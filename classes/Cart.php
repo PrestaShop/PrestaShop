@@ -3420,6 +3420,7 @@ class CartCore extends ObjectModel
         }
         $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
         if ($orderTotalwithDiscounts >= (float)($free_fees_price) && (float)($free_fees_price) > 0) {
+            $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
             Cache::store($cache_id, $shipping_cost);
             return $shipping_cost;
         }
@@ -3427,6 +3428,7 @@ class CartCore extends ObjectModel
         if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
             && $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
             && (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0) {
+            $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
             Cache::store($cache_id, $shipping_cost);
             return $shipping_cost;
         }
@@ -3477,35 +3479,10 @@ class CartCore extends ObjectModel
         $shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)$this->id_currency));
 
         //get external shipping cost from module
-        if ($carrier->shipping_external) {
-            $module_name = $carrier->external_module_name;
-
-            /** @var CarrierModule $module */
-            $module = Module::getInstanceByName($module_name);
-
-            if (Validate::isLoadedObject($module)) {
-                if (property_exists($module, 'id_carrier')) {
-                    $module->id_carrier = $carrier->id;
-                }
-                if ($carrier->need_range) {
-                    if (method_exists($module, 'getPackageShippingCost')) {
-                        $shipping_cost = $module->getPackageShippingCost($this, $shipping_cost, $products);
-                    } else {
-                        $shipping_cost = $module->getOrderShippingCost($this, $shipping_cost);
-                    }
-                } else {
-                    $shipping_cost = $module->getOrderShippingCostExternal($this);
-                }
-
-                // Check if carrier is available
-                if ($shipping_cost === false) {
-                    Cache::store($cache_id, false);
-                    return false;
-                }
-            } else {
-                Cache::store($cache_id, false);
-                return false;
-            }
+        $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
+        if ($shipping_cost === false) {
+            Cache::store($cache_id, false);
+            return false;
         }
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
@@ -3523,6 +3500,47 @@ class CartCore extends ObjectModel
 
         $shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
         Cache::store($cache_id, $shipping_cost);
+
+        return $shipping_cost;
+    }
+
+    /**
+     * Ask the module the package shipping cost.
+     *
+     * If a carrier has been linked to a carrier module, we call it order to review the shipping costs.
+     *
+     * @param Carrier $carrier The concerned carrier (Your module may have several carriers)
+     * @param float $shipping_cost The calculated shipping cost from the core, regarding package dimension and cart total
+     * @param array $products The list of products
+     * 
+     * @return boolean|float The package price for the module (0 if free, false is disabled)
+     */
+    protected function getPackageShippingCostFromModule(Carrier $carrier, $shipping_cost, $products)
+    {
+        if (!$carrier->shipping_external) {
+            return $shipping_cost;
+        }
+
+        /** @var CarrierModule $module */
+        $module = Module::getInstanceByName($carrier->external_module_name);
+
+        if (!Validate::isLoadedObject($module)) {
+            return false;
+        }
+
+        if (property_exists($module, 'id_carrier')) {
+            $module->id_carrier = $carrier->id;
+        }
+
+        if (!$carrier->need_range) {
+            return $module->getOrderShippingCostExternal($this);
+        }
+
+        if (method_exists($module, 'getPackageShippingCost')) {
+            $shipping_cost = $module->getPackageShippingCost($this, $shipping_cost, $products);
+        } else {
+            $shipping_cost = $module->getOrderShippingCost($this, $shipping_cost);
+        }
 
         return $shipping_cost;
     }
