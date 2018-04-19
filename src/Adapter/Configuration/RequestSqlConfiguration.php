@@ -57,7 +57,7 @@ class RequestSqlConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $configuration);
+            $this->configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $configuration['default_file_encoding']);
         }
 
         return [];
