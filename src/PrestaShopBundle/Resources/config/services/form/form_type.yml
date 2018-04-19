@@ -325,3 +325,11 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.db_table:
+        class: 'PrestaShopBundle\Form\Admin\Type\DatabaseTableType'
+        arguments:
+            - '@prestashop.core.admin.request_sql.repository'
+        public: true
+        tags:
+            - { name: form.type }
