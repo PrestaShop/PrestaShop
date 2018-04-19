@@ -24,6 +24,8 @@ php:
 env:
     global:
         - SYMFONY_DEPRECATIONS_HELPER=disabled
+        - _APP_ENV_=prod
+        - _TOKEN_=disabled
 
 matrix:
   include:

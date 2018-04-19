@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use PrestaShop\PrestaShop\Core\Feature\Environment;
 
 umask(0000); // This will let the permissions be 0777
 
@@ -73,8 +73,15 @@ if (_PS_MODE_DEV_) {
     Debug::enable();
 }
 require_once __DIR__.'/../app/AppKernel.php';
-//require_once __DIR__.'/../app/AppCache.php';
-$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
+
+$debugMode = null;
+
+$psEnv = _PS_MODE_DEV_ ? 'dev' : 'prod';
+
+$env = Environment::getEnvironment($psEnv);
+$debugMode = Environment::isDebugModeEnabled(_PS_MODE_DEV_);
+
+$kernel = new AppKernel($env, $debugMode);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }
