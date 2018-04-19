@@ -27,18 +27,25 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 
 use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager;
+use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlValidator;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class RequestSqlFormDataProvider implements FormDataProviderInterface
+final class RequestSqlFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var RequestSqlManager
      */
     private $requestSqlManager;
 
-    public function __construct(RequestSqlManager $requestSqlManager)
+    /**
+     * @var RequestSqlValidator
+     */
+    private $requestSqlValidator;
+
+    public function __construct(RequestSqlManager $requestSqlManager, RequestSqlValidator $requestSqlValidator)
     {
         $this->requestSqlManager = $requestSqlManager;
+        $this->requestSqlValidator = $requestSqlValidator;
     }
 
     /**
@@ -53,6 +60,10 @@ class RequestSqlFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
+        if ($errors = $this->requestSqlValidator->validateSql($data['sql'])) {
+            return $errors;
+        }
+
         return $this->requestSqlManager->createOrUpdateFromData($data);
     }
 }
