@@ -37,6 +37,7 @@ class SqlManagerPage {
 
     $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns());
     $(document).on('click', '.js-add-db-table-to-query-btn', (event) => this.addDbTableToQuery(event));
+    $(document).on('click', '.js-add-db-table-column-to-query-btn', (event) => this.addDbTableColumnToQuery(event));
   }
 
   /**
@@ -61,7 +62,8 @@ class SqlManagerPage {
             .append($('<td>').html(column.type))
             .append($('<td>').addClass('text-right')
               .append($('<button>')
-                .addClass('btn btn-sm btn-outline-secondary')
+                .addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn')
+                .attr('data-column', column.name)
                 .html($table.data('action-btn'))
               )
             );
@@ -73,6 +75,8 @@ class SqlManagerPage {
 
   /**
    * Add selected database table name to SQL query input
+   *
+   * @param event
    */
   addDbTableToQuery(event) {
     const $selectedOption = $('.js-db-tables-select').find('option:selected');
@@ -83,8 +87,28 @@ class SqlManagerPage {
       return;
     }
 
+    this.addToQuery($selectedOption.val());
+  }
+
+  /**
+   * Add table column to SQL query input
+   *
+   * @param event
+   */
+  addDbTableColumnToQuery(event) {
+    const column = $(event.target).data('column');
+
+    this.addToQuery(column);
+  }
+
+  /**
+   * Add data to SQL query input
+   *
+   * @param {String} data
+   */
+  addToQuery(data) {
     const $queryInput = $('#form_request_sql_sql');
-    $queryInput.val($queryInput.val() + ' ' + $selectedOption.val());
+    $queryInput.val($queryInput.val() + ' ' + data);
   }
 }
 
