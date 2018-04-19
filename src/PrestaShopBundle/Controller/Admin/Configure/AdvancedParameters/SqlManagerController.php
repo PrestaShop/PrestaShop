@@ -236,7 +236,6 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $columns = [];
 
-        //@todo: handle table does  not exists
         $tableColumns = $dataProvider->getTableColumns($table);
         foreach ($tableColumns as $tableColumn) {
             $columns[] = [
