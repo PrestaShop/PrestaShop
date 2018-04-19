@@ -29,18 +29,18 @@ const $ = window.$;
  * Display confirmation alert with provided message.
  */
 export default class ConfirmationAlert {
-    init() {
-        $(document).on('click', '.js-confirm-btn', (event) => {
-            const $btn = $(event.currentTarget);
-            const message = $btn.data('confirm-message');
+  init() {
+    $(document).on('click', '.js-confirm-btn', (event) => {
+      const $btn = $(event.currentTarget);
+      const message = $btn.data('confirm-message');
 
-            let confirmed = confirm(message);
-            if (confirmed) {
-                return true;
-            }
+      let confirmed = confirm(message);
+      if (confirmed) {
+          return true;
+      }
 
-            event.preventDefault();
-            event.stopPropagation();
-        });
-    }
+      event.preventDefault();
+      event.stopPropagation();
+    });
+  }
 }

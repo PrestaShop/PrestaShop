@@ -181,3 +181,10 @@ admin_sql_manager_delete:
         _legacy_controller: AdminRequestSql
     requirements:
         id: \d+
+
+admin_sql_manager_table_columns:
+    path: sql_manager/tables/{table}/columns
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:tableColumns'
+        _legacy_controller: AdminRequestSql
