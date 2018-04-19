@@ -189,7 +189,11 @@ function initTableDnD(table)
 							nodrag_lines.children('td.dragHandle:first').find('a:even').attr('disabled',true);
 							nodrag_lines.children('td.dragHandle:last').find('a:odd').attr('disabled',true);
 						}
-						showSuccessMessage(update_success_msg);
+						if (typeof (data.hasError) != 'undefined' && data.hasError == true) {
+							showErrorMessage(data.errors)
+						} else {
+							showSuccessMessage(update_success_msg);
+						}
 					}
 				});
 			}
