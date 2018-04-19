@@ -33,7 +33,7 @@
                 {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_requestSql', order_by, order_way) }}
             </th>
             <th scope="col">
-                {{ ps.sortable_column_header('SQL query Name'|trans({}, 'Admin.Global'), 'name', order_by, order_way) }}
+                {{ ps.sortable_column_header('SQL query Name'|trans, 'name', order_by, order_way) }}
             </th>
             <th scope="col">
                 {{ ps.sortable_column_header('SQL query'|trans, 'sql', order_by, order_way) }}
@@ -46,14 +46,14 @@
             <th>{{ form_widget(search_form.sql) }}</th>
             <th>
                 <button type="submit" class="btn btn-primary">
-                    <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Action') }}
+                    <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
                 </button>
 
                 {% if filters.filters is not empty %}
                     <a href="{{ path('admin_sql_manager', {'offset': filters.offset, 'limit': filters.limit}) }}"
                        class="btn btn-warning"
                     >
-                        <i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Action') }}
+                        <i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}
                     </a>
                 {% endif %}
             </th>
@@ -68,7 +68,7 @@
                 <td>
                     <div class="btn-group-action">
                         <div class="btn-group">
-                            <a href="#" title="{{ 'Export'|trans({}, 'Admin.Global') }}" class="btn tooltip-link product-edit">
+                            <a href="#" title="{{ 'Export'|trans({}, 'Admin.Actions') }}" class="btn tooltip-link product-edit">
                                 <i class="material-icons">cloud_download</i>
                             </a>
                             <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
@@ -94,7 +94,7 @@
                                    data-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
                                 >
                                     <i class="material-icons">delete</i>
-                                    {{ 'Delete'|trans({}, 'Admin.Global') }}
+                                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
                                 </a>
                             </div>
                         </div>
