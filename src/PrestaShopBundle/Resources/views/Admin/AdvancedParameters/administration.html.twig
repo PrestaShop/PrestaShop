@@ -33,7 +33,7 @@
     <div class="row">
         {% block administration_form_general %}
             <div class="col">
-                <div class="card">
+                <div class="card" id="configuration_fieldset_general">
                     <h3 class="card-header">
                         <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
                     </h3>
@@ -73,7 +73,7 @@
 
         {% block administration_form_upload_quota %}
             <div class="col">
-                <div class="card">
+                <div class="card" id="configuration_fieldset_upload">
                     <h3 class="card-header">
                         <i class="material-icons">file_upload</i> {{ 'Upload quota'|trans }}
                     </h3>
@@ -109,7 +109,7 @@
     <div class="row">
         {% block administration_form_notifications %}
             <div class="col">
-                <div class="card">
+                <div class="card" id="configuration_fieldset_notifications">
                     <h3 class="card-header">
                         <i class="material-icons">priority_high</i> {{ 'Notifications'|trans }}
                     </h3>

@@ -95,7 +95,7 @@
       </div>
   {/if}
   {if $current_tab_level == 3}
-    <div class="page-head-tabs">
+    <div class="page-head-tabs" id="head_tabs">
       {foreach $tabs as $level_1}
         {foreach $level_1.sub_tabs as $level_2}
           {foreach $level_2.sub_tabs as $level_3}
