@@ -1244,24 +1244,4 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         return false;
     }
-
-    /**
-     * @inheritdoc
-     * @return string
-     */
-    public function getCanonicalURL()
-    {
-        return $this->context->link->getProductLink(
-            $this->product->id,
-            isset($this->product->link_rewrite) ? $this->product->link_rewrite : null,
-            isset($this->product->category) ? $this->product->category : null,
-            isset($this->product->ean13) ? $this->product->ean13 : null,
-            $this->context->language->id,
-            null,
-            null,
-            false,
-            false,
-            true
-        );
-    }
 }
