@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 6;
+/******/ 			var chunkId = 4;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,19 +706,24 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(446)(__webpack_require__.s = 446);
+/******/ 	return hotCreateRequire(451)(__webpack_require__.s = 451);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 222:
+/***/ 227:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__ = __webpack_require__(23);
-/*
- * 2007-2018 PrestaShop
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_confirmation_alert__ = __webpack_require__(256);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -737,20 +742,122 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *
  */
 
 
 
-var $ = global.$;
 
-$(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__["a" /* default */]($('table.table')).attach();
+var $ = window.$;
+
+var SqlManagerPage = function () {
+  function SqlManagerPage() {
+    _classCallCheck(this, SqlManagerPage);
+  }
+
+  _createClass(SqlManagerPage, [{
+    key: 'init',
+    value: function init() {
+      var _this = this;
+
+      var $sortableTables = $('table.table');
+
+      new __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__["a" /* default */]($sortableTables).attach();
+      new __WEBPACK_IMPORTED_MODULE_1__components_confirmation_alert__["a" /* default */]().init();
+
+      $(document).on('change', '.js-db-tables-select', function () {
+        return _this.reloadDbTableColumns();
+      });
+      $(document).on('click', '.js-add-db-table-to-query-btn', function (event) {
+        return _this.addDbTableToQuery(event);
+      });
+      $(document).on('click', '.js-add-db-table-column-to-query-btn', function (event) {
+        return _this.addDbTableColumnToQuery(event);
+      });
+    }
+
+    /**
+     * Reload database table columns
+     */
+
+  }, {
+    key: 'reloadDbTableColumns',
+    value: function reloadDbTableColumns() {
+      var $selectedOption = $('.js-db-tables-select').find('option:selected');
+
+      $.ajax($selectedOption.data('table-columns-url')).then(function (response) {
+        $('.js-table-alert').addClass('d-none');
+
+        var columns = response.columns;
+
+        var $table = $('.js-table-columns');
+        $table.removeClass('d-none');
+        $table.find('tbody').empty();
+
+        columns.forEach(function (column) {
+          var $row = $('<tr>').append($('<td>').html(column.name)).append($('<td>').html(column.type)).append($('<td>').addClass('text-right').append($('<button>').addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn').attr('data-column', column.name).html($table.data('action-btn'))));
+
+          $table.find('tbody').append($row);
+        });
+      });
+    }
+
+    /**
+     * Add selected database table name to SQL query input
+     *
+     * @param event
+     */
+
+  }, {
+    key: 'addDbTableToQuery',
+    value: function addDbTableToQuery(event) {
+      var $selectedOption = $('.js-db-tables-select').find('option:selected');
+
+      if ($selectedOption.length === 0) {
+        alert($(event.target).data('choose-table-message'));
+
+        return;
+      }
+
+      this.addToQuery($selectedOption.val());
+    }
+
+    /**
+     * Add table column to SQL query input
+     *
+     * @param event
+     */
+
+  }, {
+    key: 'addDbTableColumnToQuery',
+    value: function addDbTableColumnToQuery(event) {
+      var column = $(event.target).data('column');
+
+      this.addToQuery(column);
+    }
+
+    /**
+     * Add data to SQL query input
+     *
+     * @param {String} data
+     */
+
+  }, {
+    key: 'addToQuery',
+    value: function addToQuery(data) {
+      var $queryInput = $('#form_request_sql_sql');
+      $queryInput.val($queryInput.val() + ' ' + data);
+    }
+  }]);
+
+  return SqlManagerPage;
+}();
+
+$(document).ready(function () {
+  new SqlManagerPage().init();
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
 
@@ -894,6 +1001,75 @@ var TableSorting = function () {
 
 /***/ }),
 
+/***/ 256:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Display confirmation alert with provided message.
+ */
+
+var ConfirmationAlert = function () {
+  function ConfirmationAlert() {
+    _classCallCheck(this, ConfirmationAlert);
+  }
+
+  _createClass(ConfirmationAlert, [{
+    key: 'init',
+    value: function init() {
+      $(document).on('click', '.js-confirm-btn', function (event) {
+        var $btn = $(event.currentTarget);
+        var message = $btn.data('confirm-message');
+
+        var confirmed = confirm(message);
+        if (confirmed) {
+          return true;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    }
+  }]);
+
+  return ConfirmationAlert;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (ConfirmationAlert);
+
+/***/ }),
+
 /***/ 4:
 /***/ (function(module, exports) {
 
@@ -922,10 +1098,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 446:
+/***/ 451:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(222);
+module.exports = __webpack_require__(227);
 
 
 /***/ })
