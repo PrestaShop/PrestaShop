@@ -78,7 +78,7 @@ class CombinationDataProvider
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function getFormCombinations(array $combinationIds, int $languageId)
+    public function getFormCombinations(array $combinationIds, $languageId)
     {
         $productId = (new Combination($combinationIds[0]))->id_product;
         $product = new Product($productId);
