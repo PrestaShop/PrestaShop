@@ -1,0 +1,79 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <h3 class="card-header">
+                {{ 'List of MySQL Tables'|trans }}
+            </h3>
+            <div class="card-block">
+                <div class="form-group">
+                    <select class="form-control js-db-tables-select"
+                            title="{{ 'List of MySQL Tables'|trans }}"
+                            size="10"
+                    >
+                        {% for tableName in dbTableNames %}
+                            <option value="{{ tableName }}"
+                                    data-table-columns-url="{{ path('admin_sql_manager_table_columns', {'table': tableName}) }}"
+                            >
+                                {{ tableName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <i class="material-icons">add_circle</i> {{ 'Add table name to SQL query'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <h3 class="card-header">
+                {{ 'List of attributes for this MySQL table'|trans }}
+            </h3>
+            <div class="card-block">
+                <table class="table js-table-columns d-none" data-action-btn="{{ 'Add attribute to SQL query'|trans }}">
+                    <thead>
+                        <tr>
+                            <th>{{ 'Attribute'|trans }}</th>
+                            <th>{{ 'Type'|trans({}, 'Admin.Global') }}</th>
+                            <th class="text-center">{{ 'Action'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="alert alert-warning js-table-alert" role="alert">
+                    <p class="alert-text">{{ 'Please choose a MySQL table'|trans({}, 'Admin.Advparameters.Notification') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
