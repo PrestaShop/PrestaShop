@@ -36,6 +36,7 @@ class SqlManagerPage {
     new ConfirmationAlert().init();
 
     $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns());
+    $(document).on('click', '.js-add-db-table-to-query-btn', (event) => this.addDbTableToQuery(event));
   }
 
   /**
@@ -68,6 +69,22 @@ class SqlManagerPage {
           $table.find('tbody').append($row);
         });
       });
+  }
+
+  /**
+   * Add selected database table name to SQL query input
+   */
+  addDbTableToQuery(event) {
+    const $selectedOption = $('.js-db-tables-select').find('option:selected');
+
+    if ($selectedOption.length === 0) {
+      alert($(event.target).data('choose-table-message'));
+
+      return;
+    }
+
+    const $queryInput = $('#form_request_sql_sql');
+    $queryInput.val($queryInput.val() + ' ' + $selectedOption.val());
   }
 }
 
