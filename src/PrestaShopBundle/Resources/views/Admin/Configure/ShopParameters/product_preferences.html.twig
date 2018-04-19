@@ -29,7 +29,7 @@
 
 {% block content %}
     <div class="container">
-        {{ form_start(form, {'attr': {'class': 'form'}}) }}
+        {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
         <div class="row">
             {# Product preferences General block #}
             {% include 'PrestaShopBundle:Admin/Configure/ShopParameters/Blocks:product_preferences_general.html.twig' %}
