@@ -47,7 +47,10 @@
                     </select>
                 </div>
 
-                <button type="button" class="btn btn-sm btn-outline-secondary">
+                <button type="button"
+                        class="btn btn-sm btn-outline-secondary js-add-db-table-to-query-btn"
+                        data-choose-table-message="{{ 'Please choose a table.'|trans }}"
+                >
                     <i class="material-icons">add_circle</i> {{ 'Add table name to SQL query'|trans }}
                 </button>
             </div>
