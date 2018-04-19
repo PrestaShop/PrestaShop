@@ -49,12 +49,19 @@
                                 {{ form_errors(requestSqlForm.request_sql.sql) }}
                                 {{ form_widget(requestSqlForm.request_sql.sql) }}
                             </div>
+
+                            {{ form_rest(requestSqlForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary pull-right">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                        </div>
+                        <a href="{{ path('admin_sql_manager') }}" class="btn btn-outline-secondary">
+                            <i class="material-icons">cancel</i>
+                            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+                        </a>
+                        <button class="btn btn-primary float-right">
+                            <i class="material-icons">save</i>
+                            {{ 'Save'|trans({}, 'Admin.Actions') }}
+                        </button>
                     </div>
                 </div>
                 {{ form_end(requestSqlForm) }}

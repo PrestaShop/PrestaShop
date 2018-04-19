@@ -288,7 +288,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         if ($withHeaderBtn) {
             $params['layoutHeaderToolbarBtn']['add'] = [
                 'href' => $this->generateUrl('admin_sql_manager_create'),
-                'desc' => $this->trans('New SQL query', 'Admin.Actions'),
+                'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                 'icon' => 'add_circle_outline',
             ];
         }
