@@ -174,7 +174,7 @@ class LinkCore
         $url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
         if (!is_object($category)) {
-            $category = new Category($category, $id_lang);
+            $category = new Category($category, $id_lang, $id_shop);
         }
 
         // Set available keywords
@@ -218,7 +218,7 @@ class LinkCore
             if ($alias !== null && !$dispatcher->hasKeyword('cms_category_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('cms_category_rule', $id_lang, 'meta_title', $id_shop)) {
                 return $url.$dispatcher->createUrl('cms_category_rule', $id_lang, array('id' => (int)$cms_category, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
             }
-            $cms_category = new CMSCategory($cms_category, $id_lang);
+            $cms_category = new CMSCategory($cms_category, $id_lang, $id_shop);
         }
         if (is_array($cms_category->link_rewrite) && isset($cms_category->link_rewrite[(int)$id_lang])) {
             $cms_category->link_rewrite = $cms_category->link_rewrite[(int)$id_lang];
@@ -262,7 +262,7 @@ class LinkCore
             if ($alias !== null && !$dispatcher->hasKeyword('cms_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('cms_rule', $id_lang, 'meta_title', $id_shop)) {
                 return $url.$dispatcher->createUrl('cms_rule', $id_lang, array('id' => (int)$cms, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
             }
-            $cms = new CMS($cms, $id_lang);
+            $cms = new CMS($cms, $id_lang, $id_shop);
         }
 
         // Set available keywords
@@ -304,7 +304,7 @@ class LinkCore
             if ($alias !== null && !$dispatcher->hasKeyword('supplier_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('supplier_rule', $id_lang, 'meta_title', $id_shop)) {
                 return $url.$dispatcher->createUrl('supplier_rule', $id_lang, array('id' => (int)$supplier, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
             }
-            $supplier = new Supplier($supplier, $id_lang);
+            $supplier = new Supplier($supplier, $id_lang, $id_shop);
         }
 
         // Set available keywords
@@ -338,7 +338,7 @@ class LinkCore
             if ($alias !== null && !$dispatcher->hasKeyword('manufacturer_rule', $id_lang, 'meta_keywords', $id_shop) && !$dispatcher->hasKeyword('manufacturer_rule', $id_lang, 'meta_title', $id_shop)) {
                 return $url.$dispatcher->createUrl('manufacturer_rule', $id_lang, array('id' => (int)$manufacturer, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
             }
-            $manufacturer = new Manufacturer($manufacturer, $id_lang);
+            $manufacturer = new Manufacturer($manufacturer, $id_lang, $id_shop);
         }
 
         // Set available keywords
