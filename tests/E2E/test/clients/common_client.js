@@ -162,6 +162,13 @@ class CommonClient {
       .waitForVisibleAndClick(selector, timeout);
   }
 
+  scrollWaitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(0)
+      .scrollTo(selector)
+      .waitForVisibleAndClick(selector, timeout);
+  }
+
   moveToObject(selector, pause = 0) {
     return this.client
       .pause(pause)

@@ -22,7 +22,10 @@ module.exports = {
     reset_button: '//*[@id="table-attribute_group"]//button[@name="submitResetattribute_group"]',
     attribute_checkbox: '//*[@id="table-attribute_group"]//input[@type="checkbox"]',
     bulk_actions: '//*[@id="bulk_action_menu_attribute_group"]',
-    delete_bulk_action: '//*[@id="form-attribute_group"]//div[contains(@class,"bulk-actions")]//li[4]/a'
+    delete_bulk_action: '//*[@id="form-attribute_group"]//div[contains(@class,"bulk-actions")]//li[4]/a',
+    attribute_id: '//*[@id="table-attribute_group"]/tbody/tr/td[2]',
+    color_input: '//*[@id="color_0"]',
+    texture_input_file: '//*[@id="texture"]'
   }
 
 };

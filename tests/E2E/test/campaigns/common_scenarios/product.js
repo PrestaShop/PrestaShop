@@ -38,10 +38,19 @@ const {AddProductPage} = require('../../selectors/BO/add_product_page');
  * };
  */
 module.exports = {
-  createProduct: function (AddProductPage, productData) {
+  createProduct: function (AddProductPage, productData, attributeData = {}) {
     scenario('Create a new product in the Back Office', client => {
       test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
-      test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
+      test('should click on "New Product" button', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(AddProductPage.new_product_button))
+          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            }
+          });
+      });
       test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time));
       test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]));
       test('should set the "Quantity" input', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]));
@@ -64,19 +73,28 @@ module.exports = {
               return promise
                 .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige));
             } else {
-              return promise
-                .then(() => client.waitAndSetValue(AddProductPage.variations_input, productData['attribute']['name'] + date_time + " : All"))
-                .then(() => client.waitForExistAndClick(AddProductPage.variations_select));
+              if (Object.keys(productData.attribute).length === 1) {
+                return promise
+                  .then(() => client.waitAndSetValue(AddProductPage.variations_input, productData.attribute[1].name + date_time + " : All"))
+                  .then(() => client.waitForExistAndClick(AddProductPage.variations_select));
+              } else {
+                Object.keys(productData.attribute).forEach(function (key) {
+                  if (productData.attribute[key].name === attributeData[key - 1].name) {
+                    promise = client.scrollWaitForExistAndClick('//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]'.replace('%NAME', productData.attribute[key].name + date_time));
+                    Object.keys(attributeData[key - 1].values).forEach(function (index) {
+                      promise
+                        .then(() => client.scrollWaitForVisibleAndClick('//*[@id="attribute-group-%ID"]/div/div[%S]//label'.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index)));
+                    });
+                  }
+                });
+                return promise.then(() => client.pause(5000));
+              }
             }
           });
-          test('should click on "Generate" button', () => {
-            return promise
-              .then(() => client.waitForExistAndClick(AddProductPage.variations_generate))
-              .then(() => client.getCombinationData(1));
-          });
+          test('should click on "Generate" button', () => client.scrollWaitForExistAndClick(AddProductPage.variations_generate));
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
-          test('should set the "Variations quantity" input', () => client.setVariationsQuantity(AddProductPage, productData['attribute']['variation_quantity']));
+          test('should set the "Variations quantity" input', () => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity));
         }, 'product/create_combinations');
       }
 
@@ -141,17 +159,8 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => {
-          return promise
-            .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-            .then(() => {
-              if (global.isVisible) {
-                client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-              }
-            })
-            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
-        });
-        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
+        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 

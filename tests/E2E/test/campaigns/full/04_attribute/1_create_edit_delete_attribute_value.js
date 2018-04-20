@@ -11,8 +11,10 @@ let productData = {
   image_name: 'image_test.jpg',
   reference: 'att',
   attribute: {
-    name: 'attribute',
-    variation_quantity: '10'
+    1: {
+      name: 'attribute',
+      variation_quantity: '10'
+    }
   }
 };
 
@@ -21,9 +23,15 @@ let attributeData = {
   public_name: 'attribute',
   type: 'radio',
   values: {
-    1: '10',
-    2: '20',
-    3: '30'
+    1: {
+      value: '10'
+    },
+    2: {
+      value: '20'
+    },
+    3: {
+      value: '30'
+    }
   }
 };
 
