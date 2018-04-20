@@ -67,20 +67,6 @@ class SqlManagerController extends FrameworkBundleAdminController
             'filters' => $searchForm->getData(),
         ]);
 
-        $a = new class () {
-            public function test()
-            {
-                return 'ok';
-            }
-        };
-
-        $b = function (callable $c) {
-            dump(is_callable($c));
-            dump(call_user_func($c));
-        };
-
-        $b([$a, 'test']);
-
         $repository = $this->getRepository();
         $requestSqls = $repository->findByFilters($filters);
         $requestSqlsCount = $repository->getCount();
@@ -109,48 +95,28 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function tableAction(Request $request)
     {
-        $dispatcher = $this->get('prestashop.hook.dispatcher');
+        $tableFactory = $this->get('prestashop.core.table.factory');
+        $tableViewFactory = $this->get('prestashop.core.table.view_factory');
 
-        $rowsTotal = 10;
-        $rows = [
-            [
-                'id_request_sql' => 1,
-                'name' => 'First query',
-                'sql' => 'SELECT nothing from nothing',
-            ],
-            [
-                'id_request_sql' => 2,
-                'name' => 'Second query',
-                'sql' => 'SELECT everything from everywhere',
-            ],
+        $tableDefinition = $this->get('prestashop.table.definition.request_sql');
+        $tableDataProvider = $this->get('prestashop.table.data_provider.request_sql');
+
+        $table = $tableFactory->createFromDefinition($tableDefinition);
+        $table->getForm()->handleRequest($request);
+
+        $filters = [
+            'limit' => $request->query->get('limit', 10),
+            'offset' => $request->query->get('offset', 0),
+            'orderBy' => $request->query->get('orderBy', $tableDefinition->getDefaultOrderBy()),
+            'sortOrder' => $request->query->get('sortOrder', $tableDefinition->getDefaultOrderWay()),
+            'filters' => $table->getForm()->getData(),
         ];
 
-        $table = new Table();
-
-        $idColumn = new Column('request_sql_id', 'ID');
-        $idColumn->setFormType(TextType::class);
-        $nameColumn = new Column('name', 'SQL query Name');
-        $queryColumn = new Column('sql', 'SQL query');
-
-        $table
-            ->addColumn($idColumn)
-            ->addColumn($nameColumn)
-            ->addColumn($queryColumn);
-
-        $table->setRows($rows);
-        $table->setRowsTotal($rowsTotal);
-
-        $editRowAction = new RowAction('edit', 'Edit', function($row) {
-            return 'http://some.url.generated.from.row.data';
-        }, 'some-icon');
-
-        $table->addRowAction($editRowAction);
-
-        $tableViewFactory = new TableViewFactory();
-        $tableView = $tableViewFactory->createViewFromTable($table);
+        $table->setRows($tableDataProvider->getRows($filters));
+        $table->setRowsTotal($tableDataProvider->getRowsTotal());
 
         return [
-            'table' => $table->createView(),
+            'table' => $tableViewFactory->createViewFromTable($table),
         ];
     }
 

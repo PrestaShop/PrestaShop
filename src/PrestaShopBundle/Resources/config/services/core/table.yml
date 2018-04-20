@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.table.view_factory:
+        class: 'PrestaShop\PrestaShop\Core\Table\Factory\TableViewFactory'
+
+    prestashop.core.table.factory:
+        class: 'PrestaShop\PrestaShop\Core\Table\Factory\TableFactory'
+        arguments:
+            - '@prestashop.hook.dispatcher'
+            - '@form.factory'
+
+    # Table definitions
+    prestashop.table.definition.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Table\Definition\RequestSqlTableDefinition'
+        shared: false
+        arguments:
+            - '@translator'
+
+    # Table data providers
+    prestashop.table.data_provider.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Table\DataProvider\RequestSqlTableDataProvider'
+        arguments:
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.admin.request_sql.repository'

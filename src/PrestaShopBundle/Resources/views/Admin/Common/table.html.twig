@@ -1,36 +1,105 @@
+{% set filtersForm = tableView.formView %}
 
-<table class="table">
+{{ form_start(filtersForm) }}
+<table class="table" id="{{ tableView.identifier }}">
     <thead class="thead-default">
     <tr class="column-headers">
-        {% for tableColumn in table.getColumns() %}
-            <th scope="col" width="10%">
+        {% for tableColumn in tableView.columns %}
+            <th scope="col">
                 {% if tableColumn.is_sortable %}
-                    {{ ps.sortable_column_header(tableColumn.name, 'id_requestSql', '', 'asc') }}
+                    {{ ps.sortable_column_header(tableColumn.name, tableColumn.identifier, '', 'asc') }}
                 {% else %}
                     {{ tableColumn.name }}
                 {% endif %}
             </th>
         {% endfor %}
+        <th scope="col">&nbsp;</th>
     </tr>
-    {#<tr class="column-filters">#}
-        {#<th>{{ form_widget(search_form.id_request_sql) }}</th>#}
-        {#<th>{{ form_widget(search_form.name) }}</th>#}
-        {#<th>{{ form_widget(search_form.sql) }}</th>#}
-        {#<th>#}
-            {#<button type="submit" class="btn btn-primary">#}
-                {#<i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}#}
-            {#</button>#}
+    {% if filtersForm|length > 1 %}
+    <tr class="column-filters">
+        {% for tableColumn in tableView.columns %}
+            <th>
+                {% if filtersForm[tableColumn.identifier] is defined %}
+                    {{ form_widget(filtersForm[tableColumn.identifier]) }}
+                {% else %}
+                    -
+                {% endif %}
+            </th>
+        {% endfor %}
 
-            {#{% if filters.filters is not empty %}#}
+        <th class="text-right">
+            <button type="submit" class="btn btn-primary">
+                <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
+            </button>
+
+            {% if tableView.formView.vars.data is not empty %}
                 {#<a href="{{ path('admin_sql_manager', {'offset': filters.offset, 'limit': filters.limit}) }}"#}
                    {#class="btn btn-warning"#}
                 {#>#}
                     {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
                 {#</a>#}
-            {#{% endif %}#}
-        {#</th>#}
-    {#</tr>#}
+            {% endif %}
+        </th>
+    </tr>
+    {% endif %}
     </thead>
     <tbody>
+        {# If table has any rows then render those here #}
+        {% if tableView.rows is not empty %}
+            {% for tableRow in tableView.rows %}
+                <tr>
+                    {# Render row columns here #}
+                    {% for tableColumn in tableView.columns %}
+                        <td>{{ tableRow.data[tableColumn.identifier] }}</td>
+                    {% endfor %}
+
+                    {# If row has any actions then render those here #}
+                    {% set rowActions = tableRow.actions|default([]) %}
+                    {% if rowActions is not empty %}
+                        <td class="text-right">
+                            <div class="btn-group-action">
+                                <div class="btn-group">
+                                    <a href="{{ rowActions|first.url }}"
+                                       title="{{ rowActions|first.name }}"
+                                       class="btn tooltip-link"
+                                    >
+                                        <i class="material-icons">{{ rowActions|first.icon }}</i>
+                                    </a>
+
+                                    {# If there's more than one action, then render remaining actions here #}
+                                    {% if rowActions|length > 1 %}
+                                        <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
+                                           data-toggle="dropdown"
+                                           aria-haspopup="true"
+                                           aria-expanded="false"
+                                        >
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            {% for rowAction in rowActions|slice(1) %}
+                                                <a class="dropdown-item" href="{{ rowAction.url }}">
+                                                    <i class="material-icons">{{ rowAction.icon }}</i>
+                                                    {{ rowAction.name }}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="{{ tableView.columns|length }}">
+                    <div class="text-center">
+                        <p><i class="material-icons">warning</i></p>
+                        <p>{{ 'No records found'|trans }}</p>
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
     </tbody>
 </table>
+{{ form_end(filtersForm) }}

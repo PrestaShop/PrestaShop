@@ -1,13 +1,19 @@
 <?php
 
 namespace PrestaShop\PrestaShop\Core\Table;
+use PrestaShop\PrestaShop\Core\Table\Definition\TableDefinitionInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 
+/**
+ * Class Table is responsible for holding table's data
+ */
 final class Table
 {
     /**
      * @var array|Column[]
      */
-    private $columns = [];
+    private $columns;
 
     /**
      * @var array|RowAction[]
@@ -24,20 +30,41 @@ final class Table
      */
     private $rowsTotal = 0;
 
-    public function addColumn(Column $column)
-    {
-        $this->columns[$column->getIdentifier()] = $column;
+    /**
+     * @var string
+     */
+    private $identifier;
 
-        return $this;
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var FormInterface
+     */
+    private $form;
+
+    /**
+     * @param TableDefinitionInterface $tableDefinition
+     * @param FormInterface $form
+     */
+    public function __construct(TableDefinitionInterface $tableDefinition, FormInterface $form)
+    {
+        $this->identifier = $tableDefinition->getIdentifier();
+        $this->name = $tableDefinition->getName();
+        $this->columns = $tableDefinition->getColumns();
+        $this->rowActions = $tableDefinition->getRowActions();
+        $this->form = $form;
     }
 
-    public function addRowAction(RowAction $rowAction)
-    {
-        $this->rowActions[$rowAction->getAction()] = $rowAction;
-
-        return $this;
-    }
-
+    /**
+     * Set rows for table
+     *
+     * @param array $rows
+     *
+     * @return $this
+     */
     public function setRows(array $rows)
     {
         $this->rows = $rows;
@@ -46,33 +73,72 @@ final class Table
     }
 
     /**
-     * @return TableView
+     * Set total count of all rows
+     *
+     * @param int $rowsTotal
+     *
+     * @return $this
      */
-    public function createView()
-    {
-        $formattedRows = [];
-        foreach ($this->rows as $row) {
-            foreach ($row as $key => $rowColumn) {
-
-            }
-        }
-
-        $columnsView = [];
-        foreach ($this->columns as $column) {
-            $columnsView[] = [
-                'identifier' => $column->getIdentifier(),
-                'name' => $column->getName(),
-                'is_sortable' => $column->getFormType() ? true : false,
-            ];
-        }
-
-        $tableView = new TableView($columnsView);
-
-        return $tableView;
-    }
-
     public function setRowsTotal($rowsTotal)
     {
         $this->rowsTotal = $rowsTotal;
+
+        return $this;
+    }
+
+    /**
+     * @return array|Column[]
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * @return array|RowAction[]
+     */
+    public function getRowActions()
+    {
+        return $this->rowActions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowsTotal()
+    {
+        return $this->rowsTotal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return FormInterface
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 }

@@ -88,6 +88,20 @@ class RequestSqlRepository implements RepositoryInterface
      */
     public function findByFilters(array $filters)
     {
+        $qb = $this->getFindByFiltersQuery($filters);
+
+        $statement = $qb->execute();
+
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $filters
+     *
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function getFindByFiltersQuery($filters)
+    {
         $qb = $this->connection->createQueryBuilder();
 
         $conditionValues = array_filter($filters['filters'], function ($value) {
@@ -114,8 +128,6 @@ class RequestSqlRepository implements RepositoryInterface
             $qb->setParameter('id_request_sql', $conditionValues['id_request_sql']);
         }
 
-        $statement = $qb->execute();
-
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $qb;
     }
 }

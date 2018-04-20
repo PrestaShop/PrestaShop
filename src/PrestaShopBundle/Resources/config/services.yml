@@ -3,6 +3,7 @@ imports:
     - { resource: services/form_services.yml }
     - { resource: services/alias.yml }
     - { resource: services/adapters.yml }
+    - { resource: services/core/table.yml }
 
 parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter

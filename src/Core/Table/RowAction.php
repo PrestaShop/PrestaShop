@@ -2,8 +2,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Table;
 
+/**
+ * Class RowAction holds information related to row action for each row element
+ */
 final class RowAction
 {
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -11,20 +17,32 @@ final class RowAction
      */
     private $callback;
 
-    private $icon;
+    /**
+     * @var string
+     */
+    private $icon = '';
 
+    /**
+     * @var string
+     */
     private $action;
 
-    public function __construct($action, $name, callable $callback, $icon)
+    /**
+     * @param string $identifier    Action identifier should be unique between all table row actions
+     * @param string $name          Translated action name
+     * @param callable $callback    Action collback
+     * @param string $icon     Action icon name
+     */
+    public function __construct($identifier, $name, callable $callback, $icon = '')
     {
         $this->name = $name;
         $this->callback = $callback;
         $this->icon = $icon;
-        $this->action = $action;
+        $this->action = $identifier;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -40,7 +58,7 @@ final class RowAction
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getIcon()
     {
@@ -48,9 +66,9 @@ final class RowAction
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getAction()
+    public function getIdentifier()
     {
         return $this->action;
     }
