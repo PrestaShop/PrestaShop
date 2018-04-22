@@ -59,6 +59,9 @@ class LanguageCore extends ObjectModel
 
     /** @var bool Status */
     public $active = true;
+	
+    /** @var int Calendar Type Number */
+    public $calendar_type;
 
     protected static $_cache_language_installation = null;
     protected static $_cache_language_installation_by_locale = null;
@@ -81,6 +84,7 @@ class LanguageCore extends ObjectModel
             'is_rtl' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_format_lite' => array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
             'date_format_full' => array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
+            'calendar_type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
         ),
     );
 

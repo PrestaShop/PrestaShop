@@ -25,3 +25,8 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionPerformancePageFormSave', 'Processing Performance page form', 'This hook is called when the Performance Page form is processed', '1'),
   (NULL, 'displayMaintenancePageForm', 'Manage Maintenance Page form fields', 'This hook adds, update or remove fields of the Maintenance Page form', '1'),
   (NULL, 'actionMaintenancePageFormSave', 'Processing Maintenance page form', 'This hook is called when the Maintenance Page form is processed', '1');
+  
+/* Specify the Calendar type in the database */
+ALTER TABLE `PREFIX_lang` ADD `calendar_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Core Default (0), Gregorian (1), Jalali (2), etc.' AFTER `locale`;
+ALTER TABLE `PREFIX_employee` ADD `calendar_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Language Default (0), Gregorian (1), Jalali (2), etc.' AFTER `reset_password_validity`;
+ALTER TABLE `PREFIX_customer` ADD `calendar_type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Language Default (0), Gregorian (1), Jalali (2), etc.' AFTER `reset_password_validity`;

@@ -833,7 +833,8 @@ class ToolsCore
 
         $context = Context::getContext();
         $date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
-        return date($date_format, $time);
+
+		return Calendar::getInstance()->displayDate($date_format, $time); 
     }
 
     /**

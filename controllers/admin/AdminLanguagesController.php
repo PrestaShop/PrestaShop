@@ -166,6 +166,16 @@ class AdminLanguagesControllerCore extends AdminController
                     /*'desc' => $this->trans('IETF language tag (e.g. en-US, pt-BR).').' '.sprintf('<a href="http://en.wikipedia.org/wiki/IETF_language_tag" target="_blank">%s <img src="../img/admin/external_link.png" class="icon-top" /></a>', $this->l('IETF on Wikipedia'))*/
                 ),
                 array(
+                    'type' => 'select',
+                    'label' => $this->trans('Calendar', array(), 'Admin.Global'),
+                    'name' => 'calendar_type',
+                    'options' => array(
+                        'query' => Calendar::getCalendarsList(),
+                        'id' => 'id',
+                        'name' => 'name',
+                    )
+                ),
+                array(
                     'type' => 'text',
                     'label' => $this->trans('Date format', array(), 'Admin.International.Feature'),
                     'name' => 'date_format_lite',
