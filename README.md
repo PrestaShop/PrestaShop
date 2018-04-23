@@ -1,5 +1,5 @@
 About PrestaShop
---------
+----------------
 
 [![Build Status](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.org/PrestaShop/PrestaShop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a798dc20a1254776aa7a8a0d8bd8d331)](https://www.codacy.com/app/PrestaShop/PrestaShop?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PrestaShop/PrestaShop&amp;utm_campaign=Badge_Grade)
@@ -14,7 +14,7 @@ To download the latest stable public version of PrestaShop (currently, version 1
 
 
 About the 'develop' branch
---------
+--------------------------
 
 The 'develop' branch of this repository contains the source code for the latest version of PrestaShop 1.7.
 
@@ -29,7 +29,7 @@ Finally, the ZIP file contains resources for developers and designers that are n
 
 
 Server configuration
---------
+--------------------
 
 To install PrestaShop 1.7, you need a web server running PHP 5.6+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).
 
@@ -41,7 +41,7 @@ You can find more information on the [System Administrator Guide][17].
 If your host does not offer PHP 5 by default, you will find a few explanations about PHP 5 or the `.htaccess` file in [our documentation][3], with details for certain hosting services.
 
 Installation
---------
+------------
 
 Once the files in the PrestaShop archive have been decompressed and uploaded on your hosting space, go to the root of your PrestaShop directory with your web browser, and the PrestaShop unzipper/installer will start automatically. Follow the instructions until PrestaShop is installed.
 
@@ -57,7 +57,7 @@ If you installed PrestaShop from GitHub:
     composer install
 
 Docker compose
---------
+--------------
 
 This software can also be deployed with Docker and its tool [Docker compose][22].
 
@@ -72,7 +72,7 @@ It will bind your ports 8001 to the web server. If you want to use other ports, 
 MySQL credentials can also be found and modified in this file if needed.
 
 User documentation
---------
+------------------
 
 The official PrestaShop 1.7 documentation is available online [on its own website][5]
 
@@ -85,7 +85,7 @@ First-time users will be particularly interested in the following guides:
 
 
 Contributing
---------
+------------
 
 PrestaShop is an Open Source project, and it wouldn't be possible without the help of the [hundreds of contributors][19], who submitted improvements and bugfixes over the years. Thank you all!
 
@@ -98,7 +98,7 @@ If you want to help translate PrestaShop in your language, [join us on Crowdin][
 Current Crowdin status (for 69 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 Reporting Issues
---------
+----------------
 
 Our bugtracker is called the Forge. We encourage you to [create detailed issues](http://forge.prestashop.com/secure/CreateIssue%21default.jspa?selectedProjectId=11322&issuetype=1) as soon as you see them.
 
@@ -106,7 +106,7 @@ See our [Forge Guide](http://doc.prestashop.com/display/PS16/How+to+use+the+Forg
 
 
 Reporting Security Issues
---------
+-------------------------
 
 Responsible (and private) disclosure is a standard practice when someone encounters a security problem: before making it public, the discoverer informs the Core team about it, so that a fix can be prepared, and thus minimize the potential damage.
 
@@ -118,7 +118,7 @@ Understanding a security issue means knowing how the attacker got in and hacked 
 
 
 Extending PrestaShop
---------
+--------------------
 
 PrestaShop is a very extensible e-commerce platform, both through modules and themes. Developers can even override the default components and behaviors. Learn more about this using the [Developer Guide][9] and the [Designer Guide][10].
 
@@ -126,13 +126,13 @@ Themes and modules can be obtained (and sold!) from [PrestaShop Addons][18], the
 
 
 Community forums
---------
+----------------
 
 You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][4].
 
 
 Getting support
---------
+---------------
 
 If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-172x-current/
 
