@@ -75,7 +75,7 @@ class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      * @throws \Exception
      */
     public function getForm()
@@ -86,19 +86,17 @@ class FormHandler implements FormHandlerInterface
 
         $this->formBuilder->setData($this->formDataProvider->getData());
         $this->hookDispatcher->dispatchForParameters(
-            "display{$this->hookName}Form",
+            "action{$this->hookName}Form",
             [
                 'form_builder' => &$this->formBuilder,
             ]
         );
 
-        return $this->formBuilder
-            ->setData($this->formBuilder->getData())
-            ->getForm();
+        return $this->formBuilder->getForm();
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      * @throws \Exception
      * @throws UndefinedOptionsException
      */
