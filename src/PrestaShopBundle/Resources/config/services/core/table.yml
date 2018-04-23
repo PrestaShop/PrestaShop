@@ -11,15 +11,14 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@form.factory'
 
-    # Table definitions
-    prestashop.table.definition.request_sql:
-        class: 'PrestaShop\PrestaShop\Core\Table\Definition\RequestSqlTableDefinition'
-        shared: false
+    # Table definition factories
+    prestashop.core.table.factory.request_sql_definition:
+        class: 'PrestaShop\PrestaShop\Core\Table\Factory\TableDefinition\RequestSqlTableDefinitionFactory'
         arguments:
             - '@translator'
 
     # Table data providers
-    prestashop.table.data_provider.request_sql:
+    prestashop.core.table.data_provider.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Table\DataProvider\RequestSqlTableDataProvider'
         arguments:
             - '@prestashop.hook.dispatcher'

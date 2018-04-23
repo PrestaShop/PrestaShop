@@ -1,35 +1,16 @@
 <?php
 
 namespace PrestaShop\PrestaShop\Core\Table;
+
 use PrestaShop\PrestaShop\Core\Table\Definition\TableDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Table\Exception\ColumnsNotDefinedException;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormTypeInterface;
 
 /**
  * Class Table is responsible for holding table's data
  */
 final class Table
 {
-    /**
-     * @var array|Column[]
-     */
-    private $columns;
-
-    /**
-     * @var array|RowAction[]
-     */
-    private $rowActions = [];
-
-    /**
-     * @var array
-     */
-    private $rows = [];
-
-    /**
-     * @var int
-     */
-    private $rowsTotal = 0;
-
     /**
      * @var string
      */
@@ -46,11 +27,39 @@ final class Table
     private $form;
 
     /**
-     * @param TableDefinitionInterface $tableDefinition
-     * @param FormInterface $form
+     * @var array|Column[]
+     */
+    private $columns;
+
+    /**
+     * @var array|RowAction[]
+     */
+    private $rowActions;
+
+    /**
+     * @var array
+     */
+    private $rows = [];
+
+    /**
+     * @var int
+     */
+    private $rowsTotal = 0;
+
+    /**
+     * @param TableDefinitionInterface  $tableDefinition
+     * @param FormInterface             $form
+     *
+     * @throws ColumnsNotDefinedException   When definition does not define any columns for table
      */
     public function __construct(TableDefinitionInterface $tableDefinition, FormInterface $form)
     {
+        if (0 == count($tableDefinition->getColumns())) {
+            throw new ColumnsNotDefinedException(
+                sprintf('Table "%s" definition does not contain any columns', $tableDefinition->getIdentifier())
+            );
+        }
+
         $this->identifier = $tableDefinition->getIdentifier();
         $this->name = $tableDefinition->getName();
         $this->columns = $tableDefinition->getColumns();

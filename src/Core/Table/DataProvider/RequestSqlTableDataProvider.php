@@ -20,6 +20,10 @@ final class RequestSqlTableDataProvider implements TableDataProviderInterface
      */
     private $repository;
 
+    /**
+     * @param HookDispatcher        $dispatcher
+     * @param RequestSqlRepository  $repository
+     */
     public function __construct(
         HookDispatcher $dispatcher,
         RequestSqlRepository $repository
@@ -28,10 +32,14 @@ final class RequestSqlTableDataProvider implements TableDataProviderInterface
         $this->repository = $repository;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getRows(array $filters)
     {
         $requestSqlsQuery = $this->repository->getFindByFiltersQuery($filters);
 
+        // allow developers to modify Request SQL db query
         $this->dispatcher->dispatchForParameters('modifyRequestSqlTableQuery', [
             'query' => $requestSqlsQuery,
             'filters' => $filters,
@@ -42,6 +50,9 @@ final class RequestSqlTableDataProvider implements TableDataProviderInterface
         return $requestSqls;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getRowsTotal()
     {
         return $this->repository->getCount();

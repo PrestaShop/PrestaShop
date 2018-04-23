@@ -9,24 +9,9 @@ use Symfony\Component\Form\FormView;
 final class TableView
 {
     /**
-     * @var array
-     */
-    private $columns = [];
-
-    /**
-     * @var array
-     */
-    private $rows = [];
-
-    /**
      * @var string
      */
     private $identifier;
-
-    /**
-     * @var int
-     */
-    private $rowsTotal = 0;
 
     /**
      * @var string
@@ -34,28 +19,40 @@ final class TableView
     private $name;
 
     /**
-     * @var FormView|null
+     * @var FormView
      */
     private $formView;
 
     /**
-     * @param string $identifier Table identifier should be unique per table and will act as ID on html table element
-     * @param string $name       Table name
-     * @param array $columnViews Table columns
-     * @param array $rowViews    Table rows data
-     * @param int $rowsTotal     Total count of all rows
+     * @var array
      */
-    public function __construct($identifier, $name, array $columnViews, array $rowViews, $rowsTotal)
+    private $columns;
+
+    /**
+     * @var array
+     */
+    private $rows;
+
+    /**
+     * @var int
+     */
+    private $rowsTotal;
+
+    /**
+     * @param string    $identifier     Table identifier should be unique per table and will act as ID on html table element
+     * @param string    $name           Table name
+     * @param array     $columnViews    Table columns
+     * @param array     $rowViews       Table rows data
+     * @param int       $rowsTotal      Total count of all rows
+     * @param FormView  $formView       Filters form view
+     */
+    public function __construct($identifier, $name, array $columnViews, array $rowViews, $rowsTotal, FormView $formView)
     {
         $this->columns = $columnViews;
         $this->rows = $rowViews;
         $this->identifier = $identifier;
         $this->rowsTotal = $rowsTotal;
         $this->name = $name;
-    }
-
-    public function setFormView(FormView $formView)
-    {
         $this->formView = $formView;
     }
 
@@ -100,7 +97,7 @@ final class TableView
     }
 
     /**
-     * @return FormView|null
+     * @return FormView
      */
     public function getFormView()
     {

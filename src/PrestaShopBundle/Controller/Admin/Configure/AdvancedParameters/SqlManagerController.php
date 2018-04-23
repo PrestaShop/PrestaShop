@@ -97,12 +97,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     {
         $tableFactory = $this->get('prestashop.core.table.factory');
         $tableViewFactory = $this->get('prestashop.core.table.view_factory');
+        $tableDefinitionFactory = $this->get('prestashop.core.table.factory.request_sql_definition');
+        $tableDataProvider = $this->get('prestashop.core.table.data_provider.request_sql');
 
-        $tableDefinition = $this->get('prestashop.table.definition.request_sql');
-        $tableDataProvider = $this->get('prestashop.table.data_provider.request_sql');
+        $tableDefinition = $tableDefinitionFactory->createNew();
 
-        $table = $tableFactory->createFromDefinition($tableDefinition);
-        $table->getForm()->handleRequest($request);
+        $table = $tableFactory->createFromDefinition($tableDefinition, $request);
 
         $filters = [
             'limit' => $request->query->get('limit', 10),

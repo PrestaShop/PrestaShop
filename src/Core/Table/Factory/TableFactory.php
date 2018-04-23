@@ -7,7 +7,11 @@ use PrestaShop\PrestaShop\Core\Table\Table;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class TableFactory is responsible for creating table from it's definition
+ */
 final class TableFactory implements TableFactoryInterface
 {
     /**
@@ -33,33 +37,31 @@ final class TableFactory implements TableFactoryInterface
     }
 
     /**
-     * Create table from it's definition
-     *
-     * @param TableDefinitionInterface $tableDefinition
-     *
-     * @return Table
+     * {@inheritdoc}
      */
-    public function createFromDefinition(TableDefinitionInterface $tableDefinition) {
+    public function createFromDefinition(TableDefinitionInterface $tableDefinition, Request $request) {
         // Execute hook to allow developers to modify/extend table definition
         // For exmaple add new columns, row actions & etc.
         $this->dispatcher->dispatchForParameters('modifyTableDefinition', [
             'table_definition' => $tableDefinition,
         ]);
 
-        $form = $this->getTableFilterForm($tableDefinition);
-        $table = new Table($tableDefinition, $form);
+        $filtersForm = $this->buildTableFilterForm($tableDefinition);
+        $filtersForm->handleRequest($request);
+
+        $table = new Table($tableDefinition, $filtersForm);
 
         return $table;
     }
 
     /**
-     * Create filters form for table
+     * Builds filters form for table
      *
      * @param TableDefinitionInterface $table
      *
      * @return FormInterface
      */
-    private function getTableFilterForm(TableDefinitionInterface $table)
+    private function buildTableFilterForm(TableDefinitionInterface $table)
     {
         $formBuilder = $this->formFactory->createNamedBuilder($table->getIdentifier());
 

@@ -7,7 +7,6 @@ use PrestaShop\PrestaShop\Core\Table\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Table\RowAction;
 use PrestaShop\PrestaShop\Core\Table\Table;
 use PrestaShop\PrestaShop\Core\Table\TableView;
-use Symfony\Component\Form\FormInterface;
 
 /**
  * Class TableViewFactory is responsible for creating table view data that is passed to template for table rendering
@@ -19,20 +18,14 @@ final class TableViewFactory implements TableViewFactoryInterface
      */
     public function createViewFromTable(Table $table)
     {
-        $rowsView = $this->getRowsView($table);
-        $columnsView = $this->getColumnsView($table);
-
         $tableView = new TableView(
             $table->getIdentifier(),
             $table->getName(),
-            $columnsView,
-            $rowsView,
-            $table->getRowsTotal()
+            $this->getColumnsView($table),
+            $this->getRowsView($table),
+            $table->getRowsTotal(),
+            $table->getForm()->createView()
         );
-
-        if (($form = $table->getForm()) instanceof FormInterface) {
-            $tableView->setFormView($form->createView());
-        }
 
         return $tableView;
     }
