@@ -27,5 +27,10 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
 interface PresenterInterface
 {
-    public function present($object); // must return an array or an AbstractLazyArray
+    /**
+     * @param mixed $object
+     *
+     * @return array|AbstractLazyArray
+     */
+    public function present($object);
 }

@@ -84,8 +84,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     public function __construct()
     {
         $this->arrayAccessList = new \ArrayObject();
-        $reflexionClass = new \ReflectionClass(get_called_class());
-        $methods = $reflexionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $reflectionClass = new \ReflectionClass(get_class($this));
+        $methods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
@@ -131,19 +131,6 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param string $methodName
-     *
-     * @return string
-     */
-    private function convertMethodNameToIndex($methodName)
-    {
-        // remove "get" prefix from the function name
-        $strippedMethodName = substr($methodName, 3);
-
-        return Inflector::tableize($strippedMethodName);
-    }
-
-    /**
      * Get the value associated with the $index from the lazyArray
      *
      * @param mixed $index
@@ -174,7 +161,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
         }
 
         throw new \RuntimeException(
-            'Unknown index '.$index.' from LazyArray '.get_called_class().'. 
+            'Unknown index '.print_r($index, true).' from LazyArray '.get_class($this).'. 
             Make sure the annotation @arrayAccess has properly been added on each methods which should be accessible'
         );
     }
@@ -281,7 +268,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
             $result = $this->arrayAccessList->offsetGet($offset);
             if ($result['type'] !== 'variable') {
                 throw new \RuntimeException(
-                    'Trying to set the index '.$offset.' of the LazyArray '.get_called_class().
+                    'Trying to set the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
                     ' already defined by a method is not allowed'
                 );
             }
@@ -304,7 +291,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
             $this->arrayAccessList->offsetUnset($offset);
         } else {
             throw new \RuntimeException(
-                'Trying to unset the index '.$offset.' of the LazyArray '.get_called_class().
+                'Trying to unset the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
                 ' already defined by a method is not allowed'
             );
         }
@@ -319,5 +306,18 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     public function addFilter($key, FilterInterface $filter)
     {
         $this->filters[$key] = $filter;
+    }
+
+    /**
+     * @param string $methodName
+     *
+     * @return string
+     */
+    private function convertMethodNameToIndex($methodName)
+    {
+        // remove "get" prefix from the function name
+        $strippedMethodName = substr($methodName, 3);
+
+        return Inflector::tableize($strippedMethodName);
     }
 }
