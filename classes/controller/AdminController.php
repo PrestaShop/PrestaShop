@@ -567,7 +567,7 @@ class AdminControllerCore extends Controller
      */
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
-        if (is_array($tabs) || count($tabs)) {
+        if (is_array($tabs)) {
             $tabs = array();
         }
 
@@ -3496,7 +3496,7 @@ class AdminControllerCore extends Controller
             $filter_modules_list = array($filter_modules_list);
         }
 
-        if (!count($filter_modules_list)) {
+        if (is_null($filter_modules_list) || !count($filter_modules_list)) {
             return false;
         } //if there is no modules to display just return false;
 

@@ -3241,7 +3241,7 @@ class CartCore extends ObjectModel
 
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
             $address_id = (int)$this->id_address_invoice;
-        } elseif (count($product_list)) {
+        } elseif (is_array($product_list) && count($product_list)) {
             $prod = current($product_list);
             $address_id = (int)$prod['id_address_delivery'];
         } else {
@@ -3583,7 +3583,7 @@ class CartCore extends ObjectModel
                 SELECT SUM((p.`weight` + pa.`weight`) * cp.`quantity`) as nb
                 FROM `' . _DB_PREFIX_ . 'cart_product` cp
                 LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa 
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa
                 ON (cp.`id_product_attribute` = pa.`id_product_attribute`)
                 WHERE (cp.`id_product_attribute` IS NOT NULL AND cp.`id_product_attribute` != 0)
                 AND cp.`id_cart` = ' . $productId);

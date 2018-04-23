@@ -654,9 +654,9 @@ class AdminThemesControllerCore extends AdminController
         return $helper->generateForm($fields_form);
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJS(_PS_JS_DIR_.'admin/themes.js');
 
         if ($this->context->mode == Context::MODE_HOST && Tools::getValue('action') == 'importtheme') {

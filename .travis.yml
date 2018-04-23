@@ -20,6 +20,7 @@ dist: trusty
 php:
   - 5.6
   - 7.0
+  - 7.2
 
 env:
     global:
@@ -68,3 +69,4 @@ after_failure:
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
   - bash ./travis-scripts/base64-screenshots # As we cannot upload file, we display the base64 encoded content of the screenshots
+  - cat $TRAVIS_BUILD_DIR/var/log/dev.log
