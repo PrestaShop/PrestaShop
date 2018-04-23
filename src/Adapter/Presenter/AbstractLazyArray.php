@@ -249,7 +249,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
         $arrayCopy = $this->arrayAccessList->getArrayCopy();
         foreach ($arrayCopy as $key => $value) {
             if (!array_key_exists($key, $array)) {
-                $this->offsetSet($key, null, true);
+                $this->offsetSet($key, array(), true);
             }
         }
     }
