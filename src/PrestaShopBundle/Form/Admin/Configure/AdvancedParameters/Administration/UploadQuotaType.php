@@ -23,15 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 
-class GeneralType extends TranslatorAwareType
+class UploadQuotaType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -39,17 +38,17 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', SwitchType::class, array(
+            ->add('max_size_attached_files', TextWithUnitType::class, array(
                 'required' => true,
+                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
             ))
-            ->add('check_ip_address', SwitchType::class, array(
+            ->add('max_size_downloadable_product', TextWithUnitType::class, array(
                 'required' => true,
+                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
             ))
-            ->add('front_cookie_lifetime', TextType::class, array(
+            ->add('max_size_product_image', TextWithUnitType::class, array(
                 'required' => true,
-            ))
-            ->add('back_cookie_lifetime', TextType::class, array(
-                'required' => true,
+                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
             ))
         ;
     }
@@ -69,6 +68,6 @@ class GeneralType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'administration_general_block';
+        return 'administration_upload_quota_block';
     }
 }

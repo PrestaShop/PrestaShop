@@ -35,9 +35,9 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.administration.form_provider'
             -
-              'general': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType'
-              'upload_quota': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType'
-              'notifications': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType'
+              'general': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType'
+              'upload_quota': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType'
+              'notifications': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType'
             - 'AdministrationPage'
 
     prestashop.admin.customer_preferences.form_handler:

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,7 +43,7 @@ class AdministrationController extends FrameworkBundleAdminController
 
     /**
      * @var FormInterface
-     * @Template("@PrestaShop/Admin/AdvancedParameters/administration.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig")
      * @return Response
      */
     public function indexAction(FormInterface $form = null)

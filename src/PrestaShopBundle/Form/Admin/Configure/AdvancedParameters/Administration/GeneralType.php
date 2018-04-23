@@ -23,14 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class NotificationsType extends TranslatorAwareType
+class GeneralType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -38,13 +39,16 @@ class NotificationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show_notifs_new_orders', SwitchType::class, array(
+            ->add('check_modules_update', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('show_notifs_new_customers', SwitchType::class, array(
+            ->add('check_ip_address', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('show_notifs_new_messages', SwitchType::class, array(
+            ->add('front_cookie_lifetime', TextType::class, array(
+                'required' => true,
+            ))
+            ->add('back_cookie_lifetime', TextType::class, array(
                 'required' => true,
             ))
         ;
@@ -65,6 +69,6 @@ class NotificationsType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'administration_notification_block';
+        return 'administration_general_block';
     }
 }
