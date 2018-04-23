@@ -705,6 +705,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $all_fields = $this->getFieldsShop();
                 $all_fields[$this->def['primary']] = (int)$this->id;
                 $this->update_fields = $update_fields;
+                foreach (array_keys($fields) as $key) {
+                    if (!array_key_exists($key, $this->update_fields)) {
+                        unset($fields[$key]);
+                    }
+                }
+                unset($field);
             } else {
                 $all_fields = $fields;
             }
