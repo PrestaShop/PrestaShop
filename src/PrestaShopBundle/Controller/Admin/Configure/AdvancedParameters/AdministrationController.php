@@ -87,12 +87,12 @@ class AdministrationController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ]
         )) {
             $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
 
