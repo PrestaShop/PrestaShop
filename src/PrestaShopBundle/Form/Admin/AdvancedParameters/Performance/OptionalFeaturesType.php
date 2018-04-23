@@ -35,8 +35,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OptionalFeaturesType extends CommonAbstractType
 {
+    /**
+     * @var bool
+     */
     private $isCombinationsUsed;
 
+    /**
+     * @param bool $isCombinationsUsed
+     */
     public function __construct($isCombinationsUsed)
     {
         $this->isCombinationsUsed = $isCombinationsUsed;
@@ -47,10 +53,9 @@ class OptionalFeaturesType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $isUsed = $this->isCombinationsUsed;
         $builder
             ->add('combinations', SwitchType::class, array(
-                'disabled' => $isUsed,
+                'disabled' => $this->isCombinationsUsed,
             ))
             ->add('features', SwitchType::class, array(
                 'required' => true,
