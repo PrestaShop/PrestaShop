@@ -32,7 +32,6 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Administration" page display
@@ -42,16 +41,20 @@ class AdministrationController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminAdminPreferences';
 
     /**
-     * @var FormInterface
+     * Show administration page
+     *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig")
-     * @return Response
+     *
+     * @param FormInterface $form
+     *
+     * @return array
      */
     public function indexAction(FormInterface $form = null)
     {
         $form = is_null($form) ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
-        return array(
-            'layoutHeaderToolbarBtn' => array(),
+        return [
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Administration','Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -60,10 +63,14 @@ class AdministrationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
+     * Process administration page form
+     *
+     * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
@@ -74,7 +81,7 @@ class AdministrationController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_administration');
         }
 
-        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
         $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
         $form->handleRequest($request);
 
