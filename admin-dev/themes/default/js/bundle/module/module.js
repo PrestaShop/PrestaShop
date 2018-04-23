@@ -663,13 +663,17 @@ var AdminModuleController = function() {
    * @return void
    */
   this.getNotificationsCount = function () {
+    var destinationTab = $("#subtab-AdminModulesNotifications");
+    if (destinationTab.length === 0) {
+        return;
+    }
     var token = window.location.search;
     var urlToCall = this.baseAdminDir+'module/notifications/count' + token;
 
     $.getJSON(urlToCall, function(badge) {
         // TODO: This HTML code comes from an already specific template.
         // To be moved in a template, with generic classes for badges
-        $('a.tab[href="'+badge.target+'"]').append('<div class="notification-container">\
+        destinationTab.append('<div class="notification-container">\
             <span class="notification-counter">'+badge.count+'</span>\
           </div>\
         ');
