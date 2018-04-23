@@ -52,6 +52,9 @@ final class CustomerPreferencesFormHandler extends FormHandler
         return parent::save($data);
     }
 
+    /**
+     * @param TabRepository $tabRepository
+     */
     public function setTabRepository(TabRepository $tabRepository)
     {
         $this->tabRepository = $tabRepository;
