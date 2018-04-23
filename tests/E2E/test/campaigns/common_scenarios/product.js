@@ -12,8 +12,10 @@ const {AddProductPage} = require('../../selectors/BO/add_product_page');
  *  image_name: 'picture_file_name',
  *  type: "product_type(standard, pack, virtual)",
  *  attribute: {
- *      name: 'attribute_name',
- *      variation_quantity: 'product_variation_quantity'
+ *      1: {
+ *        name: 'attribute_name',
+ *        variation_quantity: 'product_variation_quantity'
+ *      }
  *  },
  *  feature: {
  *      name: 'feature_name',
@@ -80,10 +82,10 @@ module.exports = {
               } else {
                 Object.keys(productData.attribute).forEach(function (key) {
                   if (productData.attribute[key].name === attributeData[key - 1].name) {
-                    promise = client.scrollWaitForExistAndClick('//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]'.replace('%NAME', productData.attribute[key].name + date_time));
+                    promise = client.scrollWaitForExistAndClick(AddProductPage.attribute_group_name.replace('%NAME', productData.attribute[key].name + date_time, 150, 3000));
                     Object.keys(attributeData[key - 1].values).forEach(function (index) {
                       promise
-                        .then(() => client.scrollWaitForVisibleAndClick('//*[@id="attribute-group-%ID"]/div/div[%S]//label'.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index)));
+                        .then(() => client.scrollWaitForVisibleAndClick(AddProductPage.attribute_value_checkbox.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index)));
                     });
                   }
                 });
@@ -94,7 +96,17 @@ module.exports = {
           test('should click on "Generate" button', () => client.scrollWaitForExistAndClick(AddProductPage.variations_generate));
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
-          test('should set the "Variations quantity" input', () => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity));
+          test('should set the "Variations quantity" input', () => {
+            return promise
+              .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
+              .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+              .then(() => {
+                if (global.isVisible) {
+                  client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+                }
+              });
+          });
+
         }, 'product/create_combinations');
       }
 
@@ -159,8 +171,9 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
-        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
+        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 7000));
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 

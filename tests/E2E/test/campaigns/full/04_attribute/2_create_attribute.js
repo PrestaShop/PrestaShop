@@ -1,11 +1,13 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const {productPage} = require('../../../selectors/FO/product_page');
+const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
+const {ProductList} = require('../../../selectors/BO/add_product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 const commonAttribute = require('../../common_scenarios/attribute');
 const commonScenarios = require('../../common_scenarios/product');
-const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
-const {ProductList} = require('../../../selectors/BO/add_product_page');
 
 let productData = {
   name: 'PrAt',
@@ -89,20 +91,38 @@ scenario('Create "Attributes" in the Back Office', () => {
   /* Create product with combination and add the created attributes */
   commonScenarios.createProduct(AddProductPage, productData, attributeData);
 
-  /* Check the created attributes in the Front Office */
-  scenario('Go to the Front Office', client => {
-    test('should go to the Front Office', () => client.accessToFO(AccessPageFO));
-  }, 'attribute_and_feature');
-  commonAttribute.checkAttributeInFO(productData.name, attributeData);
-
-  /* Update the created attribute */
-  scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
-  }, 'attribute_and_feature');
-  for (let i = 0; i < attributeData.length; i++) {
-    commonAttribute.deleteAttribute(attributeData[i]);
-  }
-  scenario('Logout from the Back Office', client => {
-    test('should logout successfully from the Back Office', () => client.signOutBO());
-  }, 'attribute_and_feature');
-}, 'attribute_and_feature', true);
+  scenario('Check the product pagination in the Back Office', client => {
+    test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+    test('should get the product number', () => {
+      return promise
+        .then(() => client.isVisible(ProductList.pagination_products, 3000))
+        .then(() => client.getProductsNumber(ProductList.pagination_products))
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        });
+    });
+    test('should go to "Shop Parameters - Product Settings" page', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
+        .then(() => client.pause(3000))
+        .then(() => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
+    });
+    test('should get the pagination Products per page value and check the created product in the Front Office', () => {
+      return promise
+        .then(() => client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination"))
+        .then(() => {
+          global.pagination = Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
+          /* Check the created attributes in the Front Office */
+          commonAttribute.checkAllAttributeTypeInFO(AccessPageBO, productPage, productData.name, attributeData);
+        })
+        .then(() => {
+          commonAttribute.deleteAttribute(attributeData[0]);
+          commonAttribute.deleteAttribute(attributeData[1]);
+          commonAttribute.deleteAttribute(attributeData[2], true);
+        });
+    });
+  }, 'product/product');
+}, 'attribute_and_feature');
