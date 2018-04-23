@@ -184,21 +184,24 @@ class Module implements ModuleInterface
      */
     public function hasValidInstance()
     {
-        if (($this->disk->has('is_present') && $this->disk->get('is_present') == false)
-            || ($this->disk->has('is_valid') && $this->disk->get('is_valid') == false)) {
+        if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
+            || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)) {
+
             return false;
         }
 
         if ($this->instance === null) {
-            // We try to instanciate the legacy class if not done yet
+            // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
             } catch (\Exception $e) {
                 $this->disk->set('is_valid', false);
-                throw $e;
+
+                return false;
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
+
+        $this->disk->set('is_valid', $this->instance instanceof LegacyModule);
 
         return $this->disk->get('is_valid');
     }
