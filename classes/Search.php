@@ -603,6 +603,7 @@ class SearchCore
             $db->execute('DELETE si FROM `'._DB_PREFIX_.'search_index` si
 				INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = si.id_product)
 				'.Shop::addSqlAssociation('product', 'p').'
+				INNER JOIN `'._DB_PREFIX_.'search_word` sw ON (sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop)
 				WHERE product_shop.`visibility` IN ("both", "search")
 				AND product_shop.`active` = 1
 				AND '.($id_product ? 'p.`id_product` = '.(int)$id_product : 'product_shop.`indexed` = 0'));
