@@ -26,11 +26,12 @@
 
 function ps_1740_copy_data_from_currency_to_currency_lang()
 {
+    $idLang = Context::getContext()->language->id;
     $currencies = Currency::getCurrencies();
     foreach ($currencies as $currency) {
         Db::getInstance()->execute(
             "INSERT INTO `" . _DB_PREFIX_ . "currency_lang` (`id_currency`, `id_lang`, `name`)
-            SELECT `id_currency`, " . $currency['id_lang'] . " as id_lang , `name`
+            SELECT `id_currency`, " . $idLang . " as id_lang , `name`
             FROM `" . _DB_PREFIX_ . "currency`"
         );
     }
