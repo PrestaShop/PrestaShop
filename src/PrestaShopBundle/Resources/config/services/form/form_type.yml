@@ -289,21 +289,21 @@ services:
             - { name: form.type }
 
     form.type.admininistration.general:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.administration.upload_quota:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.administration.notification:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:

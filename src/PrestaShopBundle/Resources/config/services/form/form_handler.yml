@@ -37,7 +37,7 @@ services:
             - '@prestashop.adapter.maintenance.form_provider'
 
     prestashop.adapter.administration.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\FormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.administration.form_provider'
