@@ -119,7 +119,7 @@ class StockManager
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
             if (!((int)$pack->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH)
                 && !((int)$pack->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                    && $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH2)
+                    && $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
             ) {
                 continue;
             }
