@@ -47,10 +47,10 @@ scenario('Create product with combination in the Back Office', client => {
         .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
           if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     });
   }, 'product/product');
 
@@ -245,7 +245,7 @@ scenario('Check the product with combination in the Front Office', () => {
         .then(() => client.waitForExistAndClick(productPage.product_detail_tab, 2000))
         .then(() => client.scrollTo(productPage.product_detail_tab, 180))
         .then(() => client.pause(2000))
-        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference));
     });
   }, 'product/product');
   scenario('Logout from the Front Office', client => {

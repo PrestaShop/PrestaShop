@@ -57,7 +57,7 @@ class CommonClient {
             .pause(2000)
             .waitForVisibleAndClick(selector);
         }})
-      .then(()=> this.client.pause(4000))
+      .then(()=> this.client.pause(4000));
   }
 
   closeBoarding(selector) {

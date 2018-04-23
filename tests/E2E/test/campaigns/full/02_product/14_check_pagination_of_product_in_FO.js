@@ -31,16 +31,15 @@ scenario('Check that the pagination works fine on the product page in the Front 
         .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
           if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })
     });
-    test('should go to "Traffic & SEO" page', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.traffic_seo_submenu));
+    test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.traffic_seo_submenu));
     test('should disable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'off')));
     test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, "The settings have been successfully updated."));
   }, 'common_client');
-
 
   scenario('Check the pagination in the Front Office', client => {
     test('should go to the Front Office', () => {

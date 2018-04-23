@@ -18,9 +18,9 @@ scenario('Configure shop in the Back Office', () => {
         .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
           if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
-        })
+        });
     });
     test('should click on "Enable multistore"', () => client.scrollWaitForExistAndClick(ShopParameters.enable_multistore, 50));
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.general_save_button));
@@ -35,7 +35,7 @@ scenario('Configure shop in the Back Office', () => {
     test('should go to the front office', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
-        .then(() => client.switchWindow(1))
+        .then(() => client.switchWindow(1));
     });
     test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.', 'contain'));
   }, 'common_client');
@@ -51,7 +51,7 @@ scenario('Configure shop in the Back Office', () => {
     test('should go to the front office', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
-        .then(() => client.switchWindow(1))
+        .then(() => client.switchWindow(1));
     });
     test('should check that the shop is enabled', () => client.signInFO(AccessPageFO));
   }, 'common_client');
