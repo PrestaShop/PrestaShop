@@ -23,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Form;
 
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * Complete implementation of FormHandlerInterface
@@ -64,8 +66,7 @@ class FormHandler implements FormHandlerInterface
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName
-    )
-    {
+    ) {
         $this->formBuilder = $formBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->formDataProvider = $formDataProvider;
@@ -84,11 +85,16 @@ class FormHandler implements FormHandlerInterface
         }
 
         $this->formBuilder->setData($this->formDataProvider->getData());
-        $this->hookDispatcher->dispatchForParameters("display{$this->hookName}Form", [
-            'form_builder' => &$this->formBuilder
-        ]);
+        $this->hookDispatcher->dispatchForParameters(
+            "display{$this->hookName}Form",
+            [
+                'form_builder' => &$this->formBuilder,
+            ]
+        );
 
-        return $this->formBuilder->setData($this->formBuilder->getData())->getForm();
+        return $this->formBuilder
+            ->setData($this->formBuilder->getData())
+            ->getForm();
     }
 
     /**
@@ -100,9 +106,13 @@ class FormHandler implements FormHandlerInterface
     {
         $errors = $this->formDataProvider->setData($data);
 
-        $this->hookDispatcher->dispatchForParameters("action{$this->hookName}Save", [
-            'errors' => &$errors, 'form_data' => &$data
-        ]);
+        $this->hookDispatcher->dispatchForParameters(
+            "action{$this->hookName}Save",
+            [
+                'errors' => &$errors,
+                'form_data' => &$data,
+            ]
+        );
 
         return $errors;
     }
