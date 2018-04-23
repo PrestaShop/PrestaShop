@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -69,6 +70,13 @@ class ContextCore
 
     /** @var Currency */
     public $currency;
+
+    /**
+     * Current locale instance
+     *
+     * @var Locale
+     */
+    public $currentLocale;
 
     /** @var Tab */
     public $tab;
