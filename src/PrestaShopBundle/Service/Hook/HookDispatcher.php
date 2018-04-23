@@ -108,7 +108,7 @@ class HookDispatcher extends EventDispatcher
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.
      *
-     * @param $eventName The hook name.
+     * @param $eventName string The hook name.
      * @param array $parameters Hook parameters
      * @return Event The event that has been passed to each listener.
      * @throws \Exception
