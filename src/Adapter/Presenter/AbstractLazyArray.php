@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
 use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Filter\FilterInterface;
 
 /**
  * This class is useful to provide the same behaviour than an array, but which load the result of each key on demand
@@ -69,6 +70,12 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      * @var array
      */
     private $methodCacheResults = array();
+
+    /**
+     * Array of filter which should be apply to the matching key
+     * @var array
+     */
+    private $filters = array();
 
     /**
      * AbstractLazyArray constructor.
@@ -153,10 +160,17 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
                     $methodName = $this->arrayAccessList[$index]['value'];
                     $this->methodCacheResults[$index] = $this->{$methodName}();
                 }
-                return $this->methodCacheResults[$index];
+                $result = $this->methodCacheResults[$index];
             } else { // if the index is associated with a value, just return the value
-                return $this->arrayAccessList[$index]['value'];
+                $result = $this->arrayAccessList[$index]['value'];
             }
+
+            if (!empty($result) && isset($this->filters[$index])) {
+                $filter = $this->filters[$index];
+                $result = $filter->filter($result);
+            }
+
+            return $result;
         }
 
         throw new \RuntimeException(
@@ -237,14 +251,33 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param mixed $offset
-     * @param mixed $value
+     * Set the keys not present in the given $array to null
+     *
+     * @param array $array
      *
      * @throws \RuntimeException
      */
-    public function offsetSet($offset, $value)
+    public function intersectKey($array)
     {
-        if ($this->arrayAccessList->offsetExists($offset)) {
+        $arrayCopy = $this->arrayAccessList->getArrayCopy();
+        foreach ($arrayCopy as $key => $value) {
+            if (!array_key_exists($key, $array)) {
+                $this->offsetSet($key, null, true);
+            }
+        }
+    }
+
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     *
+     * @param bool  $force if set, allow override of an existing method
+     *
+     * @throws \RuntimeException
+     */
+    public function offsetSet($offset, $value, $force = false)
+    {
+        if (!$force && $this->arrayAccessList->offsetExists($offset)) {
             $result = $this->arrayAccessList->offsetGet($offset);
             if ($result['type'] !== 'variable') {
                 throw new \RuntimeException(
@@ -275,5 +308,16 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
                 ' already defined by a method is not allowed'
             );
         }
+    }
+
+    /**
+     * Add a filter to a given key
+     *
+     * @param string          $key
+     * @param FilterInterface $filter
+     */
+    public function addFilter($key, FilterInterface $filter)
+    {
+        $this->filters[$key] = $filter;
     }
 }

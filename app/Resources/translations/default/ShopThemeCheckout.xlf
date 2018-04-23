@@ -244,25 +244,25 @@ File: controllers/front/GuestTrackingController.php:151</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Presenter/Order/OrderPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Order/OrderPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
         <source>Shipping and handling</source>
         <target>Shipping and handling</target>
         <note>Context:
-File: src/Adapter/Presenter/Order/OrderPresenter.php:191</note>
+File: src/Adapter/Order/OrderPresenter.php:191</note>
       </trans-unit>
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
         <target>Tax</target>
         <note>Context:
-File: src/Adapter/Presenter/Order/OrderPresenter.php:207</note>
+File: src/Adapter/Order/OrderPresenter.php:207</note>
       </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
         <note>Context:
-File: src/Adapter/Presenter/Order/OrderPresenter.php:238</note>
+File: src/Adapter/Order/OrderPresenter.php:238</note>
       </trans-unit>
     </body>
   </file>

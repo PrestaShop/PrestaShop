@@ -26,6 +26,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Filter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 
 /**
  * This class filters associative arrays.
@@ -152,16 +153,26 @@ class HashMapWhitelistFilter implements FilterInterface
      * @param array $subject
      *
      * @return array The filtered subject
+     * @throws \RuntimeException
      */
     public function filter($subject)
     {
         // keep whitelisted items
-        $subject = array_intersect_key($subject, $this->whitelistItems);
-
-        // run nested filters
-        foreach ($this->filters as $key => $filter) {
-            if (array_key_exists($key, $subject)) {
-                $subject[$key] = $filter->filter($subject[$key]);
+        if ($subject instanceof AbstractLazyArray) {
+            $subject->intersectKey($this->whitelistItems);
+            // run nested filters
+            foreach ($this->filters as $key => $filter) {
+                if ($subject->offsetExists($key)) {
+                    $subject->addFilter($key, $filter);
+                }
+            }
+        } else {
+            $subject = array_intersect_key($subject, $this->whitelistItems);
+            // run nested filters
+            foreach ($this->filters as $key => $filter) {
+                if (array_key_exists($key, $subject)) {
+                    $subject[$key] = $filter->filter($subject[$key]);
+                }
             }
         }
 

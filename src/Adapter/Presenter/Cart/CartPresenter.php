@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductCartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -134,7 +134,7 @@ class CartPresenter implements PresenterInterface
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
-        $presenter = new ProductCartPresenter(
+        $presenter = new ProductListingPresenter(
             $this->imageRetriever,
             $this->link,
             $this->priceFormatter,
