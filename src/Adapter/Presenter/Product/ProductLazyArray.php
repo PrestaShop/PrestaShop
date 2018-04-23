@@ -27,6 +27,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+
+use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -518,9 +521,16 @@ class ProductLazyArray extends AbstractLazyArray
         if ($product['specific_prices']) {
             $this->product['has_discount'] = (0 != $product['reduction']);
             $this->product['discount_type'] = $product['specific_prices']['reduction_type'];
-            // TODO: format according to locale preferences
-            $this->product['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
-            $this->product['discount_percentage_absolute'] = round(100 * $product['specific_prices']['reduction']).'%';
+
+            $absoluteReduction     = new Number($product['specific_prices']['reduction']);
+            $absoluteReduction     = $absoluteReduction->times(new Number('100'));
+            $negativeReduction     = $absoluteReduction->toNegative();
+            $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
+            $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
+
+            // TODO: add percent sign according to locale preferences
+            $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
+            $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             // TODO: Fix issue with tax calculation
             $this->product['discount_amount'] = $this->priceFormatter->format(
                 $product['reduction']
@@ -568,8 +578,10 @@ class ProductLazyArray extends AbstractLazyArray
 
         $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
 
-        if ($settings->stock_management_enabled && !$product['allow_oosp'] && isset($product['quantity_wanted']) &&
-            ($product['quantity'] <= 0 || $product['quantity'] < $product['quantity_wanted'])) {
+        if ($settings->stock_management_enabled
+            && !$product['allow_oosp']
+            && $product['quantity'] <= 0
+        ) {
             $shouldEnable = false;
         }
 
@@ -603,7 +615,6 @@ class ProductLazyArray extends AbstractLazyArray
      * @param ProductPresentationSettings $settings
      * @param array $product
      * @param Language $language
-     * @return array
      */
     public function addQuantityInformation(
         ProductPresentationSettings $settings,
@@ -611,38 +622,39 @@ class ProductLazyArray extends AbstractLazyArray
         Language $language
     ) {
         $show_price = $this->shouldShowPrice($settings, $product);
-
         $show_availability = $show_price && $settings->stock_management_enabled;
-
         $this->product['show_availability'] = $show_availability;
+        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', 1);
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;
         }
 
         if ($show_availability) {
-            if ($product['quantity'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] > 0) {
                 $this->product['availability_date'] = $product['available_date'];
+
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $this->applyLastItemsInStockDisplayRule();
                 } else {
-                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity'] && !$product['allow_oosp']) {
-                        $this->product['availability_message'] = $this->translator->trans(
-                            'There are not enough products in stock',
-                            array(),
-                            'Shop.Notifications.Error'
-                        );
-                        $this->product['availability'] = 'unavailable';
-                    } else {
-                        $this->product['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
-                        $this->product['availability'] = 'available';
-                    }
+                    $this->product['availability_message'] = $product['available_now'] ? $product['available_now']
+                        : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
+                    $this->product['availability'] = 'available';
                 }
             } elseif ($product['allow_oosp']) {
-                $this->product['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
+                $this->product['availability_message'] = $product['available_later'] ? $product['available_later']
+                    : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity_all_versions']) {
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] >= 0) {
+                $this->product['availability_message'] = $this->translator->trans(
+                    'There are not enough products in stock',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
+                $this->product['availability'] = 'unavailable';
+                $this->product['availability_date'] = null;
+            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),
@@ -651,7 +663,8 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'unavailable';
             } else {
-                $this->product['availability_message'] = Configuration::get('PS_LABEL_OOS_PRODUCTS_BOD', $language->id);
+                $this->product['availability_message'] =
+                    Configuration::get('PS_LABEL_OOS_PRODUCTS_BOD', $language->id);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'unavailable';
             }
