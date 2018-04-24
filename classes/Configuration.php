@@ -366,10 +366,10 @@ class ConfigurationCore extends ObjectModel
         }
 
         if ($idShop === null) {
-            $idShop = (int)Shop::getContextShopID(true);
+            $idShop = (int) Shop::getContextShopID(true);
         }
         if ($idShopGroup === null) {
-            $idShopGroup = (int)Shop::getContextShopGroupID(true);
+            $idShopGroup = (int) Shop::getContextShopGroupID(true);
         }
 
         if (!is_array($values)) {
