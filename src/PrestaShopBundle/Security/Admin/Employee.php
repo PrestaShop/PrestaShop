@@ -35,17 +35,25 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 class Employee implements UserInterface, EquatableInterface
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $username;
+
     /**
      * @var string
      */
     private $password;
+
     /**
      * @var string
      */
     private $salt;
+
     /**
      * @var array
      */
@@ -64,6 +72,7 @@ class Employee implements UserInterface, EquatableInterface
         $this->password = $data->passwd;
         $this->salt = '';
         $this->data = $data;
+        $this->id = (int) $data->id;
     }
 
     public function __toString()
@@ -109,6 +118,16 @@ class Employee implements UserInterface, EquatableInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Get the id of the current employee
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
