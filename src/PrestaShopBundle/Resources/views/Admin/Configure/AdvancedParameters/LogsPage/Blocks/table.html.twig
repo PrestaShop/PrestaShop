@@ -24,6 +24,7 @@
  *#}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% set request = app.request %}
 
 {{ form_start(searchParametersForm, {'method': 'POST', 'action': path('admin_search_logs') }) }}
 <table class="table">
@@ -68,6 +69,23 @@
         <button type="submit" class="btn btn-primary">
           <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Action') }}
         </button>
+        {% if should_reset %}
+        <button
+            type="reset"
+            class="btn btn-link reset-search"
+            name="reset_filters"
+            data-url="{{ path('admin_common_reset_search', {
+                'route': request.attributes.get('_route'),
+                'controller': getController(),
+                'action': getAction()
+            }) }}"
+            data-redirect="{{ path('admin_logs') }}"
+            title="{{ "Reset"|trans({}, 'Admin.Actions') }}"
+        >
+          <i class="material-icons">clear</i>
+            {{ "Reset"|trans({}, 'Admin.Actions') }}
+        </button>
+        {% endif %}
       </th>
     </tr>
   </thead>
@@ -98,10 +116,9 @@
 {% if logsSum >= 10 %}
   <div class="row">
     <div class="col-md-12">
-      {% set request = app.request %}
-      {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
-      {'limit': request.get('limit', 10), 'offset': request.get('offset', 0), 'total': logsSum, 'caller_route': request.attributes.get('_route') }))
-      }}
+        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
+          {'limit': request.get('limit', 10), 'offset': request.get('offset', 0), 'total': logsSum, 'caller_route': request.attributes.get('_route') }))
+        }}
     </div>
   </div>
 {% endif %}

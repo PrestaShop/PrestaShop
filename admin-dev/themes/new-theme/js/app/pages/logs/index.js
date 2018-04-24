@@ -26,6 +26,7 @@
 import TableSorting from '../../utils/table-sorting';
 import initDatePickers from '../../utils/datepicker';
 import SqlManager from '../../utils/sql-manager';
+import resetSearch from '../../utils/reset_search';
 
 const $ = global.$;
 
@@ -89,5 +90,13 @@ class LogsPage {
 }
 
 $(() => {
+  // arrow function is incompatible with availability of $(this).
+  $('.reset-search').on('click', function () {
+      let url = $(this).data('url');
+      let redirectUrl = $(this).data('redirect');
+      resetSearch(url, redirectUrl);
+
+      $(this).closest('form').trigger("reset");
+  });
   new LogsPage().init();
 });

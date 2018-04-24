@@ -239,6 +239,12 @@ services:
         tags:
             - { name: twig.extension }
 
+    prestashop.twig.extension.search_filters:
+        class: PrestaShopBundle\Twig\SearchFiltersExtension
+        arguments: ['@request_stack']
+        tags:
+            - { name: twig.extension }
+
     prestashop.twig.extension.data_formatter:
         class: PrestaShopBundle\Twig\DataFormatterExtension
         tags:
@@ -311,6 +317,12 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+
+    prestashop.core.admin.admin_filter.repository:
+        class: PrestaShopBundle\Entity\Repository\AdminFilterRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\AdminFilter
     # Api
     prestashop.core.api.query_params_collection:
         abstract: true
