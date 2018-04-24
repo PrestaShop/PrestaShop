@@ -2545,7 +2545,15 @@ class OrderCore extends ObjectModel
 
         // add real order products
         foreach ($this->getProducts() as $product) {
-            $new_cart->updateQty($product['product_quantity'], (int) $product['product_id']);
+            $new_cart->updateQty($product['product_quantity'], (int) $product['product_id'],
+            null, //pass default values
+            false, 
+            'up', 
+            0, 
+            null, 
+            true,
+            false,
+            'yes' ); //marker we made changes in BO
         }
 
         // get new shipping cost
