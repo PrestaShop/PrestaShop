@@ -23,8 +23,12 @@ php:
   - 7.2
 
 env:
-    global:
-        - SYMFONY_DEPRECATIONS_HELPER=disabled
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER=disabled
+  matrix:
+    - PRESTASHOP_TEST_TYPE=lint
+    - PRESTASHOP_TEST_TYPE=unit
+    - PRESTASHOP_TEST_TYPE=e2e
 
 matrix:
   include:
@@ -45,18 +49,26 @@ notifications:
 
 script:
   - composer install --prefer-dist --no-interaction --no-progress
-  - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
-  - php bin/console lint:twig src
-  - php bin/console lint:twig app
-  - composer run-script phpunit-legacy --timeout=0
-  - composer run-script phpunit-admin --timeout=0
-  - composer run-script phpunit-sf --timeout=0
-  - composer run-script phpunit-controllers --timeout=0
-  - bash travis-scripts/install-prestashop
-  - bash ./travis-scripts/run-selenium-tests
-  - bash ./travis-scripts/run-functional-tests # Must run before starter theme
-  - bash ./travis-scripts/test-startertheme
+  - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
+        bash tests/check_file_syntax.sh;
+        php bin/console lint:twig src;
+        php bin/console lint:twig app;
+    fi
+
+  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
+        composer run-script phpunit-legacy --timeout=0;
+        composer run-script phpunit-admin --timeout=0;
+        composer run-script phpunit-sf --timeout=0;
+        composer run-script phpunit-controllers --timeout=0;
+    fi
+
+  # run-functional-tests must run before starter theme
+  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
+        bash/travis-scripts/run-selenium-tests;
+        bash/travis-scripts/run-functional-tests;
+        bash/travis-scripts/test-startertheme;
+    fi
 
 after_script:
   - sudo cat /var/log/apache2/error.log
