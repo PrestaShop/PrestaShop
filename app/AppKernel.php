@@ -63,15 +63,6 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
         }
 
-        /**
-         * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
-         */
-        if (extension_loaded('apc')) {
-            $_SERVER['CACHE_DRIVER'] = 'apc';
-        } else {
-            $_SERVER['CACHE_DRIVER'] = 'array';
-        }
-
         /* Will not work until PrestaShop is installed */
         if ($this->parametersFileExists()) {
             try {
