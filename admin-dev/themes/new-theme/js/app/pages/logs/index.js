@@ -26,6 +26,7 @@
 import TableSorting from '../../utils/table-sorting';
 import initDatePickers from '../../utils/datepicker';
 import SqlManager from '../../utils/sql-manager';
+import resetSearch from '../../utils/reset_search';
 
 const $ = global.$;
 
@@ -89,5 +90,6 @@ class LogsPage {
 }
 
 $(() => {
+  global.resetSearch = resetSearch;
   new LogsPage().init();
 });
