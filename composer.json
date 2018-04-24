@@ -108,10 +108,11 @@
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "~5.7",
-        "symfony/phpunit-bridge": "^3.0",
+        "friendsofphp/php-cs-fixer": "^1.10",
+        "johnkary/phpunit-speedtrap": "^1.1",
         "phake/phake": "@stable",
-        "friendsofphp/php-cs-fixer": "^1.10"
+        "phpunit/phpunit": "~5.7",
+        "symfony/phpunit-bridge": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {
