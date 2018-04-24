@@ -677,6 +677,8 @@ var AdminModuleController = function() {
             <span class="notification-counter">'+badge.count+'</span>\
           </div>\
         ');
+    }).fail(function() {
+        console.error('Could not retrieve module notifications count.');
     });
   };
 
