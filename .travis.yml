@@ -33,7 +33,7 @@ env:
 matrix:
   include:
     - php: 7.1
-      env: EXTRA_TESTS=functional
+      env: EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=e2e
 
 before_install:
   # Apache & php-fpm configuration
