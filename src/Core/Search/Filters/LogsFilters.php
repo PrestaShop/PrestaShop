@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,18 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Repository;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-/**
- * Define the contract to access entities.
- *
- * A repository should only contains methods for querying the data.
- */
-interface RepositoryInterface
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+final class LogsFilters extends Filters
 {
     /**
-     * Returns the complete list of items.
-     * @return array
+     * {@inheritdoc}
      */
-    public function findAll();
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_log',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,41 +19,89 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Search;
 
+use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Retrieve filters parameters if any from the User request.
+ *
  * @param array $defaultValues if a filter is not found, set the default value
  */
 final class SearchParameters
 {
-    private $filterTypes = array(
+    const FILTER_TYPES = array(
         'limit',
         'offset',
         'orderBy',
         'sortOrder',
-        'filters'
+        'filters',
     );
 
     /**
-     * @param Request $request
-     * @param array $defaultValues
-     * @return array
+     * @var AdminFilterRepository
      */
-    public function getFiltersFromRequest(Request $request, array $defaultValues)
-    {
-        $filters = array();
+    private $adminFilterRepository;
 
-        foreach ($this->filterTypes as $type) {
+    public function __construct(AdminFilterRepository $adminFilterRepository)
+    {
+        $this->adminFilterRepository = $adminFilterRepository;
+    }
+
+    /**
+     * Retrieve list of filters from User Request.
+     *
+     * @param Request $request
+     * @param string  $filterClass the filter class
+     *
+     * @return Filters A collection of filters
+     */
+    public function getFiltersFromRequest(Request $request, $filterClass)
+    {
+        $filters = [];
+        $defaultValues = $filterClass::getDefaults();
+
+        foreach (self::FILTER_TYPES as $type) {
             $filters[$type] = $request->get($type, $defaultValues[$type]);
         }
 
-        return $filters;
+        return new $filterClass($filters);
+    }
+
+    /**
+     * Retrieve list of filters from User searches.
+     *
+     * @param int     $employeeId
+     * @param int     $shopId
+     * @param string  $filterClass the filter class
+     * @param string  $controller the controller name
+     * @param string  $action the action name
+     *
+     * @return Filters A collection of filters
+     */
+    public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
+    {
+        $adminFilter = $this->adminFilterRepository
+            ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
+        ;
+
+        $filterFromDb = is_null($adminFilter) ? '{}' : $adminFilter->getFilter();
+        $savedFilters = json_decode($filterFromDb, true);
+
+        $filters = [];
+
+        $defaultValues = $filterClass::getDefaults();
+
+        foreach (self::FILTER_TYPES as $type) {
+            $filters[$type] = isset($savedFilters[$type]) ? $savedFilters[$type] : $defaultValues[$type];
+        }
+
+        return new $filterClass($filters);
     }
 }
