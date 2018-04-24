@@ -228,4 +228,21 @@ class CommonController extends FrameworkBundleAdminController
             'kpiRow' => $presenter->present($kpiRow),
         ]);
     }
+
+    /**
+     * @param string $route
+     * @param string $controller
+     * @param string $action
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \LogicException
+     */
+    public function resetSearchAction($route, $controller, $action)
+    {
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
+
+        $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+
+        return $this->redirectToRoute($route);
+    }
 }

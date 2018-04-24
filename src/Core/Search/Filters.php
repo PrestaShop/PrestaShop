@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,18 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Repository;
+namespace PrestaShop\PrestaShop\Core\Search;
+
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Define the contract to access entities.
- *
- * A repository should only contains methods for querying the data.
+ * This class is responsible of managing filters of Listing pages.
  */
-interface RepositoryInterface
+abstract class Filters extends ParameterBag
 {
+    public function __construct(array $filters = [])
+    {
+        parent::__construct($filters);
+    }
+
     /**
-     * Returns the complete list of items.
-     * @return array
+     * @return array Define the default filters configuration
      */
-    public function findAll();
+    abstract public static function getDefaults();
 }
