@@ -52,8 +52,6 @@ script:
   - bash travis-scripts/install-prestashop
   - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
         bash tests/check_file_syntax.sh;
-        php bin/console lint:twig src;
-        php bin/console lint:twig app;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
@@ -65,9 +63,9 @@ script:
 
   # run-functional-tests must run before starter theme
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash/travis-scripts/run-selenium-tests;
-        bash/travis-scripts/run-functional-tests;
-        bash/travis-scripts/test-startertheme;
+        bash travis-scripts/run-selenium-tests;
+        bash travis-scripts/run-functional-tests;
+        bash travis-scripts/test-startertheme;
     fi
 
 after_script:
