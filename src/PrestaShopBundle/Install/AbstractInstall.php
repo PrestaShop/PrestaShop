@@ -54,7 +54,7 @@ abstract class AbstractInstall
             $errors = array($errors);
         }
 
-        $this->errors[] = $errors;
+        $this->errors = array_merge($this->errors, $errors);
     }
 
     public function getErrors()
