@@ -227,10 +227,12 @@ abstract class ControllerCore
             );
         }
 
-        if (!headers_sent()
-            && isset($_SERVER['HTTP_USER_AGENT'])
-            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
-            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
+        if (
+            !headers_sent() &&
+            isset($_SERVER['HTTP_USER_AGENT']) &&
+            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
+            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+        ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
     }
