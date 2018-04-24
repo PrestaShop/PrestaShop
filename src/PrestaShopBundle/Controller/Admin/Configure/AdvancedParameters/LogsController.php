@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
+
+use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -51,13 +52,13 @@ class LogsController extends FrameworkBundleAdminController
      * @param \Symfony\Component\HttpFoundation\Request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(LogsFilters $filters)
     {
-        // temporary search criteria class, to be removed
-        $searchCriteria = new TemporarySearchCriteria($request);
+        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $filters->get('filters'));
+        $logsByEmailForm = $this->getFormHandler()->getForm();
 
         $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
-        $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
+        $grid = $gridLogFactory->createUsingSearchCriteria($searchParametersForm);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);

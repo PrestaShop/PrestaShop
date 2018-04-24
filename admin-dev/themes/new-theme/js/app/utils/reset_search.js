@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,18 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Repository;
-
 /**
- * Define the contract to access entities.
- *
- * A repository should only contains methods for querying the data.
+ * Send a Post Request.
  */
-interface RepositoryInterface
-{
-    /**
-     * Returns the complete list of items.
-     * @return array
-     */
-    public function findAll();
-}
+const init = function resetSearch(url, redirectUrl) {
+    let request = new XMLHttpRequest();
+    request.open('POST', url, true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    request.send([]);
+
+    window.history.replaceState({}, document.title, redirectUrl);
+};
+
+export default init;
