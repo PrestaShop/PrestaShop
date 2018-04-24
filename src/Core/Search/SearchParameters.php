@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Search;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Retrieve filters parameters if any from the User request.
@@ -42,6 +43,8 @@ final class SearchParameters
     );
 
     /**
+     * Retrieve list of filters from User Request.
+     *
      * @param Request $request
      * @param array $defaultValues
      * @return array
@@ -55,5 +58,16 @@ final class SearchParameters
         }
 
         return $filters;
+    }
+
+    /**
+     * Retrieve list of filters from User searches.
+     *
+     * @param UserInterface $user The Logged user.
+     * @param string $route The route name.
+     */
+    public function getFiltersByUserAndRoute(UserInterface $user, $route)
+    {
+
     }
 }
