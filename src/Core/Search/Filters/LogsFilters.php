@@ -23,19 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-namespace PrestaShop\PrestaShop\Core\Repository;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-/**
- * Define the contract to access entities.
- *
- * A repository should only contains methods for querying the data.
- */
-interface RepositoryInterface
+final class LogsFilters extends Filters
 {
     /**
-     * Returns the complete list of items.
-     * @return array
+     * {@inheritdoc}
      */
-    public function findAll();
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_log',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
 }

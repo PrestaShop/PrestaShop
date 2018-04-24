@@ -23,19 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Search;
 
-namespace PrestaShop\PrestaShop\Core\Repository;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Define the contract to access entities.
- *
- * A repository should only contains methods for querying the data.
+ * This class is responsible of managing filters of Listing pages.
  */
-interface RepositoryInterface
+abstract class Filters extends ParameterBag
 {
+    public function __construct(array $filters = [])
+    {
+        parent::__construct($filters);
+    }
+
     /**
-     * Returns the complete list of items.
-     * @return array
+     * @return array Define the default filters configuration.
      */
-    public function findAll();
+    abstract public static function getDefaults();
 }

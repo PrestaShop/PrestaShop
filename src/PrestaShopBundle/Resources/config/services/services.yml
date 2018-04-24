@@ -25,6 +25,7 @@ services:
         factory: ["@prestashop.core.admin.url_generator_factory", forSymfony]
     prestashop.core.admin.search_parameters:
         class: PrestaShop\PrestaShop\Core\Search\SearchParameters
+        arguments: ['@prestashop.core.admin.admin_filter.repository']
 
     # Interfaced services to decorate
     prestashop.core.admin.data_provider.product_interface:
@@ -308,3 +309,13 @@ services:
         arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
         tags:
           - { name: twig.loader, priority: 1}
+
+    # Controller Argument Resolver
+    prestashop.search_parameters.resolver:
+        class: 'PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver'
+        arguments:
+          - '@prestashop.core.admin.search_parameters'
+          - '@security.token_storage'
+          - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+        tags:
+          - { name: controller.argument_value_resolver, priority: 50 }

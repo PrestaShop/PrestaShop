@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -45,37 +46,31 @@ class LogsController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request
+     * @param Request $request
+     * @param LogsFilters $filters
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, LogsFilters $filters)
     {
         $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
         $logsByEmailForm = $this->getFormHandler()->getForm();
 
-        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_log',
-            'sortOrder' => 'desc',
-            'filters' => array()
-        ));
-
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'orderBy' => $filters['orderBy'],
-            'sortOrder' => $filters['sortOrder'],
+            'orderBy' => $filters->get('orderBy'),
+            'sortOrder' => $filters->get('sortOrder'),
             'help_link' => $this->generateSidebarLink('AdminLogs'),
+            'should_reset' => !empty($filters),
             'logsByEmailForm' => $logsByEmailForm->createView(),
             'searchParametersForm' => $searchParametersForm->createView(),
             'logsSum' => count($this->getLogRepository()->findAll()),
-            'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
-            'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
+            'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters->all()),
+            'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters->all()),
             'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
                 'AdminRequestSql',
                 true,

@@ -311,6 +311,12 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+
+    prestashop.core.admin.admin_filter.repository:
+        class: PrestaShopBundle\Entity\Repository\AdminFilterRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\AdminFilter
     # Api
     prestashop.core.api.query_params_collection:
         abstract: true

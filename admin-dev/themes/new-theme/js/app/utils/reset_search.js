@@ -1,6 +1,5 @@
-<?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,23 +18,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Repository;
+import init from "./datepicker";
 
 /**
- * Define the contract to access entities.
- *
- * A repository should only contains methods for querying the data.
+ * Send a Post Request.
  */
-interface RepositoryInterface
-{
-    /**
-     * Returns the complete list of items.
-     * @return array
-     */
-    public function findAll();
-}
+const resetSearch = function resetSearch(url) {
+    let request = new XMLHttpRequest();
+    request.open('POST', url, true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    request.send([]);
+};
+
+export default resetSearch;

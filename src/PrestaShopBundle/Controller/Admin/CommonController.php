@@ -205,4 +205,21 @@ class CommonController extends FrameworkBundleAdminController
             'url' => urldecode($url),
         ]);
     }
+
+    /**
+     * @param string $controller The controller name.
+     * @param string $route The route name for redirection.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \LogicException
+     */
+    public function resetSearchAction($controller, $route)
+    {
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
+        list($controller, $action) = explode('::', $controller);
+        $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+
+        return $this->redirectToRoute($route);
+    }
 }
