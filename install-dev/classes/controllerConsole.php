@@ -64,6 +64,11 @@ abstract class InstallControllerConsole
     protected $model_install;
 
     /**
+     * @var \PrestaShopBundle\Install\Database
+     */
+    protected $model_database;
+
+    /**
      * Validate current step.
      */
     abstract public function validate();
@@ -140,7 +145,10 @@ abstract class InstallControllerConsole
 
     public function printErrors()
     {
-        $errors = $this->model_install->getErrors();
+        $errors = array_merge(
+            $this->model_database->getErrors(),
+            $this->model_install->getErrors()
+        );
         if (count($errors)) {
             if (!is_array($errors)) {
                 $errors = array($errors);

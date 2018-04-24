@@ -673,7 +673,7 @@ class ReleaseCreator
             $zip->addGlob(
                 "{$this->projectPath}/tools/build/doc/*",
                 0,
-                array('add_path' => './', 'remove_all_path' => true)
+                array('remove_all_path' => true)
             );
 
             $zip->close();
