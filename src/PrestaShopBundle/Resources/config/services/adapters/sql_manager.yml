@@ -12,3 +12,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlValidator'
         arguments:
             - '@translator'
+
+    prestashop.adapter.sql_manager.request_sql_exporter:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlExporter'
+        arguments:
+            - '@prestashop.adapter.sql_manager.request_sql_data_provider'
