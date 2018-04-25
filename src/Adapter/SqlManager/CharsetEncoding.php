@@ -24,29 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
+namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-use PrestaShop\PrestaShop\Adapter\SqlManager\CharsetEncoding;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class SqlManagerSettingsType extends AbstractType
+/**
+ * Class CharsetEncoding defnies file chartset encoding constatns used in SQL Manager
+ */
+class CharsetEncoding
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('default_file_encoding', ChoiceType::class, [
-                'choices' => [
-                    CharsetEncoding::UTF_8 => 1,
-                    CharsetEncoding::ISO_8859_1 => 2,
-                ],
-            ])
-        ;
-    }
+    const UTF_8 = 'utf-8';
+    const ISO_8859_1 = 'iso-8859-1';
 
-    public function getBlockPrefix()
+    private function __construct()
     {
-        return 'request_sql_settings_block';
     }
 }
