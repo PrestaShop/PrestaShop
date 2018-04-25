@@ -222,6 +222,34 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
+     * View Request SQL query data
+     *
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/view.html.twig")
+     *
+     * @param Request $request
+     * @param int $id
+     *
+     * @return array|RedirectResponse
+     */
+    public function viewAction(Request $request, $id)
+    {
+        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+        $result = $requestSqlDataProvider->getRequestSqlResult($id);
+
+        if (null === $result) {
+            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
+
+        $params = [
+            'requestSqlView' => $result,
+        ];
+
+        return $this->getTemplateParams($request, false) + $params;
+    }
+
+    /**
      * Get table columns data
      *
      * @param string $table     Database tabe name
