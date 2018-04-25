@@ -164,7 +164,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
             return $result;
         }
 
-        return null;
+        return array();
     }
 
     /**
