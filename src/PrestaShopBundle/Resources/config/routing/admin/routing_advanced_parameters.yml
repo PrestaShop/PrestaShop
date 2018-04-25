@@ -188,3 +188,12 @@ admin_sql_manager_table_columns:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:tableColumns'
         _legacy_controller: AdminRequestSql
+
+admin_sql_manager_view:
+    path: /sql_manager/view/{id}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:view'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        id: \d+

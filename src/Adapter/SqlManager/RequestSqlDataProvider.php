@@ -26,6 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
+use Db;
+use RequestSql;
+use Validate;
+
+/**
+ * Class RequestSqlDataProvider is responsible for providing data related to Request SQL model
+ */
 class RequestSqlDataProvider
 {
     /**
@@ -37,7 +44,7 @@ class RequestSqlDataProvider
      */
     public function getRequestSql($id)
     {
-        if (!\Validate::isLoadedObject($requestSql = new \RequestSql($id))) {
+        if (!Validate::isLoadedObject($requestSql = new RequestSql($id))) {
             return [];
         }
 
@@ -55,7 +62,7 @@ class RequestSqlDataProvider
      */
     public function getTables()
     {
-        $tables = (new \RequestSql())->getTables();
+        $tables = (new RequestSql())->getTables();
 
         return $tables;
     }
@@ -69,8 +76,38 @@ class RequestSqlDataProvider
      */
     public function getTableColumns($table)
     {
-        $columns = (new \RequestSql())->getAttributesByTable($table);
+        $columns = (new RequestSql())->getAttributesByTable($table);
 
         return $columns;
+    }
+
+    /**
+     * Get Request SQL data
+     *
+     * @param int $id       ID of Request SQL
+     *
+     * @return array|null   Array of Request SQL results or NULL if Request SQL model does not exist
+     */
+    public function getRequestSqlResult($id)
+    {
+        $result = [];
+
+        $requestSql = $this->getRequestSql($id);
+        if (empty($requestSql)) {
+            return null;
+        }
+
+        $columns = [];
+        $rows = Db::getInstance()->executeS($requestSql['sql']);
+        if (!empty($rows)) {
+            $columns = array_keys(reset($rows));
+        }
+
+        $result['request_sql'] = $requestSql;
+        $result['rows'] = $rows;
+        $result['columns'] = $columns;
+        $result['attributes'] = (new RequestSql())->attributes;
+
+        return $result;
     }
 }
