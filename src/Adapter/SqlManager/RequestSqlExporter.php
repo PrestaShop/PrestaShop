@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-use PrestaShopBundle\Component\CsvResponse;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Class RequestSqlExporter exports given Request SQL data
@@ -38,9 +41,24 @@ class RequestSqlExporter
      */
     private $dataProvider;
 
-    public function __construct(RequestSqlDataProvider $dataProvider)
-    {
+    /**
+     * @var ExportDirectory
+     */
+    private $exportDirectory;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    public function __construct(
+        RequestSqlDataProvider $dataProvider,
+        ExportDirectory $exportDirectory,
+        ConfigurationInterface $configuration
+    ) {
         $this->dataProvider = $dataProvider;
+        $this->exportDirectory = $exportDirectory;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -48,7 +66,7 @@ class RequestSqlExporter
      *
      * @param int $id
      *
-     * @return CsvResponse|null
+     * @return BinaryFileResponse|null
      */
     public function export($id)
     {
@@ -57,15 +75,30 @@ class RequestSqlExporter
             return null;
         }
 
-        $headers = [];
-        foreach ($data['columns'] as $columnName) {
-            $headers[$columnName] = $columnName;
+        $fileName = sprintf('request_sql_%s.csv', $id);
+        if ($csv = fopen($this->exportDirectory.$fileName, 'w')) {
+            $headers = [];
+            foreach ($data['columns'] as $headerName) {
+                $headers[] = $headerName;
+            }
+
+            fputcsv($csv, $headers, ';');
+
+            foreach ($data['rows'] as $row) {
+                fputcsv($csv, $row, ';');
+            }
+
+            if (file_exists($this->exportDirectory.$fileName)) {
+                $charset = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL') ?: CharsetEncoding::UTF_8;
+
+                $response = new BinaryFileResponse($this->exportDirectory.$fileName);
+                $response->setCharset($charset);
+                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+                return $response;
+            }
         }
 
-        $csvResponse = new CsvResponse();
-        $csvResponse->setHeadersData($headers);
-        $csvResponse->setData($data['rows']);
-
-        return $csvResponse;
+        //@todo: maybe exception here would be nice
     }
 }
