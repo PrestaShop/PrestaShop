@@ -17,3 +17,5 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlExporter'
         arguments:
             - '@prestashop.adapter.sql_manager.request_sql_data_provider'
+            - '@prestashop.core.export.dir'
+            - '@prestashop.adapter.legacy.configuration'
