@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.grid.view_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridViewFactory'
+
+    prestashop.core.grid.factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridFactory'
+        arguments:
+            - '@prestashop.hook.dispatcher'
+            - '@form.factory'
