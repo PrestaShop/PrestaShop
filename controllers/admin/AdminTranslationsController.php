@@ -2240,10 +2240,9 @@ class AdminTranslationsControllerCore extends AdminController
     public function getMailFiles($dir, $group_name = 'mail')
     {
         $arr_return = array();
-        if (Language::getIdByIso('en')) {
+        $default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+        if (!$default_language && Language::getIdByIso('en')) {
             $default_language = 'en';
-        } else {
-            $default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
         }
         if (!$default_language || !Validate::isLanguageIsoCode($default_language)) {
             return false;
