@@ -180,7 +180,8 @@ class CustomerFormatterCore implements FormFormatterInterface
         if ($this->ask_for_birthdate) {
             $format['birthday'] = (new FormField)
                 ->setName('birthday')
-                ->setType('text')
+                ->setType('date')
+                ->setRequired(true)
                 ->setLabel(
                     $this->translator->trans(
                         'Birthdate', [], 'Shop.Forms.Labels'
@@ -215,7 +216,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                 if (!is_array($additionnalFormFields)) {
                     continue;
                 }
-                
+
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
                     $format[$moduleName.'_'.$formField->getName()] = $formField;
