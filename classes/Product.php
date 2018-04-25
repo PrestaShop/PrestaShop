@@ -3585,7 +3585,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-    * Get available product quantities
+    * Get available product quantities (this method already have decreased products in cart)
     *
     * @param int $idProduct Product id
     * @param int $idProductAttribute Product attribute id (optional)
