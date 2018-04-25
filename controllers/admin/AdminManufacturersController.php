@@ -401,6 +401,8 @@ class AdminManufacturersControllerCore extends AdminController
             )
         );
 
+        $this->tpl_form_vars['displayBackOfficeManufacturer'] = Hook::exec('displayBackOfficeManufacturer');
+        
         if (!($manufacturer = $this->loadObject(true))) {
             return;
         }
