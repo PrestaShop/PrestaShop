@@ -116,3 +116,12 @@
 	{$smarty.block.parent}
 
 {/block}
+
+
+{block name="after"}
+	<script type="text/javascript">
+		// These variable will move the form to another location
+		var formToMove = "appearance";
+		var formDestination = "js_theme_form_container";
+	</script>
+{/block}
