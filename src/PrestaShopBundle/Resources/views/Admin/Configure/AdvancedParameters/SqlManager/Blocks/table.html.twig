@@ -68,7 +68,10 @@
                 <td>
                     <div class="btn-group-action">
                         <div class="btn-group">
-                            <a href="#" title="{{ 'Export'|trans({}, 'Admin.Actions') }}" class="btn tooltip-link product-edit">
+                            <a href="{{ path('admin_sql_manager_export', {'id': requestSql.id_request_sql }) }}"
+                               title="{{ 'Export'|trans({}, 'Admin.Actions') }}"
+                               class="btn tooltip-link product-edit"
+                            >
                                 <i class="material-icons">cloud_download</i>
                             </a>
                             <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
