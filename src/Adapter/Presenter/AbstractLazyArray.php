@@ -26,7 +26,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
 use Doctrine\Common\Util\Inflector;
-use PrestaShop\PrestaShop\Core\Filter\FilterInterface;
 
 /**
  * This class is useful to provide the same behaviour than an array, but which load the result of each key on demand
@@ -70,12 +69,6 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      * @var array
      */
     private $methodCacheResults = array();
-
-    /**
-     * Array of filter which should be apply to the matching key
-     * @var array
-     */
-    private $filters = array();
 
     /**
      * AbstractLazyArray constructor.
@@ -150,11 +143,6 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
                 $result = $this->methodCacheResults[$index];
             } else { // if the index is associated with a value, just return the value
                 $result = $this->arrayAccessList[$index]['value'];
-            }
-
-            if (!empty($result) && isset($this->filters[$index])) {
-                $filter = $this->filters[$index];
-                $result = $filter->filter($result);
             }
 
             return $result;
@@ -295,17 +283,6 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
                 ' already defined by a method is not allowed'
             );
         }
-    }
-
-    /**
-     * Add a filter to a given key
-     *
-     * @param string          $key
-     * @param FilterInterface $filter
-     */
-    public function addFilter($key, FilterInterface $filter)
-    {
-        $this->filters[$key] = $filter;
     }
 
     /**

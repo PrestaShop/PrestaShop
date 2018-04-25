@@ -163,7 +163,8 @@ class HashMapWhitelistFilter implements FilterInterface
             // run nested filters
             foreach ($this->filters as $key => $filter) {
                 if ($subject->offsetExists($key)) {
-                    $subject->addFilter($key, $filter);
+                    $filteredValue = $filter->filter($subject->offsetGet($key));
+                    $subject->offsetSet($key, $filteredValue, true);
                 }
             }
         } else {
