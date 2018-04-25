@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,27 +18,25 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2018 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class generates "General" form
+ * Class generates "Pagination" form
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class GeneralType extends TranslatorAwareType
+class PaginationType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -46,24 +44,28 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('catalog_mode', SwitchType::class)
-            ->add('new_days_number', IntegerType::class, [
-                'required' => false,
-            ])
-            ->add('short_description_limit', TextWithUnitType::class, [
-                'required' => false,
-                'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
-            ])
-            ->add('quantity_discount', ChoiceType::class, [
+            ->add('products_per_page', IntegerType::class)
+            ->add('default_order_by', ChoiceType::class, [
                 'choices' => [
-                    'Products' => 0,
-                    'Combinations' => 1,
+                    'Product name' => 0,
+                    'Product price' => 1,
+                    'Product add date' => 2,
+                    'Product modified date' => 3,
+                    'Position inside category' => 4,
+                    'Brand' => 5,
+                    'Product quantity' => 6,
+                    'Product reference' => 7,
                 ],
-                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
-            ->add('force_friendly_url', SwitchType::class)
-            ->add('default_status', SwitchType::class)
+            ->add('default_order_way', ChoiceType::class, [
+                'choices' => [
+                    'Ascending' => 0,
+                    'Descending' => 1,
+                ],
+                'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
+            ])
         ;
     }
 
@@ -82,6 +84,6 @@ class GeneralType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'product_preferences_general_block';
+        return 'product_preferences_pagination_block';
     }
 }

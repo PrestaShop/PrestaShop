@@ -23,17 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
-use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * This class manages the data manipulated using forms
- * in "Configure > Advanced Parameters > Administration" page.
+ * in "Configure > Shop Parameters > General" page.
  */
-final class FormHandler extends AbstractFormHandler
+final class PreferencesFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
@@ -41,14 +41,24 @@ final class FormHandler extends AbstractFormHandler
     private $formFactory;
 
     /**
-     * @var FormDataProviderInterface
+     * @var PreferencesFormDataProvider
      */
     private $formDataProvider;
 
-    public function __construct(FormFactoryInterface $formFactory, FormDataProviderInterface $formDataProvider)
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        PreferencesFormDataProvider $formDataProvider,
+        Configuration $configuration
+    )
     {
         $this->formFactory = $formFactory;
         $this->formDataProvider = $formDataProvider;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -56,16 +66,13 @@ final class FormHandler extends AbstractFormHandler
      */
     public function getForm()
     {
-        $formBuilder = $this->formFactory->createBuilder()
-            ->add('general', GeneralType::class)
-            ->add('upload_quota', UploadQuotaType::class)
-            ->add('notifications', NotificationsType::class)
+        return $this->formFactory->createBuilder()
+            ->add('general', PreferencesType::class, [
+                'is_ssl_enabled' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
+            ])
             ->setData($this->formDataProvider->getData())
+            ->getForm()
         ;
-
-        $this->hookDispatcher->dispatchForParameters('displayAdministrationPageForm', ['form_builder' => &$formBuilder]);
-
-        return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
     /**
@@ -73,10 +80,6 @@ final class FormHandler extends AbstractFormHandler
      */
     public function save(array $data)
     {
-        $errors = $this->formDataProvider->setData($data);
-
-        $this->hookDispatcher->dispatchForParameters('actionAdministrationPageFormSave', ['errors' => &$errors, 'form_data' => &$data]);
-
-        return $errors;
+        return $this->formDataProvider->setData($data);
     }
 }

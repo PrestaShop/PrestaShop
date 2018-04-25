@@ -3,3 +3,4 @@ imports:
     - { resource: form/form_extension.yml }
     - { resource: form/form_handler.yml }
     - { resource: form/form_data_provider.yml }
+    - { resource: form/form_builder.yml }

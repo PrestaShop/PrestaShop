@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;

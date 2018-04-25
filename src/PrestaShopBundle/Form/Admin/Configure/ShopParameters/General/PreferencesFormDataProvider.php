@@ -23,30 +23,43 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
+
+use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Enrich every form handlers to allow customization
- * of Symfony forms from PrestaShop modules.
+ * This class is responsible of managing the data manipulated using forms
+ * in "Configure > Shop Parameters > General" page.
  */
-class PopulateFormHandlersPass implements CompilerPassInterface
+final class PreferencesFormDataProvider implements FormDataProviderInterface
 {
-    const FORM_HANDLER = 'prestashop.form.handler';
+    /**
+     * @var PreferencesConfiguration
+     */
+    private $preferencesConfiguration;
+
+    public function __construct(PreferencesConfiguration $preferencesConfiguration)
+    {
+        $this->preferencesConfiguration = $preferencesConfiguration;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function getData()
     {
-        $formHandlers = $container->findTaggedServiceIds(self::FORM_HANDLER);
+        return array(
+            'general' => $this->preferencesConfiguration->getConfiguration(),
+        );
+    }
 
-        foreach (array_keys($formHandlers) as $serviceId) {
-            $formHandler = $container->findDefinition($serviceId);
-            $formHandler->addMethodCall('setHookDispatcher', array(new Reference('prestashop.hook.dispatcher')));
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->preferencesConfiguration->updateConfiguration($data['general']);
     }
 }

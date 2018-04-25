@@ -23,22 +23,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Complete implementation of FormDataProviderAwareInterface
+ * This class is responsible of managing the data manipulated using forms
+ * in "Configure > Shop Parameters > General > Maintenance" page.
  */
-abstract class AbstractFormHandler implements FormHandlerInterface
+final class MaintenanceFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var HookDispatcher
+     * @var MaintenanceConfiguration
      */
-    protected $hookDispatcher;
+    private $maintenanceConfiguration;
 
-    public function setHookDispatcher(HookDispatcher $hookDispatcher)
+    public function __construct(MaintenanceConfiguration $maintenanceConfiguration)
     {
-        $this->hookDispatcher = $hookDispatcher;
+        $this->maintenanceConfiguration = $maintenanceConfiguration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return array(
+            'general' => $this->maintenanceConfiguration->getConfiguration(),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->maintenanceConfiguration->updateConfiguration($data['general']);
     }
 }

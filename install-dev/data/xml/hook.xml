@@ -766,8 +766,8 @@
       <title>Perform actions after front office controller initialization</title>
       <description>This hook is launched after the initialization of all front office controllers</description>
     </hook>
-    <hook id="displayAdministrationPageForm">
-      <name>displayAdministrationPageForm</name>
+    <hook id="actionAdministrationPageForm">
+      <name>actionAdministrationPageForm</name>
       <title>Manage Administration Page form fields</title>
       <description>This hook adds, update or remove fields of the Administration Page form</description>
     </hook>
@@ -776,8 +776,8 @@
       <title>Processing Administration page form</title>
       <description>This hook is called when the Administration Page form is processed</description>
     </hook>
-    <hook id="displayPerformancePageForm">
-      <name>displayPerformancePageForm</name>
+    <hook id="actionPerformancePageForm">
+      <name>actionPerformancePageForm</name>
       <title>Manage Performance Page form fields</title>
       <description>This hook adds, update or remove fields of the Performance Page form</description>
     </hook>
@@ -786,8 +786,8 @@
       <title>Processing Performance page form</title>
       <description>This hook is called when the Performance Page form is processed</description>
     </hook>
-    <hook id="displayMaintenancePageForm">
-      <name>displayMaintenancePageForm</name>
+    <hook id="actionMaintenancePageForm">
+      <name>actionMaintenancePageForm</name>
       <title>Manage Maintenance Page form fields</title>
       <description>This hook adds, update or remove fields of the Maintenance Page form</description>
     </hook>

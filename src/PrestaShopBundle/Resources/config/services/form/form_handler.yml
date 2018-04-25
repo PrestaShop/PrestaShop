@@ -2,61 +2,96 @@ services:
     _defaults:
         public: true
 
-    _instanceof:
-        PrestaShop\PrestaShop\Core\Form\AbstractFormHandler:
-            tags: ['prestashop.form.handler']
-
-    prestashop.admin.customer_preferences.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.admin.customer_preferences.data_provider'
-            - '@translator'
-            - '@prestashop.hook.dispatcher'
-            - '@prestashop.core.admin.tab.repository'
-
-    prestashop.admin.product_preferences.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.admin.product_preferences.data_provider'
-            - '@prestashop.adapter.cache_clearer'
-            - '@translator'
-
     prestashop.adapter.performance.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.performance.form_provider'
-            - '@prestashop.adapter.combination_feature'
+            -
+              'smarty': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
+              'debug_mode': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
+              'optional_features': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
+              'ccc': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
+              'media_servers': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
+              'caching': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
+              'add_memcache_server': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+            - 'PerformancePage'
 
     prestashop.adapter.maintenance.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.maintenance.form_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
+            - 'MaintenancePage'
 
     prestashop.adapter.administration.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.administration.form_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType'
+              'upload_quota': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType'
+              'notifications': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType'
+            - 'AdministrationPage'
+
+    prestashop.admin.customer_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.customer_preferences.data_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
+            - 'CustomerPreferencesPage'
+
+    prestashop.admin.product_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.product_preferences.data_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
+              'pagination': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType'
+              'page': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType'
+              'stock': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType'
+            - 'ProductPreferencesPage'
+        calls:
+            - method: setCacheClearer
+              arguments:
+                  - '@prestashop.adapter.cache_clearer'
 
     prestashop.adapter.preferences.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.preferences.form_provider'
-            - '@prestashop.adapter.legacy.configuration'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
+            - 'GeneralPage'
 
     prestashop.adapter.logs.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.logs.form_provider'
+            -
+              'logs_by_email': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
+            - 'LogsPage'
 
     prestashop.admin.import.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@prestashop.admin.import.form_builder'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
+            - []
+            - 'ImportPage'

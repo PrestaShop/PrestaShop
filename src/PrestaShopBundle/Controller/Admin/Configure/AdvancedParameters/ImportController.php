@@ -48,7 +48,7 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/import.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import.html.twig")
      *
      * @return array|RedirectResponse|Response
      */
