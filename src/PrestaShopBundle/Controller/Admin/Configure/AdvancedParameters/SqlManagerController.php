@@ -163,8 +163,15 @@ class SqlManagerController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
         $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
+        $requestSql = $dataProvider->getRequestSql($id);
+        if (!$requestSql) {
+            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
+
         $form = $formHandler->getForm();
-        $form->setData(['request_sql' => $dataProvider->getRequestSql($id)]);
+        $form->setData(['request_sql' => $requestSql]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -213,8 +220,19 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_manager');
         }
 
+        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+        if (!$requestSql = $requestSqlDataProvider->getRequestSql($id)) {
+            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
+
         $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        $requestSqlManager->delete($id);
+        if (!$requestSqlManager->delete($id)) {
+            $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
 
         $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
