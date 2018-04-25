@@ -40,12 +40,12 @@ class RequestSqlDataProvider
      *
      * @param $id
      *
-     * @return array
+     * @return array|null
      */
     public function getRequestSql($id)
     {
         if (!Validate::isLoadedObject($requestSql = new RequestSql($id))) {
-            return [];
+            return null;
         }
 
         return [
@@ -90,10 +90,7 @@ class RequestSqlDataProvider
      */
     public function getRequestSqlResult($id)
     {
-        $result = [];
-
-        $requestSql = $this->getRequestSql($id);
-        if (empty($requestSql)) {
+        if (!$requestSql = $this->getRequestSql($id)) {
             return null;
         }
 
@@ -103,6 +100,7 @@ class RequestSqlDataProvider
             $columns = array_keys(reset($rows));
         }
 
+        $result = [];
         $result['request_sql'] = $requestSql;
         $result['rows'] = $rows;
         $result['columns'] = $columns;
