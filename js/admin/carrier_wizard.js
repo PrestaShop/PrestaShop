@@ -549,11 +549,7 @@ function disableZone(index)
 
 function enableRange(index)
 {
-	$('tr.fees').each(function () {
-		//only enable fees for enabled zones
-		if ($(this).find('td').find('input:checkbox').attr('checked') == 'checked')
-			enableZone(index);
-	});
+  enableZone(index);
 	$('tr.fees_all td:eq('+index+')').addClass('validated').removeClass('not_validated');
 
 	//if ($('.zone input[type=checkbox]:checked').length)
@@ -578,11 +574,7 @@ function disabledGlobalFees(index)
 
 function disableRange(index)
 {
-	$('tr.fees').each(function () {
-		//only enable fees for enabled zones
-		if ($(this).find('td').find('input:checkbox').attr('checked') == 'checked')
-			disableZone(index);
-	});
+  disableZone(index);
 	$('tr.fees_all td:eq('+index+')').find('div.input-group input').attr('disabled', 'disabled');
 	$('tr.fees_all td:eq('+index+')').removeClass('validated').addClass('not_validated');
 }
