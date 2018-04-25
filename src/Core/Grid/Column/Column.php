@@ -82,7 +82,7 @@ final class Column implements ColumnInterface
      *
      * @return $this
      */
-    public function setFormType($formType, array $options = [])
+    public function setFilterFormType($formType, array $options = [])
     {
         if (!in_array(FormTypeInterface::class, class_implements($formType))) {
             throw new \InvalidArgumentException(sprintf(

@@ -10,3 +10,16 @@ services:
         arguments:
             - '@prestashop.hook.dispatcher'
             - '@form.factory'
+
+    # Grid data providers
+    prestashop.core.grid.data_provider.log:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\LogGridDataProvider'
+        arguments:
+            - '@prestashop.core.admin.log.repository'
+            - '@prestashop.hook.dispatcher'
+
+    # Grid definition factories
+    prestashop.core.grid.factory.log_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition\LogGridDefinitionFactory'
+        arguments:
+            - '@translator'
