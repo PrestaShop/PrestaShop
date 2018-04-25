@@ -180,7 +180,9 @@ class CustomerFormatterCore implements FormFormatterInterface
         if ($this->ask_for_birthdate) {
             $format['birthday'] = (new FormField)
                 ->setName('birthday')
-                ->setType('date')                ->setLabel(
+                ->setType('date')
+
+                -setLabel(
                     $this->translator->trans(
                         'Birthdate', [], 'Shop.Forms.Labels'
                     )
