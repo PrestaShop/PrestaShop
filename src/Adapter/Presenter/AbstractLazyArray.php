@@ -53,7 +53,7 @@ use Doctrine\Common\Util\Inflector;
  * annotation @arrayAccess, the $product['url'] = 'foo'; will be ignored
  *
  */
-abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
+abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
     /**
      * @var \ArrayObject
@@ -90,6 +90,22 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
             }
         }
         $this->arrayAccessIterator = $this->arrayAccessList->getIterator();
+    }
+
+    /**
+     * Make the lazyArray serializable like an array
+     *
+     * @return array
+     * @throws \RuntimeException
+     */
+    public function jsonSerialize()
+    {
+        $arrayResult = array();
+        foreach ($this->arrayAccessList as $key => $value) {
+            $arrayResult[$key] = $this->offsetGet($key);
+        }
+
+        return $arrayResult;
     }
 
     /**
