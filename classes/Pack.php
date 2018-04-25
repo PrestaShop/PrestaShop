@@ -281,7 +281,7 @@ class PackCore extends Product
 
             foreach ($items as $index => $item) {
                 $itemQuantity = Product::getQuantity($item->id, null, null, $cart, $idCustomization);
-                $nbPackAvailableForItem = (int) ($itemQuantity / $item->pack_quantity);
+                $nbPackAvailableForItem = floor($itemQuantity / $item->pack_quantity);
 
                 // Initialize packQuantity with the first product quantity
                 // if pack decrement stock type is products only
