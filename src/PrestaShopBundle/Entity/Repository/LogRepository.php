@@ -92,7 +92,7 @@ class LogRepository implements RepositoryInterface
      * @param array $filters
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
-    private function getAllWithEmployeeInformationQuery($filters)
+    public function getAllWithEmployeeInformationQuery($filters)
     {
         $employeeTable = $this->databasePrefix.'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
