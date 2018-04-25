@@ -268,6 +268,31 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
+     * Export Request SQL data
+     *
+     * @param Request $request
+     * @param int $id
+     *
+     * @return RedirectResponse
+     */
+    public function exportAction(Request $request, $id)
+    {
+        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+        $result = $requestSqlDataProvider->getRequestSqlResult($id);
+
+        if (null === $result) {
+            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
+
+        $requestSqlExporter = $this->get('prestashop.adapter.sql_manager.request_sql_exporter');
+        $response = $requestSqlExporter->export($id);
+
+        return $response;
+    }
+
+    /**
      * Get table columns data
      *
      * @param string $table     Database tabe name
