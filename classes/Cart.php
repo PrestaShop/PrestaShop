@@ -3839,6 +3839,16 @@ class CartCore extends ObjectModel
                 || (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])) {
                 return $return_product ? $product : false;
             }
+            $productQuantity = Product::getQuantity(
+                $product['id_product'],
+                $product['id_product_attribute'],
+                null,
+                $this,
+                $product['id_customization']
+            );
+            if ($productQuantity < 0) {
+                return $return_product ? $product : false;
+            }
         }
 
         return true;
