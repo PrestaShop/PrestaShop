@@ -68,7 +68,7 @@
       </div>
     {/foreach}
 
-    {if $product.customizations|count}
+    {if is_array($product.customizations)}
       <br>
       {block name='cart_detailed_product_line_customization'}
         {foreach from=$product.customizations item="customization"}

@@ -164,10 +164,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
             return $result;
         }
 
-        throw new \RuntimeException(
-            'Unknown index '.print_r($index, true).' from LazyArray '.get_class($this).'. 
-            Make sure the annotation @arrayAccess has properly been added on each methods which should be accessible'
-        );
+        return null;
     }
 
     /**
@@ -253,7 +250,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
         $arrayCopy = $this->arrayAccessList->getArrayCopy();
         foreach ($arrayCopy as $key => $value) {
             if (!array_key_exists($key, $array)) {
-                $this->offsetSet($key, array(), true);
+                $this->offsetUnset($key, true);
             }
         }
     }
@@ -288,10 +285,10 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      *
      * @throws \RuntimeException
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset, $force = false)
     {
         $result = $this->arrayAccessList->offsetGet($offset);
-        if ($result['type'] === 'variable') {
+        if ($force || $result['type'] === 'variable') {
             $this->arrayAccessList->offsetUnset($offset);
         } else {
             throw new \RuntimeException(
