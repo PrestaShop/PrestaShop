@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -52,22 +53,15 @@ class LogsController extends FrameworkBundleAdminController
     {
         $gridFactory = $this->get('prestashop.core.grid.factory');
         $gridViewFactory = $this->get('prestashop.core.grid.view_factory');
+
         $gridDefinitionFactory = $this->get('prestashop.core.grid.defintion.factory.log_definition');
         $gridDataProvider = $this->get('prestashop.core.grid.data_provider.log');
 
-        $gridDefinition = $gridDefinitionFactory->createNew();
-        $grid = $gridFactory->createFromDefinition($gridDefinition, $request);
-
-        $filters = [
-            'limit' => $request->query->get('limit', 10),
-            'offset' => $request->query->get('offset', 0),
-            'orderBy' => $request->query->get('orderBy', $gridDefinition->getDefaultOrderBy()),
-            'sortOrder' => $request->query->get('sortOrder', $gridDefinition->getDefaultOrderWay()),
-            'filters' => $grid->getFilterForm()->getData(),
-        ];
-
-        $grid->setRows($gridDataProvider->getRows($filters));
-        $grid->setRowsTotal($gridDataProvider->getRowsTotal());
+        $grid = $gridFactory->create(
+            $gridDefinitionFactory,
+            $gridDataProvider,
+            $request
+        );
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $twigValues = [

@@ -1,7 +1,7 @@
 # Logs
 admin_logs:
     path: logs
-    methods: [GET]
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:index'
         _legacy_controller: AdminLogs
@@ -14,7 +14,7 @@ admin_search_logs:
         _legacy_controller: AdminLogs
 
 admin_logs_save:
-    path: logs
+    path: logs/settings
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:processForm'
