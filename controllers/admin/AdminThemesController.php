@@ -209,6 +209,12 @@ class AdminThemesControllerCore extends AdminController
         }
     }
 
+    /**
+     * Ajax request handler for displaying theme catalog from the marketplace.
+     * Not used anymore.
+     *
+     * @deprecated since 1.7.4.0
+     */
     public function ajaxProcessGetAddonsThemes()
     {
         $parent_domain = Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));

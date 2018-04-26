@@ -79,6 +79,7 @@
             <div>{l s='Menu' d='Admin.Navigation.Menu'}</div>
           </a>
           <ul id="toolbar-nav" class="nav nav-pills pull-right collapse navbar-collapse">
+            {hook h='displayDashboardToolbarTopMenu'}
             {foreach from=$toolbar_btn item=btn key=k}
               {if $k != 'back' && $k != 'modules-list'}
                 <li>
