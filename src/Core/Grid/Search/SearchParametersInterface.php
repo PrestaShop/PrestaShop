@@ -24,27 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Search;
 
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use Symfony\Component\HttpFoundation\Request;
-
-interface GridFactoryInterface
+interface SearchParametersInterface
 {
-    /**
-     * Create new grid
-     *
-     * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface $dataProvider
-     * @param Request $request
-     *
-     * @return Grid
-     */
-    public function create(
-        GridDefinitionFactoryInterface $definitionFactory,
-        GridDataProviderInterface $dataProvider,
-        Request $request
-    );
+    public function getOrderBy();
+
+    public function getOrderWay();
+
+    public function getLimit();
+
+    public function getOffset();
+
+    public function getFilters();
 }

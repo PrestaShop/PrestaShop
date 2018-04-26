@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Grid;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersFactoryInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -49,31 +52,47 @@ final class GridFactory implements GridFactoryInterface
     private $formFactory;
 
     /**
+     * @var SearchParametersFactoryInterface
+     */
+    private $searchParametersFactory;
+
+    /**
      * @param HookDispatcher $dispatcher
      * @param FormFactoryInterface $formFactory
+     * @param SearchParametersFactoryInterface $searchParametersFactory
      */
     public function __construct(
         HookDispatcher $dispatcher,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        SearchParametersFactoryInterface $searchParametersFactory
     ) {
         $this->dispatcher = $dispatcher;
         $this->formFactory = $formFactory;
+        $this->searchParametersFactory = $searchParametersFactory;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createFromDefinition(GridDefinitionInterface $gridDefinition, Request $request) {
-        // Execute hook to allow developers to modify/extend grid definition
-        // For exmaple add new columns, row actions & etc.
+    public function create(
+        GridDefinitionFactoryInterface $definitionFactory,
+        GridDataProviderInterface $dataProvider,
+        Request $request
+    ) {
+        $gridDefinition = $definitionFactory->create();
+
         $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
             'grid_definition' => $gridDefinition,
         ]);
 
-        $filtersForm = $this->buildGridFilterForm($gridDefinition);
-        $filtersForm->handleRequest($request);
+        $searchParameters = $this->searchParametersFactory->createFromRequest($request, $gridDefinition);
+
+        $filtersForm = $this->buildGridFilterForm($gridDefinition);;
+        $filtersForm->setData($searchParameters->getFilters());
 
         $grid = new Grid($gridDefinition, $filtersForm);
+        $grid->setRows($dataProvider->getRows($searchParameters));
+        $grid->setRowsTotal($dataProvider->getRowsTotal());
 
         return $grid;
     }
@@ -105,10 +124,7 @@ final class GridFactory implements GridFactoryInterface
             }
         }
 
-        $form = $formBuilder
-            ->setData([])
-            ->getForm()
-        ;
+        $form = $formBuilder->getForm();
 
         return $form;
     }

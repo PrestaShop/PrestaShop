@@ -11,6 +11,11 @@ services:
         arguments:
             - '@prestashop.hook.dispatcher'
             - '@form.factory'
+            - '@prestashop.core.grid.search.parameters_factory'
+
+    # Search
+    prestashop.core.grid.search.parameters_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersFactory'
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:

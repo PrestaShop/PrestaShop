@@ -35,5 +35,5 @@ interface GridDefinitionFactoryInterface
      *
      * @return GridDefinitionInterface
      */
-    public function createNew();
+    public function create();
 }
