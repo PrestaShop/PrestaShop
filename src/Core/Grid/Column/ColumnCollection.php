@@ -24,8 +24,60 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Exception;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-class NonUniqueRowActionException extends \Exception implements ExceptionInterface
+final class ColumnCollection implements ColumnCollectionInterface
 {
+    /**
+     * @var array|ColumnInterface[]
+     */
+    private $columns = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(ColumnInterface $column)
+    {
+        $this->columns[$column->getIdentifier()] = $column;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function current()
+    {
+        return current($this->columns);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function next()
+    {
+        return next($this->columns);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function key()
+    {
+        return key($this->columns);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function valid()
+    {
+        return false !== $this->current();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rewind()
+    {
+        reset($this->columns);
+    }
 }

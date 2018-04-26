@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid;
+namespace PrestaShop\PrestaShop\Core\Grid\View;
 
 use Symfony\Component\Form\FormView;
 

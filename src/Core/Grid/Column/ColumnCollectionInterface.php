@@ -24,19 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use PrestaShop\PrestaShop\Core\Grid\View\GridView;
-
-interface GridViewFactoryInterface
+interface ColumnCollectionInterface extends \Iterator
 {
     /**
-     * Create grid view data from given grid
+     * Add column to collection
      *
-     * @param Grid $grid
-     *
-     * @return GridView
+     * @param ColumnInterface $column
      */
-    public function createView(Grid $grid);
+    public function add(ColumnInterface $column);
 }

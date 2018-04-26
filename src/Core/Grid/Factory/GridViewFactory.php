@@ -27,10 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Column;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Grid\Grid;
-use PrestaShop\PrestaShop\Core\Grid\GridView;
+use PrestaShop\PrestaShop\Core\Grid\View\GridView;
+use PrestaShop\PrestaShop\Core\Grid\View\ColumnView;
+use PrestaShop\PrestaShop\Core\Grid\View\RowActionView;
 
 /**
  * Class GridViewFactory is responsible for creating grid view data that is passed to template for rendering
@@ -45,8 +47,8 @@ final class GridViewFactory implements GridViewFactoryInterface
         $gridView = new GridView(
             $grid->getIdentifier(),
             $grid->getName(),
-            $this->getColumnsView($grid),
-            $this->getRowsView($grid),
+            $this->createColumnsView($grid),
+            $this->createRowsView($grid),
             $grid->getRowsTotal(),
             $grid->getFilterForm()->createView()
         );
@@ -61,21 +63,21 @@ final class GridViewFactory implements GridViewFactoryInterface
      *
      * @return array
      */
-    private function getRowsView(Grid $grid)
+    private function createRowsView(Grid $grid)
     {
-        $rowsView = [];
+        $rowActionViews = [];
 
         foreach ($grid->getRows() as $row) {
             $rowActions = $this->getRowActions($row, $grid->getRowActions());
             $rowData = $this->applyColumnModifications($row, $grid->getColumns());
 
-            $rowsView[] = [
+            $rowActionViews[] = [
                 'actions' => $rowActions,
                 'data' => $rowData,
             ];
         }
 
-        return $rowsView;
+        return $rowActionViews;
     }
 
     /**
@@ -100,11 +102,13 @@ final class GridViewFactory implements GridViewFactoryInterface
                 continue;
             }
 
-            $actions[$rowAction->getIdentifier()] = [
-                'name' => $rowAction->getName(),
-                'icon' => $rowAction->getIcon(),
-                'url' => $url,
-            ];
+            $rowActionView = new RowActionView(
+                $rowAction->getName(),
+                $rowAction->getIcon(),
+                $url
+            );
+
+            $actions[$rowAction->getIdentifier()] = $rowActionView;
         }
 
         return $actions;
@@ -112,14 +116,13 @@ final class GridViewFactory implements GridViewFactoryInterface
 
     /**
      * Some columns may modify data that comes directly from database or any other data source.
-     * Example scenarios: add currency prefix to price, format data as HTML content, add colors & etc.
      *
-     * @param array $row
-     * @param array|Column[] $columns
+     * @param array                     $row
+     * @param ColumnCollectionInterface $columns
      *
      * @return array
      */
-    private function applyColumnModifications(array $row, array $columns)
+    private function applyColumnModifications(array $row, ColumnCollectionInterface $columns)
     {
         foreach ($columns as $column) {
             // if for some reason column does not exist in a row
@@ -145,19 +148,14 @@ final class GridViewFactory implements GridViewFactoryInterface
     /**
      * @param Grid $grid
      *
-     * @return array
+     * @return array|ColumnView[]
      */
-    private function getColumnsView(Grid $grid)
+    private function createColumnsView(Grid $grid)
     {
         $columnsView = [];
 
         foreach ($grid->getColumns() as $column) {
-            $columnsView[] = [
-                'identifier' => $column->getIdentifier(),
-                'name' => $column->getName(),
-                'is_sortable' => $column->isSortable(),
-                'is_filterable' => $column->isFilterable(),
-            ];
+            $columnsView[] = ColumnView::fromColumn($column);
         }
 
         return $columnsView;
