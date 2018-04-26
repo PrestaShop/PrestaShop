@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShop\PrestaShop\Core\Grid\View\GridView;
 use PrestaShop\PrestaShop\Core\Grid\View\ColumnView;
 use PrestaShop\PrestaShop\Core\Grid\View\RowActionView;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormView;
 
 /**
  * Class GridViewFactory is responsible for creating grid view data that is passed to template for rendering
@@ -40,17 +42,27 @@ use PrestaShop\PrestaShop\Core\Grid\View\RowActionView;
 final class GridViewFactory implements GridViewFactoryInterface
 {
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    public function __construct(FormFactoryInterface $formFactory)
+    {
+        $this->formFactory = $formFactory;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function createView(Grid $grid)
     {
         $gridView = new GridView(
-            $grid->getIdentifier(),
-            $grid->getName(),
+            $grid->getDefinition()->getIdentifier(),
+            $grid->getDefinition()->getName(),
             $this->createColumnsView($grid),
             $this->createRowsView($grid),
-            $grid->getRowsTotal(),
-            $grid->getFilterForm()->createView()
+            $grid->getData()->getRowsTotal(),
+            $this->createFilterFormView($grid)
         );
 
         return $gridView;
@@ -65,11 +77,12 @@ final class GridViewFactory implements GridViewFactoryInterface
      */
     private function createRowsView(Grid $grid)
     {
-        $rowActionViews = [];
+        $definition = $grid->getDefinition();
 
-        foreach ($grid->getRows() as $row) {
-            $rowActions = $this->getRowActions($row, $grid->getRowActions());
-            $rowData = $this->applyColumnModifications($row, $grid->getColumns());
+        $rowActionViews = [];
+        foreach ($grid->getData()->getRows() as $row) {
+            $rowActions = $this->getRowActions($row, $definition->getRowActions());
+            $rowData = $this->applyColumnModifications($row, $definition->getColumns());
 
             $rowActionViews[] = [
                 'actions' => $rowActions,
@@ -154,10 +167,48 @@ final class GridViewFactory implements GridViewFactoryInterface
     {
         $columnsView = [];
 
-        foreach ($grid->getColumns() as $column) {
+        foreach ($grid->getDefinition()->getColumns() as $column) {
             $columnsView[] = ColumnView::fromColumn($column);
         }
 
         return $columnsView;
+    }
+
+
+    /**
+     * Builds filters form for grid
+     *
+     * @param Grid $grid
+     *
+     * @return FormView
+     */
+    private function createFilterFormView(Grid $grid)
+    {
+        $definition = $grid->getDefinition();
+
+        $formBuilder = $this->formFactory->createNamedBuilder($definition->getIdentifier());
+
+        foreach ($definition->getColumns() as $column) {
+            if ($formType = $column->getFilterFormType()) {
+                $options = $column->getFilterFormTypeOptions();
+
+                if (!isset($options['required'])) {
+                    $options['required'] = false;
+                }
+
+                $formBuilder->add(
+                    $column->getIdentifier(),
+                    $formType,
+                    $options
+                );
+            }
+        }
+
+        $form = $formBuilder
+            ->setData($grid->getSearchParameters()->getFilters())
+            ->getForm()
+        ;
+
+        return $form->createView();
     }
 }
