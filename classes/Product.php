@@ -3585,28 +3585,30 @@ class ProductCore extends ObjectModel
     }
 
     /**
-    * Get available product quantities
+    * Get available product quantities (this method already have decreased products in cart)
     *
-    * @param int $id_product Product id
-    * @param int $id_product_attribute Product attribute id (optional)
-    * @param bool|null $cache_is_pack
+    * @param int $idProduct Product id
+    * @param int $idProductAttribute Product attribute id (optional)
+    * @param bool|null $cacheIsPack
     * @param Cart|null $cart
+    * @param int $idCustomization Product customization id (optional)
     * @return int Available quantities
     */
     public static function getQuantity(
-        $id_product,
-        $id_product_attribute = null,
-        $cache_is_pack = null,
-        Cart $cart = null
+        $idProduct,
+        $idProductAttribute = null,
+        $cacheIsPack = null,
+        Cart $cart = null,
+        $idCustomization = null
     ) {
-        if (Pack::isPack((int)$id_product)) {
-            return Pack::getQuantity($id_product, $id_product_attribute, $cache_is_pack, $cart);
+        if (Pack::isPack((int)$idProduct)) {
+            return Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
         }
-        $availableQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
+        $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
         $nbProductInCart = 0;
 
         if (!empty($cart)) {
-            $cartProduct = $cart->getProductQuantity($id_product, $id_product_attribute);
+            $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
                 $nbProductInCart = $cartProduct['deep_quantity'];

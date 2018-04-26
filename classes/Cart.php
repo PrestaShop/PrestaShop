@@ -1136,16 +1136,17 @@ class CartCore extends ObjectModel
     /**
      * Check if the Cart contains the given Product (Attribute)
      *
-     * @param int $id_product Product ID
-     * @param int $id_product_attribute ProductAttribute ID
-     * @param int $id_customization Customization ID
-     * @param int $id_address_delivery Delivery Address ID
+     * @param int $idProduct Product ID
+     * @param int $idProductAttribute ProductAttribute ID
+     * @param int $idCustomization Customization ID
+     * @param int $idAddressDelivery Delivery Address ID
      *
      * @return array quantity index     : number of product in cart without counting those of pack in cart
      *               deep_quantity index: number of product in cart counting those of pack in cart
      */
-    public function getProductQuantity($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
+    public function getProductQuantity($idProduct, $idProductAttribute = 0, $idCustomization = 0, $idAddressDelivery = 0)
     {
+        $productIsPack = Pack::isPack($idProduct);
         $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         $packStockTypesAllowed = array(
             Pack::STOCK_TYPE_PRODUCTS_ONLY,
@@ -1159,7 +1160,7 @@ class CartCore extends ObjectModel
             ' JOIN `'._DB_PREFIX_.'pack` p ON cp.`id_product` = p.`id_product_pack`' .
             ' JOIN `'._DB_PREFIX_.'product` pr ON p.`id_product_pack` = pr.`id_product`';
 
-        if ($id_customization) {
+        if ($idCustomization) {
             $customizationJoin = '
                 LEFT JOIN `'._DB_PREFIX_.'customization` c ON (
                     c.`id_product` = cp.`id_product`
@@ -1169,25 +1170,25 @@ class CartCore extends ObjectModel
             $secondUnionSql .= $customizationJoin;
         }
         $commonWhere = '
-            WHERE cp.`id_product_attribute` = '.(int)$id_product_attribute.'
-            AND cp.`id_customization` = '.(int)$id_customization.'
+            WHERE cp.`id_product_attribute` = '.(int)$idProductAttribute.'
+            AND cp.`id_customization` = '.(int)$idCustomization.'
             AND cp.`id_cart` = '.(int)$this->id;
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
-            $commonWhere .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
+            $commonWhere .= ' AND cp.`id_address_delivery` = '.(int)$idAddressDelivery;
         }
 
-        if ($id_customization) {
-            $commonWhere .= ' AND c.`id_customization` = '.(int)$id_customization;
+        if ($idCustomization) {
+            $commonWhere .= ' AND c.`id_customization` = '.(int)$idCustomization;
         }
         $firstUnionSql .=  $commonWhere;
-        $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $id_product;
+        $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $idProduct;
         $secondUnionSql .= $commonWhere;
-        $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $id_product;
+        $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $idProduct;
         $secondUnionSql .= ' AND (pr.`pack_stock_type` IN (' . implode(',', $packStockTypesAllowed) . ') OR (
-                pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
-                AND ' . $packStockTypesDefaultSupported . ' = 1
-            ))';
+            pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
+            AND ' . $packStockTypesDefaultSupported . ' = 1
+        ))';
         $parentSql = 'SELECT 
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity 
@@ -3838,6 +3839,16 @@ class CartCore extends ObjectModel
                 || (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])) {
                 return $return_product ? $product : false;
             }
+            $productQuantity = Product::getQuantity(
+                $product['id_product'],
+                $product['id_product_attribute'],
+                null,
+                $this,
+                $product['id_customization']
+            );
+            if ($productQuantity < 0) {
+                return $return_product ? $product : false;
+            }
         }
 
         return true;
@@ -4668,36 +4679,53 @@ class CartCore extends ObjectModel
      * Are all products of the Cart in stock?
      *
      * @param bool $ignore_virtual Ignore virtual products
-     * @param bool $exclusive If true, the validation is exclusive : it must be present product in stock and out of stock
+     * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
      * @since 1.5.0
      *
      * @return bool False if not all products in the cart are in stock
      */
-    public function isAllProductsInStock($ignore_virtual = false, $exclusive = false)
+    public function isAllProductsInStock($ignoreVirtual = false, $exclusive = false)
     {
-        $product_out_of_stock = 0;
-        $product_in_stock = 0;
+        if (func_num_args() > 1) {
+            @trigger_error(
+                '$exclusive parameter is deprecated since version 1.7.3.2 and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+        }
+        $productOutOfStock = 0;
+        $productInStock = 0;
+
         foreach ($this->getProducts() as $product) {
-            if (!$exclusive) {
-                if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) < 0
-                    && (!$ignore_virtual || !$product['is_virtual'])) {
-                    return false;
-                }
-            } else {
-                if ((int)$product['quantity_available'] <= 0
-                    && (!$ignore_virtual || !$product['is_virtual'])) {
-                    $product_out_of_stock++;
-                }
-                if ((int)$product['quantity_available'] > 0
-                    && (!$ignore_virtual || !$product['is_virtual'])) {
-                    $product_in_stock++;
+            if ($ignoreVirtual && $product['is_virtual']) {
+                continue;
+            }
+            $idProductAttribute = !empty($product['id_product_attribute']) ? $product['id_product_attribute'] : null;
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product['out_of_stock']);
+            $productQuantity = Product::getQuantity(
+                $product['id_product'],
+                $idProductAttribute,
+                null,
+                $this,
+                $product['id_customization']
+            );
+
+            if (!$exclusive
+                && ($productQuantity < 0 && !$availableOutOfStock)
+            ) {
+                return false;
+            } else if ($exclusive) {
+                if ($productQuantity <= 0) {
+                    $productOutOfStock++;
+                } else {
+                    $productInStock++;
                 }
 
-                if ($product_in_stock > 0 && $product_out_of_stock > 0) {
+                if ($productInStock > 0 && $productOutOfStock > 0) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
