@@ -26,14 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersFactoryInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -47,27 +45,19 @@ final class GridFactory implements GridFactoryInterface
     private $dispatcher;
 
     /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
      * @var SearchParametersFactoryInterface
      */
     private $searchParametersFactory;
 
     /**
      * @param HookDispatcher $dispatcher
-     * @param FormFactoryInterface $formFactory
      * @param SearchParametersFactoryInterface $searchParametersFactory
      */
     public function __construct(
         HookDispatcher $dispatcher,
-        FormFactoryInterface $formFactory,
         SearchParametersFactoryInterface $searchParametersFactory
     ) {
         $this->dispatcher = $dispatcher;
-        $this->formFactory = $formFactory;
         $this->searchParametersFactory = $searchParametersFactory;
     }
 
@@ -87,45 +77,16 @@ final class GridFactory implements GridFactoryInterface
 
         $searchParameters = $this->searchParametersFactory->createFromRequest($request, $gridDefinition);
 
-        $filtersForm = $this->buildGridFilterForm($gridDefinition);;
-        $filtersForm->setData($searchParameters->getFilters());
+        $rows = $dataProvider->getRows($searchParameters);
+        $rowsTotal = $dataProvider->getRowsTotal();
 
-        $grid = new Grid($gridDefinition, $filtersForm);
-        $grid->setRows($dataProvider->getRows($searchParameters));
-        $grid->setRowsTotal($dataProvider->getRowsTotal());
+        $data = new GridData($rows, $rowsTotal);
+        $grid = new Grid(
+            $gridDefinition,
+            $data,
+            $searchParameters
+        );
 
         return $grid;
-    }
-
-    /**
-     * Builds filters form for grid
-     *
-     * @param GridDefinitionInterface $grid
-     *
-     * @return FormInterface
-     */
-    private function buildGridFilterForm(GridDefinitionInterface $grid)
-    {
-        $formBuilder = $this->formFactory->createNamedBuilder($grid->getIdentifier());
-
-        foreach ($grid->getColumns() as $column) {
-            if ($formType = $column->getFilterFormType()) {
-                $options = $column->getFilterFormTypeOptions();
-
-                if (!isset($options['required'])) {
-                    $options['required'] = false;
-                }
-
-                $formBuilder->add(
-                    $column->getIdentifier(),
-                    $formType,
-                    $options
-                );
-            }
-        }
-
-        $form = $formBuilder->getForm();
-
-        return $form;
     }
 }

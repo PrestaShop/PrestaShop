@@ -62,7 +62,7 @@ final class LogGridDataProvider implements GridDataProviderInterface
      */
     public function getRows(SearchParametersInterface $searchParameters)
     {
-        // make search parameters compatible with logRepositoryQuery
+        // make search parameters compatible with logRepository query
         $filters = [
             'offset' => $searchParameters->getOffset(),
             'limit' => $searchParameters->getLimit(),
