@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
@@ -58,6 +59,10 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $definition->addRowAction($rowAction);
         }
 
+        foreach ($this->getBulkActions() as $bulkAction) {
+            $definition->addBulkAction($bulkAction);
+        }
+
         return $definition;
     }
 
@@ -66,35 +71,35 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return string
      */
-    abstract public function getIdentifier();
+    abstract protected function getIdentifier();
 
     /**
      * Get translated grid name
      *
      * @return string
      */
-    abstract public function getName();
+    abstract protected function getName();
 
     /**
      * Get default order by for grid
      *
      * @return string
      */
-    abstract public function getDefaultOrderBy();
+    abstract protected function getDefaultOrderBy();
 
     /**
      * Get default order way for grid
      *
      * @return string
      */
-    abstract public function getDefaultOrderWay();
+    abstract protected function getDefaultOrderWay();
 
     /**
      * Get defined columns for grid
      *
      * @return array|Column[]
      */
-    abstract function getColumns();
+    abstract protected function getColumns();
 
     /**
      * Get row actions for grid.
@@ -103,6 +108,17 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      * @return array|RowAction[]
      */
     protected function getRowActions()
+    {
+        return [];
+    }
+
+    /**
+     * Get bulk actions for grid.
+     * Override this methods to add bulk actions for grid.
+     *
+     * @return array|BulkActionInterface[]
+     */
+    protected function getBulkActions()
     {
         return [];
     }

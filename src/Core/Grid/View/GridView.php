@@ -56,6 +56,11 @@ final class GridView
     /**
      * @var array
      */
+    private $bulkActions = [];
+
+    /**
+     * @var array
+     */
     private $rows;
 
     /**
@@ -95,6 +100,14 @@ final class GridView
     public function getRows()
     {
         return $this->rows;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBulkActions()
+    {
+        return $this->bulkActions;
     }
 
     /**

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -38,7 +39,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    public function getIdentifier()
+    protected function getIdentifier()
     {
         return 'logs_table';
     }
@@ -46,7 +47,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    protected function getName()
     {
         return $this->translator->trans('Logs', [], 'Admin.Advparameters.Feature');
     }
@@ -54,7 +55,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOrderBy()
+    protected function getDefaultOrderBy()
     {
         return 'id_log';
     }
@@ -62,7 +63,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOrderWay()
+    protected function getDefaultOrderWay()
     {
         return 'desc';
     }
@@ -70,7 +71,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    public function getColumns()
+    protected function getColumns()
     {
         return [
             (new Column('id_log', $this->translator->trans('ID', [], 'Admin.Global')))
@@ -95,7 +96,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @todo: logs do not have row actions, these are defined for testing purpose and will be removed
      */
-    public function getRowActions()
+    protected function getRowActions()
     {
         $urlGenerator = function ($row) {
             return 'dummy.url.for.testing';
@@ -105,5 +106,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             new RowAction('edit', 'Edit', $urlGenerator, 'build'),
             new RowAction('delete', 'Delete', $urlGenerator, 'bug_report'),
         ];
+    }
+
+    /**
+     * @todo: logs do not have bulk actions, these are defined for testing purpose and will be removed
+     */
+    protected function getBulkActions()
+    {
+        $deleteBulkAction = new BulkAction(
+            'delete',
+            'Delete bulk action',
+            function () {},
+            'trash'
+        );
+
+        return [$deleteBulkAction];
     }
 }
