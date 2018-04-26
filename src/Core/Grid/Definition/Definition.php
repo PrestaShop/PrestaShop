@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
@@ -69,6 +72,11 @@ final class Definition implements GridDefinitionInterface
     private $rowActions;
 
     /**
+     * @var BulkActionCollectionInterface
+     */
+    private $bulkActions;
+
+    /**
      * @param string $identifier      Unique grid identifier (used as table ID when rendering table)
      * @param string $name            Translated grid name
      * @param string $defaultOrderBy  Default grid ordering by
@@ -83,6 +91,7 @@ final class Definition implements GridDefinitionInterface
 
         $this->rowActions = new RowActionCollection();
         $this->columns = new ColumnCollection();
+        $this->bulkActions = new BulkActionCollection();
     }
 
     /**
@@ -99,6 +108,14 @@ final class Definition implements GridDefinitionInterface
     public function addRowAction(RowAction $rowAction)
     {
         $this->rowActions->add($rowAction);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addBulkAction(BulkAction $bulkAction)
+    {
+        $this->bulkActions->add($bulkAction);
     }
 
     /**
