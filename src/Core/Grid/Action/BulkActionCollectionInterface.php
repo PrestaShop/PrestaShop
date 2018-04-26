@@ -26,58 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-final class RowActionCollection implements RowActionCollectionInterface
+interface BulkActionCollectionInterface extends \Iterator
 {
-    /**
-     * @var array|RowActionInterface[]
-     */
-    private $actions = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add(RowActionInterface $action)
-    {
-        $this->actions[$action->getIdentifier()] = $action;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        return current($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        return next($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
-    {
-        return false !== $this->current();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        reset($this->actions);
-    }
+    public function add(BulkActionInterface $bulkAction);
 }
