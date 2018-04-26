@@ -24,14 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column;
+namespace PrestaShop\PrestaShop\Core\Grid\Data;
 
-interface ColumnCollectionInterface extends \Iterator, \Countable
+/**
+ * Class GridData is responsible for storing grid data
+ */
+class GridData
 {
     /**
-     * Add column to collection
-     *
-     * @param ColumnInterface $column
+     * @var array
      */
-    public function add(ColumnInterface $column);
+    private $rows;
+
+    /**
+     * @var int
+     */
+    private $rowsTotal;
+
+    /**
+     * @param array $rows
+     * @param $rowsTotal
+     */
+    public function __construct(array $rows, $rowsTotal)
+    {
+        $this->rows = $rows;
+        $this->rowsTotal = $rowsTotal;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRows()
+    {
+        return $this->rows;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowsTotal()
+    {
+        return $this->rowsTotal;
+    }
 }

@@ -80,4 +80,12 @@ final class ColumnCollection implements ColumnCollectionInterface
     {
         reset($this->columns);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->columns);
+    }
 }

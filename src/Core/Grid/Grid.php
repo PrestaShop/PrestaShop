@@ -26,13 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Column;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnsNotDefinedException;
-use Symfony\Component\Form\FormInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersInterface;
 
 /**
  * Class Grid is responsible for holding grid's data
@@ -40,142 +37,64 @@ use Symfony\Component\Form\FormInterface;
 final class Grid
 {
     /**
-     * @var string
+     * @var GridDefinitionInterface
      */
-    private $identifier;
+    private $definition;
 
     /**
-     * @var string
+     * @var GridData
      */
-    private $name;
+    private $data;
 
     /**
-     * @var FormInterface
+     * @var SearchParametersInterface
      */
-    private $form;
+    private $searchParameters;
 
     /**
-     * @var ColumnCollectionInterface
-     */
-    private $columns;
-
-    /**
-     * @var RowActionCollectionInterface
-     */
-    private $rowActions;
-
-    /**
-     * @var array
-     */
-    private $rows = [];
-
-    /**
-     * @var int
-     */
-    private $rowsTotal = 0;
-
-    /**
-     * @param GridDefinitionInterface $gridDefinition
-     * @param FormInterface           $form
+     * @param GridDefinitionInterface $definition
+     * @param GridData $data
+     * @param SearchParametersInterface $searchParameters
      *
      * @throws ColumnsNotDefinedException When definition does not define any columns for grid
      */
-    public function __construct(GridDefinitionInterface $gridDefinition, FormInterface $form)
-    {
-        if (0 == count($gridDefinition->getColumns())) {
+    public function __construct(
+        GridDefinitionInterface $definition,
+        GridData $data,
+        SearchParametersInterface $searchParameters
+    ) {
+        if (0 == count($definition->getColumns())) {
             throw new ColumnsNotDefinedException(
-                sprintf('Grid "%s" definition does not contain any columns', $gridDefinition->getIdentifier())
+                sprintf('Grid "%s" definition does not contain any columns', $definition->getIdentifier())
             );
         }
 
-        $this->identifier = $gridDefinition->getIdentifier();
-        $this->name = $gridDefinition->getName();
-        $this->columns = $gridDefinition->getColumns();
-        $this->rowActions = $gridDefinition->getRowActions();
-        $this->form = $form;
+        $this->definition = $definition;
+        $this->searchParameters = $searchParameters;
+        $this->data = $data;
     }
 
     /**
-     * Set rows for grid
-     *
-     * @param array $rows
-     *
-     * @return $this
+     * @return GridDefinitionInterface
      */
-    public function setRows(array $rows)
+    public function getDefinition()
     {
-        $this->rows = $rows;
-
-        return $this;
+        return $this->definition;
     }
 
     /**
-     * Set total count of all rows
-     *
-     * @param int $rowsTotal
-     *
-     * @return $this
+     * @return SearchParametersInterface
      */
-    public function setRowsTotal($rowsTotal)
+    public function getSearchParameters()
     {
-        $this->rowsTotal = $rowsTotal;
-
-        return $this;
+        return $this->searchParameters;
     }
 
     /**
-     * @return ColumnCollectionInterface
+     * @return GridData
      */
-    public function getColumns()
+    public function getData()
     {
-        return $this->columns;
-    }
-
-    /**
-     * @return RowActionCollectionInterface
-     */
-    public function getRowActions()
-    {
-        return $this->rowActions;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRows()
-    {
-        return $this->rows;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRowsTotal()
-    {
-        return $this->rowsTotal;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return FormInterface
-     */
-    public function getFilterForm()
-    {
-        return $this->form;
+        return $this->data;
     }
 }
