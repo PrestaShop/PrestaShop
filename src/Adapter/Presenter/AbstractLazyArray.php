@@ -282,6 +282,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
 
     /**
      * @param mixed $offset
+     * @param bool  $force if set, allow unset of an existing method
      *
      * @throws \RuntimeException
      */

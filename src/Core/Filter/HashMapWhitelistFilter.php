@@ -26,6 +26,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Filter;
+
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 
 /**
@@ -117,7 +118,7 @@ class HashMapWhitelistFilter implements FilterInterface
     {
         if (!is_scalar($key)) {
             throw new FilterException(
-                sprintf( "Invalid parameter %s", print_r($key, true))
+                sprintf("Invalid parameter %s", print_r($key, true))
             );
         }
 
