@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Column;
+use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Exception\NonUniqueColumnException;
-use PrestaShop\PrestaShop\Core\Grid\Exception\NonUniqueRowActionException;
 
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.)
@@ -42,7 +42,7 @@ final class Definition implements GridDefinitionInterface
     private $name;
 
     /**
-     * @var string  Unique grid idetifier
+     * @var string  Unique grid identifier
      */
     private $identifier;
 
@@ -64,7 +64,7 @@ final class Definition implements GridDefinitionInterface
     /**
      * @var array|RowAction[]
      */
-    private $rowActions = [];
+    private $rowActions;
 
     /**
      * @param string $identifier      Unique grid identifier (used as table ID when rendering table)
@@ -78,6 +78,8 @@ final class Definition implements GridDefinitionInterface
         $this->name = $name;
         $this->defaultOrderBy = $defaultOrderBy;
         $this->defaultOrderWay = $defaultOrderWay;
+
+        $this->rowActions = new RowActionCollection();
     }
 
     /**
@@ -96,16 +98,10 @@ final class Definition implements GridDefinitionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws NonUniqueRowActionException
      */
     public function addRowAction(RowAction $rowAction)
     {
-        if (isset($this->rowActions[$rowAction->getIdentifier()])) {
-            throw new NonUniqueRowActionException(sprintf('Row action "%s" already exsists on grid definition'));
-        }
-
-        $this->rowActions[$rowAction->getIdentifier()] = $rowAction;
+        $this->rowActions->add($rowAction);
     }
 
     /**

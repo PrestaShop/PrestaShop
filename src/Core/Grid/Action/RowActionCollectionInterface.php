@@ -24,19 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use PrestaShop\PrestaShop\Core\Grid\GridView;
-
-interface GridViewFactoryInterface
+/**
+ * Interface RowActionCollectionInterface defines contract for row actions collection
+ */
+interface RowActionCollectionInterface extends \Iterator
 {
     /**
-     * Create grid view data from given grid
+     * Add row action to collection
      *
-     * @param Grid $grid
-     *
-     * @return GridView
+     * @param RowActionInterface $action
      */
-    public function createView(Grid $grid);
+    public function add(RowActionInterface $action);
 }
