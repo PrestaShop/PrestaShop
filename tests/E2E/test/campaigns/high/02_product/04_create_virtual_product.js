@@ -24,7 +24,7 @@ scenario('Create virtual Product in the Back Office', client => {
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.virtual.new_category_name + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('open all category', () => client.openAllCategory());
+    test('should open all categories', () => client.openAllCategories());
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))

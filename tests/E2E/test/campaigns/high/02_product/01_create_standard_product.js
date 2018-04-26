@@ -31,7 +31,7 @@ scenario('Create Standard Product in the Back Office', client => {
         .then(() => client.waitForVisible(AddProductPage.created_category))
         .then(() => client.waitForExistAndClick(AddProductPage.home_delete_button));
     });
-    test('open all category', () => client.openAllCategory());
+    test('should open all categories', () => client.openAllCategories());
     test('should check the existence of the first category Radio button', () => client.checkCategoryRadioButton(4));
     test('should check the existence of the second category Radio button', () => client.checkCategoryRadioButton(5));
     test('should check the existence of the third Radio button', () => client.checkCategoryRadioButton(7));

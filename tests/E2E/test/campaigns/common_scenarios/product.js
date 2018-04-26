@@ -398,5 +398,78 @@ module.exports = {
         });
       }, 'product/product');
     }, 'product/product', true);
+  },
+
+  /**** Example of demo product data ****
+   * var productData = {
+   *  name: 'product_name',
+   *  type: "product_type(standard, pack, virtual, combination, customizable)", // (required)
+   *  picture: 'picture_file_name',  // (required)
+   *  quantity: 'product_quantity',  // (optional)
+   *  priceHT: 'product_price_with_tax_excluded',  // (required)
+   *  priceTTC: 'product_price_with_tax_included',  // (required)
+   *  summary: 'product_summary',  // (required)
+   *  description: 'product_description',//if product type is equal to Pack so the description can be empty
+   *  feature: {  // (optional)
+   *      name: 'feature_name',
+   *      predefined_value: 'feature_predefined_value',//if custom_value is empty so you must set this value
+   *      custom_value: 'feature_custom_value',//if you didn't choose a predefined_value so you must set this value
+   *  },
+   *  combination: {
+   *      exist: true //(required) must check the appearance of generated combination when the product type is equal to combination
+   *  }
+   * };
+   */
+
+  checkDemoProductBO(AddProductPage, productData) {
+    scenario('Check the basic information of "' + productData.name + '"', client => {
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should search for the product by name', () => client.searchProductByName(productData.name));
+      test('should click on "Edit" button', () => client.waitForExistAndClick(ProductList.edit_button));
+      if (productData.hasOwnProperty('type')) {
+        if (productData.type === 'standard' || productData.type === 'combination' || productData.type === 'customizable') {
+          if (productData.type === 'customizable') {
+            test('should check that the product name contains Customizable', () => client.checkAttributeValue(AddProductPage.product_name_input, 'value', 'Customizable', 'contain'));
+          }
+          test('should check that "Standard product" type is well selected', () => client.isSelected(AddProductPage.product_type_option.replace('%POS', 1)));
+        } else if (productData.type === 'pack') {
+          test('should check that the product name contains Pack', () => client.checkAttributeValue(AddProductPage.product_name_input, 'value', 'Pack', 'contain'));
+          test('should check that "Pack of product" type is well selected', () => client.isSelected(AddProductPage.product_type_option.replace('%POS', 2)));
+          test('should check that the "List of products for this pack" is well displayed', () => client.isExisting(AddProductPage.product_pack_items));
+          test('should check that the "Add products to your pack" is well displayed', () => client.isExisting(AddProductPage.add_products_to_pack));
+        } else {
+          test('should check that "Virtual product" type is well selected', () => client.isSelected(AddProductPage.product_type_option.replace('%POS', 3)));
+        }
+      }
+      if(productData.hasOwnProperty('picture')) {
+        test('should check the appearance of the product picture', () => client.checkAttributeValue(AddProductPage.background_picture, 'style', productData.picture, 'contain'));
+      }
+      test('should check that the product quantity is equal to "' + productData.quantity + '"', () => client.checkAttributeValue(AddProductPage.product_quantity_input, 'value', productData.quantity));
+      test('should check that the product price HT is equal to "' + productData.priceHT + '"', () => client.checkAttributeValue(AddProductPage.priceTE_shortcut, 'value', productData.priceHT));
+      test('should check that the product price TTC is equal to "' + productData.priceTTC + '"', () => client.checkAttributeValue(AddProductPage.priceTTC_shortcut, 'value', productData.priceTTC));
+      test('should check that "' + productData.tax_rule + '" of tax rule is well selected', () => client.isSelected(AddProductPage.tax_rule_taux_standard_option));
+      test('should check that the product summary is well filled', () => client.checkTextEditor(AddProductPage.summary_textarea, productData.summary));
+      if (productData.hasOwnProperty('type') && productData.type !== 'pack') {
+        test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.description_tab));
+        test('should check that the product description is well filled', () => client.checkTextEditor(AddProductPage.description_textarea, productData.description, 2000));
+      }
+      if (productData.hasOwnProperty('feature')) {
+        test('should check that the product feature is well filled', () => {
+          return promise
+            .then(() => client.isVisible(AddProductPage.feature_select_button))
+            .then(() => client.checkFeatureValue(AddProductPage.predefined_value_option.replace('%V', productData.feature.predefined_value), AddProductPage.custom_value_input, productData.feature));
+        });
+      }
+      if (productData.hasOwnProperty('combination') && productData.type === 'combination') {
+        test('should check that "Product with combination" is well selected', () => client.checkAttributeValue(AddProductPage.product_combinations, 'value', '1'));
+        test('should click on "Combinations" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab));
+        test('should check the appearance of the first generated combination ', () => client.waitForExist(AddProductPage.combination_first_table));
+      }
+      if (productData.type === 'virtual') {
+        test('should click on "Virtual" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab));
+      }
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+    }, 'product/check_product');
   }
 };
