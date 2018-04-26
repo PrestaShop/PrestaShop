@@ -58,8 +58,6 @@ class LogsController extends FrameworkBundleAdminController
         $gridDefinition = $gridDefinitionFactory->createNew();
         $grid = $gridFactory->createFromDefinition($gridDefinition, $request);
 
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
-
         $filters = [
             'limit' => $request->query->get('limit', 10),
             'offset' => $request->query->get('offset', 0),
@@ -79,20 +77,8 @@ class LogsController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'orderBy' => $filters['orderBy'],
-            'sortOrder' => $filters['sortOrder'],
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'searchParametersForm' => $searchParametersForm->createView(),
-            'logsSum' => count($this->getLogRepository()->findAll()),
-            'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
-            'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
-            'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
-                'AdminRequestSql',
-                true,
-                [
-                'addrequest_sql' => 1
-                ]),
             'gridView' => $gridViewFactory->createView($grid),
         ];
 
