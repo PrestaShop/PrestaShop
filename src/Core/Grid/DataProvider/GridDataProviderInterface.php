@@ -25,6 +25,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersInterface;
 
 /**
  * Interface GridDataProviderInterface defines contract for grid data providers
@@ -34,11 +35,11 @@ interface GridDataProviderInterface
     /**
      * Get filtered & paginated rows from any data source (database, API or any other)
      *
-     * @param array $filters
+     * @param SearchParametersInterface $searchParameters
      *
      * @return array
      */
-    public function getRows(array $filters);
+    public function getRows(SearchParametersInterface $searchParameters);
 
     /**
      * Get total rows count in data source

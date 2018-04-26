@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersInterface;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
@@ -59,8 +60,17 @@ final class LogGridDataProvider implements GridDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRows(array $filters)
+    public function getRows(SearchParametersInterface $searchParameters)
     {
+        // make search parameters compatible with logRepositoryQuery
+        $filters = [
+            'offset' => $searchParameters->getOffset(),
+            'limit' => $searchParameters->getLimit(),
+            'filters' => $searchParameters->getFilters(),
+            'orderBy' => $searchParameters->getOrderBy(),
+            'sortOrder' => $searchParameters->getOrderWay(),
+        ];
+
         $logQuery = $this->logRepository->getAllWithEmployeeInformationQuery($filters);
 
         $this->hookDispatcher->dispatchForParameters('modifyLogGridQuery', [
