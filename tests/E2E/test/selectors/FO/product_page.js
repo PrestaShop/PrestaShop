@@ -23,7 +23,10 @@ module.exports = {
     quick_view_add_to_cart: '//*[@id="add-to-cart-or-refresh"]//button[contains(@data-button-action, "add-to-cart")]',
     //Get the number of products in front office after clicking on "SEE ALL PRODUCTS" link
     products_number: '//*[@id="js-product-list-top"]//p',
+    product_discounts_table: '//*[@id="add-to-cart-or-refresh"]//tbody/tr[%R]/td[%D]',
     offline_warning_message: '//div[contains(@class, "alert-warning")]//p',
-    product_discounts_table: '//*[@id="add-to-cart-or-refresh"]//tbody/tr[%R]/td[%D]'
+    product_summary: '(//*[@itemprop="description"]//p)[1]',
+    product_description: '//*[@id="description"]',
+    product_detail_tab: '//*[@role="tablist"]//li[2]'
   }
 };

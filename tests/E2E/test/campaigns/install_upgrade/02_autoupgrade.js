@@ -4,8 +4,7 @@ const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
-const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
-
+const {ShopParameters} = require('../../selectors/BO/shopParameters/shop_parameters.js');
 const commonScenarios = require('../common_scenarios/product');
 const commonInstallation = require('../common_scenarios/common_installation');
 const moduleCommonScenarios = require('../common_scenarios/module');
@@ -101,10 +100,10 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   scenario('Enable shop in the Back Office', client => {
-    test('should go to "Shop parameters" page', () => client.waitForExistAndClick(ShopParameter.maintenance_mode_link));
-    test('should set the shop "Enable"', () => client.waitForExistAndClick(ShopParameter.enable_shop.replace("%s", 'on')));
-    test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameter.save_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.success_panel, "The settings have been successfully updated."));
+    test('should go to "Shop parameters" page', () => client.waitForExistAndClick(ShopParameters.maintenance_mode_link));
+    test('should set the "Enable shop" parameter to "Yes"', () => client.waitAndSelectByValue(ShopParameters.enable_shop, "1"));
+    test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.save_button));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.maintenance_success_panel, "Successful update."));
   }, 'common_client');
 
   commonScenarios.createProduct(AddProductPage, productData);
