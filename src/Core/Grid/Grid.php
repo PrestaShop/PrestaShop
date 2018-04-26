@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Column;
+use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnsNotDefinedException;
@@ -58,7 +59,7 @@ final class Grid
     private $columns;
 
     /**
-     * @var array|RowAction[]
+     * @var RowActionCollectionInterface
      */
     private $rowActions;
 
@@ -130,7 +131,7 @@ final class Grid
     }
 
     /**
-     * @return array|RowAction[]
+     * @return RowActionCollectionInterface
      */
     public function getRowActions()
     {
@@ -172,7 +173,7 @@ final class Grid
     /**
      * @return FormInterface
      */
-    public function getForm()
+    public function getFilterForm()
     {
         return $this->form;
     }

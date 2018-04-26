@@ -24,9 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use Symfony\Component\Form\FormTypeInterface;
 
 /**

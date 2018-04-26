@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Column;
+use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;

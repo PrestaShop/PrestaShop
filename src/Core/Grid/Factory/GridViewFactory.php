@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Column;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShop\PrestaShop\Core\Grid\GridView;
@@ -40,7 +40,7 @@ final class GridViewFactory implements GridViewFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createViewFromGrid(Grid $grid)
+    public function createView(Grid $grid)
     {
         $gridView = new GridView(
             $grid->getIdentifier(),
@@ -48,7 +48,7 @@ final class GridViewFactory implements GridViewFactoryInterface
             $this->getColumnsView($grid),
             $this->getRowsView($grid),
             $grid->getRowsTotal(),
-            $grid->getForm()->createView()
+            $grid->getFilterForm()->createView()
         );
 
         return $gridView;
@@ -81,12 +81,12 @@ final class GridViewFactory implements GridViewFactoryInterface
     /**
      * Get available actions for single row
      *
-     * @param array $row
-     * @param array|RowAction[] $rowActions
+     * @param array                        $row
+     * @param RowActionCollectionInterface $rowActions
      *
      * @return array
      */
-    private function getRowActions(array $row, array $rowActions)
+    private function getRowActions(array $row, RowActionCollectionInterface $rowActions)
     {
         $actions = [];
 
