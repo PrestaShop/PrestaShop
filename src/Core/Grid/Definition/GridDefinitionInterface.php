@@ -25,7 +25,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
-use PrestaShop\PrestaShop\Core\Grid\Action\Column;
+use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 
 /**

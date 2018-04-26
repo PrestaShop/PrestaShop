@@ -24,19 +24,60 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use PrestaShop\PrestaShop\Core\Grid\GridView;
-
-interface GridViewFactoryInterface
+class RowActionCollection implements RowActionCollectionInterface
 {
     /**
-     * Create grid view data from given grid
-     *
-     * @param Grid $grid
-     *
-     * @return GridView
+     * @var array|RowActionInterface[]
      */
-    public function createView(Grid $grid);
+    private $actions = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(RowActionInterface $action)
+    {
+        $this->actions[$action->getIdentifier()] = $action;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function current()
+    {
+        return current($this->actions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function next()
+    {
+        return next($this->actions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function key()
+    {
+        return key($this->actions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function valid()
+    {
+        return false !== $this->current();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rewind()
+    {
+        reset($this->actions);
+    }
 }

@@ -50,20 +50,31 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $gridFactory = $this->get('prestashop.core.grid.factory');
+        $gridViewFactory = $this->get('prestashop.core.grid.view_factory');
+        $gridDefinitionFactory = $this->get('prestashop.core.grid.factory.log_definition');
+        $gridDataProvider = $this->get('prestashop.core.grid.data_provider.log');
+
+        $gridDefinition = $gridDefinitionFactory->createNew();
+        $grid = $gridFactory->createFromDefinition($gridDefinition, $request);
+
         $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
+
+        $filters = [
+            'limit' => $request->query->get('limit', 10),
+            'offset' => $request->query->get('offset', 0),
+            'orderBy' => $request->query->get('orderBy', $gridDefinition->getDefaultOrderBy()),
+            'sortOrder' => $request->query->get('sortOrder', $gridDefinition->getDefaultOrderWay()),
+            'filters' => $grid->getFilterForm()->getData(),
+        ];
+
+        $grid->setRows($gridDataProvider->getRows($filters));
+        $grid->setRowsTotal($gridDataProvider->getRowsTotal());
+
         $logsByEmailForm = $this->getFormHandler()->getForm();
-
-        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_log',
-            'sortOrder' => 'desc',
-            'filters' => array()
-        ));
-
-        $twigValues = array(
+        $twigValues = [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->get('translator')->trans('Logs', [], 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -79,10 +90,11 @@ class LogsController extends FrameworkBundleAdminController
             'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
                 'AdminRequestSql',
                 true,
-                array(
+                [
                 'addrequest_sql' => 1
-            )),
-        );
+                ]),
+            'gridView' => $gridViewFactory->createView($grid),
+        ];
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
     }
