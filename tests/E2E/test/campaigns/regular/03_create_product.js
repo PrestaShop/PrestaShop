@@ -6,7 +6,7 @@ const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../selectors/FO/search_product_page');
 let promise = Promise.resolve();
 
-var productData = {
+let productData = {
   name: 'Dress',
   quantity: "10",
   price: '5',

@@ -60,7 +60,7 @@ module.exports = {
     configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
     notification_number: '//*[@id="head_tabs"]//span[@class="notification-counter"]',
-
+    selection_tab: '//*[@id="head_tabs"]/a[1]',
     ModuleBankTransferPage: {
       account_owner_input: '//*[@id="BANK_WIRE_OWNER"]',
       account_details_textarea: '//*[@id="BANK_WIRE_DETAILS"]',

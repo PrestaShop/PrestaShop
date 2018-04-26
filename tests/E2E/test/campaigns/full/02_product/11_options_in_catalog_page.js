@@ -12,19 +12,19 @@ scenario('Check the options in the catalog page', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
   scenario('Disable the first product from the list in the Back Office', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should disable the first product', () => client.waitForExistAndClick(ProductList.first_product_status.replace('%ACTION', 'enabled')));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct successfully deactivated.'));
     test('should check that the status of the first product is equal to "Clear"', () => client.checkTextValue(CatalogPage.product_status_icon.replace('%S', 1), 'clear'));
   }, 'common_client');
   scenario('Enable the first product from the list in the Back Office', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should disable the first product', () => client.waitForExistAndClick(ProductList.first_product_status.replace('%ACTION', 'disabled')));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct successfully activated.'));
     test('should check that the status of the first product is equal to "Check"', () => client.checkTextValue(CatalogPage.product_status_icon.replace('%S', 1), 'check'));
   }, 'common_client');
   scenario('Preview the first product from the list in the Back Office', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Dropdown > Preview" button', () => {
       return promise
         .then(() => client.getTextInVar(ProductList.product_name.replace('%ID', 1), 'productName'))
@@ -39,7 +39,7 @@ scenario('Check the options in the catalog page', () => {
     });
   }, 'common_client');
   scenario('Duplicate the first product from the list in the Back Office', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Dropdown > Duplicate" button', () => {
       return promise
         .then(() => client.waitForExistAndClick(ProductList.dropdown_button.replace('%POS', 1)))
@@ -49,7 +49,7 @@ scenario('Check the options in the catalog page', () => {
     test('should check that the first product is well duplicated', () => client.checkAttributeValue(AddProductPage.product_name_input, 'value', 'copy', 'contain'));
   }, 'common_client');
   scenario('Delete the first product from the list in the Back Office', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Dropdown > Delete" button', () => {
       return promise
         .then(() => client.getTextInVar(ProductList.product_name.replace('%ID', 1), 'duplicatedProductName'))
@@ -65,4 +65,4 @@ scenario('Check the options in the catalog page', () => {
         .then(() => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     });
   }, 'product/check_product');
-}, 'common_client', true);
+}, 'common_client');

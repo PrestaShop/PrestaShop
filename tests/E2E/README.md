@@ -34,7 +34,7 @@ To run these tests you have to install
 
 This command line does it for you (you need a mysql user presta:presta with the right to create a database on localhost)
 ```
-php install/index_cli.php --language=en --country=fr --domain=localhost --db_server=localhostr --db_user=presta --db_name=presta --db_password=presta --firstname=Foo --lastname=Bar --email=demo@prestashop.com --password=prestashop_demo --db_create=1
+php install/index_cli.php --language=en --country=fr --domain=localhost --db_server=localhostr --db_user=presta --db_name=presta --DB_PASSWD=presta --firstname=Foo --lastname=Bar --email=demo@prestashop.com --password=prestashop_demo --db_create=1
 ```
 > Note:
 > Or you can run the installation script via the npm script specific-test

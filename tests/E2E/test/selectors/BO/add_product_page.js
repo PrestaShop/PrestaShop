@@ -33,12 +33,11 @@ module.exports = {
     save_quantitie_button: '//*[@id="apply-on-combinations"]',
     add_feature_to_product_button: '//*[@id="add_feature_button"]',
     feature_select: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
-    select_feature_created: '/html/body/span[4]/span/span[1]/input',
+    select_feature_created: '/html/body//span/span[1]/input',
     feature_select_button: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
     result_feature_select: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li',
-    add_summary_textarea_button: '//*[@id="form_step1_description_short"]/div/div/div/div/div[1]/div/div/div/div/div/div[1]/button',
-    add_summary_textarea: '/html/body/div[7]/div[2]/div[2]/div/textarea',
-    save_summary_button: '/html/body/div[7]/div[3]/div/div[2]/button',
+    summary_textarea: '(//*[@id="form_step1_description_short"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
+    description_textarea: '(//*[@id="form_step1_description"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
     tab_description: '//*[@id="tab_description"]/a',
     feature_value_select: '//*[@id="form_step1_features_0_value"]',
     product_create_category_btn: '//*[@id="add-category-button"]',
@@ -169,7 +168,7 @@ module.exports = {
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
-    category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
+    category_radio: '//*[@id="form_step1_categories"]//label[text()[contains(.,"%S")]]/input[2]',
     preview_buttons: '//*[@id="product_form_preview_btn"]',
     dropdown_button: '//*[@id="dropdownMenu"]',
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
@@ -179,7 +178,9 @@ module.exports = {
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
-    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]'
+    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
+    home_delete_button: '//*[@id="ps_categoryTags"]/span[1]/a',
+    created_category: '//*[@id="ps_categoryTags"]/span[2]/span'
   },
 
   ProductList: {

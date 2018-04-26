@@ -7,7 +7,7 @@ module.exports = {
   },
   installModule: function (client, ModulePage, AddProductPage, moduleTechName) {
     test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
-    test('should click on "Selection" tab', () => client.waitForVisibleAndClick(ModulePage.selection_modules_tabs));
+    test('should click on "Selection" tab', () => client.waitForExistAndClick(ModulePage.selection_tab));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
     test('should click on "Install" button', () => client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", moduleTechName)));

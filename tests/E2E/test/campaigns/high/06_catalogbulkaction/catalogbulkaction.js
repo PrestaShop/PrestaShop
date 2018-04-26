@@ -12,7 +12,7 @@ scenario('Catalog bulk action', () => {
   }, 'catalogbulkaction');
 
   scenario('Disable the product list', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Select all" radio', () => client.selectAllProducts(CatalogPage.select_all_product_button));
     test('should choose the "Deactivate selection" action', () => client.selectAction(CatalogPage, 2));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully deactivated.'));
@@ -33,7 +33,7 @@ scenario('Catalog bulk action', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products))
         .then(() => client.getProductsNumber(ProductList.pagination_products))
-        .then(() => client.selectAllProducts(CatalogPage.select_all_product_button))
+        .then(() => client.selectAllProducts(CatalogPage.select_all_product_button));
     });
     test('should choose the "Duplicate selection" action', () => client.selectAction(CatalogPage, 3));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully duplicated.'));
@@ -41,7 +41,7 @@ scenario('Catalog bulk action', () => {
       let number = typeof global.productsNumber !== 'undefined' ? parseInt(global.productsNumber) : 0;
       return promise
         .then(() => client.getProductPageNumber('product_catalog_list'))
-        .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsPageNumber) + number, 'contain'))
+        .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsPageNumber) + number, 'contain'));
     });
   }, 'catalogbulkaction');
 

@@ -11,19 +11,19 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 
 let productData = [{
   name: 'A',
-  quantity: "50",
+  quantity: '50',
   price: '5',
   image_name: 'image_test.jpg',
   reference: 'a'
 }, {
-  type: "pack",
+  type: 'pack',
   name: 'B',
-  quantity: "5",
+  quantity: '5',
   price: '5',
   image_name: 'image_test.jpg',
   reference: 'b',
   product: {
-    name: "A",
+    name: 'A',
     quantity: "10"
   }
 }];
@@ -37,7 +37,7 @@ scenario('Create standard product "A" and pack product "B" in the Back Office', 
     test('Should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     test('Should click on "NO" button to disable ordering of out-of-stock products', () => client.scrollWaitForExistAndClick(ProductSettings.disableOrderOutOfStock_button));
     test('Should select "Decrement both" of "Default pack stock management"', () => client.waitAndSelectByValue(ProductSettings.stockManagement_button, 2));
-    test('Should click "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button));
+    test('Should click "Save" button', () => client.scrollWaitForExistAndClick(ProductSettings.save_button.replace('%POS', 3)));
   }, 'product/product');
   common_scenarios.createProduct(AddProductPage, productData[0]);
   common_scenarios.createProduct(AddProductPage, productData[1]);
