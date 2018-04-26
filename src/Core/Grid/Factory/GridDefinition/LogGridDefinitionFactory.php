@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Column;
+use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
