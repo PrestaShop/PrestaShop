@@ -52,7 +52,7 @@ class LogsController extends FrameworkBundleAdminController
     {
         $gridFactory = $this->get('prestashop.core.grid.factory');
         $gridViewFactory = $this->get('prestashop.core.grid.view_factory');
-        $gridDefinitionFactory = $this->get('prestashop.core.grid.factory.log_definition');
+        $gridDefinitionFactory = $this->get('prestashop.core.grid.defintion.factory.log_definition');
         $gridDataProvider = $this->get('prestashop.core.grid.data_provider.log');
 
         $gridDefinition = $gridDefinitionFactory->createNew();
@@ -72,7 +72,7 @@ class LogsController extends FrameworkBundleAdminController
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $twigValues = [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Logs', [], 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
