@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Exception\NonUniqueColumnException;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.)
@@ -57,12 +59,12 @@ final class Definition implements GridDefinitionInterface
     private $defaultOrderWay;
 
     /**
-     * @var array|Column[]
+     * @var ColumnCollectionInterface
      */
-    private $columns = [];
+    private $columns;
 
     /**
-     * @var array|RowAction[]
+     * @var RowActionCollectionInterface
      */
     private $rowActions;
 
@@ -80,20 +82,15 @@ final class Definition implements GridDefinitionInterface
         $this->defaultOrderWay = $defaultOrderWay;
 
         $this->rowActions = new RowActionCollection();
+        $this->columns = new ColumnCollection();
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws NonUniqueColumnException
      */
     public function addColumn(Column $column)
     {
-        if (isset($this->columns[$column->getIdentifier()])) {
-            throw new NonUniqueColumnException(sprintf('Duplicated column "%s" on grid definition'));
-        }
-
-        $this->columns[$column->getIdentifier()] = $column;
+        $this->columns->add($column);
     }
 
     /**

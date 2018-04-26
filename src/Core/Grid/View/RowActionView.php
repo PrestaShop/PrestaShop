@@ -24,8 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Exception;
+namespace PrestaShop\PrestaShop\Core\Grid\View;
 
-class NonUniqueColumnException extends \Exception implements ExceptionInterface
+/**
+ * Class RowActionView represent row action ready for rendering
+ */
+class RowActionView
 {
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $icon;
+
+    /**
+     * @var string
+     */
+    private $url;
+
+    /**
+     * @param string $name Translated row action name
+     * @param string $icon Row action icon
+     * @param string $url  Row action URL
+     */
+    public function __construct($name, $icon, $url)
+    {
+        $this->name = $name;
+        $this->icon = $icon;
+        $this->url = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 }

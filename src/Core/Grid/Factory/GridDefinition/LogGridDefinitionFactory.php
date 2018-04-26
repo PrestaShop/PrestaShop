@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -69,7 +70,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    function getColumns()
+    public function getColumns()
     {
         return [
             (new Column('id_log', $this->translator->trans('ID', [], 'Admin.Global')))
@@ -88,6 +89,21 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setFilterFormType(TextType::class),
             (new Column('date_add', $this->translator->trans('Date', [], 'Admin.Global')))
                 ->setFilterFormType(TextType::class),
+        ];
+    }
+
+    /**
+     * @todo: logs do not have row actions, these are defined for testing purpose and will be removed
+     */
+    public function getRowActions()
+    {
+        $urlGenerator = function ($row) {
+            return 'dummy.url.for.testing';
+        };
+
+        return [
+            new RowAction('edit', 'Edit', $urlGenerator, 'build'),
+            new RowAction('delete', 'Delete', $urlGenerator, 'bug_report'),
         ];
     }
 }
