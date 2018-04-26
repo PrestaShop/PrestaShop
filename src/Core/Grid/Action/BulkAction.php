@@ -26,58 +26,71 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-final class RowActionCollection implements RowActionCollectionInterface
+final class BulkAction implements BulkActionInterface
 {
     /**
-     * @var array|RowActionInterface[]
+     * @var string
      */
-    private $actions = [];
+    private $name;
 
     /**
-     * {@inheritdoc}
+     * @var callable
      */
-    public function add(RowActionInterface $action)
+    private $callback;
+
+    /**
+     * @var string
+     */
+    private $icon = '';
+
+    /**
+     * @var string
+     */
+    private $identifier;
+
+    /**
+     * @param string   $identifier Action identifier should be unique between all grid row actions
+     * @param string   $name       Translated action name
+     * @param callable $callback   Action callback
+     * @param string   $icon       Action icon name
+     */
+    public function __construct($identifier, $name, callable $callback, $icon = '')
     {
-        $this->actions[$action->getIdentifier()] = $action;
+        $this->name = $name;
+        $this->callback = $callback;
+        $this->icon = $icon;
+        $this->identifier = $identifier;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function current()
+    public function getName()
     {
-        return current($this->actions);
+        return $this->name;
     }
 
     /**
-     * {@inheritdoc}
+     * @return callable
      */
-    public function next()
+    public function getCallback()
     {
-        return next($this->actions);
+        return $this->callback;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string|null
      */
-    public function key()
+    public function getIcon()
     {
-        return key($this->actions);
+        return $this->icon;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function valid()
+    public function getIdentifier()
     {
-        return false !== $this->current();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        reset($this->actions);
+        return $this->identifier;
     }
 }

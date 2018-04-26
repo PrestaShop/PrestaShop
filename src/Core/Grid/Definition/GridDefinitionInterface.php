@@ -25,6 +25,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 
@@ -88,4 +89,11 @@ interface GridDefinitionInterface
      * @param RowAction $rowAction
      */
     public function addRowAction(RowAction $rowAction);
+
+    /**
+     * Add bulk action to grid definition
+     *
+     * @param BulkAction $bulkAction
+     */
+    public function addBulkAction(BulkAction $bulkAction);
 }
