@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,21 +21,20 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
-
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use PrestaShop\PrestaShop\Core\Grid\GridView;
-
-interface GridViewFactoryInterface
-{
-    /**
-     * Create grid view data from given grid
-     *
-     * @param Grid $grid
-     *
-     * @return GridView
-     */
-    public function createView(Grid $grid);
-}
+<div class="card">
+  <div class="card-header">
+    <h3>
+      <i class="material-icons">list</i>
+      {{ gridView.name }} ({{ gridView.rowsTotal }})
+    </h3>
+  </div>
+  <div class="card-block">
+    <div class="card-text">
+      {% block grid_view_block %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' %}
+      {% endblock %}
+    </div>
+  </div>
+</div>

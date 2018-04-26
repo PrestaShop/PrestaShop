@@ -15,7 +15,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition\AbstractGridDefinitionFactory'
         abstract: true
         calls:
-            - [setTranslator, '@translator']
+            - [setTranslator, ['@translator']]
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
@@ -28,5 +28,4 @@ services:
     prestashop.core.grid.factory.log_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.factory.abstract_grid_definition'
-        arguments:
-            - '@translator'
+        public: true
