@@ -155,12 +155,12 @@ class OrderPresenter implements PresenterInterface
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            
+
             $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
             $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
             $orderProduct['price'] = $this->priceFormatter->format($orderProduct[$productPrice], Currency::getCurrencyInstance((int)$order->id_currency));
             $orderProduct['total'] = $this->priceFormatter->format($orderProduct[$totalPrice], Currency::getCurrencyInstance((int)$order->id_currency));
-            
+
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
                 $product_download = new ProductDownload($id_product_download);
@@ -277,7 +277,7 @@ class OrderPresenter implements PresenterInterface
         }
 
         $amounts['totals'] = array();
-        $amount = $includeTaxes ? $order->total_paid : $order->total_paid_tax_excl;
+        $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
         $amounts['totals']['total'] = array(
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
