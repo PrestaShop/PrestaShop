@@ -103,6 +103,9 @@ class EmployeeCore extends ObjectModel
 
     /** @var string token validity date for forgot password feature */
     public $reset_password_validity;
+	
+    /** @var int Calendar Type Number */
+    public $calendar_type;
 
     /**
      * @see ObjectModel::$definition
@@ -137,6 +140,7 @@ class EmployeeCore extends ObjectModel
             'id_last_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'reset_password_token' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
             'reset_password_validity' => array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
+            'calendar_type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
         ),
     );
 

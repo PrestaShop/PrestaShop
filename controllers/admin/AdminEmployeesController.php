@@ -343,6 +343,17 @@ class AdminEmployeesControllerCore extends AdminController
                     'name' => 'name'
                 )
             ),
+            array(
+                'type' => 'select',
+                'label' => $this->trans('Calendar', array(), 'Admin.Global'),
+                'name' => 'calendar_type',
+				'class'=> 'fixed-width-xxl',
+                'options' => array(
+                    'query' => Calendar::getCalendarsList(true),
+                    'id' => 'id',
+                    'name' => 'name',
+                )
+            )
         ));
 
         if ((int)$this->access('edit') && !$this->restrict_edition) {
