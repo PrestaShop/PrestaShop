@@ -26,19 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-final class RowActionCollection implements RowActionCollectionInterface
+class BulkActionCollection implements BulkActionCollectionInterface
 {
     /**
-     * @var array|RowActionInterface[]
+     * @var array|BulkActionInterface[]
      */
     private $actions = [];
 
     /**
      * {@inheritdoc}
      */
-    public function add(RowActionInterface $action)
+    public function add(BulkActionInterface $bulkAction)
     {
-        $this->actions[$action->getIdentifier()] = $action;
+        $this->actions[$bulkAction->getIdentifier()] = $bulkAction;
     }
 
     /**
