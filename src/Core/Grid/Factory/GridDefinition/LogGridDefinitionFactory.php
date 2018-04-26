@@ -27,53 +27,51 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Column;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
  */
-final class LogGridDefinitionFactory implements GridDefinitionFactoryInterface
+final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var TranslatorInterface
+     * {@inheritdoc}
      */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
+    public function getIdentifier()
     {
-        $this->translator = $translator;
+        return 'logs_table';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createNew()
+    public function getName()
     {
-        $definition = new Definition(
-            'logs_table',
-            $this->translator->trans('Logs', [], 'Admin.Advparameters.Feature'),
-            'id_log',
-            'desc'
-        );
-
-        $this->addDefaultColumns($definition);
-
-        return $definition;
+        return $this->translator->trans('Logs', [], 'Admin.Advparameters.Feature');
     }
 
     /**
-     * Add default columns to grid definition
-     *
-     * @param Definition $definition
+     * {@inheritdoc}
      */
-    private function addDefaultColumns(Definition $definition)
+    public function getDefaultOrderBy()
     {
-        $columns = [
+        return 'id_log';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultOrderWay()
+    {
+        return 'desc';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function getColumns()
+    {
+        return [
             (new Column('id_log', $this->translator->trans('ID', [], 'Admin.Global')))
                 ->setFilterFormType(TextType::class),
             (new Column('id_employee', $this->translator->trans('Employee', [], 'Admin.Global')))
@@ -91,9 +89,5 @@ final class LogGridDefinitionFactory implements GridDefinitionFactoryInterface
             (new Column('date_add', $this->translator->trans('Date', [], 'Admin.Global')))
                 ->setFilterFormType(TextType::class),
         ];
-
-        foreach ($columns as $column) {
-            $definition->addColumn($column);
-        }
     }
 }
