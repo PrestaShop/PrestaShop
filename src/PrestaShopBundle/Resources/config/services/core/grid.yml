@@ -5,12 +5,13 @@ services:
     # Factories
     prestashop.core.grid.view_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridViewFactory'
+        arguments:
+            - '@form.factory'
 
     prestashop.core.grid.factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridFactory'
         arguments:
             - '@prestashop.hook.dispatcher'
-            - '@form.factory'
             - '@prestashop.core.grid.search.parameters_factory'
 
     # Search

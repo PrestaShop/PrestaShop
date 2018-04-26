@@ -45,12 +45,10 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
         if ($data = $request->get($definition->getIdentifier())) {
             foreach ($definition->getColumns() as $column) {
                 $identifier = $column->getIdentifier();
-                $value = $data[$identifier];
-                $filters[$identifier] = $value;
 
-//                if (!empty($value = $data[$identifier])) {
-//                    $filters[$identifier] = $value;
-//                }
+                if (!empty($value = $data[$identifier])) {
+                    $filters[$identifier] = $value;
+                }
             }
         }
 

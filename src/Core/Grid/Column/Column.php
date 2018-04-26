@@ -164,6 +164,6 @@ final class Column implements ColumnInterface
     {
         // if form type is set for column
         // then column is filterable
-        return $this->getFilterFormType() ? true : false;
+        return null !== $this->getFilterFormType();
     }
 }
