@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnsNotDefinedException;
 use Symfony\Component\Form\FormInterface;
@@ -54,7 +55,7 @@ final class Grid
     private $form;
 
     /**
-     * @var array|Column[]
+     * @var ColumnCollectionInterface
      */
     private $columns;
 
@@ -123,7 +124,7 @@ final class Grid
     }
 
     /**
-     * @return array|Column[]
+     * @return ColumnCollectionInterface
      */
     public function getColumns()
     {

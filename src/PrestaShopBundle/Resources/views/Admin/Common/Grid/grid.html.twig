@@ -29,12 +29,12 @@
 <table class="table" id="{{ gridView.identifier }}">
   <thead class="thead-default">
   <tr class="column-headers">
-    {% for tableColumn in gridView.columns %}
+    {% for columnView in gridView.columns %}
       <th scope="col">
-        {% if tableColumn.is_sortable %}
-          {{ ps.sortable_column_header(tableColumn.name, tableColumn.identifier, '', 'asc') }}
+        {% if columnView.sortable %}
+          {{ ps.sortable_column_header(columnView.name, columnView.identifier, '', '') }}
         {% else %}
-          {{ tableColumn.name }}
+          {{ columnView.name }}
         {% endif %}
       </th>
     {% endfor %}
@@ -42,10 +42,10 @@
   </tr>
   {% if filtersForm|length > 1 %}
     <tr class="column-filters">
-      {% for tableColumn in gridView.columns %}
+      {% for columnView in gridView.columns %}
         <th>
-          {% if filtersForm[tableColumn.identifier] is defined %}
-            {{ form_widget(filtersForm[tableColumn.identifier]) }}
+          {% if columnView.filterable %}
+            {{ form_widget(filtersForm[columnView.identifier]) }}
           {% else %}
             -
           {% endif %}
@@ -74,8 +74,8 @@
     {% for tableRow in gridView.rows %}
       <tr>
         {# Render row columns here #}
-        {% for tableColumn in gridView.columns %}
-          <td>{{ tableRow.data[tableColumn.identifier] }}</td>
+        {% for columnView in gridView.columns %}
+          <td>{{ tableRow.data[columnView.identifier] }}</td>
         {% endfor %}
 
         {# If row has any actions then render those here #}
