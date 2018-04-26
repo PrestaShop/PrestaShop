@@ -2,6 +2,7 @@ services:
     _defaults:
         public: true
 
+    # Factories
     prestashop.core.grid.view_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridViewFactory'
 
@@ -11,12 +12,6 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@form.factory'
 
-    prestashop.core.grid.factory.abstract_grid_definition:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition\AbstractGridDefinitionFactory'
-        abstract: true
-        calls:
-            - [setTranslator, ['@translator']]
-
     # Grid data providers
     prestashop.core.grid.data_provider.log:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\LogGridDataProvider'
@@ -25,7 +20,13 @@ services:
             - '@prestashop.hook.dispatcher'
 
     # Grid definition factories
-    prestashop.core.grid.factory.log_definition:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridDefinition\LogGridDefinitionFactory'
-        parent: 'prestashop.core.grid.factory.abstract_grid_definition'
+    prestashop.core.grid.definition.factory.abstract_grid_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        abstract: true
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.core.grid.defintion.factory.log_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
