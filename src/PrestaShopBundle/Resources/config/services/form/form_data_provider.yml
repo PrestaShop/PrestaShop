@@ -8,6 +8,13 @@ services:
             - '@prestashop.adapter.customer.customer_configuration'
             - '@translator'
 
+    prestashop.admin.order_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\OrderPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.order_general.configuration'
+            - '@translator'
+            - '@prestashop.adapter.data_provider.cms'
+
     prestashop.admin.product_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
         arguments:

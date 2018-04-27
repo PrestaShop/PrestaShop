@@ -334,6 +334,16 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.order_preferences.general:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+            - '@prestashop.adapter.data_provider.cms'
+        tags:
+            - { name: form.type }
+
     form.type.import.import:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
         parent: 'form.type.translatable.aware'

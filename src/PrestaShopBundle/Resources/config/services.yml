@@ -186,6 +186,9 @@ services:
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
 
+    prestashop.adapter.data_provider.cms:
+        class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
+
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager
         decorates: prestashop.core.data_provider.stock_interface
