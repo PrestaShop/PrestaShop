@@ -24,17 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Search;
+namespace PrestaShop\PrestaShop\Core\Grid\View;
 
-interface SearchParametersInterface
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+
+interface GridViewFactoryInterface
 {
-    public function getOrderBy();
-
-    public function getOrderWay();
-
-    public function getLimit();
-
-    public function getOffset();
-
-    public function getFilters();
+//    /**
+//     * Create grid view data from given grid
+//     *
+//     * @param Grid $grid
+//     *
+//     * @return GridView
+//     */
+//    public function createView(GridDefinitionInterface $definition, GridDataProviderInterface $dataProvider);
 }

@@ -79,4 +79,11 @@ interface ColumnInterface
      * @return bool
      */
     public function isFilterable();
+
+    /**
+     * Check if column's content should be escaped or not
+     *
+     * @return bool
+     */
+    public function isRawContent();
 }

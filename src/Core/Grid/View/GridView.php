@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\View;
 use Symfony\Component\Form\FormView;
 
 /**
- * Class GridView is responsible for storing grid data that is passed to template for rendering
+ * Class GridView is responsible for storing final grid data that is passed to template for rendering
  */
 final class GridView
 {
@@ -46,7 +46,7 @@ final class GridView
     /**
      * @var FormView
      */
-    private $formView;
+    private $filterForm;
 
     /**
      * @var array
@@ -61,29 +61,51 @@ final class GridView
     /**
      * @var array
      */
-    private $rows;
+    private $rows = [];
 
     /**
      * @var int
      */
-    private $rowsTotal;
+    private $rowsTotal = 0;
 
     /**
-     * @param string    $identifier     Grid identifier should be unique per grid and will act as ID on html table element
-     * @param string    $name           Grid name
-     * @param array     $columnViews    Grid columns
-     * @param array     $rowViews       Grid rows data
-     * @param int       $rowsTotal      Total count of all rows
-     * @param FormView  $formView       Filters form view
+     * Constructor accepts all required parameters for grid view
+     *
+     * @param string   $identifier  Grid identifier should be unique per grid and will act as ID on html table element
+     * @param string   $name        Grid name
+     * @param array    $columnViews Grid columns
+     * @param FormView $filterForm  Filters form view
      */
-    public function __construct($identifier, $name, array $columnViews, array $rowViews, $rowsTotal, FormView $formView)
+    public function __construct($identifier, $name, array $columnViews, FormView $filterForm)
     {
         $this->columns = $columnViews;
-        $this->rows = $rowViews;
         $this->identifier = $identifier;
-        $this->rowsTotal = $rowsTotal;
         $this->name = $name;
-        $this->formView = $formView;
+        $this->filterForm = $filterForm;
+    }
+
+    /**
+     * @param array $rows
+     */
+    public function setRows(array $rows)
+    {
+        $this->rows = $rows;
+    }
+
+    /**
+     * @param int $rowsTotal
+     */
+    public function setRowsTotal($rowsTotal)
+    {
+        $this->rowsTotal = $rowsTotal;
+    }
+
+    /**
+     * @param array $bulkActions
+     */
+    public function setBulkActions(array $bulkActions)
+    {
+        $this->bulkActions = $bulkActions;
     }
 
     /**
@@ -137,8 +159,16 @@ final class GridView
     /**
      * @return FormView
      */
-    public function getFormView()
+    public function getFilterForm()
     {
-        return $this->formView;
+        return $this->filterForm;
+    }
+
+    /**
+     * Check if bulk actions are available
+     */
+    public function isBulkActionsAvailable()
+    {
+        return !empty($this->bulkActions) && count($this->rows) > 1;
     }
 }

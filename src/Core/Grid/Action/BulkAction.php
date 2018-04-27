@@ -34,11 +34,6 @@ final class BulkAction implements BulkActionInterface
     private $name;
 
     /**
-     * @var callable
-     */
-    private $callback;
-
-    /**
      * @var string
      */
     private $icon = '';
@@ -51,13 +46,11 @@ final class BulkAction implements BulkActionInterface
     /**
      * @param string   $identifier Action identifier should be unique between all grid row actions
      * @param string   $name       Translated action name
-     * @param callable $callback   Action callback
      * @param string   $icon       Action icon name
      */
-    public function __construct($identifier, $name, callable $callback, $icon = '')
+    public function __construct($identifier, $name, $icon = '')
     {
         $this->name = $name;
-        $this->callback = $callback;
         $this->icon = $icon;
         $this->identifier = $identifier;
     }
@@ -68,14 +61,6 @@ final class BulkAction implements BulkActionInterface
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return callable
-     */
-    public function getCallback()
-    {
-        return $this->callback;
     }
 
     /**

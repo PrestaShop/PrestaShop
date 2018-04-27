@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,61 +23,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\View;
+const $ = window.$;
 
-/**
- * Class RowActionView represent row action ready for rendering
- */
-class RowActionView
-{
-    /**
-     * @var string
-     */
-    private $name;
+export default class Grid {
+  constructor() {
+    this.handleBulkActionSelectAllCheckbox();
+    this.handleBulkActionCheckboxSelect();
+  }
 
-    /**
-     * @var string
-     */
-    private $icon;
+  /**
+   * Handles "Select all" button in the grid
+   */
+  handleBulkActionSelectAllCheckbox() {
+    $(document).on('change', '.js-select-all-btn', (e) => {
+      const $checkbox = $(e.target);
+      const $grid = $checkbox.closest('.js-grid');
+      const $items = $grid.find('.js-bulk-action-checkbox');
+      const $bulkActionsBtn = $grid.find('.js-bulk-actions-btn');
 
-    /**
-     * @var string
-     */
-    private $url;
+      const isChecked = $checkbox.is(':checked');
 
-    /**
-     * @param string $name Translated row action name
-     * @param string $icon Row action icon
-     * @param string $url  Row action URL
-     */
-    public function __construct($name, $icon, $url)
-    {
-        $this->name = $name;
-        $this->icon = $icon;
-        $this->url = $url;
-    }
+      $items.prop('checked', isChecked);
+      $bulkActionsBtn.prop('disabled', !isChecked);
+    });
+  }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
+  /**
+   * Handles each bulk action checkbox select in the grid
+   */
+  handleBulkActionCheckboxSelect() {
+    //@todo
+  }
 }

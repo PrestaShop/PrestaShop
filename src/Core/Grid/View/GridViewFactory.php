@@ -24,15 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\View;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnsNotDefinedException;
 use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use PrestaShop\PrestaShop\Core\Grid\View\GridView;
-use PrestaShop\PrestaShop\Core\Grid\View\ColumnView;
-use PrestaShop\PrestaShop\Core\Grid\View\RowActionView;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
 
@@ -54,16 +53,34 @@ final class GridViewFactory implements GridViewFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createView(Grid $grid)
-    {
+    public function createView(
+        GridDefinitionInterface $definition,
+        GridDataProviderInterface $dataProvider
+    ) {
+        if (empty($columns = $definition->getColumns())) {
+            throw new ColumnsNotDefinedException(
+                sprintf('Grid view cannot be created. "%s" grid definition does not define any columns.', $definition->getIdentifier())
+            );
+        }
+
+        $columns = $this->createColumnsView($columns);
+        $bulkActions = $this->createBulkActionsView($definition);
+        $filterForm = $this->createFilterFormView($definition);
+
         $gridView = new GridView(
-            $grid->getDefinition()->getIdentifier(),
-            $grid->getDefinition()->getName(),
-            $this->createColumnsView($grid),
-            $this->createRowsView($grid),
-            $grid->getData()->getRowsTotal(),
-            $this->createFilterFormView($grid)
+            $definition->getIdentifier(),
+            $definition->getName(),
+            $columns,
+            $filterForm
         );
+
+        $gridView->setBulkActions($bulkActions);
+
+        $rows = $dataProvider->getRows();
+        $rowView = $this->createRowsView($rows, $definition);
+
+        $gridView->setRows($rowView);
+        $gridView->setRowsTotal($dataProvider->getRowsTotal());
 
         return $gridView;
     }
@@ -71,26 +88,26 @@ final class GridViewFactory implements GridViewFactoryInterface
     /**
      * Get rows data ready for rendering in template
      *
-     * @param Grid $grid
+     * @param array $rows
+     * @param GridDefinitionInterface $definition
      *
      * @return array
      */
-    private function createRowsView(Grid $grid)
+    private function createRowsView(array $rows, GridDefinitionInterface $definition)
     {
-        $definition = $grid->getDefinition();
+        $rowsView = [];
 
-        $rowActionViews = [];
-        foreach ($grid->getData()->getRows() as $row) {
+        foreach ($rows as $row) {
             $rowActions = $this->getRowActions($row, $definition->getRowActions());
             $rowData = $this->applyColumnModifications($row, $definition->getColumns());
 
-            $rowActionViews[] = [
+            $rowsView[] = [
                 'actions' => $rowActions,
                 'data' => $rowData,
             ];
         }
 
-        return $rowActionViews;
+        return $rowsView;
     }
 
     /**
@@ -115,20 +132,18 @@ final class GridViewFactory implements GridViewFactoryInterface
                 continue;
             }
 
-            $rowActionView = new RowActionView(
-                $rowAction->getName(),
-                $rowAction->getIcon(),
-                $url
-            );
-
-            $actions[$rowAction->getIdentifier()] = $rowActionView;
+            $actions[$rowAction->getIdentifier()] = [
+                'name' => $rowAction->getName(),
+                'icon' => $rowAction->getIcon(),
+                'url' => $url,
+            ];
         }
 
         return $actions;
     }
 
     /**
-     * Some columns may modify data that comes directly from database or any other data source.
+     * Some columns may modify row data that comes directly from database or any other data source.
      *
      * @param array                     $row
      * @param ColumnCollectionInterface $columns
@@ -159,33 +174,36 @@ final class GridViewFactory implements GridViewFactoryInterface
     }
 
     /**
-     * @param Grid $grid
+     * @param ColumnCollectionInterface $columns
      *
-     * @return array|ColumnView[]
+     * @return array
      */
-    private function createColumnsView(Grid $grid)
+    private function createColumnsView(ColumnCollectionInterface $columns)
     {
         $columnsView = [];
 
-        foreach ($grid->getDefinition()->getColumns() as $column) {
-            $columnsView[] = ColumnView::fromColumn($column);
+        foreach ($columns as $column) {
+            $columnsView[] = [
+                'identifier' => $column->getIdentifier(),
+                'name' => $column->getName(),
+                'is_sortable' => $column->isSortable(),
+                'is_filterable' => $column->isFilterable(),
+                'is_raw' => $column->isRawContent(),
+            ];
         }
 
         return $columnsView;
     }
 
-
     /**
      * Builds filters form for grid
      *
-     * @param Grid $grid
+     * @param GridDefinitionInterface $definition
      *
      * @return FormView
      */
-    private function createFilterFormView(Grid $grid)
+    private function createFilterFormView(GridDefinitionInterface $definition)
     {
-        $definition = $grid->getDefinition();
-
         $formBuilder = $this->formFactory->createNamedBuilder($definition->getIdentifier());
 
         foreach ($definition->getColumns() as $column) {
@@ -205,10 +223,30 @@ final class GridViewFactory implements GridViewFactoryInterface
         }
 
         $form = $formBuilder
-            ->setData($grid->getSearchParameters()->getFilters())
+            ->setData([])   //@todo: filters data should be
             ->getForm()
         ;
 
         return $form->createView();
+    }
+
+    /**
+     * @param GridDefinitionInterface $definition
+     *
+     * @return array
+     */
+    private function createBulkActionsView(GridDefinitionInterface $definition)
+    {
+        $bulkActionsView = [];
+
+        foreach ($definition->getBulkActions() as $bulkAction) {
+            $bulkActionsView[] = [
+                'identifier' => $bulkAction->getIdentifier(),
+                'name' => $bulkAction->getName(),
+                'icon' => $bulkAction->getIcon(),
+            ];
+        }
+
+        return $bulkActionsView;
     }
 }
