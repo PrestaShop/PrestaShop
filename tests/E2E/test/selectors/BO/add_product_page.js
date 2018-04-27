@@ -32,7 +32,7 @@ module.exports = {
     save_quantitie_button: '//*[@id="apply-on-combinations"]',
     add_feature_to_product_button: '//*[@id="add_feature_button"]',
     feature_select: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
-    select_feature_created: '/html/body/span[4]/span/span[1]/input',
+    select_feature_created: '/html/body//span/span[1]/input',
     feature_select_button: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
     result_feature_select: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li',
     add_summary_textarea_button: '//*[@id="form_step1_description_short"]/div/div/div/div/div[1]/div/div/div/div/div/div[1]/button',
@@ -130,6 +130,7 @@ module.exports = {
     specific_price_reduction_tax_select: '//*[@id="form_step2_specific_price_sp_reduction_tax"]',
     specific_price_discount_input: '//*[@id="form_step2_specific_price_sp_reduction"]',
     specific_price_save_button: '//*[@id="form_step2_specific_price_save"]',
+    specific_price_delete_button: '//*[@id="js-specific-price-list"]//i[text()="delete"]',
     pricing_first_priorities_select: '//*[@id="form_step2_specificPricePriority_0"]',
     pricing_second_priorities_select: '//*[@id="form_step2_specificPricePriority_1"]',
     pricing_third_priorities_select: '//*[@id="form_step2_specificPricePriority_2"]',
@@ -172,7 +173,8 @@ module.exports = {
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
-    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]'
+    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
+    continue_confirmation: '//*[@id="confirmation_modal"]//button[2]'
   },
 
   ProductList: {
