@@ -2,21 +2,10 @@ services:
     _defaults:
         public: true
 
-    # Factories
-    prestashop.core.grid.view_factory:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridViewFactory'
+    prestashop.core.grid.view.factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\View\GridViewFactory'
         arguments:
             - '@form.factory'
-
-    prestashop.core.grid.factory:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Factory\GridFactory'
-        arguments:
-            - '@prestashop.hook.dispatcher'
-            - '@prestashop.core.grid.search.parameters_factory'
-
-    # Search
-    prestashop.core.grid.search.parameters_factory:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersFactory'
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:

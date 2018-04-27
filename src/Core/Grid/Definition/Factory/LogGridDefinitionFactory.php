@@ -49,23 +49,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->translator->trans('Logs', [], 'Admin.Advparameters.Feature');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultOrderBy()
-    {
-        return 'id_log';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultOrderWay()
-    {
-        return 'desc';
+        return $this->trans('Logs', [], 'Admin.Advparameters.Feature');
     }
 
     /**
@@ -74,22 +58,15 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return [
-            (new Column('id_log', $this->translator->trans('ID', [], 'Admin.Global')))
-                ->setFilterFormType(TextType::class),
-            (new Column('id_employee', $this->translator->trans('Employee', [], 'Admin.Global')))
-                ->setFilterFormType(TextType::class),
-            (new Column('severity', $this->translator->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature')))
-                ->setFilterFormType(TextType::class),
-            (new Column('message', $this->translator->trans('Message', [], 'Admin.Global')))
-                ->setFilterFormType(TextType::class),
-            (new Column('object_type', $this->translator->trans('Object type', [], 'Admin.Advparameters.Feature')))
-                ->setFilterFormType(TextType::class),
-            (new Column('object_id', $this->translator->trans('Object ID', [], 'Admin.Advparameters.Feature')))
-                ->setFilterFormType(TextType::class),
-            (new Column('error_code', $this->translator->trans('Error code', [], 'Admin.Advparameters.Feature')))
-                ->setFilterFormType(TextType::class),
-            (new Column('date_add', $this->translator->trans('Date', [], 'Admin.Global')))
-                ->setFilterFormType(TextType::class),
+            (new Column('id_log', $this->trans('ID', [], 'Admin.Global'), TextType::class))
+                ->setRawContent(true),
+            (new Column('id_employee', $this->trans('Employee', [], 'Admin.Global'), TextType::class)),
+            (new Column('severity', $this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'), TextType::class)),
+            (new Column('message', $this->trans('Message', [], 'Admin.Global'), TextType::class)),
+            (new Column('object_type', $this->trans('Object type', [], 'Admin.Advparameters.Feature'), TextType::class)),
+            (new Column('object_id', $this->trans('Object ID', [], 'Admin.Advparameters.Feature'), TextType::class)),
+            (new Column('error_code', $this->trans('Error code', [], 'Admin.Advparameters.Feature'), TextType::class)),
+            (new Column('date_add', $this->trans('Date', [], 'Admin.Global'), TextType::class)),
         ];
     }
 
@@ -116,7 +93,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
         $deleteBulkAction = new BulkAction(
             'delete',
             'Delete bulk action',
-            function () {},
             'trash'
         );
 

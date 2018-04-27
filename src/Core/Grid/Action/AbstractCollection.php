@@ -24,27 +24,63 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Grid;
-use Symfony\Component\HttpFoundation\Request;
-
-interface GridFactoryInterface
+/**
+ * Class AbstractCollection
+ */
+abstract class AbstractCollection implements \Iterator, \Countable
 {
     /**
-     * Create new grid
-     *
-     * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface $dataProvider
-     * @param Request $request
-     *
-     * @return Grid
+     * @var array
      */
-    public function create(
-        GridDefinitionFactoryInterface $definitionFactory,
-        GridDataProviderInterface $dataProvider,
-        Request $request
-    );
+    protected $items = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function current()
+    {
+        return current($this->items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function next()
+    {
+        return next($this->items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function key()
+    {
+        return key($this->items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function valid()
+    {
+        return false !== $this->current();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rewind()
+    {
+        reset($this->items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->items);
+    }
 }

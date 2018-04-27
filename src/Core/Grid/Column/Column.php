@@ -51,7 +51,12 @@ final class Column implements ColumnInterface
     /**
      * @var string
      */
-    private $formType;
+    private $filterFormType;
+
+    /**
+     * @var array
+     */
+    private $filterFormTypeOptions = [];
 
     /**
      * @var bool
@@ -59,20 +64,25 @@ final class Column implements ColumnInterface
     private $isSortable = true;
 
     /**
-     * @var array|null
+     * @var bool True if column's content must be raw (not escaped) or False otherwise
      */
-    private $formTypeOptions;
+    private $isRawContent = false;
 
     /**
-     * @param string        $identifier Unique column identifier
-     * @param string        $name       Translated column name
-     * @param callable|null $modifier   Callable to modify column's content if needed
+     * @param string $identifier Unique column identifier
+     * @param string $name Translated column name
+     * @param $filterFormType
+     * @param array $filterFormTypeOptions
      */
-    public function __construct($identifier, $name, callable $modifier = null)
+    public function __construct($identifier, $name, $filterFormType = null, array $filterFormTypeOptions = [])
     {
         $this->name = $name;
         $this->identifier = $identifier;
-        $this->modifier = $modifier;
+        $this->filterFormType = $filterFormType;
+
+        if (null !== $filterFormType) {
+            $this->setFilterFormType($filterFormType, $filterFormTypeOptions);
+        }
     }
 
     /**
@@ -91,8 +101,8 @@ final class Column implements ColumnInterface
             ));
         }
 
-        $this->formType = $formType;
-        $this->formTypeOptions = $options;
+        $this->filterFormType = $formType;
+        $this->filterFormTypeOptions = $options;
 
         return $this;
     }
@@ -105,6 +115,30 @@ final class Column implements ColumnInterface
     public function setSortable($isSortable)
     {
         $this->isSortable = $isSortable;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $isRawContent
+     *
+     * @return $this
+     */
+    public function setRawContent($isRawContent)
+    {
+        $this->isRawContent = (bool) $isRawContent;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $modifier
+     *
+     * @return Column
+     */
+    public function setModifier(callable $modifier)
+    {
+        $this->modifier = $modifier;
 
         return $this;
     }
@@ -138,7 +172,7 @@ final class Column implements ColumnInterface
      */
     public function getFilterFormType()
     {
-        return $this->formType;
+        return $this->filterFormType;
     }
 
     /**
@@ -146,7 +180,7 @@ final class Column implements ColumnInterface
      */
     public function getFilterFormTypeOptions()
     {
-        return $this->formTypeOptions;
+        return $this->filterFormTypeOptions;
     }
 
     /**
@@ -165,5 +199,13 @@ final class Column implements ColumnInterface
         // if form type is set for column
         // then column is filterable
         return null !== $this->getFilterFormType();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRawContent()
+    {
+        return $this->isRawContent;
     }
 }
