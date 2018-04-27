@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchParametersInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filtering\CriteriaInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -53,16 +53,15 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $gridFactory = $this->get('prestashop.core.grid.factory');
-        $gridViewFactory = $this->get('prestashop.core.grid.view_factory');
-
+        $gridViewFactory = $this->get('prestashop.core.grid.view.factory');
         $gridDefinitionFactory = $this->get('prestashop.core.grid.defintion.factory.log_definition');
         $gridDataProvider = $this->get('prestashop.core.grid.data_provider.log');
 
-        $grid = $gridFactory->create(
-            $gridDefinitionFactory,
-            $gridDataProvider,
-            $request
+        $definition = $gridDefinitionFactory->create();
+
+        $gridView = $gridViewFactory->createView(
+            $definition,
+            $gridDataProvider
         );
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
@@ -75,7 +74,7 @@ class LogsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'gridView' => $gridViewFactory->createView($grid),
+            'gridView' => $gridView,
         ];
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);

@@ -52,16 +52,6 @@ final class Definition implements GridDefinitionInterface
     private $identifier;
 
     /**
-     * @var string
-     */
-    private $defaultOrderBy;
-
-    /**
-     * @var string
-     */
-    private $defaultOrderWay;
-
-    /**
      * @var ColumnCollectionInterface
      */
     private $columns;
@@ -79,15 +69,11 @@ final class Definition implements GridDefinitionInterface
     /**
      * @param string $identifier      Unique grid identifier (used as table ID when rendering table)
      * @param string $name            Translated grid name
-     * @param string $defaultOrderBy  Default grid ordering by
-     * @param string $defaultOrderWay Default grid ordering way
      */
-    public function __construct($identifier, $name, $defaultOrderBy, $defaultOrderWay)
+    public function __construct($identifier, $name)
     {
         $this->identifier = $identifier;
         $this->name = $name;
-        $this->defaultOrderBy = $defaultOrderBy;
-        $this->defaultOrderWay = $defaultOrderWay;
 
         $this->rowActions = new RowActionCollection();
         $this->columns = new ColumnCollection();
@@ -137,22 +123,6 @@ final class Definition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultOrderBy()
-    {
-        return $this->defaultOrderBy;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultOrderWay()
-    {
-        return $this->defaultOrderWay;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getColumns()
     {
         return $this->columns;
@@ -164,5 +134,13 @@ final class Definition implements GridDefinitionInterface
     public function getRowActions()
     {
         return $this->rowActions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBulkActions()
+    {
+        return $this->bulkActions;
     }
 }
