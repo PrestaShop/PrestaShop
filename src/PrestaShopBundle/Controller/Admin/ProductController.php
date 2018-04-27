@@ -339,7 +339,8 @@ class ProductController extends FrameworkBundleAdminController
 
         /** @var Product $product */
         $product = $productAdapter->getProductInstance();
-        $product->id_category_default = $this->getContext()->shop->id_category;
+        $product->id_category_default = $productShopCategory;
+
         /** @var TaxRuleDataProvider $taxRuleDataProvider */
         $taxRuleDataProvider = $this->get('prestashop.adapter.data_provider.tax');
         $product->id_tax_rules_group = $taxRuleDataProvider->getIdTaxRulesGroupMostUsed();
