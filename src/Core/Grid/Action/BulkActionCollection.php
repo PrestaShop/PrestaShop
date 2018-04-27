@@ -26,58 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-class BulkActionCollection implements BulkActionCollectionInterface
+final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
 {
-    /**
-     * @var array|BulkActionInterface[]
-     */
-    private $actions = [];
-
     /**
      * {@inheritdoc}
      */
     public function add(BulkActionInterface $bulkAction)
     {
-        $this->actions[$bulkAction->getIdentifier()] = $bulkAction;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        return current($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        return next($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->actions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
-    {
-        return false !== $this->current();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        reset($this->actions);
+        $this->items[$bulkAction->getIdentifier()] = $bulkAction;
     }
 }

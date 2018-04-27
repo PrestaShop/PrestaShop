@@ -46,9 +46,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     {
         $definition = new Definition(
             $this->getIdentifier(),
-            $this->getName(),
-            $this->getDefaultOrderBy(),
-            $this->getDefaultOrderWay()
+            $this->getName()
         );
 
         foreach ($this->getColumns() as $column) {
@@ -81,25 +79,23 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     abstract protected function getName();
 
     /**
-     * Get default order by for grid
-     *
-     * @return string
-     */
-    abstract protected function getDefaultOrderBy();
-
-    /**
-     * Get default order way for grid
-     *
-     * @return string
-     */
-    abstract protected function getDefaultOrderWay();
-
-    /**
      * Get defined columns for grid
      *
      * @return array|Column[]
      */
     abstract protected function getColumns();
+
+    /**
+     * @param string $id
+     * @param array $options
+     * @param string $domain
+     *
+     * @return string
+     */
+    protected function trans($id, array $options, $domain)
+    {
+        return $this->translator->trans($id, $options, $domain);
+    }
 
     /**
      * Get row actions for grid.

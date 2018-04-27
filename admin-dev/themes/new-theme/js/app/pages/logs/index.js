@@ -26,12 +26,15 @@
 import TableSorting from '../../utils/table-sorting';
 import initDatePickers from '../../utils/datepicker';
 import SqlManager from '../../utils/sql-manager';
+import Grid from '../../../components/grid';
 
 const $ = global.$;
 
 class LogsPage {
 
   init() {
+    new Grid();
+
     const $sortableTables = $('table.table');
     const $deleteAllLogsButton = $('#logs-deleteAll');
     const $refreshButton = $('#logs-refresh');

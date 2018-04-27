@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
@@ -51,20 +52,6 @@ interface GridDefinitionInterface
     public function getIdentifier();
 
     /**
-     * Get default order by
-     *
-     * @return string
-     */
-    public function getDefaultOrderBy();
-
-    /**
-     * Get default order way
-     *
-     * @return string
-     */
-    public function getDefaultOrderWay();
-
-    /**
      * Get grid columns
      *
      * @return ColumnCollectionInterface
@@ -77,6 +64,11 @@ interface GridDefinitionInterface
      * @return RowActionCollectionInterface
      */
     public function getRowActions();
+
+    /**
+     * @return BulkActionCollectionInterface
+     */
+    public function getBulkActions();
 
     /**
      * Add column to grid definition

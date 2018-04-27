@@ -23,108 +23,151 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set filtersForm = gridView.formView %}
+{% set filtersForm = gridView.filterForm %}
+{% set isBulkActionsAvailable = gridView.bulkActionsAvailable %}
 
-{{ form_start(filtersForm) }}
-<table class="table" id="{{ gridView.identifier }}">
-  <thead class="thead-default">
-  <tr class="column-headers">
-    {% for columnView in gridView.columns %}
-      <th scope="col">
-        {% if columnView.sortable %}
-          {{ ps.sortable_column_header(columnView.name, columnView.identifier, '', '') }}
-        {% else %}
-          {{ columnView.name }}
-        {% endif %}
-      </th>
-    {% endfor %}
-    <th scope="col">&nbsp;</th>
-  </tr>
-  {% if filtersForm|length > 1 %}
-    <tr class="column-filters">
-      {% for columnView in gridView.columns %}
-        <th>
-          {% if columnView.filterable %}
-            {{ form_widget(filtersForm[columnView.identifier]) }}
+<div class="js-grid">
+  {{ form_start(filtersForm) }}
+  <table class="js-grid-table table" id="{{ gridView.identifier }}">
+    <thead class="thead-default">
+    <tr class="column-headers">
+      {% if isBulkActionsAvailable %}
+        <th scope="col">&nbsp;</th>
+      {% endif %}
+
+      {% for column in gridView.columns %}
+        <th scope="col">
+          {% if column.is_sortable %}
+            {{ ps.sortable_column_header(column.name, column.identifier, '', '') }}
           {% else %}
-            -
+            {{ column.name }}
           {% endif %}
         </th>
       {% endfor %}
 
-      <th class="text-right">
-        <button type="submit" class="btn btn-primary">
-          <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
-        </button>
-
-        {% if gridView.formView.vars.data is not empty %}
-          {#<a href="{{ path('admin_sql_manager', {'offset': filters.offset, 'limit': filters.limit}) }}"#}
-          {#class="btn btn-warning"#}
-          {#>#}
-          {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
-          {#</a>#}
-        {% endif %}
-      </th>
+      <th scope="col">&nbsp;</th>
     </tr>
-  {% endif %}
-  </thead>
-  <tbody>
-  {# If table has any rows then render those here #}
-  {% if gridView.rows is not empty %}
-    {% for tableRow in gridView.rows %}
-      <tr>
-        {# Render row columns here #}
-        {% for columnView in gridView.columns %}
-          <td>{{ tableRow.data[columnView.identifier] }}</td>
+    {% if filtersForm|length > 1 %}
+      <tr class="column-filters">
+        {% if isBulkActionsAvailable %}
+          <th>
+            <input type="checkbox" title="{{ 'Select all'|trans({}, 'Admin.Actions') }}" class="js-select-all-btn">
+          </th>
+        {% endif %}
+
+        {% for column in gridView.columns %}
+          <th>
+            {% if column.is_filterable %}
+              {{ form_widget(filtersForm[column.identifier]) }}
+            {% else %}
+              -
+            {% endif %}
+          </th>
         {% endfor %}
 
-        {# If row has any actions then render those here #}
-        {% set rowActions = tableRow.actions|default([]) %}
-        {% if rowActions is not empty %}
-          <td class="text-right">
-            <div class="btn-group-action">
-              <div class="btn-group">
-                <a href="{{ rowActions|first.url }}"
-                   title="{{ rowActions|first.name }}"
-                   class="btn tooltip-link"
-                >
-                  <i class="material-icons">{{ rowActions|first.icon }}</i>
-                </a>
+        <th class="text-right">
+          <button type="submit" class="btn btn-primary">
+            <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
+          </button>
+          {#<button class="btn btn-warning">#}
+          {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
+          {#</button>#}
+        </th>
+      </tr>
+    {% endif %}
+    </thead>
+    <tbody>
+    {# If table has any rows then render those here #}
+    {% if gridView.rows is not empty %}
+      {% for row in gridView.rows %}
+        <tr>
+          {% if isBulkActionsAvailable %}
+            <th>
+              <input class="js-bulk-action-checkbox" type="checkbox" title="">
+            </th>
+          {% endif %}
 
-                {# If there's more than one action, then render remaining actions here #}
-                {% if rowActions|length > 1 %}
-                  <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
-                     data-toggle="dropdown"
-                     aria-haspopup="true"
-                     aria-expanded="false"
+          {# Render row columns here #}
+          {% for column in gridView.columns %}
+            {% set content = row.data[column.identifier] %}
+
+            {% if column.is_raw %}
+              <td>{{ content|raw }}</td>
+            {% else %}
+              <td>{{ content }}</td>
+            {% endif %}
+          {% endfor %}
+
+          {# If row has any actions then render those here #}
+          {% set rowActions = row.actions %}
+          {% if rowActions is not empty %}
+            <td class="text-right">
+              <div class="btn-group-action">
+                <div class="btn-group">
+                  <a href="{{ rowActions|first.url }}"
+                     title="{{ rowActions|first.name }}"
+                     class="btn tooltip-link"
                   >
+                    <i class="material-icons">{{ rowActions|first.icon }}</i>
                   </a>
 
-                  <div class="dropdown-menu dropdown-menu-right">
-                    {% for rowAction in rowActions|slice(1) %}
-                      <a class="dropdown-item" href="{{ rowAction.url }}">
-                        <i class="material-icons">{{ rowAction.icon }}</i>
-                        {{ rowAction.name }}
-                      </a>
-                    {% endfor %}
-                  </div>
-                {% endif %}
+                  {# If there's more than one action, then render remaining actions here #}
+                  {% if rowActions|length > 1 %}
+                    <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
+                       data-toggle="dropdown"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                    >
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                      {% for rowAction in rowActions|slice(1) %}
+                        <a class="dropdown-item" href="{{ rowAction.url }}">
+                          <i class="material-icons">{{ rowAction.icon }}</i>
+                          {{ rowAction.name }}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
               </div>
-            </div>
-          </td>
-        {% endif %}
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="{{ gridView.columns|length }}">
+          <div class="text-center">
+            <p><i class="material-icons">warning</i></p>
+            <p>{{ 'No records found'|trans }}</p>
+          </div>
+        </td>
       </tr>
-    {% endfor %}
-  {% else %}
-    <tr>
-      <td colspan="{{ gridView.columns|length }}">
-        <div class="text-center">
-          <p><i class="material-icons">warning</i></p>
-          <p>{{ 'No records found'|trans }}</p>
+    {% endif %}
+    </tbody>
+  </table>
+  {% if isBulkActionsAvailable %}
+    <div>
+      <div class="btn-group dropup bulk-catalog">
+        <button id="product_bulk_menu" class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn" data-toggle="dropdown" disabled>
+          {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
+          <i class="icon-caret-up"></i>
+        </button>
+
+        <div class="dropdown-menu">
+          {% for bulkAction in gridView.bulkActions %}
+            <a id="{{ '%s_%s_bulk_action'|format(gridView.identifier, bulkAction.identifier) }}"
+               class="dropdown-item"
+               href="#"
+            >
+              <i class="material-icons">{{ bulkAction.icon }}</i>
+              {{ bulkAction.name }}
+            </a>
+          {% endfor %}
         </div>
-      </td>
-    </tr>
+      </div>
+    </div>
   {% endif %}
-  </tbody>
-</table>
-{{ form_end(filtersForm) }}
+  {{ form_end(filtersForm) }}
+</div>
