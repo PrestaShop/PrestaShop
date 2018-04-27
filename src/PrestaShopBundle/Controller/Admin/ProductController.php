@@ -59,6 +59,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
 use Tools;
+use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
