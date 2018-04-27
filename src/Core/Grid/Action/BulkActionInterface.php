@@ -29,25 +29,18 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 interface BulkActionInterface
 {
     /**
-     * Get unique row identifier for grid row's action
+     * Get unique bulk action identifier for grid
      *
      * @return string
      */
     public function getIdentifier();
 
     /**
-     * Get translated row action name
+     * Get translated bulk action name
      *
      * @return string
      */
     public function getName();
-
-    /**
-     * Get row action callback
-     *
-     * @return callable
-     */
-    public function getCallback();
 
     /**
      * Get row action icon
