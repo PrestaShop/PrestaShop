@@ -40,7 +40,16 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
     test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product online', () => {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 2000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        })
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+    });
   }, 'product/product');
 
   scenario('Edit product shipping', client => {
@@ -195,7 +204,7 @@ scenario('Create product with combination in the Back Office', client => {
       test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
       test('should logout successfully from the Back Office', () => client.signOutBO());
     }, 'product/product');
-}, 'product/product');
+}, 'product/product', true);
 
 scenario('Check the product creation in the Back Office', client => {
   test('should open browser', () => client.open());

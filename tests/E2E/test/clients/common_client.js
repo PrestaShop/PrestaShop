@@ -62,8 +62,9 @@ class CommonClient {
     }
   }
 
-  isVisible(selector) {
+  isVisible(selector, pause = 0) {
     return this.client
+      .pause(pause)
       .isVisible(selector)
       .then((isVisible) => {
         global.isVisible = isVisible;

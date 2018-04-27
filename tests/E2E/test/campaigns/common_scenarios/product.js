@@ -95,17 +95,17 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
-        test('should click on "Save" button', () => {
+        test('should switch the product online', () => {
           return promise
-            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
             .then(() => {
               if (global.isVisible) {
                 client.waitForExistAndClick(AddProductPage.symfony_toolbar)
               }
             })
-            .then(() => client.waitForExistAndClick(AddProductPage.save_product_button))
+            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
         });
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 7000));
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 
