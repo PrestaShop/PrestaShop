@@ -77,21 +77,10 @@ class CombinationController extends FrameworkBundleAdminController
         $product = $productAdapter->getProduct((int)$idProduct);
 
         //get combinations
-        $modelMapper = new ProductAdminModelAdapter(
-            $product,
-            $this->get('prestashop.adapter.legacy.context'),
-            $this->get('prestashop.adapter.admin.wrapper.product'),
-            $this->get('prestashop.adapter.tools'),
-            $this->get('prestashop.adapter.data_provider.product'),
-            $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
-            $this->get('prestashop.adapter.data_provider.feature'),
-            $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax')
-        );
 
-        $combinations = $modelMapper->getAttributesResume();
+        $modelMapper = $this->get('prestashop.adapter.admin.model.product');
+
+        $combinations = $modelMapper->getAttributesResume($product);
 
         $combinationList = array();
 
