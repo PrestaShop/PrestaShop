@@ -120,4 +120,16 @@ class CurrencyDataProvider
             throw new Exception('Failed saving Currency entity');
         }
     }
+
+    /**
+     * Gets a legacy Currency instance by ID
+     *
+     * @param int $currencyId
+     *
+     * @return Currency
+     */
+    public function getCurrencyById($currencyId)
+    {
+        return new Currency($currencyId);
+    }
 }
