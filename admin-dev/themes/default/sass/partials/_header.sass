@@ -15,6 +15,11 @@
 		@media (max-width: $screen-sm)
 			padding: 10px 0
 
+	[class^="material-icons"]
+		padding-right: $navbar-padding-horizontal
+		vertical-align: middle
+		position: relative
+
 #logo_block
 	position: relative
 	#header_logo
@@ -245,10 +250,6 @@
 		padding-top: 11px
 		color: #4e6167 !important
 		.material-icons
-			font-size: 20px
-			vertical-align: middle
-			position: relative
-			padding-right: 5px
 			color: #6c868e
 	#header_shopname
 		padding-top: 11px
@@ -276,9 +277,10 @@
 			&.gamification_notif
 				padding-left: 5px
 				padding-right: 8px
-
+				
+#header-list
 	[class^="material-icons"]
-		padding-right: $navbar-padding-horizontal
+		font-size: 20px !important
 
 #header_shop
 	@extend .nav
