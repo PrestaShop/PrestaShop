@@ -34,8 +34,8 @@ final class FilterParametersUpdater
     /**
      * In case of position ordering all the filters should be reset.
      *
-     * @param string $orderBy
      * @param bool $hasCategoryFilter
+     * @param string $orderBy
      * @param array $filterParameters
      * @return array $filterParameters
      */
@@ -64,7 +64,7 @@ final class FilterParametersUpdater
      * @return array
      */
     public function setValues(
-        $filterParameters,
+        array $filterParameters,
         $offset,
         $limit,
         $orderBy,
@@ -84,7 +84,7 @@ final class FilterParametersUpdater
      * @param array $filterParameters
      * @return int
      */
-    private function getOffset($offset, $filterParameters)
+    private function getOffset($offset, array $filterParameters)
     {
         return ($offset === 'last' && isset($filterParameters['last_offset'])) ? $filterParameters['last_offset'] : $offset;
     }
@@ -94,7 +94,7 @@ final class FilterParametersUpdater
      * @param array $filterParameters
      * @return int
      */
-    private function getLimit($limit, $filterParameters)
+    private function getLimit($limit, array $filterParameters)
     {
         return ($limit === 'last' && isset($filterParameters['last_limit'])) ? $filterParameters['last_limit'] : $limit;
     }
@@ -104,7 +104,7 @@ final class FilterParametersUpdater
      * @param array $filterParameters
      * @return string
      */
-    private function getOrderBy($orderBy, $filterParameters)
+    private function getOrderBy($orderBy, array $filterParameters)
     {
         return ($orderBy === 'last' && isset($filterParameters['last_orderBy'])) ? $filterParameters['last_orderBy'] : $orderBy;
     }
@@ -114,7 +114,7 @@ final class FilterParametersUpdater
      * @param array $filterParameters
      * @return string
      */
-    private function getSortOrder($sortOrder, $filterParameters)
+    private function getSortOrder($sortOrder, array $filterParameters)
     {
         return ($sortOrder === 'last' && isset($filterParameters['last_sortOrder'])) ? $filterParameters['last_sortOrder'] : $sortOrder;
     }

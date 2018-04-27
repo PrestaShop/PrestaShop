@@ -648,11 +648,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     /**
      * Get all available product attributes resume
      *
+     * @param Product $product
      * @return array Product attributes combinations
      */
-    public function getAttributesResume()
+    public function getAttributesResume(Product $product)
     {
-        return $this->product->getAttributesResume($this->context->getContext()->language->id);
+        return $product->getAttributesResume($this->context->getContext()->language->id);
     }
 
     /**
