@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -31,9 +31,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Debug mode" form in Performance page
+ * This form class generates the "Combine Compress Cache" form in Performance page
  */
-class DebugModeType extends CommonAbstractType
+class CombineCompressCacheType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -41,13 +41,13 @@ class DebugModeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disable_non_native_modules', SwitchType::class, array(
+            ->add('smart_cache_css', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('disable_overrides', SwitchType::class, array(
+            ->add('smart_cache_js', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('debug_mode', SwitchType::class, array(
+            ->add('apache_optimization', SwitchType::class, array(
                 'required' => true,
             ))
         ;
@@ -59,7 +59,7 @@ class DebugModeType extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'Admin.Advparameters.Feature'
+            'translation_domain' => 'Admin.Advparameters.Feature',
         ));
     }
 
@@ -68,6 +68,6 @@ class DebugModeType extends CommonAbstractType
      */
     public function getBlockPrefix()
     {
-        return 'performance_debug_mode_block';
+        return 'performance_ccc_block';
     }
 }

@@ -23,17 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Combine Compress Cache" form in Performance page
+ * This form class generates the "Smarty" form in Performance page
  */
-class CombineCompressCacheType extends CommonAbstractType
+class SmartyType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -41,13 +42,32 @@ class CombineCompressCacheType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('smart_cache_css', SwitchType::class, array(
+            ->add('template_compilation', ChoiceType::class, array(
+                'choices'  => array(
+                    'Never recompile template files' => 0,
+                    'Recompile templates if the files have been updated' => 1,
+                    'Force compilation' => 2,
+                ),
                 'required' => true,
             ))
-            ->add('smart_cache_js', SwitchType::class, array(
+            ->add('cache', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('apache_optimization', SwitchType::class, array(
+            ->add('multi_front_optimization', SwitchType::class, array(
+                'required' => true,
+            ))
+            ->add('caching_type', ChoiceType::class, array(
+                'choices'  => array(
+                    'File System' => 'filesystem',
+                    'MySQL' => 'mysql',
+                ),
+                'required' => true,
+            ))
+            ->add('clear_cache', ChoiceType::class, array(
+                'choices'  => array(
+                     'Never clear cache files' => 'never',
+                    'Clear cache everytime something has been modified' => 'everytime',
+                ),
                 'required' => true,
             ))
         ;
@@ -59,7 +79,7 @@ class CombineCompressCacheType extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'Admin.Advparameters.Feature',
+            'translation_domain' => 'Admin.Advparameters.Feature'
         ));
     }
 
@@ -68,6 +88,6 @@ class CombineCompressCacheType extends CommonAbstractType
      */
     public function getBlockPrefix()
     {
-        return 'performance_ccc_block';
+        return 'performance_smarty_block';
     }
 }

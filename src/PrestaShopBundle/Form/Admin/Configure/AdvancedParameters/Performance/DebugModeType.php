@@ -23,16 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Media servers" form in Performance page
+ * This form class generates the "Debug mode" form in Performance page
  */
-class MediaServersType extends CommonAbstractType
+class DebugModeType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -40,14 +41,14 @@ class MediaServersType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('media_server_one', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-                'required' => false,
+            ->add('disable_non_native_modules', SwitchType::class, array(
+                'required' => true,
             ))
-            ->add('media_server_two', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-                'required' => false,
+            ->add('disable_overrides', SwitchType::class, array(
+                'required' => true,
             ))
-            ->add('media_server_three', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-                'required' => false,
+            ->add('debug_mode', SwitchType::class, array(
+                'required' => true,
             ))
         ;
     }
@@ -67,6 +68,6 @@ class MediaServersType extends CommonAbstractType
      */
     public function getBlockPrefix()
     {
-        return 'performance_media_servers_block';
+        return 'performance_debug_mode_block';
     }
 }
