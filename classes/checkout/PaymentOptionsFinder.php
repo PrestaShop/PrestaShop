@@ -56,7 +56,14 @@ class PaymentOptionsFinderCore extends HookFinder
         $this->hookName = 'paymentOptions';
         $this->expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Payment\PaymentOption');
         $paymentOptions = array_merge($paymentOptions, parent::find());
-
+        
+        // Safety check
+        foreach ($paymentOptions as $moduleName => $paymentOption) {	
+            if (!is_array($paymentOption)) {	
+                unset($paymentOptions[$moduleName]);	
+            }	
+        }
+        
         return $paymentOptions;
     }
 
