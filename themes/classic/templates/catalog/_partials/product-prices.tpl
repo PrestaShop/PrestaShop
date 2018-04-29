@@ -40,7 +40,7 @@
         itemscope
         itemtype="https://schema.org/Offer"
       >
-        <link itemprop="availability" href="{if $product.quantity > 0}https://schema.org/InStock{else}http://schema.org/OutOfStock{/if}"/>
+        <link itemprop="availability" href="https://schema.org/{if $product.quantity > 0}InStock{else if $product.quantity <=0 && $product.allow_oosp}PreOrder{else}OutOfStock{/if}"/>
         <meta itemprop="priceCurrency" content="{$currency.iso_code}">
 
         <div class="current-price">
