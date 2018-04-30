@@ -438,9 +438,47 @@ class ToolsCore
      */
     public static function urlBelongsToShop($url)
     {
-        $urlHost = parse_url($url, PHP_URL_HOST);
+        $urlHost = Tools::extractHost($url);
 
         return (empty($urlHost) || $urlHost === Tools::getServerName());
+    }
+
+    /**
+     * Safely extracts the host part from an URL
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function extractHost($url)
+    {
+        if (PHP_VERSION_ID >= 50628) {
+            $parsed = parse_url($url);
+            if (!is_array($parsed)) {
+                return $url;
+            }
+            if (empty($parsed['host']) || empty($parsed['scheme'])) {
+                return '';
+            }
+            return $parsed['host'];
+        }
+
+        // big workaround needed
+        // @see: https://bugs.php.net/bug.php?id=73192
+        // @see: https://3v4l.org/nFYJh
+
+        $matches = [];
+        if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
+            // relative url
+            return '';
+        }
+        $authority = $matches['authority'];
+
+        if (!preg_match('/(?:(?<user>.+):(?<pass>.+)@)?(?<domain>[\w.-]+)(?::(?<port>\d+))?/ui', $authority, $matches)) {
+            return '';
+        }
+
+        return $matches['domain'];
     }
 
     /**
