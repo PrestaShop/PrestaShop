@@ -106,7 +106,7 @@ $(document).ready(function () {
       max: 1000000
     });
 
-    $('body').on('change keyup', '#quantity_wanted', function(e) {
+    $('body').on('change keyup', '#quantity_wanted', (e) => {
       $(e.currentTarget).trigger('touchspin.stopspin');
       prestashop.emit('updateProduct', {
           eventType: 'updatedProductQuantity',
