@@ -6092,12 +6092,12 @@ class ProductCore extends ObjectModel
                 `' . _DB_PREFIX_ . 'product_attribute_combination` pac
                 INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
             WHERE 
-                id_product = ' . $idProduct . ' 
-                AND id_attribute IN (' . $idAttributesImploded . ')
+                pa.id_product = ' . $idProduct . '
+                AND pac.id_attribute IN (' . $idAttributesImploded . ')
             GROUP BY 
-                id_product_attribute
+                pac.`id_product_attribute`
             HAVING 
-                COUNT(id_product) = ' . count($idAttributes)
+                COUNT(pa.id_product) = ' . count($idAttributes)
         );
 
         if ($idProductAttribute === false && $find_best) {
@@ -6106,12 +6106,12 @@ class ProductCore extends ObjectModel
             $orderred = array();
             $result = Db::getInstance()->executeS('
                 SELECT 
-                    `id_attribute` 
+                    a.`id_attribute`
                 FROM 
                     `'._DB_PREFIX_.'attribute` a
                     INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
                 WHERE 
-                    `id_attribute` IN (' . $idAttributesImploded . ')
+                    a.`id_attribute` IN (' . $idAttributesImploded . ')
                 ORDER BY 
                     g.`position` ASC'
             );
@@ -6129,12 +6129,12 @@ class ProductCore extends ObjectModel
                         `'._DB_PREFIX_.'product_attribute_combination` pac
                         INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
                     WHERE 
-                        id_product = '.(int)$idProduct.' 
-                        AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
+                        pa.id_product = '.(int)$idProduct.'
+                        AND pac.id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
                     GROUP BY 
-                        id_product_attribute
+                        pac.id_product_attribute
                     HAVING 
-                        COUNT(id_product) = '.count($orderred)
+                        COUNT(pa.id_product) = '.count($orderred)
                 );
             }
         }
