@@ -46,7 +46,7 @@
               <input
                 name="email"
                 type="email"
-                value="{if $customer.is_logged && !$customer.newsletter}{$customer.email}{/if}"
+                value="{$value}"
                 placeholder="{l s='Your email address' d='Shop.Forms.Labels'}"
                 aria-labelledby="block-newsletter-label"
               >
