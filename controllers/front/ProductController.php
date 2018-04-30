@@ -53,9 +53,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
+            $url = $this->product->link_rewrite;
+            if ($this->product->ean13) {
+                $url = $this->product->link_rewrite.'-'.$this->product->ean13;
+            }
+
             if (!$this->product->hasCombinations()) {
                 unset($_GET['id_product_attribute']);
-            } else if (!Tools::getValue('id_product_attribute') || Tools::getValue('rewrite') !== $this->product->link_rewrite) {
+            } else if (!Tools::getValue('id_product_attribute') || Tools::getValue('rewrite') !== $url) {
                 $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
             }
 
