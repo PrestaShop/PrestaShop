@@ -8,7 +8,7 @@
     .input-wrapper {
       overflow: hidden;
     }
-    input[type=text] {
+    input[type=email] {
       padding: 11px;
       &:focus {
         border: 3px $brand-primary solid;
