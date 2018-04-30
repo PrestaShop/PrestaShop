@@ -92,7 +92,7 @@ class AddressControllerCore extends FrontController
     public function initContent()
     {
         if (!$this->ajax && $this->should_redirect) {
-            if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
+            if (($back = Tools::getValue('back')) && Tools::urlBelongsToShop($back)) {
                 $mod = Tools::getValue('mod');
                 $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
             } else {

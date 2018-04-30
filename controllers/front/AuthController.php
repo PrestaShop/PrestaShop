@@ -91,23 +91,21 @@ class AuthControllerCore extends FrontController
         if ($should_redirect && !$this->ajax) {
             $back = urldecode(Tools::getValue('back'));
 
-            if (Tools::secureReferrer($back)) {
+            if (Tools::urlBelongsToShop($back)) {
                 // Checks to see if "back" is a fully qualified
                 // URL that is on OUR domain, with the right protocol
-                $this->redirectWithNotifications($back);
-            } else {
-                // Well we're not redirecting to a URL,
-                // so...
-                if ($this->authRedirection) {
-                    // We may need to go there if defined
-                    $back = $this->authRedirection;
-                } elseif (!preg_match('/^[\w\-]+$/', $back)) {
-                    // Otherwise, check that "back" matches a controller name
-                    // and set a default if not.
-                    $back = 'my-account';
-                }
-                $this->redirectWithNotifications('index.php?controller='.urlencode($back));
+                return $this->redirectWithNotifications($back);
             }
+
+            // Well we're not redirecting to a URL,
+            // so...
+            if ($this->authRedirection) {
+                // We may need to go there if defined
+                return $this->redirectWithNotifications($this->authRedirection);
+            }
+
+            // go home
+            return $this->redirectWithNotifications(__PS_BASE_URI__);
         }
     }
 }

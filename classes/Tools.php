@@ -412,17 +412,31 @@ class ToolsCore
     }
 
     /**
-    * Secure an URL referrer
-    *
-    * @param string $referrer URL referrer
-    * @return string secured referrer
-    */
+     * Returns a safe URL referrer
+     *
+     * @param string $referrer URL referrer
+     * @return string secured referrer
+     */
     public static function secureReferrer($referrer)
     {
-        if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer)) {
+        if (static::urlBelongsToShop($referrer)) {
             return $referrer;
         }
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Indicates if the provided URL belongs to this shop (relative urls count as belonging to the shop)
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function urlBelongsToShop($url)
+    {
+        $urlHost = parse_url($url, PHP_URL_HOST);
+
+        return (empty($urlHost) || $urlHost === Tools::getServerName());
     }
 
     /**
