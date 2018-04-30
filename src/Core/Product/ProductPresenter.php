@@ -242,7 +242,8 @@ class ProductPresenter
 
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
-            && $product['quantity'] <= 0
+            && ($product['quantity'] <= 0
+            || $product['quantity'] - $this->getQuantityWanted() < 0)
         ) {
             $shouldEnable = false;
         }
@@ -286,6 +287,14 @@ class ProductPresenter
             false,
             true
         );
+    }
+
+    /**
+     * @return int Quantity of product requested by the customer
+     */
+    private function getQuantityWanted()
+    {
+        return (int) Tools::getValue('quantity_wanted', 1);
     }
 
     private function addMainVariantsInformation(
@@ -448,7 +457,7 @@ class ProductPresenter
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
         $presentedProduct['show_availability'] = $show_availability;
-        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', 1);
+        $product['quantity_wanted'] = $this->getQuantityWanted();
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;
