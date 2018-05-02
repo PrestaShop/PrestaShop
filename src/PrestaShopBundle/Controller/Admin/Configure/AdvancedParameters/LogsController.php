@@ -54,11 +54,8 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(LogsFilters $filters)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $filters->get('filters'));
-        $logsByEmailForm = $this->getFormHandler()->getForm();
-
         $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
-        $grid = $gridLogFactory->createUsingSearchCriteria($searchParametersForm);
+        $grid = $gridLogFactory->createUsingSearchCriteria($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
