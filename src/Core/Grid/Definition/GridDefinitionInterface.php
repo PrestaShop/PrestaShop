@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
 /**
  * Interface GridDefinitionInterface defines contract for grid definition
@@ -54,7 +55,7 @@ interface GridDefinitionInterface
     /**
      * Get grid columns
      *
-     * @return ColumnCollectionInterface
+     * @return ColumnCollectionInterface|ColumnInterface[]
      */
     public function getColumns();
 
@@ -69,25 +70,4 @@ interface GridDefinitionInterface
      * @return BulkActionCollectionInterface
      */
     public function getBulkActions();
-
-    /**
-     * Add column to grid definition
-     *
-     * @param Column $column
-     */
-    public function addColumn(Column $column);
-
-    /**
-     * Add row action to grid definition
-     *
-     * @param RowAction $rowAction
-     */
-    public function addRowAction(RowAction $rowAction);
-
-    /**
-     * Add bulk action to grid definition
-     *
-     * @param BulkAction $bulkAction
-     */
-    public function addBulkAction(BulkAction $bulkAction);
 }
