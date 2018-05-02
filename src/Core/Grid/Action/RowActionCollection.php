@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+
 final class RowActionCollection extends AbstractCollection implements RowActionCollectionInterface
 {
     /**

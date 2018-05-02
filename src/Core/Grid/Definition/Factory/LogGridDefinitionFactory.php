@@ -93,7 +93,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
         $deleteBulkAction = new BulkAction(
             'delete',
             'Delete bulk action',
-            'trash'
+            'delete'
         );
 
         return [$deleteBulkAction];

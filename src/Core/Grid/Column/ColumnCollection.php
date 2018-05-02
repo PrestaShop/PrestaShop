@@ -26,66 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-final class ColumnCollection implements ColumnCollectionInterface
-{
-    /**
-     * @var array|ColumnInterface[]
-     */
-    private $columns = [];
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
+/**
+ * Class ColumnCollection holds collection of columns for grid
+ */
+final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
+{
     /**
      * {@inheritdoc}
      */
     public function add(ColumnInterface $column)
     {
-        $this->columns[$column->getIdentifier()] = $column;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        return current($this->columns);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        return next($this->columns);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function key()
-    {
-        return key($this->columns);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function valid()
-    {
-        return false !== $this->current();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rewind()
-    {
-        reset($this->columns);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
-    {
-        return count($this->columns);
+        $this->items[$column->getIdentifier()] = $column;
     }
 }
