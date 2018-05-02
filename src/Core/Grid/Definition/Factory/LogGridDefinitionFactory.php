@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -41,7 +39,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getIdentifier()
     {
-        return 'logs_table';
+        return 'logs';
     }
 
     /**
@@ -59,43 +57,21 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return [
             (new Column('id_log', $this->trans('ID', [], 'Admin.Global'), TextType::class))
-                ->setRawContent(true),
-            (new Column('id_employee', $this->trans('Employee', [], 'Admin.Global'), TextType::class)),
-            (new Column('severity', $this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'), TextType::class)),
-            (new Column('message', $this->trans('Message', [], 'Admin.Global'), TextType::class)),
-            (new Column('object_type', $this->trans('Object type', [], 'Admin.Advparameters.Feature'), TextType::class)),
-            (new Column('object_id', $this->trans('Object ID', [], 'Admin.Advparameters.Feature'), TextType::class)),
-            (new Column('error_code', $this->trans('Error code', [], 'Admin.Advparameters.Feature'), TextType::class)),
-            (new Column('date_add', $this->trans('Date', [], 'Admin.Global'), TextType::class)),
+                ->setPosition(2),
+            (new Column('id_employee', $this->trans('Employee', [], 'Admin.Global'), TextType::class))
+                ->setPosition(4),
+            (new Column('severity', $this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'), TextType::class))
+                ->setPosition(6),
+            (new Column('message', $this->trans('Message', [], 'Admin.Global'), TextType::class))
+                ->setPosition(8),
+            (new Column('object_type', $this->trans('Object type', [], 'Admin.Advparameters.Feature'), TextType::class))
+                ->setPosition(10),
+            (new Column('object_id', $this->trans('Object ID', [], 'Admin.Advparameters.Feature'), TextType::class))
+                ->setPosition(12),
+            (new Column('error_code', $this->trans('Error code', [], 'Admin.Advparameters.Feature'), TextType::class))
+                ->setPosition(14),
+            (new Column('date_add', $this->trans('Date', [], 'Admin.Global'), TextType::class))
+                ->setPosition(16),
         ];
-    }
-
-    /**
-     * @todo: logs do not have row actions, these are defined for testing purpose and will be removed
-     */
-    protected function getRowActions()
-    {
-        $urlGenerator = function ($row) {
-            return 'dummy.url.for.testing';
-        };
-
-        return [
-            new RowAction('edit', 'Edit', $urlGenerator, 'build'),
-            new RowAction('delete', 'Delete', $urlGenerator, 'bug_report'),
-        ];
-    }
-
-    /**
-     * @todo: logs do not have bulk actions, these are defined for testing purpose and will be removed
-     */
-    protected function getBulkActions()
-    {
-        $deleteBulkAction = new BulkAction(
-            'delete',
-            'Delete bulk action',
-            'delete'
-        );
-
-        return [$deleteBulkAction];
     }
 }

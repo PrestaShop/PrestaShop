@@ -86,4 +86,11 @@ interface ColumnInterface
      * @return bool
      */
     public function isRawContent();
+
+    /**
+     * Get column position
+     *
+     * @return int
+     */
+    public function getPosition();
 }

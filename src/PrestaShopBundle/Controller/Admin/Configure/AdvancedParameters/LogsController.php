@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Filtering\CriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -53,16 +53,32 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $gridViewFactory = $this->get('prestashop.core.grid.view.factory');
-        $gridDefinitionFactory = $this->get('prestashop.core.grid.defintion.factory.log_definition');
-        $gridDataProvider = $this->get('prestashop.core.grid.data_provider.log');
+        // temporary search criteria class, to be removed
+        $searchCirteria = new class implements SearchCriteriaInterface {
+            public function getOrderBy()
+            {
+                return 'id_log';
+            }
+            public function getOrderWay()
+            {
+                return 'desc';
+            }
+            public function getOffset()
+            {
+                return 1;
+            }
+            public function getLimit()
+            {
+                return 10;
+            }
+            public function getFilters()
+            {
+                return [];
+            }
+        };
 
-        $definition = $gridDefinitionFactory->create();
-
-        $gridView = $gridViewFactory->createView(
-            $definition,
-            $gridDataProvider
-        );
+        $logGridViewFactory = $this->get('prestashop.core.grid.view.factory.log');
+        $gridView = $logGridViewFactory->createView($searchCirteria);
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $twigValues = [
