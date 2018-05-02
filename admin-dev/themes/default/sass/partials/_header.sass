@@ -288,9 +288,27 @@
 	@include ltr
 	@include rtl
 		@extend .navbar-right
-	.dropdown-menu
-		overflow-y: auto
-		max-height: 500px
+	.dropdown
+		&.open
+			.dropdown-toggle
+				background: none !important
+				color: $brand-info !important 
+		.material-icons
+			color: $brand-info
+			top: -1px
+		.dropdown-toggle
+			display: inline-block !important
+			padding: 11px 0 0 0 !important
+			color: #4e6167 !important
+			i
+				padding-left: 5px
+		.dropdown-menu
+			.list-dropdown-menu
+				overflow-y: auto
+				max-height: 500px
+				margin: 20px
+				padding: 0
+
 
 #ajax_running
 	position: absolute
@@ -436,6 +454,7 @@
 		padding: 11px 0 10px 6px !important
 	.dropdown-menu
 		min-width: inherit
+		width: 10.625rem
 		li
 			font-size: 14px
 			&:hover
