@@ -82,7 +82,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setFilterFormType(TextType::class)
             ->setPosition(2)
         );
-        $columns->add((new Column('id_employee', $this->trans('Employee', [], 'Admin.Global')))
+        $columns->add((new Column('employee', $this->trans('Employee', [], 'Admin.Global')))
             ->setFilterFormType(TextType::class)
             ->setModifier($displayEmployee)
             ->setRawContent(true)
