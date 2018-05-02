@@ -45,6 +45,9 @@ final class GridViewFactory implements GridViewFactoryInterface
      */
     private $formFactory;
 
+    /**
+     * @param FormFactoryInterface $formFactory
+     */
     public function __construct(FormFactoryInterface $formFactory)
     {
         $this->formFactory = $formFactory;
