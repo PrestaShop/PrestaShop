@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
@@ -38,6 +39,16 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
     use TranslatorAwareTrait;
+
+    /**
+     * @var HookDispatcher
+     */
+    private $hookDispatcher;
+
+    public function __construct(HookDispatcher $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
 
     /**
      * {@inheritdoc}
@@ -49,17 +60,22 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getName()
         );
 
-        foreach ($this->getColumns() as $column) {
-            $definition->addColumn($column);
+        $c = $this->getColumns() ;
+        foreach ($c as $column) {
+            $definition->getColumns()->add($column);
         }
 
         foreach ($this->getRowActions() as $rowAction) {
-            $definition->addRowAction($rowAction);
+            $definition->getRowActions()->add($rowAction);
         }
 
         foreach ($this->getBulkActions() as $bulkAction) {
-            $definition->addBulkAction($bulkAction);
+            $definition->getBulkActions()->add($bulkAction);
         }
+
+        $this->hookDispatcher->dispatchForParameters('modifyGridDefinition', [
+            'definition' => $definition,
+        ]);
 
         return $definition;
     }
