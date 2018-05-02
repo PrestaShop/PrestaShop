@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
-use Access;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -60,7 +60,7 @@ class Admin
 
     /**
      * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
+     * If not logged in, redirect to admin home page
      *
      * @param GetResponseEvent $event
      *
@@ -74,6 +74,13 @@ class Admin
             $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
             $this->securityTokenStorage->setToken($token);
 
+            return true;
+        }
+
+        // in case of exception handler sub request, avoid infinite redirection
+        if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
+            && isset($event->getRequest()->attributes['exception'])
+        ) {
             return true;
         }
 
