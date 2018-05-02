@@ -26,12 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * This class is responsible of managing filters of Listing pages.
  */
-abstract class Filters extends ParameterBag
+abstract class Filters extends ParameterBag implements SearchCriteriaInterface
 {
     public function __construct(array $filters = [])
     {
@@ -42,4 +43,44 @@ abstract class Filters extends ParameterBag
      * @return array Define the default filters configuration
      */
     abstract public static function getDefaults();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrderBy()
+    {
+        return $this->get('orderBy');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrderWay()
+    {
+        return $this->get('sortOrder');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOffset()
+    {
+        return $this->get('offset');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLimit()
+    {
+        return $this->get('limit');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return $this->get('filters');
+    }
 }

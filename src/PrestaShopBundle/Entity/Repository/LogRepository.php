@@ -208,6 +208,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             return $qb;
         }
 
+        dump($searchCriteria->getFilters());
         $filters = $searchCriteria->getFilters();
         foreach ($filters as $filterName => $filterValue) {
             if (empty($filterValue)) {
