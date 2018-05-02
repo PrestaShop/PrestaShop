@@ -26,11 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Column;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
@@ -41,16 +40,6 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     use TranslatorAwareTrait;
 
     /**
-     * @var HookDispatcher
-     */
-    private $hookDispatcher;
-
-    public function __construct(HookDispatcher $hookDispatcher)
-    {
-        $this->hookDispatcher = $hookDispatcher;
-    }
-
-    /**
      * {@inheritdoc}
      */
     final public function create()
@@ -59,23 +48,15 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getIdentifier(),
             $this->getName()
         );
+        $definition->setColumns($this->getColumns());
 
-        $c = $this->getColumns() ;
-        foreach ($c as $column) {
-            $definition->getColumns()->add($column);
+        if (null !== $this->getRowActions()) {
+            $definition->setRowActions($this->getRowActions());
         }
 
-        foreach ($this->getRowActions() as $rowAction) {
-            $definition->getRowActions()->add($rowAction);
+        if (null !== $this->getBulkActions()) {
+            $definition->setBulkActions($this->getBulkActions());
         }
-
-        foreach ($this->getBulkActions() as $bulkAction) {
-            $definition->getBulkActions()->add($bulkAction);
-        }
-
-        $this->hookDispatcher->dispatchForParameters('modifyGridDefinition', [
-            'definition' => $definition,
-        ]);
 
         return $definition;
     }
@@ -97,7 +78,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     /**
      * Get defined columns for grid
      *
-     * @return array|Column[]
+     * @return ColumnCollectionInterface
      */
     abstract protected function getColumns();
 
@@ -117,21 +98,21 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      * Get row actions for grid.
      * Override this method to add row actions for grid.
      *
-     * @return array|RowAction[]
+     * @return RowActionCollectionInterface|null
      */
     protected function getRowActions()
     {
-        return [];
+        return null;
     }
 
     /**
      * Get bulk actions for grid.
      * Override this methods to add bulk actions for grid.
      *
-     * @return array|BulkActionInterface[]
+     * @return BulkActionCollectionInterface|null
      */
     protected function getBulkActions()
     {
-        return [];
+        return null;
     }
 }
