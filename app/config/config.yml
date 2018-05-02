@@ -60,7 +60,7 @@ twig:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
     globals:
-        webpack_server:   false
+        webpack_server:   true
 
 # Doctrine Configuration
 doctrine:

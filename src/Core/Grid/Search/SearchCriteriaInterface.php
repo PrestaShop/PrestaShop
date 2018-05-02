@@ -24,28 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
-
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+namespace PrestaShop\PrestaShop\Core\Grid\Search;
 
 /**
- * Interface GridDataProviderInterface defines contract for grid data providers
+ * Interface SearchCriteriaInterface
  */
-interface GridDataProviderInterface
+interface SearchCriteriaInterface
 {
     /**
-     * Get filtered & paginated rows from any data source (database, API or any other)
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return array
+     * @return string
      */
-    public function getRows(SearchCriteriaInterface $searchCriteria);
+    public function getOrderBy();
 
     /**
-     * Get total rows count in data source
-     *
+     * @return string
+     */
+    public function getOrderWay();
+
+    /**
      * @return int
      */
-    public function getRowsTotal();
+    public function getOffset();
+
+    /**
+     * @return int
+     */
+    public function getLimit();
+
+    /**
+     * @return array
+     */
+    public function getFilters();
 }

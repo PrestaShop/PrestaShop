@@ -26,55 +26,58 @@
 {% set filtersForm = gridView.filterForm %}
 {% set areBulkActionsAvailable = gridView.bulkActionsAvailable %}
 
-<div class="js-grid">
+<div class="js-grid" id="{{ gridView.identifier }}_grid">
   {{ form_start(filtersForm) }}
-  <table class="js-grid-table table" id="{{ gridView.identifier }}">
+  <table class="js-grid-table table" id="{{ gridView.identifier }}_table">
     <thead class="thead-default">
-    <tr class="column-headers">
-      {% if areBulkActionsAvailable %}
-        <th scope="col">&nbsp;</th>
-      {% endif %}
-
-      {% for column in gridView.columns %}
-        <th scope="col">
-          {% if column.is_sortable %}
-            {{ ps.sortable_column_header(column.name, column.identifier, '', '') }}
-          {% else %}
-            {{ column.name }}
-          {% endif %}
-        </th>
-      {% endfor %}
-
-      <th scope="col">&nbsp;</th>
-    </tr>
-    {% if filtersForm|length > 1 %}
-      <tr class="column-filters">
+      <tr class="column-headers">
         {% if areBulkActionsAvailable %}
-          <th>
-            <input type="checkbox" title="{{ 'Select all'|trans({}, 'Admin.Actions') }}" class="js-select-all-btn">
-          </th>
+          <th scope="col">&nbsp;</th>
         {% endif %}
 
         {% for column in gridView.columns %}
-          <th>
-            {% if column.is_filterable %}
-              {{ form_widget(filtersForm[column.identifier]) }}
+          <th scope="col">
+            {% if column.is_sortable %}
+              {{ ps.sortable_column_header(column.name, column.identifier, '', '') }}
             {% else %}
-              -
+              {{ column.name }}
             {% endif %}
           </th>
         {% endfor %}
 
-        <th class="text-right">
-          <button type="submit" class="btn btn-primary">
-            <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
-          </button>
-          {#<button class="btn btn-warning">#}
-          {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
-          {#</button>#}
-        </th>
+        <th scope="col">&nbsp;</th>
       </tr>
-    {% endif %}
+      {% if filtersForm|length > 1 %}
+        <tr class="column-filters">
+          {% if areBulkActionsAvailable %}
+            <th>
+              <input type="checkbox"
+                     title="{{ 'Select all'|trans({}, 'Admin.Actions') }}"
+                     class="js-select-all-bulk-actions-checkbox"
+              >
+            </th>
+          {% endif %}
+
+          {% for column in gridView.columns %}
+            <th>
+              {% if column.is_filterable %}
+                {{ form_widget(filtersForm[column.identifier]) }}
+              {% else %}
+                -
+              {% endif %}
+            </th>
+          {% endfor %}
+
+          <th class="text-right">
+            <button type="submit" class="btn btn-primary">
+              <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
+            </button>
+            {#<button class="btn btn-warning">#}
+            {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
+            {#</button>#}
+          </th>
+        </tr>
+      {% endif %}
     </thead>
     <tbody>
     {# If table has any rows then render those here #}
@@ -83,7 +86,12 @@
         <tr>
           {% if areBulkActionsAvailable %}
             <th>
-              <input class="js-bulk-action-checkbox" type="checkbox" title="">
+              <input class="js-bulk-action-checkbox"
+                     name="{{ gridView.identifier }}_bulk[]"
+                     type="checkbox"
+                     title=""
+                     value=""
+              >
             </th>
           {% endif %}
 
@@ -150,22 +158,25 @@
   {% if areBulkActionsAvailable %}
     <div>
       <div class="btn-group dropup bulk-catalog">
-        <button id="product_bulk_menu" class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn" data-toggle="dropdown" disabled>
+        <button id="product_bulk_menu" class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
+                data-toggle="dropdown"
+                disabled
+        >
           {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
           <i class="icon-caret-up"></i>
         </button>
 
         <div class="dropdown-menu">
           {% for bulkAction in gridView.bulkActions %}
-            <a id="{{ '%s_%s_bulk_action'|format(gridView.identifier, bulkAction.identifier) }}"
-               class="dropdown-item"
-               href="#"
+            <button id="{{ '%s_%s_bulk_action'|format(gridView.identifier, bulkAction.identifier) }}"
+                    class="dropdown-item"
+                    type="button"
             >
               {% if bulkAction.icon is not empty %}
                 <i class="material-icons">{{ bulkAction.icon }}</i>
               {% endif %}
               {{ bulkAction.name }}
-            </a>
+            </button>
           {% endfor %}
         </div>
       </div>
