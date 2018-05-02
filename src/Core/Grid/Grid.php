@@ -169,8 +169,9 @@ final class Grid
     {
         foreach ($columns as $column) {
             // if for some reason column does not exist in a row
+            // and it doesn't have modifier
             // then let developer know that something is wrong
-            if (!isset($row[$column->getIdentifier()])) {
+            if (!isset($row[$column->getIdentifier()]) && !is_callable($column->getModifier())) {
                 throw new MissingColumnInRowException(
                     sprintf('Column "%s" does not exist in row "%s"', $column->getIdentifier(), json_encode($row))
                 );
