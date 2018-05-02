@@ -31,6 +31,7 @@
   <div id="shop-list" class="shop-list dropdown ps-dropdown stores">
     <span class="link" data-toggle="dropdown">
       <span class="selected-item">
+        <i class="material-icons visibility">visibility</i>
         {if !isset($current_shop_name) || $current_shop_name == ''}
           {l s='All shops'}
         {else}
