@@ -41,14 +41,15 @@ var currentRequestDelayedId = null;
 function getProductUpdateUrl() {
     let dfd = $.Deferred();
     const $productActions = $('.product-actions');
-    const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-
+    const $quantityWantedInput = $('#quantity_wanted');
+    
     if (prestashop != null
-        && prestashop.page != null
-        && prestashop.page.canonical != ''
-        && prestashop.page.canonical != null
+        && prestashop.urls != null
+        && prestashop.urls.pages != null
+        && prestashop.urls.pages.product != ''
+        && prestashop.urls.pages.product != null
     ) {
-        dfd.resolve(prestashop.page.canonical);
+        dfd.resolve(prestashop.urls.pages.product);
 
         return dfd.promise();
     }
@@ -260,7 +261,12 @@ $(document).ready(function () {
         function(e) {
             prestashop.emit('updateProduct', {
                 eventType: 'updatedProductCombination',
-                event: e
+                event: e,
+                // Following variables are not used anymore, but kept for backward compatibility
+                resp: {},
+                reason: {
+                    productUrl: prestashop.urls.pages.product || '',
+                },
             });
         }
     );
@@ -282,7 +288,12 @@ $(document).ready(function () {
             }
             prestashop.emit('updateProduct', {
                 eventType: eventType,
-                event: e
+                event: e,
+                // Following variables are not used anymore, but kept for backward compatibility
+                resp: {},
+                reason: {
+                    productUrl: prestashop.urls.pages.product || '',
+                },
             })
         }
     );
