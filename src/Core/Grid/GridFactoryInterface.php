@@ -24,19 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\View;
+namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-interface GridViewFactoryInterface
+/**
+ * Interface GridFactoryInterface exposes contract for grid factory which is responsible for creating Grid instances
+ */
+interface GridFactoryInterface
 {
-//    /**
-//     * Create grid view data from given grid
-//     *
-//     * @param Grid $grid
-//     *
-//     * @return GridView
-//     */
-//    public function createView(GridDefinitionInterface $definition, GridDataProviderInterface $dataProvider);
+    /**
+     * Create grid with filtered data
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return Grid
+     */
+    public function createUsingSearchCriteria(SearchCriteriaInterface $searchCriteria);
 }

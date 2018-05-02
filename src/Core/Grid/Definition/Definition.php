@@ -30,8 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Column;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
@@ -83,30 +81,6 @@ final class Definition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function addColumn(Column $column)
-    {
-        $this->columns->add($column);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addRowAction(RowAction $rowAction)
-    {
-        $this->rowActions->add($rowAction);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addBulkAction(BulkAction $bulkAction)
-    {
-        $this->bulkActions->add($bulkAction);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
@@ -142,5 +116,29 @@ final class Definition implements GridDefinitionInterface
     public function getBulkActions()
     {
         return $this->bulkActions;
+    }
+
+    /**
+     * @param ColumnCollectionInterface $columns
+     */
+    public function setColumns(ColumnCollectionInterface $columns)
+    {
+        $this->columns = $columns;
+    }
+
+    /**
+     * @param RowActionCollectionInterface $rowActions
+     */
+    public function setRowActions(RowActionCollectionInterface $rowActions)
+    {
+        $this->rowActions = $rowActions;
+    }
+
+    /**
+     * @param BulkActionCollectionInterface $bulkActions
+     */
+    public function setBulkActions(BulkActionCollectionInterface $bulkActions)
+    {
+        $this->bulkActions = $bulkActions;
     }
 }
