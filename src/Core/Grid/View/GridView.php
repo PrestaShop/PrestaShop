@@ -46,7 +46,7 @@ final class GridView
     /**
      * @var FormView
      */
-    private $filterForm;
+    private $filterFormView;
 
     /**
      * @var array
@@ -61,12 +61,17 @@ final class GridView
     /**
      * @var array
      */
-    private $rows = [];
+    private $data = [];
 
     /**
-     * @var int
+     * @var array
      */
-    private $rowsTotal = 0;
+    private $pagination = [];
+
+    /**
+     * @var array
+     */
+    private $sorting = [];
 
     /**
      * Constructor accepts all required parameters for grid view
@@ -74,30 +79,14 @@ final class GridView
      * @param string   $identifier  Grid identifier should be unique per grid and will act as ID on html table element
      * @param string   $name        Grid name
      * @param array    $columnViews Grid columns
-     * @param FormView $filterForm  Filters form view
+     * @param FormView $formView  Filters form view
      */
-    public function __construct($identifier, $name, array $columnViews, FormView $filterForm)
+    public function __construct($identifier, $name, array $columnViews, FormView $formView)
     {
         $this->columns = $columnViews;
         $this->identifier = $identifier;
         $this->name = $name;
-        $this->filterForm = $filterForm;
-    }
-
-    /**
-     * @param array $rows
-     */
-    public function setRows(array $rows)
-    {
-        $this->rows = $rows;
-    }
-
-    /**
-     * @param int $rowsTotal
-     */
-    public function setRowsTotal($rowsTotal)
-    {
-        $this->rowsTotal = $rowsTotal;
+        $this->filterFormView = $formView;
     }
 
     /**
@@ -119,14 +108,6 @@ final class GridView
     /**
      * @return array
      */
-    public function getRows()
-    {
-        return $this->rows;
-    }
-
-    /**
-     * @return array
-     */
     public function getBulkActions()
     {
         return $this->bulkActions;
@@ -138,14 +119,6 @@ final class GridView
     public function getIdentifier()
     {
         return $this->identifier;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRowsTotal()
-    {
-        return $this->rowsTotal;
     }
 
     /**
@@ -161,7 +134,7 @@ final class GridView
      */
     public function getFilterForm()
     {
-        return $this->filterForm;
+        return $this->filterFormView;
     }
 
     /**
@@ -169,6 +142,57 @@ final class GridView
      */
     public function isBulkActionsAvailable()
     {
-        return !empty($this->bulkActions) && count($this->rows) > 1;
+        return !empty($this->bulkActions) &&
+            isset($this->data['rows_total']) &&
+            count($this->data['rows_total']) > 1
+        ;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPagination()
+    {
+        return $this->pagination;
+    }
+
+    /**
+     * @param array $pagination
+     */
+    public function setPagination(array $pagination)
+    {
+        $this->pagination = $pagination;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSorting(): array
+    {
+        return $this->sorting;
+    }
+
+    /**
+     * @param array $sorting
+     */
+    public function setSorting(array $sorting)
+    {
+        $this->sorting = $sorting;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData(array $data)
+    {
+        $this->data = $data;
     }
 }
