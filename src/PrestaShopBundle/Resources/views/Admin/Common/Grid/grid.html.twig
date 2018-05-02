@@ -24,21 +24,52 @@
  *#}
 
 {% set filtersForm = gridView.filterForm %}
-{% set areBulkActionsAvailable = gridView.bulkActionsAvailable %}
+{% set bulkActionsAvailable = gridView.bulkActionsAvailable %}
 
 <div class="js-grid" id="{{ gridView.identifier }}_grid">
   {{ form_start(filtersForm) }}
+
+  {% if bulkActionsAvailable %}
+    <div>
+      <div class="btn-group dropup bulk-catalog">
+        <button id="product_bulk_menu" class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
+                data-toggle="dropdown"
+                disabled
+        >
+          {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
+          <i class="icon-caret-up"></i>
+        </button>
+
+        <div class="dropdown-menu">
+          {% for bulkAction in gridView.bulkActions %}
+            <button id="{{ '%s_%s_bulk_action'|format(gridView.identifier, bulkAction.identifier) }}"
+                    class="dropdown-item"
+                    type="button"
+            >
+              {% if bulkAction.icon is not empty %}
+                <i class="material-icons">{{ bulkAction.icon }}</i>
+              {% endif %}
+              {{ bulkAction.name }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
   <table class="js-grid-table table" id="{{ gridView.identifier }}_table">
     <thead class="thead-default">
       <tr class="column-headers">
-        {% if areBulkActionsAvailable %}
+        {% if bulkActionsAvailable %}
           <th scope="col">&nbsp;</th>
         {% endif %}
+
+        {% set orderBy, orderWay = gridView.sorting.order_by, gridView.sorting.order_way %}
 
         {% for column in gridView.columns %}
           <th scope="col">
             {% if column.is_sortable %}
-              {{ ps.sortable_column_header(column.name, column.identifier, '', '') }}
+              {{ ps.sortable_column_header(column.name, column.identifier, orderBy, orderWay) }}
             {% else %}
               {{ column.name }}
             {% endif %}
@@ -49,7 +80,7 @@
       </tr>
       {% if filtersForm|length > 1 %}
         <tr class="column-filters">
-          {% if areBulkActionsAvailable %}
+          {% if bulkActionsAvailable %}
             <th>
               <input type="checkbox"
                      title="{{ 'Select all'|trans({}, 'Admin.Actions') }}"
@@ -81,10 +112,10 @@
     </thead>
     <tbody>
     {# If table has any rows then render those here #}
-    {% if gridView.rows is not empty %}
-      {% for row in gridView.rows %}
+    {% if gridView.data.rows is not empty %}
+      {% for row in gridView.data.rows %}
         <tr>
-          {% if areBulkActionsAvailable %}
+          {% if bulkActionsAvailable %}
             <th>
               <input class="js-bulk-action-checkbox"
                      name="{{ gridView.identifier }}_bulk[]"
@@ -155,32 +186,19 @@
     {% endif %}
     </tbody>
   </table>
-  {% if areBulkActionsAvailable %}
-    <div>
-      <div class="btn-group dropup bulk-catalog">
-        <button id="product_bulk_menu" class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
-                data-toggle="dropdown"
-                disabled
-        >
-          {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
-          <i class="icon-caret-up"></i>
-        </button>
 
-        <div class="dropdown-menu">
-          {% for bulkAction in gridView.bulkActions %}
-            <button id="{{ '%s_%s_bulk_action'|format(gridView.identifier, bulkAction.identifier) }}"
-                    class="dropdown-item"
-                    type="button"
-            >
-              {% if bulkAction.icon is not empty %}
-                <i class="material-icons">{{ bulkAction.icon }}</i>
-              {% endif %}
-              {{ bulkAction.name }}
-            </button>
-          {% endfor %}
-        </div>
+  {% if gridView.data.rows_total > 10 %}
+    <div class="row">
+      <div class="col-md-12">
+        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+          'limit': gridView.pagination.limit,
+          'offset': gridView.pagination.offset,
+          'total': gridView.data.rows_total,
+          'caller_route': app.request.attributes.get('_route')
+        })) }}
       </div>
     </div>
   {% endif %}
+
   {{ form_end(filtersForm) }}
 </div>

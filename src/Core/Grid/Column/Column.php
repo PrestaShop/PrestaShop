@@ -76,18 +76,11 @@ final class Column implements ColumnInterface
     /**
      * @param string $identifier Unique column identifier
      * @param string $name Translated column name
-     * @param $filterFormType
-     * @param array $filterFormTypeOptions
      */
-    public function __construct($identifier, $name, $filterFormType = null, array $filterFormTypeOptions = [])
+    public function __construct($identifier, $name)
     {
         $this->name = $name;
         $this->identifier = $identifier;
-        $this->filterFormType = $filterFormType;
-
-        if (null !== $filterFormType) {
-            $this->setFilterFormType($filterFormType, $filterFormTypeOptions);
-        }
     }
 
     /**

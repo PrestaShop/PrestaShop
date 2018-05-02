@@ -24,94 +24,92 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\View;
+namespace PrestaShop\PrestaShop\Core\Grid;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnsNotDefinedException;
 use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormView;
+use PrestaShop\PrestaShop\Core\Grid\View\GridView;
+use Symfony\Component\Form\FormInterface;
 
 /**
- * Class GridViewFactory is responsible for creating grid view data that is passed to template for rendering
+ * Class Grid is responsible for holding final Grid data
  */
-final class GridViewFactory implements GridViewFactoryInterface
+final class Grid
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var GridDataProviderInterface
-     */
-    private $dataProvider;
-
     /**
      * @var GridDefinitionInterface
      */
     private $definition;
 
     /**
-     * @param FormFactoryInterface $formFactory
-     * @param GridDefinitionInterface $definition
-     * @param GridDataProviderInterface $dataProvider
+     * @var GridDataInterface
      */
+    private $data;
+
+    /**
+     * @var SearchCriteriaInterface
+     */
+    private $searchCriteria;
+
+    /**
+     * @var FormInterface
+     */
+    private $filterForm;
+
     public function __construct(
-        FormFactoryInterface $formFactory,
         GridDefinitionInterface $definition,
-        GridDataProviderInterface $dataProvider
+        GridDataInterface $data,
+        SearchCriteriaInterface $searchCriteria,
+        FormInterface $filterForm
     ) {
-        $this->formFactory = $formFactory;
-        $this->dataProvider = $dataProvider;
         $this->definition = $definition;
+        $this->data = $data;
+        $this->searchCriteria = $searchCriteria;
+        $this->filterForm = $filterForm;
     }
 
     /**
-     * {@inheritdoc}
+     * @return GridView
      */
-    public function createView(SearchCriteriaInterface $searchCriteria)
+    public function createView()
     {
-        if (empty($this->definition->getColumns())) {
-            throw new ColumnsNotDefinedException(sprintf(
-                'Grid view cannot be created. "%s" grid definition does not define any columns.',
-                $this->definition->getIdentifier()
-            ));
-        }
-
-        $gridView = new GridView(
+        $view = new GridView(
             $this->definition->getIdentifier(),
             $this->definition->getName(),
             $this->createColumnsView(),
-            $this->createFilterFormView($searchCriteria)
+            $this->filterForm->createView()
         );
 
-        $bulkActions = $this->createBulkActionsView();
-        $gridView->setBulkActions($bulkActions);
+        $view->setBulkActions($this->createBulkActionsView());
+        $view->setData([
+            'rows' => $this->createRowsView(),
+            'rows_total' => $this->data->getRowsTotal(),
+        ]);
+        $view->setPagination([
+            'offset' => $this->searchCriteria->getOffset(),
+            'limit' => $this->searchCriteria->getLimit(),
+        ]);
+        $view->setSorting([
+            'order_by' => $this->searchCriteria->getOrderBy(),
+            'order_way' => $this->searchCriteria->getOrderWay(),
+        ]);
 
-        $rowView = $this->createRowsView($searchCriteria);
-
-        $gridView->setRows($rowView);
-        $gridView->setRowsTotal($this->dataProvider->getRowsTotal());
-
-        return $gridView;
+        return $view;
     }
 
     /**
      * Get rows data ready for rendering in template
      *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
      * @return array
      */
-    private function createRowsView(SearchCriteriaInterface $searchCriteria)
+    private function createRowsView()
     {
-        $rows = $this->dataProvider->getRows($searchCriteria);
+        $rows = $this->data->getRows();
 
         $rowsView = [];
         foreach ($rows as $row) {
@@ -214,41 +212,6 @@ final class GridViewFactory implements GridViewFactoryInterface
         array_multisort($positions, SORT_ASC, $columnsView);
 
         return $columnsView;
-    }
-
-    /**
-     * Builds filters form for grid
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return FormView
-     */
-    private function createFilterFormView(SearchCriteriaInterface $searchCriteria)
-    {
-        $formBuilder = $this->formFactory->createNamedBuilder($this->definition->getIdentifier());
-
-        foreach ($this->definition->getColumns() as $column) {
-            if ($formType = $column->getFilterFormType()) {
-                $options = $column->getFilterFormTypeOptions();
-
-                if (!isset($options['required'])) {
-                    $options['required'] = false;
-                }
-
-                $formBuilder->add(
-                    $column->getIdentifier(),
-                    $formType,
-                    $options
-                );
-            }
-        }
-
-        $form = $formBuilder
-            ->setData($searchCriteria->getFilters())
-            ->getForm()
-        ;
-
-        return $form->createView();
     }
 
     /**

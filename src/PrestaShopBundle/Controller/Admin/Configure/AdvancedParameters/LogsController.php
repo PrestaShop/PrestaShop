@@ -54,31 +54,18 @@ class LogsController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         // temporary search criteria class, to be removed
-        $searchCirteria = new class implements SearchCriteriaInterface {
-            public function getOrderBy()
-            {
-                return 'id_log';
-            }
-            public function getOrderWay()
-            {
-                return 'desc';
-            }
-            public function getOffset()
-            {
-                return 1;
-            }
-            public function getLimit()
-            {
-                return 10;
-            }
-            public function getFilters()
-            {
-                return [];
-            }
+        $searchCirteria = new class($request) implements SearchCriteriaInterface {
+            private $request;
+            public function __construct(Request $request) { $this->request = $request; }
+            public function getOrderBy() { return $this->request->get('orderBy', 'id_log'); }
+            public function getOrderWay() { return $this->request->get('sortOrder', 'asc');}
+            public function getOffset() { return $this->request->get('offset', 0); }
+            public function getLimit() { return $this->request->get('limit', 10); }
+            public function getFilters() { return []; }
         };
 
-        $logGridViewFactory = $this->get('prestashop.core.grid.view.factory.log');
-        $gridView = $logGridViewFactory->createView($searchCirteria);
+        $gridFactory = $this->get('prestashop.core.grid.log_factory');
+        $grid = $gridFactory->createUsingSearchCriteria($searchCirteria);
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $twigValues = [
@@ -90,7 +77,7 @@ class LogsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'gridView' => $gridView,
+            'gridView' => $grid->createView(),
         ];
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);

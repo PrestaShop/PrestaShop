@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
-use PrestaShop\PrestaShop\Core\Grid\Filtering\CriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
