@@ -25,8 +25,24 @@
 
 const $ = window.$;
 
+/**
+ * Class is responsible for handling Grid events
+ */
 export default class Grid {
-  constructor() {
+
+  /**
+   * Grid's selector
+   *
+   * @param gridSelector
+   */
+  constructor(gridSelector) {
+    this.$grid = $(gridSelector);
+  }
+
+  /**
+   * Initialize grid events
+   */
+  init() {
     this.handleBulkActionSelectAllCheckbox();
     this.handleBulkActionCheckboxSelect();
   }
@@ -35,16 +51,17 @@ export default class Grid {
    * Handles "Select all" button in the grid
    */
   handleBulkActionSelectAllCheckbox() {
-    $(document).on('change', '.js-select-all-btn', (e) => {
+    $(document).on('change', '.js-select-all-bulk-actions-checkbox', (e) => {
       const $checkbox = $(e.target);
-      const $grid = $checkbox.closest('.js-grid');
-      const $items = $grid.find('.js-bulk-action-checkbox');
-      const $bulkActionsBtn = $grid.find('.js-bulk-actions-btn');
 
       const isChecked = $checkbox.is(':checked');
+      if (isChecked) {
+        this.enableBulkActionsBtn();
+      } else {
+        this.disableBulkActionsBtn();
+      }
 
-      $items.prop('checked', isChecked);
-      $bulkActionsBtn.prop('disabled', !isChecked);
+      this.$grid.find('.js-bulk-action-checkbox').prop('checked', isChecked);
     });
   }
 
@@ -52,6 +69,28 @@ export default class Grid {
    * Handles each bulk action checkbox select in the grid
    */
   handleBulkActionCheckboxSelect() {
-    //@todo
+    this.$grid.on('change', '.js-bulk-action-checkbox', (e) => {
+      const checkedRowsCount = this.$grid.find('.js-bulk-action-checkbox:checked').length;
+
+      if (checkedRowsCount > 0) {
+        this.enableBulkActionsBtn();
+      } else {
+        this.disableBulkActionsBtn();
+      }
+    });
+  }
+
+  /**
+   * Enable bulk actions button
+   */
+  enableBulkActionsBtn() {
+    this.$grid.find('.js-bulk-actions-btn').prop('disabled', false);
+  }
+
+  /**
+   * Disable bulk actions button
+   */
+  disableBulkActionsBtn() {
+    this.$grid.find('.js-bulk-actions-btn').prop('disabled', true);
   }
 }

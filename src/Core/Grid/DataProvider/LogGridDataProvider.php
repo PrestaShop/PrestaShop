@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
 use PrestaShop\PrestaShop\Core\Grid\Filtering\CriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
@@ -60,21 +61,19 @@ final class LogGridDataProvider implements GridDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRows($filters = null)
+    public function getRows(SearchCriteriaInterface  $searchCriteria)
     {
-        // make search parameters compatible with logRepository query
-        $filters = [
-            'offset' => 0,
-            'limit' => 10,
-            'filters' => [],
-            'orderBy' => 'id_log',
-            'sortOrder' => 'desc',
-        ];
-
-        $logQuery = $this->logRepository->getAllWithEmployeeInformationQuery($filters);
+        $logQuery = $this->logRepository->getAllWithEmployeeInformationQuery([
+            'offset' => $searchCriteria->getOffset(),
+            'limit' => $searchCriteria->getLimit(),
+            'filters' => $searchCriteria->getFilters(),
+            'orderBy' => $searchCriteria->getOrderBy(),
+            'sortOrder' => $searchCriteria->getOrderWay(),
+        ]);
 
         $this->hookDispatcher->dispatchForParameters('modifyLogGridQuery', [
             'query' => $logQuery,
+            'search_criteria' => $searchCriteria,
         ]);
 
         $logs = $logQuery->execute()->fetchAll(\PDO::FETCH_ASSOC);
