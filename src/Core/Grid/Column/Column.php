@@ -69,6 +69,11 @@ final class Column implements ColumnInterface
     private $isRawContent = false;
 
     /**
+     * @var int
+     */
+    private $position = 0;
+
+    /**
      * @param string $identifier Unique column identifier
      * @param string $name Translated column name
      * @param $filterFormType
@@ -207,5 +212,25 @@ final class Column implements ColumnInterface
     public function isRawContent()
     {
         return $this->isRawContent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     *
+     * @return Column
+     */
+    public function setPosition($position)
+    {
+        $this->position = (int) $position;
+
+        return $this;
     }
 }
