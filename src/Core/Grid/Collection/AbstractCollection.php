@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Collection;
 
 /**
  * Class AbstractCollection
