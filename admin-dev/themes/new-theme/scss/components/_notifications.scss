@@ -1,4 +1,5 @@
 .notification-center {
+  margin-left: 0.3125rem;
   > .notification {
     @include notification_container();
     position: relative;
@@ -31,6 +32,35 @@
 
   .notifications {
     font-size: $font-size-base;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    min-width: 25rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    top: 42px;
+    right: 5px !important;
+    &:before, &:after {
+      bottom: 100%;
+      right: 9px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    &:after {
+      border-color: transparent;
+      border-bottom-color: white;
+      border-width: 7px;
+      margin-right: 1px;
+    }
+    &:before {
+      border-color: transparent;
+      border-bottom-color: #bbcdd2;
+      border-width: 8px;
+      margin-left: -8px;
+    }
 
     .nav {
       .nav-item {
