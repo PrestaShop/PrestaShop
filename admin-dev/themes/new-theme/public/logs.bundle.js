@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "edbe4682ce6a7f8770f1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "76202f25988b045875fd"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -764,7 +764,7 @@ var LogsPage = function () {
   _createClass(LogsPage, [{
     key: 'init',
     value: function init() {
-      new __WEBPACK_IMPORTED_MODULE_3__components_grid__["a" /* default */]();
+      new __WEBPACK_IMPORTED_MODULE_3__components_grid__["a" /* default */]('#logs_grid').init();
 
       var $sortableTables = $('table.table');
       var $deleteAllLogsButton = $('#logs-deleteAll');
@@ -1031,32 +1031,55 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var $ = window.$;
 
+/**
+ * Class is responsible for handling Grid events
+ */
+
 var Grid = function () {
-  function Grid() {
+
+  /**
+   * Grid's selector
+   *
+   * @param gridSelector
+   */
+  function Grid(gridSelector) {
     _classCallCheck(this, Grid);
 
-    this.handleBulkActionSelectAllCheckbox();
-    this.handleBulkActionCheckboxSelect();
+    this.$grid = $(gridSelector);
   }
 
   /**
-   * Handles "Select all" button in the grid
+   * Initialize grid events
    */
 
 
   _createClass(Grid, [{
+    key: 'init',
+    value: function init() {
+      this.handleBulkActionSelectAllCheckbox();
+      this.handleBulkActionCheckboxSelect();
+    }
+
+    /**
+     * Handles "Select all" button in the grid
+     */
+
+  }, {
     key: 'handleBulkActionSelectAllCheckbox',
     value: function handleBulkActionSelectAllCheckbox() {
-      $(document).on('change', '.js-select-all-btn', function (e) {
+      var _this = this;
+
+      $(document).on('change', '.js-select-all-bulk-actions-checkbox', function (e) {
         var $checkbox = $(e.target);
-        var $grid = $checkbox.closest('.js-grid');
-        var $items = $grid.find('.js-bulk-action-checkbox');
-        var $bulkActionsBtn = $grid.find('.js-bulk-actions-btn');
 
         var isChecked = $checkbox.is(':checked');
+        if (isChecked) {
+          _this.enableBulkActionsBtn();
+        } else {
+          _this.disableBulkActionsBtn();
+        }
 
-        $items.prop('checked', isChecked);
-        $bulkActionsBtn.prop('disabled', !isChecked);
+        _this.$grid.find('.js-bulk-action-checkbox').prop('checked', isChecked);
       });
     }
 
@@ -1067,7 +1090,37 @@ var Grid = function () {
   }, {
     key: 'handleBulkActionCheckboxSelect',
     value: function handleBulkActionCheckboxSelect() {
-      //@todo
+      var _this2 = this;
+
+      this.$grid.on('change', '.js-bulk-action-checkbox', function (e) {
+        var checkedRowsCount = _this2.$grid.find('.js-bulk-action-checkbox:checked').length;
+
+        if (checkedRowsCount > 0) {
+          _this2.enableBulkActionsBtn();
+        } else {
+          _this2.disableBulkActionsBtn();
+        }
+      });
+    }
+
+    /**
+     * Enable bulk actions button
+     */
+
+  }, {
+    key: 'enableBulkActionsBtn',
+    value: function enableBulkActionsBtn() {
+      this.$grid.find('.js-bulk-actions-btn').prop('disabled', false);
+    }
+
+    /**
+     * Disable bulk actions button
+     */
+
+  }, {
+    key: 'disableBulkActionsBtn',
+    value: function disableBulkActionsBtn() {
+      this.$grid.find('.js-bulk-actions-btn').prop('disabled', true);
     }
   }]);
 
