@@ -51,8 +51,8 @@ final class BulkAction implements BulkActionInterface
     public function __construct($identifier, $name, $icon = '')
     {
         $this->name = $name;
-        $this->icon = $icon;
         $this->identifier = $identifier;
+        $this->icon = $icon;
     }
 
     /**
@@ -64,7 +64,7 @@ final class BulkAction implements BulkActionInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getIcon()
     {

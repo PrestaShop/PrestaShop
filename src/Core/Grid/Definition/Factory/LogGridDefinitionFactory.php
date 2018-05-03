@@ -26,9 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Column;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Templating\EngineInterface;
@@ -46,9 +44,8 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @param EngineInterface $templating
      */
-    public function __construct(
-        EngineInterface $templating
-    ) {
+    public function __construct(EngineInterface $templating)
+    {
         $this->templating = $templating;
     }
 
@@ -125,19 +122,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ],
         ];
 
-        $columns = new ColumnCollection();
-        $position = 0;
-
-        foreach ($columnsArray as $columnArray) {
-            $columnArray['position'] = $position;
-
-            $column = Column::fromArray($columnArray);
-            $columns->add($column);
-
-            $position += 2;
-        }
-
-        return $columns;
+        return ColumnCollection::fromArray($columnsArray);
     }
 
     /**
@@ -158,29 +143,22 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'renderer' => $renderDeleteAllAction,
             ],
             [
-                'identifier' => 'refresh',
+                'identifier' => 'ps_refresh_list',
                 'name' => $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'refresh',
             ],
             [
-                'identifier' => 'show_query',
+                'identifier' => 'ps_show_query',
                 'name' => $this->trans('Show SQL query', [], 'Admin.Actions'),
                 'icon' => 'code',
             ],
             [
-                'identifier' => 'export_sql_manager',
+                'identifier' => 'ps_export_sql_manager',
                 'name' => $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'icon' => 'storage',
             ],
         ];
 
-        $actions = new GridActionCollection();
-
-        foreach ($actionsArray as $actionArray) {
-            $action = GridAction::fromArray($actionArray);
-            $actions->add($action);
-        }
-
-        return $actions;
+        return GridActionCollection::fromArray($actionsArray);
     }
 }
