@@ -30,7 +30,7 @@ scenario('Check notification module in the Back Office', () => {
     test('should check that the configured module is not visible in the "Notifications" tab', () => client.checkIsNotVisible(ModulePage.configure_module.replace('%moduleTechName', 'ps_wirepayment')));
   }, 'common_client');
   scenario('Reset the configured module', client => {
-    module_common_scenarios.resetModule(client, ModulePage, AddProductPage, Menu, 'Bank transfer', 'ps_wirepayment');
+    module_common_scenarios.resetModule(client, ModulePage, AddProductPage, 'Bank transfer', 'ps_wirepayment');
   }, 'common_client');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
