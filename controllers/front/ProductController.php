@@ -54,7 +54,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         if (Validate::isLoadedObject($this->product)) {
             $url = $this->product->link_rewrite;
-            if ($this->product->ean13) {
+            if (!empty($this->product->ean13)) {
                 $url = $this->product->link_rewrite.'-'.$this->product->ean13;
             }
 
