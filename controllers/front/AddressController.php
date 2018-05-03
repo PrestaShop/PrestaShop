@@ -93,8 +93,12 @@ class AddressControllerCore extends FrontController
     {
         if (!$this->ajax && $this->should_redirect) {
             if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
-                $mod = Tools::getValue('mod');
-                $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
+                if (strpos($back, 'http://') !== false || strpos($back, 'https://') !== false) {
+                    $this->redirectWithNotifications($back);
+                } else {
+                    $mod = Tools::getValue('mod');
+                    $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
+                }
             } else {
                 $this->redirectWithNotifications('index.php?controller=addresses');
             }
