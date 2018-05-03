@@ -29,7 +29,6 @@ const $ = window.$;
  * Class is responsible for handling Grid events
  */
 export default class Grid {
-
   /**
    * Grid's selector
    *
@@ -61,7 +60,16 @@ export default class Grid {
       return;
     }
 
-    $gridPanel.find('.test').on('click', () => this._onRefreshClick());
+    let identifier = this.$grid.attr('id');
+    let commonActionSuffix = '#' + identifier + '_action_';
+
+    let refreshListActionId = commonActionSuffix + 'ps_refresh_list';
+    let showSqlActionId = commonActionSuffix + 'ps_show_query';
+    let exportSqlManagerActionId = commonActionSuffix + 'ps_export_sql_manager';
+
+    $gridPanel.on('click', refreshListActionId, () => this._onRefreshClick());
+    $gridPanel.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
+    $gridPanel.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
   }
 
   /**
@@ -126,5 +134,39 @@ export default class Grid {
    */
   _onRefreshClick() {
     location.reload();
+  }
+
+  /**
+   * Invoked when clicking on the "show sql query" toolbar button
+   *
+   * @private
+   */
+  _onShowSqlQueryClick() {
+    let identifier = this.$grid.attr('id');
+    let query = this.$grid.find('.js-grid-table').data('query');
+
+    const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
+    $sqlManagerForm.find('textarea[name="sql"]').val(query);
+
+    const $modal = $('#' + identifier + '_ps_show_query_modal');
+    $modal.modal('show');
+
+    $modal.on('click', '.btn-sql-submit', () => {
+      $sqlManagerForm.submit();
+    });
+  }
+
+  /**
+   * Invoked when clicking on the "export to the sql query" toolbar button
+   *
+   * @private
+   */
+  _onExportSqlManagerClick() {
+    let identifier = this.$grid.attr('id');
+    let query = this.$grid.find('.js-grid-table').data('query');
+
+    const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
+    $sqlManagerForm.find('textarea[name="sql"]').val(query);
+    $sqlManagerForm.submit();
   }
 }
