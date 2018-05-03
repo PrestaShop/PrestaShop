@@ -48,4 +48,13 @@ interface GridDataProviderInterface
      * @return int
      */
     public function getRowsTotal();
+
+    /**
+     * Get query which is used to retireve grid rows from data source
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return string
+     */
+    public function getQuery(SearchCriteriaInterface $searchCriteria);
 }

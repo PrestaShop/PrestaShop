@@ -86,9 +86,11 @@ final class Grid
         );
 
         $view->setBulkActions($this->createBulkActionsView());
+        $view->setGridActions($this->createGridActionsView());
         $view->setData([
             'rows' => $this->createRowsView(),
             'rows_total' => $this->data->getRowsTotal(),
+            'query' => $this->data->getQuery(),
         ]);
         $view->setPagination([
             'offset' => $this->searchCriteria->getOffset(),
@@ -231,5 +233,34 @@ final class Grid
         }
 
         return $bulkActionsView;
+    }
+
+    /**
+     * Prepare grid actions for rendering
+     *
+     * @return array
+     */
+    private function createGridActionsView()
+    {
+        $gridActionsView = [];
+
+        foreach ($this->definition->getGridActions() as $gridAction) {
+            $actionView = [
+                'identifier' => $gridAction->getIdentifier(),
+                'name' => $gridAction->getName(),
+                'icon' => $gridAction->getIcon(),
+                'is_rendered' => false,
+            ];
+
+            $renderer = $gridAction->getRenderer();
+            if (is_callable($renderer)) {
+                $actionView['content'] = call_user_func($renderer);
+                $actionView['is_rendered'] = true;
+            }
+
+            $gridActionsView[] = $actionView;
+        }
+
+        return $gridActionsView;
     }
 }

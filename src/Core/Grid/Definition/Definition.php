@@ -26,9 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -65,6 +66,11 @@ final class Definition implements GridDefinitionInterface
     private $bulkActions;
 
     /**
+     * @var GridActionCollectionInterface
+     */
+    private $gridActions;
+
+    /**
      * @param string $identifier      Unique grid identifier (used as table ID when rendering table)
      * @param string $name            Translated grid name
      */
@@ -76,6 +82,7 @@ final class Definition implements GridDefinitionInterface
         $this->rowActions = new RowActionCollection();
         $this->columns = new ColumnCollection();
         $this->bulkActions = new BulkActionCollection();
+        $this->gridActions = new GridActionCollection();
     }
 
     /**
@@ -119,6 +126,14 @@ final class Definition implements GridDefinitionInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getGridActions()
+    {
+        return $this->gridActions;
+    }
+
+    /**
      * @param ColumnCollectionInterface $columns
      */
     public function setColumns(ColumnCollectionInterface $columns)
@@ -140,5 +155,13 @@ final class Definition implements GridDefinitionInterface
     public function setBulkActions(BulkActionCollectionInterface $bulkActions)
     {
         $this->bulkActions = $bulkActions;
+    }
+
+    /**
+     * @param GridActionCollectionInterface $gridActions
+     */
+    public function setGridActions(GridActionCollectionInterface $gridActions)
+    {
+        $this->gridActions = $gridActions;
     }
 }

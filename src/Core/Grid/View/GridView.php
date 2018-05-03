@@ -61,6 +61,11 @@ final class GridView
     /**
      * @var array
      */
+    private $gridActions = [];
+
+    /**
+     * @var array
+     */
     private $data = [];
 
     /**
@@ -194,5 +199,21 @@ final class GridView
     public function setData(array $data)
     {
         $this->data = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGridActions()
+    {
+        return $this->gridActions;
+    }
+
+    /**
+     * @param array $gridActions
+     */
+    public function setGridActions(array $gridActions)
+    {
+        $this->gridActions = $gridActions;
     }
 }
