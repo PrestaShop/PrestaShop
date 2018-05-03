@@ -33,7 +33,7 @@ const $ = global.$;
 class LogsPage {
 
   init() {
-    new Grid('#logs_grid').init();
+    new Grid('#logs_grid_panel').init();
 
     const $sortableTables = $('table.table');
     const $deleteAllLogsButton = $('#logs-deleteAll');
