@@ -32,7 +32,7 @@ framework:
     session:
         handler_id:  ~
     fragments:       ~
-    http_method_override: true
+    http_method_override: false
 
 # Monolog configuration #
 monolog:
@@ -60,7 +60,7 @@ twig:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
     globals:
-        webpack_server: false
+        webpack_server: true
 
 # Doctrine Configuration
 doctrine:
