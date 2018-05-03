@@ -53,23 +53,16 @@ export default class Grid {
    * @private
    */
   _handleCommonGridActions() {
-    const $gridPanel = this.$grid.closest('.js-grid-panel');
-    if (0 === $gridPanel.length) {
-      // if grid is not within a panel
-      // then grid actions are not available
-      return;
-    }
-
-    let identifier = this.$grid.attr('id');
+    let identifier = this.$grid.find('.js-grid').attr('id');
     let commonActionSuffix = '#' + identifier + '_action_';
 
     let refreshListActionId = commonActionSuffix + 'ps_refresh_list';
     let showSqlActionId = commonActionSuffix + 'ps_show_query';
     let exportSqlManagerActionId = commonActionSuffix + 'ps_export_sql_manager';
 
-    $gridPanel.on('click', refreshListActionId, () => this._onRefreshClick());
-    $gridPanel.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
-    $gridPanel.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
+    this.$grid.on('click', refreshListActionId, () => this._onRefreshClick());
+    this.$grid.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
+    this.$grid.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
   }
 
   /**
@@ -142,7 +135,7 @@ export default class Grid {
    * @private
    */
   _onShowSqlQueryClick() {
-    let identifier = this.$grid.attr('id');
+    let identifier = this.$grid.find('.js-grid').attr('id');
     let query = this.$grid.find('.js-grid-table').data('query');
 
     const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
@@ -162,7 +155,7 @@ export default class Grid {
    * @private
    */
   _onExportSqlManagerClick() {
-    let identifier = this.$grid.attr('id');
+    let identifier = this.$grid.find('.js-grid').attr('id');
     let query = this.$grid.find('.js-grid-table').data('query');
 
     const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
