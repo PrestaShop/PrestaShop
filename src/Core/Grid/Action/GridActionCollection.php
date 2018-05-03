@@ -30,6 +30,25 @@ use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
 {
+    /**
+     * Create grid action collection from array data
+     *
+     * @param array $data
+     *
+     * @return GridActionCollection
+     */
+    public static function fromArray(array $data)
+    {
+        $actions = new GridActionCollection();
+
+        foreach ($data as $actionArray) {
+            $action = GridAction::fromArray($actionArray);
+            $actions->add($action);
+        }
+
+        return $actions;
+    }
+
     public function add(GridActionInterface $action)
     {
         $this->items[$action->getIdentifier()] = $action;

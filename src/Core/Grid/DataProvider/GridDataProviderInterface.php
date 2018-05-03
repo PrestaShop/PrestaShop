@@ -50,7 +50,7 @@ interface GridDataProviderInterface
     public function getRowsTotal();
 
     /**
-     * Get query which is used to retireve grid rows from data source
+     * Get query which is used to retrieve grid rows from data source
      *
      * @param SearchCriteriaInterface $searchCriteria
      *
