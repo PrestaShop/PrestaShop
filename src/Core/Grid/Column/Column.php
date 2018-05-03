@@ -84,6 +84,40 @@ final class Column implements ColumnInterface
     }
 
     /**
+     * Create column from array data
+     *
+     * @param array $data
+     * @return Column
+     */
+    public static function fromArray(array $data)
+    {
+        $column = new Column(
+            $data['identifier'],
+            $data['name']
+        );
+
+        if (isset($data['position'])) {
+            $column->setPosition($data['position']);
+        }
+
+        if (isset($data['modifier'])) {
+            $column->setModifier($data['modifier']);
+        }
+
+        if (isset($data['filter_form_type'])) {
+            $options = isset($data['filter_form_type_options']) ? $data['filter_form_type_options'] : [];
+
+            $column->setFilterFormType($data['filter_form_type'], $options);
+        }
+
+        if (isset($data['raw_content'])) {
+            $column->setRawContent($data['raw_content']);
+        }
+
+        return $column;
+    }
+
+    /**
      * @param string $formType
      * @param array $options
      *

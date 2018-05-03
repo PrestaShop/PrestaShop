@@ -42,7 +42,7 @@
 
         <div class="dropdown-menu">
           {% for bulkAction in gridView.bulkActions %}
-            <button id="{{ '%s_%s_bulk_action'|format(gridView.identifier, bulkAction.identifier) }}"
+            <button id="{{ '%s_grid_bulk_action_%s'|format(gridView.identifier, bulkAction.identifier) }}"
                     class="dropdown-item"
                     type="button"
             >
@@ -57,7 +57,10 @@
     </div>
   {% endif %}
 
-  <table class="js-grid-table table" id="{{ gridView.identifier }}_table">
+  <table class="js-grid-table table"
+         id="{{ gridView.identifier }}_grid_table"
+         data-query="{{ gridView.data.query }}"
+  >
     <thead class="thead-default">
       <tr class="column-headers">
         {% if bulkActionsAvailable %}
@@ -103,9 +106,12 @@
             <button type="submit" class="btn btn-primary">
               <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
             </button>
-            {#<button class="btn btn-warning">#}
-            {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
-            {#</button>#}
+
+            {#{% if %}#}
+              {#<button class="btn btn-warning">#}
+                {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
+              {#</button>#}
+            {#{% endif %}#}
           </th>
         </tr>
       {% endif %}
@@ -146,6 +152,7 @@
                   <a href="{{ rowActions|first.url }}"
                      title="{{ rowActions|first.name }}"
                      class="btn tooltip-link"
+                     id="{{ '%s_grid_row_action_%s'|format(gridView.identifier, rowActions|first.identifier) }}"
                   >
                     <i class="material-icons">{{ rowActions|first.icon }}</i>
                   </a>
@@ -161,7 +168,10 @@
 
                     <div class="dropdown-menu dropdown-menu-right">
                       {% for rowAction in rowActions|slice(1) %}
-                        <a class="dropdown-item" href="{{ rowAction.url }}">
+                        <a class="dropdown-item"
+                           href="{{ rowAction.url }}"
+                           id="{{ '%s_grid_row_action_%s'|format(gridView.identifier, rowAction.identifier) }}"
+                        >
                           <i class="material-icons">{{ rowAction.icon }}</i>
                           {{ rowAction.name }}
                         </a>
@@ -171,6 +181,9 @@
                 </div>
               </div>
             </td>
+          {# If filters are available, it means we have "Search" button, then add empty column to fill the row #}
+          {% elseif filtersForm|length > 1 %}
+            <td>&nbsp;</td>
           {% endif %}
         </tr>
       {% endfor %}
