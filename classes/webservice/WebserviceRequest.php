@@ -797,7 +797,7 @@ class WebserviceRequestCore
 
     protected function shopExists($params)
     {
-        if (count(self::$shopIDs)) {
+        if (!empty(self::$shopIDs)&&count(self::$shopIDs)) {
             return true;
         }
 
