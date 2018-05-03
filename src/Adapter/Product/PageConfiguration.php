@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -36,11 +36,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PageConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -51,12 +51,12 @@ class PageConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'display_quantities' => $this->configuration->get('PS_DISPLAY_QTIES'),
+            'display_quantities' => $this->configuration->getBoolean('PS_DISPLAY_QTIES'),
             'display_last_quantities' => $this->configuration->get('PS_LAST_QTIES'),
-            'display_unavailable_attributes' => $this->configuration->get('PS_DISP_UNAVAILABLE_ATTR'),
-            'allow_add_variant_to_cart_from_listing' => $this->configuration->get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
+            'display_unavailable_attributes' => $this->configuration->getBoolean('PS_DISP_UNAVAILABLE_ATTR'),
+            'allow_add_variant_to_cart_from_listing' => $this->configuration->getBoolean('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
             'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
-            'display_discount_price' => $this->configuration->get('PS_DISPLAY_DISCOUNT_PRICE'),
+            'display_discount_price' => $this->configuration->getBoolean('PS_DISPLAY_DISCOUNT_PRICE'),
         ];
     }
 

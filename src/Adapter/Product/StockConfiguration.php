@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -36,11 +36,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class StockConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -51,8 +51,8 @@ class StockConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'allow_ordering_oos' => $this->configuration->get('PS_ORDER_OUT_OF_STOCK'),
-            'stock_management' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'allow_ordering_oos' => $this->configuration->getBoolean('PS_ORDER_OUT_OF_STOCK'),
+            'stock_management' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS'),
             'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA'),
             'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD'),

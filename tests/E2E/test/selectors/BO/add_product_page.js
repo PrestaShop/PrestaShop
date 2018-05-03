@@ -164,6 +164,7 @@ module.exports = {
     catalog_product_quantity: '//*[@id="product_catalog_list"]/div[2]/div/table/tbody/tr/td[7]',
     catalog_product_online: '//*[@id="product_catalog_list"]/div[2]/div/table/tbody/tr/td[8]/a/i',
     catalog_reset_filter: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[2]/th[9]/button[2]',
+    catalog_submit_filter:'//*[@id="product_catalog_list"]//button[@type="submit"]',
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
