@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
+use Doctrine\DBAL\Driver\Connection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
@@ -46,21 +47,52 @@ final class LogGridDataProvider implements GridDataProviderInterface
     private $hookDispatcher;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * @param LogRepository $logRepository
      * @param HookDispatcher $hookDispatcher
+     * @param Connection $connection
      */
     public function __construct(
         LogRepository $logRepository,
-        HookDispatcher $hookDispatcher
+        HookDispatcher $hookDispatcher,
+        Connection $connection
     ) {
         $this->logRepository = $logRepository;
         $this->hookDispatcher = $hookDispatcher;
+        $this->connection = $connection;
     }
 
     /**
      * {@inheritdoc}
      */
     public function getRows(SearchCriteriaInterface  $searchCriteria)
+    {
+        $logSqlQuery = $this->getQuery($searchCriteria);
+
+        $stmt = $this->connection->prepare($logSqlQuery);
+        $stmt->execute();
+
+        $logs = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $logs;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRowsTotal()
+    {
+        return count($this->logRepository->findAll());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getQuery(SearchCriteriaInterface $searchCriteria)
     {
         $logQuery = $this->logRepository->getAllWithEmployeeInformationQuery([
             'offset' => $searchCriteria->getOffset(),
@@ -75,16 +107,6 @@ final class LogGridDataProvider implements GridDataProviderInterface
             'search_criteria' => $searchCriteria,
         ]);
 
-        $logs = $logQuery->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-        return $logs;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRowsTotal()
-    {
-        return count($this->logRepository->findAll());
+        return $logQuery->getSQL();
     }
 }

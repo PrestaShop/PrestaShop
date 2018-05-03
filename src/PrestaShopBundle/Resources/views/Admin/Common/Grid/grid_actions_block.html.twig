@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,15 +21,23 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data;
+{% if gridView.gridActions is not empty %}
+  <div class="btn-toolbar float-right" role="toolbar">
+    {{ renderhook('displayDashboardToolbarIcons') }}
 
-interface GridDataInterface
-{
-    public function getRows();
-
-    public function getRowsTotal();
-
-    public function getQuery();
-}
+    {% for action in gridView.gridActions %}
+      {% if action.is_rendered %}
+        {{ action.content|raw }}
+      {% else %}
+        <button type="button"
+                id="{{ gridView.identifier }}_grid_action_{{ action.identifier }}"
+                class="btn btn-link list-toolbar-btn"
+        >
+          {{ ps.tooltip(action.name, action.icon) }}
+        </button>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

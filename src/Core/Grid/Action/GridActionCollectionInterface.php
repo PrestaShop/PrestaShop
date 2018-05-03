@@ -24,13 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-interface GridDataInterface
+interface GridActionCollectionInterface
 {
-    public function getRows();
 
-    public function getRowsTotal();
-
-    public function getQuery();
 }

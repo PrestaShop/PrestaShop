@@ -34,21 +34,28 @@ final class GridData implements GridDataInterface
     /**
      * @var array
      */
-    private $rows = [];
+    private $rows;
 
     /**
      * @var int
      */
-    private $rowsTotal = 0;
+    private $rowsTotal;
 
     /**
-     * @param array $rows
-     * @param int $rowsTotal
+     * @var string
      */
-    public function __construct(array $rows, $rowsTotal = 0)
+    private $query = '';
+
+    /**
+     * @param array  $rows      Filtered & paginated rows data
+     * @param int    $rowsTotal Total number of rows (without pagination)
+     * @param string $query     Query used to get rows
+     */
+    public function __construct(array $rows, $rowsTotal, $query = '')
     {
         $this->rows = $rows;
         $this->rowsTotal = $rowsTotal;
+        $this->query = $query;
     }
 
     /**
@@ -81,5 +88,21 @@ final class GridData implements GridDataInterface
     public function setRowsTotal($rowsTotal)
     {
         $this->rowsTotal = (int) $rowsTotal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param string $query
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
     }
 }
