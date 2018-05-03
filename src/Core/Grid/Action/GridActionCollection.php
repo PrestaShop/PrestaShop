@@ -24,13 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-interface GridDataInterface
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+
+final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
 {
-    public function getRows();
-
-    public function getRowsTotal();
-
-    public function getQuery();
+    public function add(GridActionInterface $action)
+    {
+        $this->items[$action->getIdentifier()] = $action;
+    }
 }

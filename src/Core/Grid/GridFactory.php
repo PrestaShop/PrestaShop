@@ -66,7 +66,6 @@ final class GridFactory implements GridFactoryInterface
         FormFactoryInterface $formFactory,
         HookDispatcher $dispatcher
     ) {
-
         $this->definitionFactory = $definitionFactory;
         $this->dataProvider = $dataProvider;
         $this->formFactory = $formFactory;
@@ -86,7 +85,8 @@ final class GridFactory implements GridFactoryInterface
 
         $data = new GridData(
             $this->dataProvider->getRows($searchCriteria),
-            $this->dataProvider->getRowsTotal()
+            $this->dataProvider->getRowsTotal(),
+            $this->dataProvider->getQuery($searchCriteria)
         );
 
         $this->dispatcher->dispatchForParameters('modifyGridData', [

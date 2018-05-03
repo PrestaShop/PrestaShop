@@ -104,7 +104,7 @@ class LogRepository implements RepositoryInterface
         },ARRAY_FILTER_USE_KEY);
 
         $qb = $queryBuilder
-            ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
+            ->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
             ->from($this->logTable, 'l')
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
             ->orderBy($filters['orderBy'], $filters['sortOrder'])

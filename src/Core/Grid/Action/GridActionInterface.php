@@ -24,13 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-interface GridDataInterface
+/**
+ * Interface GridActionInterface
+ */
+interface GridActionInterface
 {
-    public function getRows();
+    /**
+     * Return unique action identifier
+     *
+     * @return string
+     */
+    public function getIdentifier();
 
-    public function getRowsTotal();
+    /**
+     * Returns translated action name
+     *
+     * @return string
+     */
+    public function getName();
 
-    public function getQuery();
+    /**
+     * Return action icon name
+     *
+     * @return string
+     */
+    public function getIcon();
+
+    /**
+     * Return custom renderer for action
+     *
+     * @return callable|null
+     */
+    public function getRenderer();
 }
