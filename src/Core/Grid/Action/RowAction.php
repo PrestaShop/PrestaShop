@@ -82,7 +82,7 @@ final class RowAction implements RowActionInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getIcon()
     {

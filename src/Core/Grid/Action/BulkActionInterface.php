@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+/**
+ * Interface BulkActionInterface
+ */
 interface BulkActionInterface
 {
     /**

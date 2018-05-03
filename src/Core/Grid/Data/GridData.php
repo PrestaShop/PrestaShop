@@ -59,7 +59,7 @@ final class GridData implements GridDataInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getRows()
     {
@@ -75,7 +75,7 @@ final class GridData implements GridDataInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getRowsTotal()
     {
@@ -91,7 +91,7 @@ final class GridData implements GridDataInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getQuery()
     {

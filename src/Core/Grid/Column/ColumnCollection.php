@@ -34,6 +34,30 @@ use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
 {
     /**
+     * Create new columns collection from array data
+     *
+     * @param array $data
+     *
+     * @return ColumnCollectionInterface
+     */
+    public static function fromArray(array $data)
+    {
+        $columns = new ColumnCollection();
+        $position = 0;
+
+        foreach ($data as $columnData) {
+            $columnData['position'] = $position;
+
+            $column = Column::fromArray($columnData);
+            $columns->add($column);
+
+            $position += 2;
+        }
+
+        return $columns;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function add(ColumnInterface $column)

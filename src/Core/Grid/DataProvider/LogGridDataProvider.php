@@ -94,7 +94,7 @@ final class LogGridDataProvider implements GridDataProviderInterface
      */
     public function getQuery(SearchCriteriaInterface $searchCriteria)
     {
-        $logQuery = $this->logRepository->getAllWithEmployeeInformationQuery([
+        $logQueryBuilder = $this->logRepository->getAllWithEmployeeInformationQuery([
             'offset' => $searchCriteria->getOffset(),
             'limit' => $searchCriteria->getLimit(),
             'filters' => $searchCriteria->getFilters(),
@@ -102,11 +102,11 @@ final class LogGridDataProvider implements GridDataProviderInterface
             'sortOrder' => $searchCriteria->getOrderWay(),
         ]);
 
-        $this->hookDispatcher->dispatchForParameters('modifyLogGridQuery', [
-            'query' => $logQuery,
+        $this->hookDispatcher->dispatchForParameters('modifyLogGridQueryBuilder', [
+            'query_builder' => $logQueryBuilder,
             'search_criteria' => $searchCriteria,
         ]);
 
-        return $logQuery->getSQL();
+        return $logQueryBuilder->getSQL();
     }
 }

@@ -33,10 +33,37 @@
       {% else %}
         <button type="button"
                 id="{{ gridView.identifier }}_grid_action_{{ action.identifier }}"
-                class="btn btn-link list-toolbar-btn"
+                class="btn btn-link list-toolbar-btn js-{{ action.identifier }}-grid-action"
         >
           {{ ps.tooltip(action.name, action.icon) }}
         </button>
+
+        {% if action.identifier == 'ps_show_query' %}
+          {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+            'id': gridView.identifier ~ '_grid_ps_show_query_modal',
+            'title': action.name,
+            'closable': true,
+            'actions': [{
+              'type': 'button',
+              'label': "Export to SQL Manager"|trans({}, 'Admin.Actions'),
+              'value': 'sql_manager',
+              'class': 'btn btn-primary btn-lg btn-sql-submit',
+            }],
+          } %}
+            {% block content %}
+              <form method="post"
+                    action="{{ getAdminLink('AdminRequestSql', true, {'addrequest_sql': 1}) }}"
+                    id="{{ gridView.identifier ~ '_grid_ps_show_query_modal_form' }}"
+              >
+                <div class="modal-body">
+                  <textarea name="sql" rows="20" cols="65" title=""></textarea>
+                  <input type="hidden" name="name" value="" />
+                </div>
+              </form>
+            {% endblock %}
+          {% endembed %}
+        {% endif %}
+
       {% endif %}
     {% endfor %}
   </div>
