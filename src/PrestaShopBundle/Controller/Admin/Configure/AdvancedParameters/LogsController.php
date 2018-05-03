@@ -61,7 +61,7 @@ class LogsController extends FrameworkBundleAdminController
             public function getOrderWay() { return $this->request->get('sortOrder', 'asc');}
             public function getOffset() { return $this->request->get('offset', 0); }
             public function getLimit() { return $this->request->get('limit', 10); }
-            public function getFilters() { return []; }
+            public function getFilters() { $f = $this->request->get('logs', []); unset($f['_token']); return $f; }
         };
 
         $gridFactory = $this->get('prestashop.core.grid.log_factory');

@@ -43,22 +43,41 @@ export default class Grid {
    * Initialize grid events
    */
   init() {
-    this.handleBulkActionSelectAllCheckbox();
-    this.handleBulkActionCheckboxSelect();
+    this._handleBulkActionSelectAllCheckbox();
+    this._handleBulkActionCheckboxSelect();
+    this._handleCommonGridActions();
+  }
+
+  /**
+   * Handles most common grid actions (show sql, refresh list & etc.)
+   *
+   * @private
+   */
+  _handleCommonGridActions() {
+    const $gridPanel = this.$grid.closest('.js-grid-panel');
+    if (0 === $gridPanel.length) {
+      // if grid is not within a panel
+      // then grid actions are not available
+      return;
+    }
+
+    $gridPanel.find('.test').on('click', () => this._onRefreshClick());
   }
 
   /**
    * Handles "Select all" button in the grid
+   *
+   * @private
    */
-  handleBulkActionSelectAllCheckbox() {
+  _handleBulkActionSelectAllCheckbox() {
     $(document).on('change', '.js-select-all-bulk-actions-checkbox', (e) => {
       const $checkbox = $(e.target);
 
       const isChecked = $checkbox.is(':checked');
       if (isChecked) {
-        this.enableBulkActionsBtn();
+        this._enableBulkActionsBtn();
       } else {
-        this.disableBulkActionsBtn();
+        this._disableBulkActionsBtn();
       }
 
       this.$grid.find('.js-bulk-action-checkbox').prop('checked', isChecked);
@@ -67,30 +86,45 @@ export default class Grid {
 
   /**
    * Handles each bulk action checkbox select in the grid
+   *
+   * @private
    */
-  handleBulkActionCheckboxSelect() {
-    this.$grid.on('change', '.js-bulk-action-checkbox', (e) => {
+  _handleBulkActionCheckboxSelect() {
+    this.$grid.on('change', '.js-bulk-action-checkbox', () => {
       const checkedRowsCount = this.$grid.find('.js-bulk-action-checkbox:checked').length;
 
       if (checkedRowsCount > 0) {
-        this.enableBulkActionsBtn();
+        this._enableBulkActionsBtn();
       } else {
-        this.disableBulkActionsBtn();
+        this._disableBulkActionsBtn();
       }
     });
   }
 
   /**
    * Enable bulk actions button
+   *
+   * @private
    */
-  enableBulkActionsBtn() {
+  _enableBulkActionsBtn() {
     this.$grid.find('.js-bulk-actions-btn').prop('disabled', false);
   }
 
   /**
    * Disable bulk actions button
+   *
+   * @private
    */
-  disableBulkActionsBtn() {
+  _disableBulkActionsBtn() {
     this.$grid.find('.js-bulk-actions-btn').prop('disabled', true);
+  }
+
+  /**
+   * Invoked when clicking on the "reload" toolbar button
+   *
+   * @private
+   */
+  _onRefreshClick() {
+    location.reload();
   }
 }
