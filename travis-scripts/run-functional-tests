@@ -10,6 +10,9 @@ echo "* Installing functional tests ...";
 
 cd $TRAVIS_BUILD_DIR/tests/E2E && npm install
 
+DISPLAY=:10 npm run start-selenium &> /dev/null &
+sleep 5
+
 echo "* Running functional tests ...";
 npm test -- --MODULE=ps_legalcompliance
 exit $?
