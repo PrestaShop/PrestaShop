@@ -59,7 +59,7 @@ script:
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests/check_e2e.sh;
+        bash travis-scripts/run-functional-tests;
     fi
 
 after_script:
