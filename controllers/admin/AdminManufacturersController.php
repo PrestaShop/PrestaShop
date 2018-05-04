@@ -174,7 +174,7 @@ class AdminManufacturersControllerCore extends AdminController
             'manufacturer_name' => array(
                 'title' => $this->trans('Brand', array(), 'Admin.Global'),
                 'width' => 'auto',
-                'filter_key' => 'manufacturer_name'
+                'filter_key' => 'm!name'
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global')
