@@ -1,2 +1,3 @@
 imports:
+    - { resource: ../common/services_dev.yml }
     - { resource: services_prod.yml }
