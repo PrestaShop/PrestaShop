@@ -56,15 +56,25 @@ script:
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         composer run-script phpunit-legacy --timeout=0;
+    fi
+  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         composer run-script phpunit-admin --timeout=0;
+    fi
+  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         composer run-script phpunit-sf --timeout=0;
+    fi
+  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         composer run-script phpunit-controllers --timeout=0;
     fi
 
   # run-functional-tests must run before starter theme
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
         bash travis-scripts/run-selenium-tests;
+    fi
+  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
         bash travis-scripts/run-functional-tests;
+    fi
+  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
         bash travis-scripts/test-startertheme;
     fi
 
