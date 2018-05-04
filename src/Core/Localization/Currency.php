@@ -47,7 +47,7 @@ class Currency implements CurrencyInterface
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
-     * Example :
+     * Example:
      * Given the Euro as default shop's currency,
      * If 1 dollar = 1.31 euros,
      * Then conversion rate for Dollar will be 1.31
@@ -174,7 +174,7 @@ class Currency implements CurrencyInterface
     public function getSymbol($localeCode)
     {
         if (!isset($this->symbols[$localeCode])) {
-            throw new LocalizationException('Unknown locale code');
+            throw new LocalizationException("Unknown locale code : $localeCode");
         }
 
         return $this->symbols[$localeCode];
@@ -196,7 +196,7 @@ class Currency implements CurrencyInterface
     public function getName($localeCode)
     {
         if (!isset($this->names[$localeCode])) {
-            throw new LocalizationException('Unknown locale code');
+            throw new LocalizationException("Unknown locale code : $localeCode");
         }
 
         return $this->names[$localeCode];

@@ -1,4 +1,5 @@
-parameters:
+imports:
+    - { resource: ../common/services_prod.yml }
 
 services:
     hashing:
