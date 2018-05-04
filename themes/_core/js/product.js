@@ -42,12 +42,12 @@ function getProductUpdateUrl() {
     let dfd = $.Deferred();
     const $productActions = $('.product-actions');
     const $quantityWantedInput = $('#quantity_wanted');
-    
-    if (prestashop != null
-        && prestashop.urls != null
-        && prestashop.urls.pages != null
-        && prestashop.urls.pages.product != ''
-        && prestashop.urls.pages.product != null
+
+    if (prestashop !== null
+        && prestashop.urls !== null
+        && prestashop.urls.pages !== null
+        && prestashop.urls.pages.product !== ''
+        && prestashop.urls.pages.product !== null
     ) {
         dfd.resolve(prestashop.urls.pages.product);
 
@@ -71,12 +71,12 @@ function getProductUpdateUrl() {
             formData
         ),
         dataType: 'json',
-        success: (data) => {
+        success(data) {
             let productUpdateUrl = data.productUrl;
             prestashop.page.canonical = productUpdateUrl;
             dfd.resolve(productUpdateUrl);
         },
-        error: (jqXHR, textStatus, errorThrown) => {
+        error(jqXHR, textStatus, errorThrown) {
             dfd.reject({"jqXHR": jqXHR, "textStatus": textStatus, "errorThrown": errorThrown});
         }
     });
@@ -104,14 +104,14 @@ function updateProduct(event, eventType, updateUrl) {
     }
 
     // Can not get product ajax url
-    if (updateUrl == null) {
+    if (updateUrl === null) {
         showError($('#product-availability'), 'An error occurred while processing your request');
 
         return;
     }
 
     // New request only if new value
-    if (event != null
+    if (event !== null
         && event.type === 'keyup'
         && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
     ) {
@@ -123,7 +123,7 @@ function updateProduct(event, eventType, updateUrl) {
         clearTimeout(currentRequestDelayedId);
     }
 
-    currentRequestDelayedId = setTimeout(function() {
+    currentRequestDelayedId = setTimeout(function updateProductRequest() {
         currentRequest = $.ajax({
             url: updateUrl + '?' + formSerialized + preview,
             method: 'POST',
@@ -133,19 +133,19 @@ function updateProduct(event, eventType, updateUrl) {
                 quantity_wanted: $quantityWantedInput.val()
             },
             dataType: 'json',
-            beforeSend: function() {
-                if (currentRequest != null) {
+            beforeSend() {
+                if (currentRequest !== null) {
                     currentRequest.abort();
                 }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error(jqXHR, textStatus, errorThrown) {
                 if (textStatus !== 'abort'
                     && $('section#main > .ajax-error').length === 0
                 ) {
                     showError($('#product-availability'), 'An error occurred while processing your request');
                 }
             },
-            success: function(data, textStatus, errorThrown) {
+            success(data, textStatus, errorThrown) {
                 // Avoid image to blink each time we modify the product quantity
                 // Can not compare directly cause of HTML comments in data.
                 const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
@@ -173,7 +173,7 @@ function updateProduct(event, eventType, updateUrl) {
                 }
                 prestashop.emit('updatedProduct', data);
             },
-            complete: function(jqXHR, textStatus) {
+            complete(jqXHR, textStatus) {
                 currentRequest = null;
                 currentRequestDelayedId = null;
             }
@@ -184,13 +184,13 @@ function updateProduct(event, eventType, updateUrl) {
 /**
  * Replace all "add to cart" sections but the quantity input
  * in order to keep quantity field intact i.e.
- * 
+ *
  * @param {object} data of updated product and cat
  */
 function replaceAddToCartSections(data) {
     let $productAddToCart = null;
 
-    $(data.product_add_to_cart).each(function(index, value) {
+    $(data.product_add_to_cart).each((index, value) => {
         if ($(value).hasClass('product-add-to-cart')) {
             $productAddToCart = $(value);
 
@@ -227,8 +227,8 @@ function replaceAddToCartSections(data) {
 
 /**
  * Find DOM elements and replace their content
- * 
- * @param {object} Replacement Data to be replaced on the current page
+ *
+ * @param {object} replacement Data to be replaced on the current page
  */
 function replaceAddToCartSection(replacement) {
     const destinationObject = $(replacement.$targetParent.find(replacement.targetSelector));
@@ -245,7 +245,7 @@ function replaceAddToCartSection(replacement) {
 }
 
 /**
- * @param {object} $container
+ * @param {jQuery} $container
  * @param {string} textError
  */
 function showError($container, textError) {
@@ -253,12 +253,12 @@ function showError($container, textError) {
     $container.replaceWith($error);
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
     // Listen on all form elements + those who have a data-product-attribute
     $('body').on(
         'change touchspin.on.startspin',
         '.product-variants *[name]',
-        function(e) {
+        (e) => {
             prestashop.emit('updateProduct', {
                 eventType: 'updatedProductCombination',
                 event: e,
@@ -277,7 +277,7 @@ $(document).ready(function () {
     $('body').on(
         'click',
         '.product-refresh',
-        function (e, extraParameters) {
+        (e, extraParameters) => {
             e.preventDefault();
             let eventType = 'updatedProductCombination';
 
@@ -294,17 +294,17 @@ $(document).ready(function () {
                 reason: {
                     productUrl: prestashop.urls.pages.product || '',
                 },
-            })
+            });
         }
     );
 
     // Refresh all the product content
-    prestashop.on('updateProduct', function (args) {
+    prestashop.on('updateProduct', (args) => {
         const eventType = args.eventType;
         const event = args.event;
 
         getProductUpdateUrl().done(
-                productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
+            productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
         ).fail(() => {
             if ($('section#main > .ajax-error').length === 0) {
                 showError($('#product-availability'), 'An error occurred while processing your request');
