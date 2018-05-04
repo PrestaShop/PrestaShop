@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\BetterSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,6 +45,8 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * @var FormInterface
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig")
+     * @BetterSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.", url="admin_domain")
+     *
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
@@ -56,7 +59,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
-        return array(
+        return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -67,11 +70,12 @@ class PerformanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
-        );
+        ];
     }
 
     /**
      * @return RedirectResponse
+     * @Security("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.")
      */
     public function processFormAction(Request $request)
     {

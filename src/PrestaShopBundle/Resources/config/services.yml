@@ -629,3 +629,7 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
         arguments:
             - '@prestashop.adapter.data_provider.currency'
+
+    # Access Denied Handler
+    prestashop.core.security.access_denied.handler:
+        class: PrestaShopBundle\Security\AccessDeniedHandler

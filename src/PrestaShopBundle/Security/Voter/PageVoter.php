@@ -72,6 +72,7 @@ class PageVoter extends Voter
     {
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
+
         $global =  $subject . $attribute;
 
         return $this->can($global, $employeeProfileId);

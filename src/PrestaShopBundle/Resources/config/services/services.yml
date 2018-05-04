@@ -158,6 +158,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    prestashop.access_denied.listener:
+        class: PrestaShopBundle\EventListener\AccessDeniedListener
+        arguments:
+            - "@router"
+            - "@translator"
+            - "@session"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
     prestashop.security.admin.provider:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
