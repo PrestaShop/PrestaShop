@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -77,32 +78,13 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance configuration form.
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.")
+     * @DemoRestricted(route="admin_performance")
      *
      * @param Request $request
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_performance');
-        }
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_performance');
-        }
-
         $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', array('controller' => $this));
         $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
         $form->handleRequest($request);

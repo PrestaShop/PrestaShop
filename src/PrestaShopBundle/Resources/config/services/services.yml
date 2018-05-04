@@ -167,6 +167,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
+    prestashop.demo_mode_enabled.listener:
+        class: PrestaShopBundle\EventListener\DemoModeEnabledListener
+        arguments:
+            - "@router"
+            - "@translator"
+            - "@session"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
     prestashop.security.admin.provider:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
