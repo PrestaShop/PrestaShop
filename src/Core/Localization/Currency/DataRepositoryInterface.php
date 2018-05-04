@@ -24,14 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function ps_1740_copy_data_from_currency_to_currency_lang()
+namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+
+/**
+ * Currency data repository interface
+ *
+ * Describes the behavior of currency DataRepository classes
+ */
+interface DataRepositoryInterface
 {
-    $currencies = Currency::getCurrencies();
-    foreach ($currencies as $currency) {
-        Db::getInstance()->execute(
-            "INSERT INTO `" . _DB_PREFIX_ . "currency_lang` (`id_currency`, `id_lang`, `name`)
-            SELECT `id_currency`, " . $currency['id_lang'] . " as id_lang , `name`
-            FROM `" . _DB_PREFIX_ . "currency`"
-        );
-    }
+    /**
+     * Get complete currency data by currency code
+     *
+     * @param string $currencyCode
+     *
+     * @return array
+     *  The currency data
+     */
+    public function getDataByCurrencyCode($currencyCode);
 }

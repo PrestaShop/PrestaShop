@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
+namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleCache as CldrLocaleCacheDataLayer;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
-use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
+use PrestaShop\PrestaShop\Core\Localization\DataLayer\LocaleCacheDataLayer;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-class LocaleCacheTest extends TestCase
+class LocaleCacheDataLayerTest extends TestCase
 {
     /**
      * The tested data layer
      *
-     * @var CldrLocaleCacheDataLayer
+     * @var LocaleCacheDataLayer
      */
     protected $layer;
 
@@ -49,18 +49,13 @@ class LocaleCacheTest extends TestCase
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
 
-        /** @var CacheAdapterInterface $cacheAdapter */
-        $this->layer = new CldrLocaleCacheDataLayer($cacheAdapter);
+        /** @var AdapterInterface $cacheAdapter */
+        $this->layer = new LocaleCacheDataLayer($cacheAdapter);
     }
 
-    /**
-     * Given a valid CLDR LocaleCache data layer object
-     * When asking it to write data and then read the same data
-     * Then the said data should be retrieved unchanged
-     */
     public function testReadWrite()
     {
-        $data      = new CldrLocaleData();
+        $data      = new LocaleData();
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -73,7 +68,7 @@ class LocaleCacheTest extends TestCase
         /** @noinspection end */
 
         $this->assertInstanceOf(
-            CldrLocaleData::class,
+            LocaleData::class,
             $cachedData
         );
 

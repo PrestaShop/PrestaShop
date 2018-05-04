@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="Germany" version="1.0">
   <currencies>
-    <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="2"/>
+    <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="de"/>

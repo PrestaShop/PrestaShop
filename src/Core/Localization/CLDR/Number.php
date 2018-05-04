@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,9 +25,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Exception;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-class LocalizationFileNotFoundException extends LocalizationException
+class Number
 {
 
 }

@@ -24,9 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -34,8 +31,7 @@ use Composer\CaBundle\CaBundle;
 
 class ToolsCore
 {
-    const CACERT_LOCATION           = 'https://curl.haxx.se/ca/cacert.pem';
-    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
 
     protected static $file_exists_cache = array();
     protected static $_forceCompile;
@@ -136,7 +132,7 @@ class ToolsCore
      * Replace text within a portion of a string
      *
      * Replaces a string matching a search, (optionally) string from a certain position
-     *
+     *  
      * @param  string  $search  The string to search in the input string
      * @param  string  $replace The replacement string
      * @param  string  $subject The input string
@@ -697,102 +693,42 @@ class ToolsCore
     }
 
     /**
-     * Return price with currency sign for a given product
-     *
-     * @deprecated Since 1.7.4.0. Please use Locale::formatPrice() instead
-     * @see PrestaShop\PrestaShop\Core\Localization\Locale
-     *
-     * @param float $price
-     *  Product price
-     *
-     * @param object|array $currency
-     *  Current currency (object, id_currency, NULL => context currency)
-     *
-     * @param bool $no_utf8
-     *  Not used anymore
-     *
-     * @param Context|null $context
-     *
-     * @return string Price correctly formatted (sign, decimal separator...)
-     * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-     *
-     * @throws LocalizationException
-     */
+    * Return price with currency sign for a given product
+    *
+    * @param float $price Product price
+    * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+    * @return string Price correctly formated (sign, decimal separator...)
+    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+    */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
-        @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.4.0. '
-            . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatPrice() instead.',
-            E_USER_DEPRECATED
-        );
-
         if (!is_numeric($price)) {
             return $price;
         }
-
-        $context  = $context ?: Context::getContext();
-        $currency = $currency ?: $context->currency;
-
-        if (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance($currency);
+        if (!$context) {
+            $context = Context::getContext();
+        }
+        if ($currency === null) {
+            $currency = $context->currency;
+        } elseif (is_int($currency)) {
+            $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        $locale = $context->currentLocale;
-        if (null === $locale) {
-            $container = $context->controller->getContainer();
-            if (null === $container) {
-                $container = SymfonyContainer::getInstance();
-            }
+        $cldr = self::getCldr($context);
 
-            /** @var LocaleRepository $localeRepository */
-            $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-            $locale           = $localeRepository->getLocale((string)$context->language->locale);
-        }
-        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
-
-        return $locale->formatPrice($price, $currencyCode);
+        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /**
-     * Returns a well formatted number
-     *
-     * @deprecated Since 1.7.4.0. Please use Locale::formatNumber() instead
-     * @see PrestaShop\PrestaShop\Core\Localization\Locale
-     *
-     * @param float $number
-     *  The number to format
-     *
-     * @param null $currency
-     *  not used anymore
-     *
-     * @return string
-     *  The formatted number
-     *
-     * @throws Exception
-     * @throws LocalizationException
+    /*
+     * Return a number well formatted
+     * @param float $number A number
+     * @param nullable $currency / not used anymaore
      */
     public static function displayNumber($number, $currency = null)
     {
-        @trigger_error(
-            'Tools::displayNumber() is deprecated since version 1.7.4.0. '
-            . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatNumber() instead.',
-            E_USER_DEPRECATED
-        );
+        $cldr = self::getCldr(Context::getContext());
 
-        $context = Context::getContext();
-        $locale  = $context->currentLocale;
-        if (null === $locale) {
-            $container = $context->controller->getContainer();
-            if (null === $container) {
-                $container = SymfonyContainer::getInstance();
-            }
-
-            /** @var LocaleRepository $localeRepo */
-            $localeRepo = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-            $locale     = $localeRepo->getLocale((string)$context->language->locale);
-        }
-
-        return $locale->formatNumber($number);
+        return $cldr->getNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)

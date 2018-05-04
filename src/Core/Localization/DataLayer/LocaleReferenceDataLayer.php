@@ -25,20 +25,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 /**
  * Locale reference data layer
  *
- * Provides reference (CLDR) data for locale, number specification, currencies...
+ * Provides reference data for locale, number specification, currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerInterface
+class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
      * CLDR files reader
@@ -49,15 +48,10 @@ class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerIn
      */
     protected $reader;
 
-    public function __construct(ReaderInterface $reader)
-    {
-        $this->reader = $reader;
-    }
-
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CldrLocaleDataLayerInterface $lowerLayer)
+    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -65,15 +59,15 @@ class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerIn
     }
 
     /**
-     * Actually read a CLDR LocaleData object into the current layer
+     * Actually read a LocaleData object into the current layer
      *
      * Data is read from official CLDR file (via the CLDR files reader)
      *
      * @param string $localeCode
-     *  The CLDR LocaleData object identifier
+     *  The LocaleData object identifier
      *
      * @return LocaleData|null
-     *  The wanted CLDR LocaleData object (null if not found)
+     *  The wanted LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -84,10 +78,10 @@ class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerIn
      * CLDR files are read only. Nothing can be written there.
      *
      * @param string $localeCode
-     *  The CLDR LocaleData object identifier
+     *  The LocaleData object identifier
      *
      * @param LocaleData $data
-     *  The CLDR LocaleData object to be written
+     *  The LocaleData object to be written
      *
      * @return void
      */
