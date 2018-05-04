@@ -80,8 +80,14 @@ class AdminCurrenciesControllerCore extends AdminController
         return $helper->generateList($this->_list, $this->fields_list);
     }
 
-    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-    {
+    public function getList(
+        $id_lang,
+        $order_by = null,
+        $order_way = null,
+        $start = 0,
+        $limit = null,
+        $id_lang_shop = false
+    ) {
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, Context::getContext()->shop->id);
     }
 
@@ -89,55 +95,55 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         $currency = null;
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Currencies', array(), 'Admin.Global'),
-                'icon' => 'icon-money'
-            ),
-            'input' => array(
-                array(
-                    'type' => 'select',
-                    'col' => '4',
-                    'label' => $this->trans('Currency', array(), 'Admin.Global'),
-                    'name' => 'iso_code',
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Currencies', [], 'Admin.Global'),
+                'icon'  => 'icon-money',
+            ],
+            'input'  => [
+                [
+                    'type'     => 'select',
+                    'col'      => '4',
+                    'label'    => $this->trans('Currency', [], 'Admin.Global'),
+                    'name'     => 'iso_code',
                     'required' => true,
-                    'hint' => $this->trans('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).', array(), 'Admin.International.Help'),
-                    'options' => array(
+                    'hint'     => $this->trans('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).', [], 'Admin.International.Help'),
+                    'options'  => [
                         'query' => $this->cldr->getAllCurrencies(),
-                        'name' => 'name',
-                        'id' => 'code'
-                    )
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->trans('Exchange rate', array(), 'Admin.International.Feature'),
-                    'name' => 'conversion_rate',
+                        'name'  => 'name',
+                        'id'    => 'code',
+                    ],
+                ],
+                [
+                    'type'      => 'text',
+                    'label'     => $this->trans('Exchange rate', [], 'Admin.International.Feature'),
+                    'name'      => 'conversion_rate',
                     'maxlength' => 11,
-                    'required' => true,
-                    'col' => '2',
-                    'hint' => $this->trans('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).', array(), 'Admin.International.Help')
-                ),
-                array(
-                    'type' => 'hidden',
-                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
-                    'name' => 'active',
+                    'required'  => true,
+                    'col'       => '2',
+                    'hint'      => $this->trans('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).', [], 'Admin.International.Help'),
+                ],
+                [
+                    'type'     => 'hidden',
+                    'label'    => $this->trans('Enable', [], 'Admin.Actions'),
+                    'name'     => 'active',
                     'required' => false,
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => 'active_on',
+                    'is_bool'  => true,
+                    'values'   => [
+                        [
+                            'id'    => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
-                        ),
-                        array(
-                            'id' => 'active_off',
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
+                            'id'    => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
-                    )
-                )
-            )
-        );
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(

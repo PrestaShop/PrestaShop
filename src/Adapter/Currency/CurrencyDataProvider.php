@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Currency;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
 use Currency;
+use Exception;
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShopException;
 
 /**
  * This class will provide data from DB / ORM about Currency

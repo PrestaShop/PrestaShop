@@ -235,7 +235,7 @@ abstract class AbstractDataLayer
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
                 throw new DataLayerException(
-                    'Unable to write into "' . $id . '"" (data layer "' . __CLASS__ . '")',
+                    'Unable to write into "' . $id . '" (data layer "' . __CLASS__ . '")',
                     0,
                     $e
                 );
