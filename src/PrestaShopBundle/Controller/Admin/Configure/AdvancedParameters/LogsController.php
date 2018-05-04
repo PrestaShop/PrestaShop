@@ -29,9 +29,10 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -45,6 +46,7 @@ class LogsController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      * @param \Symfony\Component\HttpFoundation\Request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -88,34 +90,16 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_logs")
+     * @DemoRestricted(route="admin_logs")
      * @param Request $request
      * @return RedirectResponse
      */
     public function searchAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_logs');
-        }
-
         $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
         $searchParametersForm->handleRequest($request);
         $filters = array();
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_logs');
-        }
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
@@ -127,34 +111,17 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_logs")
+     * @DemoRestricted(route="admin_logs")
+     *
      * @param Request $request
      * @return RedirectResponse
      * @throws \Exception
      */
     public function processFormAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_logs');
-        }
-
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $logsByEmailForm->handleRequest($request);
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_logs');
-        }
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
@@ -176,6 +143,8 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_logs")
+     *
      * @return RedirectResponse
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */

@@ -26,18 +26,13 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
  */
-class AccessDeniedListener
+class DemoModeEnabledListener
 {
     /**
      * @var RouterInterface
@@ -62,64 +57,47 @@ class AccessDeniedListener
     }
 
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param FilterControllerEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
-        if (!$event->isMasterRequest() || !$event->getException() instanceof AccessDeniedException) {
+        if (!$event->isMasterRequest()) {
             return;
         }
 
-        if (!$securityConfigurations = $event->getRequest()->attributes->get('_security')) {
+        if (!$demoConfigurations = $event->getRequest()->attributes->get('_demo_restricted')) {
             return;
         }
 
-        foreach ($securityConfigurations as $securityConfiguration) {
-            if (!$securityConfiguration instanceof AdminSecurity) {
+        foreach ($demoConfigurations as $demoConfiguration) {
+            if (!$demoConfiguration instanceof DemoRestricted) {
                 continue;
             }
 
-            $event->allowCustomResponseCode();
+            $this->throwNotificationMessage($demoConfiguration);
+            $url = $this->router->generate($demoConfiguration->getRoute());
 
-            $this->throwNotificationMessage($securityConfiguration);
-            $url = $this->computeUrl($securityConfiguration);
-
-            $event->setResponse(new RedirectResponse($url));
+            $event->setController(function () use ($url){
+                return new RedirectResponse($url);
+            });
 
             return;
         }
-    }
-
-    /**
-     * Compute the url for the redirection.
-     *
-     * @param AdminSecurity $adminSecurity
-     *
-     * @return string
-     */
-    private function computeUrl(AdminSecurity $adminSecurity)
-    {
-        $route = $adminSecurity->getRoute();
-        if ($route !== null) {
-            return $this->router->generate($route);
-        }
-
-        return $adminSecurity->getUrl();
     }
 
     /**
      * Send an error message when redirected, will only work on migrated pages.
      *
-     * @param AdminSecurity $adminSecurity
+     * @param AdminSecurity $demoRestricted
      */
-    private function throwNotificationMessage(AdminSecurity $adminSecurity)
+    private function throwNotificationMessage(DemoRestricted $demoRestricted)
     {
         $this->session->getFlashBag()->add(
             'error',
             $this->translator->trans(
-                $adminSecurity->getMessage(),
+                $demoRestricted->getMessage(),
                 [],
-                $adminSecurity->getDomain()
+                $demoRestricted->getDomain()
             )
         );
     }

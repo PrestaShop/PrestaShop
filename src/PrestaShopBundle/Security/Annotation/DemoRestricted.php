@@ -25,17 +25,14 @@
  */
 namespace PrestaShopBundle\Security\Annotation;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 
 /**
- * Improves the existing Security annotation, adding:
- * `domain`: to translate the sent message using a PrestaShop domain;
- * `route`: to select the route for redirection;
- * `url`: only available in 1.7.x, to redirect to legacy pages;
+ * Forbid access to the page if Demonstration mode is enabled
  *
  * @Annotation
  */
-class AdminSecurity extends Security
+class DemoRestricted extends ConfigurationAnnotation
 {
     /**
      * The translation domain for the message.
@@ -46,19 +43,10 @@ class AdminSecurity extends Security
 
     /**
      * The route for the redirection.
-     * @todo: Once the onboarding page is migrated, set default to his route name.
      *
      * @var string
      */
     protected $route;
-
-    /**
-     * @deprecated 1.8.x once the back office is migrated, rely only on route.
-     * The url for the redirection.
-     *
-     * @return string
-     */
-    protected $url = 'admin_domain';
 
     /**
      * @return string
@@ -93,18 +81,22 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @return mixed
+     * Returns the alias name for an annotated configuration.
+     *
+     * @return string
      */
-    public function getUrl()
+    public function getAliasName()
     {
-        return $this->url;
+        return 'demo_restricted';
     }
 
     /**
-     * @param $url
+     * Returns whether multiple annotations of this type are allowed.
+     *
+     * @return bool
      */
-    public function setUrl($url)
+    public function allowArray()
     {
-        $this->url = $url;
+        return true;
     }
 }
