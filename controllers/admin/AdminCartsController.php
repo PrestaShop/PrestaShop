@@ -741,14 +741,15 @@ class AdminCartsControllerCore extends AdminController
     public function displayAjaxSearchCarts()
     {
         $id_customer = (int)Tools::getValue('id_customer');
-        $carts = Cart::getCustomerCarts((int)$id_customer);
+        $carts = Cart::getCustomerCarts((int)$id_customer, false);
         $orders = Order::getCustomerOrders((int)$id_customer);
 
         if (count($carts)) {
             foreach ($carts as $key => &$cart) {
                 $cart_obj = new Cart((int)$cart['id_cart']);
-                if ($cart['id_cart'] == $this->context->cart->id || !Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists()) {
+                if ($cart['id_cart'] == $this->context->cart->id) {
                     unset($carts[$key]);
+                    continue;
                 }
                 $currency = new Currency((int)$cart['id_currency']);
                 $cart['total_price'] = Tools::displayPrice($cart_obj->getOrderTotal(), $currency);
