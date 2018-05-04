@@ -7,7 +7,7 @@
   </languages>
 
 	<currencies>
-		<currency name="Indian Rupee" iso_code="INR" iso_code_num="356" sign="₹" blank="1" conversion_rate="60.748205" format="1" decimals="2" />
+		<currency name="Indian Rupee" iso_code="INR" iso_code_num="356" sign="₹" blank="1" conversion_rate="60.748205" format="1" decimals="1" />
 	</currencies>
 	<taxes>
 		<tax id="1" name="VAT IN 12.5%" rate="12.5" />

@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled as CurrencyInstalledDataLayer;
-
 /**
  * Localization CurrencyData source
  * Uses a stack of middleware data layers to read / write CurrencyData objects
@@ -42,68 +40,26 @@ class CurrencyDataSource implements DataSourceInterface
     protected $topLayer;
 
     /**
-     * @var CurrencyInstalledDataLayer
-     */
-    protected $installedDataLayer;
-
-    /**
      * CurrencyDataSource constructor needs CurrencyDataLayer objects.
      * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
      *
      * @param CurrencyDataLayerInterface $topLayer
-     * @param CurrencyInstalledDataLayer $installedDataLayer
      */
-    public function __construct(CurrencyDataLayerInterface $topLayer, CurrencyInstalledDataLayer $installedDataLayer)
+    public function __construct(CurrencyDataLayerInterface $topLayer)
     {
-        $this->topLayer           = $topLayer;
-        $this->installedDataLayer = $installedDataLayer;
+        $this->topLayer = $topLayer;
     }
 
     /**
-     * Get complete currency data by currency code, in a given language
+     * Get complete currency data by currency code
      *
-     * @param LocalizedCurrencyId $localizedCurrencyId
-     *  The currency data identifier (currency code + locale code)
+     * @param string $currencyCode
      *
      * @return CurrencyData
      *  The currency data
      */
-    public function getLocalizedCurrencyData(LocalizedCurrencyId $localizedCurrencyId)
+    public function getDataByCurrencyCode($currencyCode)
     {
-        return $this->topLayer->read($localizedCurrencyId);
-    }
-
-    /**
-     * Is this currency available ?
-     * (an available currency is not deleted AND is active)
-     *
-     * @param $currencyCode
-     *
-     * @return bool
-     *  True if currency is available
-     */
-    public function isCurrencyAvailable($currencyCode)
-    {
-        return $this->installedDataLayer->isAvailable($currencyCode);
-    }
-
-    /**
-     * Get all the available (installed + active) currencies' data
-     *
-     * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyData[]
-     *  The available currencies' data
-     */
-    public function getAvailableCurrenciesData($localeCode)
-    {
-        $currencyCodes  = $this->installedDataLayer->getAvailableCurrencyCodes();
-        $currenciesData = [];
-        foreach ($currencyCodes as $currencyCode) {
-            $currenciesData[] = $this->getLocalizedCurrencyData(new LocalizedCurrencyId($currencyCode, $localeCode));
-        }
-
-        return $currenciesData;
+        return $this->topLayer->read($currencyCode);
     }
 }

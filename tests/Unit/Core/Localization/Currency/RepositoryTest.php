@@ -47,12 +47,12 @@ class RepositoryTest extends TestCase
     {
         $dataSource = $this->createMock(CurrencyDataSourceInterface::class);
         $dataSource
-            ->method('getLocalizedCurrencyData')
+            ->method('getDataByCurrencyCode')
             ->willReturnCallback(
-                function ($localizedCurrencyId) {
+                function ($isoCode) {
                     $data = new CurrencyData();
 
-                    switch ($localizedCurrencyId->getCurrencyCode()) {
+                    switch ($isoCode) {
                         case 'EUR':
                             $data->isActive       = true;
                             $data->conversionRate = 1;
@@ -74,7 +74,7 @@ class RepositoryTest extends TestCase
                             break;
 
                         default:
-                            throw new LocalizationException('Unknown currency code : ' . $localizedCurrencyId);
+                            throw new LocalizationException('Unknown currency code : ' . $isoCode);
                     }
 
                     return $data;
@@ -104,7 +104,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetCurrency($currencyCode, $expectedNames, $expectedSymbols)
     {
-        $currency = $this->currencyRepository->getCurrency($currencyCode, 'fr-FR');
+        $currency = $this->currencyRepository->getCurrency($currencyCode);
         foreach ($expectedNames as $localeCode => $name) {
             $this->assertSame($name, $currency->getName($localeCode));
         }
@@ -151,6 +151,6 @@ class RepositoryTest extends TestCase
      */
     public function testGetCurrencyWithUnknownCode()
     {
-        $this->currencyRepository->getCurrency('foo', 'bar');
+        $this->currencyRepository->getCurrency('foobar');
     }
 }

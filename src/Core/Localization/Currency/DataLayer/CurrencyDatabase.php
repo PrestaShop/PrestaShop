@@ -31,24 +31,25 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
- * Currency Database data layer
+ * CLDR Currency Database (Doctrine) data layer
  *
  * Provides and persists currency data from/into database
  */
-class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInterface
+class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
 {
 
     protected $dataProvider;
+    protected $localeCode;
 
-    public function __construct(CurrencyDataProvider $dataProvider)
+    public function __construct(CurrencyDataProvider $dataProvider, $localeCode)
     {
         $this->dataProvider = $dataProvider;
+        $this->localeCode   = $localeCode;
     }
 
     /**
@@ -56,12 +57,12 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param CurrencyDataLayerInterface $lowerLayer
+     * @param CldrCurrencyDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -73,24 +74,15 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      *
      * Data is read into database
      *
-     * @param LocalizedCurrencyId $currencyDataId
-     *  The CurrencyData object identifier (currency code + locale code)
+     * @param string $currencyCode
+     *  The CurrencyData object identifier
      *
      * @return CurrencyData|null
      *  The wanted CurrencyData object (null if not found)
-     *
-     * @throws LocalizationException
-     *  When $currencyDataId is invalid
      */
-    protected function doRead($currencyDataId)
+    protected function doRead($currencyCode)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
-        }
-
-        $localeCode     = $currencyDataId->getLocaleCode();
-        $currencyCode   = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCode($currencyCode, $localeCode);
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCode($currencyCode);
 
         if (null === $currencyEntity) {
             return null;
@@ -98,11 +90,11 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
 
         $currencyData = new CurrencyData();
 
-        $currencyData->isoCode              = $currencyEntity->iso_code;
-        $currencyData->names[$localeCode]   = $currencyEntity->name;
-        $currencyData->numericIsoCode       = $currencyEntity->numeric_iso_code;
-        $currencyData->symbols[$localeCode] = $currencyEntity->symbol;
-        $currencyData->precision            = $currencyEntity->precision;
+        $currencyData->isoCode                    = $currencyEntity->iso_code;
+        $currencyData->names[$this->localeCode]   = $currencyEntity->name;
+        $currencyData->numericIsoCode             = $currencyEntity->numeric_iso_code;
+        $currencyData->symbols[$this->localeCode] = $currencyEntity->symbol;
+        $currencyData->precision                  = $currencyEntity->precision;
 
         return $currencyData;
     }
@@ -125,8 +117,8 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      * Actually write a data object into the current layer
      * Here, this is a DB insert/update...
      *
-     * @param LocalizedCurrencyId $currencyDataId
-     *  The CurrencyData object identifier (currency code + locale code)
+     * @param string $currencyCode
+     *  The currency ISO 4217 code
      *
      * @param CurrencyData $currencyData
      *  The data object to be written
@@ -135,23 +127,15 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      *
      * @throws DataLayerException
      *  If something goes wrong when trying to write into DB
-     *
-     * @throws LocalizationException
-     *  When $currencyDataId is invalid
      */
-    protected function doWrite($currencyDataId, $currencyData)
+    protected function doWrite($currencyCode, $currencyData)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
-        }
-
-        $currencyCode   = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, 'fr-FR');
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode);
 
         $currencyEntity->iso_code         = $currencyData->isoCode;
-        $currencyEntity->name             = $currencyData->names[$currencyCode];
+        $currencyEntity->name             = $currencyData->names[$this->localeCode];
         $currencyEntity->numeric_iso_code = $currencyData->numericIsoCode;
-        $currencyEntity->symbol           = $currencyData->symbols[$currencyCode];
+        $currencyEntity->symbol           = $currencyData->symbols[$this->localeCode];
         $currencyEntity->precision        = $currencyData->precision;
 
         try {

@@ -50,6 +50,7 @@ class Repository implements CurrencyRepositoryInterface
      */
     protected $dataSource;
 
+
     public function __construct(CurrencyDataSourceInterface $dataSource)
     {
         $this->dataSource = $dataSource;
@@ -58,12 +59,10 @@ class Repository implements CurrencyRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getCurrency($currencyCode, $localeCode)
+    public function getCurrency($currencyCode)
     {
         if (!isset($this->currencies[$currencyCode])) {
-            $data = $this->dataSource->getLocalizedCurrencyData(
-                new LocalizedCurrencyId($currencyCode, $localeCode)
-            );
+            $data = $this->dataSource->getDataByCurrencyCode($currencyCode);
 
             $this->currencies[$currencyCode] = new Currency(
                 $data->isActive,
@@ -80,31 +79,10 @@ class Repository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Get all the available currencies (installed + active)
-     *
-     * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
-     *
      * @return CurrencyCollection
-     *  The available currencies
      */
-    public function getAvailableCurrencies($localeCode)
+    public function getInstalledCurrencies()
     {
-        $currencies     = new CurrencyCollection();
-        $currenciesData = $this->dataSource->getAvailableCurrenciesData($localeCode);
-
-        foreach ($currenciesData as $currencyDatum) {
-            $currencies->add(new Currency(
-                $currencyDatum->isActive,
-                $currencyDatum->conversionRate,
-                $currencyDatum->isoCode,
-                $currencyDatum->numericIsoCode,
-                $currencyDatum->symbols,
-                $currencyDatum->precision,
-                $currencyDatum->names
-            ));
-        }
-
-        return $currencies;
+        // TODO : implement this method
     }
 }

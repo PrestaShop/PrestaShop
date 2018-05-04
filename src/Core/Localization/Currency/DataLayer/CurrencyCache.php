@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface as CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -72,23 +71,15 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      *
      * Might be a file access, cache read, DB select...
      *
-     * @param LocalizedCurrencyId $currencyDataId
-     *  The CurrencyData object identifier (currency code + locale code)
+     * @param mixed $currencyCode
+     *  The CurrencyData object identifier
      *
      * @return CurrencyData|null
      *  The wanted CurrencyData object (null if not found)
-     *
-     * @throws LocalizationException
-     *  When $currencyDataId is invalid
-     * @throws \Psr\Cache\InvalidArgumentException
      */
-    protected function doRead($currencyDataId)
+    protected function doRead($currencyCode)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
-        }
-
-        $cacheItem = $this->cache->getItem((string)$currencyDataId);
+        $cacheItem = $this->cache->getItem($currencyCode);
 
         return $cacheItem->isHit()
             ? $cacheItem->get()
@@ -97,7 +88,6 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
 
     /**
      * @inheritDoc
-     * @throws LocalizationException
      */
     public function write($id, $data)
     {
@@ -115,7 +105,7 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      *
      * Might be a file edit, cache update, DB insert/update...
      *
-     * @param LocalizedCurrencyId $currencyDataId
+     * @param mixed $currencyCode
      *  The data object identifier
      *
      * @param CurrencyData $currencyData
@@ -125,17 +115,10 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      *
      * @throws DataLayerException
      *  When write fails
-     * @throws LocalizationException
-     *  When $currencyDataId is invalid
-     * @throws \Psr\Cache\InvalidArgumentException
      */
-    protected function doWrite($currencyDataId, $currencyData)
+    protected function doWrite($currencyCode, $currencyData)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
-        }
-
-        $cacheItem = $this->cache->getItem((string)$currencyDataId);
+        $cacheItem = $this->cache->getItem($currencyCode);
         $cacheItem->set($currencyData);
 
         $saved = $this->cache->save($cacheItem);

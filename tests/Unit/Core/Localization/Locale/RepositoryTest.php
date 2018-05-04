@@ -97,12 +97,12 @@ class RepositoryTest extends TestCase
         $currencyRepository = $this->getMockBuilder(CurrencyRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $currencyRepository->method('getAvailableCurrencies')
+        $currencyRepository->method('getInstalledCurrencies')
             ->willReturn([$currency]);
 
         /** @var CldrLocaleRepository $cldrLocaleRepository */
         /** @var CurrencyRepository $currencyRepository */
-        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository, 'fr-FR');
+        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
     }
 
     /**

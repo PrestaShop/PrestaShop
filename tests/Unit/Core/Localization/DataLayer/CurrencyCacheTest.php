@@ -28,7 +28,6 @@ namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache as CurrencyCacheDataLayer;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -62,12 +61,12 @@ class CurrencyCacheTest extends TestCase
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->layer->write(new LocalizedCurrencyId('foo', 'bar'), $data);
+        $this->layer->write('fooBar', $data);
         /** @noinspection end */
 
         // Get value back from cache
         /** @noinspection PhpUnhandledExceptionInspection */
-        $cachedData = $this->layer->read(new LocalizedCurrencyId('foo', 'bar'));
+        $cachedData = $this->layer->read('fooBar');
         /** @noinspection end */
 
         $this->assertInstanceOf(
@@ -82,7 +81,7 @@ class CurrencyCacheTest extends TestCase
 
         // Same test with unknown cache key
         /** @noinspection PhpUnhandledExceptionInspection */
-        $cachedData = $this->layer->read(new LocalizedCurrencyId('unknown', 'unknown'));
+        $cachedData = $this->layer->read('unknown');
         /** @noinspection end */
 
         $this->assertNull($cachedData);

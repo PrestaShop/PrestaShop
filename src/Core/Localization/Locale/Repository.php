@@ -198,18 +198,18 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        $currencies = $this->currencyRepository->getAvailableCurrencies($localeCode);
+        $currencies = $this->currencyRepository->getInstalledCurrencies();
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
             // Build the spec
             $thisPriceSpecification = (new SpecificationFactory)->buildPriceSpecification(
-                $localeCode,
                 $cldrLocale,
                 $currency,
+                $localeCode,
+                $this->maxFractionDigits,
                 $this->numberGroupingUsed,
-                $this->currencyDisplayType,
-                null // TODO : replace here with custom currency precision
+                $this->currencyDisplayType
             );
 
             // Add the spec to the collection

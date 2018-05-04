@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Brazil" version="1.0">
 	<currencies>
-		<currency name="Real" iso_code="BRL" iso_code_num="986" sign="R$" blank="1" conversion_rate="2.31583" format="3" decimals="2" />
+		<currency name="Real" iso_code="BRL" iso_code_num="986" sign="R$" blank="1" conversion_rate="2.31583" format="3" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="br" />
