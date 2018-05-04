@@ -410,7 +410,7 @@ class CartControllerCore extends FrontController
         }
 
         // Check product quantity availability
-        if ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+        if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             array_push(
                 $this->{$ErrorKey},
                 $this->trans(
@@ -493,7 +493,18 @@ class CartControllerCore extends FrontController
                             'Shop.Notifications.Error'
                         )
                     );
+                } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+                    // check quantity after cart quantity update
+                    array_push(
+                        $this->{$ErrorKey},
+                        $this->trans(
+                            'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                            array('%product%' => $product->name),
+                            'Shop.Notifications.Error'
+                        )
+                    );
                 }
+
             }
         }
 
@@ -545,7 +556,16 @@ class CartControllerCore extends FrontController
             return false;
         }
 
-        return !$product->checkQty($qtyToCheck);
+        // product quantity is the available quantity after decreasing products in cart
+        $productQuantity = Product::getQuantity(
+            $this->id_product,
+            $this->id_product_attribute,
+            null,
+            $this->context->cart,
+            $this->customization_id
+        );
+
+        return $productQuantity < 0;
     }
 
     /**

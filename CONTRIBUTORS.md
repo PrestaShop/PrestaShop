@@ -225,6 +225,7 @@ GitHub contributors:
 - Guillaume Leseur
 - Guillaume Marsille
 - Guillaume P
+- GuillaumeKadolis
 - Guisardo
 - Gustavo
 - Gytis
@@ -308,6 +309,7 @@ GitHub contributors:
 - Leo
 - Lesley Paone
 - LOIC ROSSET ltd
+- Loïc Sapone
 - lozal2244
 - Luc
 - Luc Vandesype
@@ -332,6 +334,7 @@ GitHub contributors:
 - Marco Cervellin
 - Marcos
 - Marek Hanuš
+- Marion François
 - Marius
 - Mark Wienk
 - MarkC
@@ -359,6 +362,7 @@ GitHub contributors:
 - MDWeb
 - Mehdi Badrani
 - mehrshadz
+- Mehrshad
 - melvin
 - Michael Dekker
 - Michael Hjulskov
@@ -391,6 +395,8 @@ GitHub contributors:
 - Nicolas Martin
 - Nicolas Sorosac
 - Niels Wouda
+- nigel
+- Nigel Helliwell
 - nihco2
 - Niklas Ekman
 - Niko Wicaksono
