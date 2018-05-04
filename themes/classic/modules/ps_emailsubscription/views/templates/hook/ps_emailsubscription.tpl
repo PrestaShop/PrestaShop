@@ -45,7 +45,7 @@
             <div class="input-wrapper">
               <input
                 name="email"
-                type="text"
+                type="email"
                 value="{$value}"
                 placeholder="{l s='Your email address' d='Shop.Forms.Labels'}"
                 aria-labelledby="block-newsletter-label"
