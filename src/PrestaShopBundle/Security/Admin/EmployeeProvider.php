@@ -61,7 +61,7 @@ class EmployeeProvider implements UserProviderInterface
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
-                Access::getRoles($this->legacyContext->employee->id_profile)
+                array_merge(['ROLE_EMPLOYEE'], Access::getRoles($this->legacyContext->employee->id_profile))
             );
             return $employee;
         }
