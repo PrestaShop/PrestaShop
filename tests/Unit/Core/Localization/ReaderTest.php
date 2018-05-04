@@ -29,7 +29,6 @@ namespace Tests\Unit\Core\Localization\CLDR;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class ReaderTest extends TestCase
 {
@@ -51,14 +50,10 @@ class ReaderTest extends TestCase
     /**
      * @dataProvider provideLocaleData
      *
-     * Given a valid CLDR Reader
-     * When asking for a specific locale to this reader
-     * Then the expected Locale data should be retrieved
-     *
      * @param $localeCode
      * @param $expectedData
      *
-     * @throws LocalizationException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testReadLocaleData($localeCode, $expectedData)
     {
@@ -68,62 +63,37 @@ class ReaderTest extends TestCase
 
         $dns = $localeData->defaultNumberingSystem;
 
-        $this->assertSame(
+        $this->assertEquals(
             $expectedData['defaultNumberingSystem'],
             $dns,
             'Wrong group separator'
         );
-        $this->assertSame(
+        $this->assertEquals(
             $expectedData['digitsGroupSeparator'],
             $localeData->numberSymbols[$dns]->group,
             'Wrong group separator'
         );
-        $this->assertSame(
+        $this->assertEquals(
             $expectedData['decimalSeparator'],
             $localeData->numberSymbols[$dns]->decimal,
             'Wrong decimal separator'
         );
-        $this->assertSame(
+        $this->assertEquals(
             $expectedData['decimalPattern'],
             $localeData->decimalPatterns[$dns],
             'Wrong decimal pattern'
         );
-        $this->assertSame(
+        $this->assertEquals(
             $expectedData['currencyPattern'],
             $localeData->currencyPatterns[$dns],
             'Wrong currency pattern'
-        );
-        $this->assertSame(
-            $expectedData['euroName'],
-            $localeData->currencies['EUR']->displayNames['default'],
-            'Wrong name for Euro'
-        );
-        $this->assertSame(
-            $expectedData['euroNarrowSymbol'],
-            $localeData->currencies['EUR']->symbols['narrow'],
-            'Wrong narrow symbol for euro'
-        );
-        $this->assertSame(
-            $expectedData['dollarName'],
-            $localeData->currencies['USD']->displayNames['default'],
-            'Wrong name for US Dollar'
-        );
-        $this->assertSame(
-            $expectedData['dollarDefaultSymbol'],
-            $localeData->currencies['USD']->symbols['default'],
-            'Wrong default symbol for dollar'
-        );
-        $this->assertSame(
-            $expectedData['dollarNarrowSymbol'],
-            $localeData->currencies['USD']->symbols['narrow'],
-            'Wrong narrow symbol for dollar'
         );
     }
 
     public function provideLocaleData()
     {
         return [
-            'root'  => [
+            'root' => [
                 'localeCode'   => 'root',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
@@ -131,14 +101,9 @@ class ReaderTest extends TestCase
                     'decimalSeparator'       => '.',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '¤ #,##0.00',
-                    'euroName'               => null,
-                    'euroNarrowSymbol'       => '€',
-                    'dollarName'             => null,
-                    'dollarDefaultSymbol'    => 'US$',
-                    'dollarNarrowSymbol'     => '$',
                 ],
             ],
-            'fr'    => [
+            'fr' => [
                 'localeCode'   => 'fr',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
@@ -146,11 +111,6 @@ class ReaderTest extends TestCase
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤',
-                    'euroName'               => 'euro',
-                    'euroNarrowSymbol'       => '€',
-                    'dollarName'             => 'dollar des États-Unis',
-                    'dollarDefaultSymbol'    => '$US',
-                    'dollarNarrowSymbol'     => '$',
                 ],
             ],
             'fr-FR' => [
@@ -161,11 +121,6 @@ class ReaderTest extends TestCase
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤',
-                    'euroName'               => 'euro',
-                    'euroNarrowSymbol'       => '€',
-                    'dollarName'             => 'dollar des États-Unis',
-                    'dollarDefaultSymbol'    => '$US',
-                    'dollarNarrowSymbol'     => '$',
                 ],
             ],
             'fr-CH' => [
@@ -176,11 +131,6 @@ class ReaderTest extends TestCase
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤ ;-#,##0.00 ¤',
-                    'euroName'               => 'euro',
-                    'euroNarrowSymbol'       => '€',
-                    'dollarName'             => 'dollar des États-Unis',
-                    'dollarDefaultSymbol'    => '$US',
-                    'dollarNarrowSymbol'     => '$',
                 ],
             ],
             'en-GB' => [
@@ -191,11 +141,6 @@ class ReaderTest extends TestCase
                     'decimalSeparator'       => '.',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '¤#,##0.00',
-                    'euroName'               => 'Euro',
-                    'euroNarrowSymbol'       => '€',
-                    'dollarName'             => 'US Dollar',
-                    'dollarDefaultSymbol'    => 'US$',
-                    'dollarNarrowSymbol'     => '$',
                 ],
             ],
         ];

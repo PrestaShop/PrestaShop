@@ -27,62 +27,57 @@
 namespace Tests\Unit\Core\Localization\Currency;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataSourceInterface as CurrencyDataSourceInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataRepositoryInterface as CurrencyDataRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class RepositoryTest extends TestCase
 {
     /**
-     * An instance of the tested CurrencyRepository class
-     *
-     * This Locale CurrencyRepository has been populated with stub data source dependency.
-     *
      * @var CurrencyRepository
      */
     protected $currencyRepository;
 
     protected function setUp()
     {
-        $dataSource = $this->createMock(CurrencyDataSourceInterface::class);
-        $dataSource
+        $euroData  = [
+            'isActive'       => true,
+            'conversionRate' => 1,
+            'isoCode'        => 'EUR',
+            'numericIsoCode' => 978,
+            'symbols'        => ['fr-FR' => '€', 'en-US' => '€'],
+            'precision'      => 2,
+            'names'          => ['fr-FR' => 'euro', 'en-US' => 'euro'],
+        ];
+        $peaceData = [
+            'isActive'       => true,
+            'conversionRate' => 1,
+            'isoCode'        => 'PCE',
+            'numericIsoCode' => 999,
+            'symbols'        => ['fr-FR' => '☮', 'en-US' => '☮'],
+            'precision'      => 2,
+            'names'          => ['fr-FR' => 'paix', 'en-US' => 'peace'],
+        ];
+
+        $getDataByCurrencyCode = function ($isoCode) use ($euroData, $peaceData) {
+            if ($isoCode == 'EUR') {
+                return $euroData;
+            }
+
+            if ($isoCode == 'PCE') {
+                return $peaceData;
+            }
+
+            throw new LocalizationException('Unknown currency code');
+        };
+
+        $dataRepo = $this->createMock(CurrencyDataRepositoryInterface::class);
+        $dataRepo
             ->method('getDataByCurrencyCode')
-            ->willReturnCallback(
-                function ($isoCode) {
-                    $data = new CurrencyData();
+            ->willReturnCallback($getDataByCurrencyCode);
 
-                    switch ($isoCode) {
-                        case 'EUR':
-                            $data->isActive       = true;
-                            $data->conversionRate = 1;
-                            $data->isoCode        = 'EUR';
-                            $data->numericIsoCode = 978;
-                            $data->symbols        = ['fr-FR' => '€', 'en-US' => '€'];
-                            $data->precision      = 2;
-                            $data->names          = ['fr-FR' => 'euro', 'en-US' => 'euro'];
-                            break;
-
-                        case 'PCE':
-                            $data->isActive       = true;
-                            $data->conversionRate = 1;
-                            $data->isoCode        = 'PCE';
-                            $data->numericIsoCode = 999;
-                            $data->symbols        = ['fr-FR' => '☮', 'en-US' => '☮'];
-                            $data->precision      = 2;
-                            $data->names          = ['fr-FR' => 'paix', 'en-US' => 'peace'];
-                            break;
-
-                        default:
-                            throw new LocalizationException('Unknown currency code : ' . $isoCode);
-                    }
-
-                    return $data;
-                }
-            );
-
-        /** @var $dataSource CurrencyDataSourceInterface */
-        $this->currencyRepository = new CurrencyRepository($dataSource);
+        /** @var $dataRepo CurrencyDataRepositoryInterface */
+        $this->currencyRepository = new CurrencyRepository($dataRepo);
     }
 
     /**

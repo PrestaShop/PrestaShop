@@ -27,39 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
- * Localization CurrencyData source
- * Uses a stack of middleware data layers to read / write CurrencyData objects
+ * Currency data repository interface
+ *
+ * Describes the behavior of currency DataRepository classes
  */
-class CurrencyDataSource implements DataSourceInterface
+interface DataRepositoryInterface
 {
-    /**
-     * The top layer of the middleware stack
-     *
-     * @var CurrencyDataLayerInterface
-     */
-    protected $topLayer;
-
-    /**
-     * CurrencyDataSource constructor needs CurrencyDataLayer objects.
-     * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
-     *
-     * @param CurrencyDataLayerInterface $topLayer
-     */
-    public function __construct(CurrencyDataLayerInterface $topLayer)
-    {
-        $this->topLayer = $topLayer;
-    }
-
     /**
      * Get complete currency data by currency code
      *
      * @param string $currencyCode
      *
-     * @return CurrencyData
+     * @return array
      *  The currency data
      */
-    public function getDataByCurrencyCode($currencyCode)
-    {
-        return $this->topLayer->read($currencyCode);
-    }
+    public function getDataByCurrencyCode($currencyCode);
 }
