@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,8 +43,11 @@ class PerformanceController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminPerformance';
 
     /**
-     * @var FormInterface
+     * Displays the Performance main page.
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param FormInterface $form
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
@@ -56,7 +60,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
-        return array(
+        return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -67,10 +71,14 @@ class PerformanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
-        );
+        ];
     }
 
     /**
+     * Process the Performance configuration form.
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.")
+     *
+     * @param Request $request
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
