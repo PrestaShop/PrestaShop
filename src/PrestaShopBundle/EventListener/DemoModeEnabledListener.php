@@ -28,6 +28,10 @@ namespace PrestaShopBundle\EventListener;
 
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
@@ -49,11 +53,24 @@ class DemoModeEnabledListener
      */
     private $session;
 
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, SessionInterface $session)
+    /**
+     * @var bool
+     */
+    private $isDemoModeEnabled;
+
+    /**
+     * DemoModeEnabledListener constructor.
+     * @param RouterInterface $router
+     * @param TranslatorInterface $translator
+     * @param SessionInterface $session
+     * @param $isDemoModeEnabled
+     */
+    public function __construct(RouterInterface $router, TranslatorInterface $translator, SessionInterface $session, $isDemoModeEnabled)
     {
         $this->router = $router;
         $this->translator = $translator;
         $this->session = $session;
+        $this->isDemoModeEnabled = $isDemoModeEnabled;
     }
 
     /**
@@ -61,7 +78,7 @@ class DemoModeEnabledListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMasterRequest() || !$this->isDemoModeEnabled) {
             return;
         }
 

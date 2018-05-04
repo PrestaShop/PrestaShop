@@ -173,6 +173,7 @@ services:
             - "@router"
             - "@translator"
             - "@session"
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
