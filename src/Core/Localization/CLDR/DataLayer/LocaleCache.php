@@ -25,20 +25,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 /**
- * Locale cache data layer.
+ * LocaleCache CLDR data layer.
  *
- * Reads / writes into cache.
+ * This locale data layer reads and writes CLDR LocaleData from a cache adapter
  */
-class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
+class LocaleCache extends AbstractDataLayer implements CldrLocaleDataLayerInterface
 {
     /**
      * Symfony Cache component adapter.
@@ -50,11 +51,6 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
      */
     protected $cache;
 
-    /**
-     * LocaleCacheDataLayer constructor.
-     *
-     * @param AdapterInterface $cache
-     */
     public function __construct(AdapterInterface $cache)
     {
         $this->cache = $cache;
@@ -63,7 +59,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     /**
      * {@inheritdoc}
      */
-    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CldrLocaleDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -71,15 +67,15 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     }
 
     /**
-     * Actually read a LocaleData object into the current layer.
+     * Actually read a CLDR LocaleData object into the current layer.
      *
      * Data is read from passed cache adapter
      *
      * @param string $localeCode
-     *                           The LocaleData object identifier
+     *  The CLDR LocaleData object identifier
      *
      * @return LocaleData|null
-     *                         The wanted LocaleData object (null if not found)
+     *  The wanted CLDR LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -97,7 +93,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     {
         if (!($data instanceof LocaleData)) {
             throw new LocalizationException(
-                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData'
+                '$data must be an instance of ' . LocaleData::class
             );
         }
 
@@ -112,7 +108,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
      * @param mixed $localeCode
      *                          The LocaleData object identifier
      * @param LocaleData $data
-     *                         The LocaleData object to be written
+     *                         The CLDR LocaleData object to be written
      *
      * @throws DataLayerException
      *                            When write fails

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,38 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-class Number
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
+
+/**
+ * LocaleDataSource provides CLDR LocaleData objects
+ *
+ * This class uses Locale data layers as middlewares stack to read CLDR data.
+ */
+class LocaleDataSource
 {
+    /**
+     * @var CldrLocaleDataLayerInterface
+     */
+    protected $topLayer;
+
+    /**
+     * LocaleDataSource constructor needs a CldrLocaleDataLayerInterface layer object.
+     * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
+     *
+     * @param CldrLocaleDataLayerInterface $topLayer
+     */
+    public function __construct(CldrLocaleDataLayerInterface $topLayer)
+    {
+        $this->topLayer = $topLayer;
+    }
+
+    /**
+     * @param string $localeCode
+     *
+     * @return LocaleData
+     */
+    public function getLocaleData($localeCode)
+    {
+        return $this->topLayer->read($localeCode);
+    }
 }
