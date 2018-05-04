@@ -416,17 +416,69 @@ class ToolsCore
     }
 
     /**
-    * Secure an URL referrer
-    *
-    * @param string $referrer URL referrer
-    * @return string secured referrer
-    */
+     * Returns a safe URL referrer
+     *
+     * @param string $referrer URL referrer
+     * @return string secured referrer
+     */
     public static function secureReferrer($referrer)
     {
-        if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer)) {
+        if (static::urlBelongsToShop($referrer)) {
             return $referrer;
         }
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Indicates if the provided URL belongs to this shop (relative urls count as belonging to the shop)
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function urlBelongsToShop($url)
+    {
+        $urlHost = Tools::extractHost($url);
+
+        return (empty($urlHost) || $urlHost === Tools::getServerName());
+    }
+
+    /**
+     * Safely extracts the host part from an URL
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function extractHost($url)
+    {
+        if (PHP_VERSION_ID >= 50628) {
+            $parsed = parse_url($url);
+            if (!is_array($parsed)) {
+                return $url;
+            }
+            if (empty($parsed['host']) || empty($parsed['scheme'])) {
+                return '';
+            }
+            return $parsed['host'];
+        }
+
+        // big workaround needed
+        // @see: https://bugs.php.net/bug.php?id=73192
+        // @see: https://3v4l.org/nFYJh
+
+        $matches = [];
+        if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
+            // relative url
+            return '';
+        }
+        $authority = $matches['authority'];
+
+        if (!preg_match('/(?:(?<user>.+):(?<pass>.+)@)?(?<domain>[\w.-]+)(?::(?<port>\d+))?/ui', $authority, $matches)) {
+            return '';
+        }
+
+        return $matches['domain'];
     }
 
     /**
