@@ -28,6 +28,14 @@ class ContactControllerCore extends FrontController
 {
     public $php_self = 'contact';
     public $ssl = true;
+    public $auth = true;
+    
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->authRedirection = $this->context->link->getPageLink($this->php_self);
+    }
 
     /**
     * Assign template vars related to page content
