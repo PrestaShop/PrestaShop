@@ -32,7 +32,7 @@ framework:
     session:
         handler_id:  ~
     fragments:       ~
-    http_method_override: false
+    http_method_override: true
 
 # Monolog configuration #
 monolog:
