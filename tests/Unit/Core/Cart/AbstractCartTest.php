@@ -31,6 +31,8 @@ use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use DateInterval;
+use DateTime;
 use Db;
 use Tests\TestCase\IntegrationTestCase;
 use Product;
@@ -270,11 +272,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
             }
             $cartRule->gift_product = $product->id;
         }
-        $now = new \DateTime();
+        $now = new DateTime();
         // sub 1s to avoid bad comparisons with strictly greater than
-        $now->sub(new \DateInterval('PT1S'));
+        $now->sub(new DateInterval('PT1S'));
         $cartRule->date_from = $now->format('Y-m-d H:i:s');
-        $now->add(new \DateInterval('P1Y'));
+        $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
         $cartRule->active  = 1;
         if (!empty($cartRuleData['carrierRestrictionIds'])) {
