@@ -380,7 +380,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'quickview_html' => $this->render('catalog/_partials/quickview', $product_for_template),
             'product' => $product_for_template,
         )));
@@ -394,7 +394,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(

@@ -197,7 +197,7 @@ class AdminQuickAccessesControllerCore extends AdminController
         $this->errors = array_unique($this->errors);
         if (!empty($this->errors)) {
             $this->errors['has_errors'] = true;
-            $this->ajaxDie(json_encode($this->errors));
+            $this->ajaxRender(json_encode($this->errors));
             return false;
         }
         return $this->getQuickAccessesList();
