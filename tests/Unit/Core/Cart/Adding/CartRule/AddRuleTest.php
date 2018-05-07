@@ -79,25 +79,6 @@ class AddRuleTest extends AbstractCartTest
         $this->assertEquals($expectedProductCountAfterRules, Cart::getNbProducts($this->cart->id));
     }
 
-    /**
-     * test bugfix BOOM-5477
-     */
-    public function testMultipleCartRulesWithoutCode()
-    {
-        $this->addProductToCart(1,1);
-        // ad multiple fixtures without code
-        $cartRulesData = [
-            14 => ['priority' => 12, 'code' => '', 'percent' => 10, 'amount' => 0, 'productGiftId' => 3],
-            15 => ['priority' => 13, 'code' => '', 'percent' => 10, 'amount' => 0, 'productGiftId' => 4],
-        ];
-        foreach ($cartRulesData as $k => $cartRuleData) {
-            $this->insertCartRule($k, $cartRuleData);
-        }
-        $cartRule                = $this->getCartRuleFromFixtureId(1);
-        $result                  = $cartRule->checkValidity(\Context::getContext(), false, false);
-        $this->assertEquals(true, $result);
-    }
-
     public function cartRuleValidityProvider()
     {
         return [
