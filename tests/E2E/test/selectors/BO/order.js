@@ -11,7 +11,7 @@ module.exports = {
     message_order: '//*[@id="content"]//div[@class="message-body"]//p[@class="message-item-text"]',
     product_Url: '//*[@id="orderProducts"]//tr[1]/td[2]/a',
     edit_product_button: '//*[@id="orderProducts"]//button[contains(@class,"edit_product_change_link")]',
-    product_basic_price: '//*[@id="orderProducts"]//tr[1]//input[contains(@class,"edit_product_price_tax_excl")]',
+    product_basic_price: '//*[@id="orderProducts"]//tr[1]//input[contains(@class,"edit_product_price_tax_incl")]',
     customer_name: '//*[@id="content"]//div[@class="message-body"]//h4[@class="message-item-heading"]',
     order_submenu: '//*[@id="subtab-AdminOrders"]/a',
     document_submenu: '//*[@id="tabOrder"]//a[@href="#documents"]',

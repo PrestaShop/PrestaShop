@@ -25,33 +25,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface as CurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 /**
- * Localization/CurrencyCache data layer
+ * Locale cache data layer
  *
- * This currency data layer reads and writes Localization/CurrencyData from a cache adapter
+ * Reads / writes into cache.
  */
-class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterface
+class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
      * Symfony Cache component adapter
      *
-     * Provides cached CurrencyData objects
+     * Provides cached LocaleData objects
      * Implements PSR-6: Cache Interface (@see http://www.php-fig.org/psr/psr-6/)
      *
      * @var AdapterInterface
      */
     protected $cache;
 
+    /**
+     * LocaleCacheDataLayer constructor.
+     *
+     * @param AdapterInterface $cache
+     */
     public function __construct(AdapterInterface $cache)
     {
         $this->cache = $cache;
@@ -60,7 +63,7 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -68,27 +71,19 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
     }
 
     /**
-     * Actually read a CurrencyData object into the current layer
+     * Actually read a LocaleData object into the current layer
      *
-     * Might be a file access, cache read, DB select...
+     * Data is read from passed cache adapter
      *
-     * @param LocalizedCurrencyId $currencyDataId
-     *  The CurrencyData object identifier (currency code + locale code)
+     * @param string $localeCode
+     *  The LocaleData object identifier
      *
-     * @return CurrencyData|null
-     *  The wanted CurrencyData object (null if not found)
-     *
-     * @throws LocalizationException
-     *  When $currencyDataId is invalid
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @return LocaleData|null
+     *  The wanted LocaleData object (null if not found)
      */
-    protected function doRead($currencyDataId)
+    protected function doRead($localeCode)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
-        }
-
-        $cacheItem = $this->cache->getItem((string)$currencyDataId);
+        $cacheItem = $this->cache->getItem($localeCode);
 
         return $cacheItem->isHit()
             ? $cacheItem->get()
@@ -97,13 +92,12 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
 
     /**
      * @inheritDoc
-     * @throws LocalizationException
      */
     public function write($id, $data)
     {
-        if (!($data instanceof CurrencyData)) {
+        if (!($data instanceof LocaleData)) {
             throw new LocalizationException(
-                '$data must be an instance of ' . CurrencyData::class
+                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData'
             );
         }
 
@@ -111,32 +105,25 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
     }
 
     /**
-     * Actually write a CurrencyData object into the current layer
+     * Actually write a LocaleData object into the current layer
      *
      * Might be a file edit, cache update, DB insert/update...
      *
-     * @param LocalizedCurrencyId $currencyDataId
-     *  The data object identifier
+     * @param mixed $localeCode
+     *  The LocaleData object identifier
      *
-     * @param CurrencyData $currencyData
-     *  The data object to be written
+     * @param LocaleData $data
+     *  The LocaleData object to be written
      *
      * @return void
      *
      * @throws DataLayerException
      *  When write fails
-     * @throws LocalizationException
-     *  When $currencyDataId is invalid
-     * @throws \Psr\Cache\InvalidArgumentException
      */
-    protected function doWrite($currencyDataId, $currencyData)
+    protected function doWrite($localeCode, $data)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
-        }
-
-        $cacheItem = $this->cache->getItem((string)$currencyDataId);
-        $cacheItem->set($currencyData);
+        $cacheItem = $this->cache->getItem($localeCode);
+        $cacheItem->set($data);
 
         $saved = $this->cache->save($cacheItem);
 

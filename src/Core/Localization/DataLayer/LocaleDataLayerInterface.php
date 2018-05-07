@@ -25,49 +25,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
+namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
 
 /**
- * CLDR Currency data layer classes interface
+ * Locale data layer classes interface
  *
- * Describes the behavior of CldrCurrencyDataLayer classes
+ * Describes the behavior of LocaleDataLayer classes
  */
-interface CurrencyDataLayerInterface
+interface LocaleDataLayerInterface
 {
     /**
-     * Read Currency by currency code
+     * Read locale data by locale code
      *
-     * @param string $currencyCode
-     *  The currency code (ISO 4217)
+     * @param string $localeCode
+     *  The locale code (simplified IETF tag syntax)
+     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *  eg: fr-FR, en-US
      *
-     * @return CurrencyData
-     *  The searched CLDR currency data
+     * @return CldrLocaleData
+     *  The searched locale's CLDR data
      */
-    public function read($currencyCode);
+    public function read($localeCode);
 
     /**
-     * Write a currency data object into the data source
+     * Write a locale's CLDR data object into the data source
      *
-     * @param string $currencyCode
-     *  The currency code (ISO 4217)
+     * @param string $localeCode
+     *  The locale code (simplified IETF tag syntax)
+     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *  eg: fr-FR, en-US
      *
-     * @param CurrencyData $currencyData
-     *  The currency data to write
+     * @param CldrLocaleData $localeData
+     *  The locale's CLDR data to write
      *
-     * @return CurrencyData
-     *  The currency data to be written by the upper data layer
+     * @return CldrLocaleData
+     *  The locale's CLDR data to be written by the upper data layer
      */
-    public function write($currencyCode, $currencyData);
+    public function write($localeCode, $localeData);
 
     /**
      * Set the lower layer.
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param CurrencyDataLayerInterface $lowerLayer
+     * @param LocaleDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
+    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer);
 }

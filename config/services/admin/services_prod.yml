@@ -1,5 +1,4 @@
-imports:
-    - { resource: ../common/services_prod.yml }
+parameters:
 
 services:
     filesystem:
@@ -27,6 +26,3 @@ services:
 
     hashing:
         class: PrestaShop\PrestaShop\Core\Crypto\Hashing
-
-    context.static:
-        class: Context
