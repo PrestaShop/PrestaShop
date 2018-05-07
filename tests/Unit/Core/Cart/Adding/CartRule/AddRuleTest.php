@@ -79,52 +79,71 @@ class AddRuleTest extends AbstractCartTest
         $this->assertEquals($expectedProductCountAfterRules, Cart::getNbProducts($this->cart->id));
     }
 
+    /**
+     * test bugfix BOOM-5477
+     */
+    public function testMultipleCartRulesWithoutCode()
+    {
+        $this->addProductToCart(1,1);
+        // ad multiple fixtures without code
+        $cartRulesData = [
+            14 => ['priority' => 12, 'code' => '', 'percent' => 10, 'amount' => 0, 'productGiftId' => 3],
+            15 => ['priority' => 13, 'code' => '', 'percent' => 10, 'amount' => 0, 'productGiftId' => 4],
+        ];
+        foreach ($cartRulesData as $k => $cartRuleData) {
+            $this->insertCartRule($k, $cartRuleData);
+        }
+        $cartRule                = $this->getCartRuleFromFixtureId(1);
+        $result                  = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $this->assertEquals(true, $result);
+    }
+
     public function cartRuleValidityProvider()
     {
-        return array(
-            'No product in cart should give a not valid cart rule insertion'                                               => array(
-                'products'                       => array(),
-                'cartRules'                      => array(1),
+        return [
+            'No product in cart should give a not valid cart rule insertion'                                               => [
+                'products'                       => [],
+                'cartRules'                      => [1],
                 'shouldRulesBeApplied'           => false,
                 'expectedProductCount'           => 0,
                 'expectedProductCountAfterRules' => 0,
-            ),
-            '1 product in cart, cart rule is inserted correctly'                                                           => array(
-                'products'                       => array(1 => 1),
-                'cartRules'                      => array(1),
+            ],
+            '1 product in cart, cart rule is inserted correctly'                                                           => [
+                'products'                       => [1 => 1],
+                'cartRules'                      => [1],
                 'shouldRulesBeApplied'           => true,
                 'expectedProductCount'           => 1,
                 'expectedProductCountAfterRules' => 1,
-            ),
-            '1 product in cart, cart rules are inserted correctly'                                                         => array(
-                'products'                       => array(1 => 1),
-                'cartRules'                      => array(1, 2),
+            ],
+            '1 product in cart, cart rules are inserted correctly'                                                         => [
+                'products'                       => [1 => 1],
+                'cartRules'                      => [1, 2],
                 'shouldRulesBeApplied'           => true,
                 'expectedProductCount'           => 1,
                 'expectedProductCountAfterRules' => 1,
-            ),
-            '1 product in cart, double cart rule not inserted'                                                             => array(
-                'products'                       => array(1 => 1),
-                'cartRules'                      => array(1, 1),
+            ],
+            '1 product in cart, double cart rule not inserted'                                                             => [
+                'products'                       => [1 => 1],
+                'cartRules'                      => [1, 1],
                 'shouldRulesBeApplied'           => false,
                 'expectedProductCount'           => 1,
                 'expectedProductCountAfterRules' => 1,
-            ),
-            '1 product in cart, cart rule giving gift, and global cart rule should be inserted without error'              => array(
-                'products'                       => array(1 => 1),
-                'cartRules'                      => array(12, 1),
+            ],
+            '1 product in cart, cart rule giving gift, and global cart rule should be inserted without error'              => [
+                'products'                       => [1 => 1],
+                'cartRules'                      => [12, 1],
                 'shouldRulesBeApplied'           => true,
                 'expectedProductCount'           => 1,
                 'expectedProductCountAfterRules' => 2,
-            ),
+            ],
             // test PR #8361
-            '1 product in cart, cart rule giving gift out of stock, and global cart rule should be inserted without error' => array(
-                'products'                       => array(1 => 1),
-                'cartRules'                      => array(13, 1),
+            '1 product in cart, cart rule giving gift out of stock, and global cart rule should be inserted without error' => [
+                'products'                       => [1 => 1],
+                'cartRules'                      => [13, 1],
                 'shouldRulesBeApplied'           => true,
                 'expectedProductCount'           => 1,
                 'expectedProductCountAfterRules' => 1,
-            ),
-        );
+            ],
+        ];
     }
 }
