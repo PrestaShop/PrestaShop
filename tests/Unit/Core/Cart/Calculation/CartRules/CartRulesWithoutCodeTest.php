@@ -43,9 +43,9 @@ class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
      */
     public function testMultipleCartRulesWithoutCode()
     {
-        $this->addProductToCart(1,3);
-        $this->addProductToCart(2,2);
-        $this->addProductToCart(3,1);
+        $this->addProductToCart(1, 3);
+        $this->addProductToCart(2, 2);
+        $this->addProductToCart(3, 1);
         // ad multiple fixtures without code
         $cartRulesData = [
             14 => ['priority' => 12, 'code' => '', 'percent' => 10, 'amount' => 0],
@@ -54,17 +54,17 @@ class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
         foreach ($cartRulesData as $k => $cartRuleData) {
             $this->insertCartRule($k, $cartRuleData);
         }
-        $cartRule                = $this->getCartRuleFromFixtureId(1);
-        $result                  = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $cartRule = $this->getCartRuleFromFixtureId(1);
+        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertEquals(true, $result);
 
-        $expectedTotal= (1 - $cartRulesData[14]['percent'] / 100)
-                        * (1 - $cartRulesData[15]['percent'] / 100)
-                        * (3 * static::PRODUCT_FIXTURES[1]['price']
-                           + 2 * static::PRODUCT_FIXTURES[2]['price']
-                           + static::PRODUCT_FIXTURES[3]['price'])
-                        + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE;
-        $this->compareCartTotalTaxIncl($expectedTotal,true);
+        $expectedTotal = (1 - $cartRulesData[14]['percent'] / 100)
+                         * (1 - $cartRulesData[15]['percent'] / 100)
+                         * (3 * static::PRODUCT_FIXTURES[1]['price']
+                            + 2 * static::PRODUCT_FIXTURES[2]['price']
+                            + static::PRODUCT_FIXTURES[3]['price'])
+                         + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE;
+        $this->compareCartTotalTaxIncl($expectedTotal, true);
     }
 
 }
