@@ -6,7 +6,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var pdfUtil = require('pdf-to-text');
 
 global.date_time = new Date().getTime();
-global.URL = argv.URL || "localhost";
+global.URL = argv.URL || "local.prestashop.com";
 
 global.install_language = argv.LANGUAGE || "en";
 global.install_country = argv.COUNTRY || "france";

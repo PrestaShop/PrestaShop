@@ -136,7 +136,7 @@ class CartControllerCore extends FrontController
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
                 ->filter($presentedCart['products']);
 
-            $this->ajaxDie(Tools::jsonEncode([
+            $this->ajaxRender(Tools::jsonEncode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
@@ -145,7 +145,7 @@ class CartControllerCore extends FrontController
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
         } else {
-            $this->ajaxDie(Tools::jsonEncode([
+            $this->ajaxRender(Tools::jsonEncode([
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
@@ -162,7 +162,7 @@ class CartControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode([
+        $this->ajaxRender(Tools::jsonEncode([
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
             'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
@@ -210,7 +210,7 @@ class CartControllerCore extends FrontController
         }
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode([
+        $this->ajaxRender(Tools::jsonEncode([
             'success' => true,
             'productUrl' => $url
         ]));
