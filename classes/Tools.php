@@ -2339,7 +2339,7 @@ class ToolsCore
                 fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
 
                 // Webservice
-                fwrite($write_fd, 'RewriteRule ^api$ api/ [L]'."\n\n");
+                fwrite($write_fd, 'RewriteRule ^api$ %{ENV:REWRITEBASE}api/ [L]'."\n\n");
                 fwrite($write_fd, 'RewriteRule ^api/(.*)$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]'."\n\n");
 
                 if (!$rewrite_settings) {
