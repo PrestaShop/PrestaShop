@@ -51,7 +51,7 @@ scenario('Check "Specific price"', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'product/product');
   scenario('Check the created "Specific price" in the Front Office', client => {
-    test('should change front office language to english', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData["name"] + date_time));
     test('should verify that the discount is equal to "-19.6%"', () => client.checkTextValue(SearchProductPage.product_result_discount, '-19.6%'));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
@@ -102,7 +102,7 @@ scenario('Check "Catalog price rule"', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'common_client');
   scenario('Check the created "Catalog price rule" in the Front Office', client => {
-    test('should change front office language to english', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData["name"] + date_time));
     test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(SearchProductPage.product_result_discount, '-19.67%'));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));

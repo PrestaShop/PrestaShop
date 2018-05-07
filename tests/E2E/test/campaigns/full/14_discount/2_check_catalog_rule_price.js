@@ -36,7 +36,7 @@ scenario('Check double catalog price rules', () => {
 
   scenario('Check Catalog Price Rules in the Front Office', client => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
-    test('should change front office language to english', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
     test('should verify that the discount is equal to "18%"', () => client.checkTextValue(productPage.product_discount_details, catalogPriceRule[0].reduction, "contain"));
     test('should set quantity to "48"', () => client.waitAndSetValue(productPage.first_product_quantity, 48));

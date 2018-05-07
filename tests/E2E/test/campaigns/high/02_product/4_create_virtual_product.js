@@ -134,7 +134,7 @@ scenario('Check the virtual product in the Front Office', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'product/product');
   scenario('Check that the pack product is well displayed in the Front Office', client => {
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product name is equal to "' + (data.virtual.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.virtual.name + date_time).toUpperCase()));
