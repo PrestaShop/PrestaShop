@@ -32,7 +32,7 @@ module.exports = {
   },
   checkFeatureInFO(productName, data) {
     scenario('Check that the feature is well created/updated in the Front Office', client => {
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should check the feature name', () => client.checkTextValue(SearchProductPage.feature_name, data.name + date_time));
@@ -72,7 +72,7 @@ module.exports = {
   },
   checkDeletedFeatureInFO(productName) {
     scenario('Check that the feature does not exist in the Front Office', client => {
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should check that the feature has been deleted in the Front Office', () => client.checkDeleted(SearchProductPage.feature_name));

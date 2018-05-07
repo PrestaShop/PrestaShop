@@ -76,7 +76,7 @@ scenario('Check the total price after applying vouchers in the Front Office', ()
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'discount');
   scenario('Check the total price of the shopping cart', client => {
-    test('should change front office language to english', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product "A"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should set the "Quantity" input', () => client.waitAndSetValue(productPage.first_product_quantity, 3));

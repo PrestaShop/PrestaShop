@@ -143,7 +143,7 @@ scenario('Check the product discount in the Front Office', () => {
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product "' + productData.name + date_time + '"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the first quantity is equal to "10"', () => client.checkTextValue(productPage.product_discounts_table.replace('%R', 1).replace('%D', 1), productData.pricing[0].starting_at));
@@ -181,7 +181,7 @@ scenario('Check the product discount in the Front Office', () => {
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product "' + productData.name + date_time + '"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the first quantity is equal to "10"', () => client.checkTextValue(productPage.product_discounts_table.replace('%R', 1).replace('%D', 1), productData.pricing[0].starting_at));

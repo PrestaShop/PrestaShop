@@ -72,9 +72,9 @@ module.exports = {
       International: {
         international_menu: '//*[@id="subtab-AdminInternational"]/a',
         localization_submenu: '#subtab-AdminParentLocalization',
-        languages_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Languages"]',
-        currencies_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Currencies"]',
-        geolocation_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Geolocation"]',
+        languages_tab: '//*[@id="subtab-AdminLanguages"]',
+        currencies_tab: '//*[@id="subtab-AdminCurrencies"]',
+        geolocation_tab: '//*[@id="subtab-AdminGeolocation"]',
         locations_submenu: '#subtab-AdminParentCountries',
         countries_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Countries"]',
         states_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="States"]',

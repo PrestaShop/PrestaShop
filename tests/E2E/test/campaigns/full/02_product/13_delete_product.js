@@ -50,7 +50,7 @@ scenario('Delete product', () => {
   }, 'product/product');
 
   scenario('check that the product "DP' + date_time + ' doesn\'t exist in the front office', client => {
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should check that the product "DP' + date_time + '" doesn\'t exist ', () => client.isNotExisting(SearchProductPage.product_result_name));
   }, 'product/product');

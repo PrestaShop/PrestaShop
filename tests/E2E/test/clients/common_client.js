@@ -93,27 +93,17 @@ class CommonClient {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${new Date().getTime()}.png`);
   }
 
-  changeLanguage(language = "") {
-    if (language === "francais") {
-      return this.client
-        .waitForExistAndClick(languageFO.language_selector)
-        .waitForVisibleAndClick(languageFO.language_FR)
-    } else if (language === "english" || language === "") {
-      return this.client
-        .waitForExistAndClick(languageFO.language_selector)
-        .waitForVisibleAndClick(languageFO.language_EN)
-    } else {
-      return this.client
-        .waitForExistAndClick(languageFO.language_selector)
-        .pause(1000)
-        .isVisible(languageFO.language_option.replace('%LANG', language))
-        .then((isVisible) => {
-          expect(isVisible, "This language is not existing").to.be.true;
-          if (isVisible) {
-            this.client.waitForVisibleAndClick(languageFO.language_option.replace('%LANG', language));
-          }
-        });
-    }
+  changeLanguage(language = 'en') {
+    return this.client
+      .waitForExistAndClick(languageFO.language_selector)
+      .pause(1000)
+      .isVisible(languageFO.language_option.replace('%LANG', language))
+      .then((isVisible) => {
+        expect(isVisible, "This language is not existing").to.be.true;
+        if (isVisible) {
+          this.client.waitForVisibleAndClick(languageFO.language_option.replace('%LANG', language));
+        }
+      });
   }
 
   selectLanguage(selector, option, language, id) {

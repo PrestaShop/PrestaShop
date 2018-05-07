@@ -51,7 +51,7 @@ scenario('Check the category modification in the Front Office', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'attribute_and_feature');
   scenario('Check that the category is well updated in the Front Office', client => {
-    test('should change front office language to english', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should click on "All products" link', () => client.scrollWaitForExistAndClick(AccessPageFO.product_list_button, 50));
     test('should check that the category has been updated', () => {
       let promise = Promise.resolve();

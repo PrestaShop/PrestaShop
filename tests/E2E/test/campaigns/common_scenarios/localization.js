@@ -69,7 +69,7 @@ module.exports = {
         test('should check that the "' + languageData.name + '" doesn\'t appear', () => client.checkIsNotVisible(languageFO.language_option.replace('%LANG', languageData.iso_code.toLowerCase())));
       } else {
         test('should set the shop language to "' + languageData.name + '"', () => client.changeLanguage(languageData.iso_code.toLowerCase()));
-        test('should check that the "' + languageData.name + '" language is well selected', () => client.checkTextValue(languageFO.selected_language_button, languageData.name + date_time));
+        test('should check that the "' + languageData.name + '" language is well selected', () => client.checkTextValue(languageFO.selected_language_button, languageData.name + date_time, 'equal', 2000));
       }
     }, 'common_client');
   },

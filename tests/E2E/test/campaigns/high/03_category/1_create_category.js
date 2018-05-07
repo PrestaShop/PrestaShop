@@ -60,7 +60,7 @@ scenario('Check "Category" in the Front Office', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'category');
   scenario('Check that the category is well displayed in the Front Office', client => {
-    test('should change front office language to english', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should click on "All products" link', () => client.scrollWaitForExistAndClick(AccessPageFO.product_list_button, 50));
     test('should check the existence of the created category', () => {
       for (let i = 1; i < (parseInt(tab["number_category"]) + 1); i++) {

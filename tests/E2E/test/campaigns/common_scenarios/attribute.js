@@ -35,7 +35,7 @@ module.exports = {
   },
   checkAttributeInFO(productName, data) {
     scenario('Check that the attribute is well created/updated in the Front Office', client => {
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should check the product attribute name', () => client.checkTextValue(SearchProductPage.attribute_name, data.name + date_time));
@@ -88,7 +88,7 @@ module.exports = {
   },
   checkDeletedAttributeInFO(productName) {
     scenario('Check that the attribute is well deleted in Front Office', client => {
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should check that the attribute has been deleted in the Front Office', () => client.checkDeleted(SearchProductPage.attribute_name));
