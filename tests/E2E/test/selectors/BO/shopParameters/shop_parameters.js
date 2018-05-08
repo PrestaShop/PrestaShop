@@ -38,8 +38,10 @@ module.exports = {
       delete_button: '//*[@id="table-contact"]/tbody//a[@title="Delete"]',
       bulk_action_button: '//*[@id="bulk_action_menu_contact"]',
       bulk_actions_select_all_button: '//*[@id="form-contact"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "true")]',
+      bulk_actions_unselect_all_button: '//*[@id="form-contact"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, ", false")]',
       bulk_actions_delete_button: '//*[@id="form-contact"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecontact")]',
-      empty_list: '//*[@id="table-contact"]/tbody//td[@class="list-empty"]'
+      empty_list: '//*[@id="table-contact"]/tbody//td[@class="list-empty"]',
+      checkbox_element: '//*[@id="table-contact"]/tbody//input[@type="checkbox"]'
     }
   }
 };
