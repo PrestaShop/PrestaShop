@@ -16,14 +16,9 @@ scenario('Edit a translation', () => {
     test('should select the language "English (English)" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_language, "en"));
     test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
     test('should click on "Shop" button', () =>  {
-      return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
-        .then(() => client.waitForVisibleAndClick(Translations.shop_button));
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForVisibleAndClick(Translations.shop_button));
     });
     test('should click on "Theme" button', () => client.waitForVisibleAndClick(Translations.theme_button));
     test('should click on "Action" button', () => client.waitForVisibleAndClick(Translations.action_button));

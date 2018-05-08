@@ -79,14 +79,9 @@ scenario('Create "Catalog price rule"', () => {
     test('should click on "Yes" of modal button', () => client.waitForVisibleAndClick(AddProductPage.continue_confirmation));
     test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Successful deletion'));
     test('should click on "Save" button', () => {
-      return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
-        .then(() => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
     });
     test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
   }, 'product/check_product');
