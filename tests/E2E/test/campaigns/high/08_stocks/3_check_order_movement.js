@@ -37,7 +37,7 @@ scenario('Check order movement', client => {
 
   scenario('Change order state to "Delivered"', client => {
     test('should click on "Orders" menu', () => client.waitForExistAndClick(OrderPage.orders_subtab));
-    test('should go to the first order', () => client.waitForExistAndClick(OrderPage.first_order));
+    test('should go to the first order', () => client.waitForExistAndClick(OrderPage.view_order_button.replace('%NUMBER', 1)));
     test('should change order state to "Delivered"', () => client.changeOrderState(OrderPage, 'Delivered'));
     test('should get the order quantity', () => client.getTextInVar(OrderPage.order_quantity, "orderQuantity"));
   }, 'stocks');
