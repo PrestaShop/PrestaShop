@@ -27,12 +27,12 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
-    private $headerToolbarBtn = array();
-    private $title;
-    private $showContentHeader = true;
-    private $headerTabContent = '';
-    private $enableSidebar = false;
-    private $helpLink;
+    protected $headerToolbarBtn = array();
+    protected $title;
+    protected $showContentHeader = true;
+    protected $headerTabContent = '';
+    protected $enableSidebar = false;
+    protected $helpLink;
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
@@ -68,7 +68,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         return true;
     }
 
-    private function addHeaderToolbarBtn()
+    protected function addHeaderToolbarBtn()
     {
         $this->page_header_toolbar_btn = array_merge($this->page_header_toolbar_btn, $this->headerToolbarBtn);
     }

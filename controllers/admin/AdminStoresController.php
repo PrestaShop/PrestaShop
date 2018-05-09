@@ -583,7 +583,7 @@ class AdminStoresControllerCore extends AdminController
      * @param array $value
      * @return array
      */
-    private function adaptHoursFormat($value)
+    protected function adaptHoursFormat($value)
     {
         $separator = array_fill(0, count($value), ' | ');
         
