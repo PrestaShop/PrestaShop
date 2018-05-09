@@ -47,7 +47,7 @@ class CartControllerCore extends FrontController
      * An array of errors, in case the update action of product is wrong
      * @var string[] $updateOperationError
      */
-    private $updateOperationError = array();
+    protected $updateOperationError = array();
 
     /**
      * This is not a public page, so the canonical redirection is disabled
@@ -547,7 +547,7 @@ class CartControllerCore extends FrontController
      * @param int $qtyToCheck
      * @return bool
      */
-    private function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
+    protected function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
     {
         if (($this->id_product_attribute)) {
             return (!Product::isAvailableWhenOutOfStock($product->out_of_stock)
@@ -573,7 +573,7 @@ class CartControllerCore extends FrontController
      *
      * @return bool|string
      */
-    private function areProductsAvailable()
+    protected function areProductsAvailable()
     {
         $product = $this->context->cart->checkQuantities(true);
 

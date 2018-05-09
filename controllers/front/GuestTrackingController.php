@@ -30,7 +30,7 @@ class GuestTrackingControllerCore extends FrontController
     public $ssl = true;
     public $auth = false;
     public $php_self = 'guest-tracking';
-    private $order;
+    protected $order;
 
     /**
      * Initialize guest tracking controller.

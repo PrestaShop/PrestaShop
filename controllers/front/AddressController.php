@@ -32,8 +32,8 @@ class AddressControllerCore extends FrontController
     public $authRedirection = 'addresses';
     public $ssl = true;
 
-    private $address_form;
-    private $should_redirect = false;
+    protected $address_form;
+    protected $should_redirect = false;
 
     /**
      * Initialize address controller
