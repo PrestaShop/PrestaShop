@@ -1767,10 +1767,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (file_exists($tmp_thumb_path) && !unlink($tmp_thumb_path)) {
                 return false;
             }
-            if ($this->isMultishop()){
+            if ($this->isMultishop()) {
 
                 $ids = $this->id_shop;
-                if (!is_array($this->id_shop)){
+                if (!is_array($this->id_shop)) {
                     $ids = [$this->id_shop];
                 }
                 foreach ($ids as $idShop) {
