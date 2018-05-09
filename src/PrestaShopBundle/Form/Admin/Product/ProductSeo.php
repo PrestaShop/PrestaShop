@@ -71,7 +71,7 @@ class ProductSeo extends CommonAbstractType
 
         $builder->add(
             'meta_title',
-            PrestaShopBundle\Form\Admin\Type\TranslateType::class,
+            TranslateType::class,
             array(
                 'type' => FormType\TextType::class,
                 'options' => [
@@ -95,7 +95,7 @@ class ProductSeo extends CommonAbstractType
         )
         ->add(
             'meta_description',
-            PrestaShopBundle\Form\Admin\Type\TranslateType::class,
+            TranslateType::class,
             array(
                 'type' => FormType\TextareaType::class,
                 'options' => [
@@ -119,7 +119,7 @@ class ProductSeo extends CommonAbstractType
         )
         ->add(
             'link_rewrite',
-            PrestaShopBundle\Form\Admin\Type\TranslateType::class,
+            TranslateType::class,
             array(
                 'type' => FormType\TextType::class,
                 'options' => [],
