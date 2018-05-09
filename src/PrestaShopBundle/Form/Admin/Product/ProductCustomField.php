@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -59,13 +60,13 @@ class ProductCustomField extends CommonAbstractType
     {
         $builder->add(
             'id_customization_field',
-            'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+            FormType\HiddenType::class,
             array(
                 'required' => false,
             )
         )
-        ->add('label', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+        ->add('label', TranslateType::class, array(
+            'type' => FormType\TextType::class,
             'options' => [ 'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 2))
@@ -74,7 +75,7 @@ class ProductCustomField extends CommonAbstractType
             'hideTabs' => true,
             'label' => $this->translator->trans('Label', [], 'Admin.Global')
         ))
-        ->add('type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+        ->add('type', FormType\ChoiceType::class, array(
             'label' => $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'choices'  => array(
                 $this->translator->trans('Text', [], 'Admin.Global') => 1,
@@ -84,7 +85,8 @@ class ProductCustomField extends CommonAbstractType
                 'class' => 'c-select',
             ),
             'required' =>  true
-        ))->add('require', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+        ))
+        ->add('require', FormType\CheckboxType::class, array(
             'label'    => $this->translator->trans('Required', [], 'Admin.Global'),
             'required' => false,
         ));
