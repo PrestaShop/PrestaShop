@@ -78,7 +78,10 @@ class SimpleCategory extends CommonAbstractType
         $builder->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'label' => $this->translator->trans('Name', [], 'Admin.Global'),
             'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'), 'class' => 'ajax'],
+            'attr' => [
+                'placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'),
+                'class' => 'ajax'
+            ],
             'constraints' => $options['ajax'] ? [] : array(
                 new Assert\NotBlank(),
                 new Assert\Length(array('min' => 1, 'max' => 128))
