@@ -1754,28 +1754,28 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if ($force_delete || !$this->hasMultishopEntries()) {
             /* Deleting object images and thumbnails (cache) */
             if ($this->image_dir) {
-                if (file_exists($this->image_dir.$this->id.'.'.$this->image_format)
-                    && !unlink($this->image_dir.$this->id.'.'.$this->image_format)) {
+                $original_image_path = $this->image_dir.$this->id.'.'.$this->image_format;
+                if (file_exists($original_image_path) && !unlink($original_image_path)) {
                     return false;
                 }
             }
-            if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format)
-                && !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format)) {
+            $tmp_image_path = _PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format;
+            if (file_exists($tmp_image_path) && !unlink($tmp_image_path)) {
                 return false;
             }
-            if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)
-                && !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)) {
+            $tmp_thumb_path = _PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format;
+            if (file_exists($tmp_thumb_path) && !unlink($tmp_thumb_path)) {
                 return false;
             }
             if ($this->isMultishop()){
 
-                $ids_shop = $this->id_shop;
+                $ids = $this->id_shop;
                 if (!is_array($this->id_shop)){
-                    $ids_shop = [$this->id_shop];
+                    $ids = [$this->id_shop];
                 }
-                foreach ($ids_shop as $id_shop) {
-                    if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$id_shop.'.'.$this->image_format)
-                        && !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$id_shop.'.'.$this->image_format)) {
+                foreach ($ids as $idShop) {
+                    $tmp_multishop_thumb_path = _PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$idShop.'.'.$this->image_format;
+                    if (file_exists($tmp_multishop_thumb_path) && !unlink($tmp_multishop_thumb_path)) {
                         return false;
                     }
                 }
@@ -1783,8 +1783,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             $types = ImageType::getImagesTypes();
             foreach ($types as $image_type) {
-                if (file_exists($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format)
-                && !unlink($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format)) {
+                $image_resize_path = $this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format;
+                if (file_exists($image_resize_path) && !unlink($image_resize_path)) {
                     return false;
                 }
             }
