@@ -112,48 +112,57 @@
 
           {else}
 
-            {block name='facet_item_dropdown'}
-              <ul id="facet_{$_expand_id}" class="collapse{if !$_collapse} in{/if}">
-                <li>
-                  <div class="col-sm-12 col-xs-12 col-md-12 facet-dropdown dropdown">
-                    <a class="select-title" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      {$active_found = false}
-                      <span>
-                        {foreach from=$facet.filters item="filter"}
-                          {if $filter.active}
-                            {$filter.label}
-                            {if $filter.magnitude}
-                              ({$filter.magnitude})
+            {$active_found = false}
+            {foreach from=$facet.filters item="filter"}
+                {if $filter.active}
+                    {$active_found = true}
+                    {break}
+                {/if}
+            {/foreach}
+            {if !$active_found}
+              {block name='facet_item_dropdown'}
+                <ul id="facet_{$_expand_id}" class="collapse{if !$_collapse} in{/if}">
+                  <li>
+                    <div class="col-sm-12 col-xs-12 col-md-12 facet-dropdown dropdown">
+                      <a class="select-title" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {$active_found = false}
+                        <span>
+                          {foreach from=$facet.filters item="filter"}
+                            {if $filter.active}
+                              {$filter.label}
+                              {if $filter.magnitude}
+                                ({$filter.magnitude})
+                              {/if}
+                              {$active_found = true}
                             {/if}
-                            {$active_found = true}
+                          {/foreach}
+                          {if !$active_found}
+                            {l s='(no filter)' d='Shop.Theme.Global'}
+                          {/if}
+                        </span>
+                        <i class="material-icons float-xs-right">&#xE5C5;</i>
+                      </a>
+                      <div class="dropdown-menu">
+                        {foreach from=$facet.filters item="filter"}
+                          {if !$filter.active}
+                            <a
+                              rel="nofollow"
+                              href="{$filter.nextEncodedFacetsURL}"
+                              class="select-list"
+                            >
+                              {$filter.label}
+                              {if $filter.magnitude}
+                                ({$filter.magnitude})
+                              {/if}
+                            </a>
                           {/if}
                         {/foreach}
-                        {if !$active_found}
-                          {l s='(no filter)' d='Shop.Theme.Global'}
-                        {/if}
-                      </span>
-                      <i class="material-icons float-xs-right">&#xE5C5;</i>
-                    </a>
-                    <div class="dropdown-menu">
-                      {foreach from=$facet.filters item="filter"}
-                        {if !$filter.active}
-                          <a
-                            rel="nofollow"
-                            href="{$filter.nextEncodedFacetsURL}"
-                            class="select-list"
-                          >
-                            {$filter.label}
-                            {if $filter.magnitude}
-                              ({$filter.magnitude})
-                            {/if}
-                          </a>
-                        {/if}
-                      {/foreach}
+                      </div>
                     </div>
-                  </div>
-                </li>
-              </ul>
-            {/block}
+                  </li>
+                </ul>
+              {/block}
+            {/if}
 
           {/if}
         </section>
