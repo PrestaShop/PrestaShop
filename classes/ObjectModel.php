@@ -1767,6 +1767,20 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 && !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)) {
                 return false;
             }
+            if($this->isMultishop()){
+                if(is_array($this->id_shop)){
+                    foreach ($this->id_shop as $id_shop){
+                        if(file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$id_shop.'.'.$this->image_format) && !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$id_shop.'.'.$this->image_format)){
+                            return false;
+                        }
+                    }
+                }else{
+                    if(file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$this->id_shop.'.'.$this->image_format)
+                        && !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'_'.$this->id_shop.'.'.$this->image_format)){
+                        return false;
+                    }
+                }
+            }
 
             $types = ImageType::getImagesTypes();
             foreach ($types as $image_type) {
