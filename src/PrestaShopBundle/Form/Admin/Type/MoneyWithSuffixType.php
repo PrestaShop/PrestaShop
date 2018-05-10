@@ -68,9 +68,10 @@ class MoneyWithSuffixType extends MoneyType
 
     /**
      * Appends the suffix to the value, if the value is not empty.
+     * Can be used with array_walk()
      *
      * @param string $value
-     * @param int $key
+     * @param int $key not used, it's only here to make this method compatible with array_walk
      * @param string $suffix
      */
     private function applySuffix(&$value, $key, $suffix)
