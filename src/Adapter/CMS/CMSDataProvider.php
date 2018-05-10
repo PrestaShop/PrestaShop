@@ -40,7 +40,7 @@ class CMSDataProvider
      *
      * @return array
      */
-    public function getCMSPages($languageId)
+    public function getCMSPages($languageId = null)
     {
         return CMS::listCms($languageId);
     }
@@ -55,5 +55,23 @@ class CMSDataProvider
     public function getCMSById($cmsId)
     {
         return new CMS($cmsId);
+    }
+
+    /**
+     * Gets CMS choices for choice type
+     *
+     * @param int $languageId
+     *
+     * @return array
+     */
+    public function getCMSChoices($languageId = null)
+    {
+        $choices = [];
+
+        foreach ($this->getCMSPages($languageId) as $cms) {
+            $choices[$cms['meta_title']] = $cms['id_cms'];
+        }
+
+        return $choices;
     }
 }
