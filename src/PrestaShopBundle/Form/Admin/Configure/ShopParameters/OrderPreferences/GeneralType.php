@@ -49,20 +49,22 @@ class GeneralType extends TranslatorAwareType
     private $currencyDataProvider;
 
     /**
-     * @var CMSDataProvider
+     * CMS pages choices for Terms Of Service
+     *
+     * @var array
      */
-    private $cmsDataProvider;
+    private $tosCmsChoices;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         CurrencyDataProvider $currencyDataProvider,
-        CMSDataProvider $cmsDataProvider
+        $tosCmsChoices
     ) {
         parent::__construct($translator, $locales);
 
         $this->currencyDataProvider = $currencyDataProvider;
-        $this->cmsDataProvider = $cmsDataProvider;
+        $this->tosCmsChoices = $tosCmsChoices;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -70,7 +72,6 @@ class GeneralType extends TranslatorAwareType
         /** @var Configuration $configuration */
         $configuration = $this->getConfiguration();
         $isMultishippingEnabled = $configuration->getBoolean('PS_ALLOW_MULTISHIPPING');
-        $defaultLanguageId = $configuration->getInt('PS_LANG_DEFAULT');
         $defaultCurrencyId = $configuration->getInt('PS_CURRENCY_DEFAULT');
         $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
 
@@ -95,7 +96,7 @@ class GeneralType extends TranslatorAwareType
             ->add('tos_cms_id', ChoiceType::class, [
                 'choices_as_values' => true,
                 'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices'  => $this->getCMSChoices($defaultLanguageId),
+                'choices'  => $this->tosCmsChoices,
             ])
         ;
     }
@@ -116,23 +117,5 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'order_preferences_general_block';
-    }
-
-    /**
-     * Gets CMS choices for choice type
-     *
-     * @param $languageId
-     *
-     * @return array
-     */
-    private function getCMSChoices($languageId)
-    {
-        $choices = [];
-
-        foreach ($this->cmsDataProvider->getCMSPages($languageId) as $cms) {
-            $choices[$cms['meta_title']] = $cms['id_cms'];
-        }
-
-        return $choices;
     }
 }

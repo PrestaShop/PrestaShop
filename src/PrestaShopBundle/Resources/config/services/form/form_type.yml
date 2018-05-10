@@ -340,7 +340,7 @@ services:
         public: true
         arguments:
             - '@prestashop.adapter.data_provider.currency'
-            - '@prestashop.adapter.data_provider.cms'
+            - '@=service("prestashop.adapter.data_provider.cms").getCmsChoices()'
         tags:
             - { name: form.type }
 
