@@ -42,8 +42,6 @@ class CurrencyDataProvider
     {
         return Currency::getCurrencies($object = false, $active = true, $group_by = false);
     }
-<<<<<<< HEAD
-=======
 
     /**
      * Get a Currency entity instance by ISO code
@@ -131,5 +129,4 @@ class CurrencyDataProvider
     {
         return new Currency($currencyId);
     }
->>>>>>> Migrate order preferences form's General fieldset
 }
