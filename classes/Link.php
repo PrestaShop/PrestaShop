@@ -746,6 +746,7 @@ class LinkCore
                     'AdminMaintenance' => 'admin_maintenance',
                     'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
+                    'AdminOrderPreferences' => 'admin_order_preferences',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminImport' => 'admin_import',
                 );
