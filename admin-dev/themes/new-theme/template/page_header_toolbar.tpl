@@ -3,21 +3,17 @@
 <div class="header-toolbar">
 
   {block name=pageBreadcrumb}
-    <nav class="breadcrumb">
-
+    <ol class="breadcrumb">
       {if $breadcrumbs2.container.name != ''}
-        {if $breadcrumbs2.container.href != ''}
-          <a class="breadcrumb-item" href="{$breadcrumbs2.container.href|escape}">{$breadcrumbs2.container.name|escape}</a>
-        {/if}
+        <li class="breadcrumb-item">{$breadcrumbs2.container.name|escape}</li>
       {/if}
 
-      {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
-        {if $breadcrumbs2.tab.href != ''}
-          <a class="breadcrumb-item active" href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
-        {/if}
+      {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name && $breadcrumbs2.tab.href != ''}
+        <li class="breadcrumb-item active">
+          <a href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
+        </li>
       {/if}
-
-    </nav>
+    </ol>
   {/block}
 
   {block name=pageTitle}
