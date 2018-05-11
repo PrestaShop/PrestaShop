@@ -165,6 +165,7 @@
 .badges-container {
   min-height: 30px;
   font-size: .9rem;
+  line-height: 50%;
 }
 
 .module-price {
@@ -345,10 +346,10 @@
 .module-kpi {
   margin-right: 15px;
   display: initial;
-}
-.module-kpi i {
-  font-size: 30px;
-  vertical-align: sub;
+  .material-icons {
+    font-size: 1.875rem;
+    vertical-align: middle;
+  }
 }
 .module-kpi-number {
   margin: auto;
@@ -403,9 +404,9 @@
 .module-import-processing {
   display: none;
   text-align: center;
-}
-.module-import-processing .btn {
-  margin: 25px;
+  .btn {
+    margin: 25px;
+  }
 }
 .module-import-processing-footer-text {
   font-size: smaller;
