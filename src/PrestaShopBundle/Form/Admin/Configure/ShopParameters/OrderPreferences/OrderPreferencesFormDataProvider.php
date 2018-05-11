@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration;
+use PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -43,6 +44,11 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
     private $generalConfiguration;
 
     /**
+     * @var GiftOptionsConfiguration
+     */
+    private $giftOptionsConfiguration;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -54,10 +60,12 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
 
     public function __construct(
         GeneralConfiguration $generalConfiguration,
+        GiftOptionsConfiguration $giftOptionsConfiguration,
         TranslatorInterface $translator,
         CMSDataProvider $cmsDataProvider
     ) {
         $this->generalConfiguration = $generalConfiguration;
+        $this->giftOptionsConfiguration = $giftOptionsConfiguration;
         $this->translator = $translator;
         $this->cmsDataProvider = $cmsDataProvider;
     }
@@ -69,6 +77,7 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
     {
         return [
             'general' => $this->generalConfiguration->getConfiguration(),
+            'gift_options' => $this->giftOptionsConfiguration->getConfiguration(),
         ];
     }
 
@@ -82,11 +91,19 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
             $data['general']['tos_cms_id'] = 0;
         }
 
+        // If gift wrapping tax rules group was not submitted - reset it to 0
+        if (!$data['gift_options']['gift_wrapping_tax_rules_group']) {
+            $data['gift_options']['gift_wrapping_tax_rules_group'] = 0;
+        }
+
         if ($errors = $this->validate($data)) {
             return $errors;
         }
 
-        return $this->generalConfiguration->updateConfiguration($data['general']);
+        return array_merge(
+            $this->generalConfiguration->updateConfiguration($data['general']),
+            $this->giftOptionsConfiguration->updateConfiguration($data['gift_options'])
+        );
     }
 
     /**
@@ -99,21 +116,17 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
     protected function validate(array $data)
     {
         $errors = [];
+        $invalidFields = [];
         $purchaseMinimumValue = $data['general']['purchase_minimum_value'];
+        $giftWrappingPrice = $data['gift_options']['gift_wrapping_price'];
 
         // Check if purchase minimum value is a positive number
         if (!is_numeric($purchaseMinimumValue) || $purchaseMinimumValue < 0) {
-            $fieldName = $this->translator->trans(
+            $invalidFields[] = $this->translator->trans(
                 'Minimum purchase total required in order to validate the order',
                 [],
                 'Admin.Shopparameters.Feature'
             );
-
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$fieldName],
-            ];
         }
 
         $isTosEnabled = $data['general']['enable_tos'];
@@ -130,6 +143,23 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
                     'parameters' => [],
                 ];
             }
+        }
+
+        // Check if purchase minimum value is a positive number
+        if (!empty($giftWrappingPrice) && (!is_numeric($giftWrappingPrice) || $giftWrappingPrice < 0)) {
+            $invalidFields[] = $this->translator->trans(
+                'Gift-wrapping price',
+                [],
+                'Admin.Shopparameters.Feature'
+            );
+        }
+
+        foreach ($invalidFields as $invalidField) {
+            $errors[] = [
+                'key' => 'The %s field is invalid.',
+                'domain' => 'Admin.Notifications.Error',
+                'parameters' => [$invalidField],
+            ];
         }
 
         return $errors;

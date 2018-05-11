@@ -58,6 +58,7 @@ services:
             - '@prestashop.admin.order_preferences.data_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
+              'gift_options': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType'
             - 'OrderPreferencesPage'
 
     prestashop.admin.product_preferences.form_handler:

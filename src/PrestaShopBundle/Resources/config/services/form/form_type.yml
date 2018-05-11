@@ -344,6 +344,16 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.order_preferences.gift_options:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+            - '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
+        tags:
+            - { name: form.type }
+
     form.type.import.import:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
         parent: 'form.type.translatable.aware'

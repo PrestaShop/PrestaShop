@@ -37,10 +37,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class generates "General" form
+ * Class generates "Gift options" form
  * in "Configure > Shop Parameters > Order Settings" page.
  */
-class GeneralType extends TranslatorAwareType
+class GiftOptionsType extends TranslatorAwareType
 {
     /**
      * @var CurrencyDataProvider
@@ -48,56 +48,51 @@ class GeneralType extends TranslatorAwareType
     private $currencyDataProvider;
 
     /**
-     * CMS pages choices for Terms Of Service
-     *
      * @var array
      */
-    private $tosCmsChoices;
+    private $taxChoices;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         CurrencyDataProvider $currencyDataProvider,
-        $tosCmsChoices
+        $taxChoices
     ) {
         parent::__construct($translator, $locales);
 
         $this->currencyDataProvider = $currencyDataProvider;
-        $this->tosCmsChoices = $tosCmsChoices;
+        $this->taxChoices = $taxChoices;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var Configuration $configuration */
         $configuration = $this->getConfiguration();
-        $isMultishippingEnabled = $configuration->getBoolean('PS_ALLOW_MULTISHIPPING');
+        $atcpShipWrap = $configuration->getBoolean('PS_ATCP_SHIPWRAP');
         $defaultCurrencyId = $configuration->getInt('PS_CURRENCY_DEFAULT');
         $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
 
         $builder
-            ->add('enable_final_summary', SwitchType::class)
-            ->add('enable_guest_checkout', SwitchType::class)
-            ->add('disable_reordering_option', SwitchType::class)
-            ->add('purchase_minimum_value', MoneyWithSuffixType::class, [
+            ->add('enable_gift_wrapping', SwitchType::class)
+            ->add('gift_wrapping_price', MoneyWithSuffixType::class, [
+                'required' => false,
                 'currency' => $defaultCurrency->iso_code,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
             ])
-            ->add('recalculate_shipping_cost', SwitchType::class)
         ;
 
-        if ($isMultishippingEnabled) {
-            $builder->add('allow_multishipping', SwitchType::class);
+        if (!$atcpShipWrap) {
+            $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => $this->trans('None', 'Admin.Global'),
+                'choices'  => $this->taxChoices,
+            ]);
         }
 
-        $builder
-            ->add('allow_delayed_shipping', SwitchType::class)
-            ->add('enable_tos', SwitchType::class)
-            ->add('tos_cms_id', ChoiceType::class, [
-                'choices_as_values' => true,
-                'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices'  => $this->tosCmsChoices,
-            ])
-        ;
+        $builder->add('offer_recyclable_pack', SwitchType::class);
     }
 
     /**
@@ -115,6 +110,6 @@ class GeneralType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'order_preferences_general_block';
+        return 'order_preferences_gift_options_block';
     }
 }
