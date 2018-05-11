@@ -35,7 +35,8 @@
   <thead class="thead-default">
     {% block product_catalog_form_table_header %}
       <tr class="column-headers">
-        <th scope="col" style="width: 8%">
+        <th scope="col" style="width: 2rem"></th>
+        <th scope="col" style="width: 5rem">
           {{ ps.sortable_column_header("ID"|trans({}, 'Admin.Global'), 'id_product', orderBy, sortOrder) }}
         </th>
         <th scope="col">
@@ -50,19 +51,19 @@
         <th scope="col">
           {{ ps.sortable_column_header("Category"|trans({}, 'Admin.Catalog.Feature'), 'name_category', orderBy, sortOrder) }}
         </th>
-        <th scope="col" style="width: 9%">
+        <th scope="col" class="text-center" style="width: 9%">
           {{ ps.sortable_column_header("Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature'), 'price', orderBy, sortOrder) }}
         </th>
 
         {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-        <th scope="col" style="width: 9%">
+        <th scope="col" class="text-center" style="width: 9%">
           {{ ps.sortable_column_header("Quantity"|trans({}, 'Admin.Catalog.Feature'), 'sav_quantity', orderBy, sortOrder) }}
         </th>
         {% else %}
           <th></th>
         {% endif %}
 
-        <th scope="col">
+        <th scope="col" class="text-center">
           {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active') }}
         </th>
         {% if has_category_filter == true %}
@@ -76,7 +77,7 @@
 
     {% block product_catalog_form_table_filters %}
       <tr class="column-filters">
-        <th>
+        <th colspan="2">
           {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
             'input_name': "filter_column_id_product",
             'min': '0',
@@ -114,7 +115,7 @@
             value="{{ filter_column_name_category }}"
           />
         </th>
-        <th>
+        <th class="text-center">
           {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
             'input_name': "filter_column_price",
             'min': '0',
@@ -126,7 +127,7 @@
         </th>
 
         {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-        <th>
+        <th class="text-center">
           {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
             'input_name': "filter_column_sav_quantity",
             'min': '-1000000',
@@ -140,7 +141,7 @@
           <th></th>
         {% endif %}
 
-        <th id="product_filter_column_active">
+        <th id="product_filter_column_active" class="text-center">
           <div class="form-select">
             <select class="custom-select"  name="filter_column_active">
               <option value=""></option>
@@ -159,7 +160,7 @@
 
           </th>
         {% endif %}
-        <th style="width: 12%">
+        <th class="text-right" style="width: 5rem">
           <button
             type="submit"
             class="btn btn-primary"
