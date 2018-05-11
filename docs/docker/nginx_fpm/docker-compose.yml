@@ -1,0 +1,43 @@
+version: '3.1'
+services:
+    db:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: prestashop
+            MYSQL_USER: prestashop
+            MYSQL_PASSWORD: prestashop
+ #       volumes:
+ #           - ./data/db:/docker-entrypoint-initdb.d
+        networks:
+          - default
+
+    nginx:
+        image: nginx:1.14.0-alpine
+        ports:
+            - "8080:80"
+        volumes:
+            - ./prestashop/:/code/
+            - ./prestashop-nginx/prestashop-nginx.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+          - "fpm"
+        networks:
+          - default
+
+    fpm:
+        build:
+            context: prestashop-fpm
+# If you want to change the prestashop user UID to match your local user UID
+# change it here and bellow
+#            args:
+#              UID: '1001'
+        volumes:
+            - ./prestashop/:/code/
+        depends_on:
+          - "db"
+        user: "1001"
+        networks:
+          - default
+
+networks:
+  default:
