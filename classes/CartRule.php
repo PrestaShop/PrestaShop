@@ -318,7 +318,7 @@ class CartRuleCore extends ObjectModel
 
         if (!isset($haveCartRuleToday[$idCustomer])) {
             $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE NOW() BETWEEN date_from AND date_to '.
+                 'WHERE NOW() BETWEEN date_from AND date_to '.
                  'AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1';
 
             $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
