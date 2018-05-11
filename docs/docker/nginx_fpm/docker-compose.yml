@@ -7,8 +7,6 @@ services:
             MYSQL_DATABASE: prestashop
             MYSQL_USER: prestashop
             MYSQL_PASSWORD: prestashop
- #       volumes:
- #           - ./data/db:/docker-entrypoint-initdb.d
         networks:
           - default
 
@@ -27,10 +25,10 @@ services:
     fpm:
         build:
             context: prestashop-fpm
-# If you want to change the prestashop user UID to match your local user UID
-# change it here and bellow
-#            args:
-#              UID: '1001'
+#           If you want to change the prestashop user UID to match your local user UID
+#           change it here and bellow
+#           args:
+#             UID: '1001'
         volumes:
             - ./prestashop/:/code/
         depends_on:
