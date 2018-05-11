@@ -95,15 +95,11 @@ class OrderPreferencesController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            if ($errors = $formHandler->save($data)) {
+            if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
-
-                return $this->redirectToRoute('admin_order_preferences');
+            } else {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             }
-
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_order_preferences');
