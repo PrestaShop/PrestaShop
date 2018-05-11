@@ -15,7 +15,7 @@ services:
         ports:
             - "8080:80"
         volumes:
-            - ./prestashop/:/code/
+            - ./prestashop/:/prestashop/
             - ./prestashop-nginx/prestashop-nginx.conf:/etc/nginx/conf.d/default.conf
         depends_on:
           - "fpm"
@@ -30,7 +30,7 @@ services:
 #           args:
 #             UID: '1001'
         volumes:
-            - ./prestashop/:/code/
+            - ./prestashop/:/prestashop/
         depends_on:
           - "db"
         user: "1001"

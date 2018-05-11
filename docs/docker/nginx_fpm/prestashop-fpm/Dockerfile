@@ -23,6 +23,6 @@ RUN docker-php-source extract \
 	&& if [ -d "/usr/src/php/ext/opcache" ]; then docker-php-ext-install opcache; fi \
 	&& docker-php-source delete
 
-COPY prestashop-php.ini /usr/local/etc/php/php.ini
+COPY prestashop-php.ini /usr/local/etc/php/conf.d/prestashop-php.ini
 
 RUN adduser -D -H -u ${UID} prestashop
