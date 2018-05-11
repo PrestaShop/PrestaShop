@@ -11,7 +11,7 @@ admin_module_catalog:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Module:catalog
-        _legacy_controller: AdminModules
+        _legacy_controller: AdminModulesCatalog
 
 admin_module_catalog_refresh:
     path:     /catalog/refresh/{category}/{keyword}
@@ -20,14 +20,14 @@ admin_module_catalog_refresh:
         category:
         keyword:
         _controller: PrestaShopBundle:Admin/Module:refreshCatalog
-        _legacy_controller: AdminModules
+        _legacy_controller: AdminModulesCatalog
 
 admin_module_catalog_post:
     path:     /catalog/recommended
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Module:getPreferredModules
-        _legacy_controller: AdminModules
+        _legacy_controller: AdminModulesCatalog
 
 admin_module_manage:
     path:     /manage/{category}/{keyword}
@@ -36,7 +36,7 @@ admin_module_manage:
         category:
         keyword:
         _controller: PrestaShopBundle:Admin/Module:manage
-        _legacy_controller: AdminModules
+        _legacy_controller: AdminModulesManage
 
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}
@@ -79,7 +79,14 @@ admin_module_notification:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Module:notification
-        _legacy_controller: AdminModules
+        _legacy_controller: AdminModulesNotifications
+        
+admin_module_notification_count:
+    path:     /notifications/count
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:notificationsCount
+        _legacy_controller: AdminModulesNotifications
 
 admin_module_addons_store:
     path:     /addons-store
