@@ -575,39 +575,43 @@ class ToolsCore
     }
 
     /**
-     * Set cookie id_lang
+     * If necessary change cookie language ID and context language
+     *
+     * @param Context|null $context
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public static function switchLanguage(Context $context = null)
     {
-        if (!$context) {
+        if (null === $context) {
             $context = Context::getContext();
         }
 
-        // Install call the dispatcher and so the switchLanguage
-        // Stop this method by checking the cookie
+        // On PrestaShop installations Dispatcher::__construct() gets called (and so Tools::switchLanguage())
+        // Stop in this case by checking the cookie
         if (!isset($context->cookie)) {
             return;
         }
 
-        if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso))) {
+        if (
+            ($iso = Tools::getValue('isolang')) &&
+            Validate::isLanguageIsoCode($iso) &&
+            ($id_lang = (int) Language::getIdByIso($iso))
+        ) {
             $_GET['id_lang'] = $id_lang;
         }
 
-        // update language only if new id is different from old id
-        // or if default language changed
-        $cookie_id_lang = $context->cookie->id_lang;
-        $configuration_id_lang = Configuration::get('PS_LANG_DEFAULT');
-        if ((($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $cookie_id_lang != (int)$id_lang)
-            || (($id_lang == $configuration_id_lang) && Validate::isUnsignedId($id_lang) && $id_lang != $cookie_id_lang)) {
-            $context->cookie->id_lang = $id_lang;
-            $language = new Language($id_lang);
+        // Only switch if new ID is different from old ID
+        $newLanguageId = (int) Tools::getValue('id_lang');
+        if (
+            Validate::isUnsignedId($newLanguageId) &&
+            $context->cookie->id_lang !== $newLanguageId
+        ) {
+            $context->cookie->id_lang = $newLanguageId;
+            $language = new Language($newLanguageId);
             if (Validate::isLoadedObject($language) && $language->active) {
                 $context->language = $language;
-            }
-
-            $params = $_GET;
-            if (Configuration::get('PS_REWRITING_SETTINGS') || !Language::isMultiLanguageActivated()) {
-                unset($params['id_lang']);
             }
         }
     }
