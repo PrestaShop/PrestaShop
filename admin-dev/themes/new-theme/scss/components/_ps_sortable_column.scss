@@ -24,6 +24,8 @@
  *
  */
 
+$icon-margin-left: .5rem;
+
 .ps-sortable-column {
 
   display: flex;
@@ -36,11 +38,11 @@
   .ps-sort {
     @extend .material-icons;
     align-self: flex-end;
-    margin-left: .5rem;
+    margin-left: $icon-margin-left;
     margin-bottom: .125rem;
     opacity: 0;
     color: $medium-gray;
-    transition: opacity .2s;
+    transition: all .2s;
     font-size: 1rem;
     transform: rotate(90deg);
 
@@ -87,4 +89,22 @@
     }
   }
 
+}
+
+.text-center > .ps-sortable-column {
+  justify-content: center;
+
+  > .ps-sort {
+    width: 0;
+    margin-left: 0;
+    overflow: hidden;
+  }
+
+  &:hover {
+    > .ps-sort {
+      height: initial;
+      width: initial;
+      margin-left: $icon-margin-left;
+    }
+  }
 }
