@@ -58,6 +58,13 @@
       border: 0;
     }
   }
+
+  .dropdown-toggle.product-edit {
+    color: $gray-medium;
+    &:after {
+      content: "more_vert";
+    }
+  }
 }
 
 .emptycatalog-icon {
