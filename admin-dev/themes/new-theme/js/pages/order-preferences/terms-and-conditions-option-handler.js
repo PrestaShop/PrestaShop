@@ -46,13 +46,7 @@ class TermsAndConditionsOptionHandler {
    * @param {int} isTosEnabled
    */
   handleTermsAndConditionsCmsSelect(isTosEnabled) {
-    const tosCmsSelect = $('#form_general_tos_cms_id');
-
-    if (isTosEnabled) {
-        tosCmsSelect.removeAttr('disabled');
-    } else {
-        tosCmsSelect.attr('disabled', 'disabled');
-    }
+    $('#form_general_tos_cms_id').prop('disabled', !isTosEnabled);
   }
 }
 
