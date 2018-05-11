@@ -2312,7 +2312,7 @@ class CartCore extends ObjectModel
             $id_warehouse = 0;
             foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val) {
                 if (array_key_exists((int)$id_war, $product['warehouse_list'])) {
-                    $product['carrier_list'] = Tools::array_replace($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
+                    $product['carrier_list'] = array_replace($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
                     if (!$id_warehouse) {
                         $id_warehouse = (int)$id_war;
                     }
