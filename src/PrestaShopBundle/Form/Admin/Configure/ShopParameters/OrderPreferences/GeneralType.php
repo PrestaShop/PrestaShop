@@ -93,7 +93,6 @@ class GeneralType extends TranslatorAwareType
             ->add('allow_delayed_shipping', SwitchType::class)
             ->add('enable_tos', SwitchType::class)
             ->add('tos_cms_id', ChoiceType::class, [
-                'choices_as_values' => true,
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices'  => $this->tosCmsChoices,
             ])
