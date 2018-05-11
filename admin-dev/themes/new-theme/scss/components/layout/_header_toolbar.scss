@@ -6,7 +6,6 @@
   height: $size-header-toolbar-height;
   right: 0;
   z-index: 501;
-  padding-left: 0.625rem;
   border-bottom: 0.0625rem solid $color-separator;
 
   @include media-breakpoint-down(md) {
@@ -22,11 +21,12 @@
     padding: 0.3125rem;
     font-size: 1.625rem;
     font-weight: normal;
-    margin-top: -0.625rem;
+    margin-left: .938rem;
+    margin-bottom: .313rem;
   }
 
   > .breadcrumb {
-    margin: 0;
+    margin: 0 0 0 .938rem;
   }
 }
 
@@ -39,34 +39,21 @@
 }
 
 .page-head-tabs {
-    display: inline-block;
-    position: absolute;
-    bottom: 0;
 
-    > .tab {
-        display: inline-block;
-        float: left;
-        height: 40px;
-        line-height: 40px;
-        padding: 0 10px;
-        vertical-align: middle;
-        color: #363a41;
-        box-sizing: border-box;
-        font-size: 16px;
-        text-decoration: none;
+  background: #fff;
 
-        .notification-container {
-            @include notification_container();
+  .tab {
+    .notification-container {
+      @include notification_container();
 
-            .notification-counter {
-                @include notification_counter();
-            }
-        }
+      .notification-counter {
+        @include notification_counter();
+        top: -0.063rem;
+        right: initial;
+      }
     }
+  }
 
-    > .current {
-        border-bottom: 3px solid #3ed2f0;
-    }
 }
 
 .page-sidebar-closed:not(.mobile) {

@@ -15,6 +15,10 @@
   &.-notoolbar {
     padding-top: $size-header-height + $grid-gutter-width / 2;
   }
+
+  &.with-tabs {
+    padding-top: $size-header-height + $size-header-toolbar-height + ($grid-gutter-width / 2) + 2.5rem;
+  }
 }
 
 .page-sidebar-closed:not(.mobile) {
