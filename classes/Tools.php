@@ -781,33 +781,6 @@ class ToolsCore
     }
 
     /**
-     * Implement array_replace for PHP <= 5.2
-     *
-     * @return array|mixed|null
-     */
-    public static function array_replace()
-    {
-        if (!function_exists('array_replace')) {
-            $args     = func_get_args();
-            $num_args = func_num_args();
-            $res      = array();
-            for ($i = 0; $i < $num_args; $i++) {
-                if (is_array($args[$i])) {
-                    foreach ($args[$i] as $key => $val) {
-                        $res[$key] = $val;
-                    }
-                } else {
-                    trigger_error(__FUNCTION__.'(): Argument #'.($i + 1).' is not an array', E_USER_WARNING);
-                    return null;
-                }
-            }
-            return $res;
-        } else {
-            return call_user_func_array('array_replace', func_get_args());
-        }
-    }
-
-    /**
      *
      * Convert amount from a currency to an other currency automatically
      * @param float $amount
