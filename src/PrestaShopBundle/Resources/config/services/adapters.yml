@@ -147,3 +147,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order_gift.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

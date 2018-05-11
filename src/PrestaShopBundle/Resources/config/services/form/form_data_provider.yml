@@ -12,6 +12,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\OrderPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.order_general.configuration'
+            - '@prestashop.adapter.order_gift.configuration'
             - '@translator'
             - '@prestashop.adapter.data_provider.cms'
 
