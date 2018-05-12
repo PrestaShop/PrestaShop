@@ -1034,20 +1034,36 @@ class ToolsCore
     }
 
     /**
-    * Display an error according to an error code
+    * Depending on _PS_MODE_DEV_ throws an exception or returns a error message
     *
-    * @param string $string Error message
-    * @param bool $htmlentities By default at true for parsing error message with htmlentities
+    * @param string|null $errorMessage Error message (defaults to "Fatal error")
+    * @param bool $htmlentities DEPRECATED since 1.7.4.0
+    * @param Context|null $context DEPRECATED since 1.7.4.0
+    *
+    * @return string
+    *
+    * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
     */
-    public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
+    public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
-        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            throw new PrestaShopException($string);
-        } else if ('Fatal error' !== $string) {
-            return $string;
+        if (null !== $htmlentities) {
+            self::displayParameterAsDeprecated('htmlentities');
+        }
+        if (null !== $context) {
+            self::displayParameterAsDeprecated('context');
+        }
+        
+        if (null === $errorMessage) {
+            $errorMessage = Context::getContext()
+                ->getTranslator()
+                ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
-        return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
+        if (_PS_MODE_DEV_) {
+            throw new PrestaShopException($errorMessage);
+        }
+        
+        return $errorMessage;
     }
 
     /**
