@@ -1,3 +1,9 @@
 app:
     # The main bundle is PrestaShopCoreBundle which will load other dependencies.
     resource: "@PrestaShopBundle/Resources/config/routing.yml"
+
+admin_modules:
+    # Module controllers must use annotations
+    resource: "../../modules/*/src/Controller/Admin/**/*.php"
+    type: annotation
+    prefix: "/modules"
