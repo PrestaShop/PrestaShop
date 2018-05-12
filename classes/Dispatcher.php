@@ -267,7 +267,7 @@ class DispatcherCore
      *
      * @return int The front controller type
      */
-    protected function setFrontControllerType()
+    private function setFrontControllerType()
     {
         if (defined('_PS_ADMIN_DIR_')) {
             return $this->front_controller = self::FC_ADMIN;
@@ -283,7 +283,7 @@ class DispatcherCore
     /**
      * Sets the fallback controller depending on the front controller type.
      */
-    protected function setNotFoundController($frontControllerType)
+    private function setNotFoundController($frontControllerType)
     {
         $this->controller_not_found = self::FC_ADMIN === $frontControllerType ? 'adminnotfound' : 'pagenotfound';
     }
