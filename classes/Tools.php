@@ -611,22 +611,58 @@ class ToolsCore
             }
         }
     }
-
+    
+    /**
+     * Detects country and returns its ID
+     *
+     * @param null $address
+     *
+     * @return int
+     *
+     * @deprecated 1.7.4
+     */
     public static function getCountry($address = null)
     {
-        $id_country = (int)Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
-            $id_country = (int)$address->id_country;
-        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-                $id_country = (int)Country::getByIso($array[0], true);
+        return self::getCountryId($address);
+    }
+
+    /**
+     * Detects country and returns its ID
+     * First tries GET parameter id_country, then id_country of the optional parameter $address,
+     * then detection from $_SERVER, then defaults to PS_COUNTRY_DEFAULT
+     *
+     * @param Address|null $address
+     *
+     * @return int
+     *
+     * @since 1.7.4
+     */
+    public static function getCountryId(Address $address = null)
+    {
+        if ($countryId = (int) Tools::getValue('id_country')) {
+            return $countryId;
+        }
+
+        if (null !== $address && $countryId = $address->id_country) {
+            return $countryId;
+        }
+
+        if (
+            Configuration::get('PS_DETECT_COUNTRY') &&
+            isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+        ) {
+            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);
+            if (
+                is_array($matches) &&
+                isset($matches[0]) &&
+                Validate::isLanguageIsoCode($matches[0]) &&
+                $countryId = Country::getByIso($matches[0], true)
+            ) {
+                return $countryId;
             }
         }
-        if (!isset($id_country) || !$id_country) {
-            $id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-        }
-        return (int)$id_country;
+
+        return (int) Configuration::get('PS_COUNTRY_DEFAULT');
     }
 
     /**
