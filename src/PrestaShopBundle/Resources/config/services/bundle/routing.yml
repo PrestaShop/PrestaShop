@@ -1,0 +1,8 @@
+services:
+
+    prestashop.bundle.routing.module_route_loader:
+        class: 'PrestaShopBundle\Routing\ModuleLoader'
+        arguments:
+          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+          - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODULE_DIR_")'
+        tags: [routing.loader]

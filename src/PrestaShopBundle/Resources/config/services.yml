@@ -1,5 +1,5 @@
 imports:
-    - { resource: services/bundle_services.yml }
-    - { resource: services/core_services.yml }
-    - { resource: services/adapter_services.yml }
+    - { resource: services/bundle/*.yml }
+    - { resource: services/core/*.yml }
+    - { resource: services/adapter/*.yml }
     - { resource: services/alias.yml }
