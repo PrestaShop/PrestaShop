@@ -504,7 +504,6 @@ class ToolsCore
         return $value;
     }
 
-
     /**
      * Get all values from $_POST/$_GET
      * @return mixed
@@ -514,9 +513,16 @@ class ToolsCore
         return $_POST + $_GET;
     }
 
+    /**
+     * Checks if a key exists either in $_POST or $_GET
+     * 
+     * @param string $key
+     * 
+     * @return bool
+     */
     public static function getIsset($key)
     {
-        if (!isset($key) || empty($key) || !is_string($key)) {
+        if (! is_string($key)) {
             return false;
         }
         return isset($_POST[$key]) || isset($_GET[$key]);
