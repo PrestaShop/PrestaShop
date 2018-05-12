@@ -205,7 +205,7 @@ class DispatcherCore
 
         $frontControllerType = $this->setFrontControllerType();
         
-        $this->setFallbackController($frontControllerType);
+        $this->setNotFoundController($frontControllerType);
         
         $this->setRequestUri();
 
@@ -241,7 +241,7 @@ class DispatcherCore
     /**
      * Sets the fallback controller depending on the front controller type.
      */
-    protected function setFallbackController($frontControllerType)
+    protected function setNotFoundController($frontControllerType)
     {
         $this->controller_not_found = self::FC_ADMIN === $frontControllerType ? 'adminnotfound' : 'pagenotfound';
     }
