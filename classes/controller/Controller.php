@@ -159,6 +159,7 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
+        
         $this->container = $this->buildContainer();
     }
 
@@ -192,40 +193,42 @@ abstract class ControllerCore
 
     public function __construct()
     {
-        if (is_null($this->display_header)) {
-            $this->display_header = true;
-        }
-
-        if (is_null($this->display_header_javascript)) {
-            $this->display_header_javascript = true;
-        }
-
-        if (is_null($this->display_footer)) {
-            $this->display_footer = true;
-        }
-
+        $this->display_header = true;
+        $this->display_header_javascript = true;
+        $this->display_footer = true;
         $this->context = Context::getContext();
         $this->context->controller = $this;
         $this->translator = Context::getContext()->getTranslator();
-
-        // Usage of ajax parameter is deprecated
-        $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
-
-        if (isset($_SERVER['HTTP_ACCEPT'])) {
-            $this->ajax = $this->ajax || preg_match(
-                '#\bapplication/json\b#',
-                $_SERVER['HTTP_ACCEPT']
-            );
-        }
-
+        $this->ajax = $this->isAjax();
+        
         if (
-            !headers_sent() &&
+            ! headers_sent() &&
             isset($_SERVER['HTTP_USER_AGENT']) &&
             (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
             strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
         ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
+    }
+    
+    /**
+     * Returns if the current request is an AJAX request.
+     *
+     * @return bool
+     */
+    private function isAjax()
+    {
+        // Usage of ajax parameter is deprecated
+        $isAjax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
+        
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            $isAjax = $isAjax || preg_match(
+                '#\bapplication/json\b#',
+                $_SERVER['HTTP_ACCEPT']
+            );
+        }
+        
+        return $isAjax;
     }
 
     /**
@@ -279,7 +282,6 @@ abstract class ControllerCore
             $this->smartyOutputContent($this->layout);
         }
     }
-
 
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
@@ -367,6 +369,7 @@ abstract class ControllerCore
      * @param string $css_media_type
      * @param int|null $offset
      * @param bool $check_path
+     *
      * @return true
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
@@ -445,7 +448,6 @@ abstract class ControllerCore
      *
      * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
      * @param bool $check_path
-     * @return void
      */
     public function addJS($js_uri, $check_path = true)
     {
@@ -554,6 +556,7 @@ abstract class ControllerCore
      * Checks if the controller has been called from XmlHttpRequest (AJAX)
      *
      * @since 1.5
+     *
      * @return bool
      */
     public function isXmlHttpRequest()
@@ -575,23 +578,24 @@ abstract class ControllerCore
      * Renders controller templates and generates page content
      *
      * @param array|string $content Template file(s) to be rendered
+     *
      * @throws Exception
      * @throws SmartyException
      */
-    protected function smartyOutputContent($content)
+    protected function smartyOutputContent($templates)
     {
         $this->context->cookie->write();
 
-        $html = '';
         $js_tag = 'js_def';
         $this->context->smarty->assign($js_tag, $js_tag);
 
-        if (!is_array($content)) {
-            $content = array($content);
+        if (!is_array($templates)) {
+            $templates = array($templates);
         }
 
-        foreach ($content as $tpl) {
-            $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+        $html = '';
+        foreach ($templates as $template) {
+            $html .= $this->context->smarty->fetch($template, null, $this->getLayout());
         }
 
         echo trim($html);
@@ -603,15 +607,16 @@ abstract class ControllerCore
      * @param string $template
      * @param string|null $cache_id Cache item ID
      * @param string|null $compile_id
+     *
      * @return bool
      */
     protected function isCached($template, $cache_id = null, $compile_id = null)
     {
         Tools::enableCache();
-        $res = $this->context->smarty->isCached($template, $cache_id, $compile_id);
+        $isCached = $this->context->smarty->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
 
-        return $res;
+        return $isCached;
     }
 
     /**
@@ -621,6 +626,7 @@ abstract class ControllerCore
      * @param string $errstr
      * @param string $errfile
      * @param int $errline
+     *
      * @return bool
      */
     public static function myErrorHandler($errno, $errstr, $errfile, $errline)
