@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+
 /**
  * @since 1.5.0
  */
@@ -215,7 +217,7 @@ class DispatcherCore
             $this->controller_not_found = 'pagenotfound';
         }
 
-        $this->setRequestUri();
+        $this->setRequestUri(SymfonyRequest::createFromGlobals());
 
         // Switch language if needed (only on front)
         if (in_array($this->front_controller, array(self::FC_FRONT, self::FC_MODULE))) {
@@ -437,35 +439,37 @@ class DispatcherCore
     }
 
     /**
-     * Set request uri and iso lang
+     * Set request URI and if necessary $_GET['isolang'].
+     *
+     * @param SymfonyRequest $symfonyRequest To retrieve the request URI from it
      */
-    protected function setRequestUri()
+    private function setRequestUri(SymfonyRequest $symfonyRequest)
     {
-        // Get request uri (HTTP_X_REWRITE_URL is used by IIS)
-        if (isset($_SERVER['REQUEST_URI'])) {
-            $this->request_uri = $_SERVER['REQUEST_URI'];
-        } elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
-            $this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
-        }
-        $this->request_uri = rawurldecode($this->request_uri);
-
-        if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop)) {
-            $this->request_uri = preg_replace(
-                '#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i',
+        $requestUri = $symfonyRequest->getRequestUri();
+        
+        $requestUri = rawurldecode($requestUri);
+        
+        // Remove shop base URI from URI
+        $shop = Context::getContext()->shop;
+        if (Validate::isLoadedObject($shop)) {
+            $requestUri = preg_replace(
+                '#^'.preg_quote($shop->getBaseURI(), '#').'#i',
                 '/',
-                $this->request_uri
+                $requestUri
             );
         }
 
-        // If there are several languages, get language from uri
+        // If there are several languages, set language from URI and remove langage from URI 
         if ($this->use_routes && Language::isMultiLanguageActivated()) {
-            if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $this->request_uri, $m)) {
+            if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $m)) {
                 $_GET['isolang'] = $m[1];
-                $this->request_uri = substr($this->request_uri, 3);
+                $requestUri = substr($requestUri, 3);
             }
         }
+        
+        $this->request_uri = $requestUri;
     }
-
+    
     /**
      * Load default routes group by languages
      *
