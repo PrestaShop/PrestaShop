@@ -713,4 +713,17 @@ class EmployeeCore extends ObjectModel
 
         return ($access[$action] == '1');
     }
+    
+    /**
+     * Returns the default tab class name.
+     *
+     * @return null|string
+     */
+    public function getDefaultTabClassName()
+    {
+        if ($tabId = (int) $this->default_tab) {
+            return Tab::getClassNameById($tabId) ?: null;
+        }
+        return null;
+    }
 }
