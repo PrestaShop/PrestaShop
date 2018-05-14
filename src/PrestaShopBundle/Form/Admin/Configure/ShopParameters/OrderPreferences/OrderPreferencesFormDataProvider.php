@@ -92,7 +92,7 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
         }
 
         // If gift wrapping tax rules group was not submitted - reset it to 0
-        if (!$data['gift_options']['gift_wrapping_tax_rules_group']) {
+        if (!isset($data['gift_options']['gift_wrapping_tax_rules_group'])) {
             $data['gift_options']['gift_wrapping_tax_rules_group'] = 0;
         }
 
