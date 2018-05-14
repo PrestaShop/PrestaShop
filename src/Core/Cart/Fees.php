@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
+use Currency;
+use Tools;
 
 class Fees
 {
@@ -102,19 +104,19 @@ class Fees
         // wrapping fees
         if ($cart->gift) {
             $this->wrappingFees      = new AmountImmutable(
-                \Tools::convertPrice(
-                    \Tools::ps_round(
+                Tools::convertPrice(
+                    Tools::ps_round(
                         $cart->getGiftWrappingPrice(true),
                         $computePrecision
                     ),
-                    \Currency::getCurrencyInstance((int) $cart->id_currency)
+                    Currency::getCurrencyInstance((int) $cart->id_currency)
                 ),
-                \Tools::convertPrice(
-                    \Tools::ps_round(
+                Tools::convertPrice(
+                    Tools::ps_round(
                         $cart->getGiftWrappingPrice(false),
                         $computePrecision
                     ),
-                    \Currency::getCurrencyInstance((int) $cart->id_currency)
+                    Currency::getCurrencyInstance((int) $cart->id_currency)
                 )
             );
         } else {
