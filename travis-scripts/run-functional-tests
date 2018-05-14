@@ -11,5 +11,5 @@ echo "* Installing functional tests ...";
 cd $TRAVIS_BUILD_DIR/tests/E2E && npm install
 
 echo "* Running functional tests ...";
-npm test -- --MODULE=ps_legalcompliance
+npm test -- --MODULE=ps_legalcompliance --DISABLE_ADDONS
 exit $?
