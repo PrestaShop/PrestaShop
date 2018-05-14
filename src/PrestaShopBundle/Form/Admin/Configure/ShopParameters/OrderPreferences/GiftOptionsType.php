@@ -56,7 +56,7 @@ class GiftOptionsType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         CurrencyDataProvider $currencyDataProvider,
-        $taxChoices
+        array $taxChoices
     ) {
         parent::__construct($translator, $locales);
 
