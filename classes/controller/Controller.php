@@ -202,7 +202,7 @@ abstract class ControllerCore
         $this->ajax = $this->isAjax();
         
         if (
-            ! headers_sent() &&
+            !headers_sent() &&
             isset($_SERVER['HTTP_USER_AGENT']) &&
             (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
             strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
@@ -577,7 +577,7 @@ abstract class ControllerCore
     /**
      * Renders controller templates and generates page content
      *
-     * @param array|string $content Template file(s) to be rendered
+     * @param array|string $templates Template file(s) to be rendered
      *
      * @throws Exception
      * @throws SmartyException
