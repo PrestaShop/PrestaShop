@@ -58,7 +58,7 @@ class GeneralType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         CurrencyDataProvider $currencyDataProvider,
-        $tosCmsChoices
+        array $tosCmsChoices
     ) {
         parent::__construct($translator, $locales);
 
