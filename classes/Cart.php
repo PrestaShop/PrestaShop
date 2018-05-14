@@ -3791,13 +3791,13 @@ class CartCore extends ObjectModel
     /**
      * Check if product quantities in Cart are available.
      *
-     * @param bool $return_product Return the first found product with not enough quantity
+     * @param bool $returnProductOnFailure Return the first found product with not enough quantity
      *
      * @return bool|array If all products are in stock: true; if not: either false or an array
      *                    containing the first found product which is not in stock in the
      *                    requested amount
      */
-    public function checkQuantities($return_product = false)
+    public function checkQuantities($returnProductOnFailure = false)
     {
         if (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_')) {
             return false;
@@ -3825,7 +3825,7 @@ class CartCore extends ObjectModel
                 ! $product['available_for_order'] ||
                 (! $product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])
             ) {
-                return $return_product ? $product : false;
+                return $returnProductOnFailure ? $product : false;
             }
             
             if (! $product['allow_oosp']) {
@@ -3837,7 +3837,7 @@ class CartCore extends ObjectModel
                     $product['id_customization']
                 );
                 if ($productQuantity < 0) {
-                    return $return_product ? $product : false;
+                    return $returnProductOnFailure ? $product : false;
                 }
             }
         }
