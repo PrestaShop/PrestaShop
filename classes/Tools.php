@@ -643,8 +643,8 @@ class ToolsCore
             return $countryId;
         }
 
-        if (null !== $address && $countryId = $address->id_country) {
-            return $countryId;
+        if (null !== $address && $address->id_country) {
+            return $address->id_country;
         }
 
         if (
