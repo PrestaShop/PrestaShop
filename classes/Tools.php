@@ -789,7 +789,7 @@ class ToolsCore
 
         return $price;
     }
-    
+
     /**
      * Implement array_replace for PHP <= 5.2
      *
