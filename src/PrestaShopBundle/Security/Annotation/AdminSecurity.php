@@ -87,7 +87,7 @@ class AdminSecurity extends Security
     /**
      * @param $redirectRoute The route used for redirection.
      */
-    public function setRedirectRoute( $redirectRoute)
+    public function setRedirectRoute($redirectRoute)
     {
         $this->redirectRoute = $redirectRoute;
     }

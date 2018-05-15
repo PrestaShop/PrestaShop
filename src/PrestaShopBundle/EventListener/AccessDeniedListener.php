@@ -66,7 +66,7 @@ class AccessDeniedListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if (!$event->isMasterRequest() ||!$event->getException() instanceof AccessDeniedException) {
+        if (!$event->isMasterRequest() || !$event->getException() instanceof AccessDeniedException) {
             return;
         }
 
