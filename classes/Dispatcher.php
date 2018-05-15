@@ -397,11 +397,11 @@ class DispatcherCore
                                 include_once(_PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php");
                                 $controller_class = $controller_name . (
                                     strpos($controller_name,'Controller') ? 'Override' : 'ControllerOverride'
-                                    );
+                                );
                             } else {
                                 $controller_class = $controller_name . (
                                     strpos($controller_name, 'Controller') ? '' : 'Controller'
-                                    );
+                                );
                             }
                         }
                     }
