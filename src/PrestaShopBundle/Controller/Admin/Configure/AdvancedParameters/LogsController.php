@@ -52,7 +52,7 @@ class LogsController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         // temporary search criteria class, to be removed
-        $searchCirteria = new class($request) implements SearchCriteriaInterface {
+        $searchCriteria = new class($request) implements SearchCriteriaInterface {
             private $request;
             public function __construct(Request $request) { $this->request = $request; }
             public function getOrderBy() { return $this->request->get('orderBy', 'id_log'); }
@@ -62,8 +62,8 @@ class LogsController extends FrameworkBundleAdminController
             public function getFilters() { $f = $this->request->get('logs', []); unset($f['_token']); return $f; }
         };
 
-        $gridFactory = $this->get('prestashop.core.grid.log_factory');
-        $grid = $gridFactory->createUsingSearchCriteria($searchCirteria);
+        $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
+        $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $twigValues = [

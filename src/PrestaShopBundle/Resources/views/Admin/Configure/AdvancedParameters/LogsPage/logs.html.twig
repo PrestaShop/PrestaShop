@@ -33,7 +33,7 @@
   {% block logs_main_panel %}
     <div class="col-md-12">
       <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' %}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'gridView': gridView }) }}
       </div>
     </div>
   {% endblock %}
