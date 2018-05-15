@@ -94,6 +94,16 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
+        /**
+         * Parameters can be overwritten with urls:
+         *
+         * @example ?limit=100&offset=2&orderBy=name&sortOrder=desc
+         */
+        $limit = $request->query->get('limit', $limit);
+        $offset = $request->query->get('offset', $offset);
+        $orderBy = $request->query->get('orderBy', $orderBy);
+        $sortOrder = $request->query->get('sortOrder', $sortOrder);
+
         $context = $this->get('prestashop.adapter.legacy.context')->getContext();
         $request->getSession()->set('_locale', $context->language->locale);
 
