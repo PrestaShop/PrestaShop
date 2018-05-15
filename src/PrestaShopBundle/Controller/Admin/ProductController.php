@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -65,9 +66,11 @@ use Tools;
  * The retro-compatibility is dropped for the corresponding Admin pages.
  * A set of hooks are integrated and an Adapter is made to wrap the new EventDispatcher
  * component to the existing hook system. So existing hooks are always triggered, but from the new
- * code (and so needs to be adapted on the module side ton comply on the new parameters formats, the new UI style, etc...).
+ * code (and so needs to be adapted on the module side ton comply on the new
+ * parameters formats, the new UI style, etc...).
  *
- * FIXME: to adapt after 1.7.0 when alternative behavior will be removed (@see AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()).
+ * FIXME: to adapt after 1.7.0 when alternative behavior will be removed
+ * (@see AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()).
  */
 class ProductController extends FrameworkBundleAdminController
 {
@@ -84,10 +87,14 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $sortOrder To order product list
      * @return array Template vars
      */
-    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'desc')
-    {
-        if (
-            !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
+    public function catalogAction(
+        Request $request,
+        $limit = 10,
+        $offset = 0,
+        $orderBy = 'id_product',
+        $sortOrder = 'desc'
+    ) {
+        if (!$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
             && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
             && !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')
         ) {
@@ -113,11 +120,11 @@ class ProductController extends FrameworkBundleAdminController
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
-            $redirectionParams = array(
+            $redirectionParams = [
                 // do not transmit limit & offset: go to the first page when redirecting
                 'productOrderby' => $orderBy,
                 'productOrderway' => $sortOrder
-            );
+            ];
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams));
         }
 
@@ -148,33 +155,32 @@ class ProductController extends FrameworkBundleAdminController
         // get old values from persistence (before the current update)
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
 
-        if ($offset === 'last') {
-            $offset = $persistedFilterParameters['last_offset'];
-        }
-        if ($limit === 'last') {
-            $limit = $persistedFilterParameters['last_limit'];
-        }
-        if ($orderBy === 'last') {
-            $orderBy = $persistedFilterParameters['last_orderBy'];
-        }
-        if ($sortOrder === 'last') {
-            $sortOrder = $persistedFilterParameters['last_sortOrder'];
-        }
+        $offset = $offset === 'last' ? $persistedFilterParameters['last_offset'] : $offset;
+        $limit = $limit === 'last' ? $persistedFilterParameters['last_limit'] : $limit;
+        $orderBy = $orderBy === 'last' ? $persistedFilterParameters['last_orderBy'] : $orderBy;
+        $sortOrder = $sortOrder === 'last' ? $persistedFilterParameters['last_sortOrder'] : $sortOrder;
 
         // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         // Add layout top-right menu actions
-        $toolbarButtons = array();
-        $toolbarButtons['add'] = array(
+        $toolbarButtons = [];
+        $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
-            'desc' => $translator->trans('New product', array(), 'Admin.Actions'),
+            'desc' => $translator->trans('New product', [], 'Admin.Actions'),
             'icon' => 'add_circle_outline',
-            'help' => $translator->trans('Create a new product: CTRL+P', array(), 'Admin.Catalog.Help'),
-        );
+            'help' => $translator->trans('Create a new product: CTRL+P', [], 'Admin.Catalog.Help'),
+        ];
 
         // Fetch product list (and cache it into view subcall to listAction)
-        $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
+        $products = $productProvider->getCatalogProductList(
+            $offset,
+            $limit,
+            $orderBy,
+            $sortOrder,
+            $request->request->all()
+        );
+
         $lastSql = $productProvider->getLastCompiledSql();
         $logger->info('Product catalog filters stored.');
         $hasCategoryFilter = $productProvider->isCategoryFiltered();
@@ -187,10 +193,13 @@ class ProductController extends FrameworkBundleAdminController
         ) {
             // no filter, total filtered == 0, and then total count == 0 too.
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
-            return $this->render('PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'import_url' => $legacyUrlGenerator->generate('AdminImport'),
-            ));
+            return $this->render(
+                'PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig',
+                [
+                    'layoutHeaderToolbarBtn' => $toolbarButtons,
+                    'import_url' => $legacyUrlGenerator->generate('AdminImport'),
+                ]
+            );
         } else {
             // Pagination
             $paginationParameters = $request->attributes->all();
@@ -200,15 +209,25 @@ class ProductController extends FrameworkBundleAdminController
             $categories = $this->createForm(
                 'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType',
                 null,
-                array(
-                    'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $context->language->id, false),
+                [
+                    'label' => $translator->trans('Categories', [], 'Admin.Catalog.Feature'),
+                    'list' => $this->get('prestashop.adapter.data_provider.category')->getNestedCategories(
+                        null,
+                        $context->language->id,
+                        false
+                    ),
                     'valid_list' => [],
                     'multiple' => false,
-                )
+                ]
             );
             if (!empty($persistedFilterParameters['filter_category'])) {
-                $categories->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
+                $categories->setData(
+                    [
+                        'tree' => [
+                            0 => $persistedFilterParameters['filter_category']
+                        ]
+                    ]
+                );
             }
         }
 
@@ -229,7 +248,7 @@ class ProductController extends FrameworkBundleAdminController
         // Template vars injection
         return array_merge(
             $persistedFilterParameters,
-            array(
+            [
                 'limit' => $limit,
                 'offset' => $offset,
                 'orderBy' => $orderBy,
@@ -253,7 +272,7 @@ class ProductController extends FrameworkBundleAdminController
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
                 'permission_error' => $permissionError,
                 'layoutTitle' => $this->trans('Products', 'Admin.Global'),
-            )
+            ]
         );
     }
 
@@ -271,8 +290,14 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $view full|quicknav To change default template used to render the content
      * @return array Template vars
      */
-    public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc', $view = 'full')
-    {
+    public function listAction(
+        Request $request,
+        $limit = 10,
+        $offset = 0,
+        $orderBy = 'id_product',
+        $sortOrder = 'asc',
+        $view = 'full'
+    ) {
         /* @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
@@ -300,7 +325,11 @@ class ProductController extends FrameworkBundleAdminController
                 $sortOrder = $persistedFilterParameters['last_sortOrder'];
             }
 
-            // 2 hooks are triggered here: actionAdminProductsListingFieldsModifier and actionAdminProductsListingResultsModifier
+            /**
+             * 2 hooks are triggered here:
+             * - actionAdminProductsListingFieldsModifier
+             * - actionAdminProductsListingResultsModifier
+             */
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
             $lastSql = $productProvider->getLastCompiledSql();
         }
@@ -310,29 +339,41 @@ class ProductController extends FrameworkBundleAdminController
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
             $totalCount = isset($product['total']) ? $product['total'] : $totalCount;
-            $product['url'] = $this->generateUrl('admin_product_form', array('id' => $product['id_product']));
+            $product['url'] = $this->generateUrl(
+                'admin_product_form',
+                ['id' => $product['id_product']]
+            );
             $product['unit_action_url'] = $this->generateUrl(
                 'admin_product_unit_action',
-                array('action' => 'duplicate', 'id' => $product['id_product'])
+                [
+                    'action' => 'duplicate',
+                    'id' => $product['id_product']
+                ]
             );
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
         }
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-        );
+        ];
         if ($view != 'full') {
-            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
-                'limit' => $limit,
-                'offset' => $offset,
-                'total' => $totalCount,
-            ]));
+            return $this->render(
+                '@Product/CatalogPage/Lists/list_' . $view . '.html.twig',
+                array_merge(
+                    $vars,
+                    [
+                        'limit' => $limit,
+                        'offset' => $offset,
+                        'total' => $totalCount,
+                    ]
+                )
+            );
         }
         return $vars;
     }
@@ -349,7 +390,7 @@ class ProductController extends FrameworkBundleAdminController
             $translator = $this->get('translator');
             $errorMessage = $translator->trans(
                 'You do not have permission to add this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
             $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
@@ -396,8 +437,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         gc_disable();
-        if (
-            !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
+        if (!$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
             && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
             && !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')
         ) {
@@ -421,7 +461,7 @@ class ProductController extends FrameworkBundleAdminController
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
-            return $this->redirect($legacyUrlGenerator->generate('admin_product_form', array('id' => $id)));
+            return $this->redirect($legacyUrlGenerator->generate('admin_product_form', ['id' => $id]));
         }
 
         $response = new JsonResponse();
@@ -440,15 +480,15 @@ class ProductController extends FrameworkBundleAdminController
         );
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
-        $form = $this->createFormBuilder($modelMapper->getFormData(), array('allow_extra_fields' => true))
+        $form = $this->createFormBuilder($modelMapper->getFormData(), ['allow_extra_fields' => true])
             ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
             ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
             ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
             ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
             ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
-            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', array(
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', [
                 'mapping_type' => $product->getRedirectType(),
-            ))
+            ])
             ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
 
         // Prepare combination form (fake but just to validate the form)
@@ -460,12 +500,14 @@ class ProductController extends FrameworkBundleAdminController
             $combinationsInputs = ceil($combinationsCount/1000)*1000;
 
             if ($combinationsInputs > $maxInputVars) {
-
-                $this->addFlash('error', $this->trans(
-                    'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
-                    'Admin.Global.Error',
-                    array('%value%' => $combinationsInputs)
-                ));
+                $this->addFlash(
+                    'error',
+                    $this->trans(
+                        'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
+                        'Admin.Global.Error',
+                        ['%value%' => $combinationsInputs]
+                    )
+                );
             }
 
 
@@ -482,18 +524,18 @@ class ProductController extends FrameworkBundleAdminController
         $formBulkCombinations = $this->createForm(
             'PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk',
             null,
-            array(
+            [
                 'iso_code' => $this
                     ->get('prestashop.adapter.legacy.context')
                     ->getContext()->currency->iso_code,
                 'price_display_precision' => $this->configuration
                     ->get('_PS_PRICE_DISPLAY_PRECISION_'),
-            )
+            ]
         );
 
         // Legacy code. To fix when Object model will change. But report Hooks.
         $postData = $request->request->all();
-        $combinationsList = array();
+        $combinationsList = [];
         if (!empty($postData)) {
             foreach ((array)$postData as $postKey => $postValue) {
                 if (preg_match('/^combination_.*/', $postKey)) {
@@ -526,7 +568,6 @@ class ProductController extends FrameworkBundleAdminController
             }
 
             if ($form->isValid()) {
-
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
                 $_POST['state'] = Product::STATE_SAVED;
@@ -617,11 +658,11 @@ class ProductController extends FrameworkBundleAdminController
             ->findByLangAndShop(1, 1);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
-            ->setParams(array('product' => $product))
+            ->setParams(['product' => $product])
             ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
             ->present();
 
-        return array(
+        return [
             'form' => $form->createView(),
             'formCombinations' => $formBulkCombinations->createView(),
             'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
@@ -646,7 +687,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
-        );
+        ];
     }
 
     /**
@@ -654,7 +695,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param string $action The action to apply on the selected products
-     * @throws \Exception If action not properly set or unknown.
+     * @throws Exception If action not properly set or unknown.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkAction(Request $request, $action)
@@ -688,49 +729,93 @@ class ProductController extends FrameworkBundleAdminController
 
             switch ($action) {
                 case 'activate_all':
-                    $hookDispatcher->dispatchMultiple(['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList);
                     if (empty($hasMessages)) {
-                        $this->addFlash('success', $translator->trans('Product(s) successfully activated.', array(), 'Admin.Catalog.Notification'));
+                        $this->addFlash(
+                            'success',
+                            $translator->trans('Product(s) successfully activated.', [], 'Admin.Catalog.Notification')
+                        );
                     }
+
                     $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 case 'deactivate_all':
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList, false);
                     if (empty($hasMessages)) {
-                        $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.', array(), 'Admin.Catalog.Notification'));
+                        $this->addFlash(
+                            'success',
+                            $translator->trans('Product(s) successfully deactivated.', [], 'Admin.Catalog.Notification')
+                        );
                     }
+
                     $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 case 'delete_all':
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProductIdList($productIdList);
                     if (empty($hasMessages)) {
-                        $this->addFlash('success', $translator->trans('Product(s) successfully deleted.', array(), 'Admin.Catalog.Notification'));
+                        $this->addFlash(
+                            'success',
+                            $translator->trans('Product(s) successfully deleted.', [], 'Admin.Catalog.Notification')
+                        );
                     }
                     $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 case 'duplicate_all':
-                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->duplicateProductIdList($productIdList);
                     if (empty($hasMessages)) {
-                        $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.', array(), 'Admin.Catalog.Notification'));
+                        $this->addFlash(
+                            'success',
+                            $translator->trans('Product(s) successfully duplicated.', [], 'Admin.Catalog.Notification')
+                        );
                     }
                     $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 default:
-                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    /**
+                     * should never happens since the route parameters are
+                     * restricted to a set of action values in YML file.
+                     */
                     $logger->error('Bulk action from ProductController received a bad parameter.');
-                    throw new \Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
+                    throw new Exception(
+                        'Bad action received from call to ProductController::bulkAction: "' . $action . '"',
+                        2001
+                    );
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate this with an domain name
@@ -739,15 +824,16 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        return new Response(json_encode(array('result' => 'ok')));
+        return new Response(json_encode(['result' => 'ok']));
     }
 
     /**
-     * Do mass edit action on the current page of products. Used with the 'grouped action' dropdown menu on the Catalog page.
+     * Do mass edit action on the current page of products.
+     * Used with the 'grouped action' dropdown menu on the Catalog page.
      *
      * @param Request $request
      * @param string $action The action to apply on the selected products
-     * @throws \Exception If action not properly set or unknown.
+     * @throws Exception If action not properly set or unknown.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function massEditAction(Request $request, $action)
@@ -757,7 +843,7 @@ class ProductController extends FrameworkBundleAdminController
         if (!$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')) {
             $errorMessage = $translator->trans(
                 'You do not have permission to edit this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
             $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
@@ -783,27 +869,39 @@ class ProductController extends FrameworkBundleAdminController
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
                     $hookDispatcher->dispatchMultiple(
-                        array('actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'),
-                        array('product_list_id' => $productIdList, 'product_list_position' => $productPositionList)
+                        ['actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'],
+                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
                     );
                     // Hooks: managed in ProductUpdater
                     $persistedFilterParams = $productProvider->getPersistedFilterParameters();
                     $productList = array_combine($productIdList, $productPositionList);
                     $productUpdater->sortProductIdList(
                         $productList,
-                        array('filter_category' => $persistedFilterParams['filter_category'])
+                        ['filter_category' => $persistedFilterParams['filter_category']]
                     );
-                    $this->addFlash('success', $translator->trans('Products successfully sorted.', array(), 'Admin.Catalog.Notification'));
-                    $logger->info('Products sorted: (' . implode(',', $productIdList) . ') with positions (' . implode(',', $productPositionList) . ').');
+                    $this->addFlash(
+                        'success',
+                        $translator->trans('Products successfully sorted.', [], 'Admin.Catalog.Notification')
+                    );
+                    $logger->info(
+                        'Products sorted: (' . implode(',', $productIdList) .
+                        ') with positions (' . implode(',', $productPositionList) . ').'
+                    );
                     $hookDispatcher->dispatchMultiple(
-                        array('actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'),
-                        array('product_list_id' => $productIdList, 'product_list_position' => $productPositionList)
+                        ['actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'],
+                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
                     );
                     break;
                 default:
-                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    /**
+                     * should never happens since the route parameters are
+                     * restricted to a set of action values in YML file.
+                     */
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
-                    throw new \Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
+                    throw new Exception(
+                        'Bad action received from call to ProductController::massEditAction: "' . $action . '"',
+                        2001
+                    );
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with domain name
@@ -821,7 +919,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param string $action The action to apply on the selected product
      * @param integer $id The product ID to apply the action on.
-     * @throws \Exception If action not properly set or unknown.
+     * @throws Exception If action not properly set or unknown.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function unitAction($action, $id)
@@ -852,42 +950,84 @@ class ProductController extends FrameworkBundleAdminController
 
             switch ($action) {
                 case 'delete':
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProduct($id);
-                    $this->addFlash('success', $translator->trans('Product successfully deleted.', array(), 'Admin.Catalog.Notification'));
+                    $this->addFlash(
+                        'success',
+                        $translator->trans('Product successfully deleted.', [], 'Admin.Catalog.Notification')
+                    );
                     $logger->info('Product deleted: (' . $id . ').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 case 'duplicate':
-                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
-                    $this->addFlash('success', $translator->trans('Product successfully duplicated.', array(), 'Admin.Catalog.Notification'));
+                    $this->addFlash(
+                        'success',
+                        $translator->trans('Product successfully duplicated.', [], 'Admin.Catalog.Notification')
+                    );
                     $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'],
+                        $hookEventParameters
+                    );
                     // stops here and redirect to the new product's page.
-                    return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId));
+                    return $this->redirectToRoute('admin_product_form', ['id' => $duplicateProductId]);
                 case 'activate':
-                    $hookDispatcher->dispatchMultiple(['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id]);
-                    $this->addFlash('success', $translator->trans('Product successfully activated.', array(), 'Admin.Catalog.Notification'));
+                    $this->addFlash(
+                        'success',
+                        $translator->trans('Product successfully activated.', [], 'Admin.Catalog.Notification')
+                    );
                     $logger->info('Product activated: ' . $id);
-                    $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 case 'deactivate':
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'],
+                        $hookEventParameters
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id], false);
-                    $this->addFlash('success', $translator->trans('Product successfully deactivated.', array(), 'Admin.Catalog.Notification'));
+                    $this->addFlash(
+                        'success',
+                        $translator->trans('Product successfully deactivated.', [], 'Admin.Catalog.Notification')
+                    );
                     $logger->info('Product deactivated: ' . $id);
-                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'],
+                        $hookEventParameters
+                    );
                     break;
                 default:
-                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    /**
+                     * should never happens since the route parameters are
+                     * restricted to a set of action values in YML file.
+                     */
                     $logger->error('Unit action from ProductController received a bad parameter.');
-                    throw new \Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
+                    throw new Exception(
+                        'Bad action received from call to ProductController::unitAction: "' . $action . '"',
+                        2002
+                    );
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with a domain name
@@ -896,13 +1036,11 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        $urlGenerator = $this->get('prestashop.core.admin.url_generator');
-        return $this->redirect($urlGenerator->generate('admin_product_catalog'));
+        return $this->redirect($this->get('prestashop.core.admin.url_generator')->generate('admin_product_catalog'));
     }
 
     public function exportAction()
     {
-
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -911,23 +1049,23 @@ class ProductController extends FrameworkBundleAdminController
 
         // prepare callback to fetch data from DB
         $dataCallback = function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
-            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
+            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, [], true, false);
         };
 
         $translator = $this->get('translator');
 
-        $headersData = array(
+        $headersData = [
             'id_product' => 'Product ID',
-            'image_link' => $translator->trans('Image', array(), 'Admin.Global'),
-            'name' => $translator->trans('Name', array(), 'Admin.Global'),
-            'reference' => $translator->trans('Reference', array(), 'Admin.Global'),
-            'name_category' => $translator->trans('Category', array(), 'Admin.Global'),
-            'price' => $translator->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
-            'price_final' => $translator->trans('Price (tax incl.)', array(), 'Admin.Catalog.Feature'),
-            'sav_quantity' => $translator->trans('Quantity', array(), 'Admin.Global'),
-            'badge_danger' => $translator->trans('Status', array(), 'Admin.Global'),
-            'position' => $translator->trans('Position', array(), 'Admin.Global'),
-        );
+            'image_link' => $translator->trans('Image', [], 'Admin.Global'),
+            'name' => $translator->trans('Name', [], 'Admin.Global'),
+            'reference' => $translator->trans('Reference', [], 'Admin.Global'),
+            'name_category' => $translator->trans('Category', [], 'Admin.Global'),
+            'price' => $translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
+            'price_final' => $translator->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
+            'sav_quantity' => $translator->trans('Quantity', [], 'Admin.Global'),
+            'badge_danger' => $translator->trans('Status', [], 'Admin.Global'),
+            'position' => $translator->trans('Position', [], 'Admin.Global'),
+        ];
 
         return (new CsvResponse())
             ->setData($dataCallback)
@@ -957,14 +1095,19 @@ class ProductController extends FrameworkBundleAdminController
 
         $hookDispatcher = $this->get('prestashop.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
-        $hookDispatcher->dispatch('shouldUseLegacyPage', (new HookEvent())->setHookParameters(['page' => 'product', 'use_legacy' => $use]));
+        $hookDispatcher->dispatch(
+            'shouldUseLegacyPage',
+            (new HookEvent())->setHookParameters(['page' => 'product', 'use_legacy' => $use])
+        );
 
         $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
         $logger->info('Changed setting to use ' . ($use ? 'legacy' : 'new version') . ' pages for ProductController.');
 
         // Then redirect
-        $urlGenerator = $this->get($use ? 'prestashop.core.admin.url_generator_legacy' : 'prestashop.core.admin.url_generator');
+        $urlGenerator = $this->get(
+            $use ? 'prestashop.core.admin.url_generator_legacy' : 'prestashop.core.admin.url_generator'
+        );
         /* @var $urlGenerator UrlGeneratorInterface */
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
@@ -1069,7 +1212,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param $action
      * @param string $suffix
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
     {
@@ -1078,7 +1221,7 @@ class ProductController extends FrameworkBundleAdminController
         if ($action === 'delete' . $suffix) {
             return $translator->trans(
                 'You do not have permission to delete this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
         }
@@ -1086,7 +1229,7 @@ class ProductController extends FrameworkBundleAdminController
         if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
             return $translator->trans(
                 'You do not have permission to edit this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
         }
@@ -1094,11 +1237,11 @@ class ProductController extends FrameworkBundleAdminController
         if ($action === 'duplicate' . $suffix) {
             return $translator->trans(
                 'You do not have permission to add this.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
         }
 
-        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+        throw new Exception(sprintf('Invalid action (%s)', $action . $suffix));
     }
 }
