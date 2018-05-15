@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -132,10 +132,12 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static $_no_specific_values = array();
 
+    protected static $psQtyDiscountOnCombination = null;
+
     /**
      * Flush local cache
      */
-    protected function flushCache()
+    public static function flushCache()
     {
         self::$_specificPriceCache = array();
         self::$_couldHaveSpecificPriceCache = array();
@@ -143,6 +145,7 @@ class SpecificPriceCore extends ObjectModel
         self::$_filterOutCache = array();
         self::$_cache_priorities = array();
         self::$_no_specific_values = array();
+        self::$psQtyDiscountOnCombination = null;
         Product::flushPriceCache();
     }
 
@@ -486,9 +489,8 @@ class SpecificPriceCore extends ObjectModel
             return array();
         }
 
-        static $psQtyDiscountOnCombination = null;
-        if ($psQtyDiscountOnCombination === null) {
-            $psQtyDiscountOnCombination = Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION');
+        if (static::$psQtyDiscountOnCombination === null) {
+            static::$psQtyDiscountOnCombination = Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION');
             // no need to compute the key the first time the function is called, we know the cache has not
             // been computed yet
             $key = null;
@@ -534,7 +536,7 @@ class SpecificPriceCore extends ObjectModel
                 `id_group` '.self::formatIntInQuery(0, $id_group).' '.$query_extra.'
 				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
 
-            $query .= ($psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
+            $query .= (static::$psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
             $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
             self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         }
@@ -556,6 +558,11 @@ class SpecificPriceCore extends ObjectModel
         return Configuration::updateValue('PS_SPECIFIC_PRICE_PRIORITIES', rtrim($value, ';'));
     }
 
+    /**
+     * Truncate the specific price priorities
+     * 
+     * @return boolean
+     */
     public static function deletePriorities()
     {
         return Db::getInstance()->execute('
@@ -667,6 +674,13 @@ class SpecificPriceCore extends ObjectModel
         return $ids_product;
     }
 
+    /**
+     * Delete a product from its id
+     * 
+     * @param  int $id_product
+     * 
+     * @return boolean
+     */
     public static function deleteByProductId($id_product)
     {
         if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product)) {
@@ -677,6 +691,13 @@ class SpecificPriceCore extends ObjectModel
         return false;
     }
 
+    /**
+     * Duplicate a product
+     * 
+     * @param  boolean|int $id_product The product ID to duplicate, false when duplicating the current product
+     * 
+     * @return boolean
+     */
     public function duplicate($id_product = false)
     {
         if ($id_product) {
@@ -701,6 +722,23 @@ class SpecificPriceCore extends ObjectModel
         return $feature_active;
     }
 
+    /**
+     * Check if a specific price exists based on given parameters and return the specific rule id.
+     * 
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute Set at 0 when the specific price was set for all attributes
+     * @param  int  $id_shop              Set at 0 when the specific price was set for all shops
+     * @param  int  $id_group             Set at 0 when the specific price was set for all groups
+     * @param  int  $id_country           Set at 0 when the specific price was set for all countries
+     * @param  int  $id_currency          Set at 0 when the specific price was set for all currencies
+     * @param  int  $id_customer          Set at 0 when the specific price was set for all customers
+     * @param  int  $from_quantity        The starting quantity for which the specific price is applied
+     * @param  string $from               Date from which the specific price start. 0000-00-00 00:00:00 if no starting date
+     * @param  string $to                 Date from which the specific price end. 0000-00-00 00:00:00 if no ending date
+     * @param  boolean $rule              If a specific price rule (from specific_price_rule) was set or not.
+     * 
+     * @return int                        The specific rule id, 0 if no corresponding rule found
+     */
     public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
     {
         $rule = ' AND `id_specific_price_rule`'.(!$rule ? '=0' : '!=0');

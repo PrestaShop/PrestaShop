@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,7 +94,7 @@ define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
 define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
 define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 
-// PrestaShop autoload is used to load some helpfull classes like Tools.
+// PrestaShop autoload is used to load some helpful classes like Tools.
 // Add classes used by installer bellow.
 
 require_once _PS_CORE_DIR_.'/config/alias.php';

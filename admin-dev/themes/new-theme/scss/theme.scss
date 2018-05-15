@@ -29,8 +29,10 @@
 @import "components/ps_dropdown";
 @import "components/ps_number";
 @import "components/ps_radio";
+@import "components/ps_sortable_column";
 @import "components/ps_spinner";
 @import "components/ps_tree";
+@import "components/translatable_input";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -106,6 +108,10 @@ span.twitter-typeahead {
   &.visible {
     display: block;
   }
+}
+
+table.table {
+  font-size: 0.8rem;
 }
 
 // Needed to override the default inline style of modal header in translations-app

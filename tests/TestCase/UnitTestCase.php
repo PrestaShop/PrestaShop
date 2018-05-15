@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,28 +19,27 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace Tests\TestCase;
 
 use Cache;
 use Configuration;
 use Context;
 use Db;
-use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeEntityMapper;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
+use Tests\TestCase\FakeEntityMapper;
+use Tests\TestCase\FakeConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
-class UnitTestCase extends PHPUnit_Framework_TestCase
+class UnitTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Container
@@ -194,7 +193,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setupSfKernel()
     {
-        require_once __DIR__.'/../../app/autoload.php';
+        require_once __DIR__.'/../../vendor/autoload.php';
         require_once __DIR__.'/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
         $this->sfKernel->boot();

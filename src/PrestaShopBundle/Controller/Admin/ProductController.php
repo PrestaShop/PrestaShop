@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,7 +76,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @Template("@PrestaShop/Admin/Product/catalog.html.twig")
+     * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -177,7 +177,7 @@ class ProductController extends FrameworkBundleAdminController
         ) {
             // no filter, total filtered == 0, and then total count == 0 too.
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
-            return $this->render('PrestaShopBundle:Admin/Product:catalog_empty.html.twig', array(
+            return $this->render('PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'import_url' => $legacyUrlGenerator->generate('AdminImport'),
             ));
@@ -252,7 +252,7 @@ class ProductController extends FrameworkBundleAdminController
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc
      *
-     * @Template("@PrestaShop/Admin/Product/list.html.twig")
+     * @Template("@PrestaShop/Admin/Product/CatalogPage/Lists/list.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -318,7 +318,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
+            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,
@@ -378,13 +378,14 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form
      *
-     * @Template("@PrestaShop/Admin/Product/form.html.twig")
+     * @Template("@PrestaShop/Admin/Product/ProductPage/product.html.twig")
      * @param int $id The product ID
      * @param Request $request
      * @return array|Response Template vars
      */
     public function formAction($id, Request $request)
     {
+        gc_disable();
         if (
             !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
             && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
@@ -584,7 +585,7 @@ class ProductController extends FrameworkBundleAdminController
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isShopGroupContext()) {
-            return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig', ['showContentHeader' => false]);
+            return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', ['showContentHeader' => false]);
         }
 
         // languages for switch dropdown

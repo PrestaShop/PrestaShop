@@ -1,0 +1,107 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(searchParametersForm, {'method': 'POST', 'action': path('admin_search_logs') }) }}
+<table class="table">
+  <thead class="thead-default">
+    <tr class="column-headers">
+      <th scope="col" width="10%">
+        {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_log', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Employee'|trans({}, 'Admin.Global'), 'id_employee', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Severity (1-4)'|trans, 'severity', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Message'|trans({}, 'Admin.Global'), 'message', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Object type'|trans, 'object_type', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Object ID'|trans, 'object_id', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Error code'|trans, 'error_code', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Date'|trans({}, 'Admin.Global'), 'error_code', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+    <tr class="column-filters">
+      <th>{{ form_widget(searchParametersForm.id_log) }}</th>
+      <th>{{ form_widget(searchParametersForm.employee) }}</th>
+      <th>{{ form_widget(searchParametersForm.severity) }}</th>
+      <th>{{ form_widget(searchParametersForm.message) }}</th>
+      <th>{{ form_widget(searchParametersForm.object_type) }}</th>
+      <th>{{ form_widget(searchParametersForm.object_id) }}</th>
+      <th>{{ form_widget(searchParametersForm.error_code) }}</th>
+      <th>{{ form_widget(searchParametersForm.date_from) }} {{ form_widget(searchParametersForm.date_to) }}</th>
+      <th>
+        <button type="submit" class="btn btn-primary">
+          <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Action') }}
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody class="sql-manager" data-query="{{ sql_query }}">
+  {% for log in logs %}
+    <tr>
+      <th scope="row">{{ log.id_log }}</th>
+      <td>
+        {{ include('@AdvancedParameters/LogsPage/Blocks/employee_block.html.twig', {
+            'log': log
+          })
+        }}
+      </td>
+      <td class="text-center">{{ log.severity }}</td>
+      <td>{{ log.message }}</td>
+      <td class="text-center">{{ log.object_type }}</td>
+      <td class="text-center">{{ log.object_id }}</td>
+      <td class="text-center">{{ log.error_code }}</td>
+      <td>{{ log.date_add }}</td>
+      <td>&nbsp;</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{{ form_rest(searchParametersForm) }}
+{{ form_end(searchParametersForm) }}
+
+{% if logsSum >= 10 %}
+  <div class="row">
+    <div class="col-md-12">
+      {% set request = app.request %}
+      {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
+      {'limit': request.get('limit', 10), 'offset': request.get('offset', 0), 'total': logsSum, 'caller_route': request.attributes.get('_route') }))
+      }}
+    </div>
+  </div>
+{% endif %}

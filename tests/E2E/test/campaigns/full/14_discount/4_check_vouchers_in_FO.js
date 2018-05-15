@@ -46,8 +46,8 @@ scenario('Create a new "Cart Rule" in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
   for (let i = 0; i < cartRuleData.length; i++) {
-    commonDiscountScenarios.createCartRule(cartRuleData[i], 'codePromo' + (i+1));
-    commonDiscountScenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i+1));
+    commonDiscountScenarios.createCartRule(cartRuleData[i], 'codePromo' + (i + 1));
+    commonDiscountScenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i + 1));
   }
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
@@ -90,7 +90,7 @@ scenario('Check the total price after applying vouchers in the Front Office', ()
       return promise
         .then(() => client.getTextInVar(CheckoutOrderPage.cart_subtotal_products, "totalProducts"))
         .then(() => client.getTextInVar(CheckoutOrderPage.cart_subtotal_discount, "totalDiscount"))
-        .then(() => client.checkTotalPrice(CheckoutOrderPage.cart_total))
+        .then(() => client.checkTotalPrice(CheckoutOrderPage.cart_total));
     });
     test('should click on "Remove voucher" button', () => client.waitForExistAndClick(CheckoutOrderPage.remove_voucher_button));
     test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link));
@@ -99,7 +99,7 @@ scenario('Check the total price after applying vouchers in the Front Office', ()
       return promise
         .then(() => client.getTextInVar(CheckoutOrderPage.cart_subtotal_products, "totalProducts"))
         .then(() => client.getTextInVar(CheckoutOrderPage.cart_subtotal_discount, "totalDiscount"))
-        .then(() => client.checkTotalPrice(CheckoutOrderPage.cart_total, 'amount'))
+        .then(() => client.checkTotalPrice(CheckoutOrderPage.cart_total, 'amount'));
     });
   }, 'discount');
   scenario('Logout from the Front Office', client => {

@@ -4,6 +4,19 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {SearchProductPage} = require('../../selectors/FO/search_product_page');
 let promise = Promise.resolve();
 
+/**** Example of attribute data (all these properties are required) ****
+ * let data = {
+ *  name: 'attribute name',
+ *  public_name: 'the public name tha will be displayed to customers',
+ *  type: 'radio / select / color',
+ *  values: {
+ *    1: 'first value',
+ *    2: 'second value',
+ *    3: 'third value'
+ *  }
+ * };
+ */
+
 module.exports = {
   createAttribute(data) {
     scenario('Create a new "Attribute"', client => {
@@ -45,7 +58,7 @@ module.exports = {
       test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
       test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.selected_attribute));
       Object.keys(data.values).forEach(function (key) {
-        test('should click on "Edit" action for the the first value', () => client.waitForExistAndClick(AttributeSubMenu.update_value_button.replace('%POS', key)));
+        test('should click on "Edit" action', () => client.waitForExistAndClick(AttributeSubMenu.update_value_button.replace('%POS', key)));
         test('should set the "Value" input', () => client.waitAndSetValue(AttributeSubMenu.value_input, data.values[key]));
         test('should click on "Save" button', () => client.waitForExistAndClick(AttributeSubMenu.save_value_button));
       });
@@ -67,7 +80,7 @@ module.exports = {
   },
   deleteAttribute(data) {
     scenario('Delete the created "Attribute"', client => {
-      test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+      test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
       test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
       test('should delete the created attribute', () => client.clickOnAction(AttributeSubMenu.group_action_button, AttributeSubMenu.delete_attribute_button, 'delete'));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
@@ -78,7 +91,16 @@ module.exports = {
       test('should set the shop language to "English"', () => client.changeLanguage('english'));
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
-      test('should Check that the attribute has been deleted in the Front Office', () => client.checkDeleted(SearchProductPage.attribute_name));
+      test('should check that the attribute has been deleted in the Front Office', () => client.checkDeleted(SearchProductPage.attribute_name));
+    }, 'attribute_and_feature');
+  },
+  attributeBulkActions(data, action) {
+    scenario(action.charAt(0).toUpperCase() + action.slice(1) + ' the created "Attribute" using the bulk actions', client => {
+      test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+      test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
+      test('should select the created attribute', () => client.waitForExistAndClick(AttributeSubMenu.attribute_checkbox));
+      test('should ' + action + ' the created attribute', () => client.clickOnAction(AttributeSubMenu.bulk_actions, AttributeSubMenu.delete_bulk_action, action));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nThe selection has been successfully', 'contain'));
     }, 'attribute_and_feature');
   }
 };

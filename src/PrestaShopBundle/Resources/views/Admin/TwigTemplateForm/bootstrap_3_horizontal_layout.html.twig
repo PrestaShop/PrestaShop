@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -93,3 +93,27 @@
 {% block form_group_class -%}
     col-sm-10
 {%- endblock form_group_class %}
+
+{% block text_with_unit_widget %}
+<div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {% if form.vars.unit is defined %}
+        <span class="input-group-addon">{{ form.vars.unit }}</span>
+    {% endif %}
+</div>
+{% endblock text_with_unit_widget %}
+
+{% block ip_address_text_widget %}
+<div class="input-group">
+    {{- block('form_widget_simple') -}}
+    <button type="button" class="btn btn-outline-primary add_ip_button" data-ip="{{ currentIp }}">
+        <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
+    </button>
+</div>
+{% endblock ip_address_text_widget %}
+
+{% block switch_widget %}
+<div class="input-group">
+    {{- parent() -}}
+</div>
+{% endblock switch_widget %}

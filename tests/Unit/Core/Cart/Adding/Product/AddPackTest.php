@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Adding\CartRule;
+namespace Tests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
 use Product;
 use Pack;
 use StockAvailable;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
+use Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddPackTest extends AbstractCartTest
 {

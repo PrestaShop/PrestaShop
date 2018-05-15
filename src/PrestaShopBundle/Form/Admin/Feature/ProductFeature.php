@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -73,7 +73,6 @@ class ProductFeature extends CommonAbstractType
         $builder->add('feature', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Feature', array(), 'Admin.Catalog.Feature'),
             'choices' =>  $this->features,
-            'choices_as_values' => true,
             'required' =>  false,
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values', array('idFeature' => 1)),
@@ -86,7 +85,6 @@ class ProductFeature extends CommonAbstractType
         ->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
             'required' =>  false,
-            'choices_as_values' => true,
             'attr' => array(
                 'class' => 'feature-value-selector',
                 'data-minimumResultsForSearch' => '7',
@@ -149,7 +147,6 @@ class ProductFeature extends CommonAbstractType
                 'data-toggle' => 'select2',
             ),
             'choices' => $choices,
-            'choices_as_values' => true,
             'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
         ));
     }

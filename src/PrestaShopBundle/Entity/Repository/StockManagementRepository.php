@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -90,6 +90,15 @@ abstract class StockManagementRepository
      */
     protected $context;
 
+    /**
+     * @var int
+     */
+    protected $foundRows = 0;
+
+    /**
+     * @var array
+     */
+    protected $productFeatures = array();
 
     /**
      * @param ContainerInterface $container
@@ -106,8 +115,7 @@ abstract class StockManagementRepository
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         $tablePrefix
-    )
-    {
+    ) {
         $this->container = $container;
         $this->connection = $connection;
         $this->em = $entityManager;
@@ -142,6 +150,7 @@ abstract class StockManagementRepository
      */
     protected function addAdditionalData(array $rows)
     {
+        $rows = $this->addCombinationsAndFeatures($rows);
         $rows = $this->addImageThumbnailPaths($rows);
 
         return $rows;
@@ -153,7 +162,7 @@ abstract class StockManagementRepository
      */
     protected function addImageThumbnailPaths(array $rows)
     {
-        array_walk($rows, function (&$row) {
+        foreach ($rows as &$row) {
             $row['product_thumbnail'] = 'N/A';
             $row['combination_thumbnail'] = 'N/A';
 
@@ -168,7 +177,7 @@ abstract class StockManagementRepository
                     $row['combination_cover_id']
                 );
             }
-        });
+        }
 
         return $rows;
     }
@@ -190,6 +199,8 @@ abstract class StockManagementRepository
 
         $statement->execute();
         $rows = $statement->fetchAll();
+        $statement->closeCursor();
+        $this->foundRows = $this->getFoundRows();
 
         $rows = $this->addAdditionalData($rows);
 
@@ -217,7 +228,8 @@ abstract class StockManagementRepository
     public function countPages(QueryParamsCollection $queryParams)
     {
         $query = sprintf(
-            'SELECT CEIL(FOUND_ROWS() / :%s) as total_pages',
+            'SELECT CEIL(%d / :%s) as total_pages',
+            $this->foundRows,
             QueryParamsCollection::SQL_PARAM_MAX_RESULTS
         );
 
@@ -226,7 +238,10 @@ abstract class StockManagementRepository
 
         $statement->execute();
 
-        return (int)$statement->fetchColumn();
+        $count = (int)$statement->fetchColumn();
+        $statement->closeCursor();
+
+        return $count;
     }
 
     /**
@@ -239,9 +254,6 @@ abstract class StockManagementRepository
         $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
-            '{category_id}' => 'cp.id_category',
-            '{attributes}' => 'product_attributes.attributes',
-            '{features}' => 'product_features.features',
             '{id_employee}' => 'sm.id_employee',
             '{date_add}' => 'sm.date_add',
             '{id_stock_mvt_reason}' => 'sm.id_stock_mvt_reason',
@@ -320,8 +332,7 @@ abstract class StockManagementRepository
         Statement $statement,
         QueryParamsCollection $queryParams = null,
         ProductIdentity $productIdentity = null
-    )
-    {
+    ) {
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
@@ -379,5 +390,157 @@ abstract class StockManagementRepository
             $paginationParams[QueryParamsCollection::SQL_PARAM_MAX_RESULTS],
             PDO::PARAM_INT
         );
+    }
+
+    /**
+     * Store the number of rows found in a previous query executed with SQL_CALC_FOUND_ROWS
+     */
+    protected function getFoundRows()
+    {
+        $statement = $this->connection->prepare('SELECT FOUND_ROWS()');
+        $statement->execute();
+        $rowCount = (int)$statement->fetchColumn();
+        $statement->closeCursor();
+
+        return $rowCount;
+    }
+
+    /**
+     * Get the combination name subquery to be used in the select field of the main query
+     *
+     * @return string
+     */
+    protected function getCombinationNameSubquery()
+    {
+        return '(SELECT GROUP_CONCAT(
+                        DISTINCT CONCAT(agl.name, " - ", al.name)
+                        SEPARATOR ", "
+                    )
+                    FROM '.$this->tablePrefix.'product_attribute pa2
+                    JOIN '.$this->tablePrefix.'product_attribute_combination pac ON (
+                        pac.id_product_attribute = pa2.id_product_attribute
+                    )                    
+                    JOIN '.$this->tablePrefix.'attribute a ON (
+                        a.id_attribute = pac.id_attribute
+                    )
+                    JOIN '.$this->tablePrefix.'attribute_lang al ON (
+                        a.id_attribute = al.id_attribute
+                        AND al.id_lang = :language_id
+                    )
+                    JOIN '.$this->tablePrefix.'attribute_group ag ON (
+                        ag.id_attribute_group = a.id_attribute_group
+                    )
+                    JOIN '.$this->tablePrefix.'attribute_group_lang agl ON (
+                        ag.id_attribute_group = agl.id_attribute_group
+                        AND agl.id_lang = :language_id
+                    )                    
+                    WHERE pa2.id_product=p.id_product AND pa2.id_product_attribute=pa.id_product_attribute)
+                    AS combination_name';
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return string
+     */
+    protected function getProductFeatures(array $row)
+    {
+        if (!isset($this->productFeatures[$row['product_id']])) {
+            $query = 'SELECT GROUP_CONCAT(
+                      CONCAT(fp.id_feature, ":", fp.id_feature_value)
+                      ORDER BY fp.id_feature_value
+                    ) AS features
+                        FROM ' . $this->tablePrefix . 'feature_product fp
+                            JOIN  ' . $this->tablePrefix . 'feature f ON (
+                                fp.id_feature = f.id_feature
+                            )
+                            JOIN ' . $this->tablePrefix . 'feature_shop fs ON (
+                                fs.id_shop = :shop_id AND
+                                fs.id_feature = f.id_feature
+                            )
+                            JOIN ' . $this->tablePrefix . 'feature_value fv ON (
+                                f.id_feature = fv.id_feature AND
+                                fp.id_feature_value = fv.id_feature_value
+                            )
+                        WHERE fv.custom = 0 AND fp.id_product=:id_product';
+            $statement = $this->connection->prepare($query);
+            $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
+            $statement->bindValue('shop_id', $this->shopId, \PDO::PARAM_INT);
+            $statement->execute();
+            $this->productFeatures[$row['product_id']] = $statement->fetchColumn(0);
+            $statement->closeCursor();
+        }
+
+        return (string)$this->productFeatures[$row['product_id']];
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return int
+     */
+    protected function getCombinationCoverId(array $row)
+    {
+        $query = 'SELECT id_image 
+                  FROM '.$this->tablePrefix.'product_attribute_image pai
+                  WHERE id_product_attribute=:id_product_attribute
+                  LIMIT 1';
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue('id_product_attribute', (int)$row['combination_id'], \PDO::PARAM_INT);
+        $statement->execute();
+        $combinationCoverId = (int)$statement->fetchColumn(0);
+        $statement->closeCursor();
+
+        return $combinationCoverId;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return string
+     */
+    protected function getProductAttributes(array $row)
+    {
+        $query = 'SELECT GROUP_CONCAT(
+                    CONCAT(ag.id_attribute_group, ":", a.id_attribute)
+                    ORDER BY ag.id_attribute_group, a.id_attribute
+                ) AS attributes
+                    FROM '.$this->tablePrefix.'product_attribute_combination pac
+                        JOIN '.$this->tablePrefix.'attribute a ON (
+                            pac.id_attribute = a.id_attribute
+                        )
+                        JOIN '.$this->tablePrefix.'attribute_group ag ON (
+                            ag.id_attribute_group = a.id_attribute_group
+                        )                    
+                    WHERE pac.id_product_attribute=:id_product_attribute';
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue('id_product_attribute', (int)$row['combination_id'], \PDO::PARAM_INT);
+        $statement->execute();
+        $productAttributes = $statement->fetchColumn(0);
+        $statement->closeCursor();
+
+        return (string)$productAttributes;
+    }
+
+    /**
+     * @param array $rows
+     *
+     * @return array
+     */
+    protected function addCombinationsAndFeatures(array $rows)
+    {
+        foreach ($rows as &$row) {
+            $row['product_features'] = $this->getProductFeatures($row);
+            if ($row['combination_id'] != 0) {
+                $row['combination_cover_id'] = $this->getCombinationCoverId($row);
+                $row['product_attributes'] = $this->getProductAttributes($row);
+            } else {
+                $row['combination_name'] = 'N/A';
+                $row['combination_cover_id'] = 0;
+                $row['product_attributes'] = '';
+            }
+        }
+
+        return $rows;
     }
 }

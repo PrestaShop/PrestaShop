@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle\Api;
+namespace Tests\Unit\PrestaShopBundle\Api;
 
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 use Prophecy\Prophet;
@@ -35,7 +35,7 @@ use Prophecy\Prophet;
 /**
  * @group api
  */
-class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
+class QueryParamsCollectionTest extends TestCase
 {
     /**
      * @var Prophet
@@ -282,12 +282,14 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             ),
             array(
                 array('category_id' => 1),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND FIND_IN_SET({category_id}, :categories_ids)'),
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
                 $categoryFilterMessage
             ),
             array(
                 array('category_id' => array(1, 2)),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND FIND_IN_SET({category_id}, :categories_ids)'),
+                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
                 $categoryFilterMessage
             ),
             array(
@@ -344,34 +346,96 @@ class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
             array(
                 array('attributes' => '1:2'),
                 array(
-                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND '.
-                        'FIND_IN_SET(:attribute_0, {attributes})'
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
+                    FROM {table_prefix}product_attribute_combination pac
+                        LEFT JOIN {table_prefix}attribute a ON (
+                            pac.id_attribute = a.id_attribute
+                        )                   
+                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                    AND a.id_attribute=:attribute_id_0
+                    AND a.id_attribute_group=:attribute_group_id_0)'
                 ),
                 $attributesFilterMessage
             ),
             array(
                 array('attributes' => array('1:2', '3:14')),
                 array(
-                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND ' .
-                        'FIND_IN_SET(:attribute_0, {attributes})' . "\n" .
-                        'AND FIND_IN_SET(:attribute_1, {attributes})'
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
+                    FROM {table_prefix}product_attribute_combination pac
+                        LEFT JOIN {table_prefix}attribute a ON (
+                            pac.id_attribute = a.id_attribute
+                        )                   
+                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                    AND a.id_attribute=:attribute_id_0
+                    AND a.id_attribute_group=:attribute_group_id_0)
+AND EXISTS(SELECT 1
+                    FROM {table_prefix}product_attribute_combination pac
+                        LEFT JOIN {table_prefix}attribute a ON (
+                            pac.id_attribute = a.id_attribute
+                        )                   
+                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                    AND a.id_attribute=:attribute_id_1
+                    AND a.id_attribute_group=:attribute_group_id_1)'
                 ),
                 $attributesFilterMessage
             ),
             array(
                 array('features' => '5:1'),
                 array(
-                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND ' .
-                        'FIND_IN_SET(:feature_0, {features})'
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
+                    FROM {table_prefix}feature_product fp
+                        LEFT JOIN  {table_prefix}feature f ON (
+                            fp.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_shop fs ON (
+                            fs.id_shop = :shop_id AND
+                            fs.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_value fv ON (
+                            f.id_feature = fv.id_feature AND
+                            fp.id_feature_value = fv.id_feature_value
+                        )
+                    WHERE fv.custom = 0 AND fp.id_product=p.id_product
+                    AND fp.id_feature=:feature_id_0 
+                    AND fp.id_feature_value=:feature_value_id_0)'
                 ),
                 $featuresFilterMessage
             ),
             array(
                 array('features' => array('5:1', '6:11')),
                 array(
-                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND ' .
-                        'FIND_IN_SET(:feature_0, {features})' . "\n" .
-                        'AND FIND_IN_SET(:feature_1, {features})'
+                    QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
+                    FROM {table_prefix}feature_product fp
+                        LEFT JOIN  {table_prefix}feature f ON (
+                            fp.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_shop fs ON (
+                            fs.id_shop = :shop_id AND
+                            fs.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_value fv ON (
+                            f.id_feature = fv.id_feature AND
+                            fp.id_feature_value = fv.id_feature_value
+                        )
+                    WHERE fv.custom = 0 AND fp.id_product=p.id_product
+                    AND fp.id_feature=:feature_id_0 
+                    AND fp.id_feature_value=:feature_value_id_0)
+AND EXISTS(SELECT 1
+                    FROM {table_prefix}feature_product fp
+                        LEFT JOIN  {table_prefix}feature f ON (
+                            fp.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_shop fs ON (
+                            fs.id_shop = :shop_id AND
+                            fs.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_value fv ON (
+                            f.id_feature = fv.id_feature AND
+                            fp.id_feature_value = fv.id_feature_value
+                        )
+                    WHERE fv.custom = 0 AND fp.id_product=p.id_product
+                    AND fp.id_feature=:feature_id_1 
+                    AND fp.id_feature_value=:feature_value_id_1)'
                 ),
                 $featuresFilterMessage
             )

@@ -13,15 +13,13 @@ Allow: */modules/*.js
 Allow: */modules/*.png
 Allow: */modules/*.jpg
 # Private pages
-Disallow: /*?orderby=
-Disallow: /*?orderway=
+Disallow: /*?order=
 Disallow: /*?tag=
 Disallow: /*?id_currency=
 Disallow: /*?search_query=
 Disallow: /*?back=
 Disallow: /*?n=
-Disallow: /*&orderby=
-Disallow: /*&orderway=
+Disallow: /*&order=
 Disallow: /*&tag=
 Disallow: /*&id_currency=
 Disallow: /*&search_query=

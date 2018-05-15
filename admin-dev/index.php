@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,8 +60,6 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
     $_REQUEST['controller'] = strtolower($_REQUEST['tab']);
 }
 
-// Prepare Symfony kernel to resolve route.
-$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 // Enable APC for autoloading to improve performance.
 // You should change the ApcClassLoader first argument to a unique prefix
 // in order to prevent cache key conflicts with other applications
@@ -77,12 +75,17 @@ if (_PS_MODE_DEV_) {
 require_once __DIR__.'/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';
 $kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
-$kernel->loadClassCache();
+if (PHP_VERSION_ID < 70000) {
+    $kernel->loadClassCache();
+}
 //$kernel = new AppCache($kernel);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
+Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
+
 try {
+    require_once __DIR__.'/../autoload.php';
     $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
     $response->send();
     $kernel->terminate($request, $response);

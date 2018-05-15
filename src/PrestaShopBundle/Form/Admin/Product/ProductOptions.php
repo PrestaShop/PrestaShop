@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,7 +98,6 @@ class ProductOptions extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'Admin.Catalog.Feature'),
         ))
@@ -167,13 +166,11 @@ class ProductOptions extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'Admin.Catalog.Feature')
         ))
         ->add('suppliers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->suppliers,
-            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
@@ -184,7 +181,6 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('default_supplier', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->suppliers,
-            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  false,
             'required' =>  true,
@@ -227,7 +223,6 @@ class ProductOptions extends CommonAbstractType
             'expanded'  => true,
             'multiple'  => true,
             'choices'  => $this->attachmentList,
-            'choices_as_values' => true,
             'choice_label' => function ($choice, $key, $value) {
                 $attachmentKey = array_search($key, array_column($this->fullAttachmentList, 'file'));
                 return $this->fullAttachmentList[$attachmentKey]['name'];

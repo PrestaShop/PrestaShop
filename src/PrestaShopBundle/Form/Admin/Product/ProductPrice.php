@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -113,7 +113,6 @@ class ProductPrice extends CommonAbstractType
         ->add('id_tax_rules_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->tax_rules,
             'required' => true,
-            'choices_as_values' => true,
             'choice_attr' => function ($val) {
                 return [
                     'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
@@ -161,7 +160,6 @@ class ProductPrice extends CommonAbstractType
         for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
             $builder->add('specificPricePriority_'.$i, 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' => $specificPricePriorityChoices,
-                'choices_as_values' => true,
                 'required' => true
             ));
         }

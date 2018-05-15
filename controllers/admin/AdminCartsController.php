@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -428,7 +428,7 @@ class AdminCartsControllerCore extends AdminController
                     }
                 }
             }
-            $this->setMedia();
+            $this->setMedia(false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
                                                             'css_files' => $this->css_files));
@@ -741,14 +741,15 @@ class AdminCartsControllerCore extends AdminController
     public function displayAjaxSearchCarts()
     {
         $id_customer = (int)Tools::getValue('id_customer');
-        $carts = Cart::getCustomerCarts((int)$id_customer);
+        $carts = Cart::getCustomerCarts((int)$id_customer, false);
         $orders = Order::getCustomerOrders((int)$id_customer);
 
         if (count($carts)) {
             foreach ($carts as $key => &$cart) {
                 $cart_obj = new Cart((int)$cart['id_cart']);
-                if ($cart['id_cart'] == $this->context->cart->id || !Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists()) {
+                if ($cart['id_cart'] == $this->context->cart->id) {
                     unset($carts[$key]);
+                    continue;
                 }
                 $currency = new Currency((int)$cart['id_currency']);
                 $cart['total_price'] = Tools::displayPrice($cart_obj->getOrderTotal(), $currency);

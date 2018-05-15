@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -452,12 +453,6 @@ class FrontControllerCore extends Controller
             if (Validate::isLoadedObject($country)) {
                 $display_tax_label = $country->display_tax_label;
             }
-        }
-
-        $languages = Language::getLanguages(true, $this->context->shop->id);
-        $meta_language = array();
-        foreach ($languages as $lang) {
-            $meta_language[] = $lang['iso_code'];
         }
 
         /*
@@ -1215,7 +1210,7 @@ class FrontControllerCore extends Controller
         foreach ($libraries as $library) {
             if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
                 foreach ($assets as $asset) {
-                    $this->$asset['type']($library, $asset['path'], $asset['params']);
+                    $this->{$asset['type']}($library, $asset['path'], $asset['params']);
                 }
             }
         }
@@ -1510,12 +1505,17 @@ class FrontControllerCore extends Controller
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, array('login' => '1'));
         $urls['pages'] = $pages;
 
+        $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
+
         $urls['theme_assets'] = __PS_BASE_URI__.'themes/'.$this->context->shop->theme->getName().'/assets/';
 
         $urls['actions'] = array(
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
         );
-
+        
+        $imageRetriever = new ImageRetriever($this->context->link);
+        $urls['no_picture_image'] =  $imageRetriever->getNoPictureImage($this->context->language);
+        
         return $urls;
     }
 
@@ -1730,7 +1730,11 @@ class FrontControllerCore extends Controller
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
         $params = array();
-        parse_str($_SERVER['QUERY_STRING'], $params);
+        $paramsFromUri = '';
+        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
+        }
+        parse_str($paramsFromUri, $params);
 
         if (null !== $extraParams) {
             foreach ($extraParams as $key => $value) {
@@ -1964,5 +1968,24 @@ class FrontControllerCore extends Controller
         $container->compile();
 
         return $container;
+    }
+
+    /**
+     * @return array containing the URLs of the same page but for different languages
+     */
+    protected function getAlternativeLangsUrl()
+    {
+        $alternativeLangs = array();
+        $languages = Language::getLanguages(true, $this->context->shop->id);
+
+        if ($languages < 2) {
+            // No need to display alternative lang if there is only one enabled
+            return $alternativeLangs;
+        }
+
+        foreach ($languages as $lang) {
+            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+        }
+        return $alternativeLangs;
     }
 }

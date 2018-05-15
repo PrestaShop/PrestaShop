@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -210,5 +210,45 @@ class ImageRetriever
             'large'  => $large,
             'legend' => ''
         ];
+    }
+
+    public function getNoPictureImage(Language $language)
+    {
+        $urls  = [];
+        $type = 'products';
+        $image_types = ImageType::getImagesTypes($type, true);
+        
+        foreach ($image_types as $image_type) {
+            
+            $url = $this->link->getImageLink(
+                '',
+                $language->iso_code.'-default',
+                $image_type['name']
+            );
+
+            $urls[$image_type['name']] = [
+                'url'      => $url,
+                'width'     => (int)$image_type['width'],
+                'height'    => (int)$image_type['height'],
+            ];
+        }
+        
+        uasort($urls, function (array $a, array $b) {
+            return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
+        });
+
+        $keys = array_keys($urls);
+
+        $small  = $urls[$keys[0]];
+        $large  = end($urls);
+        $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
+        
+        return array(
+            'bySize' => $urls,
+            'small'  => $small,
+            'medium' => $medium,
+            'large'  => $large,
+            'legend' => ''
+        );
     }
 }

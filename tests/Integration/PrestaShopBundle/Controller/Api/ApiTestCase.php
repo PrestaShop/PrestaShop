@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,28 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
+namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophet;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
 {
-    /**
-     * @var \Prophecy\Prophet
-     */
-    protected $prophet;
-
     /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
@@ -49,131 +42,168 @@ abstract class ApiTestCase extends WebTestCase
     /**
      * @var \Symfony\Component\BrowserKit\Client
      */
-    protected $client;
+    protected static $client;
+
+    /**
+     * Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected static $container;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->prophet = new Prophet();
+        self::$kernel = static::bootKernel();
+        self::$container = self::$kernel->getContainer();
 
-        $this->client = $this->createClient();
+        $this->router = self::$container->get('router');
 
-        $container = self::$kernel->getContainer();
-        $this->router = $container->get('router');
         $legacyContextMock = $this->mockContextAdapter();
-        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
+        self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
+
+        $client = self::$kernel->getContainer()->get('test.client');
+        $client->setServerParameters(array());
+
+        self::$client = $client;
     }
 
     public function tearDown()
     {
-        $this->prophet->checkPredictions();
-
         parent::tearDown();
+
+        self::$container = null;
+        self::$kernel = null;
+        self::$client = null;
+
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockContextAdapter()
     {
-        /** @var LegacyContext|ObjectProphecy $legacyContextMock */
-        $legacyContextMock = $this->prophet->prophesize('\PrestaShop\PrestaShop\Adapter\LegacyContext');
+        $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
+            ->setMethods(array(
+                'getContext',
+                'getEmployeeLanguageIso',
+                'getEmployeeCurrency',
+                'getRootUrl',
+                'getLanguage'
+            ))
+            ->getMock()
+        ;
 
         $contextMock = $this->mockContext();
-        $legacyContextMock->getContext()->willReturn($contextMock->reveal());
+        $legacyContextMock->method('getContext')->willReturn($contextMock);
 
-        $legacyContextMock->getEmployeeLanguageIso()->willReturn(null);
-        $legacyContextMock->getEmployeeCurrency()->willReturn(null);
-        $legacyContextMock->getRootUrl()->willReturn(null);
-        $legacyContextMock->getLanguage()->willReturn(new \Language());
+        $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
+        $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
+        $legacyContextMock->method('getRootUrl')->willReturn(null);
+        $legacyContextMock->method('getLanguage')->willReturn(new \Language());
 
         return $legacyContextMock;
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockContext()
     {
-        $contextMock = $this->prophet->prophesize('\Context');
+        $contextMock = $this->getMockBuilder('\Context')->getMock();
 
         $employeeMock = $this->mockEmployee();
-        $contextMock->employee = $employeeMock->reveal();
+        $contextMock->employee = $employeeMock;
 
         $languageMock = $this->mockLanguage();
-        $contextMock->language = $languageMock->reveal();
+        $contextMock->language = $languageMock;
 
         $linkMock = $this->mockLink();
-        $contextMock->link = $linkMock->reveal();
+        $contextMock->link = $linkMock;
 
         $shopMock = $this->mockShop();
-        $contextMock->shop = $shopMock->reveal();
+        $contextMock->shop = $shopMock;
 
         $controllerMock = $this->mockController();
-        $contextMock->controller = $controllerMock->reveal();
+        $contextMock->controller = $controllerMock;
 
-        $contextMock->currency = (object)array('sign' => '$');
+        $contextMock->currency = (object) array('sign' => '$');
 
-        Context::setInstanceForTesting($contextMock->reveal());
+        Context::setInstanceForTesting($contextMock);
 
         return $contextMock;
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockEmployee()
     {
-        $employeeMock = $this->prophet->prophesize('\Employee');
+        $employeeMock = $this->getMockBuilder('\Employee')->getMock();
         $employeeMock->id_lang = 1;
 
         return $employeeMock;
     }
 
     /**
-     * @return object
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockLanguage()
     {
-        $languageMock = $this->prophet->prophesize('\Language');
+        $languageMock = $this->getMockBuilder('\Language')
+            ->getMock()
+        ;
+
         $languageMock->iso_code = 'en-US';
 
         return $languageMock;
     }
 
     /**
-     * @return object
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockLink()
     {
-        $linkMock = $this->prophet->prophesize('\Link');
-
-        return $linkMock;
+        return $this->getMockBuilder('\Link')->getMock();
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     private function mockShop()
     {
-        /** @var \Shop $shopMock */
-        $shopMock = $this->prophet->prophesize('\Shop');
-        $shopMock->getContextualShopId()->willReturn(1);
-        $shopMock->getCategory()->willReturn(1);
-        $shopMock->getContextType()->willReturn(Shop::CONTEXT_SHOP);
+        $shopMock = $this->getMockBuilder('\Shop')
+            ->setMethods(array(
+                'getContextualShopId',
+                'getCategory',
+                'getContextType',
+                'getGroup',
+            ))
+            ->getMock()
+        ;
+
+        $shopMock->method('getContextualShopId')->willReturn(1);
+        $shopMock->method('getCategory')->willReturn(1);
+        $shopMock->method('getContextType')->willReturn(Shop::CONTEXT_SHOP);
         $shopMock->id = 1;
 
-        $shopGroupMock = $this->prophet->prophesize('\ShopGroup');
+        $shopGroupMock = $this->getMockBuilder('\ShopGroup')->getMock();
+
         $shopGroupMock->id = 1;
-        $shopMock->getGroup()->willReturn($shopGroupMock);
+        $shopMock->method('getGroup')->willReturn($shopGroupMock);
 
         return $shopMock;
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function mockController()
     {
-        $controller = $this->prophesize('\AdminController');
+        $controller = $this->getMockBuilder('\AdminController')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
         $controller->controller_type = 'admin';
 
         return $controller;
@@ -186,10 +216,10 @@ abstract class ApiTestCase extends WebTestCase
     protected function assertBadRequest($route, $params)
     {
         $route = $this->router->generate($route, $params);
-        $this->client->request('GET', $route);
+        self::$client->request('GET', $route);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
+        $response = self::$client->getResponse();
         $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
     }
 
@@ -200,10 +230,10 @@ abstract class ApiTestCase extends WebTestCase
     protected function assetOkRequest($route, $params)
     {
         $route = $this->router->generate($route, $params);
-        $this->client->request('GET', $route);
+        self::$client->request('GET', $route);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
+        $response = self::$client->getResponse();
         $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 
@@ -214,7 +244,7 @@ abstract class ApiTestCase extends WebTestCase
     protected function assertResponseBodyValidJson($expectedStatusCode)
     {
         /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
-        $response = $this->client->getResponse();
+        $response = self::$client->getResponse();
 
         $message = 'Unexpected status code.';
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
+namespace Tests\Integration\PrestaShopBundle\Test;
 
-use PrestaShopBundle\Tests\Utils\Database;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 
@@ -131,8 +131,8 @@ class WebTestCase extends TestCase
             ->getMock();
 
         $values = array(
-            array('_PS_MODE_DEMO_', true),
-            array('_PS_MODULE_DIR_', __DIR__.'/../../../resources/modules/'),
+            array('_PS_MODE_DEMO_', null, true),
+            array('_PS_MODULE_DIR_', null, __DIR__.'/../../../resources/modules/'),
         );
 
         $configurationMock->method('get')

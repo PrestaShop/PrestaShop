@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -280,6 +280,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     public function processInstallTheme()
     {
         $this->initializeContext();
+        Search::indexation(true);
         $this->model_install->installTheme();
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
@@ -293,50 +294,39 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function display()
     {
-        // The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
-        $low_memory = Tools::getMemoryLimit() < Tools::getOctets('42M');
-
         // We fill the process step used for Ajax queries
         $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDefaultData', 'lang' => $this->translator->trans('Create default shop and languages', array(), 'Install'));
 
-        // If low memory, create subtasks for populateDatabase step (entity per entity)
         $populate_step = array('key' => 'populateDatabase', 'lang' => $this->translator->trans('Populate database tables', array(), 'Install'));
-        if ($low_memory) {
-            $populate_step['subtasks'] = array();
-            $xml_loader = new XmlLoader();
-            $xml_loader->setTranslator($this->translator);
+        $populate_step['subtasks'] = array();
+        $xml_loader = new XmlLoader();
+        $xml_loader->setTranslator($this->translator);
 
-            foreach ($xml_loader->getSortedEntities() as $entity) {
-                $populate_step['subtasks'][] = array('entity' => $entity);
-            }
+        foreach ($xml_loader->getSortedEntities() as $entity) {
+            $populate_step['subtasks'][] = array('entity' => $entity);
         }
 
         $this->process_steps[] = $populate_step;
         $this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->translator->trans('Configure shop information', array(), 'Install'));
 
         if ($this->session->install_type == 'full') {
-            // If low memory, create subtasks for installFixtures step (entity per entity)
             $fixtures_step = array('key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', array(), 'Install'));
-            if ($low_memory) {
-                $fixtures_step['subtasks'] = array();
-                $xml_loader = new XmlLoader();
-                $xml_loader->setTranslator($this->translator);
-                $xml_loader->setFixturesPath();
+            $fixtures_step['subtasks'] = array();
+            $xml_loader = new XmlLoader();
+            $xml_loader->setTranslator($this->translator);
+            $xml_loader->setFixturesPath();
 
-                foreach ($xml_loader->getSortedEntities() as $entity) {
-                    $fixtures_step['subtasks'][] = array('entity' => $entity);
-                }
+            foreach ($xml_loader->getSortedEntities() as $entity) {
+                $fixtures_step['subtasks'][] = array('entity' => $entity);
             }
             $this->process_steps[] = $fixtures_step;
         }
 
         $install_modules = array('key' => 'installModules', 'lang' => $this->translator->trans('Install modules', array(), 'Install'));
-        if ($low_memory) {
-            foreach ($this->model_install->getModulesList() as $module) {
-                $install_modules['subtasks'][] = array('module' => $module);
-            }
+        foreach ($this->model_install->getModulesList() as $module) {
+            $install_modules['subtasks'][] = array('module' => $module);
         }
         $this->process_steps[] = $install_modules;
 
@@ -350,11 +340,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             'version' => _PS_INSTALL_VERSION_
         );
 
-        if ($low_memory) {
-            foreach ($this->model_install->getAddonsModulesList($params) as $module) {
-                $install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
-            }
+        foreach ($this->model_install->getAddonsModulesList($params) as $module) {
+            $install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
         }
+
         $this->process_steps[] = $install_modules;
 
         $this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->translator->trans('Install theme', array(), 'Install'));

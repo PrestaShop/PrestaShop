@@ -111,9 +111,9 @@
           <i>To install PrestaShop <?= _PS_INSTALL_VERSION_ ?> you need to update your version of PHP.</i>
       </li>
     <?php endif; ?>
-        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache')): ?>
+        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
       <li>
-          PrestaShop installation needs to write critical files in the folder app/cache.
+          PrestaShop installation needs to write critical files in the folder var/cache.
           <i>Please review the permissions on your server.</i>
       </li>
     <?php endif; ?>

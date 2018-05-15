@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,6 +115,15 @@ class CurrencyCore extends ObjectModel
         if (!$this->conversion_rate) {
             $this->conversion_rate = 1;
         }
+    }
+
+    /**
+     * reset static cache (eg unit testing purpose)
+     */
+    static public function resetStaticCache()
+    {
+        static::$currencies = array();
+        static::$countActiveCurrencies = array();
     }
 
     /**
@@ -242,6 +251,35 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Is this currency installed for a given shop ?
+     * (current shop by default)
+     *
+     * @param int|null $currencyId
+     *  The currency to look for (
+     *
+     * @param int|null $shopId
+     *  The given shop's id
+     *
+     * @return bool
+     *  True if this currency is installed for the given shop
+     */
+    public function isInstalled($currencyId = null, $shopId = null)
+    {
+        $currencyId = $currencyId ?: $this->id;
+        $shopId     = $shopId ?: Context::getContext()->shop->id;
+        $sql        = (new DbQuery)
+            ->select('1')
+            ->from('currency', 'c')
+            ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
+            ->where('c.`id_currency` = ' . (int)$currencyId)
+            ->where('cs.`id_shop` = ' . (int)$shopId)
+            ->where('c.`deleted` = 0')
+            ->where('c.`active` = 1');
+
+        return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+    }
+
+    /**
      * Return available currencies
      *
      * @param bool $object
@@ -262,6 +300,21 @@ class CurrencyCore extends ObjectModel
             ' ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($tab, $object);
+    }
+
+    public function getInstalledCurrencies($shopId = null)
+    {
+        $shopId = $shopId ?: Context::getContext()->shop->id;
+        $sql    = (new DbQuery)
+            ->select('c.*, cl.*')
+            ->from('currency', 'c')
+            ->innerJoin('currency_lang', 'cl', 'c.`id_currency` = cl.`id_currency`')
+            ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
+            ->where('cs.`id_shop` = ' . (int)$shopId)
+            ->where('c.`deleted` = 0')
+            ->where('c.`active` = 1');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /**
@@ -367,12 +420,12 @@ class CurrencyCore extends ObjectModel
      * @param int  $idModule Module ID
      * @param null $idShop   Shop ID
      *
-     * @return array|bool|false|mysqli_result|null|PDOStatement|resource
+     * @return array|null|PDOStatement|resource
      */
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
         if (empty($idModule)) {
-            return false;
+            return array();
         }
 
         if (is_null($idShop)) {
@@ -385,7 +438,8 @@ class CurrencyCore extends ObjectModel
         $sql->where('mc.`id_module` = '.(int) $idModule);
         $sql->where('mc.`id_shop` = '.(int) $idShop);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        return $currencies ? $currencies : array();
     }
 
     /**

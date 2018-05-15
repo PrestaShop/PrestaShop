@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -61,9 +61,9 @@ class AdminPaymentControllerCore extends AdminController
         return parent::initContent();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('fancybox');
     }
 
@@ -92,7 +92,6 @@ class AdminPaymentControllerCore extends AdminController
     {
         if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
             $active_list = array();
-            $unactive_list = array();
             foreach ($this->modules_list as $key => $module) {
                 if (in_array($module->name, $this->list_partners_modules)) {
                     $this->modules_list[$key]->type = 'addonsPartner';
@@ -116,8 +115,6 @@ class AdminPaymentControllerCore extends AdminController
 
                 if ($module->active) {
                     $active_list[] = $module;
-                } else {
-                    $unactive_list[] = $module;
                 }
             }
 
@@ -134,7 +131,7 @@ class AdminPaymentControllerCore extends AdminController
                 'panel_id' => 'recommended-payment-gateways-panel',
                 'view_all' => true
             ));
-            $fetch .= $helper->renderModulesList($unactive_list);
+            $fetch .= parent::renderModulesList();
             return $fetch;
         }
     }

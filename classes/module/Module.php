@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1506,7 +1506,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        usort($module_list, create_function('$a,$b', 'return strnatcasecmp($a->displayName, $b->displayName);'));
+        usort($module_list, function ($a, $b) { return strnatcasecmp($a->displayName, $b->displayName); });
         if ($errors) {
             if (!isset(Context::getContext()->controller) && !Context::getContext()->controller->controller_name) {
                 echo '<div class="alert error"><h3>'.Context::getContext()->getTranslator()->trans('The following module(s) could not be loaded', array(), 'Admin.Modules.Notification').':</h3><ol>';

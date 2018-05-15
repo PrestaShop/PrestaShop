@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,15 +54,20 @@ class StockRepository extends StockManagementRepository
     private $orderStates = array();
 
     /**
-     * StockRepository constructor.
-     * @param ContainerInterface $container
-     * @param Connection $connection
-     * @param EntityManager $entityManager
-     * @param ContextAdapter $contextAdapter
-     * @param ImageManager $imageManager
-     * @param StockManager $stockManager
-     * @param $tablePrefix
+     * @var array
      */
+    private $totalCombinations = array();
+
+    /**
+      * StockRepository constructor.
+      * @param ContainerInterface $container
+      * @param Connection $connection
+      * @param EntityManager $entityManager
+      * @param ContextAdapter $contextAdapter
+      * @param ImageManager $imageManager
+      * @param StockManager $stockManager
+      * @param $tablePrefix
+      */
     public function __construct(
         ContainerInterface $container,
         Connection $connection,
@@ -71,8 +76,7 @@ class StockRepository extends StockManagementRepository
         ImageManager $imageManager,
         StockManager $stockManager,
         $tablePrefix
-    )
-    {
+    ) {
         parent::__construct(
             $container,
             $connection,
@@ -167,6 +171,8 @@ class StockRepository extends StockManagementRepository
 
         $statement->execute();
         $rows = $statement->fetchAll();
+        $statement->closeCursor();
+        $this->foundRows = $this->getFoundRows();
 
         if (count($rows) === 0) {
             throw new ProductNotFoundException(
@@ -222,192 +228,70 @@ class StockRepository extends StockManagementRepository
         $andWhereClause = '',
         $having = '',
         $orderByClause = null
-    )
-    {
+    ) {
         if (is_null($orderByClause)) {
             $orderByClause = $this->orderByProductIds();
         }
 
+        $combinationNameQuery = $this->getCombinationNameSubquery();
+
         return str_replace(
             array(
-                '{left_join}',
                 '{and_where}',
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
+                '{combination_name}'
             ),
             array(
-                $this->joinLimitingCombinationsPerProduct(),
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
+                $combinationNameQuery
             ),
             'SELECT SQL_CALC_FOUND_ROWS
-            p.id_product AS product_id,
-            COALESCE(pa.id_product_attribute, 0) AS combination_id,
-            IF (
-              COALESCE(pa.id_product_attribute, 0) = 0,
-              "N/A",
-              total_combinations
-            ) AS total_combinations,
-            IF (
-              COALESCE(p.reference, "") = "",
-              "N/A",
-              p.reference
-            ) AS product_reference,
-            IF (
-              COALESCE(pa.reference, "") = "",
-              "N/A",
-              pa.reference
-            ) AS combination_reference,
-            pl.name AS product_name,
-            IF (
-                COALESCE(pa.id_product_attribute, 0) > 0,
-                GROUP_CONCAT(
-                    DISTINCT CONCAT(agl.name, " - ", al.name)
-                    SEPARATOR ", "
-                ),
-                "N/A"
-            ) AS combination_name,
-            p.id_supplier AS supplier_id,
-            COALESCE(s.name, "N/A") AS supplier_name,
-            COALESCE(ic.id_image, 0) AS product_cover_id,
-            COALESCE(i.id_image, 0) AS combination_cover_id,
-            p.active,
-            sa.quantity AS product_available_quantity,
-            sa.physical_quantity AS product_physical_quantity,
-            sa.reserved_quantity AS product_reserved_quantity,
-            IF (
-                COALESCE(pa.id_product_attribute, 0) > 0,
-                COALESCE(pas.low_stock_threshold, "N/A"),
-                COALESCE(ps.low_stock_threshold, "N/A")
-            ) AS product_low_stock_threshold,
-             IF (
-                COALESCE(pa.id_product_attribute, 0) > 0,
-                IF (sa.quantity <= pas.low_stock_threshold, 1, 0),
-                IF (sa.quantity <= ps.low_stock_threshold, 1, 0)
-             ) AS product_low_stock_alert,
-            COALESCE(product_attributes.attributes, "") AS product_attributes,
-            COALESCE(product_features.features, "") AS product_features
-            FROM {table_prefix}product p
-            LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
-            LEFT JOIN {table_prefix}product_lang pl ON (
-                p.id_product = pl.id_product AND
-                pl.id_lang = :language_id
-            )
-            INNER JOIN {table_prefix}product_shop ps ON (
-                p.id_product = ps.id_product AND
-                ps.id_shop = :shop_id
-            )
-            LEFT JOIN {table_prefix}stock_available sa ON (
-              p.id_product = sa.id_product AND
-              sa.id_shop = :stock_shop_id AND
-              sa.id_shop_group = :stock_group_id AND
-              sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0)
-            )
-            LEFT JOIN {table_prefix}image ic ON (
-                p.id_product = ic.id_product AND
-                ic.cover = 1
-            )
-            LEFT JOIN {table_prefix}image_shop ims ON (
-                p.id_product = ims.id_product AND
-                ic.id_image  = ims.id_image AND
-                ims.id_shop = :shop_id AND
-                ims.cover = 1
-            )
-            LEFT JOIN (
-                SELECT SUBSTRING_INDEX(
-                    GROUP_CONCAT(pai.id_image),
-                    ",",
-                    1
-                ) image_ids,
-                pai.id_product_attribute AS combination_id
-                FROM {table_prefix}product_attribute_image pai
-                GROUP BY pai.id_product_attribute
-            ) images_per_combination ON (
-                pa.id_product_attribute = images_per_combination.combination_id
-            )
-            LEFT JOIN {table_prefix}image i ON (
-                i.id_product = p.id_product AND
-                COALESCE(FIND_IN_SET(i.id_image, images_per_combination.image_ids), 0) > 0
-            )
-            LEFT JOIN {table_prefix}supplier s ON (p.id_supplier = s.id_supplier)
-            LEFT JOIN {table_prefix}product_attribute_combination pac ON (
-                pac.id_product_attribute = pa.id_product_attribute
-            )
-            LEFT JOIN {table_prefix}product_attribute_shop pas ON (
-                pas.id_product = pa.id_product AND
-                pas.id_product_attribute = pa.id_product_attribute AND
-                pas.id_shop = :shop_id
-            )
-            LEFT JOIN {table_prefix}category_product cp ON (
-                p.id_product = cp.id_product
-            )
-            LEFT JOIN {table_prefix}attribute a ON (
-                a.id_attribute = pac.id_attribute
-            )
-            LEFT JOIN {table_prefix}attribute_lang al ON (
-                a.id_attribute = al.id_attribute
-                AND al.id_lang = :language_id
-                AND LENGTH(TRIM(al.name)) > 0
-            )
-            LEFT JOIN {table_prefix}attribute_group ag ON (
-                ag.id_attribute_group = a.id_attribute_group
-            )
-            LEFT JOIN {table_prefix}attribute_group_lang agl ON (
-                ag.id_attribute_group = agl.id_attribute_group
-                AND agl.id_lang = :language_id
-                AND LENGTH(TRIM(agl.name)) > 0
-            )
-            LEFT JOIN (
-                SELECT GROUP_CONCAT(
-                    CONCAT(ag.id_attribute_group, ":", a.id_attribute)
-                    ORDER BY ag.id_attribute_group, a.id_attribute
-                ) AS "attributes",
-                pac.id_product_attribute
-                FROM {table_prefix}product_attribute_combination pac
-                LEFT JOIN {table_prefix}attribute a ON (
-                    pac.id_attribute = a.id_attribute
-                )
-                LEFT JOIN {table_prefix}attribute_group ag ON (
-                    ag.id_attribute_group = a.id_attribute_group
-                )
-                GROUP BY pac.id_product_attribute
-            ) product_attributes ON (
-                product_attributes.id_product_attribute = pac.id_product_attribute
-            )
-            LEFT JOIN (
-                SELECT GROUP_CONCAT(
-                  CONCAT(f.id_feature, ":", fv.id_feature_value)
-                  ORDER BY fv.id_feature_value
-                ) AS "features",
-                fp.id_product
-                FROM {table_prefix}feature_product fp
-                LEFT JOIN  {table_prefix}feature f ON (
-                    fp.id_feature = f.id_feature
-                )
-                LEFT JOIN {table_prefix}feature_shop fs ON (
-                    fs.id_shop = :shop_id AND
-                    fs.id_feature = f.id_feature
-                )
-                LEFT JOIN {table_prefix}feature_value fv ON (
-                    f.id_feature = fv.id_feature AND
-                    fp.id_feature_value = fv.id_feature_value
-                )
-                WHERE fv.custom = 0
-                GROUP BY fp.id_product
-            ) product_features ON (
-                product_features.id_product = p.id_product
-            )
-            {left_join}
-            WHERE
-            p.state = :state
-            {and_where}
-            GROUP BY p.id_product, COALESCE(pa.id_product_attribute, 0)
-            HAVING 1 {having}
-            {order_by}
-        ');
+          p.id_product                                                                      AS product_id,
+          COALESCE(pa.id_product_attribute, 0)                                              AS combination_id,
+          IF(COALESCE(p.reference, "") = "", "N/A", p.reference)                            AS product_reference,
+          IF(COALESCE(pa.reference, "") = "", "N/A", pa.reference)                          AS combination_reference,
+          pl.name                                                                           AS product_name,
+          p.id_supplier                                                                     AS supplier_id,
+          COALESCE(s.name, "N/A")                                                           AS supplier_name,
+          COALESCE(ic.id_image, 0)                                                          AS product_cover_id,
+          p.active,
+          sa.quantity                                                                       AS product_available_quantity,
+          sa.physical_quantity                                                              AS product_physical_quantity,
+          sa.reserved_quantity                                                              AS product_reserved_quantity,
+          IF(COALESCE(pa.id_product_attribute, 0) > 0, COALESCE(pas.low_stock_threshold, "N/A"),
+             COALESCE(ps.low_stock_threshold,
+                      "N/A"))                                                               AS product_low_stock_threshold,
+          IF(COALESCE(pa.id_product_attribute, 0) > 0, IF(sa.quantity <= pas.low_stock_threshold, 1, 0),
+             IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert,
+          {combination_name}
+        FROM {table_prefix}product p
+          LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
+          LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id)
+          INNER JOIN {table_prefix}product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = :shop_id)
+          LEFT JOIN {table_prefix}stock_available sa
+            ON (p.id_product = sa.id_product AND sa.id_shop = :stock_shop_id AND sa.id_shop_group = :stock_group_id AND
+                sa.id_product_attribute = COALESCE(pa.id_product_attribute, 0))
+          LEFT JOIN {table_prefix}image ic ON (p.id_product = ic.id_product AND ic.cover = 1)
+          LEFT JOIN {table_prefix}image_shop ims
+            ON (p.id_product = ims.id_product AND ic.id_image = ims.id_image AND ims.id_shop = :shop_id AND ims.cover = 1)
+          LEFT JOIN {table_prefix}supplier s ON (p.id_supplier = s.id_supplier)
+          LEFT JOIN {table_prefix}product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)
+          LEFT JOIN {table_prefix}product_attribute_shop pas
+            ON (pas.id_product = pa.id_product AND pas.id_product_attribute = pa.id_product_attribute AND
+                pas.id_shop = :shop_id)                     
+        WHERE
+          p.state = :state
+          {and_where}
+        GROUP BY p.id_product, pa.id_product_attribute
+        HAVING 1 {having}
+        {order_by}
+        '
+        );
     }
 
     /**
@@ -416,31 +300,7 @@ class StockRepository extends StockManagementRepository
      */
     protected function andWhere(QueryParamsCollection $queryParams)
     {
-        return $this->andWhereLimitingCombinationsPerProduct() . parent::andWhere($queryParams);
-    }
-
-    /**
-     * @return string
-     */
-    private function joinLimitingCombinationsPerProduct()
-    {
-        return 'LEFT JOIN (
-            SELECT pa.id_product product_id,
-            COUNT(pa.id_product_attribute) total_combinations
-            FROM {table_prefix}product_attribute pa
-            GROUP BY pa.id_product
-        ) combinations_per_product ON (combinations_per_product.product_id = p.id_product) ';
-    }
-
-    /**
-     * @return string
-     */
-    private function andWhereLimitingCombinationsPerProduct()
-    {
-        return 'AND (
-            ISNULL(pa.id_product_attribute) OR
-            NOT ISNULL(combinations_per_product.total_combinations)
-        ) ';
+        return parent::andWhere($queryParams);
     }
 
     /**
@@ -457,17 +317,55 @@ class StockRepository extends StockManagementRepository
      */
     protected function addAdditionalData(array $rows)
     {
+        $rows = $this->addCombinationsAndFeatures($rows);
         $rows = $this->addImageThumbnailPaths($rows);
         $rows = $this->addEditProductLink($rows);
 
         return $rows;
     }
 
+    protected function addCombinationsAndFeatures(array $rows)
+    {
+        $rows = parent::addCombinationsAndFeatures($rows);
+        foreach ($rows as &$row) {
+            if ($row['combination_id'] != 0) {
+                $row['total_combinations'] = $this->getTotalCombinations($row);
+            } else {
+                $row['total_combinations'] = 'N/A';
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Compute the number of combinations associated with a product
+     *
+     * @param array $row
+     *
+     * @return string
+     */
+    private function getTotalCombinations(array $row)
+    {
+        if (!isset($this->totalCombinations[$row['product_id']])) {
+            $query = 'SELECT COUNT(*) total_combinations
+                        FROM ' . $this->tablePrefix . 'product_attribute pa
+                        WHERE id_product=:id_product';
+            $statement = $this->connection->prepare($query);
+            $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
+            $statement->execute();
+            $this->totalCombinations[$row['product_id']] = $statement->fetchColumn(0);
+            $statement->closeCursor();
+        }
+
+        return $this->totalCombinations[$row['product_id']];
+    }
+
     private function addEditProductLink(array $rows)
     {
         $router = $this->container->get('router');
 
-        array_walk($rows, function (&$row) use ($router) {
+        foreach ($rows as &$row) {
             $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', array(
                 'productId' => $row['product_id'],
             ));
@@ -482,7 +380,7 @@ class StockRepository extends StockManagementRepository
                     'productId' => $row['product_id'],
                 ));
             }
-        });
+        }
 
         return $rows;
     }

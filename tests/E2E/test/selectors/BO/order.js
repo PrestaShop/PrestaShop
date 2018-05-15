@@ -1,5 +1,5 @@
 module.exports = {
-  OrderPage:{
+  OrderPage: {
     orders_subtab: '#subtab-AdminParentOrders',
     form: '#form-order',
     view_order_button: '//*[@id="form-order"]//tr[%NUMBER]//div[contains(@class,"pull-right")]//a',
@@ -11,21 +11,22 @@ module.exports = {
     message_order: '//*[@id="content"]//div[@class="message-body"]//p[@class="message-item-text"]',
     product_Url: '//*[@id="orderProducts"]//tr[1]/td[2]/a',
     edit_product_button: '//*[@id="orderProducts"]//button[contains(@class,"edit_product_change_link")]',
-    product_basic_price: '//*[@id="orderProducts"]//tr[1]//input[contains(@class,"edit_product_price_tax_excl")]',
+    product_basic_price: '//*[@id="orderProducts"]//tr[1]//input[contains(@class,"edit_product_price_tax_incl")]',
     customer_name: '//*[@id="content"]//div[@class="message-body"]//h4[@class="message-item-heading"]',
     order_submenu: '//*[@id="subtab-AdminOrders"]/a',
-    document_submenu:'//*[@id="tabOrder"]/li[2]/a',
-    download_invoice_button:'//*[@id="documents_table"]//tr[1]/td[3]/a',
-    download_delivery_button:'//*[@id="documents_table"]//tr[3]/td[3]/a',
+    document_submenu: '//*[@id="tabOrder"]//a[@href="#documents"]',
+    download_invoice_button: '(//*[@id="documents_table"]//a[contains(@href, "generateInvoicePDF")])[1]',
+    download_delivery_button: '//*[@id="documents_table"]//tr[3]/td[3]/a',
     product_name: '//*[@id="orderProducts"]//tr[1]//span[@class="productName"]',
     total_price: '//*[@id="total_products"]/td[contains(@class,"amount")]',
     shipping_method: '//*[@id="shipping_table"]//tr/td[3]',
     search_by_reference_input: '//*[@id="form-order"]//table[contains(@class,"order")]//input[@name="orderFilter_reference"]',
     search_order_button: '//*[@id="submitFilterButtonorder"]',
     first_order: '//*[@id="form-order"]//table//tbody//tr[1]//a',
+    transform_guest_customer_button: '//*[@id="content"]//input[@name="submitGuestToCustomer"]',
   },
 
-  CreateOrder:{
+  CreateOrder: {
     new_order_button: '//*[@id="page-header-desc-order-new_order"]',
     customer_search_input: '//*[@id="customer"]',
     choose_customer_button: '//*[@id="customers"]/div[1]/div/div[2]/button',
@@ -35,10 +36,10 @@ module.exports = {
     order_message_textarea: '//*[@id="order_message"]',
     delivery_option: '//*[@id="delivery_option"]',
     payment: '//*[@id="payment_module_name"]',
-    total_shipping:'//*[@id="total_shipping"]',
+    total_shipping: '//*[@id="total_shipping"]',
     create_order_button: '//*[@id="summary_part"]//button[@name="submitAddOrder"]',
     product_combination: '//*[@class="id_product_attribute"]',
     basic_price_value: '//*[@id="customer_cart"]//tr[1]//input[@class="product_unit_price"]',
-    product_select:'//*[@id="id_product"]'
+    product_select: '//*[@id="id_product"]'
   }
 };

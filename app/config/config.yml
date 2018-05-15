@@ -29,9 +29,7 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
-        # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
     fragments:       ~
     http_method_override: true
@@ -41,7 +39,7 @@ monolog:
     handlers:
         main:
             type: stream
-            path: %kernel.logs_dir%/%kernel.environment%.log
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: notice
         legacy:
             type: service
@@ -56,11 +54,13 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_horizontal_layout.html.twig'
-    globals:
-        webpack_server:   false
     paths:
         '%admin_page%/Product': Product
+        '%admin_page%/TwigTemplateForm': Twig
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
+        '%admin_page%/Configure/ShopParameters': ShopParameters
+    globals:
+        webpack_server:   false
 
 # Doctrine Configuration
 doctrine:

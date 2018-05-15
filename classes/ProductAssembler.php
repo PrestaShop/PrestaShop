@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,7 +79,7 @@ class ProductAssemblerCore
 				)
 			) > 0) as new
                 FROM {$prefix}product p
-                INNER JOIN {$prefix}product_lang pl
+                LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
@@ -89,6 +89,9 @@ class ProductAssemblerCore
 			        AND sa.id_shop = $idShop";
 
         $rows = Db::getInstance()->executeS($sql);
+        if ($rows === false) {
+            return $rawProduct;
+        }
 
         return array_merge($rows[0], $rawProduct);
     }

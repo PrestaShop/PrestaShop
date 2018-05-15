@@ -14,6 +14,7 @@ docs/phpdoc-sf/
 composer.lock
 tests/Selenium/errorShots/
 tests/Selenium/errorDumps/
+tests/resources/modules/
 *.hot-update.js
 *.hot-update.json
 
@@ -76,23 +77,27 @@ themes/default-bootstrap/modules/*/mails/*
 
 # Symfony
 
-/app/bootstrap.php.cache
-/app/cache/*
-!app/cache/.gitkeep
+/bin/
+/.web-server-pid
 /app/Resources/translations/*
 !/app/Resources/translations/default
-/app/test/cache/*
-!app/test/cache/.gitkeep
-/app/config/config.php
 /app/config/parameters.yml
 /app/config/parameters.php
-/app/logs/*
-!app/logs/.gitkeep
-/app/phpunit.xml
-/bin/
+/build/
+/phpunit.xml
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+/vendor/
 /web/bundles/
-/web/css/
-/web/js/
 
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -218,10 +218,12 @@ abstract class ControllerCore
             );
         }
 
-        if (!headers_sent()
-            && isset($_SERVER['HTTP_USER_AGENT'])
-            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
-            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
+        if (
+            !headers_sent() &&
+            isset($_SERVER['HTTP_USER_AGENT']) &&
+            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
+            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+        ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
     }
@@ -448,7 +450,7 @@ abstract class ControllerCore
     public function addJS($js_uri, $check_path = true)
     {
         if (!is_array($js_uri)) {
-            $js_uri = [$js_uri];
+            $js_uri = array($js_uri);
         }
 
         foreach ($js_uri as $js_file) {
@@ -476,25 +478,17 @@ abstract class ControllerCore
      */
     public function removeJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri)) {
-            foreach ($js_uri as $js_file) {
-                $js_path = $js_file;
-                if ($check_path) {
-                    $js_path = Media::getJSPath($js_file);
-                }
+        if (!is_array($js_uri)) {
+            $js_uri = array($js_uri);
+        }
 
-                if ($js_path && in_array($js_path, $this->js_files)) {
-                    unset($this->js_files[array_search($js_path, $this->js_files)]);
-                }
-            }
-        } else {
-            $js_path = $js_uri;
+        foreach ($js_uri as $js_file) {
             if ($check_path) {
-                $js_path = Media::getJSPath($js_uri);
+                $js_file = Media::getJSPath($js_file);
             }
 
-            if ($js_path) {
-                unset($this->js_files[array_search($js_path, $this->js_files)]);
+            if ($js_file && in_array($js_file, $this->js_files)) {
+                unset($this->js_files[array_search($js_file, $this->js_files)]);
             }
         }
     }
@@ -592,12 +586,12 @@ abstract class ControllerCore
         $js_tag = 'js_def';
         $this->context->smarty->assign($js_tag, $js_tag);
 
-        if (is_array($content)) {
-            foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
-            }
-        } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+        if (!is_array($content)) {
+            $content = array($content);
+        }
+
+        foreach ($content as $tpl) {
+            $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
         }
 
         echo trim($html);

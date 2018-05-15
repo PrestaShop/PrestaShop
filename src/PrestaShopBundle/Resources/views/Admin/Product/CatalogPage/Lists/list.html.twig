@@ -1,0 +1,134 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<tbody
+  {% if activate_drag_and_drop and has_category_filter %}class="sortable"{% endif %}
+  last_sql="{{ last_sql_query|escape('html_attr') }}"
+>
+  {% for product in products %}
+    <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
+        <td class="checkbox-column">
+          <div class="checkbox">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
+              {{ product.id_product }}
+            </label>
+          </div>
+        </td>
+        <td>
+          <a href="{{ product.url|default('') }}#tab-step1">{{ product.image|raw }}</a>
+        </td>
+        <td>
+          <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default('N/A'|trans({}, 'Admin.Global')) }}</a>
+        </td>
+        <td>
+          {{ product.reference|default('') }}
+        </td>
+        <td>
+          {{ product.name_category|default('') }}
+        </td>
+        <td>
+          <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
+        </td>
+
+        {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+        <td class="product-sav-quantity" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
+          <a href="{{ product.url|default('') }}#tab-step3">
+            {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
+              {{ product.sav_quantity }}
+            {% else %}
+              {{ product.sav_quantity|default('N/A'|trans({}, 'Admin.Global')) }}
+            {% endif %}
+          </a>
+        </td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        <td>
+          {% if product.active|default(0) == 0 %}
+            <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
+              <i class="material-icons action-disabled">clear</i>
+            </a>
+          {% else %}
+            <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
+              <i class="material-icons action-enabled ">check</i>
+            </a>
+          {% endif %}
+        </td>
+        {% if product.position is defined %}
+          <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
+            {% if activate_drag_and_drop %}
+                <big><big>⇅</big></big>
+            {% endif %}
+            <span class="position">{{ product.position }}</span>
+            <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
+            <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
+          </td>
+        {% endif %}
+        <td>
+            <div class="btn-group-action">
+
+                {% set buttons_action = [
+                  {
+                  "href": product.preview_url|default('#'),
+                  "target": "_blank",
+                  "icon": "remove_red_eye",
+                  "label": "Preview"|trans({}, 'Admin.Actions')
+                  }
+                ] %}
+
+                {% set buttons_action = buttons_action|merge([
+                  {
+                  "onclick": "unitProductAction(this, 'duplicate');",
+                  "icon": "content_copy",
+                  "label": "Duplicate"|trans({}, 'Admin.Actions')
+                  }
+                ]) %}
+
+                {% set buttons_action = buttons_action|merge([
+                  {
+                  "onclick": "unitProductAction(this, 'delete');",
+                  "icon": "delete",
+                  "label": "Delete"|trans({}, 'Admin.Actions')
+                  }
+                ]) %}
+
+                {% include '@Product/CatalogPage/Forms/form_edit_dropdown.html.twig' with {
+                  'button_id': "product_list_id_" ~ product.id_product ~ "_menu",
+                  'default_item': {
+                    "href": product.url|default('#'),
+                    "icon": "mode_edit"
+                  },
+                  'right': true,
+                  'items': buttons_action
+                } %}
+            </div>
+        </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="11">
+        {{ "There is no result for this search. Update your filters to view other products."|trans({}, 'Admin.Catalog.Notification') }}
+    </td></tr>
+  {% endfor %}
+</tbody>

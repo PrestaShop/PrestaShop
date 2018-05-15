@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,20 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
+namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
-use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 
 /**
  * @group api
  * @group stockmanagement
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class StockManagementControllerTest extends ApiTestCase
 {
@@ -39,16 +40,12 @@ class StockManagementControllerTest extends ApiTestCase
     {
         parent::setUp();
 
-        $legacyContextMock = $this->mockContextAdapter();
-
-        $container = self::$kernel->getContainer();
-        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
-
         $stockMovementRepository = $this->getMockBuilder('PrestaShopBundle\Entity\Repository\StockMovementRepository')
             ->disableOriginalConstructor()
             ->getMock();
+
         $stockMovementRepository->method('saveStockMvt')->willReturn(true);
-        static::$kernel->getContainer()->set('prestashop.core.api.stockMovement.repository', $stockMovementRepository);
+        self::$container->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
 
         $this->restoreQuantityEditionFixtures();
     }
@@ -69,7 +66,7 @@ class StockManagementControllerTest extends ApiTestCase
             physical_quantity = 10,
             reserved_quantity = 2
             WHERE id_product = 1 AND id_product_attribute = 1';
-        $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
+        $statement = self::$container->get('doctrine.dbal.default_connection')
             ->prepare($updateProductQuantity);
         $statement->execute();
     }
@@ -85,9 +82,9 @@ class StockManagementControllerTest extends ApiTestCase
         );
 
         foreach ($routes as $route) {
-            $this->client->request('GET', $route, array('page_index' => 0));
-            $response = $this->client->getResponse();
-            $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+            self::$client->request('GET', $route, array('page_index' => 0));
+            $response = self::$client->getResponse();
+            $this->assertSame(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
         }
     }
 
@@ -188,11 +185,11 @@ class StockManagementControllerTest extends ApiTestCase
     )
     {
         $route = $this->router->generate($routeName, $parameters);
-        $this->client->request('GET', $route);
+        self::$client->request('GET', $route);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        $response = self::$client->getResponse();
+        $this->assertSame(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
 
         if ($expectedTotalPages) {
             $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
@@ -215,12 +212,12 @@ class StockManagementControllerTest extends ApiTestCase
             $pageSize = $parameters['page_size'];
         }
 
-        $response = $this->client->getResponse();
+        $response = self::$client->getResponse();
 
         /** @var \Symfony\Component\HttpFoundation\ResponseHeaderBag $headers */
         $headers = $response->headers;
         $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
-        $this->assertEquals(
+        $this->assertSame(
             $expectedTotalPages,
             $headers->get('Total-Pages'),
             sprintf(
@@ -267,14 +264,14 @@ class StockManagementControllerTest extends ApiTestCase
             array('productId' => 9)
         );
 
-        $this->client->request('POST', $editProductStockRoute);
+        self::$client->request('POST', $editProductStockRoute);
         $this->assertResponseBodyValidJson(400);
 
 
-        $this->client->request('POST', $editProductStockRoute, array(), array(), array(), '{}');
+        self::$client->request('POST', $editProductStockRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
-        $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
+        self::$client->request('POST', $editProductStockRoute, array('delta' => 1));
         $this->assertResponseBodyValidJson(404);
     }
 
@@ -291,7 +288,7 @@ class StockManagementControllerTest extends ApiTestCase
             )
         );
 
-        $this->client->request('POST', $editProductStockRoute, array('delta' => 1));
+        self::$client->request('POST', $editProductStockRoute, array('delta' => 1));
 
         $this->assertResponseBodyValidJson(404);
     }
@@ -310,7 +307,8 @@ class StockManagementControllerTest extends ApiTestCase
             )
         );
 
-        $this->client->request('POST', $editProductStockRoute, array('delta' => 2));
+        self::$client->request('POST', $editProductStockRoute, array('delta' => 2));
+
         $content = $this->assertResponseBodyValidJson(200);
 
         $this->assertArrayHasKey('product_available_quantity', $content,
@@ -339,7 +337,7 @@ class StockManagementControllerTest extends ApiTestCase
         );
 
 
-        $this->client->request('POST', $editProductStockRoute, array('delta' => -4));
+        self::$client->request('POST', $editProductStockRoute, array('delta' => -4));
         $content = $this->assertResponseBodyValidJson(200);
 
         $this->assertProductQuantity(
@@ -351,7 +349,7 @@ class StockManagementControllerTest extends ApiTestCase
             $content
         );
 
-        $this->client->request('POST', $editProductStockRoute, array(), array(), array(), '{"delta": 0}');
+        self::$client->request('POST', $editProductStockRoute, array(), array(), array(), '{"delta": 0}');
         $this->assertResponseBodyValidJson(200);
     }
 
@@ -361,14 +359,14 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertProductQuantity($expectedQuantities, $content)
     {
-        $this->assertEquals($expectedQuantities['available_quantity'], $content['product_available_quantity'],
-            'The response body should contain the newly updated available quantity.'
-        );
-        $this->assertEquals($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
+        $this->assertSame($expectedQuantities['available_quantity'], $content['product_available_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
-        $this->assertEquals($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
-            'The response body should contain the newly updated reserved quantity.'
+        $this->assertSame($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
+            'The response body should contain the newly updated quantity.'
+        );
+        $this->assertSame($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
+            'The response body should contain the newly updated physical quantity.'
         );
     }
 
@@ -376,19 +374,19 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $bulkEditProductsRoute = $this->router->generate('api_stock_bulk_edit_products');
 
-        $this->client->request('POST', $bulkEditProductsRoute);
+        self::$client->request('POST', $bulkEditProductsRoute);
         $this->assertResponseBodyValidJson(400);
 
-        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"combination_id": 0}]');
+        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"combination_id": 0}]');
         $this->assertResponseBodyValidJson(400);
 
-        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"product_id": 1}]');
+        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"product_id": 1}]');
         $this->assertResponseBodyValidJson(400);
 
-        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"delta": 0}]');
+        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"delta": 0}]');
         $this->assertResponseBodyValidJson(400);
 
-        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
             '[{"product_id": 1, "delta": 0}]');
         $this->assertResponseBodyValidJson(400);
     }
@@ -397,7 +395,7 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $bulkEditProductsRoute = $this->router->generate('api_stock_bulk_edit_products');
 
-        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
             '[{"product_id": 1, "combination_id": 1, "delta": 3},' .
             '{"product_id": 1, "combination_id": 1, "delta": -1}]');
         $content = $this->assertResponseBodyValidJson(200);
@@ -413,7 +411,7 @@ class StockManagementControllerTest extends ApiTestCase
             $content[1]
         );
 
-        $this->client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
             '[{"product_id": 1, "combination_id": 1, "delta": 3},' .
             '{"product_id": 1, "combination_id": 1, "delta": -3}]');
         $content = $this->assertResponseBodyValidJson(200);
@@ -437,7 +435,7 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
-        $this->client->request(
+        self::$client->request(
             'GET',
             $listProductsRoute,
             array('keywords' => array('Chiffon', 'demo_7', 'Size - S'))
@@ -453,7 +451,7 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
-        $this->client->request(
+        self::$client->request(
             'GET',
             $listProductsRoute,
             array('attributes' => array('1:2', '3:14'))
@@ -469,7 +467,7 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $listProductsRoute = $this->router->generate('api_stock_list_products');
 
-        $this->client->request(
+        self::$client->request(
             'GET',
             $listProductsRoute,
             array('features' => array('5:1', '6:11'))
@@ -477,10 +475,6 @@ class StockManagementControllerTest extends ApiTestCase
 
         $this->assertResponseBodyValidJson(200);
     }
-
-
-
-
 
     /**
      * @dataProvider getMovementsStockParams

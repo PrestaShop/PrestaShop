@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -122,7 +123,6 @@ class ProductInformation extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'label' =>  $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'required' => true,
         ))
@@ -157,19 +157,10 @@ class ProductInformation extends CommonAbstractType
             'label' => $this->translator->trans('Name', [], 'Admin.Global')
         ))
         ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-            'options' => [
-                'attr' => array(
-                    'class' => 'autoload_rte',
-                    'counter' => 21844
-                ),
-                'constraints' => array(
-                    new TinyMceMaxLength(array(
-                        'max' => 21844
-                    ))
-                ),
-                'required' => false
-            ],
+            'type' => FormattedTextareaType::class,
+            'options' => array(
+                'required' => false,
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' =>  $this->translator->trans('Description', [], 'Admin.Global'),
@@ -205,7 +196,6 @@ class ProductInformation extends CommonAbstractType
         ))
         ->add('id_manufacturer', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->manufacturers,
-            'choices_as_values' => true,
             'required' => false,
             'attr' => array(
                 'data-toggle' => 'select2',
@@ -253,7 +243,6 @@ class ProductInformation extends CommonAbstractType
         ))
         ->add('id_category_default', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->categories,
-            'choices_as_values' => true,
             'expanded' => true,
             'multiple' => false,
             'required' =>  true,

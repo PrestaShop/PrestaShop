@@ -520,6 +520,7 @@ var AdminModuleController = function() {
       addRemoveLinks: true,
       dictDefaultMessage: '',
       hiddenInputContainer: self.dropZoneImportZoneSelector,
+      timeout:0, // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install, it is not possible to install the module.
       addedfile: function() {
         self.animateStartUpload();
       },

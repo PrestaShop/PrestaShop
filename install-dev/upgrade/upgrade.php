@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 
 use PrestaShopBundle\Install\Upgrade;
+
+// Although no arguments execute the script, you can get some help if requested.
+if (isset($argv) && is_array($argv) && in_array('--help', $argv)) {
+    displayHelp();
+    exit(0);
+}
 
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
@@ -42,7 +48,7 @@ require_once(dirname(__FILE__).'/../init.php');
 Upgrade::migrateSettingsFile();
 require_once(_PS_CONFIG_DIR_.'bootstrap.php');
 
-$logDir = _PS_ROOT_DIR_.'/app/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
+$logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
 @mkdir($logDir, 0777, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
@@ -116,4 +122,21 @@ if ($upgrade->getInAutoUpgrade()) {
 } else {
     header('Content-Type: text/xml');
     echo $result;
+}
+
+/**
+ * displays the help
+ */
+function displayHelp()
+{
+    echo <<<EOF
+PrestaShop upgrade
+
+This script can be called directly and is used by the 1-click upgrade module. It ouputs xml in the first case and json data for the module.
+It is mainly used for the database migration of your shop. Logs will be registered in your var/logs/<env> folder.
+------------------
+Options
+--help               Display this message
+
+EOF;
 }

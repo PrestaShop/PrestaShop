@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -62,8 +62,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int Shop ID */
     protected $id_shop = null;
 
-    /** @var array|null List of shop IDs */
-    public $id_shop_list = null;
+    /** @var array List of shop IDs */
+    public $id_shop_list = array();
 
     /** @var bool */
     protected $get_shop_from_context = true;
@@ -517,7 +517,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         if (Shop::isTableAssociated($this->def['table'])) {
             $id_shop_list = Shop::getContextListShopID();
-            if (count($this->id_shop_list) > 0) {
+            if (count($this->id_shop_list)) {
                 $id_shop_list = $this->id_shop_list;
             }
         }
@@ -683,7 +683,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         $id_shop_list = Shop::getContextListShopID();
-        if (count($this->id_shop_list) > 0) {
+        if (count($this->id_shop_list)) {
             $id_shop_list = $this->id_shop_list;
         }
 
@@ -739,7 +739,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     // If this table is linked to multishop system, update / insert for all shops from context
                     if ($this->isLangMultishop()) {
                         $id_shop_list = Shop::getContextListShopID();
-                        if (count($this->id_shop_list) > 0) {
+                        if (count($this->id_shop_list)) {
                             $id_shop_list = $this->id_shop_list;
                         }
                         foreach ($id_shop_list as $id_shop) {
@@ -1922,13 +1922,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($field !== null || !Cache::isStored($cache_id)) {
-            $reflection = new ReflectionClass($class);
-
-            if (!$reflection->hasProperty('definition')) {
-                return false;
-            }
-
-            $definition = $reflection->getStaticPropertyValue('definition');
+            $definition = $class::$definition;
 
             $definition['classname'] = $class;
 

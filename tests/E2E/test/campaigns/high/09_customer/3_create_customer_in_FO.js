@@ -1,6 +1,6 @@
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {accountPage}= require('../../../selectors/FO/add_account_page');
-var data = require('./../../../datas/customer_and_address_data');
+let data = require('./../../../datas/customer_and_address_data');
 
 scenario('Create a customer account in the Front Office', client => {
     test('should open the browser', () => client.open());

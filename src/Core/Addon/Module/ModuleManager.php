@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -147,7 +148,8 @@ class ModuleManager implements AddonManagerInterface
 
         $modulesProvider = $this->adminModuleProvider;
         foreach ($modules as $moduleLabel => $modulesPart) {
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart, str_replace("to_", "", $moduleLabel));
+            $collection = AddonsCollection::createFrom($modulesPart);
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection, str_replace("to_", "", $moduleLabel));
             $modules->{$moduleLabel} = $modulesPresenter($modulesPart);
         }
 

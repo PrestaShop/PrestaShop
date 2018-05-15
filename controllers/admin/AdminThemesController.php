@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -209,6 +209,12 @@ class AdminThemesControllerCore extends AdminController
         }
     }
 
+    /**
+     * Ajax request handler for displaying theme catalog from the marketplace.
+     * Not used anymore.
+     *
+     * @deprecated since 1.7.4.0
+     */
     public function ajaxProcessGetAddonsThemes()
     {
         $parent_domain = Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
@@ -432,7 +438,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'PS_FAVICON' => array(
                         'title' => $this->trans('Favicon', array(), 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Will appear in the address bar of your web browser.', array(), 'Admin.Design.Help'),
+                        'hint' => $this->trans('It is the small icon that appears in browser tabs, next to the web address', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
                         'tab' => 'icons',
@@ -654,9 +660,9 @@ class AdminThemesControllerCore extends AdminController
         return $helper->generateForm($fields_form);
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJS(_PS_JS_DIR_.'admin/themes.js');
 
         if ($this->context->mode == Context::MODE_HOST && Tools::getValue('action') == 'importtheme') {

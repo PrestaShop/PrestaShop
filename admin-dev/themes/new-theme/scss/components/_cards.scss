@@ -79,6 +79,17 @@
   .material-icons {
     vertical-align: text-bottom;
   }
+
+  h3 {
+    margin-bottom: 0;
+  }
+
+  // toolbar buttons at the top of the card
+  .btn-toolbar {
+    .btn {
+      padding: 0 .125rem;
+    }
+  }
 }
 
 .card-footer {

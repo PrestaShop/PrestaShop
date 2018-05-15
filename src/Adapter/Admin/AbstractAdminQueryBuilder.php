@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -110,12 +110,13 @@ abstract class AbstractAdminQueryBuilder
      * @param array[array[mixed]] $select
      * @param array[mixed] $table
      * @param array[mixed] $where
+     * @param array[string] $groupBy
      * @param array[string] $order
      * @param string $limit
      * @throws LogicException if SQL elements cannot be joined.
      * @return string The SQL query ready to be executed.
      */
-    protected function compileSqlQuery(array $select, array $table, array $where = array(), array $order = array(), $limit = null)
+    protected function compileSqlQuery(array $select, array $table, array $where = array(), array $groupBy = array(), array $order = array(), $limit = null)
     {
         $sql = array();
 
@@ -164,6 +165,11 @@ abstract class AbstractAdminQueryBuilder
             if (strlen($s) > 0) {
                 $sql[] = 'WHERE '.$s.PHP_EOL;
             }
+        }
+
+        // GROUP BY
+        if (!empty($groupBy)) {
+            $sql[] = 'GROUP BY '. implode(', ', array_map('pSQL', $groupBy)) . PHP_EOL;
         }
 
         // ORDER

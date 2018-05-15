@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -68,7 +68,7 @@
 		{if $host_mode}
 		<div class="alert alert-info">
 			<h4>{l s='How to restore a database backup' d='Admin.Advparameters.Notification'}</h4>
-			{l s='If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a class="_blank" href="http://addons.prestashop.com/support/16298-support-essentiel-plan.html">', '[/2]' => '</a>'] d='Admin.Advparameters.Notification'}
+			{l s='If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>', '[2]' => '<a class="_blank" href="https://addons.prestashop.com/support/16298-support-essentiel-plan.html">', '[/2]' => '</a>'] d='Admin.Advparameters.Notification'}
 			<br />
 			{l s='Our team will take care of restoring your database safely.' d='Admin.Advparameters.Notification'}
 			<br />

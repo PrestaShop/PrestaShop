@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -113,7 +113,7 @@
 {%- endblock time_widget %}
 
 {% block choice_widget_collapsed -%}
-    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
     {{- parent() -}}
 {%- endblock %}
 
@@ -215,10 +215,10 @@
     {{ form_errors(form) }}
     <div class="translations tabbable" id="{{ form.vars.id }}">
         {% if hideTabs == false and form|length > 1 %}
-        <ul class="translationsLocales nav nav-tabs">
+        <ul class="translationsLocales nav nav-pills">
             {% for translationsFields in form %}
-                <li class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link">
-                    <a href="#" class="nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+                <li class="nav-item">
+                    <a href="#" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
                         {{ translationsFields.vars.label|capitalize }}
                     </a>
                 </li>
@@ -226,9 +226,9 @@
         </ul>
         {% endif %}
 
-        <div class="translationsFields">
+        <div class="translationsFields tab-content">
             {% for translationsFields in form %}
-                <div class="translationsFields-{{ translationsFields.vars.id }} translation-field {% if hideTabs == false and form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}visible{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
+                <div class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hideTabs == false and form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
                     {{ form_errors(translationsFields) }}
                     {{ form_widget(translationsFields) }}
                 </div>
@@ -244,6 +244,44 @@
     {{- parent() -}}
 {%- endblock translate_fields_widget %}
 
+{% block translate_text_widget -%}
+    {{ form_errors(form) }}
+    <div class="input-group locale-input-group js-locale-input-group">
+        {% for translateField in form %}
+            {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+            {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+
+            {% if default_locale.id_lang != translateField.vars.name %}
+                {% set classes = classes ~ ' d-none' %}
+            {% endif %}
+
+            {% set attr = translateField.vars.attr %}
+
+            {{ form_widget(translateField, {attr: {'class': classes|trim}}) }}
+        {% endfor %}
+
+        {% if not hide_locales %}
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    id="{{ form.vars.id }}"
+            >
+                {{ form.vars.default_locale.iso_code }}
+            </button>
+
+            <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+                {% for locale in locales %}
+                    <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{%- endblock translate_text_widget %}
+
 {% block date_picker_widget %}
     {% spaceless %}
         {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
@@ -255,6 +293,19 @@
         </div>
     {% endspaceless %}
 {% endblock date_picker_widget %}
+
+{% block switch_widget %}
+    {% spaceless %}
+    <span class="ps-switch">
+        {% for choice in choices %}
+            {% set inputId = id ~'_' ~ choice.value %}
+            <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio">
+            <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
+        {% endfor %}
+        <span class="slide-button"></span>
+    </span>
+    {% endspaceless %}
+{% endblock switch_widget %}
 
 {% block _form_step6_attachments_widget %}
     <div class="js-options-no-attachments {{ form|length > 0 ? 'hide' : '' }}">

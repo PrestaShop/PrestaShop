@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -216,7 +216,7 @@ class ProfileCore extends ObjectModel
     private static function findTabTypeInformationByAuthSlug($type, $authSlug)
     {
         preg_match(
-            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9]*)_(?P<auth>[A-Z]+)/',
             $authSlug,
             $matches
         );

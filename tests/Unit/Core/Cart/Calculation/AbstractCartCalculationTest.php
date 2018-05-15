@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,24 +19,48 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Calculation;
+namespace Tests\Unit\Core\Cart\Calculation;
 
-use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
-use Tools;
+use Tests\Unit\Core\Cart\AbstractCartTest;
+use Cart;
 
 /**
  * these tests aim to check the correct calculation of cart total
  */
 abstract class AbstractCartCalculationTest extends AbstractCartTest
 {
-    protected function compareCartTotal($expectedTotal)
+    protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
-        $total = $this->cart->getOrderTotal(true);
-        $this->assertEquals(Tools::convertPrice($expectedTotal), $total);
+        $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
+        $totalV1   = $this->cart->getOrderTotalV1(true, Cart::BOTH, null, $carrierId);
+        $totalV2   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
+        // here we round values to avoid round issues : rounding modes are tested by specific tests
+        $expectedTotal = round($expectedTotal, 1);
+        $totalV1       = round($totalV1, 1);
+        if (!$knownToFailOnV1) {
+            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
+        }
+        $totalV2 = round($totalV2, 1);
+        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax incl)');
+    }
+
+    protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
+    {
+        $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
+        $totalV1   = $this->cart->getOrderTotalV1(false, Cart::BOTH, null, $carrierId);
+        $totalV2   = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
+        // here we round values to avoid round issues : rounding modes are tested by specific tests
+        $expectedTotal = round($expectedTotal, 1);
+        $totalV1       = round($totalV1, 1);
+        if (!$knownToFailOnV1) {
+            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax excl)');
+        }
+        $totalV2 = round($totalV2, 1);
+        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 }

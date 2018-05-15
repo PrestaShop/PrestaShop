@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -286,12 +286,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $sqlOrder = array('id_product ASC');
         }
 
+        $sqlGroupBy = array();
+
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingFieldsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
+            'sql_group_by' => &$sqlGroupBy,            
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ));
@@ -322,11 +325,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
+            'sql_group_by' => &$sqlGroupBy,            
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ));
 
-        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlOrder, $sqlLimit);
+        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
         $products = Db::getInstance()->executeS($sql, true, false);
         $total = Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
         $total = $total[0]['FOUND_ROWS()'];

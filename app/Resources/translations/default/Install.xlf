@@ -1187,8 +1187,8 @@ File: install-dev/classes/controllerHttp.php:378
  Comment: Link to localized video tutorial (if available)</note>
       </trans-unit>
       <trans-unit id="7d9e68227c2ab19838a46b6b4f3e44be">
-        <source>http://addons.prestashop.com/en/388-support</source>
-        <target>http://addons.prestashop.com/en/388-support</target>
+        <source>https://addons.prestashop.com/en/388-support</source>
+        <target>https://addons.prestashop.com/en/388-support</target>
         <note>Context:
 File: install-dev/classes/controllerHttp.php:389
  Comment: Link to support on addons</note>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -399,17 +399,11 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
-            if (!is_null(Context::getContext()->cart) && !is_null(Context::getContext()->cart->id_lang)) {
-                $templateLangId = Context::getContext()->cart->id_lang;
-            } else {
-                $templateLangId = Context::getContext()->language->id;
-            }
-
             $templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $idShop));
-            $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, $templateLangId, null, false, $idShop);
-            $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, $templateLangId, null, false, $idShop);
-            $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, $templateLangId, null, false, $idShop);
-            $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, $templateLangId, null, false, $idShop);
+            $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, $idLang, null, false, $idShop);
+            $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, $idLang, null, false, $idShop);
+            $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, $idLang, null, false, $idShop);
+            $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, $idLang, null, false, $idShop);
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = array();

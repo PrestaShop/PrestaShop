@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 set_time_limit(0);
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50400);
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.4');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50600);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.6');
 
 define('ZIP_NAME', 'prestashop.zip');
 define('TARGET_FOLDER', __DIR__.'/');

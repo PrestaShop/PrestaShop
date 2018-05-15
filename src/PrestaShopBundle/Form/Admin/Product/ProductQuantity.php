@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -100,8 +100,7 @@ class ProductQuantity extends CommonAbstractType
             )
             ->add(
                 'pack_stock_type',
-                'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
-                array('choices_as_values' => true)
+                'Symfony\Component\Form\Extension\Core\Type\ChoiceType'
             )//see eventListener for details
             ->add(
                 'depends_on_stock',
@@ -119,7 +118,6 @@ class ProductQuantity extends CommonAbstractType
                             'Admin.Catalog.Feature'
                         ) => 0,
                     ),
-                    'choices_as_values' => true,
                     'expanded' => true,
                     'required' => true,
                     'multiple' => false,
@@ -143,10 +141,7 @@ class ProductQuantity extends CommonAbstractType
         $builder
             ->add(
                 'out_of_stock',
-                'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
-                array(
-                    'choices_as_values' => true,
-                )
+                'Symfony\Component\Form\Extension\Core\Type\ChoiceType'
             )
             ->add(
                 'minimal_quantity',
@@ -244,7 +239,6 @@ class ProductQuantity extends CommonAbstractType
                             $this->translator->trans('Allow orders', array(), 'Admin.Catalog.Feature') => '1',
                             $defaultChoiceLabel => '2',
                         ),
-                        'choices_as_values' => true,
                         'expanded' => true,
                         'required' => false,
                         'placeholder'=> false,
@@ -273,7 +267,6 @@ class ProductQuantity extends CommonAbstractType
                             $this->translator->trans('Decrement both.', array(), 'Admin.Catalog.Feature')  => '2',
                             $defaultChoiceLabel => '3',
                         ),
-                        'choices_as_values' => true,
                         'expanded' => false,
                         'required' => true,
                         'placeholder' => false,

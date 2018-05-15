@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
@@ -172,8 +172,9 @@ class AdminModuleDataProvider implements ModuleInterface
         return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
     }
 
-    public function generateAddonsUrls(array $addons, $specific_action = null)
+    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
+        $addons = $addons->toArray();
         foreach ($addons as &$addon) {
             $urls = array();
             foreach ($this->moduleActions as $action) {
@@ -186,14 +187,14 @@ class AdminModuleDataProvider implements ModuleInterface
                 'module_name' => $addon->attributes->get('name'),
             ));
 
-            if ($addon->database->has('installed') && $addon->database->get('installed') == 1) {
-                if ($addon->database->get('active') == 0) {
+            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
+                if (!$addon->database->getBoolean('active')) {
                     $url_active = 'enable';
                     unset(
                         $urls['install'],
                         $urls['disable']
                     );
-                } elseif ($addon->attributes->get('is_configurable') == 1) {
+                } elseif ($addon->attributes->getBoolean('is_configurable')) {
                     $url_active = 'configure';
                     unset(
                         $urls['enable'],
@@ -208,7 +209,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     );
                 }
 
-                if ($addon->attributes->get('is_configurable') == 0) {
+                if (!$addon->attributes->getBoolean('is_configurable')) {
                     unset($urls['configure']);
                 }
 
@@ -219,7 +220,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['upgrade']
                     );
                 }
-                if ($addon->database->get('active_on_mobile') == 0) {
+                if (!$addon->database->getBoolean('active_on_mobile')) {
                     unset($urls['disable_mobile']);
                 } else {
                     unset($urls['enable_mobile']);
@@ -231,8 +232,8 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
             } elseif (
                 !$addon->attributes->has('origin') ||
-                $addon->disk->get('is_present') == true ||
-                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))
+                $addon->disk->getBoolean('is_present') ||
+                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'), true)
             ) {
                 $url_active = 'install';
                 unset(
@@ -347,6 +348,12 @@ class AdminModuleDataProvider implements ModuleInterface
 
                     $addons = $this->addonsDataProvider->request($action, $params);
                     foreach ($addons as $addonsType => $addon) {
+                        if (empty($addon->name)) {
+                            $this->logger->error(sprintf("The addon with id %s does not have name.", $addon->id));
+
+                            continue;
+                        }
+
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
