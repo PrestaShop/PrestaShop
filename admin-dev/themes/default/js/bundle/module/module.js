@@ -189,7 +189,8 @@ var AdminModuleController = function() {
         var stylesheet = document.styleSheets[0];
         var stylesheetRule = '{display: none}';
         var moduleGlobalSelector = '.modules-list';
-        var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
+        var moduleSortingSelector = '.module-sorting-menu';
+        var requiredSelectorCombination = moduleGlobalSelector + ', ' + moduleSortingSelector;
 
         if (stylesheet.insertRule) {
           stylesheet.insertRule(
@@ -208,7 +209,8 @@ var AdminModuleController = function() {
           $.each(response.domElements, function(index, element){
             $(element.selector).append(element.content);
           });
-          $(requiredSelectorCombination).fadeIn(800);
+          $(moduleGlobalSelector).fadeIn(800).css('display','flex');
+          $(moduleSortingSelector).fadeIn(800);
           $('[data-toggle="popover"]').popover();
           self.initCurrentDisplay();
           self.fetchModulesList();
