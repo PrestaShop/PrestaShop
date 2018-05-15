@@ -29,14 +29,14 @@
       <i class="material-icons">list</i>
       {{ gridView.name }} ({{ gridView.data.rows_total }})
       {% block grid_actions_block %}
-        {% include '@PrestaShop/Admin/Common/Grid/grid_actions_block.html.twig' %}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid_actions_block.html.twig', {'gridView': gridView }) }}
       {% endblock %}
     </h3>
   </div>
   <div class="card-block">
     <div class="card-text">
       {% block grid_view_block %}
-        {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' %}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'gridView': gridView }) }}
       {% endblock %}
     </div>
   </div>
