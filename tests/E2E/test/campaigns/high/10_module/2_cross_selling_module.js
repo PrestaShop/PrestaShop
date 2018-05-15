@@ -10,7 +10,7 @@ scenario('Install and Uninstall Module from cross selling', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
-  if (disable_addons) {
+  if (global.test_addons) {
     return;
   }
 

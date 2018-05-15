@@ -18,7 +18,7 @@ scenario('Install and Uninstall Module from cross selling', () => {
     });
   }, 'order');
 
-  if (disable_addons) {
+  if (global.test_addons) {
     return;
   }
 
