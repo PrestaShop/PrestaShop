@@ -248,7 +248,7 @@ class DispatcherCore
     }
 
     /**
-     * Either sets a given request or creates one.
+     * Either sets a given request or a new one.
      *
      * @param SymfonyRequest|null $request
      */
