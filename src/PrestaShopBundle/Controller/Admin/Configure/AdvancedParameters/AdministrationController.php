@@ -42,7 +42,7 @@ class AdministrationController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminAdminPreferences';
 
     /**
-     * Show administration page*
+     * Show Administration page
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
@@ -67,8 +67,8 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the Performance configuration form.
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_administration")
+     * Process the Administration configuration form.
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_administration")
      * @DemoRestricted(route="admin_administration")
      *
      * @param Request $request

@@ -78,7 +78,7 @@ class DemoModeEnabledListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        if (!$event->isMasterRequest() || !$this->isDemoModeEnabled) {
+        if (!$this->isDemoModeEnabled || !$event->isMasterRequest()) {
             return;
         }
 
@@ -88,26 +88,24 @@ class DemoModeEnabledListener
 
         foreach ($demoConfigurations as $demoConfiguration) {
             if (!$demoConfiguration instanceof DemoRestricted) {
-                continue;
+                $this->showNotificationMessage($demoConfiguration);
+                $url = $this->router->generate($demoConfiguration->getRoute());
+
+                $event->setController(function () use ($url){
+                    return new RedirectResponse($url);
+                });
+
+                return;
             }
-
-            $this->throwNotificationMessage($demoConfiguration);
-            $url = $this->router->generate($demoConfiguration->getRoute());
-
-            $event->setController(function () use ($url){
-                return new RedirectResponse($url);
-            });
-
-            return;
         }
     }
 
     /**
      * Send an error message when redirected, will only work on migrated pages.
      *
-     * @param AdminSecurity $demoRestricted
+     * @param DemoRestricted $demoRestricted
      */
-    private function throwNotificationMessage(DemoRestricted $demoRestricted)
+    private function showNotificationMessage(DemoRestricted $demoRestricted)
     {
         $this->session->getFlashBag()->add(
             'error',

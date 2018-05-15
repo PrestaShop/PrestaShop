@@ -66,7 +66,7 @@ class AccessDeniedListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if (!$event->isMasterRequest() || !$event->getException() instanceof AccessDeniedException) {
+        if (!$event->isMasterRequest() ||!$event->getException() instanceof AccessDeniedException) {
             return;
         }
 
@@ -75,18 +75,16 @@ class AccessDeniedListener
         }
 
         foreach ($securityConfigurations as $securityConfiguration) {
-            if (!$securityConfiguration instanceof AdminSecurity) {
-                continue;
+            if ($securityConfiguration instanceof AdminSecurity) {
+                $event->allowCustomResponseCode();
+
+                $this->showNotificationMessage($securityConfiguration);
+                $url = $this->computeRedirectionUrl($securityConfiguration);
+
+                $event->setResponse(new RedirectResponse($url));
+
+                return;
             }
-
-            $event->allowCustomResponseCode();
-
-            $this->throwNotificationMessage($securityConfiguration);
-            $url = $this->computeUrl($securityConfiguration);
-
-            $event->setResponse(new RedirectResponse($url));
-
-            return;
         }
     }
 
@@ -97,9 +95,9 @@ class AccessDeniedListener
      *
      * @return string
      */
-    private function computeUrl(AdminSecurity $adminSecurity)
+    private function computeRedirectionUrl(AdminSecurity $adminSecurity)
     {
-        $route = $adminSecurity->getRoute();
+        $route = $adminSecurity->getRedirectRoute();
         if ($route !== null) {
             return $this->router->generate($route);
         }
@@ -112,7 +110,7 @@ class AccessDeniedListener
      *
      * @param AdminSecurity $adminSecurity
      */
-    private function throwNotificationMessage(AdminSecurity $adminSecurity)
+    private function showNotificationMessage(AdminSecurity $adminSecurity)
     {
         $this->session->getFlashBag()->add(
             'error',

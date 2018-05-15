@@ -50,7 +50,7 @@ class AdminSecurity extends Security
      *
      * @var string
      */
-    protected $route;
+    protected $redirectRoute;
 
     /**
      * @deprecated 1.8.x once the back office is migrated, rely only on route.
@@ -69,7 +69,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param $domain
+     * @param $domain The translation domain name.
      */
     public function setDomain($domain)
     {
@@ -79,17 +79,17 @@ class AdminSecurity extends Security
     /**
      * @return string
      */
-    public function getRoute()
+    public function getRedirectRoute()
     {
-        return $this->route;
+        return $this->redirectRoute;
     }
 
     /**
-     * @param $route
+     * @param $redirectRoute The route used for redirection.
      */
-    public function setRoute($route)
+    public function setRedirectRoute( $redirectRoute)
     {
-        $this->route = $route;
+        $this->redirectRoute = $redirectRoute;
     }
 
     /**
@@ -101,7 +101,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param $url
+     * @param $url The url used for redirection.
      */
     public function setUrl($url)
     {

@@ -42,11 +42,18 @@ class DemoRestricted extends ConfigurationAnnotation
     protected $domain = 'Admin.Notifications.Error';
 
     /**
+     * The message of the exception.
+     *
+     * @var string
+     */
+    protected $message = 'This functionality has been disabled.';
+
+    /**
      * The route for the redirection.
      *
      * @var string
      */
-    protected $route;
+    protected $redirectRoute;
 
     /**
      * @return string
@@ -57,7 +64,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param $domain
+     * @param $domain The translation domain name.
      */
     public function setDomain($domain)
     {
@@ -67,17 +74,33 @@ class DemoRestricted extends ConfigurationAnnotation
     /**
      * @return string
      */
-    public function getRoute()
+    public function getMessage()
     {
-        return $this->route;
+        return $this->message;
     }
 
     /**
-     * @param $route
+     * @param $message The message displayed after redirection.
      */
-    public function setRoute($route)
+    public function setMessage($message)
     {
-        $this->route = $route;
+        $this->message = $message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectRoute()
+    {
+        return $this->redirectRoute;
+    }
+
+    /**
+     * @param $redirectRoute The route used for redirection.
+     */
+    public function setRedirectRoute( $redirectRoute)
+    {
+        $this->redirectRoute = $redirectRoute;
     }
 
     /**
