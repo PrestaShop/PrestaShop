@@ -44,7 +44,7 @@
 
   .tab {
     .notification-container {
-      @include notification_container();
+      @include notification_container(1.5rem);
 
       .notification-counter {
         @include notification_counter();
