@@ -3,7 +3,7 @@
 <div class="header-toolbar">
 
   {block name=pageBreadcrumb}
-    <nav>
+    <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         {if $breadcrumbs2.container.name != ''}
           <li class="breadcrumb-item">{$breadcrumbs2.container.name|escape}</li>
