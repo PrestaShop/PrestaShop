@@ -50,6 +50,17 @@ services:
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
             - 'CustomerPreferencesPage'
 
+    prestashop.admin.order_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.order_preferences.data_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
+              'gift_options': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType'
+            - 'OrderPreferencesPage'
+
     prestashop.admin.product_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
         arguments:
