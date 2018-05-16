@@ -19,6 +19,7 @@
     top: 3.5rem;
   }
 
+  // page title
   > .title {
     padding: 0.3125rem;
     font-size: 1.625rem;
@@ -27,7 +28,8 @@
     margin-bottom: .313rem;
   }
 
-  > .breadcrumb {
+  // breadcrumb
+  > nav {
     margin: 0 0 0 .938rem;
   }
 }
