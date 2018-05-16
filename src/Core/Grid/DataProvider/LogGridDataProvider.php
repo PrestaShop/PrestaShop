@@ -70,7 +70,7 @@ final class LogGridDataProvider implements GridDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRows(SearchCriteriaInterface  $searchCriteria)
+    public function getRows(SearchCriteriaInterface $searchCriteria)
     {
         $logSqlQuery = $this->getQuery($searchCriteria);
 
