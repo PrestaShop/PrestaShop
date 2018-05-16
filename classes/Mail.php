@@ -250,14 +250,14 @@ class MailCore extends ObjectModel
                 }
 
                 $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
-                $message->addTo($addr, $addrName);
+                $message->addTo(self::toPunycode($addr), $addrName);
             }
             $toPlugin = $to[0];
         } else {
             /* Simple recipient, one address */
             $toPlugin = $to;
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
-            $message->addTo($to, $toName);
+            $message->addTo(self::toPunycode($to), $toName);
         }
 
         if (isset($bcc) && is_array($bcc)) {
@@ -267,10 +267,10 @@ class MailCore extends ObjectModel
                     Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
                     return false;
                 }
-                $message->addBcc($addr);
+                $message->addBcc(self::toPunycode($addr));
             }
         } elseif (isset($bcc)) {
-            $message->addBcc($bcc);
+            $message->addBcc(self::toPunycode($bbc));
         }
 
         try {
@@ -699,5 +699,22 @@ class MailCore extends ObjectModel
         }
 
         return $start.$string.$end;
+    }
+
+    /**
+     * Automatically convert email to Punycode
+     *
+     * @param string $to Email address
+     *
+     * @return string
+     */
+    public static function toPunycode($to)
+    {
+        $address = explode('@', $to);
+        if (empty($address[0]) || empty($address[1])) {
+            return $to;
+        }
+
+        return $address[0] . '@' . idn_to_ascii($address[1]);
     }
 }
