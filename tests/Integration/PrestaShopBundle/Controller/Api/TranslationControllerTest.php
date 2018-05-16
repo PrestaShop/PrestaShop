@@ -68,7 +68,7 @@ class TranslationControllerTest extends ApiTestCase
      */
     public function it_should_return_ok_response_when_requesting_domain($params)
     {
-        $this->assetOkRequest('api_translation_domain_catalog', $params);
+        $this->assertOkRequest('api_translation_domain_catalog', $params);
     }
 
     /**
@@ -120,7 +120,7 @@ class TranslationControllerTest extends ApiTestCase
      */
     public function it_should_return_ok_response_when_requesting_domain_catalog($params)
     {
-        $this->assetOkRequest('api_translation_domains_tree', $params);
+        $this->assertOkRequest('api_translation_domains_tree', $params);
     }
 
     /**
