@@ -71,7 +71,9 @@
             {{ ps.sortable_column_header("Position"|trans({}, 'Admin.Global'), 'position') }}
           </th>
         {% endif %}
-        <th scope="col" style="width: 6%"></th>
+        <th scope="col" class="text-right" style="width: 3rem; padding-right: 2rem">
+            {{ "Actions"|trans({}, 'Admin.Global') }}
+        </th>
       </tr>
     {% endblock %}
 
@@ -165,10 +167,10 @@
             type="submit"
             class="btn btn-primary"
             name="products_filter_submit"
-            title="{{ "Filter"|trans({}, 'Admin.Actions') }}"
+            title="{{ "Search"|trans({}, 'Admin.Actions') }}"
           >
             <i class="material-icons">search</i>
-            {{ "Apply"|trans({}, 'Admin.Actions') }}
+            {{ "Search"|trans({}, 'Admin.Actions') }}
           </button>
           <button
             type="reset"
