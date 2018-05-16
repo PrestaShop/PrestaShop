@@ -26,15 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Column;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
 /**
  * Interface GridDefinitionInterface defines contract for grid definition
@@ -49,7 +44,7 @@ interface GridDefinitionInterface
     public function getName();
 
     /**
-     * Get unique grid indentifier
+     * Get unique grid identifier
      *
      * @return string
      */
@@ -58,7 +53,7 @@ interface GridDefinitionInterface
     /**
      * Get grid columns
      *
-     * @return ColumnCollectionInterface|ColumnInterface[]
+     * @return ColumnCollectionInterface
      */
     public function getColumns();
 
@@ -75,7 +70,7 @@ interface GridDefinitionInterface
     public function getBulkActions();
 
     /**
-     * @return GridActionCollectionInterface|GridActionInterface[]
+     * @return GridActionCollectionInterface
      */
     public function getGridActions();
 }
