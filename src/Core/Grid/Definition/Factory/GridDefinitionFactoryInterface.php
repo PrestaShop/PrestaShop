@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 
+/**
+ * Interface GridDefinitionFactoryInterface defines contract for creating grid
+ */
 interface GridDefinitionFactoryInterface
 {
     /**

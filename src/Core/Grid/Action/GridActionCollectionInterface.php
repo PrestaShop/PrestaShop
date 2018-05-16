@@ -28,5 +28,4 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 interface GridActionCollectionInterface
 {
-
 }

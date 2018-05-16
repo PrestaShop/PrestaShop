@@ -26,7 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+/**
+ * Interface BulkActionCollectionInterface defines bulk actions contract
+ */
 interface BulkActionCollectionInterface extends \Iterator
 {
+    /**
+     * Add bulk action to collection
+     *
+     * @param BulkActionInterface $bulkAction
+     */
     public function add(BulkActionInterface $bulkAction);
 }

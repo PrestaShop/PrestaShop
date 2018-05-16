@@ -26,17 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
- * Class GridDataProvider is responsible for returing grid data
+ * Class GridDataProvider is responsible for returing grid data from database
  */
-final class GridDataProvider implements GridDataProviderInterface
+final class SqlGridDataProvider implements GridDataProviderInterface
 {
     /**
-     * @var GridQueryBuilderInterface
+     * @var DoctrineQueryBuilderInterface
      */
     private $gridQueryBuilder;
 
@@ -46,7 +47,7 @@ final class GridDataProvider implements GridDataProviderInterface
     private $hookDispatcher;
 
     public function __construct(
-        GridQueryBuilderInterface $gridQueryBuilder,
+        DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcher $hookDispatcher
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
@@ -58,23 +59,18 @@ final class GridDataProvider implements GridDataProviderInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        $searchQuery = $this->gridQueryBuilder->getSearchQueryBuilder($searchCriteria);
-        $countQuery = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
+        $searchQueryBuilder = $this->gridQueryBuilder->getSearchQueryBuilder($searchCriteria);
+        $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
-        $this->hookDispatcher->dispatchForParameters('modifyQuery', [
-            'search_query' => $searchQuery,
-            'count_query' => $countQuery,
-        ]);
-
-        $rows = $searchQuery->execute()->fetchAll();
-        $rowsTotal = (int) $countQuery->execute()->fetch(\PDO::FETCH_COLUMN);
+        $rows = $searchQueryBuilder->execute()->fetchAll();
+        $rowsTotal = (int) $countQueryBuilder->execute()->fetch(\PDO::FETCH_COLUMN);
 
         $rows = new RowCollection($rows);
 
         return new GridData(
             $rows,
             $rowsTotal,
-            $searchQuery->getSQL()
+            $searchQueryBuilder->getSQL()
         );
     }
 }

@@ -172,7 +172,7 @@ final class GridView
     /**
      * @return array
      */
-    public function getSorting(): array
+    public function getSorting()
     {
         return $this->sorting;
     }
