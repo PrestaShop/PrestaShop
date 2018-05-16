@@ -28,14 +28,14 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  */
-class LogRepository implements RepositoryInterface, GridQueryBuilderInterface
+class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
     private $connection;
     private $databasePrefix;
@@ -161,15 +161,16 @@ class LogRepository implements RepositoryInterface, GridQueryBuilderInterface
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
-        $logQueryBuilder = $this->getAllWithEmployeeInformationQuery([
-            'offset' => $searchCriteria->getOffset(),
-            'limit' => $searchCriteria->getLimit(),
-            'filters' => $searchCriteria->getFilters(),
-            'orderBy' => $searchCriteria->getOrderBy(),
-            'sortOrder' => $searchCriteria->getOrderWay(),
-        ]);
+        $qb = $this->buildGridQuery($searchCriteria);
+        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
+            ->orderBy(
+                $searchCriteria->getOrderBy(),
+                $searchCriteria->getOrderWay()
+            )
+            ->setFirstResult($searchCriteria->getOffset())
+            ->setMaxResults($searchCriteria->getLimit());
 
-        return $logQueryBuilder;
+        return $qb;
     }
 
     /**
@@ -181,15 +182,60 @@ class LogRepository implements RepositoryInterface, GridQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
+        $qb = $this->buildGridQuery($searchCriteria);
+        $qb->select('COUNT(*)');
+
+        return $qb;
+    }
+
+    /**
+     * Build query body without select, sorting & limiting
+     *
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    private function buildGridQuery(SearchCriteriaInterface $searchCriteria = null)
+    {
         $employeeTable = $this->databasePrefix.'employee';
 
-        //@todo: take search criteria into account
         $qb = $this->connection
             ->createQueryBuilder()
-            ->select('COUNT(*)')
             ->from($this->logTable, 'l')
-            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
-        ;
+            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
+
+        if (null === $searchCriteria) {
+            return $qb;
+        }
+
+        $filters = $searchCriteria->getFilters();
+        foreach ($filters as $filterName => $filterValue) {
+            if (empty($filterValue)) {
+                continue;
+            }
+
+            if ('employee' == $filterName) {
+                $qb->andWhere("e.lastname LIKE :employee OR e.firstname LIKE :employee");
+                $qb->setParameter('employee', '%'.$filterValue.'%');
+                continue;
+            }
+
+            if ('date_add' == $filterName) {
+                if (!empty($filterValue['from']) &&
+                    !empty($filterValue['to'])
+                ) {
+                    $qb->andWhere("l.date_add BETWEEN :date_from AND :date_to");
+                    $qb->setParameters(array(
+                        'date_from' => $filterValue['from'],
+                        'date_to' => $filterValue['to'],
+                    ));
+                }
+                continue;
+            }
+
+            $qb->andWhere("$filterName LIKE :$filterName");
+            $qb->setParameter($filterName, '%'.$filterValue.'%');
+        }
 
         return $qb;
     }
