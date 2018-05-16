@@ -8,6 +8,8 @@
   z-index: 501;
   border-bottom: 0.0625rem solid $color-separator;
 
+  transition: left .5s ease; // transition when collapsing the nav menu
+
   @include media-breakpoint-down(md) {
     left: 0;
   }
