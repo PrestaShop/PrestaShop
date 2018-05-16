@@ -26,17 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 
 /**
- * Interface GridDataProviderInterface defines contract for grid data providers
+ * Interface GridDataInterface exposes contract for final grid data
  */
-interface GridDataProviderInterface
+interface GridDataInterface
 {
     /**
-     * @param SearchCriteriaInterface $searchCriteria
+     * Returns final grid rows ready for rendering
      *
-     * @return GridData
+     * @return RowCollection
      */
-    public function getData(SearchCriteriaInterface $searchCriteria);
+    public function getRows();
+
+    /**
+     * Returns total rows in data source
+     *
+     * @return int
+     */
+    public function getRowsTotal();
+
+    /**
+     * Return query which was used to get rows
+     *
+     * @return string
+     */
+    public function getQuery();
 }

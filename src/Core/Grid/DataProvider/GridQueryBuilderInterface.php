@@ -24,31 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data;
+namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
+
+use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Interface GridDataInterface exposes contract for final grid data
+ * Class QueryProviderInterface defines contract for grid query providers
  */
-interface GridDataInterface
+interface GridQueryBuilderInterface
 {
     /**
-     * Returns final grid rows ready for rendering
+     * Get query that searches grid rows
      *
-     * @return array
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
      */
-    public function getRows();
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
 
     /**
-     * Returns total rows in data source
+     * Get query that counts grid rows
      *
-     * @return int
-     */
-    public function getRowsTotal();
-
-    /**
-     * Return query which was used to get rows
+     * @param SearchCriteriaInterface|null $searchCriteria
      *
-     * @return string
+     * @return QueryBuilder
      */
-    public function getQuery();
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
 }

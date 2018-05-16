@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
