@@ -2148,7 +2148,7 @@ class AdminControllerCore extends Controller
         if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
             $this->page_header_toolbar_btn['modules-list'] = array(
                 'href' => $this->getAdminModulesUrl(),
-                'desc' => $this->l('Recommended Modules and Services')
+                'desc' => $this->l('Recommended Modules')
             );
         }
     }
@@ -2160,7 +2160,7 @@ class AdminControllerCore extends Controller
         if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
             $this->toolbar_btn['modules-list'] = array(
                 'href' => $this->getAdminModulesUrl(),
-                'desc' => $this->l('Recommended Modules and Services')
+                'desc' => $this->l('Recommended Modules')
             );
         }
     }
@@ -2330,7 +2330,7 @@ class AdminControllerCore extends Controller
 
     /**
      * Was used to display a list of recommended modules
-     * 
+     *
      * @param string|bool $tracking_source Source information for URL used by "Install" button
      * @return string Empty
      *
