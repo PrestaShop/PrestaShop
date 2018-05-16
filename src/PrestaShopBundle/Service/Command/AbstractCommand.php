@@ -42,10 +42,15 @@ abstract class AbstractCommand
      *
      * Construct the symfony environment.
      *
-     * @param string $env Environment to set.
+     * @param AppKernel $kernel Symfony Kernel
      */
-    public function __construct(AppKernel $kernel)
+    public function __construct(AppKernel $kernel = null)
     {
+        if (null === $kernel) {
+            require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+            $kernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', false);
+        }
+
         $this->kernel = $kernel;
         $this->application = new Application($this->kernel);
         $this->application->setAutoExit(false);
