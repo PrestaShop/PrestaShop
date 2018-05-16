@@ -302,6 +302,13 @@
     {% endspaceless %}
 {% endblock date_picker_widget %}
 
+{% block date_range_widget %}
+  {% spaceless %}
+    {{ form_widget(form.from) }}
+    {{ form_widget(form.to) }}
+  {% endspaceless %}
+{% endblock date_range_widget %}
+
 {% block switch_widget %}
     {% spaceless %}
     <span class="ps-switch">
