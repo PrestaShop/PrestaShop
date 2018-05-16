@@ -108,13 +108,14 @@ $(function() {
 	</div>
 	{/if}
 
-	{if isset($products) && $products}
+	{if isset($products) && $products &&
+        isset($productsCount) && $productsCount}
 	<div class="panel">
 		<h3>
-			{if $products|@count == 1}
+			{if $productsCount == 1}
 				{l s='1 product' d='Admin.Navigation.Search'}
 			{else}
-				{l s='%d products' sprintf=[$products|@count] d='Admin.Navigation.Search'}
+				{l s='%d products' sprintf=[$productsCount] d='Admin.Navigation.Search'}
 			{/if}
 		</h3>
 		{$products}
@@ -196,7 +197,3 @@ $(function() {
 		</div>
 	</div>
 </div>
-
-
-
-
