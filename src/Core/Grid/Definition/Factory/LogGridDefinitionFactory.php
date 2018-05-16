@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -118,7 +119,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             [
                 'identifier' => 'date_add',
                 'name' => $this->trans('Date', [], 'Admin.Global'),
-                'filter_form_type' => TextType::class,
+                'filter_form_type' => DateRangeType::class,
             ],
         ];
 
