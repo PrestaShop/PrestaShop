@@ -3,7 +3,6 @@
   background: #ffffff;
   top: $size-header-height;
   left: $size-navbar-width;
-  height: $size-header-toolbar-height;
   right: 0;
   z-index: 501;
   border-bottom: 0.0625rem solid $color-separator;
@@ -25,7 +24,11 @@
     padding-left: 0;
     font-size: 1.625rem;
     font-weight: normal;
-    margin-bottom: .313rem;
+    margin-bottom: 0;
+    float: left;
+    @include media-breakpoint-down(sm) {
+      float: none;
+    }
   }
 
   // breadcrumb
@@ -35,19 +38,41 @@
 
   // toolbar buttons
   .toolbar-icons {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
 
-    a + a {
-      margin-left: $grid-gutter-width / 2;
+    @include media-breakpoint-down(sm) {
+      overflow-x: auto;
+      float: none;
     }
+
+    > .wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+
+      @include media-breakpoint-down(sm) {
+        justify-content: flex-start;
+      }
+
+      a + a {
+        margin-left: $grid-gutter-width / 2;
+      }
+    }
+  }
+
+  // bottom spacing for title & toolbar row
+  .title-row {
+    @include clearfix;
+    margin-bottom: $grid-gutter-width / 2;
   }
 }
 
 .page-head-tabs {
 
   background: #fff;
+
+  > ul {
+    border-bottom: 0;
+  }
 
   .tab {
     .notification-container {

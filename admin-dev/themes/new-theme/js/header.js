@@ -24,6 +24,8 @@
  */
 import refreshNotifications from './notifications.js';
 
+const $ = window.$;
+
 export default class Header {
   constructor() {
     $(() => {
@@ -31,6 +33,7 @@ export default class Header {
       this.initMultiStores();
       this.initNotificationsToggle();
       this.initSearch();
+      this.initContentDivOffset();
       refreshNotifications();
     });
   }
@@ -140,5 +143,25 @@ export default class Header {
         "updateElementEmployeeType": $('.notification-center .nav-link.active').attr('data-type')
       }
     );
+  }
+
+  /**
+   * Updates the offset of the content div in whenever the header changes size
+   */
+  initContentDivOffset() {
+    const toolbar = $('.header-toolbar');
+    const header = $('.main-header');
+    const content = $('.content-div');
+    const spacing = 15;
+
+    if (toolbar && header && content) {
+      const onToolbarResize = function() {
+        content.css('padding-top', toolbar.outerHeight() + header.outerHeight() + spacing);
+      };
+
+      $(window).resize(onToolbarResize);
+
+      onToolbarResize();
+    }
   }
 }
