@@ -20,26 +20,29 @@
   }
 
   // page title
-  > .title {
+  .title {
     padding: 0.3125rem;
+    padding-left: 0;
     font-size: 1.625rem;
     font-weight: normal;
-    margin-left: .938rem;
     margin-bottom: .313rem;
   }
 
   // breadcrumb
-  > nav {
-    margin: 0 0 0 .938rem;
+  nav > ol {
+    padding-left: 0;
   }
-}
 
-.toolbar-icons {
-  position: absolute;
-  top: 1.25rem;
-  right: 0.625rem;
-  display: flex;
-  align-items: center;
+  // toolbar buttons
+  .toolbar-icons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+
+    a + a {
+      margin-left: $grid-gutter-width / 2;
+    }
+  }
 }
 
 .page-head-tabs {
