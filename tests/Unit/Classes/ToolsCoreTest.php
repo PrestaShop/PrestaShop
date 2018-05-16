@@ -26,18 +26,20 @@
 
 namespace Tests\Unit\Classes;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase\UnitTestCase;
 use Tools;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
-class ToolsCoreTest extends TestCase
+class ToolsCoreTest extends UnitTestCase
 {
     protected function setUp() {
-        $_POST = array();
-        $_GET = array();
+        $this->container = new Container();
+        $_POST = [];
+        $_GET = [];
         Tools::resetRequest();
     }
 
-    private function setPostAndGet(array $post = array(), array $get = array())
+    private function setPostAndGet(array $post = [], array $get = [])
     {
         $_POST = $post;
         $_GET = $get;
@@ -47,7 +49,7 @@ class ToolsCoreTest extends TestCase
 
     public function testGetValueBaseCase()
     {
-        $this->setPostAndGet(array('hello' => 'world'));
+        $this->setPostAndGet(['hello' => 'world']);
         $this->assertEquals('world', Tools::getValue('hello'));
     }
 
@@ -65,47 +67,47 @@ class ToolsCoreTest extends TestCase
 
     public function testGetValuePrefersPost()
     {
-        $this->setPostAndGet(array('hello' => 'world'), array('hello' => 'cruel world'));
+        $this->setPostAndGet(['hello' => 'world'], ['hello' => 'cruel world']);
         $this->assertEquals('world', Tools::getValue('hello'));
     }
 
     public function testGetValueAcceptsOnlyTruthyStringsAsKeys()
     {
-        $this->setPostAndGet(array(
+        $this->setPostAndGet([
             '' => true,
             ' ' => true,
             null => true
-        ));
+        ]);
 
         $this->assertEquals(false, Tools::getValue('', true));
         $this->assertEquals(true, Tools::getValue(' '));
         $this->assertEquals(false, Tools::getValue(null, true));
     }
 
-    public function testGetValueStripsNullCharsFromReturnedStringsExamples()
+    public function getValueStripsNullCharsFromReturnedStringsProvider()
     {
-        return array(
-            array("\0", ''),
-            array("haxx\0r", 'haxxr'),
-            array("haxx\0\0\0r", 'haxxr'),
-        );
+        return [
+            ["\0", ''],
+            ["haxx\0r", 'haxxr'],
+            ["haxx\0\0\0r", 'haxxr'],
+        ];
     }
 
     /**
-     * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
+     * @dataProvider getValueStripsNullCharsFromReturnedStringsProvider
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
         /**
          * Check it cleans values stored in POST
          */
-        $this->setPostAndGet(array('rawString' => $rawString));
+        $this->setPostAndGet(['rawString' => $rawString]);
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
         /**
          * Check it cleans values stored in GET
          */
-        $this->setPostAndGet(array(), array('rawString' => $rawString));
+        $this->setPostAndGet([], ['rawString' => $rawString]);
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
         /**
@@ -115,86 +117,86 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
     }
 
-    public function testSpreadAmountExamples()
+    public function spreadAmountProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 // base case
-                array(array('a' => 2), array('a' => 1)), // expected result
+                [['a' => 2], ['a' => 1]], // expected result
                 1, 0,                                     // amount and precision
-                array(array('a' => 1), array('a' => 1)), // source rows
+                [['a' => 1], ['a' => 1]], // source rows
                 'a'                                         // sort column
-            ),
-            array(
+            ],
+            [
                 // check with 1 decimal
-                array(array('a' => 1.5), array('a' => 1.5)),
+                [['a' => 1.5], ['a' => 1.5]],
                 1, 1,
-                array(array('a' => 1), array('a' => 1)),
+                [['a' => 1], ['a' => 1]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // 2 decimals, but only one really needed
-                array(array('a' => 1.5), array('a' => 1.5)),
+                [['a' => 1.5], ['a' => 1.5]],
                 1, 2,
-                array(array('a' => 1), array('a' => 1)),
+                [['a' => 1], ['a' => 1]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // check that the biggest "a" gets the adjustment
-                array(array('a' => 3), array('a' => 1)),
+                [['a' => 3], ['a' => 1]],
                 1, 0,
-                array(array('a' => 1), array('a' => 2)),
+                [['a' => 1], ['a' => 2]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // check it works with amount > count($rows)
-                array(array('a' => 4), array('a' => 2)),
+                [['a' => 4], ['a' => 2]],
                 3, 0,
-                array(array('a' => 1), array('a' => 2)),
+                [['a' => 1], ['a' => 2]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // 2 decimals
-                array(array('a' => 2.01), array('a' => 1)),
+                [['a' => 2.01], ['a' => 1]],
                 0.01, 2,
-                array(array('a' => 1), array('a' => 2)),
+                [['a' => 1], ['a' => 2]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // 2 decimals, equal level of adjustment
-                array(array('a' => 2.01), array('a' => 1.01)),
+                [['a' => 2.01], ['a' => 1.01]],
                 0.02, 2,
-                array(array('a' => 1), array('a' => 2)),
+                [['a' => 1], ['a' => 2]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // 2 decimals, different levels of adjustmnt
-                array(array('a' => 2.02), array('a' => 1.01)),
+                [['a' => 2.02], ['a' => 1.01]],
                 0.03, 2,
-                array(array('a' => 1), array('a' => 2)),
+                [['a' => 1], ['a' => 2]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // check associative arrays are OK too
-                array(array('a' => 2.01), array('a' => 1.01)),
+                [['a' => 2.01], ['a' => 1.01]],
                 0.02, 2,
-                array('z' => array('a' => 1), 'x' => array('a' => 2)),
+                ['z' => ['a' => 1], 'x' => ['a' => 2]],
                 'a'
-            ),
-            array(
+            ],
+            [
                 // check amount is rounded if it needs more precision than asked for
-                array(array('a' => 2.02), array('a' => 1.01)),
+                [['a' => 2.02], ['a' => 1.01]],
                 0.025, 2,
-                array(array('a' => 1), array('a' => 2)),
+                [['a' => 1], ['a' => 2]],
                 'a'
-            ),
-            array(
-                array(array('a' => 7.69), array('a' => 4.09), array('a' => 1.8)),
+            ],
+            [
+                [['a' => 7.69], ['a' => 4.09], ['a' => 1.8]],
                 -0.32, 2,
-                array(array('a' => 7.8), array('a' => 4.2), array('a' => 1.9)),
+                [['a' => 7.8], ['a' => 4.2], ['a' => 1.9]],
                 'a'
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -220,11 +222,11 @@ class ToolsCoreTest extends TestCase
 
     public function dirProvider()
     {
-        return array(array(__DIR__, true), array(__FILE__, false), array('dontexists', false));
+        return [[__DIR__, true], [__FILE__, false], ['dontexists', false]];
     }
 
     /**
-     * @dataProvider testSpreadAmountExamples
+     * @dataProvider spreadAmountProvider
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
@@ -233,93 +235,93 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @return array of example taken from the installation of PrestaShop
+     * @return array of examples taken from the installation of PrestaShop
      */
-    public function testCamelCaseExample()
+    public function toCamelCaseProvider()
     {
-        return array(
-            array('address_format', 'addressFormat', false),
-            array('attachment_lang', 'attachmentLang', false),
-            array('attribute_group', 'attributeGroup', false),
-            array('attribute_group_lang', 'attributeGroupLang', false),
-            array('attribute_lang', 'attributeLang', false),
-            array('carrier', 'carrier', false),
-            array('carrier_group', 'carrierGroup', false),
-            array('carrier_lang', 'carrierLang', false),
-            array('carrier_tax_rules_group_shop', 'carrierTaxRulesGroupShop', false),
-            array('carrier_zone', 'carrierZone', false),
-            array('cart_product', 'cartProduct', false),
-            array('cart_rule_lang', 'cartRuleLang', false),
-            array('category_group', 'categoryGroup', false),
-            array('category_lang', 'categoryLang', false),
-            array('category_product', 'categoryProduct', false),
-            array('cms_category', 'cmsCategory', false),
-            array('cms_category_lang', 'cmsCategoryLang', false),
-            array('cms_lang', 'cmsLang', false),
-            array('cms_role', 'cmsRole', false),
-            array('cms_role_lang', 'cmsRoleLang', false),
-            array('configuration_kpi_lang', 'configurationKpiLang', false),
-            array('configuration_lang', 'configurationLang', false),
-            array('contact', 'contact', false),
-            array('contact_lang', 'contactLang', false),
-            array('country', 'country', false),
-            array('country_lang', 'countryLang', false),
-            array('customization_field_lang', 'customizationFieldLang', false),
-            array('feature_lang', 'featureLang', false),
-            array('feature_product', 'featureProduct', false),
-            array('feature_value', 'featureValue', false),
-            array('feature_value_lang', 'featureValueLang', false),
-            array('gamificationtasks', 'gamificationtasks', false),
-            array('gender_lang', 'genderLang', false),
-            array('group_lang', 'groupLang', false),
-            array('image_lang', 'imageLang', false),
-            array('manufacturer_lang', 'manufacturerLang', false),
-            array('meta_lang', 'metaLang', false),
-            array('operating_system', 'operatingSystem', false),
-            array('order_carrier', 'orderCarrier', false),
-            array('order_detail', 'orderDetail', false),
-            array('order_history', 'orderHistory', false),
-            array('order_message', 'orderMessage', false),
-            array('order_message_lang', 'orderMessageLang', false),
-            array('order_return_state', 'orderReturnState', false),
-            array('order_return_state_lang', 'orderReturnStateLang', false),
-            array('order_state', 'orderState', false),
-            array('order_state_lang', 'orderStateLang', false),
-            array('product_attribute', 'productAttribute', false),
-            array('product_attribute_combination', 'productAttributeCombination', false),
-            array('product_attribute_image', 'productAttributeImage', false),
-            array('product_lang', 'productLang', false),
-            array('product_supplier', 'productSupplier', false),
-            array('profile_lang', 'profileLang', false),
-            array('quick_access', 'quickAccess', false),
-            array('quick_access_lang', 'quickAccessLang', false),
-            array('range_price', 'rangePrice', false),
-            array('range_weight', 'rangeWeight', false),
-            array('risk_lang', 'riskLang', false),
-            array('search_engine', 'searchEngine', false),
-            array('specific_price', 'specificPrice', false),
-            array('stock_available', 'stockAvailable', false),
-            array('stock_mvt_reason', 'stockMvtReason', false),
-            array('stock_mvt_reason_lang', 'stockMvtReasonLang', false),
-            array('store_lang', 'storeLang', false),
-            array('supplier_lang', 'supplierLang', false),
-            array('supply_order_state', 'supplyOrderState', false),
-            array('supply_order_state_lang', 'supplyOrderStateLang', false),
-            array('tab', 'tab', false),
-            array('tax_lang', 'taxLang', false),
-            array('warehouse', 'warehouse', false),
-            array('web_browser', 'webBrowser', false),
-            array('zone', 'zone', false),
+        return [
+            ['address_format', 'addressFormat', false],
+            ['attachment_lang', 'attachmentLang', false],
+            ['attribute_group', 'attributeGroup', false],
+            ['attribute_group_lang', 'attributeGroupLang', false],
+            ['attribute_lang', 'attributeLang', false],
+            ['carrier', 'carrier', false],
+            ['carrier_group', 'carrierGroup', false],
+            ['carrier_lang', 'carrierLang', false],
+            ['carrier_tax_rules_group_shop', 'carrierTaxRulesGroupShop', false],
+            ['carrier_zone', 'carrierZone', false],
+            ['cart_product', 'cartProduct', false],
+            ['cart_rule_lang', 'cartRuleLang', false],
+            ['category_group', 'categoryGroup', false],
+            ['category_lang', 'categoryLang', false],
+            ['category_product', 'categoryProduct', false],
+            ['cms_category', 'cmsCategory', false],
+            ['cms_category_lang', 'cmsCategoryLang', false],
+            ['cms_lang', 'cmsLang', false],
+            ['cms_role', 'cmsRole', false],
+            ['cms_role_lang', 'cmsRoleLang', false],
+            ['configuration_kpi_lang', 'configurationKpiLang', false],
+            ['configuration_lang', 'configurationLang', false],
+            ['contact', 'contact', false],
+            ['contact_lang', 'contactLang', false],
+            ['country', 'country', false],
+            ['country_lang', 'countryLang', false],
+            ['customization_field_lang', 'customizationFieldLang', false],
+            ['feature_lang', 'featureLang', false],
+            ['feature_product', 'featureProduct', false],
+            ['feature_value', 'featureValue', false],
+            ['feature_value_lang', 'featureValueLang', false],
+            ['gamificationtasks', 'gamificationtasks', false],
+            ['gender_lang', 'genderLang', false],
+            ['group_lang', 'groupLang', false],
+            ['image_lang', 'imageLang', false],
+            ['manufacturer_lang', 'manufacturerLang', false],
+            ['meta_lang', 'metaLang', false],
+            ['operating_system', 'operatingSystem', false],
+            ['order_carrier', 'orderCarrier', false],
+            ['order_detail', 'orderDetail', false],
+            ['order_history', 'orderHistory', false],
+            ['order_message', 'orderMessage', false],
+            ['order_message_lang', 'orderMessageLang', false],
+            ['order_return_state', 'orderReturnState', false],
+            ['order_return_state_lang', 'orderReturnStateLang', false],
+            ['order_state', 'orderState', false],
+            ['order_state_lang', 'orderStateLang', false],
+            ['product_attribute', 'productAttribute', false],
+            ['product_attribute_combination', 'productAttributeCombination', false],
+            ['product_attribute_image', 'productAttributeImage', false],
+            ['product_lang', 'productLang', false],
+            ['product_supplier', 'productSupplier', false],
+            ['profile_lang', 'profileLang', false],
+            ['quick_access', 'quickAccess', false],
+            ['quick_access_lang', 'quickAccessLang', false],
+            ['range_price', 'rangePrice', false],
+            ['range_weight', 'rangeWeight', false],
+            ['risk_lang', 'riskLang', false],
+            ['search_engine', 'searchEngine', false],
+            ['specific_price', 'specificPrice', false],
+            ['stock_available', 'stockAvailable', false],
+            ['stock_mvt_reason', 'stockMvtReason', false],
+            ['stock_mvt_reason_lang', 'stockMvtReasonLang', false],
+            ['store_lang', 'storeLang', false],
+            ['supplier_lang', 'supplierLang', false],
+            ['supply_order_state', 'supplyOrderState', false],
+            ['supply_order_state_lang', 'supplyOrderStateLang', false],
+            ['tab', 'tab', false],
+            ['tax_lang', 'taxLang', false],
+            ['warehouse', 'warehouse', false],
+            ['web_browser', 'webBrowser', false],
+            ['zone', 'zone', false],
             // True
-            array('supplier_lang', 'SupplierLang', true),
-            array('supply_order_state', 'SupplyOrderState', true),
-            array('supply_order_state_lang', 'SupplyOrderStateLang', true),
-            array('tab', 'Tab', true),
-        );
+            ['supplier_lang', 'SupplierLang', true],
+            ['supply_order_state', 'SupplyOrderState', true],
+            ['supply_order_state_lang', 'SupplyOrderStateLang', true],
+            ['tab', 'Tab', true],
+        ];
     }
 
     /**
-     * @dataProvider testCamelCaseExample
+     * @dataProvider toCamelCaseProvider
      */
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
@@ -328,12 +330,12 @@ class ToolsCoreTest extends TestCase
     }
 
     public static function tearDownAfterClass() {
-        $_POST = array();
-        $_GET = array();
+        $_POST = [];
+        $_GET = [];
     }
 
     /**
-     * @dataProvider testStrReplaceFirstProvider
+     * @dataProvider strReplaceFirstProvider
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
@@ -381,7 +383,7 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function testStrReplaceFirstProvider() {
+    public function strReplaceFirstProvider() {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],
@@ -389,5 +391,57 @@ class ToolsCoreTest extends TestCase
             ['e', 'o', 'feed', 1, 'foed'],
             ['e', 'o', 'feed', 2, 'feod'],
         ];
+    }
+
+    public function getCountryProvider()
+    {
+        return [
+            [2222, 1111, 2222, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 3333, 5555, ''],
+            [2222, 1111, 2222, 1, 3333, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 3333, 0, ''],
+            [2222, 1111, 2222, 1, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 0, 0, ''],
+            [2222, 1111, 2222, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 0, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 0, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 0, 0, 0, ''],
+            [1111, 1111, 0, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0, 0, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0, 0, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0, 0, 0, 0, ''],
+            [2222, 0, 2222, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0, 0, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0, 0, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0, 0, 0, 0, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0, 0, 0, 0, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0, 0, 0, 0, 0, 0, ''],
+        ];
+    }
+
+    /**
+     * @dataProvider getCountryProvider
+     */
+    public function testGetCountry($expected, $addressIdCountry, $idCountry, $psDetectCountry, $psCountryDefault, $httpAcceptLanguage)
+    {
+        // Initialize configuration values
+        \Configuration::get('PS_DETECT_COUNTRY');
+        \Configuration::get('PS_COUNTRY_DEFAULT');
+
+        // Set dependencies
+        $address = new \Address();
+        $address->id_country = $addressIdCountry;
+        $this->setPostAndGet(['id_country' => $idCountry]);
+        \Configuration::set('PS_DETECT_COUNTRY', $psDetectCountry);
+        \Configuration::set('PS_COUNTRY_DEFAULT', $psCountryDefault);
+        if('' === $httpAcceptLanguage) {
+            unset($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        } else {
+            $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $httpAcceptLanguage;
+        }
+
+        $this->assertTrue($expected === \Tools::getCountry($address));
     }
 }
