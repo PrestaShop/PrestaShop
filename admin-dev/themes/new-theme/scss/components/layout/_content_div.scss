@@ -17,7 +17,7 @@
   }
 
   &.with-tabs {
-    padding-top: $size-header-height + $size-header-toolbar-height + ($grid-gutter-width / 2) + 2.5rem;
+    padding-top: $size-header-height + $size-header-toolbar-height + $grid-gutter-width + 2.5rem;
   }
 }
 
