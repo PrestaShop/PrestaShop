@@ -23,17 +23,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="col-sm-1 text-right">
-  {{ renderhook('displayDashboardToolbarIcons', {}) }}
-  <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
-    {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
-  </a>
-  <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
-    {{ ps.tooltip(("Import"|trans({}, 'Admin.Actions')), 'cloud_download') }}
-  </a>
-  <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
-    {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
-  </a>
-  <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-    {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
-</a>
+  <div class="dropdown">
+    <button class="btn btn-text dropdown-toggle tool-button"
+            id="catalog-tools-button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            title="{{ "Settings"|trans({}, 'Admin.Global') }}"
+    >
+      <span class="sr-only">{{ "Settings"|trans({}, 'Admin.Global') }}</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="catalog-tools-button">
+      {{ renderhook('displayDashboardToolbarIcons', {}) }}
+      <a id="desc-product-export" class="dropdown-item" href="{{ path('admin_product_export_action') }}">
+        {{ "Export"|trans({}, 'Admin.Actions') }}
+      </a>
+      <a id="desc-product-import" class="dropdown-item" href="{{ import_link }}">
+        {{ "Import"|trans({}, 'Admin.Actions') }}
+      </a>
+      <a id="desc-product-show-sql" class="dropdown-item" href="javascript:void(0);" onclick="showLastSqlQuery();">
+        {{ "Show SQL query"|trans({}, 'Admin.Actions') }}
+      </a>
+      <a id="desc-product-sql-manager" class="dropdown-item" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
+        {{ "Export to SQL Manager"|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+  </div>
 </div>

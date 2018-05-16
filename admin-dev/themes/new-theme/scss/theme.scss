@@ -92,6 +92,15 @@ span.twitter-typeahead {
   }
 }
 
+// setting dropdown button
+.dropdown-toggle.tool-button {
+  &:after {
+    content: "settings";
+    font-size: 1.375rem;
+    color: #6b868f;
+  }
+}
+
 .translation-field {
   display: none;
 
