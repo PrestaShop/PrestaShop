@@ -864,17 +864,22 @@ class MailCore extends ObjectModel
 
     /**
      * Generic function to dieOrLog with translations.
+     *
+     * @param boolean $die       Should die
+     * @param string  $message   Message
+     * @param array   $templates Templates list
+     * @param string  $domain    Translation domain
      */
     protected static function dieOrLog(
         $die,
         $message,
-        $template = [],
+        $templates = [],
         $domain = 'Admin.Advparameters.Notification'
     ) {
         Tools::dieOrLog(
             Context::getContext()->getTranslator()->trans(
                 $message,
-                $template,
+                $templates,
                 $domain
             ),
             $die
