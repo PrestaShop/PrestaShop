@@ -4,11 +4,10 @@ services:
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\LogGridDataProvider'
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProvider'
         arguments:
             - '@prestashop.core.admin.log.repository'
             - '@prestashop.hook.dispatcher'
-            - '@doctrine.dbal.default_connection'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:

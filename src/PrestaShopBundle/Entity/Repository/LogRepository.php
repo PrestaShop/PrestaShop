@@ -27,12 +27,15 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  */
-class LogRepository implements RepositoryInterface
+class LogRepository implements RepositoryInterface, GridQueryBuilderInterface
 {
     private $connection;
     private $databasePrefix;
@@ -147,5 +150,47 @@ class LogRepository implements RepositoryInterface
         $platform   = $this->connection->getDatabasePlatform();
 
         return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
+    }
+
+    /**
+     * Get query that searches grid rows
+     *
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $logQueryBuilder = $this->getAllWithEmployeeInformationQuery([
+            'offset' => $searchCriteria->getOffset(),
+            'limit' => $searchCriteria->getLimit(),
+            'filters' => $searchCriteria->getFilters(),
+            'orderBy' => $searchCriteria->getOrderBy(),
+            'sortOrder' => $searchCriteria->getOrderWay(),
+        ]);
+
+        return $logQueryBuilder;
+    }
+
+    /**
+     * Get query that counts grid rows
+     *
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $employeeTable = $this->databasePrefix.'employee';
+
+        //@todo: take search criteria into account
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->select('COUNT(*)')
+            ->from($this->logTable, 'l')
+            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
+        ;
+
+        return $qb;
     }
 }

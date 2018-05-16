@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data;
+namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
 
