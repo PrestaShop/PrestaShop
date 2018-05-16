@@ -84,7 +84,6 @@ final class Grid
             $this->createColumnsView(),
             $this->filterForm->createView()
         );
-
         $view->setBulkActions($this->createBulkActionsView());
         $view->setGridActions($this->createGridActionsView());
         $view->setData([

@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data;
 
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
+
 /**
  * Class GridData is responsible for storing grid data
  */
@@ -47,11 +49,11 @@ final class GridData implements GridDataInterface
     private $query = '';
 
     /**
-     * @param array  $rows      Filtered & paginated rows data
-     * @param int    $rowsTotal Total number of rows (without pagination)
-     * @param string $query     Query used to get rows
+     * @param RowCollectionInterface  $rows      Filtered & paginated rows data
+     * @param int                     $rowsTotal Total number of rows (without pagination)
+     * @param string                  $query     Query used to get rows
      */
-    public function __construct(array $rows, $rowsTotal, $query = '')
+    public function __construct(RowCollectionInterface $rows, $rowsTotal, $query = '')
     {
         $this->rows = $rows;
         $this->rowsTotal = $rowsTotal;
@@ -67,14 +69,6 @@ final class GridData implements GridDataInterface
     }
 
     /**
-     * @param array $rows
-     */
-    public function setRows(array $rows)
-    {
-        $this->rows = $rows;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getRowsTotal()
@@ -83,26 +77,10 @@ final class GridData implements GridDataInterface
     }
 
     /**
-     * @param int $rowsTotal
-     */
-    public function setRowsTotal($rowsTotal)
-    {
-        $this->rowsTotal = (int) $rowsTotal;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getQuery()
     {
         return $this->query;
-    }
-
-    /**
-     * @param string $query
-     */
-    public function setQuery($query)
-    {
-        $this->query = $query;
     }
 }
