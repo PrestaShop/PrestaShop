@@ -24,38 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Grid\Search;
 
-use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Interface GridDataProviderInterface defines contract for grid data providers
+ * Class TemporarySearchCriteria is temporary search criteria class. Should be removed.
  */
-interface GridDataProviderInterface
+class TemporarySearchCriteria implements SearchCriteriaInterface
 {
-    /**
-     * Get filtered & paginated rows from any data source (database, API or any other)
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return RowCollectionInterface
-     */
-    public function getRows(SearchCriteriaInterface $searchCriteria);
+    private $request;
 
-    /**
-     * Get total rows count in data source
-     *
-     * @return int
-     */
-    public function getRowsTotal();
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
-    /**
-     * Get query which is used to retrieve grid rows from data source
-     *
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return string
-     */
-    public function getQuery(SearchCriteriaInterface $searchCriteria);
+    public function getOrderBy()
+    {
+        return $this->request->get('orderBy', 'id_log');
+    }
+
+    public function getOrderWay()
+    {
+        return $this->request->get('sortOrder', 'asc');
+    }
+
+    public function getOffset()
+    {
+        return $this->request->get('offset', 0);
+    }
+
+    public function getLimit()
+    {
+        return $this->request->get('limit', 10);
+    }
+
+    public function getFilters()
+    {
+        $filters = $this->request->get('logs', []);
+
+        unset($filters['_token']);
+
+        return $filters;
+    }
 }
