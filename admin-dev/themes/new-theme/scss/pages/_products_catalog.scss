@@ -19,6 +19,10 @@
 
   #catalog-actions {
     align-items: start;
+
+    .row + .row {
+      padding-top: $grid-gutter-width / 2;
+    }
   }
 
   .icon-caret {
@@ -47,10 +51,6 @@
     .action-disabled {
       color: $brand-danger
     }
-  }
-
-  #product_catalog_category_tree_filter {
-    margin-left: auto;
   }
 
   .bulk-catalog {

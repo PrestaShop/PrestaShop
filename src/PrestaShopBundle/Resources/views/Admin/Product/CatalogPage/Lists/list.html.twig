@@ -28,8 +28,13 @@
 >
   {% for product in products %}
     <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
-        <td class="checkbox-column">
-          <input type="checkbox" id="bulk_action_selected_products-{{ product.id_product }}" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
+        <td class="checkbox-column form-group">
+          <div class="md-checkbox md-checkbox-inline">
+            <label>
+              <input type="checkbox" id="bulk_action_selected_products-{{ product.id_product }}" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
+              <i class="md-checkbox-control"></i>
+            </label>
+          </div>
         </td>
         <td>
             <label class="form-check-label" for="bulk_action_selected_products-{{ product.id_product }}">

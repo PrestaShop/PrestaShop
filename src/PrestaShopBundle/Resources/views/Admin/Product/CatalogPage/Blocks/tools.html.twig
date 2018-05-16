@@ -22,22 +22,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="row">
-  <div class="col-md-12">
-    <div class="float-right">
-      {{ renderhook('displayDashboardToolbarIcons', {}) }}
-      <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
-        {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
-      </a>
-      <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
-        {{ ps.tooltip(("Import"|trans({}, 'Admin.Actions')), 'cloud_download') }}
-      </a>
-      <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
-        {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
-      </a>
-      <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
-        {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
-      </a>
-    </div>
-  </div>
+<div class="col-sm-1 text-right">
+  {{ renderhook('displayDashboardToolbarIcons', {}) }}
+  <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
+    {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
+  </a>
+  <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
+    {{ ps.tooltip(("Import"|trans({}, 'Admin.Actions')), 'cloud_download') }}
+  </a>
+  <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
+    {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
+  </a>
+  <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
+    {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
+</a>
 </div>
