@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -52,15 +53,7 @@ class LogsController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         // temporary search criteria class, to be removed
-        $searchCriteria = new class($request) implements SearchCriteriaInterface {
-            private $request;
-            public function __construct(Request $request) { $this->request = $request; }
-            public function getOrderBy() { return $this->request->get('orderBy', 'id_log'); }
-            public function getOrderWay() { return $this->request->get('sortOrder', 'asc');}
-            public function getOffset() { return $this->request->get('offset', 0); }
-            public function getLimit() { return $this->request->get('limit', 10); }
-            public function getFilters() { $f = $this->request->get('logs', []); unset($f['_token']); return $f; }
-        };
+        $searchCriteria = new TemporarySearchCriteria($request);
 
         $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
         $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
@@ -176,6 +169,8 @@ class LogsController extends FrameworkBundleAdminController
     public function deleteAllAction()
     {
         $this->getLogRepository()->deleteAll();
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_logs');
     }
