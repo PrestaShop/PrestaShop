@@ -9,13 +9,13 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.performance.form_provider'
             -
-              'smarty': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
-              'debug_mode': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
-              'optional_features': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
-              'ccc': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
-              'media_servers': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
-              'caching': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
-              'add_memcache_server': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+              'smarty': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\SmartyType'
+              'debug_mode': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\DebugModeType'
+              'optional_features': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\OptionalFeaturesType'
+              'ccc': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\CombineCompressCacheType'
+              'media_servers': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\MediaServersType'
+              'caching': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\CachingType'
+              'add_memcache_server': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\MemcacheServerType'
             - 'PerformancePage'
 
     prestashop.adapter.maintenance.form_handler:

@@ -26,7 +26,7 @@ services:
             - '@translator'
 
     prestashop.adapter.performance.form_provider:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Performance\PerformanceFormDataProvider'
         arguments:
             - '@prestashop.adapter.smarty_cache.configuration'
             - '@prestashop.adapter.debug_mode.configuration'
