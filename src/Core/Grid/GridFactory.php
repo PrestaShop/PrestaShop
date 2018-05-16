@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
@@ -83,16 +82,7 @@ final class GridFactory implements GridFactoryInterface
             'definition' => $definition,
         ]);
 
-        $data = new GridData(
-            $this->dataProvider->getRows($searchCriteria),
-            $this->dataProvider->getRowsTotal(),
-            $this->dataProvider->getQuery($searchCriteria)
-        );
-
-        $this->dispatcher->dispatchForParameters('modifyGridData', [
-            'data' => $data,
-            'definition' => $definition,
-        ]);
+        $data = $this->dataProvider->getData($searchCriteria);
 
         $filterForm = $this->createFilterFormFromDefinition($definition);
         $filterForm->setData($searchCriteria->getFilters());
