@@ -25,15 +25,17 @@
  */
 namespace PrestaShopBundle\Service\Command;
 
+use AppKernel;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 
 abstract class AbstractCommand
 {
-    private $env;
+    protected $kernel;
     protected $application;
-    protected $commands;
+    protected $commands = [];
 
     /**
      * Constructor.
@@ -42,30 +44,17 @@ abstract class AbstractCommand
      *
      * @param string $env Environment to set.
      */
-    public function __construct($env = null)
+    public function __construct(AppKernel $kernel)
     {
-        umask(0000);
-        set_time_limit(0);
-
-        if (null === $env) {
-            $this->env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-        } else {
-            $this->env = $env;
-        }
-
-        $this->commands = array();
-
-        require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-
-        $kernel = new \AppKernel($this->env, false);
-        $this->application = new Application($kernel);
+        $this->kernel = $kernel;
+        $this->application = new Application($this->kernel);
         $this->application->setAutoExit(false);
     }
 
     /**
      * Execute all defined commands.
      *
-     * @throws \Exception if no command defined
+     * @throws Exception if no command defined
      */
     public function execute()
     {
@@ -73,7 +62,7 @@ abstract class AbstractCommand
         $commandOutput = array();
 
         if (empty($this->commands)) {
-            throw new \Exception('Error, you need to define at least one command');
+            throw new Exception('Error, you need to define at least one command');
         }
 
         foreach ($this->commands as $command) {
