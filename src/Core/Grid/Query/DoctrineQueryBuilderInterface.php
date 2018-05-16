@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -38,7 +39,7 @@ interface DoctrineQueryBuilderInterface
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *
-     * @return mixed
+     * @return QueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
 
@@ -47,7 +48,7 @@ interface DoctrineQueryBuilderInterface
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *
-     * @return mixed
+     * @return QueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
 }
