@@ -794,9 +794,12 @@ class ToolsCore
      * Implement array_replace for PHP <= 5.2
      *
      * @return array|mixed|null
+     *
+     * @deprecated since version 1.7.4.0, to be removed.
      */
     public static function array_replace()
     {
+        Tools::displayAsDeprecated('Use PHP\'s array_replace() instead');
         if (!function_exists('array_replace')) {
             $args     = func_get_args();
             $num_args = func_num_args();
