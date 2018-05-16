@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
 use Doctrine\DBAL\Driver\Connection;
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
@@ -76,7 +77,8 @@ final class LogGridDataProvider implements GridDataProviderInterface
         $stmt = $this->connection->prepare($logSqlQuery);
         $stmt->execute();
 
-        $logs = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $logs = new RowCollection($rows);
 
         return $logs;
     }
