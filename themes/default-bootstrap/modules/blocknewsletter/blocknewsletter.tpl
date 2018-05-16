@@ -1,5 +1,5 @@
 {*
-* 2007-2017 PrestaShop
+* 2007-2018 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,6 +32,7 @@
                 <button type="submit" name="submitNewsletter" class="btn btn-default button button-small">
                     <span>{l s='Ok' mod='blocknewsletter'}</span>
                 </button>
+				{hook h='displayGDPRConsent' mod='psgdpr' id_module=$id_module}
 				<input type="hidden" name="action" value="0" />
 			</div>
 		</form>
