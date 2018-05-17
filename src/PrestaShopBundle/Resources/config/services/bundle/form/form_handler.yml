@@ -2,10 +2,6 @@ services:
     _defaults:
         public: true
 
-    _instanceof:
-        PrestaShop\PrestaShop\Core\Form\AbstractFormHandler:
-            tags: ['prestashop.form.handler']
-
     prestashop.adapter.performance.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:

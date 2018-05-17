@@ -39,7 +39,7 @@
                     >
                         {% for tableName in dbTableNames %}
                             <option value="{{ tableName }}"
-                                    data-table-columns-url="{{ path('admin_sql_manager_table_columns', {'table': tableName}) }}"
+                                    data-table-columns-url="{{ path('admin_sql_manager_table_columns', {'mySqlTableName': tableName}) }}"
                             >
                                 {{ tableName }}
                             </option>
