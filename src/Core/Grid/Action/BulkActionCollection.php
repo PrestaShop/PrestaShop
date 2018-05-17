@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
+/**
+ * Class BulkActionCollection holds bulk action collection available for grid
+ */
 final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
 {
     /**

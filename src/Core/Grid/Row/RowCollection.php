@@ -42,9 +42,7 @@ class RowCollection extends AbstractCollection implements RowCollectionInterface
     }
 
     /**
-     * Get raw rows data
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getRows()
     {

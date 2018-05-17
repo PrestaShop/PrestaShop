@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
+/**
+ * Interface ColumnCollectionInterface defines contract for grid column collection
+ */
 interface ColumnCollectionInterface extends \Iterator, \Countable
 {
     /**

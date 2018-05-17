@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
@@ -159,7 +160,7 @@ final class Grid
     }
 
     /**
-     * Some columns may modify row data that comes directly from database or any other data source.
+     * Some columns may modify row data
      *
      * @param array                     $row
      * @param ColumnCollectionInterface $columns
@@ -191,6 +192,8 @@ final class Grid
     }
 
     /**
+     * Create columns view ready for rendering
+     *
      * @return array
      */
     private function createColumnsView()
@@ -217,6 +220,8 @@ final class Grid
     }
 
     /**
+     * Create bulk actions view ready for rendering
+     *
      * @return array
      */
     private function createBulkActionsView()
@@ -243,6 +248,7 @@ final class Grid
     {
         $gridActionsView = [];
 
+        /** @var GridActionInterface $gridAction */
         foreach ($this->definition->getGridActions() as $gridAction) {
             $actionView = [
                 'identifier' => $gridAction->getIdentifier(),

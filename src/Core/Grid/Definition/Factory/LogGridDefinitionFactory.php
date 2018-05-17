@@ -78,7 +78,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ]);
         };
 
-        $columnsArray = [
+        return ColumnCollection::fromArray([
             [
                 'identifier' => 'id_log',
                 'name' => $this->trans('ID', [], 'Admin.Global'),
@@ -121,9 +121,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'name' => $this->trans('Date', [], 'Admin.Global'),
                 'filter_form_type' => DateRangeType::class,
             ],
-        ];
-
-        return ColumnCollection::fromArray($columnsArray);
+        ]);
     }
 
     /**
@@ -136,7 +134,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             return $templating->render('@AdvancedParameters/LogsPage/Blocks/delete_all_grid_action.html.twig');
         };
 
-        $actionsArray = [
+        return GridActionCollection::fromArray([
             [
                 'identifier' => 'delete',
                 'name' => $this->trans('Erase all', [], 'Admin.Advparameters.Feature'),
@@ -158,8 +156,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'name' => $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'icon' => 'storage',
             ],
-        ];
-
-        return GridActionCollection::fromArray($actionsArray);
+        ]);
     }
 }

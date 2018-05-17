@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
- * Class GridDataProvider is responsible for returing grid data from database
+ * Class DoctrineGridDataProvider is responsible for returing grid data using Doctrine query builders
  */
-final class SqlGridDataProvider implements GridDataProviderInterface
+final class DoctrineGridDataProvider implements GridDataProviderInterface
 {
     /**
      * @var DoctrineQueryBuilderInterface
@@ -46,6 +46,10 @@ final class SqlGridDataProvider implements GridDataProviderInterface
      */
     private $hookDispatcher;
 
+    /**
+     * @param DoctrineQueryBuilderInterface $gridQueryBuilder
+     * @param HookDispatcher $hookDispatcher
+     */
     public function __construct(
         DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcher $hookDispatcher
