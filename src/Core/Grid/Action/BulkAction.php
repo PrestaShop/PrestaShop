@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+/**
+ * Class BulkAction holds data about single bulk action available in grid
+ */
 final class BulkAction implements BulkActionInterface
 {
     /**

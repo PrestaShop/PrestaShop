@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
+/**
+ * Class GridActionCollection is responsible for holding single grid actions
+ */
 final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
 {
     /**
@@ -49,6 +52,9 @@ final class GridActionCollection extends AbstractCollection implements GridActio
         return $actions;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function add(GridActionInterface $action)
     {
         $this->items[$action->getIdentifier()] = $action;

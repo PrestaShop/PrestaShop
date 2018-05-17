@@ -26,6 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+/**
+ * Interface GridActionCollectionInterface defines contract for grid action collection
+ */
 interface GridActionCollectionInterface
 {
+    /**
+     * Add grid action to collection
+     *
+     * @param GridActionInterface $action
+     */
+    public function add(GridActionInterface $action);
 }
