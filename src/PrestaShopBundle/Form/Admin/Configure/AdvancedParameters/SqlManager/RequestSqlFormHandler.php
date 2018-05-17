@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
+/**
+ * Class RequestSqlFormHandler is responsible for creating RequestSql form
+ */
 class RequestSqlFormHandler implements FormHandlerInterface
 {
     /**
@@ -41,6 +44,10 @@ class RequestSqlFormHandler implements FormHandlerInterface
      */
     private $formDataProvider;
 
+    /**
+     * @param FormFactoryInterface       $formFactory
+     * @param RequestSqlFormDataProvider $formDataProvider
+     */
     public function __construct(
         FormFactoryInterface $formFactory,
         RequestSqlFormDataProvider $formDataProvider
