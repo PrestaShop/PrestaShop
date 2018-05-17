@@ -30,6 +30,10 @@ use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager;
 use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlValidator;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
+/**
+ * Class RequestSqlFormDataProvider is responsible for saving RequestSQL model in "Configure > Advanced Parameters >
+ * Database > SQL Manager"
+ */
 final class RequestSqlFormDataProvider implements FormDataProviderInterface
 {
     /**
@@ -42,6 +46,10 @@ final class RequestSqlFormDataProvider implements FormDataProviderInterface
      */
     private $requestSqlValidator;
 
+    /**
+     * @param RequestSqlManager   $requestSqlManager
+     * @param RequestSqlValidator $requestSqlValidator
+     */
     public function __construct(RequestSqlManager $requestSqlManager, RequestSqlValidator $requestSqlValidator)
     {
         $this->requestSqlManager = $requestSqlManager;

@@ -165,44 +165,44 @@ admin_sql_manager_create:
         _legacy_controller: AdminRequestSql
 
 admin_sql_manager_edit:
-    path: sql_manager/edit/{id}
+    path: sql_manager/edit/{requestSqlId}
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:edit'
         _legacy_controller: AdminRequestSql
     requirements:
-        id: \d+
+        requestSqlId: \d+
 
 admin_sql_manager_delete:
-    path: sql_manager/delete/{id}
+    path: sql_manager/delete/{requestSqlId}
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:delete'
         _legacy_controller: AdminRequestSql
     requirements:
-        id: \d+
+        requestSqlId: \d+
 
 admin_sql_manager_table_columns:
-    path: sql_manager/tables/{table}/columns
+    path: sql_manager/tables/{mySqlTableName}/columns
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:tableColumns'
         _legacy_controller: AdminRequestSql
 
 admin_sql_manager_view:
-    path: /sql_manager/view/{id}
+    path: /sql_manager/view/{requestSqlId}
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:view'
         _legacy_controller: AdminRequestSql
     requirements:
-        id: \d+
+        requestSqlId: \d+
 
 admin_sql_manager_export:
-    path: /sql_manager/export/{id}
+    path: /sql_manager/export/{requestSqlId}
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:export'
         _legacy_controller: AdminRequestSql
     requirements:
-        id: \d+
+        requestSqlId: \d+
