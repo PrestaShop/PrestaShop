@@ -22,10 +22,10 @@
     }
     .alert-box {
       padding-top: 28px;
-      z-index: 3;
       position: fixed;
       right: 5px;
       top: 40px;
+      z-index: 502; // above header toolbar
     }
     .fade-enter-active, .fade-leave-active {
       transition: opacity .5s;
