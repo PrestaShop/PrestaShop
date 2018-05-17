@@ -40,6 +40,16 @@ services:
               'notifications': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType'
             - 'AdministrationPage'
 
+    prestashop.admin.shipping_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.shipping_preferences.data_provider'
+            -
+              'handling': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
+            - 'ShippingPreferencesPage'
+
     prestashop.admin.customer_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:

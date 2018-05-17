@@ -315,6 +315,15 @@ services:
     form.type.common_type:
         abstract: true
 
+    form.type.shipping_preferences.handling:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+        tags:
+            - { name: form.type }
+
     form.type.product_preferences.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
         parent: 'form.type.translatable.aware'
