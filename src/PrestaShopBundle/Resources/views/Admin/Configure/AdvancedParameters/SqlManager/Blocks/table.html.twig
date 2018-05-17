@@ -68,7 +68,7 @@
                 <td>
                     <div class="btn-group-action">
                         <div class="btn-group">
-                            <a href="{{ path('admin_sql_manager_export', {'id': requestSql.id_request_sql }) }}"
+                            <a href="{{ path('admin_sql_manager_export', {'requestSqlId': requestSql.id_request_sql }) }}"
                                title="{{ 'Export'|trans({}, 'Admin.Actions') }}"
                                class="btn tooltip-link product-edit"
                             >
@@ -81,19 +81,19 @@
                             >
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(86px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item" href="{{ path('admin_sql_manager_view', {'id': requestSql.id_request_sql}) }}">
+                                <a class="dropdown-item" href="{{ path('admin_sql_manager_view', {'requestSqlId': requestSql.id_request_sql}) }}">
                                     <i class="material-icons">remove_red_eye</i>
                                     {{ 'View'|trans({}, 'Admin.Global') }}
                                 </a>
                                 <a class="dropdown-item"
-                                   href="{{ path('admin_sql_manager_edit', {'id': requestSql.id_request_sql}) }}"
+                                   href="{{ path('admin_sql_manager_edit', {'requestSqlId': requestSql.id_request_sql}) }}"
                                 >
                                     <i class="material-icons">edit</i>
                                     {{ 'Edit'|trans({}, 'Admin.Global') }}
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item js-confirm-btn"
-                                   href="{{ path('admin_sql_manager_delete', {'id': requestSql.id_request_sql}) }}"
+                                   href="{{ path('admin_sql_manager_delete', {'requestSqlId': requestSql.id_request_sql}) }}"
                                    data-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
                                 >
                                     <i class="material-icons">delete</i>

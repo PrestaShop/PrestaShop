@@ -47,7 +47,7 @@
                             <div class="form-group">
                                 <label for="{{ requestSqlForm.request_sql.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
                                 {{ form_errors(requestSqlForm.request_sql.sql) }}
-                                {{ form_widget(requestSqlForm.request_sql.sql) }}
+                                {{ form_widget(requestSqlForm.request_sql.sql, {'attr': { 'rows': 10}}) }}
                             </div>
 
                             {{ form_rest(requestSqlForm) }}
