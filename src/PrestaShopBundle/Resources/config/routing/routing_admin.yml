@@ -51,6 +51,10 @@ _admin_stock_routing:
     resource: "admin/routing_stock.yml"
     prefix: /stock
 
+_admin_improve_routing:
+    resource: "admin/routing_improve.yml"
+    prefix: /improve
+
 _admin_configure_routing:
     resource: "admin/routing_configure.yml"
     prefix: /configure

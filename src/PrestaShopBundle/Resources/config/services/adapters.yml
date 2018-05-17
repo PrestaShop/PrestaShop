@@ -152,3 +152,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.shipping_preferences.handling_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
