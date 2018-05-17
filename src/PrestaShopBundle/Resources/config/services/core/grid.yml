@@ -4,7 +4,7 @@ services:
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\SqlGridDataProvider'
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.admin.log.repository'
             - '@prestashop.hook.dispatcher'
