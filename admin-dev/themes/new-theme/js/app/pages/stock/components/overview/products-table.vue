@@ -41,23 +41,23 @@
             {{trans('title_supplier')}}
           </PSSort>
         </th>
-        <th class="text-sm-center">
+        <th class="text-center">
           {{trans('title_status')}}
         </th>
-        <th class="text-sm-center">
+        <th class="text-center">
           <PSSort order="physical_quantity" @sort="sort" :current-sort="currentSort">
             {{trans('title_physical')}}
           </PSSort>
         </th>
-        <th class="text-sm-center">
+        <th class="text-center">
           {{trans('title_reserved')}}
         </th>
-        <th class="text-sm-left text-md-center">
+        <th class="text-center">
           <PSSort order="available_quantity" @sort="sort" :current-sort="currentSort">
             {{trans('title_available')}}
           </PSSort>
         </th>
-        <th class="text-md-left" :title="trans('title_edit_quantity')">
+        <th :title="trans('title_edit_quantity')">
           <i class="material-icons">edit</i>
           {{trans('title_edit_quantity')}}
         </th>

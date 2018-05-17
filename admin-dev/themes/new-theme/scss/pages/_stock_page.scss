@@ -3,19 +3,6 @@
   padding: 0;
 
   .table {
-    td {
-      padding: 5px 5px 5px;
-      word-wrap: break-word;
-      white-space: normal;
-    }
-    thead th {
-      padding: 5px inherit;
-      vertical-align: middle;
-      .material-icons {
-        color: $gray-medium;
-        vertical-align: middle;
-      }
-    }
     td:first-child {
       // product description inside the product column
       p {
@@ -159,19 +146,15 @@
 
   .stock-overview {
     .table {
-      font-size: .9em;
       table-layout: fixed;
-      width: 100%;
-      white-space: nowrap;
 
       thead {
         th {
-          color: $gray-dark;
-          padding: 10px 0;
-          &.thead-title {
-            padding-left: 88px;
+          &.product-title {
+            padding-left: 6rem;
           }
           &:last-child {
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             .material-icons {

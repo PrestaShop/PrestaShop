@@ -40,10 +40,10 @@
           <th>
             {{trans('title_movements_type')}}
           </th>
-          <th class="text-sm-center">
+          <th class="text-center">
             {{trans('title_quantity')}}
           </th>
-          <th class="text-sm-center">
+          <th class="text-center">
             <PSSort order="date_add" @sort="sort" :current-sort="currentSort">
               {{trans('title_date')}}
             </PSSort>
