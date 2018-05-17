@@ -29,6 +29,7 @@ module.exports = {
     product_description: '//*[@id="description"]',
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
-    filename_link: '(//*[@id="attachments"]//a)[1]'
+    filename_link: '(//*[@id="attachments"]//a)[1]',
+    second_product: '(//*[@id="content"]//h3[@itemprop="name"])[2]'
   }
 };
