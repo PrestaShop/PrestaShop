@@ -83,11 +83,19 @@
   // form that allows changing stock quantities
   form.qty {
     position: relative;
-    width: 120px;
+    display: inline-block;
+    width: 7rem;
 
-    .ps-number-button {
-      // we need this offset to make room for the confirmation button
-      right: 34px;
+    &:hover,
+    &.active {
+      input[type=number] {
+        // we need this offset to make room for the confirmation button
+        padding-right: 34px;
+      }
+
+      .ps-number-spinner {
+        right: 34px;
+      }
     }
 
     .check-button {
@@ -95,13 +103,14 @@
       opacity: 0;
       position: absolute;
       top: 1px;
-      right: 26px;
+      right: 1px;
       border: none;
       height: 33px;
       width: 33px;
       background: $brand-primary;
       z-index: 2;
       padding: 0;
+      cursor: pointer;
       .material-icons {
         color: white;
         vertical-align: middle;
@@ -192,6 +201,9 @@
     }
 
     .product-actions {
+      small {
+        display: block;
+      }
       .bulk-qty {
         max-width: 100px;
       }
