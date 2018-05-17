@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Collection;
 
 /**
- * Class AbstractCollection
+ * Class AbstractCollection is responsible for providing base collection implementation
  */
 abstract class AbstractCollection implements \Iterator, \Countable
 {

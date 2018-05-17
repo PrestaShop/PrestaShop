@@ -34,42 +34,42 @@ use Symfony\Component\Form\FormTypeInterface;
 final class Column implements ColumnInterface
 {
     /**
-     * @var string
+     * @var string Translated column name
      */
     private $name;
 
     /**
-     * @var string
+     * @var string  Unique column identifier
      */
     private $identifier;
 
     /**
-     * @var callable|null
+     * @var callable|null Column's content modifier if needed
      */
     private $modifier;
 
     /**
-     * @var string
+     * @var string|null Fully qualified class name of Symfony's form type if column is filterable
      */
     private $filterFormType;
 
     /**
-     * @var array
+     * @var array Form type options for $filterFormType
      */
     private $filterFormTypeOptions = [];
 
     /**
-     * @var bool
+     * @var bool True if column is sortable or False otherwise
      */
     private $isSortable = true;
 
     /**
-     * @var bool True if column's content must be raw (not escaped) or False otherwise
+     * @var bool True if column's content must not be escaped. Useful when modifier is set and it renders Html content.
      */
     private $isRawContent = false;
 
     /**
-     * @var int
+     * @var int Column's position in grid
      */
     private $position = 0;
 
@@ -87,6 +87,7 @@ final class Column implements ColumnInterface
      * Create column from array data
      *
      * @param array $data
+     *
      * @return Column
      */
     public static function fromArray(array $data)

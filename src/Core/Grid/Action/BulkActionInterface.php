@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Interface BulkActionInterface
+ * Interface BulkActionInterface defines contract for single grid bulk action
  */
 interface BulkActionInterface
 {

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Class RowAction holds information related to row action for each row element
+ * Class RowAction holds information related to row action for each row element in grid
  */
 final class RowAction implements RowActionInterface
 {
@@ -66,7 +66,7 @@ final class RowAction implements RowActionInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -74,7 +74,7 @@ final class RowAction implements RowActionInterface
     }
 
     /**
-     * @return callable
+     * {@inheritdoc}
      */
     public function getCallback()
     {
@@ -82,7 +82,7 @@ final class RowAction implements RowActionInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getIcon()
     {
@@ -90,7 +90,7 @@ final class RowAction implements RowActionInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {
