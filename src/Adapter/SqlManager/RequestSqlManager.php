@@ -34,9 +34,9 @@ class RequestSqlManager
     /**
      * Create or updating existing RequestSqlCore model from given data
      *
-     * @param array $data
+     * @param array $data RequestSql data
      *
-     * @return array
+     * @return array Errors if any
      */
     public function createOrUpdateFromData(array $data)
     {
@@ -46,8 +46,8 @@ class RequestSqlManager
         $requestSql->name = $data['name'];
         $requestSql->sql = $data['sql'];
 
-        if (true !== $result = $requestSql->validateFields(false, true)) {
-            return [$result];
+        if (true !== $error = $requestSql->validateFields(false, true)) {
+            return [$error];
         }
 
         $requestSql->save();
@@ -58,9 +58,9 @@ class RequestSqlManager
     /**
      * Delete Request SQL
      *
-     * @param int $id   ID of Request SQL
+     * @param int $id ID of Request SQL
      *
-     * @return bool     True on success or False otherwise
+     * @return bool True on success or False otherwise
      */
     public function delete($id)
     {
