@@ -87,5 +87,9 @@
         clear: none; } }
   #footer #newsletter_block_left .newsletter-input {
     max-width: 300px !important; }
-
+  #footer #gpdr_consent
+  {
+      margin-top: 22px;
+      color: #fff !important;
+  }
 /*# sourceMappingURL=blocknewsletter.css.map */
