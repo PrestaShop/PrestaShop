@@ -113,9 +113,6 @@
   // hide the layout header
   #main-div > .header-toolbar {
     height: 0;
-    border: none;
-    .title {
-      display: none;
-    }
+    display: none;
   }
 </style>
