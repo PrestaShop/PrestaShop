@@ -63,7 +63,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Logs', [], 'Admin.Advparameters.Feature');
+        return $this->trans('Logs', [], 'Admin.Navigation.Menu');
     }
 
     /**
