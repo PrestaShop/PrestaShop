@@ -28,12 +28,14 @@
       <thead>
         <tr>
           <th width="30%">
-            {{trans('title_product')}}
-            <PSSort order="product" @sort="toggleSort" />
+            <PSSort order="product" @sort="sort" :current-sort="currentSort">
+              {{trans('title_product')}}
+            </PSSort>
           </th>
           <th>
-            {{trans('title_reference')}}
-            <PSSort order="reference" @sort="toggleSort" />
+            <PSSort order="reference" @sort="sort" :current-sort="currentSort">
+              {{trans('title_reference')}}
+            </PSSort>
           </th>
           <th>
             {{trans('title_movements_type')}}
@@ -42,8 +44,9 @@
             {{trans('title_quantity')}}
           </th>
           <th class="text-sm-center">
-            {{trans('title_date')}}
-            <PSSort order="date_add" @sort="toggleSort" />
+            <PSSort order="date_add" @sort="sort" :current-sort="currentSort">
+              {{trans('title_date')}}
+            </PSSort>
           </th>
           <th>
             {{trans('title_employee')}}
@@ -52,7 +55,7 @@
       </thead>
       <tbody>
         <tr v-if="this.isLoading">
-          <td colspan="7">
+          <td colspan="6">
             <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
               <div class="background-masker header-top"></div>
               <div class="background-masker header-left"></div>
@@ -63,7 +66,7 @@
           </td>
         </tr>
         <tr v-else-if="emptyMovements">
-          <td colspan="7">
+          <td colspan="6">
             <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false">
               {{trans('no_product')}}
             </PSAlert>
@@ -82,7 +85,7 @@
   import PSLoader from 'app/widgets/ps-loader';
   import MovementLine from './movement-line';
 
-  const DEFAULT_SORT = ' desc';
+  const DEFAULT_SORT = 'desc';
 
   export default {
     computed: {
@@ -95,12 +98,14 @@
       emptyMovements() {
         return !this.$store.state.movements.length;
       },
+      currentSort() {
+        return this.$store.state.order;
+      },
     },
     methods: {
-      toggleSort(order, isSorted) {
-        const desc = isSorted ? ' desc' : '';
+      sort(order, sortDirection) {
         this.$store.dispatch('updateOrder', order);
-        this.$emit('fetch', desc);
+        this.$emit('fetch', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
     mounted() {
