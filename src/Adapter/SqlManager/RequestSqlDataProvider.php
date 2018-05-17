@@ -70,7 +70,7 @@ class RequestSqlDataProvider
     /**
      * Get table's columns data
      *
-     * @param string $table     Database table name
+     * @param string $table Database table name
      *
      * @return array
      */
@@ -84,9 +84,9 @@ class RequestSqlDataProvider
     /**
      * Get Request SQL data
      *
-     * @param int $id       ID of Request SQL
+     * @param int $id ID of Request SQL
      *
-     * @return array|null   Array of Request SQL results or NULL if Request SQL model does not exist
+     * @return array|null Array of Request SQL results or NULL if Request SQL model does not exist
      */
     public function getRequestSqlResult($id)
     {

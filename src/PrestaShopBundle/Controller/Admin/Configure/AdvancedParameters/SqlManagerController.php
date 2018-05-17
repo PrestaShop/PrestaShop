@@ -31,9 +31,11 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page
@@ -47,10 +49,14 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return array
+     * @return array|Response
      */
     public function listAction(Request $request)
     {
+        if ($request->query->has('addrequest_sql')) {
+           return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:create');
+        }
+
         $searchForm = $this->createForm(FilterRequestSqlType::class, []);
         $searchForm->handleRequest($request);
 
@@ -91,11 +97,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     public function settingsAction(Request $request)
     {
         $handler = $this->getSettingsFormHandler();
-        $form = $handler->getForm();
-        $form->handleRequest($request);
+        $settingForm = $handler->getForm();
+        $settingForm->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
+        if ($settingForm->isSubmitted()) {
+            $data = $settingForm->getData();
 
             if (!$errors = $handler->save($data)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -123,11 +129,19 @@ class SqlManagerController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
         $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
+        $requestSqlForm = $formHandler->getForm();
+        if ($request->request->has('sql')) {
+            $requestSqlForm->setData([
+                'request_sql' => [
+                    'sql' => $request->request->get('sql'),
+                    'name' => $request->request->get('name'),
+                ],
+            ]);
+        }
+        $requestSqlForm->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
+        if ($requestSqlForm->isSubmitted()) {
+            $data = $requestSqlForm->getData();
 
             if (!$errors = $formHandler->save($data)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
@@ -141,7 +155,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         $params = [
-            'requestSqlForm' => $form->createView(),
+            'requestSqlForm' => $requestSqlForm->createView(),
             'dbTableNames' => $dataProvider->getTables(),
         ];
 
@@ -153,29 +167,29 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
      *
-     * @param int $id
+     * @param int     $requestSqlId
      * @param Request $request
      *
      * @return array|RedirectResponse
      */
-    public function editAction($id, Request $request)
+    public function editAction($requestSqlId, Request $request)
     {
         $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
         $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
-        $requestSql = $dataProvider->getRequestSql($id);
+        $requestSql = $dataProvider->getRequestSql($requestSqlId);
         if (!$requestSql) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_sql_manager');
         }
 
-        $form = $formHandler->getForm();
-        $form->setData(['request_sql' => $requestSql]);
-        $form->handleRequest($request);
+        $requestSqlForm = $formHandler->getForm();
+        $requestSqlForm->setData(['request_sql' => $requestSql]);
+        $requestSqlForm->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
+        if ($requestSqlForm->isSubmitted()) {
+            $data = $requestSqlForm->getData();
 
             if (!$errors = $formHandler->save($data)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -189,7 +203,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         $params = [
-            'requestSqlForm' => $form->createView(),
+            'requestSqlForm' => $requestSqlForm->createView(),
             'dbTableNames' => $dataProvider->getTables(),
         ];
 
@@ -199,12 +213,12 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Delete selected Request SQL
      *
-     * @param int $id           ID of selected Request SQL
+     * @param int     $requestSqlId ID of selected Request SQL
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function deleteAction($id, Request $request)
+    public function deleteAction($requestSqlId, Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -221,14 +235,14 @@ class SqlManagerController extends FrameworkBundleAdminController
         }
 
         $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        if (!$requestSql = $requestSqlDataProvider->getRequestSql($id)) {
+        if (!$requestSql = $requestSqlDataProvider->getRequestSql($requestSqlId)) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_sql_manager');
         }
 
         $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        if (!$requestSqlManager->delete($id)) {
+        if (!$requestSqlManager->delete($requestSqlId)) {
             $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_sql_manager');
@@ -245,23 +259,23 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/view.html.twig")
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $requestSqlId
      *
      * @return array|RedirectResponse
      */
-    public function viewAction(Request $request, $id)
+    public function viewAction(Request $request, $requestSqlId)
     {
         $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        $result = $requestSqlDataProvider->getRequestSqlResult($id);
+        $requestSqlResult = $requestSqlDataProvider->getRequestSqlResult($requestSqlId);
 
-        if (null === $result) {
+        if (null === $requestSqlResult) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_sql_manager');
         }
 
         $params = [
-            'requestSqlView' => $result,
+            'requestSqlResult' => $requestSqlResult,
         ];
 
         return $this->getTemplateParams($request, false) + $params;
@@ -270,9 +284,9 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Export Request SQL data
      *
-     * @param int $id   Request SQL id
+     * @param int $id Request SQL id
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|BinaryFileResponse
      */
     public function exportAction($id)
     {
@@ -289,19 +303,19 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get table columns data
+     * Get MySQL table columns data
      *
-     * @param string $table     Database tabe name
+     * @param string $mySqlTableName Database tabe name
      *
      * @return JsonResponse
      */
-    public function tableColumnsAction($table)
+    public function tableColumnsAction($mySqlTableName)
     {
         $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
         $columns = [];
 
-        $tableColumns = $dataProvider->getTableColumns($table);
+        $tableColumns = $dataProvider->getTableColumns($mySqlTableName);
         foreach ($tableColumns as $tableColumn) {
             $columns[] = [
                 'name' => $tableColumn['Field'],
@@ -336,7 +350,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Get required template parameters needed for all responses that renders content
      *
      * @param Request $request
-     * @param bool $withHeaderBtn
+     * @param bool    $withHeaderBtn
      *
      * @return array
      */
