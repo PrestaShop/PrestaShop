@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+use Iterator;
+
 /**
  * Interface RowActionCollectionInterface defines contract for row actions collection
  */
-interface RowActionCollectionInterface extends \Iterator
+interface RowActionCollectionInterface extends Iterator
 {
     /**
      * Add row action to collection

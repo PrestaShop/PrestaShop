@@ -26,10 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Row;
 
+use Countable;
+use Iterator;
+
 /**
  * Interface RowCollectionInterface defines interface for raw rows wrapper
  */
-interface RowCollectionInterface extends \Countable, \Iterator
+interface RowCollectionInterface extends Countable, Iterator
 {
     /**
      * Get raw rows
