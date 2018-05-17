@@ -1,6 +1,6 @@
 .stock-app {
 
-  padding: 3em 0 0 0;
+  padding: 0;
 
   .table {
     td {
@@ -22,15 +22,6 @@
         margin-bottom: 0;
       }
     }
-  }
-
-  .stock-header {
-    position: fixed;
-    top: 39px;
-    background: white;
-    width: 100%;
-    z-index: 3;
-    margin-left: -15px;
   }
 
   #search {

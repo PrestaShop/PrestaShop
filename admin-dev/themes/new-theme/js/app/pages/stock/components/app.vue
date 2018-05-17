@@ -114,7 +114,8 @@
 </script>
 
 <style lang="sass" type="text/scss">
-  .header-toolbar {
+  // hide the layout header
+  #main-div > .header-toolbar {
     height: 0;
     border: none;
     .title {

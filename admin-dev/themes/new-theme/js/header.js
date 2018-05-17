@@ -149,19 +149,25 @@ export default class Header {
    * Updates the offset of the content div in whenever the header changes size
    */
   initContentDivOffset() {
-    const toolbar = $('.header-toolbar');
-    const header = $('.main-header');
-    const content = $('.content-div');
-    const spacing = 15;
 
-    if (toolbar && header && content) {
-      const onToolbarResize = function() {
+    const onToolbarResize = function() {
+      const toolbar = $('.header-toolbar').last();
+      const header = $('.main-header');
+      const content = $('.content-div');
+      const spacing = 15;
+
+      if (toolbar.length && header.length && content.length) {
         content.css('padding-top', toolbar.outerHeight() + header.outerHeight() + spacing);
-      };
+      }
+    };
 
-      $(window).resize(onToolbarResize);
+    // update the offset now
+    onToolbarResize();
 
-      onToolbarResize();
-    }
+    // update when resizing the window
+    $(window).resize(onToolbarResize);
+
+    // update when replacing the header with a vue header
+    $(document).on('vueHeaderMounted', onToolbarResize);
   }
 }
