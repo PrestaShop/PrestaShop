@@ -62,6 +62,12 @@ final class Grid
      */
     private $filterForm;
 
+    /**
+     * @param GridDefinitionInterface $definition
+     * @param GridDataInterface       $data
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param FormInterface           $filterForm
+     */
     public function __construct(
         GridDefinitionInterface $definition,
         GridDataInterface $data,
@@ -200,6 +206,7 @@ final class Grid
     {
         $columns = $this->definition->getColumns();
         $columnsView = [];
+        $positions = [];
 
         /** @var ColumnInterface $column */
         foreach ($columns as $key => $column) {

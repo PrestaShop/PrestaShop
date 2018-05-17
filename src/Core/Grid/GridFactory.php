@@ -59,6 +59,12 @@ final class GridFactory implements GridFactoryInterface
      */
     private $dispatcher;
 
+    /**
+     * @param GridDefinitionFactoryInterface $definitionFactory
+     * @param GridDataProviderInterface      $dataProvider
+     * @param FormFactoryInterface           $formFactory
+     * @param HookDispatcher                 $dispatcher
+     */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataProviderInterface $dataProvider,
@@ -78,23 +84,24 @@ final class GridFactory implements GridFactoryInterface
     {
         $definition = $this->definitionFactory->create();
 
-        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
-            'definition' => $definition,
-        ]);
+        $this->dispatcher->dispatchForParameters(
+            'modifyGridDefinition',
+            [
+                'definition' => $definition,
+            ]
+        );
 
         $data = $this->dataProvider->getData($searchCriteria);
 
         $filterForm = $this->createFilterFormFromDefinition($definition);
         $filterForm->setData($searchCriteria->getFilters());
 
-        $grid = new Grid(
+        return new Grid(
             $definition,
             $data,
             $searchCriteria,
             $filterForm
         );
-
-        return $grid;
     }
 
     /**
@@ -124,8 +131,6 @@ final class GridFactory implements GridFactoryInterface
             }
         }
 
-        $form = $formBuilder->getForm();
-
-        return $form;
+        return $formBuilder->getForm();
     }
 }

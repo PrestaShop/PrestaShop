@@ -26,10 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Collection;
 
+use Countable;
+use Iterator;
+
 /**
  * Class AbstractCollection is responsible for providing base collection implementation
  */
-abstract class AbstractCollection implements \Iterator, \Countable
+abstract class AbstractCollection implements Iterator, Countable
 {
     /**
      * @var array
