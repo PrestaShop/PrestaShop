@@ -1,0 +1,4 @@
+# Routing for pages under Improve > Shipping
+_admin_shipping_routing:
+    resource: "routing_shipping.yml"
+    prefix: /shipping/

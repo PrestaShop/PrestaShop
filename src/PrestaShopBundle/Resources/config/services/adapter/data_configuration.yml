@@ -101,3 +101,8 @@ services:
     prestashop.adapter.logs.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.shipping_preferences.handling_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
