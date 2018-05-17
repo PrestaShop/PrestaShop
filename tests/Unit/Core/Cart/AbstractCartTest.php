@@ -31,6 +31,8 @@ use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use DateInterval;
+use DateTime;
 use Db;
 use Tests\TestCase\IntegrationTestCase;
 use Product;
@@ -104,8 +106,8 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->cart->add(); // required, else we cannot get the content when calculation total
         Context::getContext()->cart = $this->cart;
         $this->resetCart();
-        $this->insertProducts();
-        $this->insertCartRules();
+        $this->insertProductsFromFixtures();
+        $this->insertCartRulesFromFixtures();
     }
 
     public function tearDown()
@@ -150,7 +152,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         }
     }
 
-    protected function insertProducts()
+    protected function insertProductsFromFixtures()
     {
         foreach (static::PRODUCT_FIXTURES as $k => $productFixture) {
             $product           = new Product;
@@ -191,25 +193,30 @@ abstract class AbstractCartTest extends IntegrationTestCase
         Pack::resetStaticCache();
     }
 
-    protected function addProductsToCart($productData)
+    protected function addProductsToCart($productsData)
     {
-        foreach ($productData as $id => $quantity) {
-            $product = $this->getProductFromFixtureId($id);
-            if ($product !== null) {
-                $this->cart->updateQty($quantity, $product->id);
-            }
+        foreach ($productsData as $productFixtureId => $quantity) {
+            $this->addProductToCart($productFixtureId, $quantity);
+        }
+    }
+
+    protected function addProductToCart($productFixtureId, $quantity)
+    {
+        $product = $this->getProductFromFixtureId($productFixtureId);
+        if ($product !== null) {
+            $this->cart->updateQty($quantity, $product->id);
         }
     }
 
     /**
-     * @param int $id fixture product id
+     * @param int $productFixtureId fixture product id
      *
      * @return Product|null
      */
-    protected function getProductFromFixtureId($id)
+    protected function getProductFromFixtureId($productFixtureId)
     {
-        if (isset($this->products[$id])) {
-            return $this->products[$id];
+        if (isset($this->products[$productFixtureId])) {
+            return $this->products[$productFixtureId];
         }
 
         return null;
@@ -229,59 +236,73 @@ abstract class AbstractCartTest extends IntegrationTestCase
         return null;
     }
 
-    protected function insertCartRules()
+    protected function insertCartRulesFromFixtures()
     {
         foreach (static::CART_RULES_FIXTURES as $k => $cartRuleData) {
-            $cartRule                    = new CartRule;
-            $cartRule->reduction_percent = $cartRuleData['percent'];
-            $cartRule->reduction_amount  = $cartRuleData['amount'];
-            $cartRule->name              = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
-            if (!empty($cartRuleData['code'])) {
-                $cartRule->code = $cartRuleData['code'];
-            }
-            $cartRule->priority          = $cartRuleData['priority'];
-            $cartRule->quantity          = 1000;
-            $cartRule->quantity_per_user = 1000;
-            if (!empty($cartRuleData['productRestrictionId'])) {
-                $product = $this->getProductFromFixtureId($cartRuleData['productRestrictionId']);
-                if ($product === null) {
-                    // if product does not exist, skip this rule
-                    continue;
-                }
-                $cartRule->product_restriction = true;
-                $cartRule->reduction_product   = $product->id;
-            }
-            if (!empty($cartRuleData['productGiftId'])) {
-                $product = $this->getProductFromFixtureId($cartRuleData['productGiftId']);
-                if ($product === null) {
-                    // if product does not exist, skip this rule
-                    continue;
-                }
-                $cartRule->gift_product = $product->id;
-            }
-            $now = new \DateTime();
-            // sub 1s to avoid bad comparisons with strictly greater than
-            $now->sub(new \DateInterval('PT1S'));
-            $cartRule->date_from = $now->format('Y-m-d H:i:s');
-            $now->add(new \DateInterval('P1Y'));
-            $cartRule->date_to = $now->format('Y-m-d H:i:s');
-            $cartRule->active  = 1;
-            if (!empty($cartRuleData['carrierRestrictionIds'])) {
-                $cartRule->carrier_restriction = 1;
-            }
-            $cartRule->add();
-            $this->cartRules[$k] = $cartRule;
+            $this->insertCartRule($k, $cartRuleData);
         }
     }
 
-    protected function addCartRulesToCart(array $cartRuleIds)
+    protected function insertCartRule($cartRuleFixtureId, $cartRuleData)
     {
-        foreach ($cartRuleIds as $cartRuleId) {
-            $cartRule = $this->getCartRuleFromFixtureId($cartRuleId);
+        $cartRule                    = new CartRule;
+        $cartRule->reduction_percent = $cartRuleData['percent'];
+        $cartRule->reduction_amount  = $cartRuleData['amount'];
+        $cartRule->name              = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
+        if (!empty($cartRuleData['code'])) {
+            $cartRule->code = $cartRuleData['code'];
+        }
+        $cartRule->priority          = $cartRuleData['priority'];
+        $cartRule->quantity          = 1000;
+        $cartRule->quantity_per_user = 1000;
+        if (!empty($cartRuleData['productRestrictionId'])) {
+            $product = $this->getProductFromFixtureId($cartRuleData['productRestrictionId']);
+            if ($product === null) {
+                // if product does not exist, skip this rule
+                return;
+            }
+            $cartRule->product_restriction = true;
+            $cartRule->reduction_product   = $product->id;
+        }
+        if (!empty($cartRuleData['productGiftId'])) {
+            $product = $this->getProductFromFixtureId($cartRuleData['productGiftId']);
+            if ($product === null) {
+                // if product does not exist, skip this rule
+                return;
+            }
+            $cartRule->gift_product = $product->id;
+        }
+        $now = new DateTime();
+        // sub 1s to avoid bad comparisons with strictly greater than
+        $now->sub(new DateInterval('PT1S'));
+        $cartRule->date_from = $now->format('Y-m-d H:i:s');
+        $now->add(new DateInterval('P1Y'));
+        $cartRule->date_to = $now->format('Y-m-d H:i:s');
+        $cartRule->active  = 1;
+        if (!empty($cartRuleData['carrierRestrictionIds'])) {
+            $cartRule->carrier_restriction = 1;
+        }
+        $cartRule->add();
+        $this->cartRules[$cartRuleFixtureId] = $cartRule;
+    }
+
+    protected function addCartRulesToCart(array $cartRuleFixtureIds)
+    {
+        foreach ($cartRuleFixtureIds as $cartRuleFixtureId) {
+            $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
             if ($cartRule !== null) {
                 $this->cartRulesInCart[] = $cartRule;
                 $this->cart->addCartRule($cartRule->id);
             }
+        }
+    }
+
+    protected function addCartRuleToCart($cartRuleFixtureId)
+    {
+        $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
+        if ($cartRule !== null) {
+            $this->cartRulesInCart[] = $cartRule;
+            $this->cart->addCartRule($cartRule->id);
         }
     }
 
