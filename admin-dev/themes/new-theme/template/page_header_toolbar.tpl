@@ -21,9 +21,9 @@
 
     <div class="title-row">
       {block name=pageTitle}
-          <h2 class="title">
+          <h1 class="title">
             {if is_array($title)}{$title|end|escape}{else}{$title|escape}{/if}
-          </h2>
+          </h1>
       {/block}
 
       {block name=toolbarBox}
