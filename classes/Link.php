@@ -745,6 +745,7 @@ class LinkCore
                     'AdminModulesNotifications' => 'admin_module_notification',
                     'AdminModulesSf' => 'admin_module_manage',
                     'AdminOrderPreferences' => 'admin_order_preferences',
+                    'AdminShipping' => 'admin_shipping_preferences',
                     'AdminPerformance' => 'admin_performance',
                     'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
