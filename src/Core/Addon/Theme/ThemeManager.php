@@ -285,15 +285,17 @@ class ThemeManager implements AddonManagerInterface
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)
-                && !$moduleManager->install($moduleName)) {
+                && !$moduleManager->install($moduleName)
+            ) {
                 throw new PrestaShopException(
-                    $this->translator->trans('Cannot %action% module %module%. %error_details%',
-                    array(
-                        '%action%' => 'install',
-                        '%module%' => $moduleName,
-                        '%error_details%' => $moduleManager->getError($moduleName),
-                    ),
-                    'Admin.Modules.Notification')
+                    $this->translator->trans(
+                        'Cannot %action% module %module%. %error_details%',
+                        array(
+                            '%action%' => 'install',
+                            '%module%' => $moduleName,
+                            '%error_details%' => $moduleManager->getError($moduleName),
+                        ),
+                        'Admin.Modules.Notification')
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
