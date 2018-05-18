@@ -83,7 +83,7 @@
             {% if child.vars.value == 1 %}
               <div class="widget-radio-inline">
                 {{ form_widget(child) }}
-                <a href="{{ getAdminLink("AdminPPreferences") }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
+                <a href="{{ path('admin_product_preferences') }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
               </div>
             {% else %}
               {{ form_widget(child) }}
