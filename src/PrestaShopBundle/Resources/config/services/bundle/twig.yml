@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+        
+    prestashop.twig.modules.loader:
+        class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
+        arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
+        tags:
+          - { name: twig.loader, priority: 1}

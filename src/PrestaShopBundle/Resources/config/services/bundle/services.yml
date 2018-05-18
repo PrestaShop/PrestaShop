@@ -1,0 +1,36 @@
+parameters:
+    ps_root_dir:              "%kernel.root_dir%/../"
+    ps_config_dir:            "%ps_root_dir%config"
+    translations_dir:         "%kernel.root_dir%/Resources/translations"
+    themes_translations_dir:  "%kernel.cache_dir%/themes"
+    themes_dir:               "%kernel.root_dir%/../themes"
+
+services:
+    _defaults:
+        public: true
+
+    # Interfaced services to decorate
+    prestashop.core.admin.data_provider.product_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ProductInterface
+    prestashop.core.admin.data_updater.product_interface:
+        class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
+    prestashop.core.admin.page_preference_interface:
+        class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+    prestashop.core.admin.data_provider.addons_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface
+    prestashop.core.admin.data_provider.module_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+
+    # URL generation
+    prestashop.core.admin.url_generator_factory:
+        class: PrestaShopBundle\Service\TransitionalBehavior\AdminUrlGeneratorFactory
+        arguments:
+            - "@router"
+    prestashop.core.admin.url_generator_legacy:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: ["@prestashop.core.admin.url_generator_factory", forLegacy]
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+    prestashop.core.admin.url_generator:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: ["@prestashop.core.admin.url_generator_factory", forSymfony]

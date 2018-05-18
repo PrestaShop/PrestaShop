@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.security.admin.provider:
+        class: PrestaShopBundle\Security\Admin\EmployeeProvider
+        arguments:
+            - "@prestashop.adapter.legacy.context"

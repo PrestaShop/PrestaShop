@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.admin.page_preference:
+        class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+        arguments:
+            - "@session"
+        decorates: prestashop.core.admin.page_preference_interface
+        public: false
+    prestashop.adapter.admin.controller.category:
+        class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper

@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.module.self_configurator:
+        class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
+        arguments:
+            - "@prestashop.core.admin.module.repository"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@doctrine.dbal.default_connection"
+            - "@filesystem"
+
+    # MODULE TAB MANAGEMENT
+    prestashop.adapter.module.tab.register:
+        class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister
+        arguments:
+            - "@prestashop.core.admin.tab.repository"
+            - "@prestashop.core.admin.lang.repository"
+            - "@logger"
+            - "@translator"
+            - "@filesystem"
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+
+    prestashop.adapter.module.tab.unregister:
+        class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
+        arguments:
+            - "@prestashop.core.admin.tab.repository"
+            - "@prestashop.core.admin.lang.repository"
+            - "@logger"
+            - "@translator"
+
+    prestashop.adapter.module.tab.eventsubscriber:
+        class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabManagementSubscriber
+        arguments:
+            - "@prestashop.adapter.module.tab.register"
+            - "@prestashop.adapter.module.tab.unregister"
+        tags:
+            - { name: kernel.event_subscriber }
