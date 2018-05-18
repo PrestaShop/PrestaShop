@@ -28,12 +28,12 @@ namespace Tests\Unit\Classes;
 
 use Tests\TestCase\UnitTestCase;
 use Tools;
-use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use Configuration;
+use Address;
 
 class ToolsCoreTest extends UnitTestCase
 {
     protected function setUp() {
-        $this->container = new Container();
         $_POST = [];
         $_GET = [];
         Tools::resetRequest();
@@ -398,26 +398,69 @@ class ToolsCoreTest extends UnitTestCase
         return [
             [2222, 1111, 2222, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
             [2222, 1111, 2222, 1, 3333, 5555, ''],
-            [2222, 1111, 2222, 1, 3333, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [2222, 1111, 2222, 1, 3333, 0, ''],
-            [2222, 1111, 2222, 1, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [2222, 1111, 2222, 1, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [2222, 1111, 2222, 1, 0, 0, ''],
+            [2222, 1111, 2222, 1, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 3333, 0,    ''],
+            [2222, 1111, 2222, 1, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 0,    5555, ''],
+            [2222, 1111, 2222, 1, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 1, 0,    0,    ''],
             [2222, 1111, 2222, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [2222, 1111, 2222, 0, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [2222, 1111, 2222, 0, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [2222, 1111, 2222, 0, 0, 0, ''],
-            [1111, 1111, 0, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [1111, 1111, 0, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [1111, 1111, 0, 0, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [1111, 1111, 0, 0, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [1111, 1111, 0, 0, 0, 0, ''],
-            [2222, 0, 2222, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [3333, 0, 0, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [3333, 0, 0, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [0, 0, 0, 0, 0, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [0, 0, 0, 0, 0, 0, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
-            [0, 0, 0, 0, 0, 0, ''],
+            [2222, 1111, 2222, 0, 3333, 5555, ''],
+            [2222, 1111, 2222, 0, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 0, 3333, 0,    ''],
+            [2222, 1111, 2222, 0, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 0, 0,    5555, ''],
+            [2222, 1111, 2222, 0, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 1111, 2222, 0, 0,    0,    ''],
+            [1111, 1111, 0,    1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0,    1, 3333, 5555, ''],
+            [1111, 1111, 0,    1, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0,    1, 3333, 0,    ''],
+            [1111, 1111, 0,    1, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0,    1, 0,    5555, ''],
+            [1111, 1111, 0,    1, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0,    1, 0,    0,    ''],
+            [1111, 1111, 0,    0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [1111, 1111, 0,    0, 3333, 5555, ''],
+            [1111, 1111, 0,    0, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0,    0,    0, 3333, 0,    ''],
+            [0,    0,    0,    0, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0,    0,    0,    0, 0,    5555, ''],
+            [0,    0,    0,    0, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0,    0,    0,    0, 0,    0,    ''],
+            [2222, 0,    2222, 1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 1, 3333, 5555, ''],
+            [2222, 0,    2222, 1, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 1, 3333, 0,    ''],
+            [2222, 0,    2222, 1, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 1, 0,    5555, ''],
+            [2222, 0,    2222, 1, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 1, 0,    0,    ''],
+            [2222, 0,    2222, 0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 0, 3333, 5555, ''],
+            [2222, 0,    2222, 0, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 0, 3333, 0,    ''],
+            [2222, 0,    2222, 0, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 0, 0,    5555, ''],
+            [2222, 0,    2222, 0, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [2222, 0,    2222, 0, 0,    0,    ''],
+            [3333, 0,    0,    1, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0,    0,    1, 3333, 5555, ''],
+            [3333, 0,    0,    1, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0,    0,    1, 3333, 0,    ''],
+            [0,    0,    0,    1, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0,    0,    0,    1, 0,    5555, ''],
+            [0,    0,    0,    1, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0,    0,    0,    1, 0,    0,    ''],
+            [3333, 0,    0,    0, 3333, 5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0,    0,    0, 3333, 5555, ''],
+            [3333, 0,    0,    0, 3333, 0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [3333, 0,    0,    0, 3333, 0,    ''],
+            [0,    0,    0,    0, 0,    5555, 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0,    0,    0,    0, 0,    5555, ''],
+            [0,    0,    0,    0, 0,    0,    'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7'],
+            [0,    0,    0,    0, 0,    0,    ''],
+
         ];
     }
 
@@ -427,21 +470,21 @@ class ToolsCoreTest extends UnitTestCase
     public function testGetCountry($expected, $addressIdCountry, $idCountry, $psDetectCountry, $psCountryDefault, $httpAcceptLanguage)
     {
         // Initialize configuration values
-        \Configuration::get('PS_DETECT_COUNTRY');
-        \Configuration::get('PS_COUNTRY_DEFAULT');
+        Configuration::get('PS_DETECT_COUNTRY');
+        Configuration::get('PS_COUNTRY_DEFAULT');
 
         // Set dependencies
-        $address = new \Address();
+        $address = new Address();
         $address->id_country = $addressIdCountry;
         $this->setPostAndGet(['id_country' => $idCountry]);
-        \Configuration::set('PS_DETECT_COUNTRY', $psDetectCountry);
-        \Configuration::set('PS_COUNTRY_DEFAULT', $psCountryDefault);
+        Configuration::set('PS_DETECT_COUNTRY', $psDetectCountry);
+        Configuration::set('PS_COUNTRY_DEFAULT', $psCountryDefault);
         if('' === $httpAcceptLanguage) {
             unset($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         } else {
             $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $httpAcceptLanguage;
         }
 
-        $this->assertTrue($expected === \Tools::getCountry($address));
+        $this->assertTrue($expected === Tools::getCountry($address));
     }
 }
