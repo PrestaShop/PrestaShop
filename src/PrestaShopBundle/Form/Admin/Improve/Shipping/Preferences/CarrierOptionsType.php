@@ -26,12 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -40,44 +36,58 @@ use Symfony\Component\Translation\TranslatorInterface;
  * Class generates "Handling" form
  * in "Improve > Shipping > Preferences" page.
  */
-class HandlingType extends TranslatorAwareType
+class CarrierOptionsType extends TranslatorAwareType
 {
     /**
-     * @var CurrencyDataProvider
+     * @var array
      */
-    private $currencyDataProvider;
+    private $carriers;
+
+    /**
+     * @var array
+     */
+    private $orderByChoices;
+
+    /**
+     * @var array
+     */
+    private $orderWayChoices;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        CurrencyDataProvider $currencyDataProvider
+        array $carriers,
+        array $orderByChoices,
+        array $orderWayChoices
     ) {
         parent::__construct($translator, $locales);
 
-        $this->currencyDataProvider = $currencyDataProvider;
+        $this->carriers = $carriers;
+        $this->orderByChoices = $orderByChoices;
+        $this->orderWayChoices = $orderWayChoices;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var Configuration $configuration */
-        $configuration = $this->getConfiguration();
-        $defaultCurrencyId = $configuration->getInt('PS_CURRENCY_DEFAULT');
-        $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
-        $weightUnit = $configuration->get('PS_WEIGHT_UNIT');
+        $carrierChoices = array_merge([
+            'Best price' => -1,
+            'Best grade' => -2,
+        ], $this->carriers);
 
         $builder
-            ->add('shipping_handling_charges', MoneyWithSuffixType::class, [
-                'currency' => $defaultCurrency->iso_code,
-                'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
-                'required' => false,
+            ->add('default_carrier', ChoiceType::class, [
+                'choices' => $carrierChoices,
             ])
-            ->add('free_shipping_price', MoneyType::class, [
-                'currency' => $defaultCurrency->iso_code,
-                'required' => false,
+            ->add('carrier_default_order_by', ChoiceType::class, [
+                'choices' => $this->orderByChoices,
+                'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('free_shipping_weight', TextWithUnitType::class, [
-                'unit' => $weightUnit,
-                'required' => false,
+            ->add('carrier_default_order_way', ChoiceType::class, [
+                'choices' => $this->orderWayChoices,
+                'choice_translation_domain' => 'Admin.Global',
             ])
         ;
     }
@@ -97,6 +107,6 @@ class HandlingType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'shipping_preferences_handling_block';
+        return 'shipping_preferences_carrier_options_block';
     }
 }

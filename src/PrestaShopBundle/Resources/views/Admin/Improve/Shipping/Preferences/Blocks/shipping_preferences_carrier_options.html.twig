@@ -25,39 +25,31 @@
 
 {% trans_default_domain "Admin.Shipping.Feature" %}
 
-{% block shipping_preferences_handling %}
+{% block shipping_preferences_carrier_options %}
 <div class="col">
     <div class="card">
         <h3 class="card-header">
-            <i class="material-icons">filter_none</i> {{ 'Handling'|trans }}
+            <i class="material-icons">local_shipping</i> {{ 'Carrier options'|trans }}
         </h3>
         <div class="card-block">
-            <div class="alert alert-info" role="alert">
-                <ul>
-                    <li>
-                        {{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }}
-                    </li>
-                    <li>
-                        {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}
-                    </li>
-                </ul>
-            </div>
-
             <div class="card-text">
                 <div class="form-group">
-                    <label class="form-control-label">{{ 'Handling charges'|trans }}</label>
-                    {{ form_errors(handlingForm.shipping_handling_charges) }}
-                    {{ form_widget(handlingForm.shipping_handling_charges) }}
+                    <label class="form-control-label">{{ 'Default carrier'|trans }}</label>
+                    {{ form_errors(carrierOptionsForm.default_carrier) }}
+                    {{ form_widget(carrierOptionsForm.default_carrier) }}
+                    <small class="form-text">{{ 'Your shop\'s default carrier'|trans({}, 'Admin.Shipping.Help') }}</small>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
-                    {{ form_errors(handlingForm.free_shipping_price) }}
-                    {{ form_widget(handlingForm.free_shipping_price) }}
+                    <label class="form-control-label">{{ 'Sort by'|trans({}, 'Admin.Actions') }}</label>
+                    {{ form_errors(carrierOptionsForm.carrier_default_order_by) }}
+                    {{ form_widget(carrierOptionsForm.carrier_default_order_by) }}
+                    <small class="form-text">{{ 'This will only be visible in the front office.'|trans({}, 'Admin.Shipping.Help') }}</small>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
-                    {{ form_errors(handlingForm.free_shipping_weight) }}
-                    {{ form_widget(handlingForm.free_shipping_weight) }}
+                    <label class="form-control-label">{{ 'Order by'|trans({}, 'Admin.Actions') }}</label>
+                    {{ form_errors(carrierOptionsForm.carrier_default_order_way) }}
+                    {{ form_widget(carrierOptionsForm.carrier_default_order_way) }}
+                    <small class="form-text">{{ 'This will only be visible in the front office.'|trans({}, 'Admin.Shipping.Help') }}</small>
                 </div>
             </div>
         </div>

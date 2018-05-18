@@ -322,6 +322,17 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.shipping_preferences.carrier_options:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.carrier").getActiveCarriersChoices()'
+            - '@=service("prestashop.adapter.data_provider.carrier").getOrderByChoices()'
+            - '@=service("prestashop.adapter.data_provider.carrier").getOrderWayChoices()'
+        tags:
+            - { name: form.type }
+
     form.type.product_preferences.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
         parent: 'form.type.translatable.aware'
