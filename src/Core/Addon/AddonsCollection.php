@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module as Addon;
 use ArrayAccess;
+use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 

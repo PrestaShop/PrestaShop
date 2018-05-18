@@ -4,7 +4,7 @@ Please take the time to edit the "Answers" rows with the necessary information: 
 
 | Questions     | Answers
 | ------------- | -------------------------------------------------------
-| Branch?       | Use the "develop" branch if you target PrestaShop 1.7; use the "1.6.1.x" branch if you target PrestaShop 1.6 (bugfixes only).
+| Branch?       | Use the "develop" branch if you target the next major version of PrestaShop 1.7, "1.7.4.x" for 1.7 bug fixes, and "1.6.1.x" for PrestaShop 1.6 (bugfixes only).
 | Description?  | Please be specific when describing the PR. <br/> Every detail helps: versions, browser/server configuration, specific module/theme, etc.
 | Type?         | bug fix / improvement / new feature
 | Category?     | See [the Category list](http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message#Howtowriteacommitmessage-Category), i.e.: BO
@@ -19,4 +19,3 @@ Please take the time to edit the "Answers" rows with the necessary information: 
 
 * Make sure [your local branch is up to date](https://help.github.com/articles/syncing-a-fork/) before commiting your changes!
 * Your code MUST respect [our Coding Standards](http://doc.prestashop.com/display/PS16/Coding+Standards) (for code written in PHP, JavaScript, HTML/CSS/Smarty/Twig, SQL)!
-* Your commit name MUST respect our [naming convention](http://doc.prestashop.com/display/PS16/How+to+write+a+commit+message)!

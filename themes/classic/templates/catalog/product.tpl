@@ -132,9 +132,8 @@
                     {include file='catalog/_partials/product-additional-info.tpl'}
                   {/block}
 
-                  {block name='product_refresh'}
-                    <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
-                  {/block}
+                  {* Input to refresh product HTML removed, block kept for compatibility with themes *}
+                  {block name='product_refresh'}{/block}
                 </form>
               {/block}
 

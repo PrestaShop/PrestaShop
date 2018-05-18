@@ -990,7 +990,7 @@ class AdminThemesControllerCore extends AdminController
     protected function postProcessSubmitConfigureLayouts()
     {
         try {
-            $this->validateAllAuthorizations();
+            $this->validateEditAuthorization();
             $this->processSubmitConfigureLayouts();
             $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
         } catch (Exception $e) {
@@ -1004,7 +1004,7 @@ class AdminThemesControllerCore extends AdminController
     protected function postProcessEnableTheme()
     {
         try {
-            $this->validateAllAuthorizations();
+            $this->validateEditAuthorization();
 
             $isThemeEnabled = $this->theme_manager->enable(Tools::getValue('theme_name'));
             // get errors if theme wasn't enabled
@@ -1039,17 +1039,23 @@ class AdminThemesControllerCore extends AdminController
      */
     protected function postProcessSubmitGenerateRTL()
     {
-        if ((bool)Tools::getValue('PS_GENERATE_RTL')) {
-            Language::getRtlStylesheetProcessor()
-            ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
-            ->setRegenerate(true)
-            ->process();
+        try {
+            $this->validateEditAuthorization();
 
-            $this->confirmations[] = $this->trans(
-                'Your RTL stylesheets has been generated successfully',
-                array(),
-                'Admin.Design.Notification'
-            );
+            if ((bool)Tools::getValue('PS_GENERATE_RTL')) {
+                Language::getRtlStylesheetProcessor()
+                ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
+                ->setRegenerate(true)
+                ->process();
+
+                $this->confirmations[] = $this->trans(
+                    'Your RTL stylesheets has been generated successfully',
+                    array(),
+                    'Admin.Design.Notification'
+                );
+            }
+        } catch (Exception $e) {
+            $this->errors[] = $e->getMessage();
         }
     }
 
@@ -1059,7 +1065,7 @@ class AdminThemesControllerCore extends AdminController
     protected function postProcessResetToDefaults()
     {
         try {
-            $this->validateAllAuthorizations();
+            $this->validateEditAuthorization();
             if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
                 $this->confirmations[] = $this->trans(
                     'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
@@ -1078,7 +1084,7 @@ class AdminThemesControllerCore extends AdminController
     protected function postProcessSubmitOptionsConfiguration()
     {
         try {
-            $this->validateAllAuthorizations();
+            $this->validateEditAuthorization();
 
             Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 
