@@ -639,11 +639,9 @@ class ToolsCore
      */
     public static function getCountryId(Address $address = null)
     {
-        if ($countryId = (int) Tools::getValue('id_country')) {
-            return $countryId;
-        }
+        $countryId = (int) Tools::getValue('id_country');
 
-        if (null !== $address && $address->id_country) {
+        if (!$countryId && null !== $address && $address->id_country) {
             return $address->id_country;
         }
 
@@ -655,11 +653,15 @@ class ToolsCore
             if (
                 is_array($matches) &&
                 isset($matches[0]) &&
-                Validate::isLanguageIsoCode($matches[0]) &&
-                $countryId = Country::getByIso($matches[0], true)
+                Validate::isLanguageIsoCode($matches[0])
             ) {
-                return $countryId;
+                dump($matches[0]);
+                $countryId = Country::getByIso($matches[0], true);
             }
+        }
+
+        if($countryId) {
+            return $countryId;
         }
 
         return (int) Configuration::get('PS_COUNTRY_DEFAULT');
