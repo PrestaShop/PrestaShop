@@ -3,20 +3,18 @@
 <div class="header-toolbar">
 
   {block name=pageBreadcrumb}
-    <nav class="breadcrumb">
-
-      {if $breadcrumbs2.container.name != ''}
-        {if $breadcrumbs2.container.href != ''}
-          <a class="breadcrumb-item" href="{$breadcrumbs2.container.href|escape}">{$breadcrumbs2.container.name|escape}</a>
+    <nav>
+      <ol class="breadcrumb">
+        {if $breadcrumbs2.container.name != ''}
+          <li class="breadcrumb-item">{$breadcrumbs2.container.name|escape}</li>
         {/if}
-      {/if}
 
-      {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
-        {if $breadcrumbs2.tab.href != ''}
-          <a class="breadcrumb-item active" href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
+        {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name && $breadcrumbs2.tab.href != ''}
+          <li class="breadcrumb-item active">
+            <a href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
+          </li>
         {/if}
-      {/if}
-
+      </ol>
     </nav>
   {/block}
 
@@ -101,7 +99,7 @@
           {foreach $level_2.sub_tabs as $level_3}
             {if $level_3.current}
               {foreach $level_3.sub_tabs as $level_4}
-                <a href="{$level_4.href}" class="tab {if $level_4.current}current{/if}">{$level_4.name}</a>
+                <a href="{$level_4.href}" id="subtab-{$level_4.class_name}" class="tab {if $level_4.current}current{/if}" data-submenu="{$level_4.id_tab}">{$level_4.name}</a>
               {/foreach}
             {/if}
           {/foreach}

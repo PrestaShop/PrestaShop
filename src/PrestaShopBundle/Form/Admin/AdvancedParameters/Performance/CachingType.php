@@ -57,7 +57,7 @@ class CachingType extends TranslatorAwareType
                     'APC' => 'CacheApc',
                     'Xcache' => 'CacheXcache',
                 ),
-                'choice_label' => function($value, $key, $index) {
+                'choice_label' => function ($value, $key, $index) {
                     $disabled = false;
                     foreach ($this->extensionsList[$index] as $extensionName) {
                         if (extension_loaded($extensionName)) {
@@ -68,7 +68,7 @@ class CachingType extends TranslatorAwareType
 
                     return $disabled === true ? $this->getErrorsMessages()[$index] : $value;
                 },
-                'choice_attr' => function($value, $key, $index) {
+                'choice_attr' => function ($value, $key, $index) {
                     $disabled = false;
                     foreach ($this->extensionsList[$index] as $extensionName) {
                         if (extension_loaded($extensionName)) {

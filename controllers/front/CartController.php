@@ -172,9 +172,23 @@ class CartControllerCore extends FrontController
         ]));
     }
 
+    /**
+     * @deprecated 1.7.3.1 the product link is now accessible
+     *                     in #quantity_wanted[data-url-update]
+     */
     public function displayAjaxProductRefresh()
     {
         if ($this->id_product) {
+            $idProductAttribute = 0;
+            $groups = Tools::getValue('group');
+
+            if (!empty($groups)) {
+                $idProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
+                    $this->id_product,
+                    $groups,
+                    true
+                );
+            }
             $url = $this->context->link->getProductLink(
                 $this->id_product,
                 null,
@@ -182,7 +196,7 @@ class CartControllerCore extends FrontController
                 null,
                 $this->context->language->id,
                 null,
-                (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'), true),
+                $idProductAttribute,
                 false,
                 false,
                 true,

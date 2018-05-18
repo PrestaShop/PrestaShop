@@ -63,9 +63,8 @@
                   {include file='catalog/_partials/product-add-to-cart.tpl'}
                 {/block}
 
-                {block name='product_refresh'}
-                  <input class="product-refresh" data-url-update="false" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}" hidden>
-                {/block}
+                {* Input to refresh product HTML removed, block kept for compatibility with themes *}
+                {block name='product_refresh'}{/block}
             </form>
           </div>
         {/block}

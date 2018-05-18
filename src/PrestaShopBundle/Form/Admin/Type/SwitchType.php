@@ -32,7 +32,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 /**
  * Displays a switch (ON / OFF by default)
  */
