@@ -740,6 +740,7 @@ class LinkCore
                     'AdminTranslationSf' => 'admin_international_translation_overview',
                     'AdminInformation' => 'admin_system_information',
                     'AdminAddonsCatalog' => 'admin_module_addons_store',
+                    'AdminShipping' => 'admin_shipping_preferences',
                     // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
                     'AdminPerformance' => 'admin_performance',
                     'AdminAdminPreferences' => 'admin_administration',
