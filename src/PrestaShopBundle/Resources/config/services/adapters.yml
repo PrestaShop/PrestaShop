@@ -152,3 +152,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.data_provider.language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
