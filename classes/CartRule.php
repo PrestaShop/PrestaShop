@@ -1113,7 +1113,7 @@ class CartRuleCore extends ObjectModel
             if ($this->reduction_percent && $this->reduction_product == 0) {
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
-                foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule) {
+                foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
                     $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_COMPUTE_PRECISION_);
                 }
 

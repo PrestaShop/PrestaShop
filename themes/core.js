@@ -2533,123 +2533,265 @@
 	
 	var _common = __webpack_require__(7);
 	
-	(0, _jquery2['default'])(document).ready(function () {
-	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute]', function () {
-	    (0, _jquery2['default'])("input[name$='refresh']").click();
-	  });
+	// Used to be able to abort request if user modify something
+	var currentRequest = null;
 	
-	  (0, _jquery2['default'])('body').on('click', '.product-refresh', function (event, extraParameters) {
-	    var $productRefresh = (0, _jquery2['default'])(this);
-	    event.preventDefault();
+	// Used to clearTimeout if user flood the product quantity input
+	var currentRequestDelayedId = null;
 	
-	    var eventType = 'updatedProductCombination';
-	    if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
-	      eventType = extraParameters.eventType;
+	/**
+	 * Get product update URL from different
+	 * sources if needed (for compatibility)
+	 *
+	 * @return {Promise}
+	 */
+	function getProductUpdateUrl() {
+	    var dfd = _jquery2['default'].Deferred();
+	    var $productActions = (0, _jquery2['default'])('.product-actions');
+	    var $quantityWantedInput = (0, _jquery2['default'])('#quantity_wanted');
+	
+	    if (_prestashop2['default'] !== null && _prestashop2['default'].urls !== null && _prestashop2['default'].urls.pages !== null && _prestashop2['default'].urls.pages.product !== '' && _prestashop2['default'].urls.pages.product !== null) {
+	        dfd.resolve(_prestashop2['default'].urls.pages.product);
+	
+	        return dfd.promise();
 	    }
+	    var formData = {};
 	
-	    var preview = (0, _common.psGetRequestParameter)('preview');
-	    if (preview !== null) {
-	      preview = '&preview=' + preview;
-	    } else {
-	      preview = '';
-	    }
-	
-	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh' + preview;
-	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      _prestashop2['default'].emit('updateProduct', {
-	        reason: {
-	          productUrl: resp.productUrl
-	        },
-	        refreshUrl: $productRefresh.data('url-update'),
-	        eventType: eventType,
-	        resp: resp
-	      });
+	    (0, _jquery2['default'])($productActions.find('form:first').serializeArray()).each(function (k, v) {
+	        formData[v.name] = v.value;
 	    });
-	  });
 	
-	  _prestashop2['default'].on('updateProduct', function (event) {
-	    if (typeof event.refreshUrl == "undefined") {
-	      event.refreshUrl = true;
+	    _jquery2['default'].ajax({
+	        url: $productActions.find('form:first').attr('action'),
+	        method: 'POST',
+	        data: Object.assign({
+	            ajax: 1,
+	            action: 'productrefresh',
+	            quantity_wanted: $quantityWantedInput.val()
+	        }, formData),
+	        dataType: 'json',
+	        success: function success(data) {
+	            var productUpdateUrl = data.productUrl;
+	            _prestashop2['default'].page.canonical = productUpdateUrl;
+	            dfd.resolve(productUpdateUrl);
+	        },
+	        error: function error(jqXHR, textStatus, errorThrown) {
+	            dfd.reject({ "jqXHR": jqXHR, "textStatus": textStatus, "errorThrown": errorThrown });
+	        }
+	    });
+	
+	    return dfd.promise();
+	}
+	
+	/**
+	 * Update the product html
+	 *
+	 * @param {string} event
+	 * @param {string} eventType
+	 * @param {string} updateUrl
+	 */
+	function updateProduct(event, eventType, updateUrl) {
+	    var $productActions = (0, _jquery2['default'])('.product-actions');
+	    var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
+	    var formSerialized = $productActions.find('form:first').serialize();
+	    var preview = (0, _common.psGetRequestParameter)('preview');
+	
+	    if (preview !== null) {
+	        preview = '&preview=' + preview;
+	    } else {
+	        preview = '';
 	    }
 	
-	    var eventType = event.eventType;
+	    // Can not get product ajax url
+	    if (updateUrl === null) {
+	        showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
 	
-	    var replaceAddToCartSections = function replaceAddToCartSections(addCartHtml) {
-	      var $addToCartSnippet = (0, _jquery2['default'])(addCartHtml);
-	      var $addProductToCart = (0, _jquery2['default'])('.product-add-to-cart');
+	        return;
+	    }
 	
-	      function replaceAddToCartSection(replacement) {
-	        var replace = replacement.$addToCartSnippet.find(replacement.targetSelector);
+	    // New request only if new value
+	    if (event !== null && event.type === 'keyup' && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')) {
+	        return;
+	    }
+	    $quantityWantedInput.data('old-value', $quantityWantedInput.val());
 	
-	        if ((0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector)).length > 0) {
-	          if (replace.length > 0) {
-	            (0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector)).replaceWith(replace[0].outerHTML);
-	          } else {
-	            (0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector)).html('');
-	          }
+	    if (currentRequestDelayedId) {
+	        clearTimeout(currentRequestDelayedId);
+	    }
+	
+	    currentRequestDelayedId = setTimeout((function updateProductRequest() {
+	        currentRequest = _jquery2['default'].ajax({
+	            url: updateUrl + '?' + formSerialized + preview,
+	            method: 'POST',
+	            data: {
+	                ajax: 1,
+	                action: 'refresh',
+	                quantity_wanted: $quantityWantedInput.val()
+	            },
+	            dataType: 'json',
+	            beforeSend: function beforeSend() {
+	                if (currentRequest !== null) {
+	                    currentRequest.abort();
+	                }
+	            },
+	            error: function error(jqXHR, textStatus, errorThrown) {
+	                if (textStatus !== 'abort' && (0, _jquery2['default'])('section#main > .ajax-error').length === 0) {
+	                    showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
+	                }
+	            },
+	            success: function success(data, textStatus, errorThrown) {
+	                // Avoid image to blink each time we modify the product quantity
+	                // Can not compare directly cause of HTML comments in data.
+	                var $newImagesContainer = (0, _jquery2['default'])('<div>').append(data.product_cover_thumbnails);
+	
+	                // Used to avoid image blinking if same image = epileptic friendly
+	                if ((0, _jquery2['default'])('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
+	                    (0, _jquery2['default'])('.images-container').replaceWith(data.product_cover_thumbnails);
+	                }
+	                (0, _jquery2['default'])('.product-prices').replaceWith(data.product_prices);
+	                (0, _jquery2['default'])('.product-customization').replaceWith(data.product_customization);
+	                (0, _jquery2['default'])('.product-variants').replaceWith(data.product_variants);
+	                (0, _jquery2['default'])('.product-discounts').replaceWith(data.product_discounts);
+	                (0, _jquery2['default'])('.product-additional-info').replaceWith(data.product_additional_info);
+	                (0, _jquery2['default'])('#product-details').replaceWith(data.product_details);
+	                replaceAddToCartSections(data);
+	                var minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
+	
+	                // Prevent quantity input from blinking with classic theme.
+	                if (!isNaN(minimalProductQuantity) && $quantityWantedInput.val() < minimalProductQuantity && eventType !== 'updatedProductQuantity') {
+	                    $quantityWantedInput.attr('min', minimalProductQuantity);
+	                    $quantityWantedInput.val(minimalProductQuantity);
+	                }
+	                _prestashop2['default'].emit('updatedProduct', data);
+	            },
+	            complete: function complete(jqXHR, textStatus) {
+	                currentRequest = null;
+	                currentRequestDelayedId = null;
+	            }
+	        });
+	    }).bind(currentRequest, currentRequestDelayedId), 250);
+	}
+	
+	/**
+	 * Replace all "add to cart" sections but the quantity input
+	 * in order to keep quantity field intact i.e.
+	 *
+	 * @param {object} data of updated product and cat
+	 */
+	function replaceAddToCartSections(data) {
+	    var $productAddToCart = null;
+	
+	    (0, _jquery2['default'])(data.product_add_to_cart).each(function (index, value) {
+	        if ((0, _jquery2['default'])(value).hasClass('product-add-to-cart')) {
+	            $productAddToCart = (0, _jquery2['default'])(value);
+	
+	            return false;
 	        }
-	      }
+	    });
 	
-	      var productAvailabilitySelector = '.add';
-	      replaceAddToCartSection({
-	        $addToCartSnippet: $addToCartSnippet,
+	    if ($productAddToCart === null) {
+	        showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
+	    }
+	    var $addProductToCart = (0, _jquery2['default'])('.product-add-to-cart');
+	    var productAvailabilitySelector = '.add';
+	    var productAvailabilityMessageSelector = '#product-availability';
+	    var productMinimalQuantitySelector = '.product-minimal-quantity';
+	
+	    replaceAddToCartSection({
+	        $addToCartSnippet: $productAddToCart,
 	        $targetParent: $addProductToCart,
 	        targetSelector: productAvailabilitySelector
-	      });
+	    });
 	
-	      var productAvailabilityMessageSelector = '#product-availability';
-	      replaceAddToCartSection({
-	        $addToCartSnippet: $addToCartSnippet,
+	    replaceAddToCartSection({
+	        $addToCartSnippet: $productAddToCart,
 	        $targetParent: $addProductToCart,
 	        targetSelector: productAvailabilityMessageSelector
-	      });
+	    });
 	
-	      var productMinimalQuantitySelector = '.product-minimal-quantity';
-	      replaceAddToCartSection({
-	        $addToCartSnippet: $addToCartSnippet,
+	    replaceAddToCartSection({
+	        $addToCartSnippet: $productAddToCart,
 	        $targetParent: $addProductToCart,
 	        targetSelector: productMinimalQuantitySelector
-	      });
-	    };
-	
-	    _jquery2['default'].post(event.reason.productUrl, { ajax: '1', action: 'refresh' }, null, 'json').then(function (resp) {
-	      (0, _jquery2['default'])('.product-prices').replaceWith(resp.product_prices);
-	      (0, _jquery2['default'])('.product-customization').replaceWith(resp.product_customization);
-	      (0, _jquery2['default'])('.product-variants').replaceWith(resp.product_variants);
-	      (0, _jquery2['default'])('.product-discounts').replaceWith(resp.product_discounts);
-	      (0, _jquery2['default'])('.images-container').replaceWith(resp.product_cover_thumbnails);
-	      (0, _jquery2['default'])('.product-additional-info').replaceWith(resp.product_additional_info);
-	      (0, _jquery2['default'])('#product-details').replaceWith(resp.product_details);
-	
-	      // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
-	      // Prevent quantity input from blinking with classic theme.
-	      var $productAddToCart = undefined;
-	      (0, _jquery2['default'])(resp.product_add_to_cart).each(function (index, value) {
-	        if ((0, _jquery2['default'])(value).hasClass('product-add-to-cart')) {
-	          $productAddToCart = (0, _jquery2['default'])(value);
-	        }
-	      });
-	      replaceAddToCartSections($productAddToCart);
-	
-	      var minimalProductQuantity = parseInt(resp.product_minimal_quantity, 10);
-	      var quantityInputSelector = '#quantity_wanted';
-	      var quantityInput = (0, _jquery2['default'])(quantityInputSelector);
-	      var quantity_wanted = quantityInput.val();
-	
-	      if (!isNaN(minimalProductQuantity) && quantity_wanted < minimalProductQuantity && eventType !== 'updatedProductQuantity') {
-	        quantityInput.attr('min', minimalProductQuantity);
-	        quantityInput.val(minimalProductQuantity);
-	      }
-	
-	      if (event.refreshUrl) {
-	        window.history.pushState({ id_product_attribute: resp.id_product_attribute }, undefined, resp.product_url);
-	      }
-	
-	      _prestashop2['default'].emit('updatedProduct', resp);
 	    });
-	  });
+	}
+	
+	/**
+	 * Find DOM elements and replace their content
+	 *
+	 * @param {object} replacement Data to be replaced on the current page
+	 */
+	function replaceAddToCartSection(replacement) {
+	    var destinationObject = (0, _jquery2['default'])(replacement.$targetParent.find(replacement.targetSelector));
+	    if (destinationObject.length <= 0) {
+	        return;
+	    }
+	    var replace = replacement.$addToCartSnippet.find(replacement.targetSelector);
+	
+	    if (replace.length > 0) {
+	        destinationObject.replaceWith(replace[0].outerHTML);
+	    } else {
+	        destinationObject.html('');
+	    }
+	}
+	
+	/**
+	 * @param {jQuery} $container
+	 * @param {string} textError
+	 */
+	function showError($container, textError) {
+	    var $error = (0, _jquery2['default'])('<div class="alert alert-danger ajax-error" role="alert">' + textError + '</div>');
+	    $container.replaceWith($error);
+	}
+	
+	(0, _jquery2['default'])(document).ready(function () {
+	    // Listen on all form elements + those who have a data-product-attribute
+	    (0, _jquery2['default'])('body').on('change touchspin.on.startspin', '.product-variants *[name]', function (e) {
+	        _prestashop2['default'].emit('updateProduct', {
+	            eventType: 'updatedProductCombination',
+	            event: e,
+	            // Following variables are not used anymore, but kept for backward compatibility
+	            resp: {},
+	            reason: {
+	                productUrl: _prestashop2['default'].urls.pages.product || ''
+	            }
+	        });
+	    });
+	
+	    /**
+	     * Button has been removed on classic theme, but event triggering has been kept for compatibility
+	     */
+	    (0, _jquery2['default'])('body').on('click', '.product-refresh', function (e, extraParameters) {
+	        e.preventDefault();
+	        var eventType = 'updatedProductCombination';
+	
+	        if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
+	            eventType = extraParameters.eventType;
+	        }
+	        _prestashop2['default'].emit('updateProduct', {
+	            eventType: eventType,
+	            event: e,
+	            // Following variables are not used anymore, but kept for backward compatibility
+	            resp: {},
+	            reason: {
+	                productUrl: _prestashop2['default'].urls.pages.product || ''
+	            }
+	        });
+	    });
+	
+	    // Refresh all the product content
+	    _prestashop2['default'].on('updateProduct', function (args) {
+	        var eventType = args.eventType;
+	        var event = args.event;
+	
+	        getProductUpdateUrl().done(function (productUpdateUrl) {
+	            return updateProduct(event, eventType, productUpdateUrl);
+	        }).fail(function () {
+	            if ((0, _jquery2['default'])('section#main > .ajax-error').length === 0) {
+	                showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
+	            }
+	        });
+	    });
 	});
 
 /***/ }),
