@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true
+        
+    prestashop.module_kernel.repository:
+        class: 'PrestaShopBundle\Kernel\ModuleRepository'
+        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']

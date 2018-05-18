@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     # Service aliases for backward campatibility
     prestashop.core.api.stockMovement.repository:
         alias: prestashop.core.api.stock_movement.repository

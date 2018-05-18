@@ -1,0 +1,9 @@
+imports:
+    - { resource: bundle/event_listener.yml }
+    - { resource: bundle/form.yml }
+    - { resource: bundle/repository.yml }
+    - { resource: bundle/security.yml }
+    - { resource: bundle/services.yml }
+    - { resource: bundle/translation.yml }
+    - { resource: bundle/twig.yml }
+    - { resource: bundle/utils.yml }

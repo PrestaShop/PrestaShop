@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.admin.data_provider.addons:
+        class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+        decorates: prestashop.core.admin.data_provider.addons_interface
+        arguments:
+            - '@prestashop.addons.client_api'
+            - '@prestashop.module.zip.manager'
+        properties:
+            cacheDir: "%kernel.cache_dir%"
+        public: false
+
+    prestashop.adapter.admin.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+        arguments:
+             - "@translator"
+             - "@logger"
+             - "@prestashop.core.admin.data_provider.addons_interface"
+             - "@prestashop.categories_provider"
+             - "@prestashop.adapter.data_provider.module"
+             - "@doctrine.cache.provider"
+             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+        calls:
+            - [ setRouter, ['@router']]
+        decorates: prestashop.core.admin.data_provider.module_interface
+        public: false
