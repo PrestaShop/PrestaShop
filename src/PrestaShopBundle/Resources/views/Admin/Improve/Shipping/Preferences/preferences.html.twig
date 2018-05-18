@@ -24,9 +24,8 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% set handlingForm = form.handling %}
+{% set handlingForm, carrierOptionsForm = form.handling, form.carrier_options %}
 
 {% block content %}
     <div class="container">
@@ -34,6 +33,9 @@
         <div class="row">
             {# Handling options block #}
             {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
+
+            {# Carrier options block #}
+            {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
         </div>
         {{ form_end(form) }}
     </div>

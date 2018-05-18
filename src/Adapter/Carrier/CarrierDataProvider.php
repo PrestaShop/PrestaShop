@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
 use Carrier;
+use Configuration;
 
 /**
  * This class will provide data from DB / ORM about Category
@@ -41,7 +42,7 @@ class CarrierDataProvider
      * @param bool $delete
      * @param bool|int $id_zone
      * @param null|string $ids_group
-     * @param $modules_filters, possible values:
+     * @param $modules_filters , possible values:
      * PS_CARRIERS_ONLY
      * CARRIERS_MODULE
      * CARRIERS_MODULE_NEED_RANGE
@@ -53,6 +54,55 @@ class CarrierDataProvider
     public function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
     {
         return Carrier::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
+    }
+
+    /**
+     * Get all active carriers in given language, usable for choice form type
+     *
+     * @param int|null $languageId if not provided - will use the default language
+     *
+     * @return array carrier choices
+     */
+    public function getActiveCarriersChoices($languageId = null)
+    {
+        if (null === $languageId) {
+            $languageId = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        $carriers = $this->getCarriers($languageId, true, false, false, null, $this->getAllCarriersConstant());
+        $carriersChoices = [];
+
+        foreach ($carriers as $carrier) {
+            $carriersChoices[$carrier['name']] = $carrier['id_carrier'];
+        }
+
+        return $carriersChoices;
+    }
+
+    /**
+     * Get carriers order by choices
+     *
+     * @return array order by choices
+     */
+    public function getOrderByChoices()
+    {
+        return [
+            'Price' => Carrier::SORT_BY_PRICE,
+            'Position' => Carrier::SORT_BY_POSITION,
+        ];
+    }
+
+    /**
+     * Get carriers order way choices
+     *
+     * @return array order way choices
+     */
+    public function getOrderWayChoices()
+    {
+        return [
+            'Ascending' => Carrier::SORT_BY_ASC,
+            'Descending' => Carrier::SORT_BY_DESC,
+        ];
     }
 
     /**
