@@ -276,8 +276,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to uninstall this module.',
-                    array(),
+                    'You are not allowed to uninstall the module %module%.',
+                    array(
+                        '%module%' => $name
+                    ),
                     'Admin.Modules.Notification'));
         }
 
@@ -310,8 +312,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to upgrade this module.',
-                    array(),
+                    'You are not allowed to upgrade the module %module%.',
+                    array(
+                        '%module%' => $name,
+                    ),
                     'Admin.Modules.Notification'));
         }
 
@@ -348,8 +352,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to disable this module.',
-                    array(),
+                    'You are not allowed to disable the module %module%.',
+                    array(
+                        '%module%' => $name,
+                    ),
                     'Admin.Modules.Notification'));
         }
 
@@ -385,8 +391,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to enable this module.',
-                    array(),
+                    'You are not allowed to enable the module %module%.',
+                    array(
+                        '%module%' => $name,
+                    ),
                     'Admin.Modules.Notification'));
         }
 
@@ -434,8 +442,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to disable this module on mobile.',
-                    array(),
+                    'You are not allowed to disable the module %module% on mobile.',
+                    array(
+                        '%module%' => $name,
+                    ),
                     'Admin.Modules.Notification'));
         }
 
@@ -482,8 +492,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to enable this module on mobile.',
-                    array(),
+                    'You are not allowed to enable the module %module% on mobile.',
+                    array(
+                        '%module%' => $name,
+                    ),
                     'Admin.Modules.Notification'));
         }
 
@@ -514,8 +526,10 @@ class ModuleManager implements AddonManagerInterface
         if (!$this->adminModuleProvider->isAllowedAccess('install') || !$this->adminModuleProvider->isAllowedAccess('uninstall', $name)) {
             throw new Exception(
                 $this->translator->trans(
-                    'You are not allowed to reset this module.',
-                    array(),
+                    'You are not allowed to reset the module %module%.',
+                    array(
+                        '%module%' => $name,
+                    ),
                     'Admin.Modules.Notification'));
         }
 
