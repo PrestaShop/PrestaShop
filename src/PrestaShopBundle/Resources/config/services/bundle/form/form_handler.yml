@@ -126,3 +126,15 @@ services:
             -
               'pdf': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipPdfType'
             - 'OrderDeliverySlipPage'
+
+    prestashop.admin.localization.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.localization.form_data_provider'
+            -
+              'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+              'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
+              'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
+            - 'LocalizationPage'
