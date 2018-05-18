@@ -1512,10 +1512,10 @@ class FrontControllerCore extends Controller
         $urls['actions'] = array(
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
         );
-        
+
         $imageRetriever = new ImageRetriever($this->context->link);
         $urls['no_picture_image'] =  $imageRetriever->getNoPictureImage($this->context->language);
-        
+
         return $urls;
     }
 
