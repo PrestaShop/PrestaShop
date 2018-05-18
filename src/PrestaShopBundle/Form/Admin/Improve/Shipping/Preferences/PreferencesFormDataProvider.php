@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
+use PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration;
 use PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -42,15 +43,22 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
     private $handlingConfiguration;
 
     /**
+     * @var CarrierOptionsConfiguration
+     */
+    private $carrierOptionsConfiguration;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     public function __construct(
         HandlingConfiguration $handlingConfiguration,
+        CarrierOptionsConfiguration $carrierOptionsConfiguration,
         TranslatorInterface $translator
     ) {
         $this->handlingConfiguration = $handlingConfiguration;
+        $this->carrierOptionsConfiguration = $carrierOptionsConfiguration;
         $this->translator = $translator;
     }
 
@@ -61,6 +69,7 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
     {
         return [
             'handling' => $this->handlingConfiguration->getConfiguration(),
+            'carrier_options' => $this->carrierOptionsConfiguration->getConfiguration(),
         ];
     }
 
@@ -85,7 +94,7 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
 
         return array_merge(
             $this->handlingConfiguration->updateConfiguration($data['handling']),
-            [] //@todo second fieldset
+            $this->carrierOptionsConfiguration->updateConfiguration($data['carrier_options'])
         );
     }
 
@@ -102,15 +111,15 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
         $numericFields = [
             [
                 'value' => $data['handling']['shipping_handling_charges'],
-                'name' => $this->translator->trans('Handling charges', [], 'Admin.Shopparameters.Feature'),
+                'name' => $this->translator->trans('Handling charges', [], 'Admin.Shipping.Feature'),
             ],
             [
                 'value' => $data['handling']['free_shipping_price'],
-                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shopparameters.Feature'),
+                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
             ],
             [
                 'value' => $data['handling']['free_shipping_weight'],
-                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shopparameters.Feature'),
+                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
             ],
         ];
 

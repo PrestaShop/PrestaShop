@@ -48,6 +48,7 @@ services:
             - '@prestashop.admin.shipping_preferences.data_provider'
             -
               'handling': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
+              'carrier_options': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
             - 'ShippingPreferencesPage'
 
     prestashop.admin.customer_preferences.form_handler:
