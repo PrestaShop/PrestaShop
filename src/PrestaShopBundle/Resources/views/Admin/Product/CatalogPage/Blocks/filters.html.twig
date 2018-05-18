@@ -37,37 +37,35 @@
               {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
           </button>
           <div id="tree-categories" class="dropdown-menu">
-            <a
-              class="categories-tree-actions"
-              href="#"
-              name="product_catalog_category_tree_filter_expand"
-              onclick="productCategoryFilterExpand($('div#product_catalog_category_tree_filter'), this);"
-              id="product_catalog_category_tree_filter_expand"
-            >
-              <i class="material-icons">expand_more</i>
-                {{ 'Expand'|trans({}, 'Admin.Actions') }}
-            </a>
-            <a
-              class="categories-tree-actions"
-              href="#"
-              name="product_catalog_category_tree_filter_collapse"
-              onclick="productCategoryFilterCollapse($('div#product_catalog_category_tree_filter'), this);"
-              id="product_catalog_category_tree_filter_collapse"
-            >
-              <i class="material-icons">expand_less</i>
-                {{ 'Collapse'|trans({}, 'Admin.Actions') }}
-            </a>
-            <a
-              class="categories-tree-actions"
-              href="#"
-              name="product_catalog_category_tree_filter_reset"
-              onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));"
-              id="product_catalog_category_tree_filter_reset"
-            >
-              <i class="material-icons">radio_button_unchecked</i>
-                {{ 'Unselect'|trans({}, 'Admin.Actions') }}
-            </a>
-            <hr>
+            <div class="categories-tree-actions">
+              <a
+                href="#"
+                name="product_catalog_category_tree_filter_expand"
+                onclick="productCategoryFilterExpand($('div#product_catalog_category_tree_filter'), this);"
+                id="product_catalog_category_tree_filter_expand"
+              >
+                <i class="material-icons">expand_more</i>
+                  {{ 'Expand'|trans({}, 'Admin.Actions') }}
+              </a>
+              <a
+                href="#"
+                name="product_catalog_category_tree_filter_collapse"
+                onclick="productCategoryFilterCollapse($('div#product_catalog_category_tree_filter'), this);"
+                id="product_catalog_category_tree_filter_collapse"
+              >
+                <i class="material-icons">expand_less</i>
+                  {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+              </a>
+              <a
+                href="#"
+                name="product_catalog_category_tree_filter_reset"
+                onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));"
+                id="product_catalog_category_tree_filter_reset"
+              >
+                <i class="material-icons">radio_button_unchecked</i>
+                  {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+              </a>
+            </div>
               {{ form_widget(categories) }}
           </div>
         </div>
