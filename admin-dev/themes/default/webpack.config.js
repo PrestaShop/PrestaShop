@@ -31,24 +31,50 @@ module.exports = {
     './js/theme.js'
   ],
   output: {
-    path: './public',
+    path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js'
   },
   module: {
     loaders: [{
       test: path.join(__dirname, 'js'),
-      loader: 'babel',
+      loader: 'babel-loader',
       query: {
         presets: ['es2015']
       }
     }, {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style', 'css!sass')
-    }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: ['css-loader']
+      })
     }, {
-      test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+      test: /\.(scss|sass)$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true,
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          }
+        ]
+      })
+    }, {
+      test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
       loader: 'file-loader?name=[hash].[ext]'
     }]
   },

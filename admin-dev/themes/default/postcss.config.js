@@ -22,5 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import '../sass/font.scss';
-import '../sass/admin-theme.sass';
+module.exports = {
+  plugins: [
+    require('postcss-cssnext')
+  ]
+}
