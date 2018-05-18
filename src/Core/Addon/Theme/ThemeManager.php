@@ -284,8 +284,17 @@ class ThemeManager implements AddonManagerInterface
         $moduleManager = $moduleManagerBuilder->build()->setActionParams(['confirmPrestaTrust' => true]);
 
         foreach ($modules as $key => $moduleName) {
-            if (!$moduleManager->isInstalled($moduleName)) {
-                $moduleManager->install($moduleName);
+            if (!$moduleManager->isInstalled($moduleName)
+                && !$moduleManager->install($moduleName)) {
+                throw new PrestaShopException(
+                    $this->translator->trans('Cannot %action% module %module%. %error_details%',
+                    array(
+                        '%action%' => 'install',
+                        '%module%' => $moduleName,
+                        '%error_details%' => $moduleManager->getError($moduleName),
+                    ),
+                    'Admin.Modules.Notification')
+                );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
                 $moduleManager->enable($moduleName);
