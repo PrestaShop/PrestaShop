@@ -101,3 +101,6 @@ services:
     prestashop.adapter.logs.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.data_provider.language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
