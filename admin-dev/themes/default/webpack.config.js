@@ -34,6 +34,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js'
   },
+  //devtool: 'source-map', // uncomment me to build source maps (really slow)
   module: {
     loaders: [{
       test: path.join(__dirname, 'js'),
@@ -41,12 +42,6 @@ module.exports = {
       query: {
         presets: ['es2015']
       }
-    }, {
-      test: /\.css$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: ['css-loader']
-      })
     }, {
       test: /\.(scss|sass)$/,
       use: ExtractTextPlugin.extract({

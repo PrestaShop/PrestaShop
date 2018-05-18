@@ -33,16 +33,7 @@
 
 <div class="bootstrap">
   <div class="page-head {if isset($current_tab_level) && $current_tab_level == 3}with-tabs{/if}">
-    {block name=pageTitle}
-      <h2 class="page-title">
-        {*if isset($toolbar_btn['back'])}
-              <a id="page-header-desc-{$table}{if isset($toolbar_btn['back'].imgclass)}-{$toolbar_btn['back'].imgclass}{/if}" class="page-header-toolbar-back{if isset($toolbar_btn['back'].target) && $toolbar_btn['back'].target} _blank{/if}" {if isset($toolbar_btn['back'].href)}href="{$toolbar_btn['back'].href}"{/if} title="{$toolbar_btn['back'].desc}"{if isset($toolbar_btn['back'].js) && $toolbar_btn['back'].js} onclick="{$toolbar_btn['back'].js}"{/if}>
-              </a>
-              {/if*}
-        {if is_array($title)}{$title|end|strip_tags}{else}{$title|strip_tags}{/if}
-      </h2>
-    {/block}
-
+    <div class="wrapper clearfix">
     {block name=pageBreadcrumb}
       <ul class="breadcrumb page-breadcrumb">
         {* Container *}
@@ -71,6 +62,17 @@
               {/if*}
       </ul>
     {/block}
+
+    {block name=pageTitle}
+      <h1 class="page-title">
+        {*if isset($toolbar_btn['back'])}
+              <a id="page-header-desc-{$table}{if isset($toolbar_btn['back'].imgclass)}-{$toolbar_btn['back'].imgclass}{/if}" class="page-header-toolbar-back{if isset($toolbar_btn['back'].target) && $toolbar_btn['back'].target} _blank{/if}" {if isset($toolbar_btn['back'].href)}href="{$toolbar_btn['back'].href}"{/if} title="{$toolbar_btn['back'].desc}"{if isset($toolbar_btn['back'].js) && $toolbar_btn['back'].js} onclick="{$toolbar_btn['back'].js}"{/if}>
+              </a>
+              {/if*}
+        {if is_array($title)}{$title|end|strip_tags}{else}{$title|strip_tags}{/if}
+      </h1>
+    {/block}
+
     {block name=toolbarBox}
       <div class="page-bar toolbarBox">
         <div class="btn-toolbar">
@@ -139,19 +141,26 @@
         </div>
       </div>
     {/block}
+
+    </div>
+
     {if isset($current_tab_level) && $current_tab_level == 3}
       <div class="page-head-tabs" id="head_tabs">
+        <ul class="nav">
         {foreach $tabs as $level_1}
           {foreach $level_1.sub_tabs as $level_2}
             {foreach $level_2.sub_tabs as $level_3}
               {if $level_3.current}
                 {foreach $level_3.sub_tabs as $level_4}
-                  <a href="{$level_4.href}" id="subtab-{$level_4.class_name}" {if $level_4.current}class="current"{/if} data-submenu="{$level_4.id_tab}">{$level_4.name}</a>
+                  <li>
+                    <a href="{$level_4.href}" id="subtab-{$level_4.class_name}" {if $level_4.current}class="current"{/if} data-submenu="{$level_4.id_tab}">{$level_4.name}</a>
+                  </li>
                 {/foreach}
               {/if}
             {/foreach}
           {/foreach}
         {/foreach}
+        </ul>
       </div>
     {/if}
   </div>

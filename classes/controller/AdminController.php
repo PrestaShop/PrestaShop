@@ -435,12 +435,12 @@ class AdminControllerCore extends Controller
         }
 
         $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
-            && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
+            && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
 
-        $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css;
+        $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.$this->bo_css;
 
         if (file_exists($adminThemeCSSFile)) {
-            $this->bo_css = 'admin-theme.css';
+            $this->bo_css = 'theme.css';
         }
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
