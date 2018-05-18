@@ -590,6 +590,11 @@ class ModuleManager implements AddonManagerInterface
         if ($module->hasValidInstance()) {
             $errors = $module->getInstance()->getErrors();
             $message = array_pop($errors);
+        } else {
+            // Invalid instance: Missing or with syntax error
+            $message = $this->translator->trans('The module is invalid and cannot be loaded.',
+                array(),
+                'Admin.Modules.Notification');
         }
 
         if (empty($message)) {
