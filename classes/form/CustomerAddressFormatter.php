@@ -97,6 +97,9 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                         $formField->setRequired(true);
                     }
                 }
+                if ($field === 'phone') {
+                    $formField->setType('tel');
+                }
             } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
 
