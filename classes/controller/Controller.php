@@ -193,9 +193,15 @@ abstract class ControllerCore
 
     public function __construct()
     {
-        $this->display_header = true;
-        $this->display_header_javascript = true;
-        $this->display_footer = true;
+        if (is_null($this->display_header)) {
+            $this->display_header = true;
+        }
+        if (is_null($this->display_header_javascript)) {
+            $this->display_header_javascript = true;
+        }
+        if (is_null($this->display_footer)) {
+            $this->display_footer = true;
+        }
         $this->context = Context::getContext();
         $this->context->controller = $this;
         $this->translator = Context::getContext()->getTranslator();
