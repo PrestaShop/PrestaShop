@@ -219,7 +219,7 @@ class DispatcherCore
     {
         $this->setRequest($request);
 
-        $this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
+        $this->use_routes = (bool) Configuration::get('PS_REWRITING_SETTINGS');
 
         $frontControllerType = $this->setFrontControllerType();
         
