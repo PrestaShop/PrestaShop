@@ -328,8 +328,8 @@ class CartRuleCore extends ObjectModel
                 '" AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1)';
 
             $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_to < "' . date('Y-m-d 00:00:00') .
-                '" AND date_from > "' . date('Y-m-d 23:59:59') .
+                'WHERE date_from < "' . date('Y-m-d 00:00:00') .
+                '" AND date_to > "' . date('Y-m-d 23:59:59') .
                 '" AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1) LIMIT 1';
 
             $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
