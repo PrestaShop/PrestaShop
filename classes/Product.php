@@ -300,7 +300,7 @@ class ProductCore extends ObjectModel
     protected static $_tax_rules_group = array();
     protected static $_cacheFeatures = array();
     protected static $_frontFeaturesCache = array();
-    protected static $producPropertiesCache = array();
+    protected static $productPropertiesCache = array();
 
     /** @var array cache stock data in getStock() method */
     protected static $cacheStock = array();
@@ -4625,8 +4625,8 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack'.$row['id_product_pack'];
         }
 
-        if (isset(self::$producPropertiesCache[$cache_key])) {
-            return array_merge($row, self::$producPropertiesCache[$cache_key]);
+        if (isset(self::$productPropertiesCache[$cache_key])) {
+            return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
 
         // Datas
@@ -4797,8 +4797,8 @@ class ProductCore extends ObjectModel
 
         $row['unit_price'] = ($row['unit_price_ratio'] != 0  ? $row['price'] / $row['unit_price_ratio'] : 0);
 
-        self::$producPropertiesCache[$cache_key] = $row;
-        return self::$producPropertiesCache[$cache_key];
+        self::$productPropertiesCache[$cache_key] = $row;
+        return self::$productPropertiesCache[$cache_key];
     }
 
     public static function getTaxesInformations($row, Context $context = null)
