@@ -16,10 +16,13 @@ module.exports = {
     page_link: '//*[@id="main"]//a[@title="%pageName"]',
     page_content: '//*[@id="content"]/p',
     address_information_link: '//*[@id="addresses-link"]',
-    address_information:'//*[@id="address-%ID"]//address',
+    address_information: '//*[@id="address-%ID"]//address',
     addresses_warning: '//*[@id="notifications"]//li',
+    identity_link: '//*[@id="identity-link"]',
+    create_account_button: '//*[@id="content"]/div[contains(@class,"no-account")]/a',
     page_category: '//*[@id="wrapper"]//a/span[contains(text(),"%CATEGORY")]',
     review_page_link: '//*[@id="content"]//a[contains(text(),"%PAGENAME")]',
-    not_found_erreur_message: '//*[@id="main"]//h1'
+    not_found_error_message: '//*[@id="main"]//h1',
+    terms_and_conditions_input: '//*[@id="customer-form"]//input[contains(@name,"psgdpr")]'
   }
 };

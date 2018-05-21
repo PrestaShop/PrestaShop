@@ -109,7 +109,7 @@ scenario('Create, edit, delete "CMS page"', () => {
     common_scenarios.deletePage();
     scenario('Check the review page', client => {
       test('should go to the review page in the Front Office', () => client.switchWindow(1));
-      test('should check that "page-not-found" appear', () => client.checkTextValue(AccessPageFO.not_found_erreur_message, 'The page you are looking for was not found.'));
+      test('should check that "page-not-found" appear', () => client.checkTextValue(AccessPageFO.not_found_error_message, 'The page you are looking for was not found.'));
       test('should go to the Back Office', () => client.switchWindow(0));
     }, 'design');
   }, 'design');

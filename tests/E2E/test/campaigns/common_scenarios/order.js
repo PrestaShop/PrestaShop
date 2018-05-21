@@ -41,7 +41,7 @@ module.exports = {
 
       if (authentication === "create_account" || authentication === "guest") {
         scenario('Create new account', client => {
-          test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.radio_button_gender));
+          test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.gender_radio_button));
           test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, data.customer.firstname));
           test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, data.customer.lastname));
           if (authentication === "create_account") {
