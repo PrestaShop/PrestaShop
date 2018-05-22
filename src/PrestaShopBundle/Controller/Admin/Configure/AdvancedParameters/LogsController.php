@@ -90,7 +90,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_logs")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_logs")
      * @DemoRestricted(route="admin_logs")
      * @param Request $request
      * @return RedirectResponse
