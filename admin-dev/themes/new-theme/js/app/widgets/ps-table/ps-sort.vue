@@ -35,25 +35,16 @@
       // column name
       order: String,
       // indicates the currently sorted column in the table
-      currentSort: {
-        type: String,
-      },
+      currentSort: String,
     },
     methods: {
       sortToggle() {
-        if (this.isSorted) {
-          // toggle direction
-          this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
-        } else {
-          this.isSorted = true;
-          this.sortDirection = 'asc';
-        }
+        // toggle direction
+        this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
         this.$emit('sort', this.order, this.sortDirection);
       },
     },
     data: () => ({
-      // indicates if this column is sorted
-      isSorted: true,
       sortDirection: 'asc',
     }),
     computed: {
