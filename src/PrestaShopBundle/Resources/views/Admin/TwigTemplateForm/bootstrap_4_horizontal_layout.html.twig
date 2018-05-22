@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% use "PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_layout.html.twig" %}
+{% use "PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_4_layout.html.twig" %}
 {% block form_start -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
     {{- parent() -}}
@@ -98,7 +98,9 @@
 <div class="input-group">
     {{- block('form_widget_simple') -}}
     {% if form.vars.unit is defined %}
-        <span class="input-group-addon">{{ form.vars.unit }}</span>
+        <div class="input-group-append">
+            <span class="input-group-text">{{ form.vars.unit }}</span>
+        </div>
     {% endif %}
 </div>
 {% endblock text_with_unit_widget %}

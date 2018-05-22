@@ -167,9 +167,9 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
-            'desc' => $translator->trans('New product', [], 'Admin.Actions'),
-            'icon' => 'add_circle_outline',
-            'help' => $translator->trans('Create a new product: CTRL+P', [], 'Admin.Catalog.Help'),
+            'desc' => $translator->trans('New product', array(), 'Admin.Actions'),
+            'icon' => 'add',
+            'help' => $translator->trans('Create a new product: CTRL+P', array(), 'Admin.Catalog.Help'),
         ];
 
         // Fetch product list (and cache it into view subcall to listAction)

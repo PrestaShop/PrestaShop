@@ -50,13 +50,17 @@
 						<h4>{l s='Connect to PrestaShop Addons'}</h4>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon"><i class="icon-user"></i></span>
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="icon-user"></i></span>
+								</div>
 								<input id="username_addons" name="username_addons" type="text" value="" autocomplete="off" class="form-control ac_input">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon"><i class="icon-key"></i></span>
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="icon-key"></i></span>
+								</div>
 								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
 							<a class="btn btn-link float-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
