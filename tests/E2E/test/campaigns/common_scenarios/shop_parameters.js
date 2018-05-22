@@ -69,8 +69,7 @@ module.exports = {
         test('should check the fifth onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Yay! You just created your first product. Looks good, right?'));
         test('should search the "Product"', () => {
           return promise
-            .then(() => client.waitAndSetValue(AddProductPage.catalogue_filter_by_name_input, 'productTest' + date_time))
-            .then(() => client.waitForExistAndClick(AddProductPage.click_outside))
+            .then(() => client.waitAndSetValue(AddProductPage.catalogue_filter_by_name_input, 'productTest' + date_time));
         });
         test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.catalog_submit_filter));
         test('should check the product', () => client.checkTextValue(ProductList.product_name.replace("%ID", '1'), 'productTest' + date_time));

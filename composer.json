@@ -96,7 +96,7 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/statsvisits": "^2",
-        "prestashop/welcome": "^4",
+        "prestashop/welcome": "^5",
         "prestashop/dashtrends": "^2",
         "prestashop/decimal": "^1.0.0",
         "cssjanus/cssjanus": "dev-patch-1"

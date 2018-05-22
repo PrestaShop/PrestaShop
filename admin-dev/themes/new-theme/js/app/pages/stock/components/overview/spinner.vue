@@ -24,7 +24,7 @@
  *-->
 <template>
   <form
-    class="qty text-sm-right"
+    class="qty"
     :class="classObject"
     @mouseover="focusIn"
     @mouseleave="focusOut($event)"
@@ -36,8 +36,9 @@
       placeholder="0"
       pattern="\d*"
       step="1"
+      buttons="true"
+      hoverButtons="true"
       :value="qty"
-      :buttons="this.isActive"
       @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
@@ -51,6 +52,9 @@
 
 <script>
   import PSNumber from 'app/widgets/ps-number';
+
+  const $ = global.$;
+
   export default {
     props: ['product'],
     computed: {
@@ -96,7 +100,8 @@
         this.isActive = true;
       },
       focusOut(event) {
-        if (!$(event.target).hasClass('ps-number') && !this.value) {
+        const value = parseInt(this.value, 10);
+        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;

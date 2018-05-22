@@ -92,9 +92,6 @@
   width: auto !important;
   margin-right: 5px;
 }
-.nav-link.active {
-  border-bottom: 3px solid #25B9D7;
-}
 
 .module-short-list {
     margin: 2em;
@@ -133,7 +130,7 @@
       }
       img {
         width: 100%;
-        max-width: 34px;
+        max-width: 40px;
         margin-bottom: 0.5em;
       }
     }
@@ -165,6 +162,7 @@
 .badges-container {
   min-height: 30px;
   font-size: .9rem;
+  line-height: 50%;
 }
 
 .module-price {
@@ -345,10 +343,10 @@
 .module-kpi {
   margin-right: 15px;
   display: initial;
-}
-.module-kpi i {
-  font-size: 30px;
-  vertical-align: sub;
+  .material-icons {
+    font-size: 1.875rem;
+    vertical-align: middle;
+  }
 }
 .module-kpi-number {
   margin: auto;
@@ -403,9 +401,9 @@
 .module-import-processing {
   display: none;
   text-align: center;
-}
-.module-import-processing .btn {
-  margin: 25px;
+  .btn {
+    margin: 25px;
+  }
 }
 .module-import-processing-footer-text {
   font-size: smaller;

@@ -673,9 +673,9 @@ var AdminModuleController = function() {
     $.getJSON(urlToCall, function(badge) {
         // TODO: This HTML code comes from an already specific template.
         // To be moved in a template, with generic classes for badges
-        destinationTab.append('<div class="notification-container">\
+        destinationTab.append('<span class="notification-container">\
             <span class="notification-counter">'+badge.count+'</span>\
-          </div>\
+          </span>\
         ');
     }).fail(function() {
         console.error('Could not retrieve module notifications count.');

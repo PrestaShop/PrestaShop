@@ -171,8 +171,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     /**
      * {@inheritdoc}
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true)
-    {
+    public function getCatalogProductList(
+        $offset,
+        $limit,
+        $orderBy,
+        $sortOrder,
+        $post = [],
+        $avoidPersistence = false,
+        $formatCldr = true
+    ) {
         $offset = (int)$offset;
         $limit = (int)$limit;
         $orderBy = Validate::isOrderBy($orderBy) ? $orderBy : 'id_product';
@@ -294,7 +301,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
-            'sql_group_by' => &$sqlGroupBy,            
+            'sql_group_by' => &$sqlGroupBy,
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ));
@@ -325,7 +332,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
-            'sql_group_by' => &$sqlGroupBy,            
+            'sql_group_by' => &$sqlGroupBy,
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ));

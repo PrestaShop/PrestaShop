@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Api;
 
+use Exception;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -93,7 +94,7 @@ abstract class ApiController
         try {
             $cacheRefresh->addCacheClear();
             $cacheRefresh->execute();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
     }
@@ -106,8 +107,11 @@ abstract class ApiController
      * @param array $headers
      * @return array
      */
-    protected function addAdditionalInfo(Request $request, QueryParamsCollection $queryParams = null, $headers = array())
-    {
+    protected function addAdditionalInfo(
+        Request $request,
+        QueryParamsCollection $queryParams = null,
+        $headers = array()
+    ) {
         $router = $this->container->get('router');
 
         $queryParamsArray = array();
@@ -115,12 +119,19 @@ abstract class ApiController
             $queryParamsArray = $queryParams->getQueryParams();
         }
 
-        $allParams = $allParamsWithoutPagination = array_merge($request->attributes->get('_route_params'), $queryParamsArray, $request->query->all());
+        $allParams = $allParamsWithoutPagination = array_merge(
+            $request->attributes->get('_route_params'),
+            $queryParamsArray,
+            $request->query->all()
+        );
         unset($allParamsWithoutPagination['page_index'], $allParamsWithoutPagination['page_size']);
 
         $info = array(
             'current_url' => $router->generate($request->attributes->get('_route'), $allParams),
-            'current_url_without_pagination' => $router->generate($request->attributes->get('_route'), $allParamsWithoutPagination)
+            'current_url_without_pagination' => $router->generate(
+                $request->attributes->get('_route'),
+                $allParamsWithoutPagination
+            )
         );
 
         if (array_key_exists('page_index', $allParams) && $allParams['page_index'] > 1) {
@@ -141,8 +152,7 @@ abstract class ApiController
             $info['next_url'] = $router->generate($request->attributes->get('_route'), $nextParams);
         }
 
-
-        if(array_key_exists('Total-Pages', $headers)) {
+        if (array_key_exists('Total-Pages', $headers)) {
             $info['total_page'] = $headers['Total-Pages'];
         }
 

@@ -23,31 +23,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="translations-header">
-    <Breadcrumb />
-    <h1>{{trans('head_title')}}</h1>
+  <div class="header-toolbar">
+    <div class="container-fluid">
+      <Breadcrumb />
+      <div class="title-row">
+        <h1 class="title">{{trans('head_title')}}</h1>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import Breadcrumb from './breadcrumb';
 
+  const $ = global.$;
+
+  function getOldHeaderToolbarButtons() {
+    return $('.header-toolbar')
+      .first()
+      .find('.toolbar-icons');
+  }
+
   export default {
     components: {
       Breadcrumb,
     },
+    mounted() {
+      // move the toolbar buttons to this header
+      const toolbarButtons = getOldHeaderToolbarButtons();
+      toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
+
+      // signal header change (so size can be updated)
+      const event = $.Event('vueHeaderMounted', {
+        name: 'stock-header',
+      });
+      $(document).trigger(event);
+    },
   };
 </script>
-
-<style lang="sass?outputStyle=expanded" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .translations-header {
-    position: fixed;
-    top: 40px;
-    background: white;
-    width: 100%;
-    z-index: 3;
-    border-bottom: 1px solid $gray-light;
-    height: 128px;
-  }
-</style>

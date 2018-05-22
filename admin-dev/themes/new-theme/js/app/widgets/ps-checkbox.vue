@@ -23,12 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="custom-checkbox">
-    <div class="checkbox">
+  <div class="md-checkbox">
+    <label @click="onClick">
       <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
-      <span @click="onClick"></span>
-    </div>
-    <slot name="label"></slot>
+      <i class="md-checkbox-control"></i>
+      <slot name="label"></slot>
+    </label>
   </div>
 </template>
 
@@ -53,67 +53,4 @@
     }),
   };
 </script>
-<style lang="sass" type="text/scss" scoped>
-  @import "../../../scss/config/_settings.scss";
-  .custom-checkbox {
-    & > .checkbox {
-      width: 15px;
-      height: 15px;
-      position: relative;
-      background: white;
-      display: inline-block;
-      vertical-align: baseline;
-      margin-bottom: -2px; // same as border
-      span {
-        width: 15px;
-        height: 15px;
-        cursor: pointer;
-        position: absolute;
-        top: 0;
-        left: 0;
-        border: 2px $gray-light solid;
-        border-radius: 2px;
-        &:after {
-          content: '';
-          width: 12px;
-          height: 5px;
-          position: absolute;
-          top: 1px;
-          left: 0;
-          border: 2px solid white;
-          border-top: none;
-          border-right: none;
-          background: transparent;
-          opacity: 0;
-          transform: rotate(-45deg);
-        }
-        &::before {
-          content: '';
-          width: 12px;
-          height: 12px;
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-      }
-      input[type=checkbox] {
-        display: none;
-        &:checked + span {
-          border: 2px $brand-primary solid;
-        }
-        &:checked + span:before {
-          background: $brand-primary;
-        }
-        &:checked + span:after {
-          opacity: 1;
-        }
-        &.indeterminate + span:after {
-          transform: rotate(0);
-          height: 0;
-          width: 11px;
-          top: 4px;
-        }
-      }
-    }
-  }
-</style>
+

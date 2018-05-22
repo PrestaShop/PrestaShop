@@ -23,7 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <table class="table">
-    <slot />
-  </table>
+  <div class="table-responsive">
+    <table class="table">
+      <slot />
+    </table>
+  </div>
 </template>

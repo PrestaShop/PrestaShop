@@ -62,16 +62,12 @@
     },
     methods: {
       onPageChanged(pageIndex) {
-        const desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch(desc);
+        this.fetch('asc');
       },
-      fetch(desc) {
-        let sorting = desc;
+      fetch(sortDirection) {
         const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        if (typeof desc !== 'string') {
-          sorting = ' desc';
-        }
+        const sorting = (sortDirection === 'desc') ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
         this.filters = Object.assign({}, this.filters, {
@@ -114,11 +110,9 @@
 </script>
 
 <style lang="sass" type="text/scss">
-  .header-toolbar {
+  // hide the layout header
+  #main-div > .header-toolbar {
     height: 0;
-    border: none;
-    .title {
-      display: none;
-    }
+    display: none;
   }
 </style>
