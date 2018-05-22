@@ -101,7 +101,6 @@
       },
       focusOut(event) {
         const value = parseInt(this.value, 10);
-        console.log("%o %o", $(event.target).hasClass('ps-number'), value);
         if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
           this.isActive = false;
         }
