@@ -1650,7 +1650,7 @@ class CartCore extends ObjectModel
         }
 
         $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-        if ($preservedGifts[$id_product.'-'.$id_product_attribute] > 0) {
+        if (isset($preservedGifts[$id_product.'-'.$id_product_attribute]) && $preservedGifts[$id_product.'-'.$id_product_attribute] > 0) {
             return Db::getInstance()->execute(
                 'UPDATE `'._DB_PREFIX_.'cart_product`
                 SET `quantity` = '.(int)$preservedGifts[$id_product.'-'.$id_product_attribute].'
@@ -3819,7 +3819,7 @@ class CartCore extends ObjectModel
                     $delivery
                 );
             }
-            
+
             if (
                 ! $product['active'] ||
                 ! $product['available_for_order'] ||
@@ -3827,7 +3827,7 @@ class CartCore extends ObjectModel
             ) {
                 return $returnProductOnFailure ? $product : false;
             }
-            
+
             if (! $product['allow_oosp']) {
                 $productQuantity = Product::getQuantity(
                     $product['id_product'],
