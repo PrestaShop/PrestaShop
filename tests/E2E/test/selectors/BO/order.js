@@ -41,5 +41,20 @@ module.exports = {
     product_combination: '//*[@class="id_product_attribute"]',
     basic_price_value: '//*[@id="customer_cart"]//tr[1]//input[@class="product_unit_price"]',
     product_select: '//*[@id="id_product"]'
+  },
+
+  ShoppingCarts: {
+    export_carts_button: '//*[@id="page-header-desc-cart-export_cart"]',
+    search_input: '//*[@id="table-cart"]//thead//input[@name="cartFilter_%searchParam"]',
+    search_button: '//*[@id="submitFilterButtoncart"]',
+    id: '//*[@id="table-cart"]//tr[%NUMBER]/td[2]',
+    order_id: '//*[@id="table-cart"]//tr[%NUMBER]/td[3]',
+    customer: '//*[@id="table-cart"]//tr[%NUMBER]/td[4]',
+    total: '//*[@id="table-cart"]//tr[%NUMBER]/td[5]',
+    carrier: '//*[@id="table-cart"]//tr[%NUMBER]/td[6]',
+    date: '//*[@id="table-cart"]//tr[%NUMBER]/td[7]',
+    customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[8]',
+    id_shopping_carts: 'table-cart',
+    reset_button: '//*[@name="submitResetcart"]'
   }
 };
