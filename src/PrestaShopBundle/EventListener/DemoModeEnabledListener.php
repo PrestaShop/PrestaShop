@@ -78,11 +78,10 @@ class DemoModeEnabledListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        if (!$this->isDemoModeEnabled || !$event->isMasterRequest()) {
-            return;
-        }
-
-        if (!$demoConfigurations = $event->getRequest()->attributes->get('_demo_restricted')) {
+        if (!$this->isDemoModeEnabled
+            || !$event->isMasterRequest()
+            || !$demoConfigurations = $event->getRequest()->attributes->get('_demo_restricted')
+        ) {
             return;
         }
 

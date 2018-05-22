@@ -78,7 +78,7 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Process the Performance configuration form.
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.")
-     * @DemoRestricted(route="admin_performance")
+     * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
      * @return RedirectResponse

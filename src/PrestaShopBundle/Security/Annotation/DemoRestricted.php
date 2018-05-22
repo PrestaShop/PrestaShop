@@ -64,7 +64,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param $domain The translation domain name.
+     * @param string $domain The translation domain name.
      */
     public function setDomain($domain)
     {
@@ -80,7 +80,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param $message The message displayed after redirection.
+     * @param string $message The message displayed after redirection.
      */
     public function setMessage($message)
     {
@@ -96,7 +96,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param $redirectRoute The route used for redirection.
+     * @param string $redirectRoute The route used for redirection.
      */
     public function setRedirectRoute($redirectRoute)
     {

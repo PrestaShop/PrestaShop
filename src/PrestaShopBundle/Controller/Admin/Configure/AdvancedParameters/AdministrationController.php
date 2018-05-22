@@ -68,8 +68,8 @@ class AdministrationController extends FrameworkBundleAdminController
 
     /**
      * Process the Administration configuration form.
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", route="admin_administration")
-     * @DemoRestricted(route="admin_administration")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
      * @return RedirectResponse

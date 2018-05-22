@@ -47,7 +47,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @DemoRestricted(route="admin_servers_test")
+     * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
@@ -70,7 +70,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @DemoRestricted(route="admin_servers_test")
+     * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
@@ -121,7 +121,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @DemoRestricted(route="admin_servers_test")
+     * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse

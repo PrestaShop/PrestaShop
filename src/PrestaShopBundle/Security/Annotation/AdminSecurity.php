@@ -30,7 +30,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * Improves the existing Security annotation, adding:
  * `domain`: to translate the sent message using a PrestaShop domain;
- * `route`: to select the route for redirection;
+ * `redirectRoute`: to select the route for redirection;
  * `url`: only available in 1.7.x, to redirect to legacy pages;
  *
  * @Annotation
@@ -69,7 +69,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param $domain The translation domain name.
+     * @param string $domain The translation domain name.
      */
     public function setDomain($domain)
     {
@@ -85,7 +85,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param $redirectRoute The route used for redirection.
+     * @param string $redirectRoute The route used for redirection.
      */
     public function setRedirectRoute($redirectRoute)
     {
@@ -101,7 +101,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param $url The url used for redirection.
+     * @param string $url The url used for redirection.
      */
     public function setUrl($url)
     {
