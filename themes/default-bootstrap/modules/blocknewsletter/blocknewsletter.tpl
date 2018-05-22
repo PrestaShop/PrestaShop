@@ -34,7 +34,9 @@
                 </button>
 				<input type="hidden" name="action" value="0" />
 			</div>
+            {if isset($id_module)}
             {hook h='displayGDPRConsent' id_module=$id_module}
+            {/if}
 		</form>
 	</div>
     {hook h="displayBlockNewsletterBottom" from='blocknewsletter'}
