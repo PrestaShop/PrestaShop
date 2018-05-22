@@ -63,6 +63,7 @@
                   {$msg}
                 </p>
               {/if}
+                {hook h='displayGDPRConsent' id_module=$id_module}
           </div>
         </div>
       </form>
