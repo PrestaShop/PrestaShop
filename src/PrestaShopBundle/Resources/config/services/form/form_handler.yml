@@ -112,7 +112,7 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
-            - '@prestashop.admin.import.form_data_provider'
+            - '@prestashop.admin.localization.form_data_provider'
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
             - 'LocalizationPage'

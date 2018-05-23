@@ -155,3 +155,8 @@ services:
 
     prestashop.adapter.data_provider.language:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
+
+    prestashop.adapter.localization.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

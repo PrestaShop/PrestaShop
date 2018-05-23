@@ -62,3 +62,8 @@ services:
         arguments:
             - '@session'
             - '@prestashop.core.import.file_finder'
+
+    prestashop.admin.localization.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.localization.configuration'
