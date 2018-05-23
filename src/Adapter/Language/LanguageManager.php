@@ -24,10 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Adapter\Language;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use Language;
 
-class LocalizationFormHandler extends FormHandler
+class LanguageManager
 {
+    /**
+     * Activate language
+     *
+     * @param int $langId
+     */
+    public function activateLanguage($langId)
+    {
+        $lang = new Language((int) $langId);
+
+        if (!$lang->active) {
+            $lang->active = 1;
+            $lang->save();
+        }
+    }
 }
