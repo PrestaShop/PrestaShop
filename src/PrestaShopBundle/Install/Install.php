@@ -877,6 +877,7 @@ class Install extends AbstractInstall
                 'ps_sharebuttons',
                 'ps_shoppingcart',
                 'ps_socialfollow',
+                'ps_themecusto',
                 'ps_wirepayment',
                 'pagesnotfound',
                 'sekeywords',
