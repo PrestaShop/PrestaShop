@@ -28,7 +28,7 @@
 
 {% block content %}
   <div class="container">
-    {{ form_start(localizationForm) }}
+    {{ form_start(localizationForm, {'action': path('admin_international_localization_save_settings')}) }}
     <div class="row">
         <div class="col">
           <div class="card">
