@@ -66,6 +66,19 @@ class PerformanceController extends FrameworkBundleAdminController
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
         );
 
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('Access denied.', 'Admin.Notifications.Error'));
+            return $this->redirect('admin_dashboard');
+        }
+
         return $this->render('@AdvancedParameters/performance.html.twig', $twigValues);
     }
 
@@ -120,8 +133,18 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function clearCacheAction()
     {
-        $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
-        $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+            return $this->redirectToRoute('admin_performance');
+        } else {
+            $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+            $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
+        }
 
         return $this->redirectToRoute('admin_performance');
     }
