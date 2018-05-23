@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -61,21 +62,29 @@ class LocalizationConfigurationType extends AbstractType
     private $currencyDataProvider;
 
     /**
+     * @var TimezoneRepository
+     */
+    private $timezoneRepository;
+
+    /**
      * @param LegacyContext $legacyContext
      * @param LanguageDataProvider $languageDataProvider
      * @param CountryDataProvider $countryDataProvider
      * @param CurrencyDataProvider $currencyDataProvider
+     * @param TimezoneRepository $timezoneRepository
      */
     public function __construct(
         LegacyContext $legacyContext,
         LanguageDataProvider $languageDataProvider,
         CountryDataProvider $countryDataProvider,
-        CurrencyDataProvider $currencyDataProvider
+        CurrencyDataProvider $currencyDataProvider,
+        TimezoneRepository $timezoneRepository
     ) {
         $this->languageDataProvider = $languageDataProvider;
         $this->countryDataProvider = $countryDataProvider;
         $this->legacyContext = $legacyContext;
         $this->currencyDataProvider = $currencyDataProvider;
+        $this->timezoneRepository = $timezoneRepository;
     }
 
     /**
@@ -108,7 +117,11 @@ class LocalizationConfigurationType extends AbstractType
                 ],
             ])
             ->add('timezone', ChoiceType::class, [
-                'choices' => [],
+                'choices' => $this->getTimezoneChoices(),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
         ;
     }
@@ -162,6 +175,23 @@ class LocalizationConfigurationType extends AbstractType
 
         foreach ($currencies as $currency) {
             $choices[$currency['name']] = $currency['id_currency'];
+        }
+
+        return $choices;
+    }
+
+    /**
+     * Get timezone choices
+     *
+     * @return array
+     */
+    private function getTimezoneChoices()
+    {
+        $timezones = $this->timezoneRepository->findAll();
+        $choices = [];
+
+        foreach ($timezones as $timezone) {
+            $choices[$timezone['name']] = $timezone['name'];
         }
 
         return $choices;

@@ -26,23 +26,40 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-/**
- * Class ImportLocalizationPackType
- */
-class ImportLocalizationPackType extends AbstractType
+class LocalizationFormDataProvider implements FormDataProviderInterface
 {
+    /**
+     * @var LocalizationConfiguration
+     */
+    private $localizationConfiguration;
+
+    /**
+     * @param LocalizationConfiguration $localizationConfiguration
+     */
+    public function __construct(
+        LocalizationConfiguration $localizationConfiguration
+    ) {
+        $this->localizationConfiguration = $localizationConfiguration;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getData()
     {
-        $builder
-            ->add('iso_localization_pack')
-            ->add('content_to_import')
-            ->add('download_pack_data')
-        ;
+        return [
+            'configuration' => $this->localizationConfiguration->getConfiguration(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->localizationConfiguration->updateConfiguration($data['configuration']);
     }
 }
