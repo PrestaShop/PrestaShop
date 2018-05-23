@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration;
+use PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 class LocalizationFormDataProvider implements FormDataProviderInterface
@@ -37,12 +38,20 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
     private $localizationConfiguration;
 
     /**
+     * @var LocalUnitsConfiguration
+     */
+    private $localUnitsConfiguration;
+
+    /**
      * @param LocalizationConfiguration $localizationConfiguration
+     * @param LocalUnitsConfiguration $localUnitsConfiguration
      */
     public function __construct(
-        LocalizationConfiguration $localizationConfiguration
+        LocalizationConfiguration $localizationConfiguration,
+        LocalUnitsConfiguration $localUnitsConfiguration
     ) {
         $this->localizationConfiguration = $localizationConfiguration;
+        $this->localUnitsConfiguration = $localUnitsConfiguration;
     }
 
     /**
@@ -52,6 +61,7 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
     {
         return [
             'configuration' => $this->localizationConfiguration->getConfiguration(),
+            'local_units' => $this->localUnitsConfiguration->getConfiguration(),
         ];
     }
 
@@ -60,6 +70,7 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->localizationConfiguration->updateConfiguration($data['configuration']);
+        return $this->localizationConfiguration->updateConfiguration($data['configuration']) +
+            $this->localUnitsConfiguration->updateConfiguration($data['local_units']);
     }
 }

@@ -119,3 +119,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.local_units.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
