@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration;
 use PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration;
 use PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
@@ -43,15 +44,23 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
     private $localUnitsConfiguration;
 
     /**
+     * @var AdvancedConfiguration
+     */
+    private $advancedConfiguration;
+
+    /**
      * @param LocalizationConfiguration $localizationConfiguration
      * @param LocalUnitsConfiguration $localUnitsConfiguration
+     * @param AdvancedConfiguration $advancedConfiguration
      */
     public function __construct(
         LocalizationConfiguration $localizationConfiguration,
-        LocalUnitsConfiguration $localUnitsConfiguration
+        LocalUnitsConfiguration $localUnitsConfiguration,
+        AdvancedConfiguration $advancedConfiguration
     ) {
         $this->localizationConfiguration = $localizationConfiguration;
         $this->localUnitsConfiguration = $localUnitsConfiguration;
+        $this->advancedConfiguration = $advancedConfiguration;
     }
 
     /**
@@ -62,6 +71,7 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
         return [
             'configuration' => $this->localizationConfiguration->getConfiguration(),
             'local_units' => $this->localUnitsConfiguration->getConfiguration(),
+            'advanced' => $this->advancedConfiguration->getConfiguration(),
         ];
     }
 
@@ -71,6 +81,7 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
     public function setData(array $data)
     {
         return $this->localizationConfiguration->updateConfiguration($data['configuration']) +
-            $this->localUnitsConfiguration->updateConfiguration($data['local_units']);
+            $this->localUnitsConfiguration->updateConfiguration($data['local_units']) +
+            $this->advancedConfiguration->updateConfiguration($data['advanced']);
     }
 }
