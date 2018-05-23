@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.admin.data_provider.product:
+            class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+            decorates: prestashop.core.admin.data_provider.product_interface
+            arguments:
+                - "@doctrine.orm.entity_manager"
+                - "@prestashop.adapter.image_manager"
+            public: false
+
+    prestashop.adapter.admin.data_updater.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
+        decorates: prestashop.core.admin.data_updater.product_interface
+        public: false
+        arguments:
+            - '@prestashop.hook.dispatcher'
+
+    prestashop.adapter.admin.wrapper.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
+        arguments: ["@translator", "@prestashop.adapter.legacy.context"]
+
+    prestashop.adapter.admin.controller.attribute_generator:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
