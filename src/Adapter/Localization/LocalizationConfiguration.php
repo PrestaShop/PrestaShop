@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageManager;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -40,11 +42,28 @@ class LocalizationConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
-     * @param Configuration $configuration
+     * @var LanguageManager
      */
-    public function __construct(Configuration $configuration)
-    {
+    private $languageManager;
+
+    /**
+     * @var CurrencyManager
+     */
+    private $currencyManager;
+
+    /**
+     * @param Configuration $configuration
+     * @param LanguageManager $languageManager
+     * @param CurrencyManager $currencyManager
+     */
+    public function __construct(
+        Configuration $configuration,
+        LanguageManager $languageManager,
+        CurrencyManager $currencyManager
+    ) {
         $this->configuration = $configuration;
+        $this->languageManager = $languageManager;
+        $this->currencyManager = $currencyManager;
     }
 
     /**
@@ -70,11 +89,19 @@ class LocalizationConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
+            $this->languageManager->activateLanguage((int) $config['default_language']);
+
+            // only update currency related data if it has changed
+            $currentConfig = $this->getConfiguration();
+            if ($currentConfig['default_currency'] != $config['default_currency']) {
+                $this->configuration->set('PS_CURRENCY_DEFAULT', (int) $config['default_currency']);
+                $this->currencyManager->updateDefaultCurrency();
+            }
+
             $this->configuration->set('PS_LANG_DEFAULT', (int) $config['default_language']);
             $this->configuration->set('PS_DETECT_LANG', (int) $config['detect_language_from_browser']);
             $this->configuration->set('PS_COUNTRY_DEFAULT', (int) $config['default_country']);
             $this->configuration->set('PS_DETECT_COUNTRY', (int) $config['detect_country_from_browser']);
-            $this->configuration->set('PS_CURRENCY_DEFAULT', (int) $config['default_currency']);
             $this->configuration->set('PS_TIMEZONE', $config['timezone']);
         }
 
