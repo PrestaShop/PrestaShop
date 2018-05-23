@@ -30,7 +30,7 @@
   <div class="container">
     {{ form_start(localizationForm, {'action': path('admin_international_localization_save_settings')}) }}
     <div class="row">
-        <div class="col">
+      <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
@@ -91,6 +91,47 @@
             </div>
           </div>
         </div>
+      <div class="col">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">language</i> {{ 'Local units'|trans }}
+          </h3>
+
+          <div class="card-block">
+            <div class="card-text">
+              <div class="form-group">
+                {{ ps.label_with_help(('Weight unit'|trans), ('The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).'|trans({}, 'Admin.International.Help'))) }}
+                {{ form_errors(localizationForm.local_units.weight_unit) }}
+                {{ form_widget(localizationForm.local_units.weight_unit) }}
+              </div>
+
+              <div class="form-group">
+                {{ ps.label_with_help(('Distance unit'|trans), ('The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).'|trans({}, 'Admin.International.Help'))) }}
+                {{ form_errors(localizationForm.local_units.distance_unit) }}
+                {{ form_widget(localizationForm.local_units.distance_unit) }}
+              </div>
+
+              <div class="form-group">
+                {{ ps.label_with_help(('Volume unit'|trans), ('The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).'|trans({}, 'Admin.International.Help'))) }}
+                {{ form_errors(localizationForm.local_units.volume_unit) }}
+                {{ form_widget(localizationForm.local_units.volume_unit) }}
+              </div>
+
+              <div class="form-group">
+                {{ ps.label_with_help(('Dimension unit'|trans), ('The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).'|trans({}, 'Admin.International.Help'))) }}
+                {{ form_errors(localizationForm.local_units.dimension_unit) }}
+                {{ form_widget(localizationForm.local_units.dimension_unit) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     {{ form_end(localizationForm) }}
   </div>
