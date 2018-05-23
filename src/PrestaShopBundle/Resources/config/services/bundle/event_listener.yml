@@ -14,3 +14,21 @@ services:
         arguments: ['@prestashop.hook.dispatcher']
         tags:
             - { name: kernel.event_subscriber }
+
+    prestashop.tokenized_url_listener:
+        class: PrestaShopBundle\EventListener\TokenizedUrlsListener
+        arguments:
+            - "@security.csrf.token_manager"
+            - "@router"
+            - "@=service('prestashop.user_provider').getUsername()"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    prestashop.multishop_command_listener:
+        class: PrestaShopBundle\EventListener\MultishopCommandListener
+        arguments:
+            - "@prestashop.adapter.shop.context"
+            - "@=service('kernel').getRootDir()"
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }

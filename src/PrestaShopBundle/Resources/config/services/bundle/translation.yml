@@ -117,3 +117,20 @@ services:
             cacheDir: "%kernel.cache_dir%"
         calls:
             - [ setExportDir, ["%kernel.cache_dir%/export"]]
+
+    # Api - i18n
+    prestashop.translation.api:
+        abstract: true
+        class: PrestaShopBundle\Translation\Api\AbstractApi
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.translation.api.stock:
+        class: PrestaShopBundle\Translation\Api\StockApi
+        parent: prestashop.translation.api
+        public: true
+
+    prestashop.translation.api.international:
+        class: PrestaShopBundle\Translation\Api\InternationalApi
+        parent: prestashop.translation.api
+        public: true
