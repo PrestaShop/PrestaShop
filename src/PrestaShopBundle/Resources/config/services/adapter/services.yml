@@ -38,3 +38,50 @@ services:
     prestashop.adapter.php_parameters:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
         arguments: ['%kernel.root_dir%/config/parameters.php']
+
+    prestashop.adapter.legacy.configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration
+
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\LegacyContext
+
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
+
+    # SSL middleware
+    prestashop.adapter.middleware.ssl:
+        class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    # Legacy Hooks registrator
+    prestashop.adapter.legacy.hook.subscriber:
+        class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+
+    prestashop.adapter.legacy.block.helper.subscriber:
+            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+
+    prestashop.adapter.stock_manager:
+        class: PrestaShop\PrestaShop\Adapter\StockManager
+        decorates: prestashop.core.data_provider.stock_interface
+        public: false
+
+    prestashop.adapter.formatter.price:
+        class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
+
+    # Other adapters
+    prestashop.adapter.shop.context:
+        class: PrestaShop\PrestaShop\Adapter\Shop\Context
+
+    prestashop.adapter.tools:
+        class: PrestaShop\PrestaShop\Adapter\Tools
+
+    prestashop.adapter.image_manager:
+        class: PrestaShop\PrestaShop\Adapter\ImageManager
+        arguments: ["@prestashop.adapter.legacy.context"]
+
+    prestashop.core.module.updater:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+        arguments:
+            - "@prestashop.core.admin.data_provider.addons_interface"
+            - "@prestashop.adapter.admin.data_provider.module"

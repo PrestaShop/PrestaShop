@@ -7,3 +7,7 @@ imports:
     - { resource: bundle/translation.yml }
     - { resource: bundle/twig.yml }
     - { resource: bundle/utils.yml }
+    - { resource: bundle/cache.yml }
+    - { resource: bundle/api.yml }
+    - { resource: bundle/controller.yml }
+    - { resource: bundle/data_collector.yml }
