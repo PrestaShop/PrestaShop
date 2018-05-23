@@ -68,3 +68,4 @@ services:
         arguments:
             - '@prestashop.adapter.localization.configuration'
             - '@prestashop.adapter.local_units.configuration'
+            - '@prestashop.adapter.localization_advanced.configuration'

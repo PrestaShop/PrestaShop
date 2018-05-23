@@ -116,4 +116,5 @@ services:
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
               'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
+              'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
             - 'LocalizationPage'
