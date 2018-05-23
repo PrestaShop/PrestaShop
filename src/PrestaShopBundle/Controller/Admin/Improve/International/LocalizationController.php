@@ -52,6 +52,10 @@ class LocalizationController extends FrameworkBundleAdminController
 
         $localizationForm = $this->getLocalizationFormHandler()->getForm();
 
+        if (!extension_loaded('openssl')) {
+            $this->addFlash('warning', $this->trans('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.', 'Admin.International.Notification'));
+        }
+
         return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Localization', 'Admin.Navigation.Menu'),
