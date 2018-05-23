@@ -345,7 +345,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
         // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
         $this->context->shop = new Shop((int)$this->context->shop->id);
-        $url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+        $url = $this->context->shop->getBaseURL(true).$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
 
         return $url;
     }

@@ -80,7 +80,7 @@ class AdminInformationControllerCore extends AdminController
         $shop_vars = array(
             'shop' => array(
                 'ps' => _PS_VERSION_,
-                'url' => $this->context->shop->getBaseURL(),
+                'url' => $this->context->shop->getBaseURL(true),
                 'theme' => $this->context->shop->theme_name,
             ),
             'mail' => Configuration::get('PS_MAIL_METHOD') == 1,

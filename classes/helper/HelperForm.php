@@ -253,7 +253,7 @@ class HelperFormCore extends Helper
             'required_fields' => $this->getFieldsRequired(),
             'vat_number' => Module::isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
-            'base_url' => $this->context->shop->getBaseURL(),
+            'base_url' => $this->context->shop->getBaseURL(true),
             'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
             'show_cancel_button' => $this->show_cancel_button,
             'back_url' => $this->back_url

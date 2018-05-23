@@ -3382,7 +3382,7 @@ class AdminProductsControllerCore extends AdminController
             'languages' => $this->_languages,
             'id_lang' => $this->context->language->id,
             'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
-            'curent_shop_url' => $this->context->shop->getBaseURL(),
+            'curent_shop_url' => $this->context->shop->getBaseURL(true),
             'default_form_language' => $this->default_form_language,
             'rewritten_links' => $rewritten_links
         ));

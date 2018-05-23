@@ -1976,7 +1976,7 @@ class AdminControllerCore extends Controller
             'full_language_code' => $this->context->language->language_code,
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'base_url' => $this->context->shop->getBaseURL(),
+            'base_url' => $this->context->shop->getBaseURL(true),
             'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
             'current_parent_id' => (int)Tab::getCurrentParentId(),
             'tabs' => $tabs,
@@ -2258,7 +2258,7 @@ class AdminControllerCore extends Controller
                 .'email='.urlencode($this->context->employee->email)
                 .'&firstname='.urlencode($this->context->employee->firstname)
                 .'&lastname='.urlencode($this->context->employee->lastname)
-                .'&website='.urlencode($this->context->shop->getBaseURL())
+                .'&website='.urlencode($this->context->shop->getBaseURL(true))
                 .'&utm_source=back-office&utm_medium=connect-to-addons'
                 .'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
                 .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'#createnow',
