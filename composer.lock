@@ -3703,16 +3703,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "eeb87f613c8908e6f074c26e9d71beb85077132b"
+                "reference": "73576b54d40077442bae9249e00e5ca05929b513"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/eeb87f613c8908e6f074c26e9d71beb85077132b",
-                "reference": "eeb87f613c8908e6f074c26e9d71beb85077132b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/73576b54d40077442bae9249e00e5ca05929b513",
+                "reference": "73576b54d40077442bae9249e00e5ca05929b513",
                 "shasum": ""
             },
             "require": {
@@ -3731,7 +3731,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-05-16T15:46:09+00:00"
+            "time": "2018-05-23T16:07:31+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
