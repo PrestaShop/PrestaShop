@@ -49,7 +49,7 @@ class AdminLoginControllerCore extends AdminController
         $this->addJquery();
         $this->addjqueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/theme.css', 'all', 0);
         $this->addJS(_PS_JS_DIR_.'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
         Media::addJsDef(array('img_dir' => _PS_IMG_));
