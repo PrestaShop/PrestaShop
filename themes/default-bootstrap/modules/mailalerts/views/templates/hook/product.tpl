@@ -33,7 +33,7 @@
 		{if isset($id_module)}
 			{hook h='displayGDPRConsent' id_module=$id_module}
 		{/if}
-		<button type="submit" title="{l s='Notify me when available' mod='mailalerts'}" id="mailalert_link" rel="nofollow">{l s='Notify me when available' mod='mailalerts'}</button>
+		<button type="submit" class="btn btn-default" title="{l s='Notify me when available' mod='mailalerts'}" id="mailalert_link" rel="nofollow">{l s='Notify me when available' mod='mailalerts'}</button>
 		<span id="oos_customer_email_result" style="display:none; display: block;"></span>
 	</form>
 {strip}
