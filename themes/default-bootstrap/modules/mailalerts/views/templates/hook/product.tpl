@@ -24,13 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- MODULE MailAlerts -->
-	{if isset($email) AND $email}
-		<p class="form-group">
-			<input type="text" id="oos_customer_email" name="customer_email" size="20" value="{l s='your@email.com' mod='mailalerts'}" class="mailalerts_oos_email form-control" />
-    	</p>
-    {/if}
-	<a href="#" title="{l s='Notify me when available' mod='mailalerts'}" id="mailalert_link" rel="nofollow">{l s='Notify me when available' mod='mailalerts'}</a>
-	<span id="oos_customer_email_result" style="display:none; display: block;"></span>
+	<form>
+		{if isset($email) AND $email}
+			<p class="form-group">
+				<input type="text" id="oos_customer_email" name="customer_email" size="20" value="{l s='your@email.com' mod='mailalerts'}" class="mailalerts_oos_email form-control" />
+			</p>
+		{/if}
+		{if isset($id_module)}
+			{hook h='displayGDPRConsent' id_module=$id_module}
+		{/if}
+		<button type="submit" title="{l s='Notify me when available' mod='mailalerts'}" id="mailalert_link" rel="nofollow">{l s='Notify me when available' mod='mailalerts'}</button>
+		<span id="oos_customer_email_result" style="display:none; display: block;"></span>
+	</form>
 {strip}
 {addJsDef oosHookJsCodeFunctions=array('oosHookJsCodeMailAlert')}
 {addJsDef mailalerts_url_check=$link->getModuleLink('mailalerts', 'actions', ['process' => 'check'])}
