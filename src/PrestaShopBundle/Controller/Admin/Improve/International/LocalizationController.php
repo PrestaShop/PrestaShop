@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -45,7 +46,7 @@ class LocalizationController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    public function localizationAction(Request $request)
+    public function showSettingsAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -59,6 +60,36 @@ class LocalizationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'localizationForm' => $localizationForm->createView(),
         ];
+    }
+
+    /**
+     * Save localization settings
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function saveSettingsAction(Request $request)
+    {
+        $localizationFormHandler = $this->getLocalizationFormHandler();
+
+        $localizationForm = $localizationFormHandler->getForm();
+        $localizationForm->handleRequest($request);
+
+        if ($localizationForm->isSubmitted()) {
+            $data = $localizationForm->getData();
+
+            $errors = $localizationFormHandler->save($data);
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_international_localization_show_settings');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_international_localization_show_settings');
     }
 
     /**

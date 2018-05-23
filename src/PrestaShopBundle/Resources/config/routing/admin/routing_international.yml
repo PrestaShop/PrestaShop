@@ -30,9 +30,16 @@ admin_international_translations_export_theme:
 
 # Localization routes
 
-admin_international_localization:
+admin_international_localization_show_settings:
     path: /localization
     methods: [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Localization:localization
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:showSettings
+        _legacy_controller: AdminLocalization
+
+admin_international_localization_save_settings:
+    path: /localization
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:saveSettings
         _legacy_controller: AdminLocalization

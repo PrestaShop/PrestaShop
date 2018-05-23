@@ -368,6 +368,7 @@ services:
             - '@prestashop.adapter.data_provider.language'
             - '@prestashop.adapter.data_provider.country'
             - '@prestashop.adapter.data_provider.currency'
+            - '@prestashop.core.admin.timezone.repository'
         tags:
             - { name: form.type }
 
