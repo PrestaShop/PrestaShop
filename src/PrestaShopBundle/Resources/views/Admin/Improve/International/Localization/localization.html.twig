@@ -26,145 +26,30 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
+{% set configurationForm, localUnitsForm, advancedForm = localizationForm.configuration, localizationForm.local_units, localizationForm.advanced %}
+
 {% block content %}
   <div class="container">
     {{ form_start(localizationForm, {'action': path('admin_international_localization_save_settings')}) }}
     <div class="row">
       <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
-            </h3>
-
-            <div class="card-block">
-              <div class="card-text">
-                <div class="form-group">
-                  {{ ps.label_with_help(('Default language'|trans), ('The default language used in your shop.'|trans({}, 'Admin.International.Help'))) }}
-                  {{ form_errors(localizationForm.configuration.default_language) }}
-                  {{ form_widget(localizationForm.configuration.default_language) }}
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">
-                    {{ 'Set language from browser'|trans }}
-                  </label>
-                  {{ form_errors(localizationForm.configuration.detect_language_from_browser) }}
-                  {{ form_widget(localizationForm.configuration.detect_language_from_browser) }}
-                  <small class="form-text">{{ 'Set browser language as default language'|trans({}, 'Admin.International.Help') }}</small>
-                </div>
-
-                <div class="form-group">
-                  {{ ps.label_with_help(('Default country'|trans), ('The default country used in your shop.'|trans({}, 'Admin.International.Help'))) }}
-                  {{ form_errors(localizationForm.configuration.default_country) }}
-                  {{ form_widget(localizationForm.configuration.default_country) }}
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">
-                    {{ 'Set default country from browser language'|trans }}
-                  </label>
-                  {{ form_errors(localizationForm.configuration.detect_country_from_browser) }}
-                  {{ form_widget(localizationForm.configuration.detect_country_from_browser) }}
-                  <small class="form-text">{{ 'Set country corresponding to browser language'|trans({}, 'Admin.International.Help') }}</small>
-                </div>
-
-                <div class="form-group">
-                  {{ ps.label_with_help(('Default currency'|trans), ('The default currency used in your shop.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                  {{ form_errors(localizationForm.configuration.default_currency) }}
-                  {{ form_widget(localizationForm.configuration.default_currency) }}
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">
-                    {{ 'Time zone'|trans }}
-                  </label>
-                  {{ form_errors(localizationForm.configuration.timezone) }}
-                  {{ form_widget(localizationForm.configuration.timezone) }}
-                </div>
-              </div>
-            </div>
-
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+          {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
         </div>
     </div>
 
     <div class="row">
       <div class="col">
-        <div class="card">
-          <h3 class="card-header">
-            <i class="material-icons">language</i> {{ 'Local units'|trans }}
-          </h3>
-
-          <div class="card-block">
-            <div class="card-text">
-              <div class="form-group">
-                {{ ps.label_with_help(('Weight unit'|trans), ('The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).'|trans({}, 'Admin.International.Help'))) }}
-                {{ form_errors(localizationForm.local_units.weight_unit) }}
-                {{ form_widget(localizationForm.local_units.weight_unit) }}
-              </div>
-
-              <div class="form-group">
-                {{ ps.label_with_help(('Distance unit'|trans), ('The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).'|trans({}, 'Admin.International.Help'))) }}
-                {{ form_errors(localizationForm.local_units.distance_unit) }}
-                {{ form_widget(localizationForm.local_units.distance_unit) }}
-              </div>
-
-              <div class="form-group">
-                {{ ps.label_with_help(('Volume unit'|trans), ('The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).'|trans({}, 'Admin.International.Help'))) }}
-                {{ form_errors(localizationForm.local_units.volume_unit) }}
-                {{ form_widget(localizationForm.local_units.volume_unit) }}
-              </div>
-
-              <div class="form-group">
-                {{ ps.label_with_help(('Dimension unit'|trans), ('The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).'|trans({}, 'Admin.International.Help'))) }}
-                {{ form_errors(localizationForm.local_units.dimension_unit) }}
-                {{ form_widget(localizationForm.local_units.dimension_unit) }}
-              </div>
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <div class="d-flex justify-content-end">
-              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
-          </div>
-        </div>
+        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/local_units.html.twig' %}
       </div>
       <div class="col">
-        <div class="card">
-          <h3 class="card-header">
-            <i class="material-icons">settings</i> {{ 'Advanced'|trans({}, 'Admin.Global') }}
-          </h3>
-
-          <div class="card-block">
-            <div class="card-text">
-              <div class="form-group">
-                {{ ps.label_with_help(('Language identifier'|trans), ('The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).'|trans({}, 'Admin.International.Help'))) }}
-                {{ form_errors(localizationForm.advanced.language_identifier) }}
-                {{ form_widget(localizationForm.advanced.language_identifier) }}
-              </div>
-
-              <div class="form-group">
-                {{ ps.label_with_help(('Country identifier'|trans), ('The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).'|trans({}, 'Admin.International.Help'))) }}
-                {{ form_errors(localizationForm.advanced.country_identifier) }}
-                {{ form_widget(localizationForm.advanced.country_identifier) }}
-              </div>
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <div class="d-flex justify-content-end">
-              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
-          </div>
-        </div>
+        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
       </div>
     </div>
+
+    {% block localization_settings_form_rest %}
+      {{ form_rest(localizationForm) }}
+    {% endblock %}
+
     {{ form_end(localizationForm) }}
   </div>
 {% endblock %}
