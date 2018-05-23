@@ -67,3 +67,4 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
         arguments:
             - '@prestashop.adapter.localization.configuration'
+            - '@prestashop.adapter.local_units.configuration'

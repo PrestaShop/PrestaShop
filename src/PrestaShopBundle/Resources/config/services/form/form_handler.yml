@@ -115,4 +115,5 @@ services:
             - '@prestashop.admin.localization.form_data_provider'
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+              'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
             - 'LocalizationPage'
