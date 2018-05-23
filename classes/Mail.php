@@ -329,7 +329,7 @@ class MailCore extends ObjectModel
                 $message->addBcc(self::toPunycode($addr));
             }
         } elseif (isset($bcc)) {
-            $message->addBcc(self::toPunycode($bbc));
+            $message->addBcc(self::toPunycode($bcc));
         }
 
         try {
