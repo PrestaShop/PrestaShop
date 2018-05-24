@@ -31,10 +31,10 @@
     <div class="container">
         {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
         <div class="row">
-            {# Handling options block #}
+            {# Block for "Handling" fieldset #}
             {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
 
-            {# Carrier options block #}
+            {# Block for "Carrier options" fieldset #}
             {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
         </div>
         {{ form_end(form) }}
