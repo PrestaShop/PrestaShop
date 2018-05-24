@@ -27,13 +27,23 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
 use Carrier;
-use Configuration;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This class will provide data from DB / ORM about Category
  */
 class CarrierDataProvider
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
     /**
      * Get all carriers in a given language
      *
@@ -66,7 +76,7 @@ class CarrierDataProvider
     public function getActiveCarriersChoices($languageId = null)
     {
         if (null === $languageId) {
-            $languageId = Configuration::get('PS_LANG_DEFAULT');
+            $languageId = $this->configuration->getInt('PS_LANG_DEFAULT');
         }
 
         $carriers = $this->getCarriers($languageId, true, false, false, null, $this->getAllCarriersConstant());
