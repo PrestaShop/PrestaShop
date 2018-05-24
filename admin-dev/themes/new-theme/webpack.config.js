@@ -70,8 +70,11 @@ let config = {
     localization: [
       './js/pages/localization'
     ],
+    invoices: [
+        './js/pages/invoices',
+    ],
     geolocation: [
-      './js/pages/geolocation'
+      './js/pages/geolocation',
     ]
   },
   output: {
