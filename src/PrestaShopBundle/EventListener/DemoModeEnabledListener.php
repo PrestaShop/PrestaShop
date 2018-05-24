@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -54,22 +56,36 @@ class DemoModeEnabledListener
     private $session;
 
     /**
+     * @var Reader
+     */
+    private $annotationReader;
+
+    /**
      * @var bool
      */
     private $isDemoModeEnabled;
 
     /**
      * DemoModeEnabledListener constructor.
+     *
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
      * @param SessionInterface $session
+     * @param Reader $annotationReader
      * @param $isDemoModeEnabled
      */
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, SessionInterface $session, $isDemoModeEnabled)
+    public function __construct(
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        Reader $annotationReader,
+        $isDemoModeEnabled
+    )
     {
         $this->router = $router;
         $this->translator = $translator;
         $this->session = $session;
+        $this->annotationReader = $annotationReader;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
     }
 
@@ -80,23 +96,31 @@ class DemoModeEnabledListener
     {
         if (!$this->isDemoModeEnabled
             || !$event->isMasterRequest()
-            || !$demoConfigurations = $event->getRequest()->attributes->get('_demo_restricted')
         ) {
             return;
         }
 
-        foreach ($demoConfigurations as $demoConfiguration) {
-            if (!$demoConfiguration instanceof DemoRestricted) {
-                $this->showNotificationMessage($demoConfiguration);
-                $url = $this->router->generate($demoConfiguration->getRoute());
+        $controller = $event->getController();
 
-                $event->setController(function () use ($url){
-                    return new RedirectResponse($url);
-                });
-
-                return;
-            }
+        if (!is_array($controller)) {
+            return;
         }
+
+        list($controllerObject, $methodName) = $controller;
+        $demoRestricted = $this->getAnnotation($controllerObject, $methodName);
+
+        if (!$demoRestricted instanceof DemoRestricted) {
+            return;
+        }
+
+
+        $this->showNotificationMessage($demoRestricted);
+        $url = $this->router->generate($demoRestricted->getRedirectRoute());
+
+        $event->setController(function () use ($url){
+            return new RedirectResponse($url);
+        });
+
     }
 
     /**
@@ -114,5 +138,30 @@ class DemoModeEnabledListener
                 $demoRestricted->getDomain()
             )
         );
+    }
+
+    /**
+     * Check if DemoRestricted annotation is part of controller
+     *
+     * @param Controller $controllerObject
+     * @param string $methodName
+     * @return DemoRestricted|null
+     */
+    private function getAnnotation($controllerObject, $methodName)
+    {
+        $tokenAnnotation = DemoRestricted::class;
+
+        $classAnnotation = $this->annotationReader->getClassAnnotation(
+            new \ReflectionClass(ClassUtils::getClass($controllerObject)), $tokenAnnotation
+        );
+
+        if ($classAnnotation) {
+            return null;
+        }
+
+        $controllerReflectionObject = new \ReflectionObject($controllerObject);
+        $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
+
+        return $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
     }
 }
