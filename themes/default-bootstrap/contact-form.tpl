@@ -143,6 +143,7 @@
 						<label for="message">{l s='Message'}</label>
 						<textarea class="form-control" id="message" name="message">{if isset($message)}{$message|escape:'html':'UTF-8'|stripslashes}{/if}</textarea>
 					</div>
+					{hook h='displayGDPRConsent' moduleName='contactform'}
 				</div>
 			</div>
 			<div class="submit">
