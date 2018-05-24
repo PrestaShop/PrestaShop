@@ -70,14 +70,17 @@ class HandlingType extends TranslatorAwareType
                 'currency' => $defaultCurrency->iso_code,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'required' => false,
+                'empty_data' => '0',
             ])
             ->add('free_shipping_price', MoneyType::class, [
                 'currency' => $defaultCurrency->iso_code,
                 'required' => false,
+                'empty_data' => '0',
             ])
             ->add('free_shipping_weight', TextWithUnitType::class, [
                 'unit' => $weightUnit,
                 'required' => false,
+                'empty_data' => '0',
             ])
         ;
     }

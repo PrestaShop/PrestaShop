@@ -78,16 +78,6 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        /**
-         * All three following fields (shipping_handling_charges, free_shipping_price, free_shipping_weight)
-         * can be submitted as either empty or with "0" values
-         * and in both cases it means that the functionality is disabled.
-         * For consistency changing the values to 0, in case they were submitted empty.
-         */
-        $data['handling']['shipping_handling_charges'] = $data['handling']['shipping_handling_charges'] ?: 0;
-        $data['handling']['free_shipping_price'] = $data['handling']['free_shipping_price'] ?: 0;
-        $data['handling']['free_shipping_weight'] = $data['handling']['free_shipping_weight'] ?: 0;
-
         if ($errors = $this->validate($data)) {
             return $errors;
         }
