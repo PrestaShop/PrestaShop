@@ -30,6 +30,13 @@
 
 {% block content %}
   <div class="container">
+
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
+      </div>
+    </div>
+
     {{ form_start(localizationForm, {'action': path('admin_international_localization_save_settings')}) }}
     <div class="row">
       <div class="col">

@@ -378,3 +378,10 @@ services:
             - '@prestashop.core.admin.timezone.repository'
         tags:
             - { name: form.type }
+
+    form.type.localization.import_pack:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
