@@ -79,6 +79,9 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
+    prestashop.adapter.validate:
+        class: PrestaShop\PrestaShop\Adapter\Validate
+
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
         arguments: ["@prestashop.adapter.legacy.context"]
