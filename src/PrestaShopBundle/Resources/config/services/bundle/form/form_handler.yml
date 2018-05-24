@@ -56,9 +56,9 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
-            - '@prestashop.admin.orders_invoices.data_provider'
+            - '@prestashop.admin.order.invoices.data_provider'
             -
-              'generate_by_date': 'PrestaShopBundle\Form\Admin\Sell\Orders\Invoices\GenerateByDateType'
+              'generate_by_date': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
             - 'OrdersInvoicesPage'
 
     prestashop.admin.customer_preferences.form_handler:

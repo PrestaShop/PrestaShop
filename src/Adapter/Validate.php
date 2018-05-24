@@ -45,6 +45,18 @@ class Validate
     }
 
     /**
+     * Check for date validity
+     *
+     * @param string $date Date to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public function isValidDate($date)
+    {
+        return ValidateLegacy::isDate($date);
+    }
+
+    /**
      * Check if HTML content is clean
      *
      * @param string $html

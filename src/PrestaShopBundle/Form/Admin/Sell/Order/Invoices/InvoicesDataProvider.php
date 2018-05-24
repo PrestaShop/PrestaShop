@@ -24,9 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Orders\Invoices;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -36,6 +37,24 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 final class InvoicesDataProvider implements FormDataProviderInterface
 {
+    /**
+     * @var Validate
+     */
+    private $validate;
+
+    /**
+     * @var OrderInvoiceDataProvider
+     */
+    private $orderInvoiceDataProvider;
+
+    public function __construct(
+        Validate $validate,
+        OrderInvoiceDataProvider $orderInvoiceDataProvider
+    ) {
+        $this->validate = $validate;
+        $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -58,7 +77,7 @@ final class InvoicesDataProvider implements FormDataProviderInterface
             return $errors;
         }
 
-        return true;
+        return [];
     }
 
     /**
@@ -66,13 +85,37 @@ final class InvoicesDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array    Array of errors if any
+     * @return array Array of errors if any
      */
     private function validate(array $data)
     {
         $errors = [];
+        $dateFrom = $data['generate_by_date']['date_from'];
+        $dateTo = $data['generate_by_date']['date_to'];
 
-        //@todo validation
+        if (!$this->validate->isValidDate($dateFrom)) {
+            $errors[] = [
+                'key' => 'Invalid "From" date',
+                'domain' => 'Admin.Orderscustomers.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        if (!$this->validate->isValidDate($dateTo)) {
+            $errors[] = [
+                'key' => 'Invalid "To" date',
+                'domain' => 'Admin.Orderscustomers.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        if (empty($errors) && !$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
+            $errors[] = [
+                'key' => 'No invoice has been found for this period.',
+                'domain' => 'Admin.Orderscustomers.Notification',
+                'parameters' => [],
+            ];
+        }
 
         return $errors;
     }
