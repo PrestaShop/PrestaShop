@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Orders\Invoices;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;

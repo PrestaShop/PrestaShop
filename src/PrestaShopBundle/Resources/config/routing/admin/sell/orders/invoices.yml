@@ -3,12 +3,12 @@ admin_order_invoices:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Sell\Orders\Invoices:index'
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:index'
         _legacy_controller: AdminInvoices
 
 admin_order_invoices_process:
     path: /
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Sell\Orders\Invoices:process'
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:process'
         _legacy_controller: AdminInvoices
