@@ -25,13 +25,51 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
-{% set optionsForm = form.options %}
+{% set optionsForm, pdfForm = form.options, form.pdf %}
 
 {% block content %}
   <div class="container">
-    {{ form_start(form, {'attr' : {'class': 'form'} }) }}
+    {{ form_start(pdfForm, {'attr' : {'class': 'form'}, 'action': path('admin_order_delivery_slip_pdf') }) }}
       <div class="row">
-        {% block administration_form_delivery %}
+        {% block admin_form_order_delivery_slip_pdf %}
+          <div class="col">
+            <div class="card" id="delivery_fieldset_general">
+              <h3 class="card-header">
+                <i class="material-icons">print</i> {{ 'Print PDF'|trans }}
+              </h3>
+              <div class="card-block">
+                <div class="card-text">
+                  <div class="form-group">
+                    {{ ps.label_with_help('From'|trans({}, 'Admin.Globals'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+
+                    {{ form_errors(pdfForm.date_from) }}
+                    {{ form_widget(pdfForm.date_from) }}
+                  </div>
+                  <div class="form-group">
+                    {{ ps.label_with_help('To'|trans({}, 'Admin.Globals'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+
+                    {{ form_errors(pdfForm.date_to) }}
+                    {{ form_widget(pdfForm.date_to) }}
+                  </div>
+                  {{ form_rest(pdfForm) }}
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-primary">{{ 'Generate PDF'|trans({}, 'Admin.Actions') }}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endblock %}
+      </div>
+    {{ form_end(pdfForm) }}
+  </div>
+
+  <div class="container">
+    {{ form_start(optionsForm, {'attr' : {'class': 'form'} }) }}
+      <div class="row">
+        {% block admin_form_order_delivery_slip_options %}
           <div class="col">
             <div class="card" id="delivery_fieldset_general">
               <h3 class="card-header">
@@ -57,7 +95,7 @@
                     {{ form_errors(optionsForm.enable_product_image) }}
                     {{ form_widget(optionsForm.enable_product_image) }}
                   </div>
-                  {{ form_rest(form) }}
+                  {{ form_rest(optionsForm) }}
                 </div>
               </div>
               <div class="card-footer">
@@ -69,7 +107,7 @@
           </div>
         {% endblock %}
       </div>
-    {{ form_end(form) }}
+    {{ form_end(optionsForm) }}
   </div>
 {% endblock %}
 

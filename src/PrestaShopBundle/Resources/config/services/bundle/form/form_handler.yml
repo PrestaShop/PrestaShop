@@ -115,4 +115,5 @@ services:
             - '@prestashop.adapter.order.delivery.slip.form_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType'
+              'pdf': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipPdfType'
             - 'OrderDeliverySlipPage'

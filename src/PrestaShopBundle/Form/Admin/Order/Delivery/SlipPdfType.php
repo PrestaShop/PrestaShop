@@ -25,16 +25,14 @@
  */
 namespace PrestaShopBundle\Form\Admin\Order\Delivery;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * This form class generates the "Caching" form in Performance page
  */
-class SlipOptionsType extends TranslatorAwareType
+class SlipPdfType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -43,19 +41,24 @@ class SlipOptionsType extends TranslatorAwareType
     {
         $builder
             ->add(
-                'prefix',
-                TranslateTextType::class,
+                'date_from',
+                DatePickerType::class,
                 [
-                    'locales' => $this->locales,
+                    'required' => false,
+                    'attr' => ['placeholder' => 'From'],
+                    'translation_domain' => 'Admin.Global',
+                    'data' => new \DateTime(),
                 ]
             )
             ->add(
-                'number',
-                FormType\NumberType::class
-            )
-            ->add(
-                'enable_product_image',
-                SwitchType::class
+                'date_to',
+                DatePickerType::class,
+                [
+                    'required' => false,
+                    'attr' => ['placeholder' => 'To'],
+                    'translation_domain' => 'Admin.Global',
+                    'data' => new \DateTime(),
+                ]
             );
     }
 

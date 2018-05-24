@@ -75,7 +75,7 @@ class AdminDeliverySlipControllerCore extends AdminController
                     'name' => 'date_from',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help')
+                    'hint' => $this->trans('', array(), 'Admin.Orderscustomers.Help')
                 ),
                 array(
                     'type' => 'date',
