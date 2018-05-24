@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration
+ */
 class CarrierOptionsConfiguration implements DataConfigurationInterface
 {
     /**
@@ -36,6 +39,11 @@ class CarrierOptionsConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
+    /**
+     * CarrierOptionsConfiguration constructor.
+     *
+     * @param Configuration $configuration
+     */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;

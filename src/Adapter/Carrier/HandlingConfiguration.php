@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * Class HandlingConfiguration is responsible for saving and loading Handling options configuration
+ */
 class HandlingConfiguration implements DataConfigurationInterface
 {
     /**
@@ -36,6 +39,11 @@ class HandlingConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
+    /**
+     * HandlingConfiguration constructor.
+     * 
+     * @param Configuration $configuration
+     */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
