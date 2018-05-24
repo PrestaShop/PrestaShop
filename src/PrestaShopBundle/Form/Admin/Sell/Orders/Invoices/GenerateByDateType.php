@@ -37,6 +37,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GenerateByDateType extends CommonAbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
