@@ -27,8 +27,11 @@ namespace PrestaShopBundle\Controller\Admin\Order;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
+use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +39,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
 
 /**
  * Admin controller for the Order Delivery
@@ -66,10 +68,11 @@ class DeliveryController extends FrameworkBundleAdminController
             return $this->redirectToDefaultPage();
         }
 
+        /* @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.form_handler');
+        /* @var $form Form */
         $form = $formHandler->getForm();
 
-        /* @var $form Form */
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $errors = $formHandler->save($form->getData());
@@ -88,7 +91,7 @@ class DeliveryController extends FrameworkBundleAdminController
         return [
             'form' => $form->createView(),
             'help_link' => $this->generateSidebarLink($legacyController),
-            'layoutTitle' => $this->trans('Delivery Slips', 'Admin.Global'),
+            'layoutTitle' => $this->trans('Delivery Slips', 'Admin.NavigationMenu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'showContentHeader' => true,

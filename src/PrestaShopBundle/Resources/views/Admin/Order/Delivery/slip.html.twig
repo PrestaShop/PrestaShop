@@ -23,7 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-{% trans_default_domain "Admin.OrderDeliverySlip.Feature" %}
+{% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
 {% set optionsForm = form.options %}
 
@@ -40,19 +40,19 @@
               <div class="card-block">
                 <div class="card-text">
                   <div class="form-group">
-                    {{ ps.label_with_help(('Delivery prefix'|trans), ('Prefix used for delivery slips.'|trans({}, 'Admin.OrderDeliverySlip.Help'))) }}
+                    {{ ps.label_with_help(('Delivery prefix'|trans), ('Prefix used for delivery slips.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
                     {{ form_errors(optionsForm.prefix) }}
                     {{ form_widget(optionsForm.prefix) }}
                   </div>
                   <div class="form-group">
-                    {{ ps.label_with_help(('Delivery Number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.OrderDeliverySlip.Help'))) }}
+                    {{ ps.label_with_help(('Delivery Number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
                     {{ form_errors(optionsForm.number) }}
                     {{ form_widget(optionsForm.number) }}
                   </div>
                   <div class="form-group">
-                    {{ ps.label_with_help(('Enable product image'|trans), ('Adds an image before product name on Delivery-slip'|trans({}, 'Admin.OrderDeliverySlip.Help'))) }}
+                    {{ ps.label_with_help(('Enable product image'|trans), ('Adds an image before product name on Delivery-slip'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
                     {{ form_errors(optionsForm.enable_product_image) }}
                     {{ form_widget(optionsForm.enable_product_image) }}
