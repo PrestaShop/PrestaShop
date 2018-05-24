@@ -261,7 +261,7 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param $cart
+     * @param Cart $cart
      * @param bool $shouldSeparateGifts
      * @return array
      * @throws \Exception
