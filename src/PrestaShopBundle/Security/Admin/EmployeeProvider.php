@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
  */
 class EmployeeProvider implements UserProviderInterface
 {
+    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+
     private $legacyContext;
 
     /**
@@ -61,7 +63,7 @@ class EmployeeProvider implements UserProviderInterface
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
-                Access::getRoles($this->legacyContext->employee->id_profile)
+                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
             );
             return $employee;
         }
