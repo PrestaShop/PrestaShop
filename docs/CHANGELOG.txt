@@ -25,6 +25,18 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.3.3 - (2018-05-24)
+####################################
+- Back Office:
+  - Bug fix:
+    - #9026: Fixed display error on back office module selection list
+- Front Office:
+  - New feature:
+    - #9099: Follow-up to: display GDPR consent checkbox in contactform
+  - Improvement:
+    - #9104: Add compliance to GDPR law for ps_emailsubscription module
+
+####################################
 #   v1.7.3.2 - (2018-05-03)
 ####################################
 - Back Office:

@@ -2756,16 +2756,16 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v4.0.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "bef34d2f69cefc93663219438b6d952aab3fcf79"
+                "reference": "a2a7d20c207cead6f2f6e23bb13af97ad4e59ded"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/bef34d2f69cefc93663219438b6d952aab3fcf79",
-                "reference": "bef34d2f69cefc93663219438b6d952aab3fcf79",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/a2a7d20c207cead6f2f6e23bb13af97ad4e59ded",
+                "reference": "a2a7d20c207cead6f2f6e23bb13af97ad4e59ded",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2018-03-26T09:56:09+00:00"
+            "time": "2018-05-23T16:27:31+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -3316,16 +3316,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "15312b89d3884c9b055da65d9cd9c45473686f5d"
+                "reference": "6120112d834a193bc56c448777081350cf0a18be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/15312b89d3884c9b055da65d9cd9c45473686f5d",
-                "reference": "15312b89d3884c9b055da65d9cd9c45473686f5d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/6120112d834a193bc56c448777081350cf0a18be",
+                "reference": "6120112d834a193bc56c448777081350cf0a18be",
                 "shasum": ""
             },
             "require": {
@@ -3344,7 +3344,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2018-03-26T10:27:13+00:00"
+            "time": "2018-05-23T16:26:23+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
