@@ -48,6 +48,6 @@ class TextEmptyType extends AbstractTypeExtension implements DataTransformerInte
 
     public function reverseTransform($data)
     {
-        return empty($data) ? '' : $data;
+        return null === $data ? '' : $data;
     }
 }
