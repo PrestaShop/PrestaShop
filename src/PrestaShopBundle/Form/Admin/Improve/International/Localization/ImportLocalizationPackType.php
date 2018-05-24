@@ -26,13 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class ImportLocalizationPackType
  */
-class ImportLocalizationPackType extends AbstractType
+class ImportLocalizationPackType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -41,8 +42,25 @@ class ImportLocalizationPackType extends AbstractType
     {
         $builder
             ->add('iso_localization_pack')
-            ->add('content_to_import')
-            ->add('download_pack_data')
+            ->add('content_to_import', ChoiceType::class, [
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => [
+                    $this->trans('States', 'Admin.International.Feature') => 'states',
+                    $this->trans('Taxes', 'Admin.Global') => 'taxes',
+                    $this->trans('Currencies', 'Admin.Global') => 'currencies',
+                    $this->trans('Languages', 'Admin.Global') => 'languages',
+                    $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => 'units',
+                    $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => 'groups',
+                ],
+            ])
+            ->add('download_pack_data', ChoiceType::class, [
+                'expanded' => true,
+                'choices' => [
+                    $this->trans('Yes', 'Admin.Global') => 1,
+                    $this->trans('No', 'Admin.Global') => 0,
+                ],
+            ])
         ;
     }
 }
