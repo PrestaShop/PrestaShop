@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,11 +51,12 @@ class LocalizationController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $localizationForm = $this->getLocalizationFormHandler()->getForm();
-
         if (!extension_loaded('openssl')) {
             $this->addFlash('warning', $this->trans('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.', 'Admin.International.Notification'));
         }
+
+        $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
+        $localizationForm = $this->getLocalizationFormHandler()->getForm();
 
         return [
             'layoutHeaderToolbarBtn' => [],
@@ -63,6 +65,7 @@ class LocalizationController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'localizationForm' => $localizationForm->createView(),
+            'localizationPackImportForm' => $localizationPackImportForm->createView(),
         ];
     }
 
