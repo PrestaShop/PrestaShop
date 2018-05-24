@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Orders;
+namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -85,7 +85,7 @@ class InvoicesController extends FrameworkBundleAdminController
                 $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error')
             );
 
-            return $this->redirectToRoute('admin_invoices');
+            return $this->redirectToRoute('admin_order_invoices');
         }
 
         $formHandler = $this->get('prestashop.admin.orders_invoices.form_handler');
@@ -101,6 +101,6 @@ class InvoicesController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_invoices');
+        return $this->redirectToRoute('admin_order_invoices');
     }
 }

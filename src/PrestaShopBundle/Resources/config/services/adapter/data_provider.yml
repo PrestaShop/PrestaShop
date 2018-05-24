@@ -67,6 +67,9 @@ services:
     prestashop.adapter.data_provider.carrier:
         class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
 
+    prestashop.adapter.data_provider.order_invoice:
+        class: PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider
+
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 

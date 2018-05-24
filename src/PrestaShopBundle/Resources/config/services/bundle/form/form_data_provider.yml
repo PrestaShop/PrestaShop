@@ -2,10 +2,11 @@ services:
     _defaults:
         public: true
 
-    prestashop.admin.orders_invoices.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Orders\Invoices\InvoicesDataProvider'
+    prestashop.admin.order.invoices.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesDataProvider'
         arguments:
-            - '@translator'
+            - '@prestashop.adapter.validate'
+            - '@prestashop.adapter.data_provider.order_invoice'
 
     prestashop.admin.customer_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
