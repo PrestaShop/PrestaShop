@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_VERSION_', '1.7.3.2');
+define('_PS_VERSION_', '1.7.3.3');
 
 require_once(_PS_CONFIG_DIR_.'alias.php');
 require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
