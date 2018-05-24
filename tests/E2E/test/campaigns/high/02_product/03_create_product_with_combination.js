@@ -22,7 +22,7 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
     test('should set the "Description" text', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations));
-    test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
+    test('should set the "product name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
     test('should select the "Product with combination" option', () => client.waitForExistAndClick(AddProductPage.product_combinations));
     test('should upload the first product picture', () => client.uploadPicture('1.png', AddProductPage.picture));
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
@@ -110,4 +110,4 @@ scenario('Create product with combination in the Back Office', client => {
         });
     });
   }, 'product/create_combinations');
-}, 'product/product');
+}, 'product/product', true);
