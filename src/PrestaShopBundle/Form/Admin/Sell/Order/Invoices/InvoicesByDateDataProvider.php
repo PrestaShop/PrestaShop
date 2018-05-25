@@ -31,10 +31,10 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Class is responsible of managing the data manipulated using forms
+ * Class is responsible of managing the data manipulated using invoice generation by date form
  * in "Sell > Orders > Invoices" page.
  */
-final class InvoicesDataProvider implements FormDataProviderInterface
+final class InvoicesByDateDataProvider implements FormDataProviderInterface
 {
     /**
      * @var Validate
@@ -72,11 +72,8 @@ final class InvoicesDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
-
-        return [];
+        // This form doesn't need to save any data, so it only validates the data
+        return $this->validate($data);
     }
 
     /**
