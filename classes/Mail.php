@@ -315,7 +315,9 @@ class MailCore extends ObjectModel
             }
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode.'/'.$template;
-                $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
+                if (!empty($templatePath)) {
+                    $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
+                }
 
                 if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
                     PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.txt'), 'Admin.Advparameters.Notification'));
