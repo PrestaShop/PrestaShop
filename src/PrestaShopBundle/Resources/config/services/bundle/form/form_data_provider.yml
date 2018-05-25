@@ -2,8 +2,8 @@ services:
     _defaults:
         public: true
 
-    prestashop.admin.order.invoices.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesDataProvider'
+    prestashop.admin.order.invoices.by_date.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
         arguments:
             - '@prestashop.adapter.validate'
             - '@prestashop.adapter.data_provider.order_invoice'
