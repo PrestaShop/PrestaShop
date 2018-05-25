@@ -51,6 +51,7 @@ class InvoicesController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $byDateForm = $this->get('prestashop.admin.orders.invoices.by_date.form_handler')->getForm();
+        $byStatusForm = $this->get('prestashop.admin.orders_invoices_by_status.form_handler')->getForm();
 
         return [
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
@@ -58,6 +59,7 @@ class InvoicesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'byDateForm' => $byDateForm->createView(),
+            'byStatusForm' => $byStatusForm->createView(),
         ];
     }
 
@@ -106,6 +108,71 @@ class InvoicesController extends FrameworkBundleAdminController
                     $data['generate_by_date']['date_from'],
                     $data['generate_by_date']['date_to']
                 );
+
+                if (empty($invoiceCollection)) {
+                    $this->addFlash(
+                        'error',
+                        $this->trans('No invoice was found.', 'Admin.Orderscustomers.Notification')
+                    );
+                } else {
+                    // Generate PDF out of found invoices
+                    $invoiceGenerator = $this->get('prestashop.adapter.pdf_generator.invoice');
+                    $invoiceGenerator->generateInvoicesPDF($invoiceCollection);
+                }
+            }
+        }
+
+        return $this->redirectToRoute('admin_order_invoices');
+    }
+
+    /**
+     * Action that generates invoices PDF by order status
+     *
+     * @param Request $request
+
+     * @return RedirectResponse
+     */
+    public function generatePdfByStatusAction(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_order_invoices');
+        }
+
+        $formHandler = $this->get('prestashop.admin.orders_invoices_by_status.form_handler');
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if ($errors = $formHandler->save($data)) {
+                $this->flashErrors($errors);
+            } else {
+                $invoiceDataProvider = $this->get('prestashop.adapter.data_provider.order_invoice');
+                $invoiceCollection = [];
+
+                foreach ($data['generate_by_status']['order_states'] as $orderStateId) {
+                    // Put invoices for each selected status into one collection
+                    $invoiceCollection = array_merge(
+                        $invoiceCollection,
+                        $invoiceDataProvider->getByStatus($orderStateId)
+                    );
+                }
 
                 if (empty($invoiceCollection)) {
                     $this->addFlash(

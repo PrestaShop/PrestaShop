@@ -48,7 +48,17 @@ services:
             - '@prestashop.admin.order.invoices.by_date.data_provider'
             -
               'generate_by_date': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
-            - 'OrdersInvoicesPage'
+            - 'OrdersInvoicesByDate'
+
+    prestashop.admin.orders_invoices_by_status.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.orders_invoices_by_status.data_provider'
+            -
+              'generate_by_status': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
+            - 'OrdersInvoicesByStatus'
 
     prestashop.admin.customer_preferences.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'

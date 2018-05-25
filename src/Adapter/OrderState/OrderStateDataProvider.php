@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,25 +22,32 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% set generateByDateForm, generateByStatusForm = byDateForm.generate_by_date, byStatusForm.generate_by_status %}
+namespace PrestaShop\PrestaShop\Adapter\OrderState;
 
-{% block content %}
-    <div class="container">
-        <div class="row">
-            {# "By Date" block #}
-            {% include '@PrestaShop/Admin/Sell/Orders/Invoices/Blocks/generate_by_date.html.twig' %}
+use OrderState;
 
-            {# "By order status" block #}
-            {% include '@PrestaShop/Admin/Sell/Orders/Invoices/Blocks/generate_by_status.html.twig' %}
-        </div>
-    </div>
-{% endblock %}
+/**
+ * Class OrderStateDataProvider provides OrderState data using legacy code
+ */
+class OrderStateDataProvider
+{
+    /**
+     * Get order states choices in given language
+     *
+     * @param int $languageId
+     *
+     * @return array
+     */
+    public function getOrderStateChoices($languageId)
+    {
+        $choices = [];
 
-{% block javascripts %}
-    {{ parent() }}
+        foreach (OrderState::getOrderStates($languageId) as $orderState) {
+            $choices[$orderState['name']] = $orderState['id_order_state'];
+        }
 
-    <script src="{{ asset('themes/new-theme/public/invoices.bundle.js') }}"></script>
-{% endblock %}
+        return $choices;
+    }
+}

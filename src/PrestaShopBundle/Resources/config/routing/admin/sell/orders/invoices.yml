@@ -6,9 +6,16 @@ admin_order_invoices:
         _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:index'
         _legacy_controller: AdminInvoices
 
-admin_order_invoices_process:
-    path: /
+admin_order_invoices_generate_by_date:
+    path: /by_date
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:process'
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:generatePdfByDate'
+        _legacy_controller: AdminInvoices
+
+admin_order_invoices_generate_by_status:
+    path: /by_status
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:generatePdfByStatus'
         _legacy_controller: AdminInvoices

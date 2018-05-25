@@ -244,6 +244,16 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.orders_invoices.generate_by_status:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Orders\Invoices\GenerateByStatusType'
+        parent: 'form.type.common_type'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.order_state").getOrderStateChoices(service("prestashop.adapter.legacy.context").getLanguage().id)'
+            - '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
+        tags:
+            - { name: form.type }
+
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
         tags:
