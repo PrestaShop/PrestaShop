@@ -29,6 +29,7 @@ namespace Tests\Unit\Core\Cart;
 use Cache;
 use Cart;
 use CartRule;
+use Combination;
 use Configuration;
 use Context;
 use DateInterval;
@@ -58,16 +59,17 @@ abstract class AbstractCartTest extends IntegrationTestCase
         4 => ['price' => 35.567, 'outOfStock' => true],
         5 => ['price' => 23.86, 'quantity' => 50],
         6 => [
-            'price' => 12.34,
-            'quantity' => 10,
-            'is_pack' => true,
+            'price'      => 12.34,
+            'quantity'   => 10,
+            'is_pack'    => true,
             'pack_items' => [
                 [
                     'id_product_fixture' => 5,
-                    'quantity' => 10
+                    'quantity'           => 10,
                 ],
             ],
         ],
+        7 => ['price' => 24.324, 'combinations' => ['a' => ['quantity' => 500], 'b' => ['quantity' => 400]]],
     ];
 
     const CART_RULES_FIXTURES = [
@@ -106,6 +108,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
      */
     protected $products = [];
 
+    /**
+     * @var Combination[]
+     */
+    protected $combinations = [];
+
     public function setUp()
     {
         parent::setUp();
@@ -127,6 +134,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
         // delete cart rules from cart
         foreach ($this->cartRulesInCart as $cartRule) {
             $cartRule->delete();
+        }
+
+        // delete combinations
+        foreach ($this->combinations as $combination) {
+            $combination->delete();
         }
 
         // delete products
@@ -154,7 +166,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     {
         $productDatas = $this->cart->getProducts(true);
         foreach ($productDatas as $productData) {
-            $this->cart->updateQty(0, $productData['id_product']);
+            $this->cart->updateQty(0, $productData['id_product'], $productData['id_product_attribute']);
         }
 
         $cartRuleDatas = $this->cart->getCartRules();
@@ -179,6 +191,18 @@ abstract class AbstractCartTest extends IntegrationTestCase
                 $product->id_tax_rules_group = $productFixture['taxRuleGroupId'];
             }
             $product->add();
+            if (isset($productFixture['combinations'])) {
+                foreach ($productFixture['combinations'] as $combinationName => $combinationData) {
+                    $combination             = new Combination();
+                    $combination->reference  = $combinationName;
+                    $combination->id_product = $product->id;
+                    $combination->quantity   = !empty($combinationData['quantity'])
+                        ? $combinationData['quantity'] : 1000;
+                    $combination->add();
+                    StockAvailable::setQuantity((int) $product->id, $combination->id, $combination->quantity);
+                    $this->combinations[$combinationName] = $combination;
+                }
+            }
 
             if (isset($productFixture['is_pack'])
                 && $productFixture['is_pack'] === true
@@ -234,6 +258,20 @@ abstract class AbstractCartTest extends IntegrationTestCase
     }
 
     /**
+     * @param int $combinationFixtureName fixture combination name
+     *
+     * @return Combination|null
+     */
+    protected function getCombinationFromFixtureName($combinationFixtureName)
+    {
+        if (isset($this->combinations[$combinationFixtureName])) {
+            return $this->combinations[$combinationFixtureName];
+        }
+
+        return null;
+    }
+
+    /**
      * @param int $id fixture cart rule id
      *
      * @return CartRule|null
@@ -259,7 +297,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $cartRule                    = new CartRule;
         $cartRule->reduction_percent = $cartRuleData['percent'];
         $cartRule->reduction_amount  = $cartRuleData['amount'];
-        $cartRule->name              = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
+        $cartRule->name              = [Configuration::get('PS_LANG_DEFAULT') => 'foo'];
         if (!empty($cartRuleData['code'])) {
             $cartRule->code = $cartRuleData['code'];
         }
