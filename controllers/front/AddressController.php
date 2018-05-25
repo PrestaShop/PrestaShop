@@ -138,5 +138,7 @@ class AddressControllerCore extends FrontController
                 $addressForm->getTemplateVariables()
             ),
         )));
+
+        return;
     }
 }
