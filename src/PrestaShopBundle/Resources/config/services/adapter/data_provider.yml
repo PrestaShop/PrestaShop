@@ -71,6 +71,9 @@ services:
     prestashop.adapter.data_provider.order_invoice:
         class: PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider
 
+    prestashop.adapter.data_provider.pdf:
+        class: PrestaShop\PrestaShop\Adapter\PDF\PDFDataProvider
+
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 

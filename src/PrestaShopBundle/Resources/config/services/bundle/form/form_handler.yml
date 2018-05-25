@@ -51,7 +51,7 @@ services:
               'carrier_options': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
             - 'ShippingPreferencesPage'
 
-    prestashop.admin.orders_invoices.form_handler:
+    prestashop.admin.orders_invoices_by_date.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
