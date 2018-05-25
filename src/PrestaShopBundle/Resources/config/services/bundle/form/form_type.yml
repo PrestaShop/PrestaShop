@@ -377,7 +377,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.localization.loader.localization_pack'
+            - '@prestashop.core.localization.pack.loader'
         tags:
             - { name: form.type }
 
