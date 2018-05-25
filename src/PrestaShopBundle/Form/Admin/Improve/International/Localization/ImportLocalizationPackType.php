@@ -26,9 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShop\PrestaShop\Core\Localization\Pack\LocalizationPackLoaderInterface;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ImportLocalizationPackType
@@ -36,12 +39,38 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ImportLocalizationPackType extends TranslatorAwareType
 {
     /**
+     * @var LocalizationPackLoaderInterface
+     */
+    private $localizationPackLoader;
+
+    /**
+     * @param TranslatorInterface             $translator
+     * @param array                           $locales
+     * @param LocalizationPackLoaderInterface $localizationPackLoader
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        LocalizationPackLoaderInterface $localizationPackLoader
+    ) {
+        parent::__construct($translator, $locales);
+
+        $this->localizationPackLoader = $localizationPackLoader;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('iso_localization_pack')
+            ->add('iso_localization_pack', ChoiceType::class, [
+                'choices' =>  $this->getLocalizationPackChoices(),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+            ])
             ->add('content_to_import', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => true,
@@ -53,14 +82,34 @@ class ImportLocalizationPackType extends TranslatorAwareType
                     $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => 'units',
                     $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => 'groups',
                 ],
-            ])
-            ->add('download_pack_data', ChoiceType::class, [
-                'expanded' => true,
-                'choices' => [
-                    $this->trans('Yes', 'Admin.Global') => 1,
-                    $this->trans('No', 'Admin.Global') => 0,
+                'data' => [
+                    'states',
+                    'taxes',
+                    'currencies',
+                    'languages',
+                    'units',
                 ],
             ])
+            ->add('download_pack_data', SwitchType::class, [
+                'data' => 1,
+            ])
         ;
+    }
+
+    /**
+     * Get available localization packs as choices
+     *
+     * @return array
+     */
+    private function getLocalizationPackChoices()
+    {
+        $localizationPacks = $this->localizationPackLoader->getLocalizationPacks();
+        $choices = [];
+
+        foreach ($localizationPacks as $pack) {
+            $choices[$pack['name']] = $pack['iso_localization_pack'];
+        }
+
+        return $choices;
     }
 }
