@@ -26,6 +26,7 @@
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
 {% block invoices_generate_by_date %}
+    {{ form_start(generateByDateForm, {'method': 'POST', 'action': path('admin_invoices_generate_by_date')}) }}
     <div class="col">
         <div class="card">
             <h3 class="card-header">
@@ -35,13 +36,13 @@
                 <div class="card-text">
                     <div class="form-group">
                         {{ ps.label_with_help(('From'|trans({}, 'Admin.Global')), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                        {{ form_errors(byDateForm.date_from) }}
-                        {{ form_widget(byDateForm.date_from) }}
+                        {{ form_errors(generateByDateForm.date_from) }}
+                        {{ form_widget(generateByDateForm.date_from) }}
                     </div>
                     <div class="form-group">
                         {{ ps.label_with_help(('To'|trans({}, 'Admin.Global')), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                        {{ form_errors(byDateForm.date_to) }}
-                        {{ form_widget(byDateForm.date_to) }}
+                        {{ form_errors(generateByDateForm.date_to) }}
+                        {{ form_widget(generateByDateForm.date_to) }}
                     </div>
                 </div>
             </div>
@@ -52,4 +53,5 @@
             </div>
         </div>
     </div>
+    {{ form_end(generateByDateForm) }}
 {% endblock %}

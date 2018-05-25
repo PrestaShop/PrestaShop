@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 use PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms

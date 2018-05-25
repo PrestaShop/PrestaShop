@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,40 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% set generateByDateForm = byDateForm.generate_by_date %}
+namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-{% block content %}
-    <div class="container">
-        <div class="row">
-            {# "By Date" block #}
-            {% include '@PrestaShop/Admin/Sell/Orders/Invoices/Blocks/generate_by_date.html.twig' %}
+use PDF;
+use Smarty;
 
-        </div>
-    </div>
-{% endblock %}
+/**
+ * Class PDFManager responsible for PDF generation using legacy code
+ */
+class PDFManager
+{
+    /**
+     * @var Smarty
+     */
+    private $smarty;
 
-{% block javascripts %}
-    {{ parent() }}
+    /**
+     * @param Smarty $smarty
+     */
+    public function __construct(Smarty $smarty)
+    {
+        $this->smarty = $smarty;
+    }
 
-    <script src="{{ asset('themes/new-theme/public/invoices.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * Generates PDF out of given object and template using legacy generator
+     *
+     * @param array|\ObjectModel $object one object or collection of objects
+     * @param string $template name of the PDF template
+     */
+    public function generatePDF($object, $template)
+    {
+        $pdf = new PDF($object, $template, $this->smarty);
+        $pdf->render();
+    }
+}
