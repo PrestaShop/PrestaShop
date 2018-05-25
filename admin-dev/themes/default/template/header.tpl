@@ -132,11 +132,6 @@
 								{foreach $quick_access as $quick}
 									<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
 										<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
-											{if isset($quick.icon)}
-												<i class="icon-{$quick.icon} icon-fw"></i>
-											{else}
-												<i class="icon-chevron-right icon-fw"></i>
-											{/if}
 											{$quick.name}
 										</a>
 									</li>
@@ -145,21 +140,21 @@
 								{if isset($matchQuickLink)}
 									<li>
 										<a href="javascript:void(0);" class="ajax-quick-link" data-method="remove" data-quicklink-id="{$matchQuickLink}">
-											<i class="icon-minus-circle"></i>
+											<i class="material-icons">remove_circle</i>
 											{l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
 										</a>
 									</li>
 								{else}
 				  <li>
 					<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-					  <i class="icon-plus-circle"></i>
+					  <i class="material-icons">add_circle</i>
 					  {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
 					</a>
 				  </li>
 				{/if}
 				<li>
 				  <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
-					<i class="icon-cog"></i>
+					<i class="material-icons">settings</i>
 					{l s='Manage quick accesses' d='Admin.Navigation.Header'}
 				  </a>
 				</li>
@@ -194,7 +189,7 @@
 											var quicklink_list ='';
 											$.each(data, function(index,value){
 												if (typeof data[index]['name'] !== 'undefined')
-													quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+													quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '">' + data[index]['name'] + '</a></li>';
 											});
 
 											if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
