@@ -90,3 +90,10 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+
+    prestashop.core.api.order_invoice.repository:
+        class: PrestaShopBundle\Entity\Repository\OrderInvoiceRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "%database_prefix%"
+
