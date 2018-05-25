@@ -2,8 +2,14 @@ services:
     _defaults:
         public: true
 
-    prestashop.core.localization.loader.localization_pack:
+    prestashop.core.localization.pack.loader:
         class: 'PrestaShop\PrestaShop\Core\Localization\Pack\LocalizationPackLoader'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+
+    prestashop.core.localization.pack.downloader:
+        class: 'PrestaShop\PrestaShop\Core\Localization\Pack\LocalizationPackDownloader'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tools'
