@@ -144,12 +144,16 @@ class CartControllerCore extends FrontController
                 'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
+
+            return;
         } else {
             $this->ajaxRender(Tools::jsonEncode([
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
             ]));
+
+            return;
         }
     }
 
@@ -170,6 +174,8 @@ class CartControllerCore extends FrontController
             'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
         ]));
+
+        return;
     }
 
     /**
@@ -214,6 +220,8 @@ class CartControllerCore extends FrontController
             'success' => true,
             'productUrl' => $url
         ]));
+
+        return;
     }
 
     public function postProcess()
