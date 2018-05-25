@@ -12,8 +12,8 @@ class OrderInvoiceDataProvider
     /**
      * Returns all the order invoices that match the date interval
      *
-     * @param $dateFrom
-     * @param $dateTo
+     * @param string $dateFrom
+     * @param string $dateTo
      *
      * @return array collection of OrderInvoice objects
      */
