@@ -181,32 +181,32 @@
 [submodule "modules/dashactivity"]
 	path = modules/dashactivity
 	url = https://github.com/PrestaShop/dashactivity.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/dashgoals"]
 	path = modules/dashgoals
 	url = https://github.com/PrestaShop/dashgoals.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/dashproducts"]
 	path = modules/dashproducts
 	url = https://github.com/PrestaShop/dashproducts.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/dashtrends"]
 	path = modules/dashtrends
 	url = https://github.com/PrestaShop/dashtrends.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/graphnvd3"]
 	path = modules/graphnvd3
 	url = https://github.com/PrestaShop/graphnvd3.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/gridhtml"]
 	path = modules/gridhtml
 	url = https://github.com/PrestaShop/gridhtml.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/homefeatured"]
 	path = modules/homefeatured
@@ -221,7 +221,7 @@
 [submodule "modules/pagesnotfound"]
 	path = modules/pagesnotfound
 	url = https://github.com/PrestaShop/pagesnotfound.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/productpaymentlogos"]
 	path = modules/productpaymentlogos
@@ -241,7 +241,7 @@
 [submodule "modules/sekeywords"]
 	path = modules/sekeywords
 	url = https://github.com/PrestaShop/sekeywords.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/socialsharing"]
 	path = modules/socialsharing
@@ -251,112 +251,112 @@
 [submodule "modules/statsbestcategories"]
 	path = modules/statsbestcategories
 	url = https://github.com/PrestaShop/statsbestcategories.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsbestcustomers"]
 	path = modules/statsbestcustomers
 	url = https://github.com/PrestaShop/statsbestcustomers.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsbestmanufacturers"]
 	path = modules/statsbestmanufacturers
 	url = https://github.com/PrestaShop/statsbestmanufacturers.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsbestproducts"]
 	path = modules/statsbestproducts
 	url = https://github.com/PrestaShop/statsbestproducts.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsbestsuppliers"]
 	path = modules/statsbestsuppliers
 	url = https://github.com/PrestaShop/statsbestsuppliers.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsbestvouchers"]
 	path = modules/statsbestvouchers
 	url = https://github.com/PrestaShop/statsbestvouchers.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statscarrier"]
 	path = modules/statscarrier
 	url = https://github.com/PrestaShop/statscarrier.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statscatalog"]
 	path = modules/statscatalog
 	url = https://github.com/PrestaShop/statscatalog.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statscheckup"]
 	path = modules/statscheckup
 	url = https://github.com/PrestaShop/statscheckup.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsdata"]
 	path = modules/statsdata
 	url = https://github.com/PrestaShop/statsdata.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsequipment"]
 	path = modules/statsequipment
 	url = https://github.com/PrestaShop/statsequipment.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsforecast"]
 	path = modules/statsforecast
 	url = https://github.com/PrestaShop/statsforecast.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statslive"]
 	path = modules/statslive
 	url = https://github.com/PrestaShop/statslive.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsnewsletter"]
 	path = modules/statsnewsletter
 	url = https://github.com/PrestaShop/statsnewsletter.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsorigin"]
 	path = modules/statsorigin
 	url = https://github.com/PrestaShop/statsorigin.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statspersonalinfos"]
 	path = modules/statspersonalinfos
 	url = https://github.com/PrestaShop/statspersonalinfos.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsproduct"]
 	path = modules/statsproduct
 	url = https://github.com/PrestaShop/statsproduct.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsregistrations"]
 	path = modules/statsregistrations
 	url = https://github.com/PrestaShop/statsregistrations.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statssales"]
 	path = modules/statssales
 	url = https://github.com/PrestaShop/statssales.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statssearch"]
 	path = modules/statssearch
 	url = https://github.com/PrestaShop/statssearch.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsstock"]
 	path = modules/statsstock
 	url = https://github.com/PrestaShop/statsstock.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/statsvisits"]
 	path = modules/statsvisits
 	url = https://github.com/PrestaShop/statsvisits.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/themeconfigurator"]
 	path = modules/themeconfigurator
@@ -366,7 +366,7 @@
 [submodule "modules/trackingfront"]
 	path = modules/trackingfront
 	url = https://github.com/PrestaShop/trackingfront.git
-	branch = master
+	branch = 1.7.0.x-prev
 	ignore = dirty
 [submodule "modules/vatnumber"]
 	path = modules/vatnumber
