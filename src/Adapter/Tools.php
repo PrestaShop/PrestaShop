@@ -126,4 +126,16 @@ class Tools
     {
         return LegacyTools::getShopDomainSsl($http, $entities);
     }
+
+    /**
+     * Get file contents from URL
+     *
+     * @param string $url
+     *
+     * @return bool|string
+     */
+    public function getFileContents($url)
+    {
+        return \Tools::file_get_contents($url);
+    }
 }

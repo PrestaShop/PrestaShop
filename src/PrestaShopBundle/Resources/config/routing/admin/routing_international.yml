@@ -43,3 +43,10 @@ admin_international_localization_save_settings:
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\International\Localization:saveSettings
         _legacy_controller: AdminLocalization
+
+admin_international_localization_import_pack:
+    path: /localization/import_pack
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:importLocalizationPack
+        _legacy_controller: AdminLocalization
