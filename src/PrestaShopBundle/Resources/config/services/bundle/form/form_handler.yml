@@ -40,12 +40,12 @@ services:
               'notifications': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType'
             - 'AdministrationPage'
 
-    prestashop.admin.orders_invoices_by_date.form_handler:
+    prestashop.admin.orders.invoices.by_date.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
-            - '@prestashop.admin.order.invoices.data_provider'
+            - '@prestashop.admin.order.invoices.by_date.data_provider'
             -
               'generate_by_date': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
             - 'OrdersInvoicesPage'
