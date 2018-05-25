@@ -50,25 +50,25 @@ class InvoicesController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $form = $this->get('prestashop.admin.orders_invoices.form_handler')->getForm();
+        $byDateForm = $this->get('prestashop.admin.orders_invoices_by_date.form_handler')->getForm();
 
         return [
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'form' => $form->createView(),
+            'byDateForm' => $byDateForm->createView(),
         ];
     }
 
     /**
-     * Handle order settings form submit
+     * Action that generates invoices PDF by date interval
      *
      * @param Request $request
-     *
+
      * @return RedirectResponse
      */
-    public function processAction(Request $request)
+    public function generatePdfByDateAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -88,16 +88,35 @@ class InvoicesController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_order_invoices');
         }
 
-        $formHandler = $this->get('prestashop.admin.orders_invoices.form_handler');
+        $formHandler = $this->get('prestashop.admin.orders_invoices_by_date.form_handler');
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
+            $data = $form->getData();
+
+            if ($errors = $formHandler->save($data)) {
                 $this->flashErrors($errors);
             } else {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $invoiceDataProvider = $this->get('prestashop.adapter.data_provider.order_invoice');
+
+                // Get invoices by submitted date interval
+                $invoiceCollection = $invoiceDataProvider->getByDateInterval(
+                    $data['generate_by_date']['date_from'],
+                    $data['generate_by_date']['date_to']
+                );
+
+                if (empty($invoiceCollection)) {
+                    $this->addFlash(
+                        'error',
+                        $this->trans('No invoice was found.', 'Admin.Orderscustomers.Notification')
+                    );
+                } else {
+                    // Generate PDF out of found invoices
+                    $invoiceGenerator = $this->get('prestashop.adapter.pdf_generator.invoice');
+                    $invoiceGenerator->generateInvoicesPDF($invoiceCollection);
+                }
             }
         }
 

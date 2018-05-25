@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,24 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% set generateByDateForm = byDateForm.generate_by_date %}
+namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-{% block content %}
-    <div class="container">
-        <div class="row">
-            {# "By Date" block #}
-            {% include '@PrestaShop/Admin/Sell/Orders/Invoices/Blocks/generate_by_date.html.twig' %}
+use PDF;
 
-        </div>
-    </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    <script src="{{ asset('themes/new-theme/public/invoices.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Class PDFDataProvider provides PDF entity data using legacy code
+ */
+class PDFDataProvider
+{
+    /**
+     * Gets invoice template type constant
+     *
+     * @return string
+     */
+    public function getInvoiceTemplateType()
+    {
+        return PDF::TEMPLATE_INVOICE;
+    }
+}
