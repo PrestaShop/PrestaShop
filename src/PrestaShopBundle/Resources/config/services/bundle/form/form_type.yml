@@ -376,6 +376,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.core.localization.loader.localization_pack'
         tags:
             - { name: form.type }
 
