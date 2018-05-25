@@ -100,6 +100,25 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
+     * Handles localization pack import
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function importLocalizationPackAction(Request $request)
+    {
+        $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
+        $localizationPackImportForm->handleRequest($request);
+
+        if ($localizationPackImportForm->isSubmitted()) {
+            //@todo: import
+        }
+
+        return $this->redirectToRoute('admin_international_localization_show_settings');
+    }
+
+    /**
      * Returns localization settings from handler
      *
      * @return FormHandlerInterface
