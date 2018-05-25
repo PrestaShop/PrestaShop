@@ -383,6 +383,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'quickview_html' => $this->render('catalog/_partials/quickview', $product_for_template),
             'product' => $product_for_template,
         )));
+
+        return;
     }
 
     public function displayAjaxRefresh()
@@ -425,6 +427,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
+
+        return;
     }
 
     /**
