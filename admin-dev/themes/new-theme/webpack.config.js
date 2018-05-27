@@ -55,6 +55,9 @@ let config = {
     logs: [
       './js/app/pages/logs',
     ],
+    order_preferences: [
+      './js/pages/order-preferences',
+    ],
     product_preferences: [
       './js/pages/product-preferences',
     ],

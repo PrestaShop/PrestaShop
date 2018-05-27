@@ -99,7 +99,9 @@
         {{ form_errors(form.sp_from_quantity) }}
         <div class="input-group">
           {{ form_widget(form.sp_from_quantity) }}
-          <span class="input-group-addon">{{ 'Unit(s)'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <div class="input-group-append">
+            <span class="input-group-text">{{ 'Unit(s)'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          </div>
         </div>
       </fieldset>
     </div>

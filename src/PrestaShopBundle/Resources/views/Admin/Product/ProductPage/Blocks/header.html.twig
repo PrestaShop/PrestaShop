@@ -25,24 +25,24 @@
 <div class="product-header col-md-12">
   <div class="row justify-content-md-center">
   {% if is_multishop_context %}
-    <div class="col-md-10">
+    <div class="col-xxl-10">
       <div class="alert alert-warning" role="alert">
         <p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
       </div>
     </div>
   {% endif %}
 
-    <div class="col-md-10">
+    <div class="col-xxl-10">
       <div class="row">
         <div class="col-md-7 big-input {{ 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
           {{ form_widget(formName) }}
         </div>
-        <div class="col-md-2 form_step1_type_product">
+        <div class="col-sm-7 col-md-2 form_step1_type_product">
           {{ form_widget(formType) }}
           <span class="help-box pull-xs-right" data-toggle="popover"
             data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?"|trans({}, 'Admin.Catalog.Help') }}"></span>
         </div>
-        <div class="col-md-1 form_switch_language">
+        <div class="col-sm-2 col-md-1 form_switch_language">
           <div class="{{ languages|length == 1 ? 'hide' : '' }}">
             <select id="form_switch_language" class="custom-select">
               {% for language in languages %}
@@ -51,7 +51,7 @@
             </select>
           </div>
         </div>
-        <div class="toolbar col-md-2 text-md-right">
+        <div class="toolbar col-sm-3 col-md-2 text-md-right">
           <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
             id="product_form_go_to_sales">
             <i class="material-icons">assessment</i>

@@ -28,7 +28,7 @@
      <div class="row py-2">
        <div class="col row ml-1">
          <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck">
-           <label slot="label" for="low-filter" class="low-filter-label ml-1">{{trans('filter_low_stock')}}</label>
+           <span slot="label" class="ml-2">{{trans('filter_low_stock')}}</span>
          </PSCheckbox>
        </div>
        <div class="col mr-3 d-flex align-items-center justify-content-end">

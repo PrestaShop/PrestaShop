@@ -35,7 +35,9 @@
     {{ form_errors(form.width) }}
     <div class="input-group">
       {{ form_widget(form.width) }}
-      <span class="input-group-addon">{{ dimension_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ dimension_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -45,7 +47,9 @@
     {{ form_errors(form.height) }}
     <div class="input-group">
       {{ form_widget(form.height) }}
-      <span class="input-group-addon">{{ dimension_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ dimension_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -55,7 +59,9 @@
     {{ form_errors(form.depth) }}
     <div class="input-group">
       {{ form_widget(form.depth) }}
-      <span class="input-group-addon">{{ dimension_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ dimension_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -65,7 +71,9 @@
     {{ form_errors(form.weight) }}
     <div class="input-group">
       {{ form_widget(form.weight) }}
-      <span class="input-group-addon">{{ weight_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ weight_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -83,7 +91,7 @@
             {% if child.vars.value == 1 %}
               <div class="widget-radio-inline">
                 {{ form_widget(child) }}
-                <a href="{{ getAdminLink("AdminPPreferences") }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
+                <a href="{{ path('admin_product_preferences') }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
               </div>
             {% else %}
               {{ form_widget(child) }}

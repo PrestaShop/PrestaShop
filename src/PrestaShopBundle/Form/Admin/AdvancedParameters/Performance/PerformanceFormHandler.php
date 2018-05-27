@@ -55,8 +55,7 @@ final class PerformanceFormHandler extends AbstractFormHandler
         FormFactoryInterface $formFactory,
         FormDataProviderInterface $formDataProvider,
         CombinationFeature $combinationFeature
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->combinationFeature = $combinationFeature;
         $this->formDataProvider = $formDataProvider;
@@ -91,8 +90,10 @@ final class PerformanceFormHandler extends AbstractFormHandler
     public function save(array $data)
     {
         $errors = $this->formDataProvider->setData($data);
-
-        $this->hookDispatcher->dispatchForParameters('actionPerformancePageFormSave', ['errors' => &$errors, 'form_data' => &$data]);
+        $this->hookDispatcher->dispatchForParameters(
+            'actionPerformancePageFormSave',
+            ['errors' => &$errors, 'form_data' => &$data]
+        );
 
         return $errors;
     }

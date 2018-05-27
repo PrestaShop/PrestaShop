@@ -108,4 +108,23 @@ class TaxRuleDataProvider
     {
         return Tax::getProductEcotaxRate();
     }
+
+    /**
+     * Gets a list of tax rules groups for choice type
+     *
+     * @param bool $onlyActive if true, returns only active tax rules groups
+     *
+     * @return array
+     */
+    public function getTaxRulesGroupChoices($onlyActive = true)
+    {
+        $taxRulesGroups = $this->getTaxRulesGroups($onlyActive);
+        $choices = [];
+
+        foreach ($taxRulesGroups as $taxRulesGroup) {
+            $choices[$taxRulesGroup['name']] = $taxRulesGroup['id_tax_rules_group'];
+        }
+
+        return $choices;
+    }
 }

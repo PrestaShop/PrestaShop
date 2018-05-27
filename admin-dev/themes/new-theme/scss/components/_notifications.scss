@@ -1,6 +1,6 @@
 .notification-center {
   > .notification {
-    @include notification_container();
+    @include notification_container($size-header-height);
     position: relative;
 
     > .material-icons {

@@ -28,13 +28,18 @@
 >
   {% for product in products %}
     <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
-        <td class="checkbox-column">
-          <div class="checkbox">
-            <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
-              {{ product.id_product }}
+        <td class="checkbox-column form-group">
+          <div class="md-checkbox md-checkbox-inline">
+            <label>
+              <input type="checkbox" id="bulk_action_selected_products-{{ product.id_product }}" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
+              <i class="md-checkbox-control"></i>
             </label>
           </div>
+        </td>
+        <td>
+            <label class="form-check-label" for="bulk_action_selected_products-{{ product.id_product }}">
+              {{ product.id_product }}
+            </label>
         </td>
         <td>
           <a href="{{ product.url|default('') }}#tab-step1">{{ product.image|raw }}</a>
@@ -48,12 +53,12 @@
         <td>
           {{ product.name_category|default('') }}
         </td>
-        <td>
+        <td class="text-center">
           <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'Admin.Global')) }}</a>
         </td>
 
         {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-        <td class="product-sav-quantity" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
+        <td class="product-sav-quantity text-center" data-product-quantity-value="{{ product.sav_quantity|default('') }}">
           <a href="{{ product.url|default('') }}#tab-step3">
             {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
               {{ product.sav_quantity }}
@@ -65,7 +70,7 @@
         {% else %}
             <td></td>
         {% endif %}
-        <td>
+        <td class="text-center">
           {% if product.active|default(0) == 0 %}
             <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
               <i class="material-icons action-disabled">clear</i>
@@ -86,7 +91,7 @@
             <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
           </td>
         {% endif %}
-        <td>
+        <td class="text-right">
             <div class="btn-group-action">
 
                 {% set buttons_action = [

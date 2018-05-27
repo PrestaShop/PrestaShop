@@ -26,13 +26,14 @@
 
 namespace PrestaShopBundle\Service;
 
+use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
-class TranslationService {
-
+class TranslationService
+{
     /**
      * @var Container
      */
@@ -52,7 +53,7 @@ class TranslationService {
     /**
      * @param $locale
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function findLanguageByLocale($locale)
     {
@@ -61,7 +62,7 @@ class TranslationService {
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
         if (!$lang) {
-            throw new \Exception('The language for this locale is not available');
+            throw new Exception('The language for this locale is not available');
         }
 
         return $lang;
@@ -69,7 +70,7 @@ class TranslationService {
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private function getLangToLocalesMapping()
     {
@@ -80,7 +81,7 @@ class TranslationService {
 
         $jsonLastErrorCode = json_last_error();
         if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
-            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
+            throw new Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
         }
 
         return $legacyToStandardLocales;
@@ -143,7 +144,8 @@ class TranslationService {
      * @param null $search
      * @return array
      */
-    public function listDomainTranslation($locale, $domain, $theme = null, $search = null){
+    public function listDomainTranslation($locale, $domain, $theme = null, $search = null)
+    {
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
@@ -151,7 +153,7 @@ class TranslationService {
             $translationProvider = $this->container->get('prestashop.translation.search_provider');
         }
 
-        if ('Messages' === $domain){
+        if ('Messages' === $domain) {
             $domain = 'messages';
         }
 
@@ -209,7 +211,8 @@ class TranslationService {
      * @param $data
      * @return bool
      */
-    private function dataContainsSearchWord($search, $data) {
+    private function dataContainsSearchWord($search, $data)
+    {
         if (is_string($search)) {
             $search = strtolower($search);
             return false !== strpos(strtolower($data['default']), $search) ||
@@ -293,7 +296,7 @@ class TranslationService {
             $entityManager->flush();
 
             $updatedTranslationSuccessfully = true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $logger->error($exception->getMessage());
         }
 
@@ -335,7 +338,7 @@ class TranslationService {
             $entityManager->flush();
 
             $resetTranslationSuccessfully = true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
 

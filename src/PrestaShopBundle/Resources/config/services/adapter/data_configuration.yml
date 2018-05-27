@@ -1,0 +1,103 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.product_general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_pagination.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_page.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\PageConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_stock.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.customer.customer_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order_general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order_gift.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.debug_mode.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration'
+        arguments:
+            - '@prestashop.adapter.debug_mode'
+            - '@prestashop.adapter.legacy.configuration'
+            - '%ps_config_dir%/defines.inc.php'
+
+    prestashop.adapter.optional_features.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.combination_feature'
+            - '@prestashop.adapter.feature.feature'
+            - '@prestashop.adapter.group.feature'
+
+    prestashop.adapter.ccc.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@filesystem'
+            - '@prestashop.adapter.tools'
+            - '%themes_dir%'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme_name'
+
+    prestashop.adapter.media_servers.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.caching.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration'
+        arguments:
+          - '@prestashop.adapter.memcache_server.manager'
+          - '@prestashop.adapter.php_parameters'
+          - '@prestashop.adapter.cache_clearer'
+          - '%ps_cache_enable%'
+          - '%ps_caching%'
+
+    prestashop.adapter.general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.maintenance.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.upload_quota.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.notifications.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.smarty_cache.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.logs.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']

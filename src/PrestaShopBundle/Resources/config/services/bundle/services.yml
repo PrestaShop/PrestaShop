@@ -1,0 +1,101 @@
+parameters:
+    ps_root_dir:              "%kernel.root_dir%/../"
+    ps_config_dir:            "%ps_root_dir%config"
+    translations_dir:         "%kernel.root_dir%/Resources/translations"
+    themes_translations_dir:  "%kernel.cache_dir%/themes"
+    themes_dir:               "%kernel.root_dir%/../themes"
+
+services:
+    _defaults:
+        public: true
+
+    # Interfaced services to decorate
+    prestashop.core.admin.data_provider.product_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ProductInterface
+    prestashop.core.admin.data_updater.product_interface:
+        class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
+    prestashop.core.admin.page_preference_interface:
+        class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+    prestashop.core.admin.data_provider.addons_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface
+    prestashop.core.admin.data_provider.module_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
+
+    # URL generation
+    prestashop.core.admin.url_generator_factory:
+        class: PrestaShopBundle\Service\TransitionalBehavior\AdminUrlGeneratorFactory
+        arguments:
+            - "@router"
+
+    prestashop.core.admin.url_generator_legacy:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: ["@prestashop.core.admin.url_generator_factory", forLegacy]
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+
+    prestashop.core.admin.url_generator:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: ["@prestashop.core.admin.url_generator_factory", forSymfony]
+
+    prestashop.database.naming_strategy:
+        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
+        arguments: ["%database_prefix%"]
+
+    prestashop.data_provider.modules.recommended:
+        class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
+        arguments: ["@router"]
+
+    prestashop.service.product:
+        class: PrestaShopBundle\Service\ProductService
+        arguments:
+            - "@prestashop.adapter.data_provider.product"
+
+    prestashop.service.translation:
+        class: PrestaShopBundle\Service\TranslationService
+        properties:
+            container: "@service_container"
+
+    # Interfaced services to decorate
+    prestashop.core.data_provider.stock_interface:
+        class: PrestaShopBundle\Service\DataProvider\StockInterface
+
+    # DISPATCHERS
+    prestashop.hook.dispatcher:
+        class: PrestaShopBundle\Service\Hook\HookDispatcher
+        calls:
+            - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
+            - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
+
+    prestashop.hook.finder:
+        class: PrestaShopBundle\Service\Hook\HookFinder
+
+    # EVENT HANDLER
+    prestashop.handler.log:
+        class: PrestaShopBundle\Service\Log\LogHandler
+        arguments:
+            - "@service_container"
+
+    # CSRF/XSS additional protection middleware
+    prestashop.user_provider:
+        class: PrestaShopBundle\Service\DataProvider\UserProvider
+        arguments: ['@security.token_storage']
+
+    prestashop.router:
+        class: PrestaShopBundle\Service\Routing\Router
+        parent: 'router.default'
+        public: true
+        calls:
+          - ['setTokenManager', ['@security.csrf.token_manager']]
+          - ['setUserProvider', ["@=service('prestashop.user_provider')"]]
+
+    # Addons API Client
+    prestashop.addons.client_api:
+        class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
+        arguments:
+            - "@csa_guzzle.client.addons_api"
+            - "@=service('translator').getLocale()"
+            - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+            - "@prestashop.adapter.tools"
+            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
+        calls:
+            - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]

@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
+
 /**
  * Class returning the content of the form in the maintenance page.
  * To be found in Configure > Shop parameters > General > Maintenance
@@ -44,24 +45,37 @@ class MaintenanceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enable_shop', SwitchType::class, array(
-                'required' => true,
-            ))
-            ->add('maintenance_ip', IpAddressType::class, array(
-                'required' => false,
-                'attr' => array(
-                    'class' => 'col-md-5',
-                ),
-            ))
-            ->add('maintenance_text', TranslateType::class, array(
-                'type' => FormattedTextareaType::class,
-                'options' => array(
+            ->add(
+                'enable_shop',
+                SwitchType::class,
+                [
+                    'required' => true,
+                ]
+            )
+            ->add(
+                'maintenance_ip',
+                IpAddressType::class,
+                [
                     'required' => false,
-                ),
-                'locales' => $this->locales,
-                'hideTabs' => false,
-                'required' => true,
-            ))
+                    'empty_data' => '',
+                    'attr' => [
+                        'class' => 'col-md-5',
+                    ],
+                ]
+            )
+            ->add(
+                'maintenance_text',
+                TranslateType::class,
+                [
+                    'type' => FormattedTextareaType::class,
+                    'options' => [
+                        'required' => false,
+                    ],
+                    'locales' => $this->locales,
+                    'hideTabs' => false,
+                    'required' => true,
+                ]
+            )
         ;
     }
 
@@ -70,9 +84,9 @@ class MaintenanceType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ));
+        ]);
     }
 
     /**
