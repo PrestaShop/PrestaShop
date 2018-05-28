@@ -400,9 +400,6 @@
 }
 
 .page-sidebar-closed:not(.mobile) {
-  .content-div {
-    transition: padding 1s ease;
-  }
 
   .menu-collapse {
     transform: rotate(180deg);

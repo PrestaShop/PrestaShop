@@ -75,7 +75,7 @@
       </span>
       <span v-if="lowStock" class="stock-warning ico ml-2" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
     </td>
-    <td class="qty-spinner text-sm-right">
+    <td class="qty-spinner text-right">
       <Spinner :product="product" @updateProductQty="updateProductQty" />
     </td>
   </tr>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "56d8ed20b612d24656f61902e6f236e6",
+    "content-hash": "7e42deb22e5fd961b542f88303763eae",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2756,16 +2756,16 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v4.0.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "bef34d2f69cefc93663219438b6d952aab3fcf79"
+                "reference": "a2a7d20c207cead6f2f6e23bb13af97ad4e59ded"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/bef34d2f69cefc93663219438b6d952aab3fcf79",
-                "reference": "bef34d2f69cefc93663219438b6d952aab3fcf79",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/a2a7d20c207cead6f2f6e23bb13af97ad4e59ded",
+                "reference": "a2a7d20c207cead6f2f6e23bb13af97ad4e59ded",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2018-03-26T09:56:09+00:00"
+            "time": "2018-05-23T16:27:31+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -3316,16 +3316,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "15312b89d3884c9b055da65d9cd9c45473686f5d"
+                "reference": "6120112d834a193bc56c448777081350cf0a18be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/15312b89d3884c9b055da65d9cd9c45473686f5d",
-                "reference": "15312b89d3884c9b055da65d9cd9c45473686f5d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/6120112d834a193bc56c448777081350cf0a18be",
+                "reference": "6120112d834a193bc56c448777081350cf0a18be",
                 "shasum": ""
             },
             "require": {
@@ -3344,7 +3344,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2018-03-26T10:27:13+00:00"
+            "time": "2018-05-23T16:26:23+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
@@ -3700,6 +3700,38 @@
             "description": "PrestaShop module ps_socialfollow",
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
             "time": "2017-02-01T13:17:47+00:00"
+        },
+        {
+            "name": "prestashop/ps_themecusto",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_themecusto.git",
+                "reference": "73576b54d40077442bae9249e00e5ca05929b513"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/73576b54d40077442bae9249e00e5ca05929b513",
+                "reference": "73576b54d40077442bae9249e00e5ca05929b513",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_themecusto",
+            "homepage": "https://github.com/PrestaShop/ps_themecusto",
+            "time": "2018-05-23T16:07:31+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -4530,16 +4562,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v4.0.2",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "73f2668def9607fbf68c269632bd997abae2931a"
+                "reference": "e95133dc19353024fd16aa00f4e9d60c4c292741"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/73f2668def9607fbf68c269632bd997abae2931a",
-                "reference": "73f2668def9607fbf68c269632bd997abae2931a",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/e95133dc19353024fd16aa00f4e9d60c4c292741",
+                "reference": "e95133dc19353024fd16aa00f4e9d60c4c292741",
                 "shasum": ""
             },
             "require": {
@@ -4564,7 +4596,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2018-01-02T16:25:48+00:00"
+            "time": "2018-05-15T15:34:58+00:00"
         },
         {
             "name": "psr/cache",

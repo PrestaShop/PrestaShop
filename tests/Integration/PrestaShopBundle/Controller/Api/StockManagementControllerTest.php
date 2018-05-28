@@ -182,8 +182,7 @@ class StockManagementControllerTest extends ApiTestCase
         $routeName,
         $parameters = array(),
         $expectedTotalPages = null
-    )
-    {
+    ) {
         $route = $this->router->generate($routeName, $parameters);
         self::$client->request('GET', $route);
 

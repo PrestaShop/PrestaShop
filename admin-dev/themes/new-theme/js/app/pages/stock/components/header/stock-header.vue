@@ -24,9 +24,13 @@
  *-->
 
 <template>
-  <div class="stock-header px-3">
-    <Breadcrumb />
-    <h1>{{trans('head_title')}}</h1>
+  <div class="header-toolbar">
+    <div class="container-fluid">
+      <Breadcrumb />
+      <div class="title-row">
+        <h1 class="title">{{trans('head_title')}}</h1>
+      </div>
+    </div>
     <Tabs />
   </div>
 </template>
@@ -35,10 +39,29 @@
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
+  const $ = global.$;
+
+  function getOldHeaderToolbarButtons() {
+    return $('.header-toolbar')
+      .first()
+      .find('.toolbar-icons');
+  }
+
   export default {
     components: {
       Breadcrumb,
       Tabs,
+    },
+    mounted() {
+      // move the toolbar buttons to this header
+      const toolbarButtons = getOldHeaderToolbarButtons();
+      toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
+
+      // signal header change (so size can be updated)
+      const event = $.Event('vueHeaderMounted', {
+        name: 'stock-header',
+      });
+      $(document).trigger(event);
     },
   };
 </script>

@@ -22,120 +22,126 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div id="catalog-actions" class="row">
+<div id="catalog-actions" class="col order-first">
+  <div class="row">
+    <div class="col">
+      {% block product_catalog_filter_by_categories %}
+        <div id="product_catalog_category_tree_filter" class="d-inline-block dropdown dropdown-clickable mr-2">
+          <button
+                  class="btn btn-outline-secondary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+          >
+              {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
+          </button>
+          <div id="tree-categories" class="dropdown-menu">
+            <div class="categories-tree-actions">
+              <a
+                href="#"
+                name="product_catalog_category_tree_filter_expand"
+                onclick="productCategoryFilterExpand($('div#product_catalog_category_tree_filter'), this);"
+                id="product_catalog_category_tree_filter_expand"
+              >
+                <i class="material-icons">expand_more</i>
+                  {{ 'Expand'|trans({}, 'Admin.Actions') }}
+              </a>
+              <a
+                href="#"
+                name="product_catalog_category_tree_filter_collapse"
+                onclick="productCategoryFilterCollapse($('div#product_catalog_category_tree_filter'), this);"
+                id="product_catalog_category_tree_filter_collapse"
+              >
+                <i class="material-icons">expand_less</i>
+                  {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+              </a>
+              <a
+                href="#"
+                name="product_catalog_category_tree_filter_reset"
+                onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));"
+                id="product_catalog_category_tree_filter_reset"
+              >
+                <i class="material-icons">radio_button_unchecked</i>
+                  {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+              </a>
+            </div>
+              {{ form_widget(categories) }}
+          </div>
+        </div>
+      {% endblock %}
+
+      {% block product_catalog_filter_bulk_actions %}
+        <div
+            class="d-inline-block"
+            bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
+            massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
+            redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+            redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+        >
+          {% set buttons_action = [
+            {
+              "onclick": "bulkProductAction(this, 'activate_all');",
+              "icon": "radio_button_checked",
+              "label": "Activate selection"|trans({}, 'Admin.Actions')
+            }, {
+              "onclick": "bulkProductAction(this, 'deactivate_all');",
+              "icon": "radio_button_unchecked",
+              "label": "Deactivate selection"|trans({}, 'Admin.Actions')
+            }
+          ] %}
+
+          {% set buttons_action = buttons_action|merge([
+            {
+              "divider": true
+            }, {
+              "onclick": "bulkProductAction(this, 'duplicate_all');",
+              "icon": "content_copy",
+              "label": "Duplicate selection"|trans({}, 'Admin.Actions')
+            }
+          ]) %}
+
+
+          {% set buttons_action = buttons_action|merge([
+            {
+              "divider": true
+            }, {
+              "onclick": "bulkProductAction(this, 'delete_all');",
+              "icon": "delete",
+              "label": "Delete selection"|trans({}, 'Admin.Actions')
+            }
+          ]) %}
+
+          {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
+            'div_style': "btn-group dropdown bulk-catalog",
+            'button_id': "product_bulk_menu",
+            'disabled': true,
+            'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
+            'buttonType': "outline-secondary",
+            'menu_icon': "icon-caret-up",
+            'items': buttons_action
+          } %}
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+
   {% block product_catalog_filter_select_all %}
-    <div class="col-md-1">
-      <label class="form-check-label">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="bulk_action_select_all"
-          onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
-          value=""
-        >
-        {{ "Select all"|trans({}, 'Admin.Actions') }}
-      </label>
-    </div>
-  {% endblock %}
-
-  {% block product_catalog_filter_bulk_actions %}
-    <div
-      class="col-md-2"
-      bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
-      massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
-      redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-      redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-    >
-      {% set buttons_action = [
-          {
-            "onclick": "bulkProductAction(this, 'activate_all');",
-            "icon": "radio_button_checked",
-            "label": "Activate selection"|trans({}, 'Admin.Actions')
-          }, {
-            "onclick": "bulkProductAction(this, 'deactivate_all');",
-            "icon": "radio_button_unchecked",
-            "label": "Deactivate selection"|trans({}, 'Admin.Actions')
-          }
-      ] %}
-
-      {% set buttons_action = buttons_action|merge([
-          {
-            "divider": true
-          }, {
-            "onclick": "bulkProductAction(this, 'duplicate_all');",
-            "icon": "content_copy",
-            "label": "Duplicate selection"|trans({}, 'Admin.Actions')
-          }
-      ]) %}
-
-
-      {% set buttons_action = buttons_action|merge([
-        {
-          "divider": true
-        }, {
-          "onclick": "bulkProductAction(this, 'delete_all');",
-          "icon": "delete",
-          "label": "Delete selection"|trans({}, 'Admin.Actions')
-        }
-      ]) %}
-
-      {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
-        'div_style': "btn-group dropup bulk-catalog",
-        'button_id': "product_bulk_menu",
-        'disabled': true,
-        'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
-        'buttonType': "outline-secondary",
-        'menu_icon': "icon-caret-up",
-        'items': buttons_action
-      }%}
-    </div>
-  {% endblock %}
-
-  {% block product_catalog_filter_by_categories %}
-    <div id="product_catalog_category_tree_filter" class="col-md-3 dropdown dropdown-clickable">
-      <button
-        class="btn btn-outline-secondary dropdown-toggle"
-        type="button"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
-      </button>
-      <div id="tree-categories" class="dropdown-menu">
-        <a
-          class="categories-tree-actions"
-          href="#"
-          name="product_catalog_category_tree_filter_expand"
-          onclick="productCategoryFilterExpand($('div#product_catalog_category_tree_filter'), this);"
-          id="product_catalog_category_tree_filter_expand"
-        >
-          <i class="material-icons">expand_more</i>
-          {{ 'Expand'|trans({}, 'Admin.Actions') }}
-        </a>
-        <a
-        class="categories-tree-actions"
-          href="#"
-          name="product_catalog_category_tree_filter_collapse"
-          onclick="productCategoryFilterCollapse($('div#product_catalog_category_tree_filter'), this);"
-          id="product_catalog_category_tree_filter_collapse"
-        >
-          <i class="material-icons">expand_less</i>
-          {{ 'Collapse'|trans({}, 'Admin.Actions') }}
-        </a>
-        <a
-          class="categories-tree-actions"
-          href="#"
-          name="product_catalog_category_tree_filter_reset"
-          onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));"
-          id="product_catalog_category_tree_filter_reset"
-        >
-          <i class="material-icons">radio_button_unchecked</i>
-          {{ 'Unselect'|trans({}, 'Admin.Actions') }}
-        </a>
-        <hr>
-        {{ form_widget(categories) }}
+  <div class="row">
+    <div class="col">
+      <div class="md-checkbox">
+        <label>
+          <input
+            type="checkbox"
+            id="bulk_action_select_all"
+            onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
+            value=""
+          >
+          <i class="md-checkbox-control"></i>
+            {{ "Select all"|trans({}, 'Admin.Actions') }}
+        </label>
       </div>
     </div>
+  </div>
   {% endblock %}
 </div>

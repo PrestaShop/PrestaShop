@@ -62,7 +62,7 @@ class TranslationsController extends FrameworkBundleAdminController
         foreach ($request->request->all() as $k => $p) {
             if (strstr($k, 'selected')) {
                 $k = 'selected';
-            } else if ('locale' === $k) {
+            } elseif ('locale' === $k) {
                 $translationService = $this->get('prestashop.service.translation');
                 $p = $translationService->langToLocale($p);
             }
@@ -86,17 +86,15 @@ class TranslationsController extends FrameworkBundleAdminController
             return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
         }
 
-        if (
-            !in_array(
-                $this->authorizationLevel($this::CONTROLLER_NAME),
-                array(
-                    PageVoter::LEVEL_READ,
-                    PageVoter::LEVEL_UPDATE,
-                    PageVoter::LEVEL_CREATE,
-                    PageVoter::LEVEL_DELETE,
-                )
+        if (!in_array(
+            $this->authorizationLevel(self::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
             )
-        ) {
+        )) {
             return $this->redirect('admin_dashboard');
         }
 

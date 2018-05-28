@@ -25,34 +25,39 @@
 <template>
   <PSTable class="mt-1">
     <thead>
-      <tr>
-        <th width="27%" class="thead-title">
-          {{trans('title_product')}}
-          <PSSort order="product" @sort="toggleSort" />
+      <tr class="column-headers">
+        <th scope="col" width="27%" class="product-title">
+          <PSSort order="product" @sort="sort" :current-sort="currentSort">
+            {{trans('title_product')}}
+          </PSSort>
+        </th>
+        <th scope="col">
+          <PSSort order="reference" @sort="sort" :current-sort="currentSort">
+            {{trans('title_reference')}}
+          </PSSort>
         </th>
         <th>
-          {{trans('title_reference')}}
-          <PSSort order="reference" @sort="toggleSort" />
+          <PSSort order="supplier" @sort="sort" :current-sort="currentSort">
+            {{trans('title_supplier')}}
+          </PSSort>
         </th>
-        <th>
-          {{trans('title_supplier')}}
-          <PSSort order="supplier" @sort="toggleSort" />
-        </th>
-        <th class="text-sm-center">
+        <th class="text-center">
           {{trans('title_status')}}
         </th>
-        <th class="text-sm-center">
-          {{trans('title_physical')}}
-          <PSSort order="physical_quantity" @sort="toggleSort" />
+        <th class="text-center">
+          <PSSort order="physical_quantity" @sort="sort" :current-sort="currentSort">
+            {{trans('title_physical')}}
+          </PSSort>
         </th>
-        <th class="text-sm-center">
+        <th class="text-center">
           {{trans('title_reserved')}}
         </th>
-        <th class="text-sm-left text-md-center">
-          {{trans('title_available')}}
-          <PSSort order="available_quantity" @sort="toggleSort" />
+        <th class="text-center">
+          <PSSort order="available_quantity" @sort="sort" :current-sort="currentSort">
+            {{trans('title_available')}}
+          </PSSort>
         </th>
-        <th class="text-md-left" :title="trans('title_edit_quantity')">
+        <th :title="trans('title_edit_quantity')">
           <i class="material-icons">edit</i>
           {{trans('title_edit_quantity')}}
         </th>
@@ -71,7 +76,7 @@
         </td>
       </tr>
       <tr v-else-if="emptyProducts">
-        <td colspan="7">
+        <td colspan="8">
           <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false" >
             {{trans('no_product')}}
           </PSAlert>
@@ -104,10 +109,9 @@
       PSLoader,
     },
     methods: {
-      toggleSort(order, isSorted) {
-        const desc = isSorted ? ' desc' : '';
+      sort(order, sortDirection) {
         this.$store.dispatch('updateOrder', order);
-        this.$emit('sort', desc);
+        this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
     computed: {
@@ -116,6 +120,9 @@
       },
       emptyProducts() {
         return !this.$store.state.products.length;
+      },
+      currentSort() {
+        return this.$store.state.order;
       },
     },
   };

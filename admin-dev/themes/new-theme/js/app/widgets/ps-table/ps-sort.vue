@@ -23,30 +23,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <button class="ps-sort" @click.prevent="sortFilter">
-    <i class="material-icons">swap_vert</i>
-  </button>
+  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
+    <span role="columnheader"><slot /></span>
+    <span role="button" class="ps-sort" aria-label="Tri"></span>
+  </div>
 </template>
 
 <script>
   export default {
-    props: ['order'],
+    props: {
+      // column name
+      order: String,
+      // indicates the currently sorted column in the table
+      currentSort: String,
+    },
     methods: {
-      sortFilter() {
-        this.isSorted = !this.isSorted;
-        this.$emit('sort', this.order, this.isSorted);
+      sortToggle() {
+        // toggle direction
+        this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
+        this.$emit('sort', this.order, this.sortDirection);
       },
     },
-    data: () => ({ isSorted: true }),
+    data: () => ({
+      sortDirection: 'asc',
+    }),
+    computed: {
+      isCurrent() {
+        return this.currentSort === this.order;
+      },
+    },
   };
 </script>
 
-<style lang="sass" scoped>
-  @import "../../../../scss/config/_settings.scss";
-  .ps-sort {
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    outline: none;
-  }
-</style>

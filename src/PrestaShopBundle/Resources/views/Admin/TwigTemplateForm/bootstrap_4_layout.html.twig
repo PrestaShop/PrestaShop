@@ -48,11 +48,15 @@
     <div class="input-group money-type">
         {% set prepend = '{{' == money_pattern[0:2] %}
         {% if not prepend %}
-            <span class="input-group-addon">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+            <div class="input-group-prepend">
+                <span class="input-group-text">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+            </div>
         {% endif %}
         {{- block('form_widget_simple') -}}
         {% if prepend %}
-            <span class="input-group-addon">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+            <div class="input-group-append">
+                <span class="input-group-text">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+            </div>
         {% endif %}
     </div>
 {%- endblock money_widget %}
@@ -60,7 +64,9 @@
 {% block percent_widget -%}
     <div class="input-group">
         {{- block('form_widget_simple') -}}
-        <span class="input-group-addon">%</span>
+        <div class="input-group-append">
+            <span class="input-group-text">%</span>
+        </div>
     </div>
 {%- endblock percent_widget %}
 
@@ -287,8 +293,10 @@
         {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
         <div class="input-group datepicker">
             <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-            <div class="input-group-addon">
-                <i class="material-icons">date_range</i>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <i class="material-icons">date_range</i>
+                </div>
             </div>
         </div>
     {% endspaceless %}

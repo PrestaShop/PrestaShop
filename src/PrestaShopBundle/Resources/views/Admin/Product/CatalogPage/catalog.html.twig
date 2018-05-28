@@ -56,19 +56,21 @@
       </div>
       {% endif %}
 
-      {% block product_catalog_tooltips %}
-        {{ include('@Product/CatalogPage/Blocks/tooltips.html.twig', {'import_link': import_link }) }}
-      {% endblock %}
+      <div class="row align-items-start">
+        {% block product_catalog_tools %}
+          {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
+        {% endblock %}
 
-      {% block product_catalog_filters %}
-        {{ include('@Product/CatalogPage/Blocks/filters.html.twig', {
-            'limit': limit,
-            'offset': offset,
-            'orderBy': orderBy,
-            'sortOrder': sortOrder
-          })
-        }}
-      {% endblock %}
+        {% block product_catalog_filters %}
+          {{ include('@Product/CatalogPage/Blocks/filters.html.twig', {
+              'limit': limit,
+              'offset': offset,
+              'orderBy': orderBy,
+              'sortOrder': sortOrder
+            })
+          }}
+        {% endblock %}
+      </div>
 
       {% block product_catalog_form %}
         {{ include('@Product/CatalogPage/Forms/form_products.html.twig', {

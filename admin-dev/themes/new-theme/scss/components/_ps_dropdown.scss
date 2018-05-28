@@ -1,15 +1,16 @@
 .ps-dropdown{
   font-size: 1em;
-  padding: .3em 0;
+  padding: .188em 0;
   background: #fff;
   width: 100%;
-  line-height: 2rem;
+  line-height: 2.286em;
   cursor: pointer;
   &.bordered {
     border: $gray-light 1px solid;
   }
   .dropdown-label {
     padding: 0 0.5em;
+    flex-grow: 1;
   }
   .arrow-down{
     font-size: 1.8em;

@@ -51,7 +51,7 @@ class I18nControllerTest extends ApiTestCase
      */
     public function it_should_return_ok_response_when_requesting_list_of_translations($params)
     {
-        $this->assetOkRequest('api_i18n_translations_list', $params);
+        $this->assertOkRequest('api_i18n_translations_list', $params);
     }
 
     /**
