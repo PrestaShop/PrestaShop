@@ -7,7 +7,7 @@ admin_logs:
         _legacy_controller: AdminLogs
 
 admin_search_logs:
-    path: logs_search
+    path: logs-search
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:search'
@@ -29,14 +29,14 @@ admin_logs_delete:
 
 # System Information
 admin_system_information:
-    path: system_information
+    path: system-information
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:index'
         _legacy_controller: AdminInformation
 
 admin_system_information_check_files:
-    path: system_information/files
+    path: system-information/files
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:displayCheckFiles'
@@ -59,7 +59,7 @@ admin_performance_save:
         _legacy_controller: AdminPerformance
 
 admin_clear_cache:
-    path: clear_cache
+    path: clear-cache
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Performance:clearCache'

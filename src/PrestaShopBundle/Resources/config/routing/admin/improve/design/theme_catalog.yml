@@ -1,5 +1,5 @@
 admin_theme_catalog:
-    path: /addons-store
+    path: /
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\ThemeCatalog:index'

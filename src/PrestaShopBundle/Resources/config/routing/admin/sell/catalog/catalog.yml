@@ -1,0 +1,3 @@
+_products:
+    resource: "products/products.yml"
+    prefix: /products/
