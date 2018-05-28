@@ -233,16 +233,26 @@ class EmployeeCore extends ObjectModel
 
     protected function saveOptin()
     {
-        if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS')) {
+        if (!defined('PS_INSTALLATION_IN_PROGRESS')) {
             $language = new Language($this->id_lang);
-            $params = http_build_query(array(
-                'email' => $this->email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $language->iso_code,
-                'visitorType' => 1,
-                'source' => 'backoffice'
-            ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            if ($this->optin == 1) {
+                $params = http_build_query(array(
+                    'email' => $this->email,
+                    'method' => 'addMemberToNewsletter',
+                    'language' => $language->iso_code,
+                    'visitorType' => 1,
+                    'source' => 'backoffice'
+                ));
+            } else {
+                $params = http_build_query(array(
+                    'email' => $this->email,
+                    'method' => 'removeMemberToNewsletter', // We don't know the method
+                    'language' => $language->iso_code,
+                    'visitorType' => 1,
+                    'source' => 'backoffice'
+                ));
+            }
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
@@ -392,8 +402,7 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT `module`
 			FROM `'._DB_PREFIX_.'module_preference`
-			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
-        );
+			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)');
     }
 
     /**
