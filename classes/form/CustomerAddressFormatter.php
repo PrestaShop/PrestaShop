@@ -146,6 +146,21 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             $format[$formField->getName()] = $formField;
         }
 
+        //To add the extra fields in address form
+        $additionalAddressFormFields = Hook::exec('additionalCustomerAddressFields', array(), null, true);
+        if (is_array($additionalAddressFormFields)) {
+            foreach ($additionalAddressFormFields as $moduleName => $additionnalFormFields) {
+                if (!is_array($additionnalFormFields)) {
+                    continue;
+                }
+
+                foreach ($additionnalFormFields as $formField) {
+                    $formField->moduleName = $moduleName;
+                    $format[$moduleName.'_'.$formField->getName()] = $formField;
+                }
+            }
+        }
+
         return $this->addConstraints(
                 $this->addMaxLength(
                     $format
