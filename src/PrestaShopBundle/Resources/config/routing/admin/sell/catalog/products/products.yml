@@ -1,5 +1,38 @@
+_product_attributes:
+    resource: "attributes.yml"
+    prefix: /attributes/
+
+_product_categories:
+    resource: "categories.yml"
+    prefix: /categories/
+
+_product_combinations:
+    resource: "combinations.yml"
+    prefix: /combinations/
+
+_product_features:
+    resource: "features.yml"
+    prefix: /features/
+
+_product_specific_prices:
+    resource: "specific_prices.yml"
+    prefix: /specific-prices/
+
+_product_specific_prices:
+    resource: "specific_prices.yml"
+    prefix: /specific-prices/
+
+_product_suppliers:
+    resource: "suppliers.yml"
+    prefix: /suppliers/
+
+_product_warehouses:
+    resource: "warehouses.yml"
+    prefix: /suppliers/
+
+# Product List
 admin_product_catalog:
-    path: /catalog/{offset}/{limit}/{orderBy}/{sortOrder}
+    path: /{offset}/{limit}/{orderBy}/{sortOrder}
     methods:  [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:catalog
@@ -15,7 +48,7 @@ admin_product_catalog:
         sortOrder: last|asc|desc
 
 admin_product_catalog_filters:
-    path: /catalog_filters/{quantity}/{active}
+    path: /filters/{quantity}/{active}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:catalogFilters
@@ -43,14 +76,15 @@ admin_product_list:
         sortOrder: last|asc|desc
         view: full|quicknav
 
+# Product Form
 admin_product_new:
-    path: /new
+    path: /product/new
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:new
 
 admin_product_form:
-    path: /form/{id}
+    path: /product/{id}
     methods:  [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Product:form

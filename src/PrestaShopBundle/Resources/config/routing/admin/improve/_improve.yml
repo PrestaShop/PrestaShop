@@ -1,0 +1,19 @@
+#_design:
+#    resource: "design/*.yml"
+#    prefix: /design/
+
+_international:
+    resource: "international/international.yml"
+    prefix: /international/
+
+_modules:
+    resource: "modules/modules.yml"
+    prefix: /modules/
+
+#_payment:
+#    resource: "payment/*.yml"
+#    prefix: /payment/
+#
+#_shipping:
+#    resource: "shipping/*.yml"
+#    prefix: /shipping/
