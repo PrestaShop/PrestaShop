@@ -1,5 +1,5 @@
 admin_supplier_refresh_product_supplier_combination_form:
-    path:     /refresh-product-supplier-combination-form/{idProduct}/{supplierIds}
+    path:     /refresh-combination-form/{idProduct}/{supplierIds}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Supplier:refreshProductSupplierCombinationForm

@@ -1,5 +1,5 @@
 admin_warehouse_refresh_product_warehouse_combination_form:
-    path:     /refresh-product-warehouse-combination-form/{idProduct}
+    path:     /refresh-combination-form/{idProduct}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Warehouse:refreshProductWarehouseCombinationForm

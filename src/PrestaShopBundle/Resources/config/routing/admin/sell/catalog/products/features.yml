@@ -1,5 +1,5 @@
 admin_feature_get_feature_values:
-    path:     /get-feature-values/{idFeature}
+    path:     /{idFeature}
     methods:  [GET]
     defaults:
         idFeature: 0
