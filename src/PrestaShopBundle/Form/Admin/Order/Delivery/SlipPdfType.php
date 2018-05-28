@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Order\Delivery;
 
+use DateTime;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,15 +40,15 @@ class SlipPdfType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $now = new DateTime();
         $builder
             ->add(
                 'date_from',
                 DatePickerType::class,
                 [
                     'required' => false,
-                    'attr' => ['placeholder' => 'From'],
-                    'translation_domain' => 'Admin.Global',
-                    'data' => new \DateTime(),
+                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
+                    'data' => $now->format('YYYY-MM-DD'),
                 ]
             )
             ->add(
@@ -55,9 +56,8 @@ class SlipPdfType extends CommonAbstractType
                 DatePickerType::class,
                 [
                     'required' => false,
-                    'attr' => ['placeholder' => 'To'],
-                    'translation_domain' => 'Admin.Global',
-                    'data' => new \DateTime(),
+                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
+                    'data' => $now->format('YYYY-MM-DD'),
                 ]
             );
     }

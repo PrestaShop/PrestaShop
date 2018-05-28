@@ -24,11 +24,9 @@
  */
 
 import TranslatableInput from '../../../components/translatable-input';
-import initDatePickers from '../../../app/utils/datepicker';
 
-const $ = window.$;
+const $ = global.$;
 
 $(() => {
   new TranslatableInput();
-  initDatePickers();
 });

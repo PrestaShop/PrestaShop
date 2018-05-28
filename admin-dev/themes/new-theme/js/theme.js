@@ -26,7 +26,6 @@
 // Plugins CSS
 
 import 'dropzone/dist/min/dropzone.min.css';
-
 import 'magnific-popup/dist/magnific-popup.css';
 
 // Theme SCSS
@@ -47,6 +46,13 @@ import './product-page/index';
 import './translation-page/index';
 
 import Header from './header.js';
+import initDatePickers from './app/utils/datepicker';
 
-new NavBar();
-new Header();
+const $ = global.$;
+
+$(() => {
+  new NavBar();
+  new Header();
+
+  initDatePickers();
+});
