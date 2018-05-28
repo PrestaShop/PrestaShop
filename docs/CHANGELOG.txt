@@ -25,8 +25,20 @@ Release Notes for PrestaShop 1.6
 --------------------------------
 
 ####################################
+#   v1.6.1.19 - (2018-05-28)
+####################################
+
+    Fixed bugs:
+
+    BO: Fix directory listing
+
+    FO: Add compliance to GDPR law for blocknewsletter, contact form and mail alerts
+
+####################################
 #   v1.6.1.18 - (2018-02-05)
 ####################################
+
+    Fixed bugs:
 
     BO: Move to HTTPS
     BO: Update marketplace URL to http(S)
