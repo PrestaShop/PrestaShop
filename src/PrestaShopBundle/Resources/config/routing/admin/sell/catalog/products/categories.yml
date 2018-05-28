@@ -1,11 +1,11 @@
 admin_category_simple_add_form:
-    path:     /form/add/simple
+    path:     /add/simple
     methods:  [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Category:addSimpleCategoryForm
 
 admin_get_ajax_categories:
-    path:     /getList/{limit}
+    path:     /list/{limit}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Category:getAjaxCategories

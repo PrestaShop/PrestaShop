@@ -1,0 +1,3 @@
+_theme_catalog:
+    resource: "theme_catalog.yml"
+    prefix: /themes-catalog/

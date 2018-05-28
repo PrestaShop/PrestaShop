@@ -1,12 +1,12 @@
 admin_combination_generate_form:
-    path:     /{combinationIds}
+    path:     /form/{combinationIds}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Combination:generateCombinationForm
         combinationIds: 0
 
 admin_get_product_combinations:
-    path:     /product-combinations/{idProduct}
+    path:     /{idProduct}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Combination:getProductCombinations

@@ -1,3 +1,7 @@
+_addons:
+    resource: "addons.yml"
+    prefix: /addons/
+
 admin_module_cart:
     path: /cart/{moduleId}
     methods: [GET]

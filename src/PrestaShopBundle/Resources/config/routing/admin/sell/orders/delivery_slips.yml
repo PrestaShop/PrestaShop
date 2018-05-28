@@ -1,12 +1,12 @@
 admin_order_delivery_slip:
-    path: /delivery/slip
+    path: /
     methods:  [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Order/Delivery:slip
         _legacy_controller: AdminDeliverySlip
 
 admin_order_delivery_slip_pdf:
-    path: /delivery/slip/pdf
+    path: /pdf
     methods:  [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Order/Delivery:generatePdf

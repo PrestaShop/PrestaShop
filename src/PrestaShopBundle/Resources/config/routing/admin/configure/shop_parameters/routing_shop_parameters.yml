@@ -15,14 +15,14 @@ admin_preferences_save:
 
 # Order Preferences
 admin_order_preferences:
-    path: /order_preferences
+    path: /order-preferences
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:index'
         _legacy_controller: AdminOrderPreferences
 
 admin_order_preferences_save:
-    path: /order_preferences
+    path: /order-preferences
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:process'
@@ -45,14 +45,14 @@ admin_maintenance_save:
 
 # Product Preferences
 admin_product_preferences:
-    path: /product_preferences
+    path: /product-preferences
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:index'
         _legacy_controller: AdminPPreferences
 
 admin_product_preferences_process:
-    path: /product_preferences
+    path: /product-preferences
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:process'
@@ -61,14 +61,14 @@ admin_product_preferences_process:
 
 # Customer preferences
 admin_customer_preferences:
-    path: /customer_preferences
+    path: /customer-preferences
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\CustomerPreferences:index'
         _legacy_controller: AdminCustomerPreferences
 
 admin_customer_preferences_process:
-    path: /customer_preferences
+    path: /customer-preferences
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\CustomerPreferences:process'

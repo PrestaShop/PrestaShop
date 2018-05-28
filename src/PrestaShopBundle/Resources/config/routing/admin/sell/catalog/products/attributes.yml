@@ -27,7 +27,7 @@ admin_delete_all_attributes:
         idProduct: \d+
 
 admin_get_form_images_combination:
-    path:     /product-form-images/{idProduct}
+    path:     /form-images/{idProduct}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Attribute:getFormImages
