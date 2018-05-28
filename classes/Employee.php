@@ -261,7 +261,7 @@ class EmployeeCore extends ObjectModel
                 'visitorType' => 1,
                 'source' => 'backoffice',
             ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
@@ -507,10 +507,9 @@ class EmployeeCore extends ObjectModel
     public function favoriteModulesList()
     {
         return Db::getInstance()->executeS('
-			SELECT `module`
-			FROM `'._DB_PREFIX_.'module_preference`
-			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
-        );
+		SELECT `module`
+		FROM `'._DB_PREFIX_.'module_preference`
+		WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)');
     }
 
     /**
