@@ -33,7 +33,7 @@ export default new VueRouter({
   mode: 'history',
   base: (() => {
     const hasIndex = /(index\.php)/.exec(window.location.href);
-    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/stock`;
+    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/sell/stocks`;
   })(),
   routes: [
     {
