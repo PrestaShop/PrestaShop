@@ -24,56 +24,75 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Pack;
+namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use SimpleXMLElement;
 
 /**
- * Class LocalizationPackDownloader is responsible for downloading localization pack
+ * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com
  */
-final class LocalizationPackDownloader implements LocalizationPackDownloaderInterface
+final class RemoteLocalizationPackLoader implements LocalizationPackLoaderInterface
 {
     /**
      * @var ConfigurationInterface
      */
     private $configuration;
 
-    /**
-     * @var Tools
-     */
-    private $tools;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     * @param Tools $tools
-     */
-    public function __construct(
-        ConfigurationInterface $configuration,
-        Tools $tools
-    ) {
+    public function __construct(ConfigurationInterface $configuration)
+    {
         $this->configuration = $configuration;
-        $this->tools = $tools;
     }
 
     /**
-     * @param string $countryIsoCode
-     *
-     * @return bool|null|string
+     * {@inheritdoc}
      */
-    public function download($countryIsoCode)
+    public function getLocalizationPackList()
+    {
+        $apiUrl = $this->configuration->get('_PS_API_URL_');
+
+        $xmlLocalizationPacks = $this->loadXml($apiUrl.'/rss/localization.xml');
+        if (!$xmlLocalizationPacks) {
+            return null;
+        }
+
+        return $xmlLocalizationPacks;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocalizationPack($countryIso)
     {
         $psVersion = str_replace('.', '', $this->configuration->get('_PS_VERSION_'));
         $psVersion = substr($psVersion, 0, 2);
 
         $apiUrl = $this->configuration->get('_PS_API_URL_');
-        $localizationPackUrl = $apiUrl.'/localization/'.$psVersion.'/'.$countryIsoCode.'.xml';
+        $localizationPackUrl = sprintf('%s/localization/%s/%s.xml', $apiUrl, $psVersion, $countryIso);
 
-        $pack = $this->tools->getFileContents($localizationPackUrl);
+        $pack = $this->loadXml($localizationPackUrl);
         if (false === $pack) {
             return null;
         }
 
         return $pack;
+    }
+
+    /**
+     * Loads XML from local or remote file
+     *
+     * @param string $file
+     *
+     * @return SimpleXMLElement|null
+     */
+    private function loadXml($file)
+    {
+        $xml = simplexml_load_file($file);
+
+        if (false === $xml) {
+            return null;
+        }
+
+        return $xml;
     }
 }
