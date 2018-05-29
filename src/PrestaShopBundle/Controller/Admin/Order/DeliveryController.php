@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class DeliveryController extends FrameworkBundleAdminController
 {
     /**
+     * Main page for Delivery slips.
      *
      * @Template("@PrestaShop/Admin/Order/Delivery/slip.html.twig")
      * @param Request $request
@@ -101,6 +102,7 @@ class DeliveryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delivery slips PDF generator
      *
      * @param Request $request
      *

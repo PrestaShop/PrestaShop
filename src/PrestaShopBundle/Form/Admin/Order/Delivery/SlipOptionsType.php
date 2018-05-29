@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class generates the "Caching" form in Performance page
+ * This form class generates the "Options" form in Delivery slips page
  */
 class SlipOptionsType extends TranslatorAwareType
 {

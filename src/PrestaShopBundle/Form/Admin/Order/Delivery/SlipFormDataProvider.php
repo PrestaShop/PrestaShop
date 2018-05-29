@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class is responsible of managing the data manipulated using forms
- * in "Configure > Shop Parameters > General" page.
+ * in "Sells > Orders > Delivery Slips" page.
  */
 final class SlipFormDataProvider implements FormDataProviderInterface
 {

@@ -106,7 +106,6 @@ class DeliveryControllerTest extends WebTestCase
         );
     }
 
-
     public function testPdfActionWithInvalidData()
     {
         $this->client->request(

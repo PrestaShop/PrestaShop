@@ -31,7 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class generates the "Caching" form in Performance page
+ * This form class generates the "Pdf" form in Delivery slips page
  */
 class SlipPdfType extends CommonAbstractType
 {
