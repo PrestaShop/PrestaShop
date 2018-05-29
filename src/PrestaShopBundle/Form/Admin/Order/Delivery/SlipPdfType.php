@@ -48,7 +48,7 @@ class SlipPdfType extends CommonAbstractType
                 [
                     'required' => false,
                     'attr' => array('placeholder' => 'YYYY-MM-DD'),
-                    'data' => $now->format('YYYY-MM-DD'),
+                    'data' => $now->format('Y-m-d'),
                 ]
             )
             ->add(
@@ -57,7 +57,7 @@ class SlipPdfType extends CommonAbstractType
                 [
                     'required' => false,
                     'attr' => array('placeholder' => 'YYYY-MM-DD'),
-                    'data' => $now->format('YYYY-MM-DD'),
+                    'data' => $now->format('Y-m-d'),
                 ]
             );
     }

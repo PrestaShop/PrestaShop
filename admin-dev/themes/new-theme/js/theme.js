@@ -50,9 +50,9 @@ import initDatePickers from './app/utils/datepicker';
 
 const $ = global.$;
 
-$(() => {
-  new NavBar();
-  new Header();
+new NavBar();
+new Header();
 
+$(() => {
   initDatePickers();
 });
