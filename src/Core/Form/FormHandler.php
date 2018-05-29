@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form;
 use Exception;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolverException\UndefinedOptionsException;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * Complete implementation of FormHandlerInterface
