@@ -98,7 +98,7 @@
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.6.4",
-        "symfony/symfony": "^3.4.0",
+        "symfony/symfony": ">=3.4.8",
         "tecnickcom/tcpdf": "^6.2.12",
         "twig/twig": "^1.0||^2.0"
     },
