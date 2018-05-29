@@ -24,17 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Pack;
+namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
- * Interface LocalizationPackLoaderInterface defines contract for localization pack loader
+ * Interface LocalizationPackImporterInterface defines contract for localization importer
  */
-interface LocalizationPackLoaderInterface
+interface LocalizationPackImporterInterface
 {
     /**
-     * Loads localization packs from remote and local server
+     * Import localization pack
      *
-     * @return array|null
+     * @param LocalizationPackImportConfig $config
+     *
+     * @return array Returns errors if any or empty array otherwise
      */
-    public function getLocalizationPacks();
+    public function import(LocalizationPackImportConfig $config);
 }

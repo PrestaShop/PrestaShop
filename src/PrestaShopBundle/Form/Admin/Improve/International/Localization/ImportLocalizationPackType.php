@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
-use PrestaShop\PrestaShop\Core\Localization\Pack\LocalizationPackLoaderInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -41,21 +43,37 @@ class ImportLocalizationPackType extends TranslatorAwareType
     /**
      * @var LocalizationPackLoaderInterface
      */
-    private $localizationPackLoader;
+    private $remoteLocalizationPackLoader;
 
     /**
-     * @param TranslatorInterface             $translator
-     * @param array                           $locales
-     * @param LocalizationPackLoaderInterface $localizationPackLoader
+     * @var LocalizationPackLoaderInterface
+     */
+    private $localLocalizationPackLoader;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param LocalizationPackLoaderInterface $remoteLocalizationPackLoader
+     * @param LocalizationPackLoaderInterface $localLocalizationPackLoader
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LocalizationPackLoaderInterface $localizationPackLoader
+        LocalizationPackLoaderInterface $remoteLocalizationPackLoader,
+        LocalizationPackLoaderInterface $localLocalizationPackLoader,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
-        $this->localizationPackLoader = $localizationPackLoader;
+        $this->remoteLocalizationPackLoader = $remoteLocalizationPackLoader;
+        $this->localLocalizationPackLoader = $localLocalizationPackLoader;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -103,12 +121,49 @@ class ImportLocalizationPackType extends TranslatorAwareType
      */
     private function getLocalizationPackChoices()
     {
-        $localizationPacks = $this->localizationPackLoader->getLocalizationPacks();
+        $localizationPacks = $this->remoteLocalizationPackLoader->getLocalizationPackList();
+        if (null === $localizationPacks) {
+            $localizationPacks = $this->localLocalizationPackLoader->getLocalizationPackList();
+        }
+
         $choices = [];
 
-        foreach ($localizationPacks as $pack) {
-            $choices[$pack['name']] = $pack['iso_localization_pack'];
+        if ($localizationPacks) {
+            foreach ($localizationPacks as $pack) {
+                $iso = (string) $pack->iso;
+                $name = (string) $pack->name;
+
+                $choices[$name] = $iso;
+            }
         }
+
+        $rootDir = $this->configuration->get('_PS_ROOT_DIR_');
+
+        $finder = (new Finder())
+            ->files()
+            ->depth('1')
+            ->in($rootDir.'/localization')
+            ->name('/^([a-z]{2})\.xml$/');
+
+        foreach ($finder as $file) {
+            list($iso) = explode('.', $file->getFilename());
+
+            if (!in_array($iso, $choices)) {
+                $pack = simplexml_load_file($file->getPathname());
+                $name = $this->trans(
+                    '%s (local)',
+                    'Admin.International.Feature'
+                    [
+                        (string) $pack['name']
+                    ]
+                );
+
+                $choices[$name] = $iso;
+            }
+        }
+
+        // sort choices alphabetically
+        ksort($choices);
 
         return $choices;
     }

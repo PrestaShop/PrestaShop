@@ -24,19 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Pack;
+namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
+
+use SimpleXMLElement;
 
 /**
- * Interface LocalizationPackDownloaderInterface defines contract for localization pack downloader
+ * Interface LocalizationPackLoaderInterface defines contract for localization pack loaders
  */
-interface LocalizationPackDownloaderInterface
+interface LocalizationPackLoaderInterface
 {
     /**
-     * Download localization pack from remote server
+     * Get localization packs list
      *
-     * @param string $countryIsoCode
-     *
-     * @return mixed
+     * @return array|null Array of localization packs or null if packs are not available
      */
-    public function download($countryIsoCode);
+    public function getLocalizationPackList();
+
+    /**
+     * Get single localization pack data
+     *
+     * @param string $countryIso Country ISO Alpha-2 code
+     *
+     * @return SimpleXMLElement|null
+     */
+    public function getLocalizationPack($countryIso);
 }
