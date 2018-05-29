@@ -40,15 +40,16 @@ class SlipPdfType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $now = new DateTime();
+        $now = (new DateTime())->format('Y-m-d');
         $builder
             ->add(
                 'date_from',
                 DatePickerType::class,
                 [
                     'required' => false,
-                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
-                    'data' => $now->format('Y-m-d'),
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                    'data' => $now,
+                    'empty_data' => $now,
                 ]
             )
             ->add(
@@ -56,8 +57,9 @@ class SlipPdfType extends CommonAbstractType
                 DatePickerType::class,
                 [
                     'required' => false,
-                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
-                    'data' => $now->format('Y-m-d'),
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                    'data' => $now,
+                    'empty_data' => $now,
                 ]
             );
     }

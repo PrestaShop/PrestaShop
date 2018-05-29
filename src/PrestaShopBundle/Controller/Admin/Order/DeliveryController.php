@@ -121,7 +121,6 @@ class DeliveryController extends FrameworkBundleAdminController
             return $this->redirectToDefaultPage();
         }
 
-
         $formData = $request->request->get('form');
         $dateFrom = !empty($formData['pdf']['date_from']) ?
                   $formData['pdf']['date_from'] :

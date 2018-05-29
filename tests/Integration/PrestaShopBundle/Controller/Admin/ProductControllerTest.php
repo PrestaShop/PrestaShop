@@ -80,12 +80,12 @@ class ProductControllerTest extends WebTestCase
 
     public function getBulkActions()
     {
-       return array(
+        return array(
             ['activate_all'],
             ['deactivate_all'],
             ['duplicate_all'],
             ['delete_all']
-       );
+        );
     }
 
     protected function assertSessionFlagBagContainsFailureMessage()
