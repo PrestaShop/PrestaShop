@@ -2313,7 +2313,7 @@ class CartCore extends ObjectModel
             $id_warehouse = 0;
             foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val) {
                 if (array_key_exists((int)$id_war, $product['warehouse_list'])) {
-                    $product['carrier_list'] = Tools::array_replace($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
+                    $product['carrier_list'] = array_replace($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
                     if (!$id_warehouse) {
                         $id_warehouse = (int)$id_war;
                     }
@@ -3789,28 +3789,46 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Check if product quantities in Cart are available
+     * Check if product quantities in Cart are available.
      *
-     * @param bool $return_product Return the Product with not enough quantity instead
+     * @param bool $returnProductOnFailure Return the first found product with not enough quantity
      *
-     * @return bool|Product Indicates if there is enough in stock
+     * @return bool|array If all products are in stock: true; if not: either false or an array
+     *                    containing the first found product which is not in stock in the
+     *                    requested amount
      */
-    public function checkQuantities($return_product = false)
+    public function checkQuantities($returnProductOnFailure = false)
     {
         if (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_')) {
             return false;
         }
 
         foreach ($this->getProducts() as $product) {
-            if (!$this->allow_seperated_package && !$product['allow_oosp'] && StockAvailable::dependsOnStock($product['id_product']) &&
-                $product['advanced_stock_management'] && (bool)Context::getContext()->customer->isLogged() && ($delivery = $this->getDeliveryOption()) && !empty($delivery)) {
-                $product['stock_quantity'] = StockManager::getStockByCarrier((int)$product['id_product'], (int)$product['id_product_attribute'], $delivery);
+            if (
+                ! $this->allow_seperated_package &&
+                ! $product['allow_oosp'] &&
+                StockAvailable::dependsOnStock($product['id_product']) &&
+                $product['advanced_stock_management'] &&
+                (bool) Context::getContext()->customer->isLogged() &&
+                ($delivery = $this->getDeliveryOption()) &&
+                ! empty($delivery)
+            ) {
+                $product['stock_quantity'] = StockManager::getStockByCarrier(
+                    (int) $product['id_product'],
+                    (int) $product['id_product_attribute'],
+                    $delivery
+                );
             }
-            if (!$product['active'] || !$product['available_for_order']
-                || (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])) {
-                return $return_product ? $product : false;
+            
+            if (
+                ! $product['active'] ||
+                ! $product['available_for_order'] ||
+                (! $product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])
+            ) {
+                return $returnProductOnFailure ? $product : false;
             }
-            if (!$product['allow_oosp']) {
+            
+            if (! $product['allow_oosp']) {
                 $productQuantity = Product::getQuantity(
                     $product['id_product'],
                     $product['id_product_attribute'],
@@ -3819,7 +3837,7 @@ class CartCore extends ObjectModel
                     $product['id_customization']
                 );
                 if ($productQuantity < 0) {
-                    return $return_product ? $product : false;
+                    return $returnProductOnFailure ? $product : false;
                 }
             }
         }

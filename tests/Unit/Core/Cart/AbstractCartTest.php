@@ -52,28 +52,38 @@ abstract class AbstractCartTest extends IntegrationTestCase
     const DEFAULT_WRAPPING_FEE = 0;
 
     const PRODUCT_FIXTURES = [
-        1 => array('price' => 19.812),
-        2 => array('price' => 32.388),
-        3 => array('price' => 31.188),
-        4 => array('price' => 35.567, 'outOfStock' => true),
-        5 => array('price' => 23.86, 'quantity' => 50),
-        6 => array('price' => 12.34, 'quantity' => 10, 'is_pack' => true, 'pack_items' => array(array('id_product_fixture' => 5, 'quantity' => 10))),
+        1 => ['price' => 19.812],
+        2 => ['price' => 32.388],
+        3 => ['price' => 31.188],
+        4 => ['price' => 35.567, 'outOfStock' => true],
+        5 => ['price' => 23.86, 'quantity' => 50],
+        6 => [
+            'price' => 12.34,
+            'quantity' => 10,
+            'is_pack' => true,
+            'pack_items' => [
+                [
+                    'id_product_fixture' => 5,
+                    'quantity' => 10
+                ],
+            ],
+        ],
     ];
 
     const CART_RULES_FIXTURES = [
-        1  => array('priority' => 1, 'code' => 'foo1', 'percent' => 50, 'amount' => 0),
-        2  => array('priority' => 2, 'code' => 'foo2', 'percent' => 50, 'amount' => 0),
-        3  => array('priority' => 3, 'code' => 'foo3', 'percent' => 10, 'amount' => 0),
-        4  => array('priority' => 4, 'code' => 'foo4', 'percent' => 0, 'amount' => 5),
-        5  => array('priority' => 5, 'code' => 'foo5', 'percent' => 0, 'amount' => 500),
-        6  => array('priority' => 6, 'code' => 'foo6', 'percent' => 0, 'amount' => 10),
-        7  => array('priority' => 7, 'code' => 'foo7', 'percent' => 50, 'amount' => 0),
-        8  => array('priority' => 8, 'code' => 'foo8', 'percent' => 0, 'amount' => 5, 'productRestrictionId' => 2),
-        9  => array('priority' => 9, 'code' => 'foo9', 'percent' => 0, 'amount' => 500, 'productRestrictionId' => 2),
-        10 => array('priority' => 10, 'code' => 'foo10', 'percent' => 50, 'amount' => 0, 'productRestrictionId' => 2),
-        11 => array('priority' => 11, 'code' => 'foo11', 'percent' => 10, 'amount' => 0, 'productRestrictionId' => 2),
-        12 => array('priority' => 12, 'code' => 'foo12', 'percent' => 10, 'amount' => 0, 'productGiftId' => 3),
-        13 => array('priority' => 13, 'code' => 'foo13', 'percent' => 10, 'amount' => 0, 'productGiftId' => 4),
+        1  => ['priority' => 1, 'code' => 'foo1', 'percent' => 50, 'amount' => 0],
+        2  => ['priority' => 2, 'code' => 'foo2', 'percent' => 50, 'amount' => 0],
+        3  => ['priority' => 3, 'code' => 'foo3', 'percent' => 10, 'amount' => 0],
+        4  => ['priority' => 4, 'code' => 'foo4', 'percent' => 0, 'amount' => 5],
+        5  => ['priority' => 5, 'code' => 'foo5', 'percent' => 0, 'amount' => 500],
+        6  => ['priority' => 6, 'code' => 'foo6', 'percent' => 0, 'amount' => 10],
+        7  => ['priority' => 7, 'code' => 'foo7', 'percent' => 50, 'amount' => 0],
+        8  => ['priority' => 8, 'code' => 'foo8', 'percent' => 0, 'amount' => 5, 'productRestrictionId' => 2],
+        9  => ['priority' => 9, 'code' => 'foo9', 'percent' => 0, 'amount' => 500, 'productRestrictionId' => 2],
+        10 => ['priority' => 10, 'code' => 'foo10', 'percent' => 50, 'amount' => 0, 'productRestrictionId' => 2],
+        11 => ['priority' => 11, 'code' => 'foo11', 'percent' => 10, 'amount' => 0, 'productRestrictionId' => 2],
+        12 => ['priority' => 12, 'code' => 'foo12', 'percent' => 10, 'amount' => 0, 'productGiftId' => 3],
+        13 => ['priority' => 13, 'code' => 'foo13', 'percent' => 10, 'amount' => 0, 'productGiftId' => 4],
     ];
 
     /**
@@ -84,17 +94,17 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @var CartRule[]
      */
-    protected $cartRulesInCart = array();
+    protected $cartRulesInCart = [];
 
     /**
      * @var CartRule[]
      */
-    protected $cartRules = array();
+    protected $cartRules = [];
 
     /**
      * @var Product[]
      */
-    protected $products = array();
+    protected $products = [];
 
     public function setUp()
     {
@@ -103,7 +113,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->cart->id_lang     = (int) Context::getContext()->language->id;
         $this->cart->id_currency = (int) Context::getContext()->currency->id;
         $this->cart->id_shop     = (int) Context::getContext()->shop->id;
-        $this->cart->add(); // required, else we cannot get the content when calculation total
+        $this->cart->add(); // required, else we cannot get the content when calculating total
         Context::getContext()->cart = $this->cart;
         $this->resetCart();
         $this->insertProductsFromFixtures();
@@ -142,13 +152,14 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     protected function resetCart()
     {
-        $productData = $this->cart->getProducts(true);
-        foreach ($productData as $data) {
-            $this->cart->updateQty(0, $data['id_product']);
+        $productDatas = $this->cart->getProducts(true);
+        foreach ($productDatas as $productData) {
+            $this->cart->updateQty(0, $productData['id_product']);
         }
-        $carRuleData = $this->cart->getCartRules();
-        foreach ($carRuleData as $data) {
-            $this->cart->removeCartRule($data['id_cart_rule']);
+
+        $cartRuleDatas = $this->cart->getCartRules();
+        foreach ($cartRuleDatas as $cartRuleData) {
+            $this->cart->removeCartRule($cartRuleData['id_cart_rule']);
         }
     }
 
