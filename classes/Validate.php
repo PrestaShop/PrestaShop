@@ -47,6 +47,9 @@ class ValidateCore
      */
     public static function isEmail($email)
     {
+        if (preg_match('/[^\p{Common}\p{Latin}]/u', $email)) {
+            return !empty($email) && preg_match(Tools::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+\.*[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+@[a-z\p{L}0-9]+(?:[.]?[_a-z\p{L}0-9-])*\.[a-z\p{L}0-9]+$/ui'), $email);
+        }
         return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
