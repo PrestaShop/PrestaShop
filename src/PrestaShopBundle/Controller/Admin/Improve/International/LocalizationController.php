@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -112,7 +113,29 @@ class LocalizationController extends FrameworkBundleAdminController
         $localizationPackImportForm->handleRequest($request);
 
         if ($localizationPackImportForm->isSubmitted()) {
-            //@todo: import
+            $data = $localizationPackImportForm->getData();
+
+            $localizationImportConfig = new LocalizationPackImportConfig(
+                $data['iso_localization_pack'],
+                $data['content_to_import'],
+                $data['download_pack_data']
+            );
+
+            $localizationPackImporter = $this->get('prestashop.core.localization.pack.import.importer');
+            $errors = $localizationPackImporter->import($localizationImportConfig);
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Localization pack imported successfully.', 'Admin.International.Notification')
+                );
+
+                return $this->redirectToRoute('admin_international_localization_show_settings');
+            }
+
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
+            }
         }
 
         return $this->redirectToRoute('admin_international_localization_show_settings');
