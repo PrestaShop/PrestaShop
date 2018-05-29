@@ -24,7 +24,7 @@
  *-->
 <template>
   <div class="md-checkbox">
-    <label @click="onClick">
+    <label>
       <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
       <i class="md-checkbox-control"></i>
       <slot name="label"></slot>
@@ -34,7 +34,20 @@
 
 <script>
   export default {
-    props: ['id', 'model', 'isIndeterminate'],
+    props: {
+      id: {
+        type: String,
+      },
+      model: {
+        type: Object,
+        required: false,
+      },
+      isIndeterminate: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+    },
     watch: {
       checked(val) {
         this.$emit('checked', {
@@ -43,14 +56,8 @@
         });
       },
     },
-    methods: {
-      onClick() {
-        this.checked = !this.checked;
-      },
-    },
     data: () => ({
       checked: false,
     }),
   };
 </script>
-
