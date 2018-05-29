@@ -127,7 +127,7 @@ class DeliveryControllerTest extends WebTestCase
             $response->getStatusCode()
         );
         $this->assertArrayHasKey(
-            'failure',
+            'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
     }
