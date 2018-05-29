@@ -111,7 +111,7 @@ class DeliveryControllerTest extends WebTestCase
         $this->client->request(
             'POST',
             $this->router->generate(
-                'admin_order_delivery_pdf'
+                'admin_order_delivery_slip_pdf'
             ),
             [
                 'form' => [
@@ -128,33 +128,6 @@ class DeliveryControllerTest extends WebTestCase
         );
         $this->assertArrayHasKey(
             'failure',
-            self::$kernel->getContainer()->get('session')->getFlashBag()->all()
-        );
-    }
-
-    public function testPdfActionWithValidData()
-    {
-        $this->client->request(
-            'POST',
-            $this->router->generate(
-                'admin_order_delivery_slip'
-            ),
-            [
-                'form' => [
-                    'options' => [
-                        'number' => '100'
-                    ],
-                ],
-            ]
-        );
-        $response = $this->client->getResponse();
-        $this->assertEquals(
-            Response::HTTP_FOUND,
-            $response->getStatusCode()
-        );
-
-        $this->assertArrayHasKey(
-            'success',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
     }
