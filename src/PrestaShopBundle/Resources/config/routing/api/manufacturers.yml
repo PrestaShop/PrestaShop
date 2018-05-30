@@ -1,5 +1,5 @@
 api_stock_list_manufacturers:
-    path: /manufacturers
+    path: /
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.manufacturer.controller:listManufacturersAction

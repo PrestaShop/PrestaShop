@@ -1,17 +1,17 @@
 api_stock_list_products:
-    path: /stock
+    path: /
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
 
 api_stock_list_products_export:
-    path: /stock/export
+    path: /export
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsExportAction
 
 api_stock_list_product_combinations:
-    path: /stock/{productId}
+    path: /{productId}
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
@@ -19,7 +19,7 @@ api_stock_list_product_combinations:
         productId: \d+
 
 api_stock_edit_product:
-    path: /stock/product/{productId}
+    path: /product/{productId}
     methods: [POST]
     defaults:
         _controller: prestashop.core.api.stock.controller:editProductAction
@@ -27,7 +27,7 @@ api_stock_edit_product:
         productId: \d+
 
 api_stock_edit_product_combination:
-    path: /stock/product/{productId}/combination/{combinationId}
+    path: /product/{productId}/combination/{combinationId}
     methods: [POST]
     defaults:
         _controller: prestashop.core.api.stock.controller:editProductAction
@@ -36,7 +36,7 @@ api_stock_edit_product_combination:
         combinationId: \d+
 
 api_stock_bulk_edit_products:
-    path: /stock/products
+    path: /products
     methods: [POST]
     defaults:
         _controller: prestashop.core.api.stock.controller:bulkEditProductsAction

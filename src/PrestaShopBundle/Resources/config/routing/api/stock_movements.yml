@@ -1,11 +1,11 @@
 api_stock_list_movements:
-     path: /movements
+     path: /
      methods: [GET]
      defaults:
          _controller: prestashop.core.api.stock_movement.controller:listMovementsAction
 
 api_stock_product_list_movements:
-     path: /movements/product/{productId}
+     path: /product/{productId}
      methods: [GET]
      defaults:
          _controller: prestashop.core.api.stock_movement.controller:listMovementsAction
@@ -13,14 +13,14 @@ api_stock_product_list_movements:
          productId: \d+
 
 api_stock_list_movements_employees:
-     path: /movements/employees
+     path: /employees
      methods: [GET]
      defaults:
          _controller: prestashop.core.api.stock_movement.controller:listMovementsEmployeesAction
 
 
 api_stock_list_movements_types:
-     path: /movements/types
+     path: /types
      methods: [GET]
      defaults:
          _controller: prestashop.core.api.stock_movement.controller:listMovementsTypesAction

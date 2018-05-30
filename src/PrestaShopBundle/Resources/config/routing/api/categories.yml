@@ -1,5 +1,5 @@
 api_stock_list_categories:
-    path: /categories
+    path: /
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.category.controller:listCategoriesAction

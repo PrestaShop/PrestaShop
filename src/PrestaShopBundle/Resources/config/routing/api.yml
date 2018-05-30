@@ -1,26 +1,35 @@
-_api_stock_management:
-    resource: "api/routing_stock_management.yml"
+_api_stocks:
+    resource: "api/stocks.yml"
+    prefix: /stocks
 
-_api_stock_movement:
-    resource: "api/routing_stock_movement.yml"
+_api_stock_movements:
+    resource: "api/stock_movements.yml"
+    prefix: /stock-movements
 
-_api_supplier:
-    resource: "api/routing_supplier.yml"
+_api_suppliers:
+    resource: "api/suppliers.yml"
+    prefix: /suppliers
 
 _api_manufacturers:
-    resource: "api/routing_manufacturer.yml"
+    resource: "api/manufacturers.yml"
+    prefix: /manufacturers
 
-_api_category:
-    resource: "api/routing_category.yml"
+_api_categories:
+    resource: "api/categories.yml"
+    prefix: /categories
 
-_api_attribute:
-    resource: "api/routing_attribute.yml"
+_api_attributes:
+    resource: "api/attributes.yml"
+    prefix: /attributes
 
-_api_feature:
-    resource: "api/routing_feature.yml"
+_api_features:
+    resource: "api/features.yml"
+    prefix: /features
 
 _api_i18n:
-    resource: "api/routing_i18n.yml"
+    resource: "api/i18n.yml"
+    prefix: /i18n
 
-_api_translation:
-    resource: "api/routing_translation.yml"
+_api_translations:
+    resource: "api/translations.yml"
+    prefix: /translations

@@ -1,5 +1,5 @@
 api_stock_list_features:
-    path: /features
+    path: /
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.feature.controller:listFeaturesAction
