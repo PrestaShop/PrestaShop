@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,14 +46,14 @@ class MemcacheServerController extends FrameworkBundleAdminController
         return new JsonResponse($this->getMemcacheManager()->getServers());
     }
 
+    /**
+     * @DemoRestricted(redirectRoute="admin_servers_test")
+     *
+     * @param Request $request
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function testAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_servers_test');
-        }
-
         $queryValues = $request->query;
 
         if ($queryValues->has('server_ip') && $queryValues->has('server_port')) {
@@ -67,14 +69,14 @@ class MemcacheServerController extends FrameworkBundleAdminController
         return new JsonResponse(array('errors' => 'error'), 400);
     }
 
+    /**
+     * @DemoRestricted(redirectRoute="admin_servers_test")
+     *
+     * @param Request $request
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function addAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_servers_test');
-        }
-
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             array(
@@ -118,14 +120,14 @@ class MemcacheServerController extends FrameworkBundleAdminController
 
     }
 
+    /**
+     * @DemoRestricted(redirectRoute="admin_servers_test")
+     *
+     * @param Request $request
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function deleteAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_servers_test');
-        }
-
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             array(
@@ -153,7 +155,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @var MemcacheServerManager
+     * @return MemcacheServerManager
      */
     private function getMemcacheManager()
     {

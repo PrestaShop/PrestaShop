@@ -171,13 +171,11 @@ class SupplierCore extends ObjectModel
                 $counts[(int) $result['id_supplier']] = (int) $result['nb_products'];
             }
 
-            if (count($counts) && is_array($suppliers)) {
-                foreach ($suppliers as $key => $supplier) {
-                    if (isset($counts[(int) $supplier['id_supplier']])) {
-                        $suppliers[$key]['nb_products'] = $counts[(int) $supplier['id_supplier']];
-                    } else {
-                        $suppliers[$key]['nb_products'] = 0;
-                    }
+            foreach ($suppliers as $key => $supplier) {
+                if (array_key_exists((int) $supplier['id_supplier'], $counts)) {
+                    $suppliers[$key]['nb_products'] = $counts[(int) $supplier['id_supplier']];
+                } else {
+                    $suppliers[$key]['nb_products'] = 0;
                 }
             }
         }

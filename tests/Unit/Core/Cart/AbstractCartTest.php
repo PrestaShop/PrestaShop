@@ -388,14 +388,4 @@ abstract class AbstractCartTest extends IntegrationTestCase
             }
         }
     }
-
-    protected function addCartRuleToCart($cartRuleFixtureId)
-    {
-        $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-        if ($cartRule !== null) {
-            $this->cartRulesInCart[] = $cartRule;
-            $this->cart->addCartRule($cartRule->id);
-        }
-    }
-
 }
