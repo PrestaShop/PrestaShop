@@ -158,14 +158,30 @@ module.exports = {
     options_file_add_button: '//*[@id="form_step6_attachment_product_add"]',
     options_file_checkbox: '//*[@id="form_step6_attachments_0"]',
     catalog_product_table: '#product_catalog_list table.product',
-    get catalog_product_name() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a'; },
-    get catalog_product_reference() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(5)'; },
-    get catalog_product_category() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(6)'; },
-    get catalog_product_price() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(7)'; },
-    get catalog_product_quantity() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(8)'; },
-    get catalog_product_online() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9) > a > i'; },
-    get catalog_reset_filter() { return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]'; },
-    get catalog_submit_filter() { return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]'; },
+    get catalog_product_name() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a';
+    },
+    get catalog_product_reference() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(5)';
+    },
+    get catalog_product_category() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(6)';
+    },
+    get catalog_product_price() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(7)';
+    },
+    get catalog_product_quantity() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(8)';
+    },
+    get catalog_product_online() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9) > a > i';
+    },
+    get catalog_reset_filter() {
+      return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]';
+    },
+    get catalog_submit_filter() {
+      return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]';
+    },
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
@@ -202,6 +218,10 @@ module.exports = {
     action_duplicate_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"duplicate")])[%POS]',
     action_delete_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"delete")])[%POS]',
     delete_now_modal_button: '//*[@id="catalog_deletion_modal"]//button[contains(text(), "Delete now")]',
-    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td'
+    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td',
+    pagination_next: '//*[@id="pagination_next_url"]',
+    pagination_previous: '//*[@id="product_catalog_list"]//li[@class="page-item previous "]//a',
+    page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
+    item_per_page: '//*[@id="paginator_select_page_limit"]'
   }
 };
