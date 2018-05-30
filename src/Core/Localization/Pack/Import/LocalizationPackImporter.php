@@ -133,6 +133,12 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
      */
     private function checkConfig(LocalizationPackImportConfig $config)
     {
+        if (empty($config->getCountryIsoCode())) {
+            $error = $this->trans('Invalid selection', 'Admin.Notifications.Error');
+
+            return [$error];
+        }
+
         if (empty($config->getContentToImport())) {
             $error = $this->trans('Please select at least one item to import.', 'Admin.International.Notification');
 
