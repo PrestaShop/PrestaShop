@@ -24,6 +24,12 @@ module.exports = {
     delete_button: '//*[@id="table-address"]//a[@title="Delete"]',
     select_address: '//*[@id="table-address"]//input[@name="addressBox[]"]',
     bulk_actions_button: '//*[@id="bulk_action_menu_address"]',
-    bulk_actions_delete_button: '//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeleteaddress")]'
+    bulk_actions_delete_button: '//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeleteaddress")]',
+    required_fields_button: '//a[contains(@onclick,"requiredFieldsParameters")]',
+    company_field_input: '//input[contains(@name,"fieldsBox[]")]',
+    submit_field: '//button[contains(@name,"submitFields")]',
+    select_all_field_name: '//input[contains(@name,"checkme")]',
+    address_id: '//*[@id="table-address"]//td[2]',
+    empty_class: '//*[@id="table-address"]//div[contains(@class,"list-empty-msg")]'
   }
 };

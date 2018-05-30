@@ -28,7 +28,7 @@ module.exports = {
     scenario('Create a new "Address"', client => {
       test('should go to the "Addresses" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.addresses_submenu));
       test('should click on add new address', () => client.waitForExistAndClick(Addresses.new_address_button));
-      test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, addressData.email));
+      test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, date_time + addressData.email));
       test('should set "Identification number" input', () => client.waitAndSetValue(Addresses.id_number_input, addressData.id_number));
       test('should set "Address alias" input', () => client.waitAndSetValue(Addresses.address_alias_input, addressData.address_alias));
       test('should check that the "First name" is "John"', () => client.checkAttributeValue(Addresses.first_name_input, 'value', addressData.first_name));
@@ -46,8 +46,55 @@ module.exports = {
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
     }, 'customer');
   },
+  checkAddressRequiredInput: function (addressData, Check) {
+    scenario('Check required fields on Address page', client => {
+      if (Check === "allInput") {
+        test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, date_time + addressData.email));
+        test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+        test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'Your Zip/postal code is incorrect.', 'contain'));
+        test('should set "Postal code" input', () => client.waitAndSetValue(Addresses.zip_code_input, addressData.ZIP));
+        test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+        test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, '12 errors', 'contain'));
+      } else {
+        test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, "wrongEmail@gmail.com"));
+        test('should set "Identification number" input', () => client.waitAndSetValue(Addresses.id_number_input, addressData.id_number));
+        test('should set "Address alias" input', () => client.waitAndSetValue(Addresses.address_alias_input, addressData.address_alias));
+        test('should set "First name" input', () => client.waitAndSetValue(Addresses.first_name_input, addressData.first_name));
+        test('should set "Last name" input', () => client.waitAndSetValue(Addresses.last_name_input, addressData.last_name));
+        test('should set "VAT number" input', () => client.waitAndSetValue(Addresses.VAT_number_input, addressData.vat_number));
+        test('should set "Address" input', () => client.waitAndSetValue(Addresses.address_input, addressData.address + " " + date_time));
+        test('should set "Second address" input', () => client.waitAndSetValue(Addresses.address_second_input, addressData.second_address));
+        test('should set "Postal code" input', () => client.waitAndSetValue(Addresses.zip_code_input, addressData.ZIP));
+        test('should set "City" input', () => client.waitAndSetValue(Addresses.city_input, addressData.city));
+        test('should set "Pays" input', () => client.waitAndSelectByVisibleText(Addresses.country_input, addressData.country));
+        test('should set "Home phone" input', () => client.waitAndSetValue(Addresses.phone_input, addressData.home_phone));
+        if (Check === 'first') {
+          test('should set "Company" input', () => client.waitAndSetValue(Addresses.company, addressData.company));
+          test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'));
+          test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+          test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'This email address is not registered.', 'contain'));
+          test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, date_time + addressData.email));
+          test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+          test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'The other field is too long (300 chars max).', 'contain'));
+          test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, addressData.other));
+          test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+          test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+        } else if (Check === "second") {
+          test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, addressData.other));
+          test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+          test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'This email address is not registered.', 'contain'));
+          test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, date_time + addressData.email));
+          test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+          test('should verify the appearance of the red error message', () => client.checkTextValue(BO.alert_panel, 'The company field is required.', 'contain'));
+          test('should set "Company" input', () => client.waitAndSetValue(Addresses.company, addressData.company));
+          test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+          test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+        }
+      }
+    }, 'customer');
+  },
   checkAddressBO: function (addressData) {
-    scenario('Check the address creation', client => {
+    scenario('Check the address creation in the Back Office', client => {
       test('should check the address existence in the "addresses list"', () => {
         return promise
           .then(() => client.isVisible(Addresses.filter_by_address_input))
@@ -56,14 +103,16 @@ module.exports = {
       });
     }, 'customer');
   },
+
   /**
    * This function allows you to search for a address and edit it
    * @param dataAddress
    * @param newAddressData
    * @returns {*}
    */
+
   editAddress: function (dataAddress, newAddressData) {
-    scenario('Check the Address creation', client => {
+    scenario('Edit created Address', client => {
       test('should go to the "Addresses" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.addresses_submenu));
       test('should search for the address in the "Addresses list"', () => {
         return promise

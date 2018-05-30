@@ -330,7 +330,7 @@ class CommonClient {
   clickOnResumeButton(selector) {
     if (!global.isVisible) {
       return this.client
-        .click(selector)
+        .click(selector);
     } else {
       return this.client.pause(1000);
     }
@@ -458,6 +458,7 @@ class CommonClient {
       });
     }
   }
+
 }
 
 module.exports = CommonClient;
