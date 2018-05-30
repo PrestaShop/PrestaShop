@@ -58,13 +58,13 @@ abstract class AbstractCartTest extends IntegrationTestCase
         4 => ['price' => 35.567, 'outOfStock' => true],
         5 => ['price' => 23.86, 'quantity' => 50],
         6 => [
-            'price' => 12.34,
-            'quantity' => 10,
-            'is_pack' => true,
+            'price'      => 12.34,
+            'quantity'   => 10,
+            'is_pack'    => true,
             'pack_items' => [
                 [
                     'id_product_fixture' => 5,
-                    'quantity' => 10
+                    'quantity'           => 10,
                 ],
             ],
         ],
@@ -259,7 +259,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $cartRule                    = new CartRule;
         $cartRule->reduction_percent = $cartRuleData['percent'];
         $cartRule->reduction_amount  = $cartRuleData['amount'];
-        $cartRule->name              = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
+        $cartRule->name              = [Configuration::get('PS_LANG_DEFAULT') => 'foo'];
         if (!empty($cartRuleData['code'])) {
             $cartRule->code = $cartRuleData['code'];
         }
@@ -299,22 +299,30 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     protected function addCartRulesToCart(array $cartRuleFixtureIds)
     {
+        $allAdded = true;
         foreach ($cartRuleFixtureIds as $cartRuleFixtureId) {
             $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-            if ($cartRule !== null) {
+            if ($cartRule === null) {
+                $allAdded = false;
+            } else {
                 $this->cartRulesInCart[] = $cartRule;
-                $this->cart->addCartRule($cartRule->id);
+                if (!$this->cart->addCartRule($cartRule->id)) {
+                    $allAdded = false;
+                }
             }
         }
+
+        return $allAdded;
     }
 
     protected function addCartRuleToCart($cartRuleFixtureId)
     {
         $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-        if ($cartRule !== null) {
-            $this->cartRulesInCart[] = $cartRule;
-            $this->cart->addCartRule($cartRule->id);
+        if ($cartRule === null) {
+            return false;
         }
-    }
+        $this->cartRulesInCart[] = $cartRule;
 
+        return $this->cart->addCartRule($cartRule->id);
+    }
 }
