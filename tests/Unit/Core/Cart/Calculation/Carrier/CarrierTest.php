@@ -46,7 +46,7 @@ class CarrierTest extends AbstractCarrierTest
         // specific setUp
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $this->setCartCarrier($carrierId);
+        $this->setCartCarrierFromFixtureId($carrierId);
         $this->setCartAddress($addressId);
 
         // assertions
@@ -69,7 +69,7 @@ class CarrierTest extends AbstractCarrierTest
         // specific setUp
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $this->setCartCarrier($carrierId);
+        $this->setCartCarrierFromFixtureId($carrierId);
         $this->setCartAddress($addressId);
 
         // assertions
