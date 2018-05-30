@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Factory;
 
-use LocalizationPack;
+use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 
 /**
  * Class LocalizationPackFactory is responsible for creating localization pack instances
