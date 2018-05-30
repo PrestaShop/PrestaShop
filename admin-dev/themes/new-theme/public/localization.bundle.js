@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 5;
+/******/ 			var chunkId = 8;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,18 +706,14 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(390)(__webpack_require__.s = 390);
+/******/ 	return hotCreateRequire(388)(__webpack_require__.s = 388);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 199:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ 197:
+/***/ (function(module, exports) {
 
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__ = __webpack_require__(228);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(237);
 /**
  * 2007-2018 PrestaShop
  *
@@ -742,201 +738,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
-
 
 var $ = window.$;
 
 $(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__["a" /* default */]();
-  new __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__["a" /* default */]();
+  // show warning message when currency is changed
+  $('#form_configuration_default_currency').on('change', function () {
+    alert($(this).data('warning-message'));
+  });
 });
 
 /***/ }),
 
-/***/ 228:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-var TranslatableInput = function () {
-    function TranslatableInput() {
-        _classCallCheck(this, TranslatableInput);
-
-        $('body').on('click', '.js-locale-item', this.toggleInputs);
-    }
-
-    /**
-     * Toggle all translatable inputs in form in which locale was changed
-     *
-     * @param {Event} event
-     */
-
-
-    _createClass(TranslatableInput, [{
-        key: 'toggleInputs',
-        value: function toggleInputs(event) {
-            var localeItem = $(event.target);
-            var form = localeItem.closest('form');
-            var selectedLocale = localeItem.data('locale');
-
-            form.find('.js-locale-btn').text(selectedLocale);
-
-            form.find('input.js-locale-input').addClass('d-none');
-            form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
-        }
-    }]);
-
-    return TranslatableInput;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (TranslatableInput);
-
-/***/ }),
-
-/***/ 237:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-var StockManagementOptionHandler = function () {
-  function StockManagementOptionHandler() {
-    var _this = this;
-
-    _classCallCheck(this, StockManagementOptionHandler);
-
-    this.handle();
-
-    $('input[name="form[stock][stock_management]"]').on('change', function () {
-      return _this.handle();
-    });
-  }
-
-  _createClass(StockManagementOptionHandler, [{
-    key: 'handle',
-    value: function handle() {
-      var stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
-      var isStockManagementEnabled = parseInt(stockManagementVal);
-
-      this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
-      this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
-    }
-
-    /**
-     * If stock managament is disabled
-     * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
-     * otherwise it should be enabled
-     *
-     * @param {int} isStockManagementEnabled
-     */
-
-  }, {
-    key: 'handleAllowOrderingOutOfStockOption',
-    value: function handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-      var allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
-
-      if (isStockManagementEnabled) {
-        allowOrderingOosRadios.removeAttr('disabled');
-      } else {
-        allowOrderingOosRadios.val([1]);
-        allowOrderingOosRadios.attr('disabled', 'disabled');
-      }
-    }
-
-    /**
-     * If stock managament is disabled
-     * then 'Display available quantities on the product page' option must be No and disabled
-     * otherwise it should be enabled
-     *
-     * @param {int} isStockManagementEnabled
-     */
-
-  }, {
-    key: 'handleDisplayAvailableQuantitiesOption',
-    value: function handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-      var displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
-
-      if (isStockManagementEnabled) {
-        displayQuantitiesRadio.removeAttr('disabled');
-      } else {
-        displayQuantitiesRadio.val([0]);
-        displayQuantitiesRadio.attr('disabled', 'disabled');
-      }
-    }
-  }]);
-
-  return StockManagementOptionHandler;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (StockManagementOptionHandler);
-
-/***/ }),
-
-/***/ 390:
+/***/ 388:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(199);
+module.exports = __webpack_require__(197);
 
 
 /***/ })

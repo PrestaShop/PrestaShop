@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "47925bc2ba2375c84ead"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d24b02f55df48813d181"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,17 +706,17 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(395)(__webpack_require__.s = 395);
+/******/ 	return hotCreateRequire(389)(__webpack_require__.s = 389);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 202:
+/***/ 198:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(240);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(236);
 /**
  * 2007-2018 PrestaShop
  *
@@ -752,7 +752,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 240:
+/***/ 236:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -819,13 +819,7 @@ var TermsAndConditionsOptionHandler = function () {
   }, {
     key: 'handleTermsAndConditionsCmsSelect',
     value: function handleTermsAndConditionsCmsSelect(isTosEnabled) {
-      var tosCmsSelect = $('#form_general_tos_cms_id');
-
-      if (isTosEnabled) {
-        tosCmsSelect.removeAttr('disabled');
-      } else {
-        tosCmsSelect.attr('disabled', 'disabled');
-      }
+      $('#form_general_tos_cms_id').prop('disabled', !isTosEnabled);
     }
   }]);
 
@@ -836,10 +830,10 @@ var TermsAndConditionsOptionHandler = function () {
 
 /***/ }),
 
-/***/ 395:
+/***/ 389:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(202);
+module.exports = __webpack_require__(198);
 
 
 /***/ })
