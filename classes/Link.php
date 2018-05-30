@@ -749,6 +749,7 @@ class LinkCore
                     'AdminOrderPreferences' => 'admin_order_preferences',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminImport' => 'admin_import',
+                    'AdminLocalization' => 'admin_localization_show_settings',
                 );
 
                 if (isset($routes[$controller])) {

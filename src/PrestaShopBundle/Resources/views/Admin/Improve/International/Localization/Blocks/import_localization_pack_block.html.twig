@@ -26,7 +26,7 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block import_localization_pack %}
-  {{ form_start(localizationPackImportForm, {'action': path('admin_international_localization_import_pack')}) }}
+  {{ form_start(localizationPackImportForm, {'action': path('admin_localization_import_pack')}) }}
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">language</i> {{ 'Import a localization pack'|trans }}
