@@ -71,7 +71,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             ],
         ],
         7 => ['price' => 24.324, 'combinations' => ['a' => ['quantity' => 500], 'b' => ['quantity' => 400]]],
-        8 => ['price' => 26.364, 'quantity' => 30, 'customizations' => ['a' => [], 'b' => []]],
+        8 => ['price' => 26.364, 'quantity' => 30, 'customizations' => ['a', 'b']],
     ];
 
     const CART_RULES_FIXTURES = [
@@ -232,7 +232,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             }
 
             if (isset($productFixture['customizations'])) {
-                foreach ($productFixture['customizations'] as $customizationName => $customizationData) {
+                foreach ($productFixture['customizations'] as $customizationName) {
                     $customizationField             = new CustomizationField;
                     $customizationField->id_product = $product->id;
                     $customizationField->type       = 1; // text field
