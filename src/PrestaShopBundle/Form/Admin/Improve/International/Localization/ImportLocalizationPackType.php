@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -92,20 +93,13 @@ class ImportLocalizationPackType extends TranslatorAwareType
             ->add('content_to_import', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => true,
-                'choices' => [
-                    $this->trans('States', 'Admin.International.Feature') => 'states',
-                    $this->trans('Taxes', 'Admin.Global') => 'taxes',
-                    $this->trans('Currencies', 'Admin.Global') => 'currencies',
-                    $this->trans('Languages', 'Admin.Global') => 'languages',
-                    $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => 'units',
-                    $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => 'groups',
-                ],
+                'choices' => $this->getContentToImportChoices(),
                 'data' => [
-                    'states',
-                    'taxes',
-                    'currencies',
-                    'languages',
-                    'units',
+                    LocalizationPackImportConfig::CONTENT_STATES,
+                    LocalizationPackImportConfig::CONTENT_TAXES,
+                    LocalizationPackImportConfig::CONTENT_CURRENCIES,
+                    LocalizationPackImportConfig::CONTENT_LANGUAGES,
+                    LocalizationPackImportConfig::CONTENT_UNITS,
                 ],
             ])
             ->add('download_pack_data', SwitchType::class, [
@@ -166,5 +160,22 @@ class ImportLocalizationPackType extends TranslatorAwareType
         ksort($choices);
 
         return $choices;
+    }
+
+    /**
+     * Get import content choices
+     *
+     * @return array
+     */
+    private function getContentToImportChoices()
+    {
+        return [
+            $this->trans('States', 'Admin.International.Feature') => LocalizationPackImportConfig::CONTENT_STATES,
+            $this->trans('Taxes', 'Admin.Global') => LocalizationPackImportConfig::CONTENT_TAXES,
+            $this->trans('Currencies', 'Admin.Global') => LocalizationPackImportConfig::CONTENT_CURRENCIES,
+            $this->trans('Languages', 'Admin.Global') => LocalizationPackImportConfig::CONTENT_LANGUAGES,
+            $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => LocalizationPackImportConfig::CONTENT_UNITS,
+            $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => LocalizationPackImportConfig::CONTENT_GROUPS,
+        ];
     }
 }
