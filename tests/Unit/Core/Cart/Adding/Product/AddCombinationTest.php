@@ -34,7 +34,7 @@ use Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddCombinationTest extends AbstractCartTest
 {
-    public function testProductCanBeAddedInCartIfAvailable()
+    public function testCombinationCanBeAddedInCartIfAvailable()
     {
         $combination = $this->getCombinationFromFixtureName('a');
         $product     = new Product($combination->id_product);
@@ -50,7 +50,7 @@ class AddCombinationTest extends AbstractCartTest
         $this->assertEquals(489, $nbProduct);
     }
 
-    public function testProductCannotBeAddedInCartIfMoreThanStock()
+    public function testCombinationCannotBeAddedInCartIfMoreThanStock()
     {
         $combination = $this->getCombinationFromFixtureName('a');
         $product     = new Product($combination->id_product);
@@ -63,12 +63,12 @@ class AddCombinationTest extends AbstractCartTest
         $this->assertEquals(500, $nbProduct);
     }
 
-    public function testProductCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
+    public function testCombinationCanBeAddedInCartIfMoreThanStockButAvailableWhenOutOfStock()
     {
         $combination = $this->getCombinationFromFixtureName('a');
         $product     = new Product($combination->id_product);
 
-        $oldOrderOutOfStock = Configuration::get('PS_PACK_STOCK_TYPE');
+        $oldOrderOutOfStock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
         Configuration::set('PS_ORDER_OUT_OF_STOCK', 1);
         $product->out_of_stock = 1;
         $product->save();
