@@ -63,6 +63,9 @@ let config = {
     ],
     imports: [
         './js/pages/import'
+    ],
+    localization: [
+      './js/pages/localization'
     ]
   },
   output: {
