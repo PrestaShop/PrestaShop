@@ -30,6 +30,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Class AdvancedConfigurationType is responsible for building 'Improve > International > Localization' page
+ * 'Advanced' form
+ */
 class AdvancedConfigurationType extends AbstractType
 {
     /**

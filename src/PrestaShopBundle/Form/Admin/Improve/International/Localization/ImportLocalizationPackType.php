@@ -37,7 +37,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ImportLocalizationPackType defines 'Import a localization pack' form
+ * Class ImportLocalizationPackType is responsible for building 'Import a localization pack' form
  * in 'Improve > International > Localization'
  */
 class ImportLocalizationPackType extends TranslatorAwareType

@@ -37,7 +37,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class LocalizationConfigurationType
+ * Class LocalizationConfigurationType is responsible for building 'Improve > International > Localization' page
+ * 'Configuration' form
  */
 class LocalizationConfigurationType extends AbstractType
 {
