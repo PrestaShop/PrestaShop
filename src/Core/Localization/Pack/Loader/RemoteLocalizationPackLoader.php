@@ -27,12 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use SimpleXMLElement;
 
 /**
  * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com
  */
-final class RemoteLocalizationPackLoader implements LocalizationPackLoaderInterface
+final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 {
     /**
      * @var ConfigurationInterface
@@ -76,23 +75,5 @@ final class RemoteLocalizationPackLoader implements LocalizationPackLoaderInterf
         }
 
         return $pack;
-    }
-
-    /**
-     * Loads XML from local or remote file
-     *
-     * @param string $file
-     *
-     * @return SimpleXMLElement|null
-     */
-    private function loadXml($file)
-    {
-        $xml = simplexml_load_file($file);
-
-        if (false === $xml) {
-            return null;
-        }
-
-        return $xml;
     }
 }
