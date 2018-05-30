@@ -26,8 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
+/**
+ * Class LocalizationPackImportConfig
+ */
 class LocalizationPackImportConfig
 {
+    /**
+     * Available content to import options
+     */
+    const CONTENT_STATES = 'states';
+    const CONTENT_TAXES = 'taxes';
+    const CONTENT_CURRENCIES = 'currencies';
+    const CONTENT_LANGUAGES = 'languages';
+    const CONTENT_UNITS = 'units';
+    const CONTENT_GROUPS = 'groups';
+
     /**
      * @var string
      */
