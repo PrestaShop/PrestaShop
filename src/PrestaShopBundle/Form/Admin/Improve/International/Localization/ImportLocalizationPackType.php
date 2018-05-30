@@ -37,7 +37,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ImportLocalizationPackType
+ * Class ImportLocalizationPackType defines 'Import a localization pack' form
+ * in 'Improve > International > Localization'
  */
 class ImportLocalizationPackType extends TranslatorAwareType
 {
@@ -135,24 +136,20 @@ class ImportLocalizationPackType extends TranslatorAwareType
 
         $finder = (new Finder())
             ->files()
-            ->depth('1')
+            ->depth('0')
             ->in($rootDir.'/localization')
             ->name('/^([a-z]{2})\.xml$/');
 
         foreach ($finder as $file) {
             list($iso) = explode('.', $file->getFilename());
 
+            // if localization pack was not loaded yet and it exists locally
+            // then add it to choices list
             if (!in_array($iso, $choices)) {
-                $pack = simplexml_load_file($file->getPathname());
-                $name = $this->trans(
-                    '%s (local)',
-                    'Admin.International.Feature'
-                    [
-                        (string) $pack['name']
-                    ]
-                );
+                $pack = $this->localLocalizationPackLoader->getLocalizationPack($iso);
+                $packName = $this->trans('%s (local)', 'Admin.International.Feature', [(string) $pack['name']]);
 
-                $choices[$name] = $iso;
+                $choices[$packName] = $iso;
             }
         }
 
