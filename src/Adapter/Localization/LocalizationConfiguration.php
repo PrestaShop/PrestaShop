@@ -33,7 +33,8 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class LocalizationConfiguration
+ * Class LocalizationConfiguration is responsible for 'Improve > International > Localization' page
+ * 'Configuration' form data
  */
 class LocalizationConfiguration implements DataConfigurationInterface
 {

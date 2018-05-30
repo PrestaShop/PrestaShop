@@ -29,6 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Localization;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * Class LocalUnitsConfiguration is responsible for 'Improve > International > Localization' page
+ * 'Local units' form data
+ */
 class LocalUnitsConfiguration implements DataConfigurationInterface
 {
     /**

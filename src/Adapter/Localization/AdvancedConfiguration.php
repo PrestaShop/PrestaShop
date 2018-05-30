@@ -29,6 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Localization;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * Class AdvancedConfiguration is responsible for 'Improve > International > Localization' page
+ * 'Advanced' form data
+ */
 class AdvancedConfiguration implements DataConfigurationInterface
 {
     /**
