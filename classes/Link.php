@@ -750,6 +750,7 @@ class LinkCore
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
                     // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
+                    'AdminLocalization' => 'admin_localization_show_settings',
                 );
 
                 if (isset($routes[$controller])) {

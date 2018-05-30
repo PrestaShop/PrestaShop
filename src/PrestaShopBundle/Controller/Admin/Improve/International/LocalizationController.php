@@ -99,7 +99,7 @@ class LocalizationController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         if ($this->isDemoModeEnabled()) {
-            return $this->redirectToRoute('admin_international_localization_show_settings');
+            return $this->redirectToRoute('admin_localization_show_settings');
         }
 
         if (!in_array(
@@ -112,7 +112,7 @@ class LocalizationController extends FrameworkBundleAdminController
         )) {
             $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
 
-            return $this->redirectToRoute('admin_international_localization_show_settings');
+            return $this->redirectToRoute('admin_localization_show_settings');
         }
 
         $localizationFormHandler = $this->getLocalizationFormHandler();
@@ -127,13 +127,13 @@ class LocalizationController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_international_localization_show_settings');
+                return $this->redirectToRoute('admin_localization_show_settings');
             }
 
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_international_localization_show_settings');
+        return $this->redirectToRoute('admin_localization_show_settings');
     }
 
     /**
@@ -146,7 +146,7 @@ class LocalizationController extends FrameworkBundleAdminController
     public function importLocalizationPackAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
-            return $this->redirectToRoute('admin_international_localization_show_settings');
+            return $this->redirectToRoute('admin_localization_show_settings');
         }
 
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
@@ -170,7 +170,7 @@ class LocalizationController extends FrameworkBundleAdminController
                     $this->trans('Localization pack imported successfully.', 'Admin.International.Notification')
                 );
 
-                return $this->redirectToRoute('admin_international_localization_show_settings');
+                return $this->redirectToRoute('admin_localization_show_settings');
             }
 
             foreach ($errors as $error) {
@@ -178,7 +178,7 @@ class LocalizationController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_international_localization_show_settings');
+        return $this->redirectToRoute('admin_localization_show_settings');
     }
 
     /**
