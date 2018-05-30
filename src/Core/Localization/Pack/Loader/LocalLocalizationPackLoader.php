@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use SimpleXMLElement;
 
 /**
  * Class LocalLocalizationPackLoader is responsible for loading localization pack data from local host
@@ -66,7 +67,9 @@ final class LocalLocalizationPackLoader implements LocalizationPackLoaderInterfa
      */
     public function getLocalizationPack($countryIso)
     {
-        $rootDir = $this->configuration->get('_PS_ROOT_DIR_');
+        $rootDir = $this->configuration->get('_PS_HOST_MODE_') ?
+            $this->configuration->get('_PS_CORE_DIR_') :
+            $this->configuration->get('_PS_ROOT_DIR_');
 
         $localizationPackFile = sprintf('%s/localization/%s.xml', $rootDir, $countryIso);
         if (!file_exists($localizationPackFile)) {

@@ -25,7 +25,8 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Factory;
-use LocalizationPack;
+
+use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 
 /**
  * Interface LocalizationPackFactoryInterface defines contract for localization pack factory

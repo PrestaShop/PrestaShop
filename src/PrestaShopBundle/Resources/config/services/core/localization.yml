@@ -12,6 +12,7 @@ services:
             - '@prestashop.core.localization.pack.loader.local'
             - '@prestashop.core.localozation.pack.factory.localization_pack'
             - '@translator'
+            - '@prestashop.adapter.legacy.configuration'
 
     prestashop.core.localization.pack.loader.local:
         class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalLocalizationPackLoader'
