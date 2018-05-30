@@ -25,8 +25,8 @@
  */
 namespace PrestaShopBundle\Controller\Admin\Order;
 
-use OrderInvoice;
-use Validate;
+use PrestaShop\PrestaShop\Adapter\Order\Invoice;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
@@ -148,7 +148,7 @@ class DeliveryController extends FrameworkBundleAdminController
         }
 
         if (empty($errors)) {
-            if (!empty(OrderInvoice::getByDeliveryDateInterval($dateFrom, $dateTo))) {
+            if (!empty(Invoice::getByDeliveryDateInterval($dateFrom, $dateTo))) {
                 return $this->redirect(
                     $this->get('prestashop.adapter.legacy.context')
                     ->getAdminLink('AdminPdf') .

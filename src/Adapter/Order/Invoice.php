@@ -23,24 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use Validate as ValidateLegacy;
+use OrderInvoice as InvoiceLegacy;
 
-class Validate
+class Invoice
 {
-    public static function isOrderWay($way)
+    /**
+     * Return collection of Invoice
+     *
+     * @param string $dateFrom Date From
+     * @param string $dateTo   Date To
+     *
+     * @return array[InvoiceLegacy]
+     */
+    public static function getByDeliveryDateInterval($dateFrom, $dateTo)
     {
-        return ValidateLegacy::isOrderWay($way);
-    }
-
-    public static function isOrderBy($order)
-    {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
+        return InvoiceLegacy::getByDeliveryDateInterval($dateFrom, $dateTo);
     }
 }
