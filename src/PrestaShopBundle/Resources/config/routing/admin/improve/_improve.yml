@@ -3,7 +3,7 @@
 #    prefix: /design/
 
 _international:
-    resource: "international/international.yml"
+    resource: "international/_international.yml"
     prefix: /international/
 
 _modules:
