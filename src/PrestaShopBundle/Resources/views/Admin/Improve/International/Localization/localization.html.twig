@@ -60,3 +60,9 @@
     {{ form_end(localizationForm) }}
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/localization.bundle.js') }}"></script>
+{% endblock %}
