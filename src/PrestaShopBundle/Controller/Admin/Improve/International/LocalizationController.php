@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,11 +47,27 @@ class LocalizationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function showSettingsAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            return $this->redirectToDefaultPage();
+        }
+
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+        }
 
         if (!extension_loaded('openssl')) {
             $this->addFlash('warning', $this->trans('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.', 'Admin.International.Notification'));
@@ -79,6 +96,25 @@ class LocalizationController extends FrameworkBundleAdminController
      */
     public function saveSettingsAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if ($this->isDemoModeEnabled()) {
+            return $this->redirectToRoute('admin_international_localization_show_settings');
+        }
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_international_localization_show_settings');
+        }
+
         $localizationFormHandler = $this->getLocalizationFormHandler();
 
         $localizationForm = $localizationFormHandler->getForm();
@@ -109,6 +145,10 @@ class LocalizationController extends FrameworkBundleAdminController
      */
     public function importLocalizationPackAction(Request $request)
     {
+        if ($this->isDemoModeEnabled()) {
+            return $this->redirectToRoute('admin_international_localization_show_settings');
+        }
+
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
         $localizationPackImportForm->handleRequest($request);
 
