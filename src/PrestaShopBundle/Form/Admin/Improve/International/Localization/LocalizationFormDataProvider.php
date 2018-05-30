@@ -31,6 +31,10 @@ use PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration;
 use PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
+/**
+ * Class LocalizationFormDataProvider is responsible for handling
+ * 'Improve > International > Localization' page form data
+ */
 class LocalizationFormDataProvider implements FormDataProviderInterface
 {
     /**

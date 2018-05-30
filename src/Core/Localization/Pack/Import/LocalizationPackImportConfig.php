@@ -27,9 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
- * Class LocalizationPackImportConfig
+ * Class LocalizationPackImportConfig is value object which is responsible
+ * for storing localization pack configuration for import
  */
-class LocalizationPackImportConfig
+final class LocalizationPackImportConfig
 {
     /**
      * Available content to import options
