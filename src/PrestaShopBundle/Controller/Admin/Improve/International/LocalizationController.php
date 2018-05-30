@@ -182,7 +182,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns localization settings from handler
+     * Returns localization settings form handler
      *
      * @return FormHandlerInterface
      */
