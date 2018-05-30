@@ -3029,6 +3029,10 @@ class CartCore extends ObjectModel
         }
 
         $this->delivery_option = json_encode($delivery_option);
+
+        // update auto cart rules
+        CartRule::autoRemoveFromCart();
+        CartRule::autoAddToCart();
     }
 
     /**
