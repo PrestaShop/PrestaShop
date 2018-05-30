@@ -32,6 +32,7 @@ use CartRule;
 use Combination;
 use Configuration;
 use Context;
+use CustomizationField;
 use DateInterval;
 use DateTime;
 use Db;
@@ -70,6 +71,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             ],
         ],
         7 => ['price' => 24.324, 'combinations' => ['a' => ['quantity' => 500], 'b' => ['quantity' => 400]]],
+        8 => ['price' => 26.364, 'quantity' => 30, 'customizations' => ['a' => [], 'b' => []]],
     ];
 
     const CART_RULES_FIXTURES = [
@@ -113,6 +115,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
      */
     protected $combinations = [];
 
+    /**
+     * @var CustomizationField[]
+     */
+    protected $customizationFields = [];
+
     public function setUp()
     {
         parent::setUp();
@@ -134,6 +141,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
         // delete cart rules from cart
         foreach ($this->cartRulesInCart as $cartRule) {
             $cartRule->delete();
+        }
+
+        // delete customizations
+        foreach ($this->customizationFields as $customizationField) {
+            $customizationField->delete();
         }
 
         // delete combinations
@@ -187,6 +199,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
                 $product->out_of_stock = 0;
                 $product->quantity     = 0;
             }
+            if (!empty($productFixture['customizations'])) {
+                $product->customizable = 1;
+            }
             if (!empty($productFixture['taxRuleGroupId'])) {
                 $product->id_tax_rules_group = $productFixture['taxRuleGroupId'];
             }
@@ -213,6 +228,20 @@ abstract class AbstractCartTest extends IntegrationTestCase
                         $this->products[$packItem['id_product_fixture']]->id,
                         $packItem['quantity']
                     );
+                }
+            }
+
+            if (isset($productFixture['customizations'])) {
+                foreach ($productFixture['customizations'] as $customizationName => $customizationData) {
+                    $customizationField             = new CustomizationField;
+                    $customizationField->id_product = $product->id;
+                    $customizationField->type       = 1; // text field
+                    $customizationField->required   = 1;
+                    $customizationField->name       = [
+                        (int) Configuration::get('PS_LANG_DEFAULT') => $customizationName,
+                    ];
+                    $customizationField->add();
+                    $this->customizationFields[$customizationName] = $customizationField;
                 }
             }
 
@@ -266,6 +295,20 @@ abstract class AbstractCartTest extends IntegrationTestCase
     {
         if (isset($this->combinations[$combinationFixtureName])) {
             return $this->combinations[$combinationFixtureName];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int $customizationFixtureName fixture customization name
+     *
+     * @return CustomizationField|null
+     */
+    protected function getCustomizationFieldFromFixtureName($customizationFixtureName)
+    {
+        if (isset($this->customizationFields[$customizationFixtureName])) {
+            return $this->customizationFields[$customizationFixtureName];
         }
 
         return null;
