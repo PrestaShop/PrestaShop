@@ -25,12 +25,12 @@
  */
 namespace PrestaShopBundle\Controller\Admin\Order;
 
-use PrestaShop\PrestaShop\Adapter\Order\Invoice;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Adapter\Order\Invoice;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
