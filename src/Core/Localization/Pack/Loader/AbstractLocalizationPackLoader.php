@@ -26,26 +26,33 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 
+use ErrorException;
 use SimpleXMLElement;
 
 /**
- * Interface LocalizationPackLoaderInterface defines contract for localization pack loaders
+ * Class AbstractLocalizationPackLoader is abstract localization pack loader that implements XML loading from file
  */
-interface LocalizationPackLoaderInterface
+abstract class AbstractLocalizationPackLoader implements LocalizationPackLoaderInterface
 {
     /**
-     * Get localization packs list
+     * Loads XML from local or remote file
      *
-     * @return SimpleXMLElement|null SimpleXMLElement with localization packs data or null if packs are not available
-     */
-    public function getLocalizationPackList();
-
-    /**
-     * Get single localization pack data
-     *
-     * @param string $countryIso Country ISO Alpha-2 code
+     * @param string $file
      *
      * @return SimpleXMLElement|null
      */
-    public function getLocalizationPack($countryIso);
+    protected function loadXml($file)
+    {
+        try {
+            $xml = simplexml_load_file($file);
+        } catch (ErrorException $e) {
+            return null;
+        }
+
+        if (false === $xml) {
+            return null;
+        }
+
+        return $xml;
+    }
 }
