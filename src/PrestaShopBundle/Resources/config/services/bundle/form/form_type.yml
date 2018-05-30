@@ -367,3 +367,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.geolocation.options:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
