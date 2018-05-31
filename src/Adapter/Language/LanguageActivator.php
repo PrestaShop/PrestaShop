@@ -37,25 +37,31 @@ final class LanguageActivator implements LanguageActivatorInterface
     /**
      * {@inheritdoc}
      */
-    public function activate($langId)
+    public function enable($langId)
     {
-        $lang = new Language((int) $langId);
-
-        if (!$lang->active) {
-            $lang->active = 1;
-            $lang->save();
-        }
+        $this->setActive($langId, true);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function deactivate($langId)
+    public function disable($langId)
+    {
+        $this->setActive($langId, false);
+    }
+
+    /**
+     * Enable/disable language
+     *
+     * @param int $langId
+     * @param bool $status
+     */
+    private function setActive($langId, $status)
     {
         $lang = new Language((int) $langId);
 
-        if ($lang->active) {
-            $lang->active = 0;
+        if ((int) $lang->active !== (int) $status) {
+            $lang->active = (int) $status;
             $lang->save();
         }
     }
