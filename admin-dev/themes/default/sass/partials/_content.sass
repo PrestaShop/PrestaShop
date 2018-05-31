@@ -30,7 +30,7 @@ body
 #content.bootstrap
 	padding: 120px 10px 0 225px
 	&.with-tabs
-		padding-top: 150px
+		padding-top: 160px
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
@@ -229,9 +229,4 @@ body.display-modal
 			padding-left: $paddingLeftPageClosed
 
 			.page-head
-				h2.page-title
-					padding-left: $paddingLeftPageClosed
-				h4.page-subtitle
-					@include left($paddingLeftPageClosed)
-				ul.page-breadcrumb
-					@include left($paddingLeftPageClosed)
+				padding-left: $paddingLeftPageClosed - .9375rem

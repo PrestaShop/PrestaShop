@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -36,11 +36,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GeneralConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -51,12 +51,12 @@ class GeneralConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'catalog_mode' => $this->configuration->get('PS_CATALOG_MODE'),
+            'catalog_mode' => $this->configuration->getBoolean('PS_CATALOG_MODE'),
             'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT'),
             'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
             'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
-            'force_friendly_url' => $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT'),
-            'default_status' => $this->configuration->get('PS_PRODUCT_ACTIVATION_DEFAULT'),
+            'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
+            'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
         ];
     }
 

@@ -27,9 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
-use Exception;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShopException;
 
 /**
  * This class will provide data from DB / ORM about Currency
@@ -119,5 +116,17 @@ class CurrencyDataProvider
         if (false === $currencyEntity->save()) {
             throw new Exception('Failed saving Currency entity');
         }
+    }
+
+    /**
+     * Gets a legacy Currency instance by ID
+     *
+     * @param int $currencyId
+     *
+     * @return Currency
+     */
+    public function getCurrencyById($currencyId)
+    {
+        return new Currency($currencyId);
     }
 }

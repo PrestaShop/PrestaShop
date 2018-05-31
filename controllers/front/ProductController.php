@@ -58,8 +58,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             } else if (!$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
                 $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
             }
-
-            $idProductAttribute = $this->getIdProductAttribute();
+            $idProductAttribute = $this->getIdProductAttribute(false);
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -380,10 +379,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'quickview_html' => $this->render('catalog/_partials/quickview', $product_for_template),
             'product' => $product_for_template,
         )));
+
+        return;
     }
 
     public function displayAjaxRefresh()
@@ -394,7 +395,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
@@ -426,6 +427,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
+
+        return;
     }
 
     /**
@@ -936,25 +939,47 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $this->category;
     }
 
-    private function getIdProductAttribute()
+    /**
+     * Return id_product_attribute by id_product_attribute request parameter
+     * or by the group request parameter.
+     *
+     * @param bool $useGroups
+     * @return int
+     */
+    private function getIdProductAttribute($useGroups = false)
     {
-        $requestedIdProductAttribute = (int)Tools::getValue('id_product_attribute');
+        $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
+
+        if ($useGroups === true) {
+            $groups = Tools::getValue('group');
+
+            if (!empty($groups)) {
+                $requestedIdProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
+                    $this->product->id,
+                    $groups
+                );
+            }
+        }
 
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
             $productAttributes = array_filter(
                 $this->product->getAttributeCombinations(),
                 function ($elem) {
                     return $elem['quantity'] > 0;
-                });
+                }
+            );
             $productAttribute = array_filter(
                 $productAttributes,
                 function ($elem) use ($requestedIdProductAttribute) {
                     return $elem['id_product_attribute'] == $requestedIdProductAttribute;
-                });
+                }
+            );
+
             if (empty($productAttribute) && !empty($productAttributes)) {
                 return (int)array_shift($productAttributes)['id_product_attribute'];
             }
         }
+
         return $requestedIdProductAttribute;
     }
 
@@ -968,7 +993,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['id_product_attribute'] = $this->getIdProductAttribute();
+        $product['id_product_attribute'] = $this->getIdProductAttribute(true);
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
@@ -1171,31 +1196,38 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $product_full;
     }
 
+    /**
+     *
+     * @return array
+     */
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
-
         $page['body_classes']['product-id-'.$this->product->id] = true;
         $page['body_classes']['product-'.$this->product->name] = true;
         $page['body_classes']['product-id-category-'.$this->product->id_category_default] = true;
         $page['body_classes']['product-id-manufacturer-'.$this->product->id_manufacturer] = true;
         $page['body_classes']['product-id-supplier-'.$this->product->id_supplier] = true;
+
         if ($this->product->on_sale) {
             $page['body_classes']['product-on-sale'] = true;
         }
+
         if ($this->product->available_for_order) {
             $page['body_classes']['product-available-for-order'] = true;
         }
+
         if ($this->product->customizable) {
             $page['body_classes']['product-customizable'] = true;
         }
-
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
 
         return $page;
     }
 
     /**
+     * @inheritdoc
+     *
      * Indicates if the provided combination exists and belongs to the product
      *
      * @param int $productAttributeId

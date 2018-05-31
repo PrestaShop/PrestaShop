@@ -25,6 +25,131 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.3.3 - (2018-05-24)
+####################################
+- Back Office:
+  - Bug fix:
+    - #9026: Fixed display error on back office module selection list
+- Front Office:
+  - New feature:
+    - #9099: Follow-up to: display GDPR consent checkbox in contactform
+  - Improvement:
+    - #9104: Add compliance to GDPR law for ps_emailsubscription module
+
+####################################
+#   v1.7.3.2 - (2018-05-03)
+####################################
+- Back Office:
+  - Improvement:
+    - #8834: Adds missing Persian translations for data and samples
+  - Bug fix:
+    - #8752: Check product availability before validating orders
+    - #8975: Fix broken "you must first create a new language" link in BO Translations
+    - #8965: Fix theme install with prestatrust modules
+    - #8517: Fixed bug when using 2 swap in 1 form
+    - #8948: Fixed update of combinations
+    - #8762: Specific price created for a cart is displayed in the front end as the product price
+- Front Office:
+  - Improvement:
+    - #8835: Replace Noto Sans font with Vazir font for Farsi in Classic theme
+  - Bug fix:
+    - #9005: Fix cannot order oos product even if it's allowed
+    - #8951: Fix error display on cart quantity edition
+    - #8946: Fix button show password height on Safari
+    - #8940: Check product availability in order step
+    - #8931: Out of stock message display only if customer can order the product
+- Core:
+  - Bug fix:
+    - #8973: Fixed undefined class constant
+    - #8850: Fix profile permission array construction
+    - #8679: Catch Throwable errors on CLI install and check Theme instance in context
+- Installer:
+  - Improvement:
+    - #8843: Minor install improvements
+  - Bug fix:
+    - #8949: Remove addition of . folder in release archives
+- Localization:
+  - Improvement:
+    - #8832: Update Iran tax rate
+
+####################################
+#   v1.7.3.1 - (2018-04-09)
+####################################
+- Back Office:
+  - New feature:
+    - #8849: Add User club and UserVoice on BO link footer
+  - Improvement:
+    - #8664: Change employee icon
+    - #8500: Make sure shop list in header is scrollable with lot of items
+    - #8780: Improve BO speed by removing menu images
+    - #8725: Replace Google+ link on BO footer by Youtube link
+  - Bug fix:
+    - #8925: Stop generating RTL css file for the default theme using SASS
+    - #8921: Fixed CDN management in Performance page
+    - #8871: Improved rendering of combinations in Product page
+    - #8779: Little css override for modal title
+    - #8631: Request module zip for upgrade ONLY when the version available is higher
+    - #8714: Update loaded details from database on module action
+    - #8696: Fix translation issue during language install
+    - #8648: Fix modal backdrop not removed when uninstalling a module
+    - #8618: Fix type warning in order detail
+    - #8525: "No tax" price option is now well saved in admin product page
+    - #8476: Fix customer search in new order form
+    - #8234: Fixed bug on save specific price priority for specific product
+- Front Office:
+  - Bug fix:
+    - #8873: Fix contactform module issues
+    - #8856: Fixed undefined variables when an url is called in ajax
+    - #8847: Override advertising module on classic template to fix image width
+    - #8845: Fix search bar on header when it moves from hook and improve header structure #2
+    - #7775: Resolve incompatibility between canonical redirections, attributes and product route not only containing rewrite
+    - #8846: Fix menu width and submenu hover on header
+    - #8522: Fixed specific price percentage rounding on front product page
+- Core:
+  - Improvement:
+    - #8867: Rely on the right legacy container if available on modules
+    - #8584: Update toCamelCase
+    - #8795: Minor improvements during install
+  - Bug fix:
+    - #8922: Fixed access to Front Office container from modules
+    - #8766: Show unit price within a tax in order confirmation e-mail
+    - #8607: Fix pack stock issues
+    - #8711: Default AJAX Relevance search sort order is wrong
+    - #8803: Stop full object exposure on the front end
+    - #8708: Debug of Tools::strReplaceFirst that do not correctly compare the return of strpos + PhpDoc
+    - #8498: Fixed bug on reorder with free gift in the cart
+    - #8543: Layout broken by cache clear
+    - #8669: Make sure all adresses are reset on cart
+    - #8462: Fix empty module return on actionEmailSendBefore breaks all email send
+    - #8277: CustomerAddressFormatter states were queried without the status (active) check causing disabling states in BO useless
+- Installer:
+  - Improvement:
+    - #8860: Make the dezipper great again
+    - #8806: Sample products in FA
+  - Bug fix:
+    - #8913: Fix issue with pack in fixtures (installer)
+    - #8891: Fix dezipper redirect
+    - #8858: Include docs when creating zip build
+- Tests:
+  - New feature:
+    - #8812: Delete product
+    - #8829: Add script for screenshot display on Travis
+  - Improvement:
+    - #8881: Check the pagination of product in the Front Office
+    - #8898: Check generated combinations table
+    - #8903: Add some fixes to the script
+    - #8813: Check the product discount in the Front Office
+    - #8805: Reset module Welcome if the RESUME button does not exist
+    - #8878: Check the appearance of tinymce field on the product page
+    - #8854: Check the change of the default combination from the edition page
+    - #8819: Fix sort product script
+    - #8810: Check the total price in the shopping cart
+    - #8815: Re-enable functional tests
+  - Bug fix:
+    - #8842: Fixed Travis build (update Chrome browser version)
+    - #8746: Make file copy on ModuleSelfConfiguration mockable
+
+####################################
 #   v1.7.3.0 - (2018-02-28)
 ####################################
 - Back Office:

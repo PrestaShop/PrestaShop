@@ -317,15 +317,9 @@ class CartRuleCore extends ObjectModel
         static $haveCartRuleToday = array();
 
         if (!isset($haveCartRuleToday[$idCustomer])) {
-            $sql = '(SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_to >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_to <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1)';
-
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_from <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1) LIMIT 1';
+            $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
+                 'WHERE NOW() BETWEEN date_from AND date_to '.
+                 'AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1';
 
             $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
         }
@@ -367,8 +361,7 @@ class CartRuleCore extends ObjectModel
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
 				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
-        $sql_part2 = ' AND cr.date_from < "' . date('Y-m-d H:i:59') . '"
-				AND cr.date_to > "' . date('Y-m-d H:i:59') . '"
+        $sql_part2 = ' AND NOW() BETWEEN cr.date_from AND cr.date_to
 				' . ($active ? 'AND cr.`active` = 1' : '') . '
 				' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
@@ -1113,7 +1106,7 @@ class CartRuleCore extends ObjectModel
             if ($this->reduction_percent && $this->reduction_product == 0) {
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
-                foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule) {
+                foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
                     $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_COMPUTE_PRECISION_);
                 }
 
@@ -1506,8 +1499,7 @@ class CartRuleCore extends ObjectModel
 		WHERE cr.active = 1
 		AND cr.code = ""
 		AND cr.quantity > 0
-		AND cr.date_from < "' . date('Y-m-d H:i:s') . '"
-		AND cr.date_to > "' . date('Y-m-d H:i:s') . '"
+		AND NOW() BETWEEN cr.date_from AND cr.date_to
 		AND (
 			cr.id_customer = 0
 			' . ($context->customer->id ? 'OR cr.id_customer = ' . (int) $context->cart->id_customer : '') . '

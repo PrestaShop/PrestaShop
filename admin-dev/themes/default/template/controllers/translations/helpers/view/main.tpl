@@ -363,7 +363,7 @@
 			<p class="alert alert-info">
 				{l s='Copies data from one language to another.' d='Admin.International.Help'}<br />
 				{l s='Warning: This will replace all of the existing data inside the destination language.' d='Admin.International.Help'}<br />
-        {l s='If necessary [1][2] you must first create a new language[/1].' sprintf=['[1]' => "<a href=\"-{$url_create_language}-\" class=\"btn btn-link\">", '[/1]' => '</a>', '[2]' => '<i class="icon-external-link-sign"></i>'] d='Admin.International.Help'}
+        {l s='If necessary [1][2] you must first create a new language[/1].' sprintf=['[1]' => "<a href=\"{$url_create_language}\" class=\"btn btn-link\">", '[/1]' => '</a>', '[2]' => '<i class="icon-external-link-sign"></i>'] d='Admin.International.Help'}
 			</p>
 			<div class="form-group">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From' d='Admin.Global'}</label>

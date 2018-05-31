@@ -91,7 +91,7 @@ function initCommands(client) {
       .selectByVisibleText(selector, value);
   });
 
-  client.addCommand('signInBO', function (selector, link = URL, login = 'demo@prestashop.com', password='prestashop_demo') {
+  client.addCommand('signInBO', function (selector, link = URL, login = 'demo@prestashop.com', password = 'prestashop_demo') {
     this.selector = globals.selector;
     return client
       .url('http://' + link + '/admin-dev')
@@ -149,6 +149,20 @@ function initCommands(client) {
       .then(ids => client.switchTab(ids[id]))
       .refresh();
   });
+
+  client.addCommand('isOpen', function (selector) {
+    return client
+      .getAttribute(selector + '/..', 'class')
+      .then((text) => {
+        global.isOpen = text.indexOf('open');
+        if (global.isOpen !== -1) {
+          return global.isOpen = true;
+        } else {
+          return global.isOpen = false;
+        }
+      });
+  });
+
 }
 
 module.exports = {

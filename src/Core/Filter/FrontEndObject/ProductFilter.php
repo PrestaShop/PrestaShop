@@ -116,6 +116,7 @@ class ProductFilter extends HashMapWhitelistFilter
             "update_quantity_url",
             "url",
             "weight_unit",
+            "seo_availability",
         );
 
         $this->whitelist($whitelist);

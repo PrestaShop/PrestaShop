@@ -302,13 +302,13 @@ class AdminStoresControllerCore extends AdminController
 
         $hours_temp = ($this->getFieldValue($obj, 'hours'));
         if (is_array($hours_temp) && !empty($hours_temp)) {
-            $Langs = Language::getLanguages(true);
+            $langs = Language::getLanguages(false);
             $hours_temp = array_map('json_decode', $hours_temp);
             $hours = array_map(
                 array($this, 'adaptHoursFormat'),
                 $hours_temp
             );
-            $hours = (count($Langs) > 1) ? $hours : $hours[reset($Langs)['id_lang']];
+            $hours = (count($langs) > 1) ? $hours : $hours[reset($langs)['id_lang']];
         }
 
         $this->fields_value = array(
@@ -324,7 +324,7 @@ class AdminStoresControllerCore extends AdminController
     public function postProcess()
     {
         if (isset($_POST['submitAdd'.$this->table])) {
-            $langs = Language::getLanguages();
+            $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
                 if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'))) {

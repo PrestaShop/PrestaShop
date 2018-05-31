@@ -40,7 +40,7 @@
         itemscope
         itemtype="https://schema.org/Offer"
       >
-        <link itemprop="availability" href="https://schema.org/InStock"/>
+        <link itemprop="availability" href="{$product.seo_availability}"/>
         <meta itemprop="priceCurrency" content="{$currency.iso_code}">
 
         <div class="current-price">

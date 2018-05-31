@@ -457,9 +457,6 @@ class MetaCore extends ObjectModel
             if (!empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['meta_description']);
             }
-            if (!empty($row['meta_title'])) {
-                $row['meta_title'] = $row['meta_title'];
-            }
             return Meta::completeMetaTags($row, $row['name']);
         }
 

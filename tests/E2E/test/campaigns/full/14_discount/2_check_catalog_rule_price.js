@@ -4,7 +4,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const commonScenarios = require('../../common_scenarios/discount');
 
-var catalogPriceRule = [{
+let catalogPriceRule = [{
   name: 'Catalog_price_1',
   type: "percentage",
   reduction: '18'

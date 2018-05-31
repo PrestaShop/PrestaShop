@@ -8,8 +8,8 @@ module.exports = {
     search_input: 'div.pstaggerAddTagWrapper > input',
     search_button: '.btn.btn-primary.pull-right.search-button',
     page_loaded: '.module-search-result-wording',
-    installed_modules_tabs: '(//div[@class="page-head-tabs"]/a)[2]',
-    selection_modules_tabs: '(//div[@class="page-head-tabs"]/a)[1]',
+    installed_modules_tabs: '#subtab-AdminModulesManage',
+    selection_modules_tabs: '#subtab-AdminModulesCatalog',
     modules_search_input: '.pstaggerAddTagInput',
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
@@ -60,7 +60,7 @@ module.exports = {
     configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
     notification_number: '//*[@id="head_tabs"]//span[@class="notification-counter"]',
-
+    selection_tab: '//*[@id="head_tabs"]/a[1]',
     ModuleBankTransferPage: {
       account_owner_input: '//*[@id="BANK_WIRE_OWNER"]',
       account_details_textarea: '//*[@id="BANK_WIRE_DETAILS"]',

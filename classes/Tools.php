@@ -412,17 +412,69 @@ class ToolsCore
     }
 
     /**
-    * Secure an URL referrer
-    *
-    * @param string $referrer URL referrer
-    * @return string secured referrer
-    */
+     * Returns a safe URL referrer
+     *
+     * @param string $referrer URL referrer
+     * @return string secured referrer
+     */
     public static function secureReferrer($referrer)
     {
-        if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer)) {
+        if (static::urlBelongsToShop($referrer)) {
             return $referrer;
         }
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Indicates if the provided URL belongs to this shop (relative urls count as belonging to the shop)
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function urlBelongsToShop($url)
+    {
+        $urlHost = Tools::extractHost($url);
+
+        return (empty($urlHost) || $urlHost === Tools::getServerName());
+    }
+
+    /**
+     * Safely extracts the host part from an URL
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function extractHost($url)
+    {
+        if (PHP_VERSION_ID >= 50628) {
+            $parsed = parse_url($url);
+            if (!is_array($parsed)) {
+                return $url;
+            }
+            if (empty($parsed['host']) || empty($parsed['scheme'])) {
+                return '';
+            }
+            return $parsed['host'];
+        }
+
+        // big workaround needed
+        // @see: https://bugs.php.net/bug.php?id=73192
+        // @see: https://3v4l.org/nFYJh
+
+        $matches = [];
+        if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
+            // relative url
+            return '';
+        }
+        $authority = $matches['authority'];
+
+        if (!preg_match('/(?:(?<user>.+):(?<pass>.+)@)?(?<domain>[\w.-]+)(?::(?<port>\d+))?/ui', $authority, $matches)) {
+            return '';
+        }
+
+        return $matches['domain'];
     }
 
     /**
@@ -452,7 +504,6 @@ class ToolsCore
         return $value;
     }
 
-
     /**
      * Get all values from $_POST/$_GET
      * @return mixed
@@ -462,9 +513,16 @@ class ToolsCore
         return $_POST + $_GET;
     }
 
+    /**
+     * Checks if a key exists either in $_POST or $_GET
+     * 
+     * @param string $key
+     * 
+     * @return bool
+     */
     public static function getIsset($key)
     {
-        if (!isset($key) || empty($key) || !is_string($key)) {
+        if (! is_string($key)) {
             return false;
         }
         return isset($_POST[$key]) || isset($_GET[$key]);
@@ -523,39 +581,43 @@ class ToolsCore
     }
 
     /**
-     * Set cookie id_lang
+     * If necessary change cookie language ID and context language
+     *
+     * @param Context|null $context
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public static function switchLanguage(Context $context = null)
     {
-        if (!$context) {
+        if (null === $context) {
             $context = Context::getContext();
         }
 
-        // Install call the dispatcher and so the switchLanguage
-        // Stop this method by checking the cookie
+        // On PrestaShop installations Dispatcher::__construct() gets called (and so Tools::switchLanguage())
+        // Stop in this case by checking the cookie
         if (!isset($context->cookie)) {
             return;
         }
 
-        if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso))) {
+        if (
+            ($iso = Tools::getValue('isolang')) &&
+            Validate::isLanguageIsoCode($iso) &&
+            ($id_lang = (int) Language::getIdByIso($iso))
+        ) {
             $_GET['id_lang'] = $id_lang;
         }
 
-        // update language only if new id is different from old id
-        // or if default language changed
-        $cookie_id_lang = $context->cookie->id_lang;
-        $configuration_id_lang = Configuration::get('PS_LANG_DEFAULT');
-        if ((($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $cookie_id_lang != (int)$id_lang)
-            || (($id_lang == $configuration_id_lang) && Validate::isUnsignedId($id_lang) && $id_lang != $cookie_id_lang)) {
-            $context->cookie->id_lang = $id_lang;
-            $language = new Language($id_lang);
+        // Only switch if new ID is different from old ID
+        $newLanguageId = (int) Tools::getValue('id_lang');
+        if (
+            Validate::isUnsignedId($newLanguageId) &&
+            $context->cookie->id_lang !== $newLanguageId
+        ) {
+            $context->cookie->id_lang = $newLanguageId;
+            $language = new Language($newLanguageId);
             if (Validate::isLoadedObject($language) && $language->active) {
                 $context->language = $language;
-            }
-
-            $params = $_GET;
-            if (Configuration::get('PS_REWRITING_SETTINGS') || !Language::isMultiLanguageActivated()) {
-                unset($params['id_lang']);
             }
         }
     }
@@ -732,9 +794,12 @@ class ToolsCore
      * Implement array_replace for PHP <= 5.2
      *
      * @return array|mixed|null
+     *
+     * @deprecated since version 1.7.4.0, to be removed.
      */
     public static function array_replace()
     {
+        Tools::displayAsDeprecated('Use PHP\'s array_replace() instead');
         if (!function_exists('array_replace')) {
             $args     = func_get_args();
             $num_args = func_num_args();
@@ -972,20 +1037,36 @@ class ToolsCore
     }
 
     /**
-    * Display an error according to an error code
+    * Depending on _PS_MODE_DEV_ throws an exception or returns a error message
     *
-    * @param string $string Error message
-    * @param bool $htmlentities By default at true for parsing error message with htmlentities
+    * @param string|null $errorMessage Error message (defaults to "Fatal error")
+    * @param bool $htmlentities DEPRECATED since 1.7.4.0
+    * @param Context|null $context DEPRECATED since 1.7.4.0
+    *
+    * @return string
+    *
+    * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
     */
-    public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
+    public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
-        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            throw new PrestaShopException($string);
-        } else if ('Fatal error' !== $string) {
-            return $string;
+        if (null !== $htmlentities) {
+            self::displayParameterAsDeprecated('htmlentities');
+        }
+        if (null !== $context) {
+            self::displayParameterAsDeprecated('context');
+        }
+        
+        if (null === $errorMessage) {
+            $errorMessage = Context::getContext()
+                ->getTranslator()
+                ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
-        return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
+        if (_PS_MODE_DEV_) {
+            throw new PrestaShopException($errorMessage);
+        }
+        
+        return $errorMessage;
     }
 
     /**
@@ -2557,6 +2638,9 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/themes/*/assets/cache/*.js',
+            '*/themes/*/assets/cache/*.css',
+            '*/themes/*/assets/css/*',
         );
 
         // Directories
@@ -3841,7 +3925,7 @@ exit;
             return;
         }
 
-        $sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
+        $sort_function = function($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
 
         uasort($rows, $sort_function);
 

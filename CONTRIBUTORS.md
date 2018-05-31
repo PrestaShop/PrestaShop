@@ -189,6 +189,7 @@ GitHub contributors:
 - florervd
 - Florian Kwakkenbos
 - Florian Lemaitre
+- Florian Nolte
 - Flowster
 - fojtcz
 - Fourat ACHOUR
@@ -225,6 +226,7 @@ GitHub contributors:
 - Guillaume Leseur
 - Guillaume Marsille
 - Guillaume P
+- GuillaumeKadolis
 - Guisardo
 - Gustavo
 - Gytis
@@ -267,6 +269,7 @@ GitHub contributors:
 - jessylenne
 - jestemradek
 - Jérôme Nadaud
+- jGissinger
 - Joan
 - Joan Juvanteny
 - joce
@@ -308,6 +311,7 @@ GitHub contributors:
 - Leo
 - Lesley Paone
 - LOIC ROSSET ltd
+- Loïc Sapone
 - lozal2244
 - Luc
 - Luc Vandesype
@@ -332,6 +336,7 @@ GitHub contributors:
 - Marco Cervellin
 - Marcos
 - Marek Hanuš
+- Marion François
 - Marius
 - Mark Wienk
 - MarkC
@@ -359,6 +364,7 @@ GitHub contributors:
 - MDWeb
 - Mehdi Badrani
 - mehrshadz
+- Mehrshad
 - melvin
 - Michael Dekker
 - Michael Hjulskov
@@ -391,6 +397,8 @@ GitHub contributors:
 - Nicolas Martin
 - Nicolas Sorosac
 - Niels Wouda
+- nigel
+- Nigel Helliwell
 - nihco2
 - Niklas Ekman
 - Niko Wicaksono
@@ -484,7 +492,7 @@ GitHub contributors:
 - Saycile
 - Seb
 - Sebastien
-- Sebastien Bareyre
+- Sébastien Bareyre
 - Sebastien Bocahu
 - Sebastien Monterisi
 - SebSept

@@ -1,0 +1,10 @@
+imports:
+    - { resource: adapter/admin.yml }
+    - { resource: adapter/context.yml }
+    - { resource: adapter/data_configuration.yml }
+    - { resource: adapter/data_provider.yml }
+    - { resource: adapter/feature.yml }
+    - { resource: adapter/module.yml }
+    - { resource: adapter/prestatrust.yml }
+    - { resource: adapter/product.yml }
+    - { resource: adapter/services.yml }

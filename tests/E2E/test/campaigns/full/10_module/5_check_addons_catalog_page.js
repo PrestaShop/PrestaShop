@@ -15,39 +15,39 @@ scenario('Check the addons catalog page in the Back Office', () => {
       return promise
         .then(() => client.switchWindow(1))
         .then(() => client.checkTextValue(ModulesCatalogPage.category_name_text, "Traffic", 'contain'))
-        .then(() => client.switchWindow(0))
+        .then(() => client.switchWindow(0));
     });
     test('should click on "Discover" button of the "SEO Expert" module', () => client.waitForExistAndClick(ModulesCatalogPage.discover_button));
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(2))
         .then(() => client.checkTextValue(ModulesCatalogPage.module_name, "SEO Expert", 'contain'))
-        .then(() => client.switchWindow(0))
+        .then(() => client.switchWindow(0));
     });
     test('should click on "Discover the payment modules" link', () => client.waitForExistAndClick(ModulesCatalogPage.discover_payment_modules_link));
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(3))
         .then(() => client.checkTextValue(ModulesCatalogPage.category_name_text, "Payment", 'contain'))
-        .then(() => client.switchWindow(0))
+        .then(() => client.switchWindow(0));
     });
     test('should click on "View all modules" link', () => client.waitForExistAndClick(ModulesCatalogPage.view_all_modules_button));
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(4))
         .then(() => client.isExisting(ModulesCatalogPage.prestashop_addons_logo))
-        .then(() => client.switchWindow(0))
+        .then(() => client.switchWindow(0));
     });
     test('should search for the modules on the prestashop addons', () => {
       return promise
         .then(() => client.waitAndSetValue(ModulesCatalogPage.search_addons_input, 'chart'))
-        .then(() => client.keys('Enter'))
+        .then(() => client.keys('Enter'));
     });
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(5))
         .then(() => client.checkTextValue(ModulesCatalogPage.search_name, "chart"))
-        .then(() => client.switchWindow(0))
+        .then(() => client.switchWindow(0));
     });
   }, 'common_client');
   scenario('Logout from the Back Office', client => {

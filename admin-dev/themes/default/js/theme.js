@@ -23,3 +23,4 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import '../sass/font.scss';
+import '../sass/admin-theme.sass';

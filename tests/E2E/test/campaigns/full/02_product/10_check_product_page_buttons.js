@@ -26,16 +26,34 @@ scenario('Check product page buttons', client => {
   }, 'product/product');
 
   scenario('Testing "Preview" button', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "NEW PRODUCT" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
     test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, firstProductData.name + date_time));
     test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, firstProductData.quantity));
-    test('should set the "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, firstProductData.price));
+    test('should set the "Price" input', () => client.waitAndSetValue(AddProductPage.priceTE_shortcut, firstProductData.price));
     test('should upload the first product picture', () => client.uploadPicture(firstProductData.picture_name, AddProductPage.picture));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should set the product "online"', () =>  {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        })
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    });
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
-    test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons));
+    test('should click on "Preview" button', () =>  {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        })
+        .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
+    });
     test('should switch to the Front Office', () => client.switchWindow(1));
     test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));
   }, 'product/product');
@@ -52,7 +70,7 @@ scenario('Check product page buttons', client => {
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     scenario('Check that the product is well duplicated', client => {
-      test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+      test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu));
       test('should search for product by name', () => client.searchProductByName("copy of " + firstProductData.name + date_time));
       test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, "copy of " + firstProductData.name + date_time));
       test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, "Home"));
@@ -88,11 +106,11 @@ scenario('Check product page buttons', client => {
       return promise
         .then(() => client.waitForExistAndClick(AddProductPage.dropdown_button))
         .then(() => client.waitForExistAndClick(AddProductPage.new_product_dropdown_button))
-        .then(() => client.pause(3000));
+        .then(() => client.pause(5000));
     });
     test('should set "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, secondProductData.name + date_time));
     test('should set "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, secondProductData.quantity));
-    test('should set "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, secondProductData.price));
+    test('should set the "Tax exclude" price', () => client.waitAndSetValue(AddProductPage.priceTE_shortcut, secondProductData.price));
     test('should set the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));

@@ -41,9 +41,9 @@
     </a>
   {% endif %}
 
-  <a class="btn btn-link dropdown-toggle dropdown-toggle-split product-edit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button class="btn btn-link dropdown-toggle dropdown-toggle-split product-edit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {{ menu_label|default('') }}
-  </a>
+  </button>
 
   <div class="dropdown-menu{% if right %} dropdown-menu-right{% endif %}" x-placement="bottom-start" >
     {% for entry in items %}

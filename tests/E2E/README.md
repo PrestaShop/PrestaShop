@@ -34,7 +34,7 @@ To run these tests you have to install
 
 This command line does it for you (you need a mysql user presta:presta with the right to create a database on localhost)
 ```
-php install/index_cli.php --language=en --country=fr --domain=localhost --db_server=localhostr --db_user=presta --db_name=presta --db_password=presta --firstname=Foo --lastname=Bar --email=demo@prestashop.com --password=prestashop_demo --db_create=1
+php install/index_cli.php --language=en --country=fr --domain=localhost --db_server=localhostr --db_user=presta --db_name=presta --DB_PASSWD=presta --firstname=Foo --lastname=Bar --email=demo@prestashop.com --password=prestashop_demo --db_create=1
 ```
 > Note:
 > Or you can run the installation script via the npm script specific-test
@@ -88,6 +88,7 @@ npm test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PA
 * **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
 * **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
 * **INSTALL**: **(Optional)** Boolean option : set it to **true** if you want to run the installation script (default to **false**)
+* **TEST_ADDONS**: **(Optional)** Boolean option : set it to **true** if you want disable check with Addons API (default to **false**)
 * **LANGUAGE**: **(Optional)** Language to install with (default to "en")
 * **COUNTRY**: **(Optional)** Country to install with (default o "france")
 * **DB_SERVER**: **(Optional)** DataBase server (default to "mysql")

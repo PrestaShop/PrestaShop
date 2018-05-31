@@ -898,15 +898,19 @@ $(document).ready(function()
 		return false;
 	});
 
-	/** make sure that all the swap id is present in the dom to prevent mistake **/
-	if (typeof $('#addSwap') !== undefined && typeof $("#removeSwap") !== undefined &&
-		typeof $('#selectedSwap') !== undefined && typeof $('#availableSwap') !== undefined)
-	{
-		bindSwapButton('add', 'available', 'selected');
-		bindSwapButton('remove', 'selected', 'available');
-
-		$('button:submit').click(bindSwapSave);
-	}
+	$('.swap-container').each(function() {
+		/** make sure that all the swap id is present in the dom to prevent mistake **/
+		if (typeof $('.addSwap', this) !== undefined && typeof $(".removeSwap", this) !== undefined &&
+			typeof $('.selectedSwap', this) !== undefined && typeof $('.availableSwap', this) !== undefined)
+		{
+			bindSwapButton('add', 'available', 'selected', this);
+			bindSwapButton('remove', 'selected', 'available', this);
+		
+			$('button:submit').click(function() {
+				bindSwapSave(this);
+			});
+		}
+	});
 
 	if (typeof host_mode !== 'undefined' && host_mode)
 	{
@@ -933,23 +937,23 @@ $(document).ready(function()
     }
 });
 
-function bindSwapSave()
+function bindSwapSave(context)
 {
-	if ($('#selectedSwap option').length !== 0)
-		$('#selectedSwap option').attr('selected', 'selected');
+	if ($('.selectedSwap option', context).length !== 0)
+		$('.selectedSwap option', context).attr('selected', 'selected');
 	else
-		$('#availableSwap option').attr('selected', 'selected');
+		$('.availableSwap option', context).attr('selected', 'selected');
 }
 
-function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add)
+function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add, context)
 {
-	$('#'+prefix_button+'Swap').on('click', function(e) {
+	$('.'+prefix_button+'Swap', context).on('click', function(e) {
 		e.preventDefault();
-		$('#' + prefix_select_remove + 'Swap option:selected').each(function() {
-			$('#' + prefix_select_add + 'Swap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+		$('.' + prefix_select_remove + 'Swap option:selected', context).each(function() {
+			$('.' + prefix_select_add + 'Swap', context).append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
 			$(this).remove();
 		});
-		$('#selectedSwap option').prop('selected', true);
+		$('.selectedSwap option', context).prop('selected', true);
 	});
 }
 

@@ -339,6 +339,48 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
     }
 
+    /**
+     * @param string $url
+     * @param string $expectedDomain
+     *
+     * @dataProvider domainProvider
+     */
+    public function testExtractUrlDomain($url, $expectedDomain)
+    {
+        $this->assertSame($expectedDomain, Tools::extractHost($url));
+    }
+
+    public function domainProvider()
+    {
+        return [
+            ['http://example.com:80#@google.com/', 'example.com'],
+            ['http://example.com:80?@google.com/', 'example.com'],
+            ['http://example.com#@google.com/', 'example.com'],
+            ['http://example.com?@google.com/', 'example.com'],
+            ['https://example.com:80#@google.com/', 'example.com'],
+            ['https://example.com:80?@google.com/', 'example.com'],
+            ['http://example.com:80/', 'example.com'],
+            ['http://example.com/', 'example.com'],
+            ['https://example.com/', 'example.com'],
+            ['http://foo@bar.com:yolo@example.com:80/foo', 'example.com'],
+            ['https://example.com/', 'example.com'],
+            ['ttp://example.com:80#@google.com/', 'example.com'],
+            ['example.com:80#@google.com/', ''],
+            ['example.com:80?@google.com/', ''],
+            ['example.com#@google.com/', ''],
+            ['example.com?@google.com/', ''],
+            ['example.com:80#@google.com/', ''],
+            ['example.com:80?@google.com/', ''],
+            ['example.com:80/', ''],
+            ['example.com/', ''],
+            ['example.com/', ''],
+            ['foo@bar.com:yolo@example.com:80/foo', ''],
+            ['example.com/', ''],
+            ['/blah/bleh', ''],
+            ['/plop.html', ''],
+        ];
+    }
+
     public function testStrReplaceFirstProvider() {
         return [
             ['s', 'f', 'seed', 0, 'feed'],

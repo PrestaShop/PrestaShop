@@ -91,6 +91,7 @@ scenario('Create, edit, delete and delete with bulk actions CMS page', () => {
     test('should click on "Edit" button', () => client.waitForExistAndClick(Pages.Page.edit_button));
     common_scenarios.editPage(pageWithCategory, newPageData);
   }, 'design');
+
   common_scenarios.checkPageFO(newPageData);
   common_scenarios.deletePage();
   common_scenarios.createPage(pageData);

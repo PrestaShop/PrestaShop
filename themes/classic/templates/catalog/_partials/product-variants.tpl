@@ -24,6 +24,7 @@
  *}
 <div class="product-variants">
   {foreach from=$groups key=id_attribute_group item=group}
+    {if !empty($group.attributes)}
     <div class="clearfix product-variants-item">
       <span class="control-label">{$group.name}</span>
       {if $group.group_type == 'select'}
@@ -63,5 +64,6 @@
         </ul>
       {/if}
     </div>
+    {/if}
   {/foreach}
 </div>

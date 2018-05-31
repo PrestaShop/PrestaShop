@@ -61,9 +61,9 @@ class AdminPaymentControllerCore extends AdminController
         return parent::initContent();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('fancybox');
     }
 
@@ -92,7 +92,6 @@ class AdminPaymentControllerCore extends AdminController
     {
         if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
             $active_list = array();
-            $unactive_list = array();
             foreach ($this->modules_list as $key => $module) {
                 if (in_array($module->name, $this->list_partners_modules)) {
                     $this->modules_list[$key]->type = 'addonsPartner';
@@ -116,8 +115,6 @@ class AdminPaymentControllerCore extends AdminController
 
                 if ($module->active) {
                     $active_list[] = $module;
-                } else {
-                    $unactive_list[] = $module;
                 }
             }
 
@@ -134,7 +131,7 @@ class AdminPaymentControllerCore extends AdminController
                 'panel_id' => 'recommended-payment-gateways-panel',
                 'view_all' => true
             ));
-            $fetch .= $helper->renderModulesList($unactive_list);
+            $fetch .= parent::renderModulesList();
             return $fetch;
         }
     }

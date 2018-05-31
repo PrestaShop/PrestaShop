@@ -17,6 +17,11 @@ scenario('Install and Uninstall Module from cross selling', () => {
         .then(() => client.closeBoarding(OnBoarding.popup_close_button))
     });
   }, 'order');
+
+  if (global.test_addons) {
+    return;
+  }
+
   scenario('Install "'+module_tech_name+'" From Cross selling', client => {
     module_common_scenarios.installModule(client, ModulePage, AddProductPage, module_tech_name);
   }, 'common_client');

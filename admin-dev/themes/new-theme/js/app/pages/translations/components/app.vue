@@ -134,14 +134,12 @@
   };
 </script>
 
-<style lang="sass?outputStyle=expanded">
+<style lang="sass" type="text/scss">
   @import "../../../../../scss/config/_settings.scss";
-  .header-toolbar {
-    z-index: 0;
-    height: 128px;
-  }
-  .translations-app {
-    padding-top: 3em;
+  // hide the layout header
+  #main-div > .header-toolbar {
+    height: 0;
+    display: none;
   }
   .flex {
     display: flex;

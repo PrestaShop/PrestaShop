@@ -92,7 +92,7 @@ class AddressControllerCore extends FrontController
     public function initContent()
     {
         if (!$this->ajax && $this->should_redirect) {
-            if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
+            if (($back = Tools::getValue('back')) && Tools::urlBelongsToShop($back)) {
                 $mod = Tools::getValue('mod');
                 $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
             } else {
@@ -132,11 +132,13 @@ class AddressControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'address_form' => $this->render(
                 'customer/_partials/address-form',
                 $addressForm->getTemplateVariables()
             ),
         )));
+
+        return;
     }
 }

@@ -588,7 +588,7 @@ class AdminImportControllerCore extends AdminController
         $this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator :  ',';
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         $bo_theme = ((Validate::isLoadedObject($this->context->employee)
             && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
@@ -599,7 +599,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         // We need to set parent media first, so that jQuery is loaded before the dependant plugins
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
         $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
@@ -4421,6 +4421,7 @@ class AdminImportControllerCore extends AdminController
             }
             $import_type = false;
             $doneCount = 0;
+            $moreStepLabels = array();
             // Sometime, import will use registers to memorize data across all elements to import (for trees, or else).
             // Since import is splitted in multiple ajax calls, we must keep these data across all steps of the full import.
             $crossStepsVariables = array();

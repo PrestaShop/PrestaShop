@@ -63,7 +63,7 @@
     display: block;
     position: fixed;
     top: $size-header-height - 0.0625rem;
-    left: $size-navbar-width;
+    left: 0;
     right: 0;
     box-shadow: $gray-dark 0 0 10px;
     z-index: 400;

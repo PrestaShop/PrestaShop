@@ -46,8 +46,7 @@ class I18nController extends ApiController
 
             try {
                 $translationClass = $this->container->get('prestashop.translation.api.'.$page);
-            }
-            catch (Exception $exception) {
+            } catch (Exception $exception) {
                 throw new BadRequestHttpException($exception->getMessage());
             }
         } catch (BadRequestHttpException $exception) {

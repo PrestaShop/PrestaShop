@@ -71,7 +71,8 @@ class TranslationController extends ApiController
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
             );
 
-            $catalog['info'] = array_merge($catalog['info'],
+            $catalog['info'] = array_merge(
+                $catalog['info'],
                 array(
                     'locale' => $locale,
                     'domain' => $domain,
@@ -94,7 +95,6 @@ class TranslationController extends ApiController
             );
 
             return $this->jsonResponse($catalog, $request, $queryParamsCollection, 200, $info);
-
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
@@ -131,7 +131,6 @@ class TranslationController extends ApiController
             }
 
             return $this->jsonResponse($tree, $request);
-
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
@@ -141,6 +140,7 @@ class TranslationController extends ApiController
      * Route to edit translation
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function translationEditAction(Request $request)
@@ -152,8 +152,7 @@ class TranslationController extends ApiController
             $this->guardAgainstInvalidTranslationEditRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-            $response = array();
-
+            $response = [];
             foreach ($translations as $translation) {
                 if (!array_key_exists('theme', $translation)) {
                     $translation['theme'] = null;
@@ -198,7 +197,7 @@ class TranslationController extends ApiController
             $this->guardAgainstInvalidTranslationResetRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-            $response = array();
+            $response = [];
 
             foreach ($translations as $translation) {
                 if (!array_key_exists('theme', $translation)) {
@@ -238,7 +237,10 @@ class TranslationController extends ApiController
 
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
-        if (empty($decodedContent) || !array_key_exists('translations', $decodedContent) || !is_array($decodedContent['translations'])) {
+        if (empty($decodedContent) ||
+            !array_key_exists('translations', $decodedContent) ||
+            !is_array($decodedContent['translations'])
+        ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
@@ -269,7 +271,7 @@ class TranslationController extends ApiController
     /**
      * @param $content
      */
-    function guardAgainstInvalidTranslationResetRequest($content)
+    protected function guardAgainstInvalidTranslationResetRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
             'a "locale", a "domain" and a "default" values. '.

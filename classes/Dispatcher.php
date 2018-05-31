@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+
 /**
  * @since 1.5.0
  */
@@ -40,6 +42,11 @@ class DispatcherCore
      * @var Dispatcher
      */
     public static $instance = null;
+
+    /**
+     * @var SymfonyRequest
+     */
+    private $request;
 
     /**
      * @var array List of default routes
@@ -187,20 +194,31 @@ class DispatcherCore
      * Get current instance of dispatcher (singleton)
      *
      * @return Dispatcher
+     *
+     * @throws PrestaShopException
      */
-    public static function getInstance()
+    public static function getInstance(SymfonyRequest $request = null)
     {
         if (!self::$instance) {
-            self::$instance = new Dispatcher();
+            if (null === $request) {
+                $request = SymfonyRequest::createFromGlobals();
+            }
+            self::$instance = new Dispatcher($request);
         }
         return self::$instance;
     }
 
     /**
-     * Need to be instantiated from getInstance() method
+     * Needs to be instantiated from getInstance() method.
+     *
+     * @param SymfonyRequest|null $request
+     *
+     * @throws PrestaShopException
      */
-    protected function __construct()
+    protected function __construct(SymfonyRequest $request = null)
     {
+        $this->setRequest($request);
+
         $this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 
         // Select right front controller
@@ -227,6 +245,30 @@ class DispatcherCore
         }
 
         $this->loadRoutes();
+    }
+
+    /**
+     * Either sets a given request or a new one.
+     *
+     * @param SymfonyRequest|null $request
+     */
+    private function setRequest(SymfonyRequest $request = null)
+    {
+        if (null === $request) {
+            $request = SymfonyRequest::createFromGlobals();
+        }
+
+        $this->request = $request;
+    }
+
+    /**
+     * Returns the request property.
+     *
+     * @return SymfonyRequest
+     */
+    private function getRequest()
+    {
+        return $this->request;
     }
 
     public function useDefaultController()
@@ -437,33 +479,56 @@ class DispatcherCore
     }
 
     /**
-     * Set request uri and iso lang
+     * Sets request uri and if necessary $_GET['isolang'].
      */
     protected function setRequestUri()
     {
-        // Get request uri (HTTP_X_REWRITE_URL is used by IIS)
-        if (isset($_SERVER['REQUEST_URI'])) {
-            $this->request_uri = $_SERVER['REQUEST_URI'];
-        } elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
-            $this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
+        $shop = Context::getContext()->shop;
+        if (!Validate::isLoadedObject($shop)) {
+            $shop = null;
         }
-        $this->request_uri = rawurldecode($this->request_uri);
 
-        if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop)) {
-            $this->request_uri = preg_replace(
-                '#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i',
+        $this->request_uri = $this->buildRequestUri(
+            $this->getRequest()->getRequestUri(),
+            Language::isMultiLanguageActivated(),
+            $shop
+        );
+    }
+
+    /**
+     * Builds request URI and if necessary sets $_GET['isolang'].
+     *
+     * @param string $requestUri To retrieve the request URI from it
+     * @param bool $isMultiLanguageActivated
+     * @param Shop $shop
+     *
+     * @return string
+     */
+    private function buildRequestUri($requestUri, $isMultiLanguageActivated, Shop $shop = null)
+    {
+        // Decode raw request URI
+        $requestUri = rawurldecode($requestUri);
+
+        // Remove the shop base URI part from the request URI
+        if (null !== $shop) {
+            $requestUri = preg_replace(
+                '#^'.preg_quote($shop->getBaseURI(), '#').'#i',
                 '/',
-                $this->request_uri
+                $requestUri
             );
         }
 
-        // If there are several languages, get language from uri
-        if ($this->use_routes && Language::isMultiLanguageActivated()) {
-            if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $this->request_uri, $m)) {
-                $_GET['isolang'] = $m[1];
-                $this->request_uri = substr($this->request_uri, 3);
-            }
+        // If there are several languages, set $_GET['isolang'] and remove the language part from the request URI
+        if (
+            $this->use_routes &&
+            $isMultiLanguageActivated &&
+            preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
+        ) {
+            $_GET['isolang'] = $matches[1];
+            $requestUri = substr($requestUri, 3);
         }
+
+        return $requestUri;
     }
 
     /**

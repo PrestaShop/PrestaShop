@@ -314,9 +314,9 @@ class AdminSearchControllerCore extends AdminController
         );
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('highlight');
     }
 
@@ -385,6 +385,7 @@ class AdminSearchControllerCore extends AdminController
                 }
 
                 $this->tpl_view_vars['products'] = $view;
+                $this->tpl_view_vars['productsCount'] = count($this->_list['products']);
             }
             if (isset($this->_list['customers']) && count($this->_list['customers'])) {
                 $view = '';

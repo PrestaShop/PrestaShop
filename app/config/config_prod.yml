@@ -28,5 +28,5 @@ monolog:
 
 doctrine:
     orm:
-        metadata_cache_driver: "%env(CACHE_DRIVER)%"
-        query_cache_driver:    "%env(CACHE_DRIVER)%"
+        metadata_cache_driver: "%cache.driver%"
+        query_cache_driver:    "%cache.driver%"

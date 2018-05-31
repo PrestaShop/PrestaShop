@@ -8,7 +8,7 @@ let data = require('../../datas/customer_and_address_data');
 let promise = Promise.resolve();
 
 module.exports = {
-  createOrder: function (authentication = "connected") {
+  createOrderFO: function (authentication = "connected") {
     scenario('Create order in the Front Office', client => {
       test('should set the language of shop to "English"', () => client.changeLanguage());
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
@@ -38,9 +38,11 @@ module.exports = {
           test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.radio_button_gender));
           test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, data.customer.firstname));
           test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, data.customer.lastname));
-          test('should set the "Email" input', () => client.waitAndSetValue(accountPage.new_email_input, data.customer.email.replace("%ID", date_time)));
           if (authentication === "create_account") {
+            test('should set the "Email" input', () => client.waitAndSetValue(accountPage.new_email_input, data.customer.email.replace("%ID", date_time)));
             test('should set the "Password" input', () => client.waitAndSetValue(accountPage.new_password_input, data.customer.password));
+          } else {
+            test('should set the "Email" input', () => client.waitAndSetValue(accountPage.new_email_input, data.customer.email.replace("%ID", '_guest' + date_time)));
           }
           test('should click on "CONTINUE" button', () => client.waitForExistAndClick(accountPage.new_customer_btn));
         }, 'common_client');
@@ -92,8 +94,8 @@ module.exports = {
   },
   createOrderBO: function (OrderPage, CreateOrder, productData) {
     scenario('Create order in the Back Office', client => {
-      test('should go to orders list', () => client.goToSubtabMenuPage(OrderPage.orders_subtab, OrderPage.order_submenu));
-      test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button));
+      test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
+      test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button, 1000));
       test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, 'john doe'));
       test('should choose the customer', () => client.waitForExistAndClick(CreateOrder.choose_customer_button));
       test('should search for a product by name', () => client.waitAndSetValue(CreateOrder.product_search_input, productData.name + global.date_time));

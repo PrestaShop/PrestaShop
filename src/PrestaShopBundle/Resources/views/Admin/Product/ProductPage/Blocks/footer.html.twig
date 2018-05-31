@@ -24,10 +24,10 @@
  *#}
  {% block product_footer %}
   <div class="product-footer justify-content-md-center">
-    <div class="col-lg-5">
+    <div class="col-lg-4">
       <a
         href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
-        class="tooltip-link btn btn-lg"
+        class="tooltip-link btn btn-lg delete"
         data-toggle="pstooltip"
         id="product_form_delete_btn"
         title="{{ 'Permanently delete this product.'|trans({}, 'Admin.Catalog.Help') }}"
@@ -64,7 +64,7 @@
       />
       {% endif %}
     </div>
-    <div class="col-lg-6 text-lg-right">
+    <div class="col-sm-5 col-lg-7 text-right">
       {% if is_shop_context %}
         <button
           type="button"

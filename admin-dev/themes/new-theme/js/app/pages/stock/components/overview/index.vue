@@ -36,7 +36,7 @@
   import ProductsActions from './products-actions';
   import ProductsTable from './products-table';
 
-  const DEFAULT_SORT = ' desc';
+  const DEFAULT_SORT = 'asc';
 
   export default {
     computed: {
@@ -45,8 +45,8 @@
       },
     },
     methods: {
-      sort(desc) {
-        this.$emit('fetch', desc);
+      sort(sortDirection) {
+        this.$emit('fetch', sortDirection);
       },
     },
     mounted() {

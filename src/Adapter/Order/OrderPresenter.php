@@ -151,11 +151,15 @@ class OrderPresenter implements PresenterInterface
         $cartProducts = $this->cartPresenter->present($cart);
         $orderPaid = $order->getCurrentOrderState() && $order->getCurrentOrderState()->paid;
 
+        $includeTaxes = $this->includeTaxes();
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price'], Currency::getCurrencyInstance((int)$order->id_currency));
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price'], Currency::getCurrencyInstance((int)$order->id_currency));
+
+            $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
+            $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct[$productPrice], Currency::getCurrencyInstance((int)$order->id_currency));
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct[$totalPrice], Currency::getCurrencyInstance((int)$order->id_currency));
 
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
@@ -196,7 +200,8 @@ class OrderPresenter implements PresenterInterface
     {
         $subtotals = array();
 
-        $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
+        $includeTaxes = $this->includeTaxes();
+        $total_products = $includeTaxes ? $order->total_products_wt : $order->total_products;
         $subtotals['products'] = array(
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
@@ -204,7 +209,7 @@ class OrderPresenter implements PresenterInterface
             'value' => $this->priceFormatter->format($total_products, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
-        $discount_amount = ($this->includeTaxes())
+        $discount_amount = $includeTaxes
             ? $order->total_discounts_tax_incl
             : $order->total_discounts_tax_excl;
         if ((float) $discount_amount) {
@@ -218,7 +223,7 @@ class OrderPresenter implements PresenterInterface
 
         $cart = new Cart($order->id_cart);
         if (!$cart->isVirtualCart()) {
-            $shippingCost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+            $shippingCost = $includeTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
             $subtotals['shipping'] = array(
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
@@ -244,7 +249,7 @@ class OrderPresenter implements PresenterInterface
         }
 
         if ($order->gift) {
-            $giftWrapping = ($this->includeTaxes())
+            $giftWrapping = $includeTaxes
                 ? $order->total_wrapping_tax_incl
                 : $order->total_wrapping_tax_excl;
             $subtotals['gift_wrapping'] = array(
@@ -503,11 +508,12 @@ class OrderPresenter implements PresenterInterface
 
     private function getLabels()
     {
+        $includeTaxes = $this->includeTaxes();
         return array(
-            'tax_short' => ($this->includeTaxes())
+            'tax_short' => $includeTaxes
                 ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
                 : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
-            'tax_long' => ($this->includeTaxes())
+            'tax_long' => $includeTaxes
                 ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
                 : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
         );

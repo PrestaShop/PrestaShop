@@ -488,7 +488,7 @@ class OrderHistoryCore extends ObjectModel
                 }
             }
 
-            if ($template_vars) {
+            if (is_array($template_vars)) {
                 $data = array_merge($data, $template_vars);
             }
 

@@ -15,8 +15,7 @@ class CheckProductBO extends CommonClient {
     return this.client
       .waitForExistAndClick(AddProductPage.catalogue_filter_by_name_input)
       .waitAndSetValue(AddProductPage.catalogue_filter_by_name_input, productName)
-      .waitForExistAndClick(AddProductPage.click_outside)
-      .waitForExistAndClick(AddProductPage.catalogue_submit_filter_button)
+      .waitForExistAndClick(AddProductPage.catalogue_submit_filter_button);
   }
 
   checkProductPriceTE(priceTE) {

@@ -98,9 +98,9 @@ class AdminManufacturersControllerCore extends AdminController
         );
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryUi('ui.widget');
         $this->addJqueryPlugin('tagify');
     }
@@ -174,7 +174,7 @@ class AdminManufacturersControllerCore extends AdminController
             'manufacturer_name' => array(
                 'title' => $this->trans('Brand', array(), 'Admin.Global'),
                 'width' => 'auto',
-                'filter_key' => 'manufacturer_name'
+                'filter_key' => 'm!name'
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global')

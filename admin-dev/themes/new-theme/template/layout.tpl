@@ -77,11 +77,7 @@
     {if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
     {if isset($modal_module_list)}{$modal_module_list}{/if}
 
-    <div class="content-div {if !isset($page_header_toolbar)}-notoolbar{/if}">
-
-      {* TODO: SEE IF USEFULL
-      {if $current_tab_level == 3}with-tabs{/if}
-      *}
+    <div class="content-div {if !isset($page_header_toolbar)}-notoolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 
       {hook h='displayAdminAfterHeader'}
 
@@ -104,6 +100,7 @@
       <div class="row ">
         <div class="col-sm-12">
           {$page}
+          {hook h='displayAdminEndContent'}
         </div>
       </div>
 

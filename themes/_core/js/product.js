@@ -26,126 +26,289 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import {psGetRequestParameter} from './common';
 
-$(document).ready(function () {
-  $('body').on('change', '.product-variants [data-product-attribute]', function () {
-    $("input[name$='refresh']").click();
-  });
+// Used to be able to abort request if user modify something
+var currentRequest = null;
 
-  $('body').on(
-    'click',
-    '.product-refresh',
-    function (event, extraParameters) {
-      var $productRefresh = $(this);
-      event.preventDefault();
+// Used to clearTimeout if user flood the product quantity input
+var currentRequestDelayedId = null;
 
-      let eventType = 'updatedProductCombination';
-      if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
-        eventType = extraParameters.eventType;
-      }
+/**
+ * Get product update URL from different
+ * sources if needed (for compatibility)
+ *
+ * @return {Promise}
+ */
+function getProductUpdateUrl() {
+    let dfd = $.Deferred();
+    const $productActions = $('.product-actions');
+    const $quantityWantedInput = $('#quantity_wanted');
 
-      var preview = psGetRequestParameter('preview');
-      if (preview !== null) {
-        preview = '&preview=' + preview;
-      } else {
-        preview = '';
-      }
+    if (prestashop !== null
+        && prestashop.urls !== null
+        && prestashop.urls.pages !== null
+        && prestashop.urls.pages.product !== ''
+        && prestashop.urls.pages.product !== null
+    ) {
+        dfd.resolve(prestashop.urls.pages.product);
 
-      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh' + preview;
-      var actionURL = $(event.target.form).attr('action');
+        return dfd.promise();
+    }
+    let formData = {};
 
-      $.post(actionURL, query, null, 'json').then(function(resp) {
-        prestashop.emit('updateProduct', {
-          reason: {
-            productUrl: resp.productUrl
-          },
-          refreshUrl: $productRefresh.data('url-update'),
-          eventType: eventType,
-          resp: resp
+    $($productActions.find('form:first').serializeArray()).each((k, v) => {
+        formData[v.name] = v.value;
         });
-      });
-    }
-  );
 
-  prestashop.on('updateProduct', function (event) {
-    if (typeof event.refreshUrl == "undefined") {
-        event.refreshUrl = true;
-    }
-
-    var eventType = event.eventType;
-
-    let replaceAddToCartSections = ((addCartHtml) => {
-      let $addToCartSnippet = $(addCartHtml);
-      let $addProductToCart = $('.product-add-to-cart');
-
-      function replaceAddToCartSection(replacement) {
-        let replace = replacement.$addToCartSnippet.find(replacement.targetSelector);
-
-        if ($(replacement.$targetParent.find(replacement.targetSelector)).length > 0) {
-          if (replace.length > 0) {
-            $(replacement.$targetParent.find(replacement.targetSelector)).replaceWith(replace[0].outerHTML);
-          } else {
-            $(replacement.$targetParent.find(replacement.targetSelector)).html('');
-          }
+    $.ajax({
+        url: $productActions.find('form:first').attr('action'),
+        method: 'POST',
+        data: Object.assign(
+            {
+                ajax: 1,
+                action: 'productrefresh',
+                quantity_wanted: $quantityWantedInput.val()
+            },
+            formData
+        ),
+        dataType: 'json',
+        success(data) {
+            let productUpdateUrl = data.productUrl;
+            prestashop.page.canonical = productUpdateUrl;
+            dfd.resolve(productUpdateUrl);
+        },
+        error(jqXHR, textStatus, errorThrown) {
+            dfd.reject({"jqXHR": jqXHR, "textStatus": textStatus, "errorThrown": errorThrown});
         }
-      }
+    });
 
-      const productAvailabilitySelector = '.add';
-      replaceAddToCartSection({
-        $addToCartSnippet: $addToCartSnippet,
+    return dfd.promise();
+}
+
+/**
+ * Update the product html
+ *
+ * @param {string} event
+ * @param {string} eventType
+ * @param {string} updateUrl
+ */
+function updateProduct(event, eventType, updateUrl) {
+    const $productActions = $('.product-actions');
+    const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
+    const formSerialized = $productActions.find('form:first').serialize();
+    let preview = psGetRequestParameter('preview');
+
+    if (preview !== null) {
+        preview = '&preview=' + preview;
+    } else {
+        preview = '';
+    }
+
+    // Can not get product ajax url
+    if (updateUrl === null) {
+        showError($('#product-availability'), 'An error occurred while processing your request');
+
+        return;
+    }
+
+    // New request only if new value
+    if (event !== null
+        && event.type === 'keyup'
+        && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+    ) {
+        return;
+    }
+    $quantityWantedInput.data('old-value', $quantityWantedInput.val());
+
+    if (currentRequestDelayedId) {
+        clearTimeout(currentRequestDelayedId);
+    }
+
+    currentRequestDelayedId = setTimeout(function updateProductRequest() {
+        currentRequest = $.ajax({
+            url: updateUrl + '?' + formSerialized + preview,
+            method: 'POST',
+            data: {
+                ajax: 1,
+                action: 'refresh',
+                quantity_wanted: $quantityWantedInput.val()
+            },
+            dataType: 'json',
+            beforeSend() {
+                if (currentRequest !== null) {
+                    currentRequest.abort();
+                }
+            },
+            error(jqXHR, textStatus, errorThrown) {
+                if (textStatus !== 'abort'
+                    && $('section#main > .ajax-error').length === 0
+                ) {
+                    showError($('#product-availability'), 'An error occurred while processing your request');
+                }
+            },
+            success(data, textStatus, errorThrown) {
+                // Avoid image to blink each time we modify the product quantity
+                // Can not compare directly cause of HTML comments in data.
+                const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
+
+                // Used to avoid image blinking if same image = epileptic friendly
+                if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
+                    $('.images-container').replaceWith(data.product_cover_thumbnails);
+                }
+                $('.product-prices').replaceWith(data.product_prices);
+                $('.product-customization').replaceWith(data.product_customization);
+                $('.product-variants').replaceWith(data.product_variants);
+                $('.product-discounts').replaceWith(data.product_discounts);
+                $('.product-additional-info').replaceWith(data.product_additional_info);
+                $('#product-details').replaceWith(data.product_details);
+                replaceAddToCartSections(data);
+                const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
+
+                // Prevent quantity input from blinking with classic theme.
+                if (!isNaN(minimalProductQuantity)
+                    && $quantityWantedInput.val() < minimalProductQuantity
+                    && eventType !== 'updatedProductQuantity'
+                ) {
+                    $quantityWantedInput.attr('min', minimalProductQuantity);
+                    $quantityWantedInput.val(minimalProductQuantity);
+                }
+                prestashop.emit('updatedProduct', data);
+            },
+            complete(jqXHR, textStatus) {
+                currentRequest = null;
+                currentRequestDelayedId = null;
+            }
+        });
+    }.bind(currentRequest, currentRequestDelayedId), 250);
+}
+
+/**
+ * Replace all "add to cart" sections but the quantity input
+ * in order to keep quantity field intact i.e.
+ *
+ * @param {object} data of updated product and cat
+ */
+function replaceAddToCartSections(data) {
+    let $productAddToCart = null;
+
+    $(data.product_add_to_cart).each((index, value) => {
+        if ($(value).hasClass('product-add-to-cart')) {
+            $productAddToCart = $(value);
+
+            return false;
+        }
+    });
+
+    if ($productAddToCart === null) {
+        showError($('#product-availability'), 'An error occurred while processing your request');
+    }
+    const $addProductToCart = $('.product-add-to-cart');
+    const productAvailabilitySelector = '.add';
+    const productAvailabilityMessageSelector = '#product-availability';
+    const productMinimalQuantitySelector = '.product-minimal-quantity';
+
+    replaceAddToCartSection({
+        $addToCartSnippet: $productAddToCart,
         $targetParent: $addProductToCart,
         targetSelector: productAvailabilitySelector
-      });
+    });
 
-      const productAvailabilityMessageSelector = '#product-availability';
-      replaceAddToCartSection({
-        $addToCartSnippet: $addToCartSnippet,
+    replaceAddToCartSection({
+        $addToCartSnippet: $productAddToCart,
         $targetParent: $addProductToCart,
         targetSelector: productAvailabilityMessageSelector
-      });
+    });
 
-      const productMinimalQuantitySelector = '.product-minimal-quantity';
-      replaceAddToCartSection({
-        $addToCartSnippet: $addToCartSnippet,
+    replaceAddToCartSection({
+        $addToCartSnippet: $productAddToCart,
         $targetParent: $addProductToCart,
         targetSelector: productMinimalQuantitySelector
-      });
     });
+}
 
-    $.post(event.reason.productUrl, {ajax: '1', action: 'refresh'}, null, 'json').then(function(resp) {
-      $('.product-prices').replaceWith(resp.product_prices);
-      $('.product-customization').replaceWith(resp.product_customization);
-      $('.product-variants').replaceWith(resp.product_variants);
-      $('.product-discounts').replaceWith(resp.product_discounts);
-      $('.images-container').replaceWith(resp.product_cover_thumbnails);
-      $('.product-additional-info').replaceWith(resp.product_additional_info);
-      $('#product-details').replaceWith(resp.product_details);
+/**
+ * Find DOM elements and replace their content
+ *
+ * @param {object} replacement Data to be replaced on the current page
+ */
+function replaceAddToCartSection(replacement) {
+    const destinationObject = $(replacement.$targetParent.find(replacement.targetSelector));
+    if (destinationObject.length <= 0) {
+        return;
+    }
+    const replace = replacement.$addToCartSnippet.find(replacement.targetSelector);
 
-      // Replace all "add to cart" sections but the quantity input in order to keep quantity field intact i.e.
-      // Prevent quantity input from blinking with classic theme.
-      let $productAddToCart;
-      $(resp.product_add_to_cart).each(function(index, value) {
-          if ($(value).hasClass('product-add-to-cart')) {
-            $productAddToCart = $(value);
-          }
-      });
-      replaceAddToCartSections($productAddToCart);
+    if (replace.length > 0) {
+        destinationObject.replaceWith(replace[0].outerHTML);
+    } else {
+        destinationObject.html('');
+    }
+}
 
-      const minimalProductQuantity = parseInt(resp.product_minimal_quantity, 10);
-      const quantityInputSelector = '#quantity_wanted';
-      let quantityInput = $(quantityInputSelector);
-      const quantity_wanted = quantityInput.val();
+/**
+ * @param {jQuery} $container
+ * @param {string} textError
+ */
+function showError($container, textError) {
+    const $error = $(`<div class="alert alert-danger ajax-error" role="alert">${textError}</div>`);
+    $container.replaceWith($error);
+}
 
-      if (!isNaN(minimalProductQuantity) && quantity_wanted < minimalProductQuantity && eventType !== 'updatedProductQuantity') {
-        quantityInput.attr('min', minimalProductQuantity);
-        quantityInput.val(minimalProductQuantity);
-      }
+$(document).ready(() => {
+    // Listen on all form elements + those who have a data-product-attribute
+    $('body').on(
+        'change touchspin.on.startspin',
+        '.product-variants *[name]',
+        (e) => {
+            prestashop.emit('updateProduct', {
+                eventType: 'updatedProductCombination',
+                event: e,
+                // Following variables are not used anymore, but kept for backward compatibility
+                resp: {},
+                reason: {
+                    productUrl: prestashop.urls.pages.product || '',
+                },
+            });
+        }
+    );
 
-      if (event.refreshUrl) {
-        window.history.pushState({id_product_attribute: resp.id_product_attribute}, undefined, resp.product_url);
-      }
+    /**
+     * Button has been removed on classic theme, but event triggering has been kept for compatibility
+     */
+    $('body').on(
+        'click',
+        '.product-refresh',
+        (e, extraParameters) => {
+            e.preventDefault();
+            let eventType = 'updatedProductCombination';
 
-      prestashop.emit('updatedProduct', resp);
+            if (typeof extraParameters !== 'undefined'
+                && extraParameters.eventType
+            ) {
+                eventType = extraParameters.eventType;
+            }
+            prestashop.emit('updateProduct', {
+                eventType: eventType,
+                event: e,
+                // Following variables are not used anymore, but kept for backward compatibility
+                resp: {},
+                reason: {
+                    productUrl: prestashop.urls.pages.product || '',
+                },
+            });
+        }
+    );
+
+    // Refresh all the product content
+    prestashop.on('updateProduct', (args) => {
+        const eventType = args.eventType;
+        const event = args.event;
+
+        getProductUpdateUrl().done(
+            productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
+        ).fail(() => {
+            if ($('section#main > .ajax-error').length === 0) {
+                showError($('#product-availability'), 'An error occurred while processing your request');
+            }
+        });
     });
-  });
 });
-

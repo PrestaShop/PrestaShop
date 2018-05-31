@@ -74,7 +74,6 @@ abstract class ApiTestCase extends WebTestCase
         self::$container = null;
         self::$kernel = null;
         self::$client = null;
-
     }
 
     /**
@@ -227,7 +226,7 @@ abstract class ApiTestCase extends WebTestCase
      * @param $route
      * @param $params
      */
-    protected function assetOkRequest($route, $params)
+    protected function assertOkRequest($route, $params)
     {
         $route = $this->router->generate($route, $params);
         self::$client->request('GET', $route);

@@ -2,13 +2,11 @@ var CommonClient = require('./common_client');
 
 class Discount extends CommonClient {
 
-  searchByName(inputSelector, buttonSelector, catalogPriceRulesName) {
+  searchByName(inputSelector, buttonSelector, name) {
     if (isVisible) {
       return this.client
-        .waitAndSetValue(inputSelector, catalogPriceRulesName)
+        .waitAndSetValue(inputSelector, name)
         .waitForExistAndClick(buttonSelector)
-    } else {
-      return this.client.pause(1000)
     }
   }
 

@@ -30,99 +30,28 @@ class CurrencyCore extends ObjectModel
 {
     public $id;
 
-    /**
-     * Name of the currency
-     *
-     * @var string
-     */
+    /** @var string Name */
     public $name;
 
-    /**
-     * Alphabetic ISO 4217 code of this currency
-     *
-     * @var string
-     */
+    /** @var string Iso code */
     public $iso_code;
 
-    /**
-     * Numeric ISO 4217 code of this currency
-     * Will be deprecated soon
-     *
-     * @var string
-     */
+    /** @var string numeric Iso code */
     public $iso_code_num;
 
-    /**
-     * Numeric ISO 4217 code of this currency
-     *
-     * @var string
-     */
-    public $numeric_iso_code;
-
-    /**
-     * Exchange rate from default currency
-     *
-     * @var float
-     */
+    /** @var string exchange rate from euros */
     public $conversion_rate;
 
-    /**
-     * Is this currency deleted ?
-     * If currency is deleted, it stays in database. This is just a state (soft delete).
-     *
-     * @var bool
-     */
+    /** @var bool True if currency has been deleted (staying in database as deleted) */
     public $deleted = 0;
 
-    /**
-     * Is this currency active ?
-     *
-     * @var int|bool active
-     */
+    /** @var int bool active */
     public $active;
 
-    /**
-     * Currency's symbol
-     * Will be deprecated soon
-     *
-     * @var string
-     */
     public $sign;
-
-    /**
-     * Currency's symbol
-     *
-     * @var string
-     */
-    public $symbol;
-
-    /**
-     * CLDR price formatting pattern
-     * e.g.: In french (fr-FR), price formatting pattern is : #,##0.00 ¤
-     *
-     * @var string
-     */
     public $format;
-
-    /**
-     * @var int
-     */
     public $blank;
-
-    /**
-     * Number of decimal digits to use when displaying a price in this currency
-     * Will be deprecated soon
-     *
-     * @var int
-     */
     public $decimals;
-
-    /**
-     * Number of decimal digits to use when displaying a price in this currency
-     *
-     * @var int
-     */
-    public $precision;
 
     /**
      * @see ObjectModel::$definition
@@ -130,19 +59,13 @@ class CurrencyCore extends ObjectModel
     public static $definition = array(
         'table' => 'currency',
         'primary' => 'id_currency',
-        'multilang' => true,
-        // 'multilang_shop' => true,
+        'multilang_shop' => true,
         'fields' => array(
-            'iso_code'         => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-            'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
-            'precision'        => array('type' => self::TYPE_INT   , 'validate' => 'isInt'),
-            'conversion_rate'  => array('type' => self::TYPE_FLOAT , 'validate' => 'isUnsignedFloat'  , 'required' => true, 'shop' => true),
-            'deleted'          => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
-            'active'           => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
-
-            /* Lang fields */
-            'name'   => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true                               , 'size' => 255),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+            'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
+            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
@@ -181,14 +104,12 @@ class CurrencyCore extends ObjectModel
         if ($this->iso_code) {
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
 
-            $this->sign             = $cldrCurrency['symbol'];
-            $this->symbol           = $cldrCurrency['symbol'];
-            $this->iso_code_num     = $cldrCurrency['iso_code'];
-            $this->numeric_iso_code = $cldrCurrency['iso_code'];
-            $this->name             = $cldrCurrency['name'];
-            $this->format           = $this->cldr->getCurrencyFormatPattern();
-            $this->blank            = 1;
-            $this->decimals         = 1;
+            $this->sign = $cldrCurrency['symbol'];
+            $this->iso_code_num = $cldrCurrency['iso_code'];
+            $this->name = $cldrCurrency['name'];
+            $this->format = $this->cldr->getCurrencyFormatPattern();
+            $this->blank = 1;
+            $this->decimals = 1;
         }
 
         if (!$this->conversion_rate) {
@@ -499,12 +420,12 @@ class CurrencyCore extends ObjectModel
      * @param int  $idModule Module ID
      * @param null $idShop   Shop ID
      *
-     * @return array|bool|false|mysqli_result|null|PDOStatement|resource
+     * @return array|null|PDOStatement|resource
      */
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
         if (empty($idModule)) {
-            return false;
+            return array();
         }
 
         if (is_null($idShop)) {
@@ -517,7 +438,8 @@ class CurrencyCore extends ObjectModel
         $sql->where('mc.`id_module` = '.(int) $idModule);
         $sql->where('mc.`id_shop` = '.(int) $idShop);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        return $currencies ? $currencies : array();
     }
 
     /**

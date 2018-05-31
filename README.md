@@ -71,6 +71,9 @@ Then reach your shop with the URL http://localhost:8001
 It will bind your ports 8001 to the web server. If you want to use other ports, open and modify the file `docker-compose.yml`.
 MySQL credentials can also be found and modified in this file if needed.
 
+**Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
+If you expect the container to (re)install your shop, remove this file if it exists.
+
 User documentation
 --------
 

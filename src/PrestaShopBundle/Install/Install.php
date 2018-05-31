@@ -537,6 +537,7 @@ class Install extends AbstractInstall
             $this->setError($this->translator->trans('Cannot create shop', array(), 'Install').' / '.Db::getInstance()->getMsgError());
             return false;
         }
+        $shop->setTheme();
         Context::getContext()->shop = $shop;
 
         // Create default shop URL
@@ -876,6 +877,7 @@ class Install extends AbstractInstall
                 'ps_sharebuttons',
                 'ps_shoppingcart',
                 'ps_socialfollow',
+                'ps_themecusto',
                 'ps_wirepayment',
                 'pagesnotfound',
                 'sekeywords',
