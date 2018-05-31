@@ -38,7 +38,7 @@ interface LanguageActivatorInterface
      *
      * @return void
      */
-    public function activate($langId);
+    public function enable($langId);
 
     /**
      * Deactivate language
@@ -47,5 +47,5 @@ interface LanguageActivatorInterface
      *
      * @return void
      */
-    public function deactivate($langId);
+    public function disable($langId);
 }
