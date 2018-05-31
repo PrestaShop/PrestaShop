@@ -100,7 +100,7 @@ class LocalizationConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->languageActivator->activate((int) $config['default_language']);
+            $this->languageActivator->enable((int) $config['default_language']);
 
             // only update currency related data if it has changed
             $currentConfig = $this->getConfiguration();
