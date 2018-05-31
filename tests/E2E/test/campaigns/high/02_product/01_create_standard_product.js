@@ -25,7 +25,7 @@ scenario('Create Standard Product in the Back Office', client => {
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + date_time));
-    test('should click on "Create"', () => client.createCategory());
+    test('should click on "Create" button', () => client.createCategory());
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
@@ -50,15 +50,9 @@ scenario('Create Standard Product in the Back Office', client => {
     test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () => {
-      return promise
-        .then(() => client.pause(2000))
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
     });
   }, 'product/product');
 

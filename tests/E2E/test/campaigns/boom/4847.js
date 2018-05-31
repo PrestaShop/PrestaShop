@@ -31,13 +31,9 @@ scenario('BOOM-4847: Check that the pagination works fine on the product page in
 
   scenario('Disable the Friendly URL', client => {
     test('should close symfony Profiler', () => {
-      return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.pause(2000));
     });
     test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
     test('should disable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'off')));

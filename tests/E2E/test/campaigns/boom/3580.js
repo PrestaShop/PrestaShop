@@ -73,14 +73,9 @@ scenario('Create "Product"', () => {
       test('should select "Tax exclude"', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_tax_select, productData.pricing[0].discount_type));
       test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
       test('should click on "Save" button', () => {
-        return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          })
-          .then(() => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
+        if (global.ps_mode_dev)
+          promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+        return promise.then(() => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
       });
       test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
       test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[1].starting_at, 3000));
@@ -93,16 +88,7 @@ scenario('Create "Product"', () => {
       });
     }, 'product/product');
     scenario('Save the created product', client => {
-      test('should switch the product online', () => {
-        return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          })
-          .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
-      });
+      test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     }, 'product/product');
   }, 'product/product');

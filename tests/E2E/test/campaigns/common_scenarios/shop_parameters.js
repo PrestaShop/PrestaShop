@@ -145,5 +145,15 @@ module.exports = {
         test('should click on "Ready" button', () => client.waitForExistAndClick(OnBoarding.ready_button, 1000));
       }, 'common_client');
     }, 'common_client', true);
+  },
+  enablePrestashopDebugMode: function (Menu, Performence) {
+    if(!global.ps_mode_dev) {
+      scenario('Enable the debug mode', client => {
+        test('should go to "Performance" page', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu));
+        test('should switch the "Debug mode" to "Yes"', () => client.waitForExistAndClick(Performence.enableDebugMode));
+        test('should click on "Save" button', () => client.waitForExistAndClick(Performence.save_button.replace('%I', 2)));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(Performence.success_box, "Successful update."));
+      }, 'common_client');
+    }
   }
 };

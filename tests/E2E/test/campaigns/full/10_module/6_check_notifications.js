@@ -11,7 +11,7 @@ scenario('Check notification module in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
   scenario('Configure "Bank Transfer" module', client => {
-    test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+    test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.module_manager_submenu));
     test('should click on "Notifications" tab', () => {
       return promise
         .then(() => client.getTextInVar(ModulePage.notification_number, 'notification'))
@@ -24,9 +24,9 @@ scenario('Check notification module in the Back Office', () => {
     test('should click on "Save" button', () => client.waitForExistAndClick(ModulePage.ModuleBankTransferPage.save_button));
   }, 'common_client');
   scenario('Check that the module is well configured', client => {
-    test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+    test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.module_manager_submenu));
     test('should click on "Notifications" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.notifications_tabs));
-    test('should check that the "Notifications number" is decremented with 1', () => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1).toString() ));
+    test('should check that the "Notifications number" is decremented with 1', () => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1).toString(), 'equal', 3000 ));
     test('should check that the configured module is not visible in the "Notifications" tab', () => client.checkIsNotVisible(ModulePage.configure_module.replace('%moduleTechName', 'ps_wirepayment')));
   }, 'common_client');
   scenario('Reset the configured module', client => {

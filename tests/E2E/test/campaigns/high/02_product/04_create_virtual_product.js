@@ -28,7 +28,7 @@ scenario('Create virtual Product in the Back Office', client => {
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
-        .then(() => client.waitForExistAndClick(AddProductPage.home_delete_button));
+        .then(() => client.scrollWaitForExistAndClick(AddProductPage.home_delete_button));
     });
     test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
@@ -42,14 +42,9 @@ scenario('Create virtual Product in the Back Office', client => {
     test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () =>  {
-      return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
     });
   }, 'product/product');
 
@@ -133,7 +128,7 @@ scenario('Check the virtual product in the Front Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'product/product');
-  scenario('Check that the pack product is well displayed in the Front Office', client => {
+  scenario('Check that the virtual product is well displayed in the Front Office', client => {
     test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));

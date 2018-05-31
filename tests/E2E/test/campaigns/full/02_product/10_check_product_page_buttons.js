@@ -24,16 +24,7 @@ scenario('Check product page buttons', () => {
   common_scenarios.createProduct(AddProductPage, firstProductData);
 
   scenario('Testing "Preview" button', client => {
-    test('should click on "Preview" button', () => {
-      return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        })
-        .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
-    });
+    test('should click on "Preview" button', () =>  client.waitForExistAndClick(AddProductPage.preview_buttons, 3000));
     test('should switch to the Front Office', () => client.switchWindow(1));
     test('should click on the "Preview" link', () => client.waitForExistAndClick(AddProductPage.preview_link));
     test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));

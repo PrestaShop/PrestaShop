@@ -23,7 +23,7 @@ scenario('Check the click on "Read more" button', () => {
             scenario('Install module', client => {
               test('should click on "Install" button', () => client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", 'ps_mbo')));
               test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
-              test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(Menu.Improve.Modules.installed_modules_tabs));
+              test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(Menu.Improve.Modules.module_manager_submenu));
               test('should search for "ps_mbo" module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, 'ps_mbo'));
               test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
               test('should check if the module "ps_mbo" was installed', () => client.isExisting(ModulePage.installed_module_div.replace('%moduleTechName', 'ps_mbo')));
@@ -40,7 +40,7 @@ scenario('Check the click on "Read more" button', () => {
     test('should go to "Module manager" page', () => {
       return promise
         .then(() => client.pause(3000))
-        .then(() => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+        .then(() => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.module_manager_submenu));
     });
     test('should search for the module "ps_mbo"', () => {
       return promise

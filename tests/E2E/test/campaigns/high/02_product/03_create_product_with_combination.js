@@ -19,18 +19,17 @@ scenario('Create product with combination in the Back Office', client => {
     test('should set the "Summary" text', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
     test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
     test('should set the "Description" text', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
-    test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
     test('should select the "Product with combination" option', () => client.waitForExistAndClick(AddProductPage.product_combinations));
     test('should upload the first product picture', () => client.uploadPicture('1.png', AddProductPage.picture));
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + 'C' + date_time));
-    test('should click on "Create"', () => client.createCategory());
+    test('should click on "Create" button', () => client.createCategory());
     test('should open all categories', () => client.openAllCategories());
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
-        .then(() => client.waitForExistAndClick(AddProductPage.home_delete_button));
+        .then(() => client.scrollWaitForExistAndClick(AddProductPage.home_delete_button));
     });
     test('should click on "ADD A BRAND" button', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
@@ -43,15 +42,10 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
     test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
-    test('should switch the product online', () => {
-      return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
+    test('should switch the product online', () =>  {
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
     });
   }, 'product/product');
 

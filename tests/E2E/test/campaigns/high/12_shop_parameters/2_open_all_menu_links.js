@@ -1,6 +1,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {PagesForm} = require('../../../selectors/BO/pages_form.js');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const {Performence} = require('../../../selectors/BO/advancedParameters/performence');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
 const common = require('../../common_scenarios/shop_parameters');
 let promise = Promise.resolve();
@@ -13,17 +14,19 @@ scenario('Open all menu links in the Back Office', () => {
       return promise
         .then(() => client.isVisible(OnBoarding.stop_button))
         .then(() => client.stopOnBoarding(OnBoarding.stop_button))
+        .then(() => common.enablePrestashopDebugMode(Menu, Performence));
     });
   }, 'onboarding');
+
   scenario('Go to "Dashboard" page in the Back Office', client => {
     common.clickOnMenuLinksAndCheckElement(client, "", Menu.dashboard_menu, PagesForm.calendar_form, "Dashboard");
   }, 'common_client');
   scenario('Check all the menu links of "SELL"', () => {
     scenario('Check all the menu links of "Orders" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu, PagesForm.Orders.order_form, "Orders");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.invoices_submenu, PagesForm.Orders.invoice_form, "Invoices");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.invoices_submenu, PagesForm.Orders.status_block, "Invoices");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.credit_slips_submenu, PagesForm.Orders.order_slip_form, "Credit slips");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.delivery_slips_submenu, PagesForm.Orders.delivery_form, "Delivery slips");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.delivery_slips_submenu, PagesForm.Orders.delivery_pdf_fieldset, "Delivery slips");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.shopping_carts_submenu, PagesForm.Orders.shopping_cart_form, "Shopping cart");
     }, 'common_client');
    scenario('Check all the menu links of "Catalog" in the Back Office', client => {
@@ -55,16 +58,17 @@ scenario('Open all menu links in the Back Office', () => {
   }, 'common_client');
   scenario('Check all the menu links of "IMPROVE"', () => {
     scenario('Check all the menu links of "Modules" in the Back Office', client => {
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu, PagesForm.Modules.modules_list, "Modules", "Selection", 5000);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu, PagesForm.Modules.modules_search_input, "Modules", "Installed modules", 0, Menu.Improve.Modules.installed_modules_tabs);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu, PagesForm.Modules.modules_to_configure, "Modules", "Notifications", 0, Menu.Improve.Modules.notifications_tabs);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu, PagesForm.Modules.addons_search_form, "Modules catalog");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.module_manager_submenu, PagesForm.Modules.modules_list, "Module manager", "Manage installed modules", 5000);
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.module_manager_submenu, PagesForm.Modules.modules_to_configure, "Module manager", "Alerts", 0, Menu.Improve.Modules.notifications_tabs);
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.module_manager_submenu, PagesForm.Modules.modules_update_list, "Module manager", "Updates", 0, Menu.Improve.Modules.updates_tab);
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu, PagesForm.Modules.modules_list, "Module catalog");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu, PagesForm.Modules.addons_search_form, "Module catalog", "Module selection", 0, Menu.Improve.Modules.modules_selections_tab);
     }, 'common_client');
     scenario('Check all the menu links of "Design" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_logo_submenu, PagesForm.Design.design_form, "Design");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_catalog_submenu, PagesForm.Design.catalog_theme, "Theme catalog");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu, PagesForm.Design.cms_category_form, "Pages");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.positions_submenu, PagesForm.Design.position_filter_form, "Positions");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.positions_submenu, PagesForm.Design.module_position_form, "Positions");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.image_settings_submenu, PagesForm.Design.image_type_form, "Image settings");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu, PagesForm.Design.configuration_link_form, "Link widget");
     }, 'common_client');
@@ -109,7 +113,8 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.merchant_expertise_submenu, PagesForm.ShopParameters.gamification_box, "Merchant Expertise", "Gamification");
     }, 'common_client');
     scenario('Check all the menu links of "Informations" in the Back Office', client => {
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.information_submenu, PagesForm.AdvancedParameters.check_configuration_box, "Informations");
+      test('should click on "Shop parameters" menu', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.shop_parameters_menu));
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.information_submenu, PagesForm.AdvancedParameters.check_configuration_box, "Informations", "", 3000);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu, PagesForm.AdvancedParameters.debug_mode_button, "Performance");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.administration_submenu, PagesForm.AdvancedParameters.administration_form, "Administration");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.email_submenu, PagesForm.AdvancedParameters.mail_form, "Email");

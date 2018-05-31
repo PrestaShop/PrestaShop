@@ -10,11 +10,10 @@ scenario('Discover "Advanced top menu" module in Back Office', () => {
   }, 'common_client');
 
   scenario('Check that the "Advanced top menu" module is opened', client => {
-    test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
-    test('should click on "Selection" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.selection_tab));
+    test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
     test('should search for the module "Advanced top menu"', () => {
       return promise
-        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, 'pm_advancedtopmenu'))
+        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, 'pm_advancedtopmenu', 2000))
         .then(() => client.waitForExistAndClick(ModulePage.modules_search_button));
     });
     test('should click on "Discover" button', () => client.waitForExistAndClick(ModulePage.discover_button));
