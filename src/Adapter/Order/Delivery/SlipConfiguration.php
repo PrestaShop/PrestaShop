@@ -43,11 +43,6 @@ final class SlipConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    /**
-     * @var string $rootDir Path to the application defines path
-     */
-    private $configDefinesPath;
-
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
