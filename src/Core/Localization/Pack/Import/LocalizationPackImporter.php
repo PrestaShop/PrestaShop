@@ -87,7 +87,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
      */
     public function import(LocalizationPackImportConfig $config)
     {
-        $errors = $errors = $this->checkConfig($config);
+        $errors = $this->checkConfig($config);
         if (!empty($errors)) {
             return $errors;
         }
@@ -146,12 +146,12 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
         }
 
         $contentItems = [
-            LocalizationPackImportConfig::CONTENT_STATES,
-            LocalizationPackImportConfig::CONTENT_TAXES,
-            LocalizationPackImportConfig::CONTENT_CURRENCIES,
-            LocalizationPackImportConfig::CONTENT_LANGUAGES,
-            LocalizationPackImportConfig::CONTENT_UNITS,
-            LocalizationPackImportConfig::CONTENT_GROUPS,
+            LocalizationPackImportConfigInterface::CONTENT_STATES,
+            LocalizationPackImportConfigInterface::CONTENT_TAXES,
+            LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
+            LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
+            LocalizationPackImportConfigInterface::CONTENT_UNITS,
+            LocalizationPackImportConfigInterface::CONTENT_GROUPS,
         ];
 
         foreach ($config->getContentToImport() as $contentItem) {

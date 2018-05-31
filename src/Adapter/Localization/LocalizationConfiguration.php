@@ -28,9 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
-use PrestaShop\PrestaShop\Adapter\Language\LanguageManager;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageActivator;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 
 /**
  * Class LocalizationConfiguration is responsible for 'Improve > International > Localization' page
@@ -44,9 +45,9 @@ class LocalizationConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
-     * @var LanguageManager
+     * @var LanguageActivator
      */
-    private $languageManager;
+    private $languageActivator;
 
     /**
      * @var CurrencyManager
@@ -60,18 +61,18 @@ class LocalizationConfiguration implements DataConfigurationInterface
 
     /**
      * @param Configuration $configuration
-     * @param LanguageManager $languageManager
+     * @param LanguageActivatorInterface $languageActivator
      * @param CurrencyManager $currencyManager
      * @param AdminModuleDataProvider $adminModuleDataProvider
      */
     public function __construct(
         Configuration $configuration,
-        LanguageManager $languageManager,
+        LanguageActivatorInterface $languageActivator,
         CurrencyManager $currencyManager,
         AdminModuleDataProvider $adminModuleDataProvider
     ) {
         $this->configuration = $configuration;
-        $this->languageManager = $languageManager;
+        $this->languageActivator = $languageActivator;
         $this->currencyManager = $currencyManager;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
     }
@@ -99,7 +100,7 @@ class LocalizationConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->languageManager->activateLanguage((int) $config['default_language']);
+            $this->languageActivator->activate((int) $config['default_language']);
 
             // only update currency related data if it has changed
             $currentConfig = $this->getConfiguration();

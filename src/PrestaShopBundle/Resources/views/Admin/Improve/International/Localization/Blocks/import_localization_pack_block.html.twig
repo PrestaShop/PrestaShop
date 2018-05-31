@@ -39,7 +39,7 @@
             {{ 'Localization pack you want to import'|trans }}
           </label>
           {{ form_errors(localizationPackImportForm.iso_localization_pack) }}
-          {{ form_widget(localizationPackImportForm.iso_localization_pack) }}
+          {{ form_widget(localizationPackImportForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
         </div>
 
         <div class="form-group">
