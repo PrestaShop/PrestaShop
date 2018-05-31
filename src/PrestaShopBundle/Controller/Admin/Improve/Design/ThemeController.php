@@ -37,11 +37,6 @@ use Symfony\Component\HttpFoundation\Request;
 class ThemeController extends FrameworkBundleAdminController
 {
     /**
-     * @var string The legacy controller name for routing.
-     */
-    const CONTROLLER_NAME = 'AdminThemesCatalog';
-
-    /**
      * Displays themes from Addons under "Improve > Design > Themes Catalog"
      *
      * @param Request $request
@@ -50,16 +45,22 @@ class ThemeController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-1.7.php?'.
-            'psVersion='.$this->get('prestashop.adapter.legacy.configuration')->get('_PS_VERSION_').'&'.
-            'isoLang='.$this->getContext()->language->iso_code.'&'.
-            'isoCurrency='.$this->getContext()->currency->iso_code.'&'.
-            'isoCountry='.$this->getContext()->country->iso_code.'&'.
-            'activity='.(int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY').'&'.
-            'parentUrl='.$request->getSchemeAndHttpHost().'&'.
-            'onlyThemes=1');
+        $context = $this->getContext();
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/addons_store.html.twig', [
+        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-1.7.php'
+            . http_build_query([
+                'psVersion' => $configuration->get('_PS_VERSION_'),
+                'isoLang' => $context->language->iso_code,
+                'isoCurrency' => $context->currency->iso_code,
+                'isoCountry' => $this->getContext()->country->iso_code,
+                'activity' => $configuration->getInt('PS_SHOP_ACTIVITY'),
+                'parentUrl' => $request->getSchemeAndHttpHost(),
+                'onlyThemes' => 1
+            ])
+        );
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/ThemesCatalogPage/addons_store.html.twig', [
             'pageContent' => $pageContent,
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
@@ -69,7 +70,6 @@ class ThemeController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminThemesCatalog'),
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
         ]);
     }
 }
