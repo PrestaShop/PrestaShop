@@ -95,7 +95,9 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        return isset($configuration['date_from']) &&
-            isset($configuration['date_to']);
+        return isset(
+            $configuration['date_from'],
+            $configuration['date_to']
+        );
     }
 }
