@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,8 +43,10 @@ class SystemInformationController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminInformation';
 
     /**
-     * @param Request $request
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/system_information.html.twig")
+     *
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -51,7 +54,7 @@ class SystemInformationController extends FrameworkBundleAdminController
         $requirementsSummary = $this->getRequirementsChecker()->getSummary();
         $systemInformationSummary = $this->getSystemInformation()->getSummary();
 
-        return array(
+        return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Information', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -65,7 +68,7 @@ class SystemInformationController extends FrameworkBundleAdminController
             'system' => $systemInformationSummary,
             'requirements' => $requirementsSummary,
             'userAgent' => $request->headers->get('User-Agent'),
-        );
+        ];
     }
 
     /**
