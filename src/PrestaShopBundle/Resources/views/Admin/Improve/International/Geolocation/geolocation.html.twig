@@ -30,7 +30,17 @@
 
 {% block content %}
   <div class="container">
-    {{ form_start(geolocationForm) }}
+    <div class="row">
+      <div class="col">
+        <div class="alert alert-warning" role="alert">
+          <span class="alert-text">
+            {{ 'In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.'|trans({'[1]': '<a href="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz" target="_blank">', '[/1]': '<a/>'})|raw }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    {{ form_start(geolocationForm, {'action': path('admin_geolocation_process_form')}) }}
     <div class="row">
       <div class="col">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
