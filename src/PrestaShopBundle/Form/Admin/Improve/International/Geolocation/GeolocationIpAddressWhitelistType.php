@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -40,7 +41,22 @@ class GeolocationIpAddressWhitelistType extends AbstractType
         $builder
             ->add('geolocation_whitelist', TextareaType::class, [
                 'required' => false,
+                'attr' => [
+                    'col' => 15,
+                    'rows' => 30,
+                ],
             ])
+        ;
+
+        $builder->get('geolocation_whitelist')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($ipWhitelistTextWithSemiColons) {
+                    return str_replace(';', "\n", $ipWhitelistTextWithSemiColons);
+                },
+                function ($ipWhitelistTextWithNewLines) {
+                    return preg_replace('/\r\n|\r|\n/', ';', $ipWhitelistTextWithNewLines);
+                }
+            ))
         ;
     }
 }
