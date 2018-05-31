@@ -24,42 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Order\Delivery;
+namespace PrestaShop\PrestaShop\Core\Order;
 
-use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipConfiguration;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-
-/**
- * This class is responsible of managing the data manipulated using forms
- * in "Sells > Orders > Delivery Slips" page.
- */
-final class SlipFormDataProvider implements FormDataProviderInterface
+interface InvoiceInterface
 {
-    /**
-     * @var SlipConfiguration
-     */
-    private $configuration;
-
-    public function __construct(SlipConfiguration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData()
-    {
-        return array(
-            'options' => $this->configuration->getConfiguration(),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->configuration->updateConfiguration($data['options']);
-    }
 }

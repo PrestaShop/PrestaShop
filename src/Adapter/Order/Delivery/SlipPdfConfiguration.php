@@ -26,18 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Delivery;
 
+use PrestaShop\PrestaShop\Adapter\Order\Invoice;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Order delivery slip configuration
+ * This class manages Order delivery slip pdf configuration
  */
-final class SlipConfiguration implements DataConfigurationInterface
+final class SlipPdfConfiguration implements DataConfigurationInterface
 {
-    const PREFIX = 'PS_DELIVERY_PREFIX';
-    const NUMBER = 'PS_DELIVERY_NUMBER';
-    const ENABLE_PRODUCT_IMAGE = 'PS_PDF_IMG_DELIVERY';
-
     /**
      * @var Configuration
      */
@@ -55,11 +53,7 @@ final class SlipConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
-            'prefix' => $this->configuration->get(self::PREFIX),
-            'number' => $this->configuration->getInt(self::NUMBER),
-            'enable_product_image' => $this->configuration->getBoolean(self::ENABLE_PRODUCT_IMAGE),
-        );
+        return [];
     }
 
     /**
@@ -67,15 +61,33 @@ final class SlipConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
-
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set(self::PREFIX, $configuration['prefix']);
-            $this->configuration->set(self::NUMBER, $configuration['number']);
-            $this->configuration->set(self::ENABLE_PRODUCT_IMAGE, $configuration['enable_product_image']);
+            if (!Validate::isDate($configuration['date_to'])) {
+                $errors[] = [
+                    'key' => "Invalid 'to' date",
+                    'domain' => 'Admin.Catalog.Notification',
+                    'parameters' => [],
+                ];
+            }
+
+            if (!Validate::isDate($configuration['date_from'])) {
+                $errors[] = [
+                    'key' => "Invalid 'from' date",
+                    'domain' => 'Admin.Catalog.Notification',
+                    'parameters' => [],
+                ];
+            }
+
+            if (empty(Invoice::getByDeliveryDateInterval($configuration['date_from'], $configuration['date_to']))) {
+                $errors[] = [
+                    'key' => 'No delivery slip was found for this period.',
+                    'domain' => 'Admin.Orderscustomers.Notification',
+                    'parameters' => [],
+                ];
+            }
         }
 
-        return $errors;
+        return !empty($errors) ? $errors : [];
     }
 
     /**
@@ -83,10 +95,7 @@ final class SlipConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        return isset(
-            $configuration['prefix'],
-            $configuration['number'],
-            $configuration['enable_product_image']
-        );
+        return isset($configuration['date_from']) &&
+            isset($configuration['date_to']);
     }
 }

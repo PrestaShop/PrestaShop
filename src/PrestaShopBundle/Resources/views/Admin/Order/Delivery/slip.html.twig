@@ -25,8 +25,6 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
-{% set optionsForm, pdfForm = form.options, form.pdf %}
-
 {% block content %}
   <div class="container">
     {{ form_start(pdfForm, {'attr' : {'class': 'form', 'autocomplete': 'off'}, 'action': path('admin_order_delivery_slip_pdf') }) }}
@@ -41,15 +39,14 @@
                 <div class="card-text">
                   <div class="form-group">
                     {{ ps.label_with_help('From'|trans({}, 'Admin.Globals'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-
-                    {{ form_errors(pdfForm.date_from) }}
-                    {{ form_widget(pdfForm.date_from) }}
+                    {{ form_errors(pdfForm.pdf.date_from) }}
+                    {{ form_widget(pdfForm.pdf.date_from) }}
                   </div>
                   <div class="form-group">
                     {{ ps.label_with_help('To'|trans({}, 'Admin.Globals'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
-                    {{ form_errors(pdfForm.date_to) }}
-                    {{ form_widget(pdfForm.date_to) }}
+                    {{ form_errors(pdfForm.pdf.date_to) }}
+                    {{ form_widget(pdfForm.pdf.date_to) }}
                   </div>
                   {{ form_rest(pdfForm) }}
                 </div>
@@ -80,22 +77,22 @@
                   <div class="form-group">
                     {{ ps.label_with_help(('Delivery prefix'|trans), ('Prefix used for delivery slips.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
-                    {{ form_errors(optionsForm.prefix) }}
-                    {{ form_widget(optionsForm.prefix) }}
+                    {{ form_errors(optionsForm.options.prefix) }}
+                    {{ form_widget(optionsForm.options.prefix) }}
                   </div>
                   <div class="form-group">
                     {{ ps.label_with_help(('Delivery Number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
-                    {{ form_errors(optionsForm.number) }}
-                    {{ form_widget(optionsForm.number) }}
+                    {{ form_errors(optionsForm.options.number) }}
+                    {{ form_widget(optionsForm.options.number) }}
                   </div>
                   <div class="form-group">
                     {{ ps.label_with_help(('Enable product image'|trans), ('Adds an image before product name on Delivery-slip'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
-                    {{ form_errors(optionsForm.enable_product_image) }}
-                    {{ form_widget(optionsForm.enable_product_image) }}
+                    {{ form_errors(optionsForm.options.enable_product_image) }}
+                    {{ form_widget(optionsForm.options.enable_product_image) }}
                   </div>
-                  {{ form_rest(form) }}
+                  {{ form_rest(optionsForm) }}
                 </div>
               </div>
               <div class="card-footer">

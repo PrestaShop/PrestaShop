@@ -108,6 +108,7 @@ class DeliveryControllerTest extends WebTestCase
 
     public function testPdfActionWithInvalidData()
     {
+        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('form');
         $this->client->request(
             'POST',
             $this->router->generate(
@@ -118,6 +119,7 @@ class DeliveryControllerTest extends WebTestCase
                     'pdf' => [
                         'date_from' => 'foo'
                     ],
+                    '_token' => $token
                 ],
             ]
         );
@@ -130,5 +132,34 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
+        $this->assertContains('/order/delivery/slip?_token', $response->getTargetUrl());
+    }
+
+    public function testPdfActionWithEmptyData()
+    {
+        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('form');
+        $this->client->request(
+            'POST',
+            $this->router->generate(
+                'admin_order_delivery_slip_pdf'
+            ),
+            [
+                'form' => [
+                    'pdf' => [],
+                    '_token' => $token
+                ],
+            ]
+        );
+        $response = $this->client->getResponse();
+        $this->assertEquals(
+            Response::HTTP_FOUND,
+            $response->getStatusCode()
+        );
+
+        $this->assertArrayHasKey(
+            'error',
+            self::$kernel->getContainer()->get('session')->getFlashBag()->all()
+        );
+        $this->assertContains('/order/delivery/slip?_token', $response->getTargetUrl());
     }
 }

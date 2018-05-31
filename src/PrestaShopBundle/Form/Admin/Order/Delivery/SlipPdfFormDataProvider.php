@@ -23,23 +23,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use OrderInvoice as InvoiceLegacy;
-use PrestaShop\PrestaShop\Core\Order\InvoiceInterface;
+namespace PrestaShopBundle\Form\Admin\Order\Delivery;
 
-final class Invoice implements InvoiceInterface
+use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+
+/**
+ * This class is responsible of managing the data manipulated pdf form
+ * in "Sells > Orders > Delivery Slips" page.
+ */
+final class SlipPdfFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * Return collection of Invoice
-     *
-     * @param string $dateFrom Date From
-     * @param string $dateTo   Date To
-     *
-     * @return array[InvoiceLegacy]
+     * @var SlipPdfConfiguration
      */
-    public static function getByDeliveryDateInterval($dateFrom, $dateTo)
+    private $configuration;
+
+    public function __construct(SlipPdfConfiguration $configuration)
     {
-        return InvoiceLegacy::getByDeliveryDateInterval($dateFrom, $dateTo);
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->configuration->updateConfiguration($data['pdf']);
     }
 }

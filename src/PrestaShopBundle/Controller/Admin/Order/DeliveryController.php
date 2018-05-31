@@ -30,7 +30,6 @@ use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShop\PrestaShop\Adapter\Order\Invoice;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -71,7 +70,7 @@ class DeliveryController extends FrameworkBundleAdminController
         }
 
         /* @var $formHandler FormHandler */
-        $formHandler = $this->get('prestashop.adapter.order.delivery.slip.form_handler');
+        $formHandler = $this->get('prestashop.adapter.order.delivery.slip.options.form_handler');
         /* @var $form Form */
         $form = $formHandler->getForm();
 
@@ -91,7 +90,8 @@ class DeliveryController extends FrameworkBundleAdminController
         }
 
         return [
-            'form' => $form->createView(),
+            'optionsForm' => $form->createView(),
+            'pdfForm' => $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler')->getForm()->createView(),
             'help_link' => $this->generateSidebarLink($legacyController),
             'layoutTitle' => $this->trans('Delivery Slips', 'Admin.NavigationMenu'),
             'requireAddonsSearch' => false,
@@ -123,45 +123,23 @@ class DeliveryController extends FrameworkBundleAdminController
             return $this->redirectToDefaultPage();
         }
 
-        $formData = $request->request->get('form');
-        $dateFrom = !empty($formData['pdf']['date_from']) ?
-                  $formData['pdf']['date_from'] :
-                  null;
-        $dateTo = !empty($formData['pdf']['date_to']) ?
-                  $formData['pdf']['date_to'] :
-                  null;
+        /* @var $formHandler FormHandler */
+        $formHandler = $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler');
+        /* @var $form Form */
+        $form = $formHandler->getForm();
 
-        $errors = [];
-        if (!Validate::isDate($dateFrom)) {
-            $errors[] = [
-                'key' => "Invalid 'from' date",
-                'domain' => 'Admin.Catalog.Notification',
-                'parameters' => [],
-            ];
-        }
-        if (!Validate::isDate($dateTo)) {
-            $errors[] = [
-                'key' => "Invalid 'to' date",
-                'domain' => 'Admin.Catalog.Notification',
-                'parameters' => [],
-            ];
-        }
-
-        if (empty($errors)) {
-            if (!empty(Invoice::getByDeliveryDateInterval($dateFrom, $dateTo))) {
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $errors = $formHandler->save($form->getData());
+            if (empty($errors)) {
                 return $this->redirect(
                     $this->get('prestashop.adapter.legacy.context')
                     ->getAdminLink('AdminPdf') .
                     '&submitAction=generateDeliverySlipsPDF&date_from=' .
-                    urlencode($dateFrom) .'&date_to=' . urlencode($dateTo)
+                    urlencode($data['pdf']['date_from']) .'&date_to=' . urlencode($data['pdf']['date_to'])
                 );
             }
-
-            $errors[] = [
-                'key' => 'No delivery slip was found for this period.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
         }
 
         if (!empty($errors)) {

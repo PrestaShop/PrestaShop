@@ -102,7 +102,12 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
 
-    prestashop.adapter.order.delivery.slip.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipConfiguration'
+    prestashop.adapter.order.delivery.slip.options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order.delivery.slip.pdf.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
