@@ -28,18 +28,15 @@ namespace PrestaShopBundle\Controller\Admin\Order;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShop\PrestaShop\Adapter\Order\Invoice;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Admin controller for the Order Delivery
@@ -50,25 +47,14 @@ class DeliveryController extends FrameworkBundleAdminController
      * Main page for Delivery slips.
      *
      * @Template("@PrestaShop/Admin/Order/Delivery/slip.html.twig")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
      * @param Request $request
      *
      * @return array|RedirectResponse
      */
     public function slipAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            return $this->redirectToDefaultPage();
-        }
-
         /* @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.options.form_handler');
         /* @var $form Form */
@@ -92,7 +78,7 @@ class DeliveryController extends FrameworkBundleAdminController
         return [
             'optionsForm' => $form->createView(),
             'pdfForm' => $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler')->getForm()->createView(),
-            'help_link' => $this->generateSidebarLink($legacyController),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans('Delivery Slips', 'Admin.NavigationMenu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
@@ -104,25 +90,14 @@ class DeliveryController extends FrameworkBundleAdminController
     /**
      * Delivery slips PDF generator
      *
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function generatePdfAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            return $this->redirectToDefaultPage();
-        }
-
         /* @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler');
         /* @var $form Form */
@@ -130,14 +105,19 @@ class DeliveryController extends FrameworkBundleAdminController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
+                $pdf = $form->get('pdf')->getData();
                 return $this->redirect(
-                    $this->get('prestashop.adapter.legacy.context')
-                    ->getAdminLink('AdminPdf') .
-                    '&submitAction=generateDeliverySlipsPDF&date_from=' .
-                    urlencode($data['pdf']['date_from']) .'&date_to=' . urlencode($data['pdf']['date_to'])
+                    $this->get('prestashop.adapter.legacy.context')->getAdminLink(
+                        'AdminPdf',
+                        true,
+                        [
+                            'date_from' => $pdf['date_from'],
+                            'date_to' => $pdf['date_to'],
+                            'submitAction' => 'generateDeliverySlipsPDF'
+                        ]
+                    )
                 );
             }
         }
