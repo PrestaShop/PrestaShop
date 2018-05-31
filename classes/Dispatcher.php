@@ -221,23 +221,14 @@ class DispatcherCore
 
         $this->use_routes = (bool) Configuration::get('PS_REWRITING_SETTINGS');
 
-        // Select right front controller
-        if (defined('_PS_ADMIN_DIR_')) {
-            $this->front_controller = self::FC_ADMIN;
-            $this->controller_not_found = 'adminnotfound';
-        } elseif (Tools::getValue('fc') == 'module') {
-            $this->front_controller = self::FC_MODULE;
-            $this->controller_not_found = 'pagenotfound';
-        } else {
-            $this->front_controller = self::FC_FRONT;
-            $this->controller_not_found = 'pagenotfound';
-        }
-
+        $this->setFrontControllerType();
+        
+        $this->setNotFoundController($this->getFrontControllerType());
+        
         $this->setRequestUri();
 
-        // Switch language if needed (only on front)
-        if (in_array($this->front_controller, array(self::FC_FRONT, self::FC_MODULE))) {
-            Tools::switchLanguage();
+        if (self::FC_ADMIN !== $this->getFrontControllerType()) {
+            Tools::switchLanguage(); // Switches language if it is necessary
         }
 
         if (Language::isMultiLanguageActivated()) {
@@ -315,6 +306,38 @@ class DispatcherCore
         $this->default_controller = $defaultController;
     }
 
+    /**
+     * Sets the front controller type.
+     */
+    private function setFrontControllerType()
+    {
+        if (defined('_PS_ADMIN_DIR_')) {
+            $this->front_controller = self::FC_ADMIN;
+        }
+        
+        if ('module' === Tools::getValue('fc')) {
+            $this->front_controller = self::FC_MODULE;
+        }
+        
+        $this->front_controller = self::FC_FRONT;
+    }
+    
+    /**
+     * Gets the front controller type.
+     */
+    private function getFrontControllerType()
+    {
+        return $this->front_controller;
+    }
+        
+    /**
+     * Sets the fallback controller depending on the front controller type.
+     */
+    private function setNotFoundController($frontControllerType)
+    {
+        $this->controller_not_found = self::FC_ADMIN === $frontControllerType ? 'adminnotfound' : 'pagenotfound';
+    }
+    
     /**
      * Sets use_default_controller to true, sets and returns the default controller.
      *
