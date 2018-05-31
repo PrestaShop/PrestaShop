@@ -47,7 +47,7 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage Debug mode in back office
+     * Returns configuration used to manage Slip pdf in back office
      *
      * @return array
      */
