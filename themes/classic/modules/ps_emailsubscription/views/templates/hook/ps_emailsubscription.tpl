@@ -63,6 +63,9 @@
                   {$msg}
                 </p>
               {/if}
+              {if isset($id_module)}
+                {hook h='displayGDPRConsent' id_module=$id_module}
+              {/if}
           </div>
         </div>
       </form>
