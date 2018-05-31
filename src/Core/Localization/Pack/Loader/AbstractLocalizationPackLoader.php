@@ -49,10 +49,6 @@ abstract class AbstractLocalizationPackLoader implements LocalizationPackLoaderI
             return null;
         }
 
-        if (false === $xml) {
-            return null;
-        }
-
-        return $xml;
+        return false === $xml ? null : $xml;
     }
 }

@@ -115,8 +115,8 @@ services:
     prestashop.adapter.data_provider.language:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
 
-    prestashop.adapter.manager.language:
-        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageManager'
+    prestashop.adapter.language.activator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
 
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
@@ -125,7 +125,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
-            - '@prestashop.adapter.manager.language'
+            - '@prestashop.adapter.language.activator'
             - '@prestashop.adapter.manager.currency'
             - '@prestashop.adapter.admin.data_provider.module'
 

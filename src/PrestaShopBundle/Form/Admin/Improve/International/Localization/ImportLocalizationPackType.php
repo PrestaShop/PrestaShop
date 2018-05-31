@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
+use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -86,21 +86,17 @@ class ImportLocalizationPackType extends TranslatorAwareType
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
                 'choices' =>  $this->getLocalizationPackChoices(),
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
             ])
             ->add('content_to_import', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->getContentToImportChoices(),
                 'data' => [
-                    LocalizationPackImportConfig::CONTENT_STATES,
-                    LocalizationPackImportConfig::CONTENT_TAXES,
-                    LocalizationPackImportConfig::CONTENT_CURRENCIES,
-                    LocalizationPackImportConfig::CONTENT_LANGUAGES,
-                    LocalizationPackImportConfig::CONTENT_UNITS,
+                    LocalizationPackImportConfigInterface::CONTENT_STATES,
+                    LocalizationPackImportConfigInterface::CONTENT_TAXES,
+                    LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
+                    LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
+                    LocalizationPackImportConfigInterface::CONTENT_UNITS,
                 ],
             ])
             ->add('download_pack_data', SwitchType::class, [
@@ -125,10 +121,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
 
         if ($localizationPacks) {
             foreach ($localizationPacks as $pack) {
-                $iso = (string) $pack->iso;
-                $name = (string) $pack->name;
-
-                $choices[$name] = $iso;
+                $choices[(string) $pack->name] = (string) $pack->iso;
             }
         }
 
@@ -167,12 +160,12 @@ class ImportLocalizationPackType extends TranslatorAwareType
     private function getContentToImportChoices()
     {
         return [
-            $this->trans('States', 'Admin.International.Feature') => LocalizationPackImportConfig::CONTENT_STATES,
-            $this->trans('Taxes', 'Admin.Global') => LocalizationPackImportConfig::CONTENT_TAXES,
-            $this->trans('Currencies', 'Admin.Global') => LocalizationPackImportConfig::CONTENT_CURRENCIES,
-            $this->trans('Languages', 'Admin.Global') => LocalizationPackImportConfig::CONTENT_LANGUAGES,
-            $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => LocalizationPackImportConfig::CONTENT_UNITS,
-            $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => LocalizationPackImportConfig::CONTENT_GROUPS,
+            $this->trans('States', 'Admin.International.Feature') => LocalizationPackImportConfigInterface::CONTENT_STATES,
+            $this->trans('Taxes', 'Admin.Global') => LocalizationPackImportConfigInterface::CONTENT_TAXES,
+            $this->trans('Currencies', 'Admin.Global') => LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
+            $this->trans('Languages', 'Admin.Global') => LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
+            $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => LocalizationPackImportConfigInterface::CONTENT_UNITS,
+            $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => LocalizationPackImportConfigInterface::CONTENT_GROUPS,
         ];
     }
 }

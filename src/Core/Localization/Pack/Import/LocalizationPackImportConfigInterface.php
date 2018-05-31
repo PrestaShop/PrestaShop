@@ -24,51 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
+namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
- * Class TimezoneRepository
+ * Interface LocalizationPackImportConfigInterface defines
  */
-class TimezoneRepository implements RepositoryInterface
+interface LocalizationPackImportConfigInterface
 {
     /**
-     * @var Connection
+     * Available content to import
      */
-    private $connection;
+    const CONTENT_STATES = 'states';
+    const CONTENT_TAXES = 'taxes';
+    const CONTENT_CURRENCIES = 'currencies';
+    const CONTENT_LANGUAGES = 'languages';
+    const CONTENT_UNITS = 'units';
+    const CONTENT_GROUPS = 'groups';
 
     /**
-     * @var string
+     * Get country ISO code
+     *
+     * @return string
      */
-    private $tablePrefix;
+    public function getCountryIsoCode();
 
     /**
-     * @var string
-     */
-    private $timezoneTable;
-
-    /**
-     * @param Connection $connection
-     * @param $tablePrefix
-     */
-    public function __construct(Connection $connection, $tablePrefix)
-    {
-        $this->connection = $connection;
-        $this->tablePrefix = $tablePrefix;
-        $this->timezoneTable = $tablePrefix.'timezone';
-    }
-
-    /**
-     * Final all timezones from database
+     * Get content to import
      *
      * @return array
      */
-    public function findAll()
-    {
-        $statement = $this->connection->query("SELECT t.* FROM $this->timezoneTable t");
+    public function getContentToImport();
 
-        return $statement->fetchAll();
-    }
+    /**
+     * Whether pack data should be downloaded
+     *
+     * @return bool
+     */
+    public function shouldDownloadPackData();
 }
