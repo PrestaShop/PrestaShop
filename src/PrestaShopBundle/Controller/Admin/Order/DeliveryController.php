@@ -130,14 +130,19 @@ class DeliveryController extends FrameworkBundleAdminController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
+                $pdf = $form->get('pdf')->getData();
                 return $this->redirect(
-                    $this->get('prestashop.adapter.legacy.context')
-                    ->getAdminLink('AdminPdf') .
-                    '&submitAction=generateDeliverySlipsPDF&date_from=' .
-                    urlencode($data['pdf']['date_from']) .'&date_to=' . urlencode($data['pdf']['date_to'])
+                    $this->get('prestashop.adapter.legacy.context')->getAdminLink(
+                        'AdminPdf',
+                        true,
+                        [
+                            'date_from' => $pdf['date_from'],
+                            'date_to' => $pdf['date_to'],
+                            'submitAction' => 'generateDeliverySlipsPDF'
+                        ]
+                    )
                 );
             }
         }
