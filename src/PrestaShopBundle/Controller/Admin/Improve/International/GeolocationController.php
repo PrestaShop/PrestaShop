@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class GeolocationController extends FrameworkBundleAdminController
@@ -57,9 +58,36 @@ class GeolocationController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process geolocation configuration form
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processFormAction(Request $request)
+    {
+        $geolocationFormHandler = $this->getGeolocationFormHandler();
+
+        $geolocationForm = $geolocationFormHandler->getForm();
+        $geolocationForm->handleRequest($request);
+
+        if ($geolocationForm->isSubmitted()) {
+            $errors = $geolocationFormHandler->save($geolocationForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_geolocation_show');
+            }
+        }
+
+        return $this->redirectToRoute('admin_geolocation_show');
+    }
+
+    /**
      * @return FormHandler
      */
-    private function getGeolocationFormHandler()
+    protected function getGeolocationFormHandler()
     {
         return $this->get('prestashop.admin.geolocation.form_handler');
     }

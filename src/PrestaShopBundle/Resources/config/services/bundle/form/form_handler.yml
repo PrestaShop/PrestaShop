@@ -128,14 +128,16 @@ services:
             - 'OrderDeliverySlipPage'
 
     prestashop.admin.localization.form_handler:
-        - '@=service("form.factory").createBuilder()'
-        - '@prestashop.hook.dispatcher'
-        - '@prestashop.admin.geolocation.form_data_provider'
-        -
-          'geolocation_by_id_address': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
-          'geolocation_ip_address_whitelist': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
-          'geolocation_options': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
-        - 'GeolocationPage'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.geolocation.form_data_provider'
+            -
+              'geolocation_by_id_address': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
+              'geolocation_ip_address_whitelist': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
+              'geolocation_options': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+            - 'GeolocationPage'
 
     prestashop.admin.geolocation.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'

@@ -138,3 +138,15 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.geolocation_by_ip_address.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.geolocation_ip_address_whitelist.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.geolocation_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
