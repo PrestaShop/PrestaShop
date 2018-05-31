@@ -36,7 +36,7 @@
         <div class="form-group">
           {{ ps.label_with_help(('Default language'|trans), ('The default language used in your shop.'|trans({}, 'Admin.International.Help'))) }}
           {{ form_errors(configurationForm.default_language) }}
-          {{ form_widget(configurationForm.default_language) }}
+          {{ form_widget(configurationForm.default_language, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
         </div>
 
         <div class="form-group">
@@ -51,7 +51,7 @@
         <div class="form-group">
           {{ ps.label_with_help(('Default country'|trans), ('The default country used in your shop.'|trans({}, 'Admin.International.Help'))) }}
           {{ form_errors(configurationForm.default_country) }}
-          {{ form_widget(configurationForm.default_country) }}
+          {{ form_widget(configurationForm.default_country, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
         </div>
 
         <div class="form-group">
@@ -68,7 +68,7 @@
 
           {{ ps.label_with_help(('Default currency'|trans), ('The default currency used in your shop.'|trans({}, 'Admin.International.Help'))) }}
           {{ form_errors(configurationForm.default_currency) }}
-          {{ form_widget(configurationForm.default_currency, {'attr': {'data-warning-message': currencyChangeWarningMessage}}) }}
+          {{ form_widget(configurationForm.default_currency, {'attr': {'data-warning-message': currencyChangeWarningMessage, 'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
         </div>
 
         <div class="form-group">
@@ -76,7 +76,7 @@
             {{ 'Time zone'|trans }}
           </label>
           {{ form_errors(configurationForm.timezone) }}
-          {{ form_widget(configurationForm.timezone) }}
+          {{ form_widget(configurationForm.timezone, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
         </div>
       </div>
     </div>

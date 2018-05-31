@@ -94,7 +94,7 @@ class LocalizationController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function saveSettingsAction(Request $request)
+    public function processFormAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 

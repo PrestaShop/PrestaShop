@@ -24,51 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
+namespace PrestaShop\PrestaShop\Core\Language;
 
 /**
- * Class TimezoneRepository
+ * Interface LanguageActivatorInterface defines contract for language activator
  */
-class TimezoneRepository implements RepositoryInterface
+interface LanguageActivatorInterface
 {
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $tablePrefix;
-
-    /**
-     * @var string
-     */
-    private $timezoneTable;
-
-    /**
-     * @param Connection $connection
-     * @param $tablePrefix
-     */
-    public function __construct(Connection $connection, $tablePrefix)
-    {
-        $this->connection = $connection;
-        $this->tablePrefix = $tablePrefix;
-        $this->timezoneTable = $tablePrefix.'timezone';
-    }
-
-    /**
-     * Final all timezones from database
+     * Activate language
      *
-     * @return array
+     * @param int $langId
+     *
+     * @return void
      */
-    public function findAll()
-    {
-        $statement = $this->connection->query("SELECT t.* FROM $this->timezoneTable t");
+    public function activate($langId);
 
-        return $statement->fetchAll();
-    }
+    /**
+     * Deactivate language
+     *
+     * @param int $langId
+     *
+     * @return void
+     */
+    public function deactivate($langId);
 }

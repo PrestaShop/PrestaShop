@@ -96,33 +96,17 @@ class LocalizationConfigurationType extends AbstractType
         $builder
             ->add('default_language', ChoiceType::class, [
                 'choices' => $this->getLanguageChoices(),
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
             ])
             ->add('detect_language_from_browser', SwitchType::class)
             ->add('default_country', ChoiceType::class, [
                 'choices' => $this->getCountryChoices(),
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
             ])
             ->add('detect_country_from_browser', SwitchType::class)
             ->add('default_currency', ChoiceType::class, [
                 'choices' => $this->getCurrencyChoices(),
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
             ])
             ->add('timezone', ChoiceType::class, [
                 'choices' => $this->getTimezoneChoices(),
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
             ])
         ;
     }

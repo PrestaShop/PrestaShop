@@ -27,20 +27,35 @@
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
 use Language;
+use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 
-class LanguageManager
+/**
+ * Class LanguageActivator is responsible for activating/deactivating language
+ */
+final class LanguageActivator implements LanguageActivatorInterface
 {
     /**
-     * Activate language
-     *
-     * @param int $langId
+     * {@inheritdoc}
      */
-    public function activateLanguage($langId)
+    public function activate($langId)
     {
         $lang = new Language((int) $langId);
 
         if (!$lang->active) {
             $lang->active = 1;
+            $lang->save();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deactivate($langId)
+    {
+        $lang = new Language((int) $langId);
+
+        if ($lang->active) {
+            $lang->active = 0;
             $lang->save();
         }
     }
