@@ -31,8 +31,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Displays themes from Addons under "Improve > Design > Themes Catalog"
- *
- * @author Michael Käfer <michael.kaefer1@gmx.at>
  */
 class ThemeController extends FrameworkBundleAdminController
 {
