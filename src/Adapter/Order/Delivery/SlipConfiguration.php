@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Debug mode configuration for a Shop
+ * This class manages Order delivery slip configuration
  */
-class SlipConfiguration implements DataConfigurationInterface
+final class SlipConfiguration implements DataConfigurationInterface
 {
     const PREFIX = 'PS_DELIVERY_PREFIX';
     const NUMBER = 'PS_DELIVERY_NUMBER';
