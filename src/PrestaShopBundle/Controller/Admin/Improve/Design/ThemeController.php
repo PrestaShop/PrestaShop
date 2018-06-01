@@ -46,7 +46,7 @@ class ThemeController extends FrameworkBundleAdminController
         $context = $this->getContext();
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-1.7.php?'
+        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-' . $this->getMajorVersion($configuration->get('_PS_VERSION_')) . '.php?'
             . http_build_query([
                 'psVersion' => $configuration->get('_PS_VERSION_'),
                 'isoLang' => $context->language->iso_code,
@@ -69,5 +69,23 @@ class ThemeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminThemesCatalog'),
             'requireFilterStatus' => false,
         ]);
+    }
+
+    /**
+     * Extracts the major version part of a PrestaShop version string
+     *
+     * For "1.7.4.0" the method returns "1.7", etc.
+     *
+     * @param string $version
+     *
+     * @return bool|string
+     */
+    private function getMajorVersion($version)
+    {
+        return substr(
+            $version,
+            0,
+            strpos($version, '.', strpos($version, '.') + 1)
+        );
     }
 }
