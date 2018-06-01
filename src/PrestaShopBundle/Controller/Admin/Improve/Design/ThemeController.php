@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ThemeController extends FrameworkBundleAdminController
 {
+
     /**
      * Displays themes from Addons under "Improve > Design > Themes Catalog"
      *
@@ -46,7 +47,7 @@ class ThemeController extends FrameworkBundleAdminController
         $context = $this->getContext();
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-1.7.php'
+        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-1.7.php?'
             . http_build_query([
                 'psVersion' => $configuration->get('_PS_VERSION_'),
                 'isoLang' => $context->language->iso_code,
