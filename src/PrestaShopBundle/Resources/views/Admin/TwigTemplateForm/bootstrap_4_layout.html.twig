@@ -345,6 +345,27 @@
     </div>
 {% endblock %}
 
+{% block choice_table_widget %}
+  {% spaceless %}
+    <div>
+      <table class="table">
+        <tbody>
+        {% for child in form %}
+          <tr>
+            <td>
+              {{ form_widget(child) }}
+            </td>
+            <td>
+              {# Todo render label #}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endspaceless %}
+{% endblock %}
+
 {# Labels #}
 
 {% block form_label -%}

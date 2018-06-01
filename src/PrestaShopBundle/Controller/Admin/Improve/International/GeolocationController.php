@@ -48,12 +48,14 @@ class GeolocationController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $geolocationForm = $this->getGeolocationFormHandler()->getForm();
+        $geoLiteCityChecker = $this->get('prestashop.core.geolocation.geo_lite_city.checker');
 
         return [
             'layoutTitle' => $this->trans('Geolocation', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'geolocationForm' => $geolocationForm->createView(),
+            'geolocationDatabaseAvailable' => $geoLiteCityChecker->isAvailable(),
         ];
     }
 
@@ -78,6 +80,10 @@ class GeolocationController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_geolocation_show');
+            }
+
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
             }
         }
 

@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShopBundle\Form\Admin\Type\ChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -37,6 +39,14 @@ class GeolocationOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // to be removed
+        $countries = \Country::getCountries(\Context::getContext()->language->id);
+        $choices = [];
+
+        foreach ($countries as $country) {
+            $choices[$country['name']] = $country['iso_code'];
+        }
+
         $builder
             ->add('geolocation_behaviour', ChoiceType::class, [
                 'choices' => [
@@ -51,6 +61,20 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => _PS_GEOLOCATION_NO_ORDER_,
                 ],
             ])
+            ->add('geolocation_countries', ChoiceTableType::class, [
+                'choices' => $choices,
+                'expanded' => true,
+                'multiple' => true,
+            ])
         ;
+
+        $builder->get('geolocation_countries')->addModelTransformer(new CallbackTransformer(
+            function ($countries) {
+                return explode(';', $countries);
+            },
+            function ($countries) {
+                return implode(';', $countries);
+            }
+        ));
     }
 }
