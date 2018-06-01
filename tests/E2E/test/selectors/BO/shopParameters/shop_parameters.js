@@ -15,7 +15,7 @@ module.exports = {
     maintenance_message: '//*[@id="content"]',
     success_box: '//*[@id="main-div"]//div[contains(@class, "success")]//div[contains(@class, "alert-text")]',
     menu_button: '//*[@id="subtab-ShopParameters"]',
-    maintenance_mode_link: '//*[@id="maintenance-mode"]/a',
+    maintenance_mode_link: '//*[@id="maintenance-mode"]',
   },
   TrafficAndSeo: {
     SeoAndUrls: {
