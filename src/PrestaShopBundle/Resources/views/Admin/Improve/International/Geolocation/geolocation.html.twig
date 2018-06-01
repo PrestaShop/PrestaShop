@@ -30,6 +30,7 @@
 
 {% block content %}
   <div class="container">
+    {% if not geolocationDatabaseAvailable %}
     <div class="row">
       <div class="col">
         <div class="alert alert-warning" role="alert">
@@ -39,6 +40,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
     {{ form_start(geolocationForm, {'action': path('admin_geolocation_process_form')}) }}
     <div class="row">
