@@ -41,8 +41,8 @@ class OrderPresenter implements PresenterInterface
      */
     public function present($order)
     {
-        if (!is_a($order, 'Order')) {
-            throw new Exception('OrderArray can only present instance of Order');
+        if (!($order instanceof Order)) {
+            throw new Exception('OrderPresenter can only present instance of Order');
         }
 
         return new OrderLazyArray($order);

@@ -78,7 +78,7 @@ class OrderLazyArray extends AbstractLazyArray
      * @throws AnnotationException
      * @throws ReflectionException
      */
-    public function __construct($order)
+    public function __construct(Order $order)
     {
         $this->order = $order;
         $this->cartPresenter = new CartPresenter();

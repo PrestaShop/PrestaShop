@@ -51,7 +51,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
     /**
      * OrderDetailLazyArray constructor.
      */
-    public function __construct($order)
+    public function __construct(Order $order)
     {
         $this->order = $order;
         $this->context = Context::getContext();

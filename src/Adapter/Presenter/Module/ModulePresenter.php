@@ -26,8 +26,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use Exception;
 
 class ModulePresenter implements PresenterInterface
 {
@@ -52,8 +54,8 @@ class ModulePresenter implements PresenterInterface
      */
     public function present($module)
     {
-        if (!is_a($module, '\\PrestaShop\\PrestaShop\\Adapter\\Module\\Module')) {
-            throw new \Exception("ModulePresenter can only present instance of Module");
+        if (!($module instanceof Module)) {
+            throw new Exception("ModulePresenter can only present instance of Module");
         }
 
         $attributes = $module->attributes->all();

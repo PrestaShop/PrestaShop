@@ -28,19 +28,21 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Object;
 
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use ObjectModel;
+use Exception;
 
 class ObjectPresenter implements PresenterInterface
 {
     /**
-     * @param \ObjectModel $object
+     * @param ObjectModel $object
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function present($object)
     {
-        if (!is_a($object, 'ObjectModel')) {
-            throw new \Exception('ObjectPresenter can only present ObjectModel classes');
+        if (!($object instanceof ObjectModel)) {
+            throw new Exception('ObjectPresenter can only present ObjectModel classes');
         }
 
         $presentedObject = array();
@@ -49,10 +51,7 @@ class ObjectPresenter implements PresenterInterface
         foreach ($fields as $fieldName => $null) {
             $presentedObject[$fieldName] = $object->{$fieldName};
         }
-        $mustHave = ['id'];
-        foreach ($mustHave as $fieldName) {
-            $presentedObject[$fieldName] = $object->{$fieldName};
-        }
+        $presentedObject['id'] = $object->id;
 
         $mustRemove = ['deleted', 'active'];
         foreach ($mustRemove as $fieldName) {
