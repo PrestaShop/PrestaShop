@@ -140,4 +140,9 @@ class WebTestCase extends TestCase
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }
+
+    protected function clearCache()
+    {
+        self::$kernel->getContainer()->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+    }
 }

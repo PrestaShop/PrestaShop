@@ -31,7 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * This class is responsible of loading routes of enabled modules.
  */
-class ModuleLoader extends Loader
+class YamlModuleLoader extends Loader
 {
     /**
      * @var array $activeModules The list of activated modules.
@@ -43,15 +43,9 @@ class ModuleLoader extends Loader
      */
     private $isLoaded = false;
 
-    /**
-     * @var string $modulePath The path to the modules folder.
-     */
-    private $modulePath;
-
-    public function __construct(array $activeModulesPaths, $modulePath)
+    public function __construct(array $activeModulesPaths)
     {
         $this->activeModulesPaths = $activeModulesPaths;
-        $this->modulePath = $modulePath;
     }
 
     /**
