@@ -160,15 +160,20 @@ class OrderLazyArray extends AbstractLazyArray
         $cartProducts = $this->cartPresenter->present($cart);
         $orderPaid = $order->getCurrentOrderState() && $order->getCurrentOrderState()->paid;
 
+        $includeTaxes = $this->includeTaxes();
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
+            $orderProduct['quantity'] = $orderProduct['product_quantity'];
+
+            $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
+            $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
+
             $orderProduct['price'] = $this->priceFormatter->format(
-                $orderProduct['product_price'],
+                $orderProduct[$productPrice],
                 Currency::getCurrencyInstance((int)$order->id_currency)
             );
-            $orderProduct['quantity'] = $orderProduct['product_quantity'];
             $orderProduct['total'] = $this->priceFormatter->format(
-                $orderProduct['total_price'],
+                $orderProduct[$totalPrice],
                 Currency::getCurrencyInstance((int)$order->id_currency)
             );
 

@@ -46,13 +46,16 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     /** @var Context */
     private $context;
 
-    /* @var TaxConfiguration */
+    /** @var TaxConfiguration */
     private $taxConfiguration;
 
-    /* @var PriceFormatter */
+    /** @var PriceFormatter */
     private $priceFormatter;
 
-    /* @var TranslatorComponent */
+    /** @var bool */
+    private $includeTaxes;
+
+    /** @var TranslatorComponent */
     private $translator;
 
     /**
@@ -62,6 +65,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     {
         $this->context = Context::getContext();
         $this->taxConfiguration = new TaxConfiguration();
+        $this->includeTaxes = $this->includeTaxes();
         $this->priceFormatter = new PriceFormatter();
         $this->translator = Context::getContext()->getTranslator();
         $this->order = $order;
@@ -74,7 +78,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
      */
     public function getProducts()
     {
-        $totalProducts = ($this->includeTaxes()) ? $this->order->total_products_wt : $this->order->total_products;
+        $totalProducts = ($this->includeTaxes) ? $this->order->total_products_wt : $this->order->total_products;
         return array(
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
@@ -92,7 +96,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
      */
     public function getDiscounts()
     {
-        $discountAmount = ($this->includeTaxes())
+        $discountAmount = ($this->includeTaxes)
             ? $this->order->total_discounts_tax_incl
             : $this->order->total_discounts_tax_excl;
         if ((float) $discountAmount) {
@@ -123,7 +127,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     {
         $cart = new Cart($this->order->id_cart);
         if (!$cart->isVirtualCart()) {
-            $shippingCost = ($this->includeTaxes())
+            $shippingCost = ($this->includeTaxes)
                 ? $this->order->total_shipping_tax_incl : $this->order->total_shipping_tax_excl;
             return array(
                 'type' => 'shipping',
@@ -179,7 +183,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     public function getGiftWrapping()
     {
         if ($this->order->gift) {
-            $giftWrapping = ($this->includeTaxes())
+            $giftWrapping = ($this->includeTaxes)
                 ? $this->order->total_wrapping_tax_incl
                 : $this->order->total_wrapping_tax_excl;
             return array(
@@ -203,7 +207,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
 
 
     /**
-     * @return bool|mixed
+     * @return bool
      */
     private function includeTaxes()
     {
