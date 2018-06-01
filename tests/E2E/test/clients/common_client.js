@@ -90,6 +90,11 @@ class CommonClient {
       });
   }
 
+  isVisibleWithinViewport(selector){
+    return this.client
+      .isVisibleWithinViewport(selector);
+  }
+
   takeScreenshot() {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${new Date().getTime()}.png`);
   }
