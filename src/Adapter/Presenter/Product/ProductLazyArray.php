@@ -297,6 +297,24 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     * @return string
+     */
+    public function getSeoAvailability()
+    {
+        $seoAvailability = 'https://schema.org/';
+        if ($this->product['quantity'] > 0) {
+            $seoAvailability .= 'InStock';
+        } elseif ($this->product['quantity'] <= 0 && $this->product['allow_oosp']) {
+            $seoAvailability .= 'PreOrder';
+        } else {
+            $seoAvailability .= 'OutOfStock';
+        }
+
+        return $seoAvailability;
+    }
+
+    /**
+     * @arrayAccess
      * @return array
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
@@ -580,7 +598,8 @@ class ProductLazyArray extends AbstractLazyArray
 
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
-            && $product['quantity'] <= 0
+            && ($product['quantity'] <= 0
+            || $product['quantity'] - $this->getQuantityWanted() < 0)
         ) {
             $shouldEnable = false;
         }
@@ -588,6 +607,21 @@ class ProductLazyArray extends AbstractLazyArray
         return $shouldEnable;
     }
 
+    /**
+     * @return int Quantity of product requested by the customer
+     */
+    private function getQuantityWanted()
+    {
+        return (int) Tools::getValue('quantity_wanted', 1);
+    }
+
+    /**
+     * @inheritdoc
+     * @param array $product
+     * @param Language $language
+     * @param bool $canonical
+     * @return string
+     */
     private function getProductURL(
         array $product,
         Language $language,
@@ -624,7 +658,7 @@ class ProductLazyArray extends AbstractLazyArray
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
         $this->product['show_availability'] = $show_availability;
-        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', 1);
+        $product['quantity_wanted'] = $this->getQuantityWanted();
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;

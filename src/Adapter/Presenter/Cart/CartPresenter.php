@@ -149,6 +149,12 @@ class CartPresenter implements PresenterInterface
         );
     }
 
+    /**
+     * @param array $products
+     * @param Cart  $cart
+     *
+     * @return array
+     */
     public function addCustomizedData(array $products, Cart $cart)
     {
         return array_map(function ($product) use ($cart) {
@@ -263,7 +269,7 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * @param $cart
+     * @param Cart $cart
      * @param bool $shouldSeparateGifts
      * @return array
      * @throws \Exception
