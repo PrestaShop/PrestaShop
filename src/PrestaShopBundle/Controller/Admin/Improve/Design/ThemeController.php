@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Displays themes from Addons under "Improve > Design > Themes Catalog"
  */
-class ThemeController extends FrameworkBundleAdminController
+class ThemeCatalogController extends FrameworkBundleAdminController
 {
     /**
      * Displays themes from Addons under "Improve > Design > Themes Catalog"
