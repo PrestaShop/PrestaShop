@@ -86,3 +86,5 @@ services:
             - '@prestashop.adapter.geolocation_by_ip_address.configuration'
             - '@prestashop.adapter.geolocation_ip_address_whitelist.configuration'
             - '@prestashop.adapter.geolocation_options.configuration'
+            - '@translator'
+            - '@prestashop.core.geolocation.geo_lite_city.checker'
