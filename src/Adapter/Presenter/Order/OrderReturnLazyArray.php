@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShopException;
 use Tools;
 
 class OrderReturnLazyArray extends AbstractLazyArray
@@ -94,7 +95,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      * @return string
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function getReturnDate()
     {

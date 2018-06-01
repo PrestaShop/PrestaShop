@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use Order;
+use Exception;
 
 class OrderPresenter implements PresenterInterface
 {
@@ -36,12 +37,12 @@ class OrderPresenter implements PresenterInterface
      * @param Order $order
      *
      * @return OrderLazyArray
-     * @throws \Exception
+     * @throws Exception
      */
     public function present($order)
     {
         if (!is_a($order, 'Order')) {
-            throw new \Exception('OrderArray can only present instance of Order');
+            throw new Exception('OrderArray can only present instance of Order');
         }
 
         return new OrderLazyArray($order);

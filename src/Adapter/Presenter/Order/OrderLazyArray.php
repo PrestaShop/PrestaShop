@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use Doctrine\Common\Annotations\AnnotationException;
+use ReflectionException;
+use PrestaShopException;
 use Address;
 use AddressFormat;
 use Carrier;
@@ -72,8 +75,8 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * OrderArray constructor.
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \ReflectionException
+     * @throws AnnotationException
+     * @throws ReflectionException
      */
     public function __construct($order)
     {
@@ -136,7 +139,7 @@ class OrderLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      * @return mixed
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function getShipping()
     {

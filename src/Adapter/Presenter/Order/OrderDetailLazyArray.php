@@ -32,6 +32,7 @@ use Cart;
 use Configuration;
 use Context;
 use HistoryController;
+use PrestaShopException;
 use Order;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use Tools;
@@ -79,7 +80,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      * @return string
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function getOrderDate()
     {

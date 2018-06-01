@@ -26,13 +26,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Language;
 
 class ProductListingPresenter extends ProductPresenter
 {
     public function present(
         ProductPresentationSettings $settings,
         array $product,
-        \Language $language
+        Language $language
     ) {
         return new ProductListingLazyArray(
             $settings,

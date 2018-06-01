@@ -26,6 +26,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
 use Doctrine\Common\Util\Inflector;
+use ArrayObject;
+use ArrayIterator;
+use Iterator;
+use ArrayAccess;
+use Countable;
+use JsonSerializable;
+use ReflectionException;
+use ReflectionClass;
+use ReflectionMethod;
+use RuntimeException;
 
 /**
  * This class is useful to provide the same behaviour than an array, but which load the result of each key on demand
@@ -53,15 +63,15 @@ use Doctrine\Common\Util\Inflector;
  * annotation @arrayAccess, the $product['url'] = 'foo'; will be ignored
  *
  */
-abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
+abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, JsonSerializable
 {
     /**
-     * @var \ArrayObject
+     * @var ArrayObject
      */
     private $arrayAccessList;
 
     /**
-     * @var \ArrayIterator
+     * @var ArrayIterator
      */
     private $arrayAccessIterator;
 
@@ -72,13 +82,13 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
 
     /**
      * AbstractLazyArray constructor.
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct()
     {
-        $this->arrayAccessList = new \ArrayObject();
-        $reflectionClass = new \ReflectionClass(get_class($this));
-        $methods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $this->arrayAccessList = new ArrayObject();
+        $reflectionClass = new ReflectionClass(get_class($this));
+        $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
@@ -96,7 +106,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      * Make the lazyArray serializable like an array
      *
      * @return array
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function jsonSerialize()
     {
@@ -145,7 +155,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      * @param mixed $index
      *
      * @return mixed
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function offsetGet($index)
     {
@@ -193,7 +203,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      * Get the result associated with the current index
      *
      * @return mixed
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function current()
     {
@@ -243,7 +253,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      *
      * @param array $array
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function intersectKey($array)
     {
@@ -261,14 +271,14 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      *
      * @param bool  $force if set, allow override of an existing method
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function offsetSet($offset, $value, $force = false)
     {
         if (!$force && $this->arrayAccessList->offsetExists($offset)) {
             $result = $this->arrayAccessList->offsetGet($offset);
             if ($result['type'] !== 'variable') {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     'Trying to set the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
                     ' already defined by a method is not allowed'
                 );
@@ -284,7 +294,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
      * @param mixed $offset
      * @param bool  $force if set, allow unset of an existing method
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function offsetUnset($offset, $force = false)
     {
@@ -292,7 +302,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable,
         if ($force || $result['type'] === 'variable') {
             $this->arrayAccessList->offsetUnset($offset);
         } else {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Trying to unset the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
                 ' already defined by a method is not allowed'
             );

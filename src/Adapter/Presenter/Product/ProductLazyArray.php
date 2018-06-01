@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Configuration;
 use Language;
@@ -170,7 +171,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      * @return array|bool
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getCondition()
     {
@@ -316,7 +317,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      * @return array
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getLabels()
     {
@@ -350,7 +351,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      * @return array
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getFlags()
     {
