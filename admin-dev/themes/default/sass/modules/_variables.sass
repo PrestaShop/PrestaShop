@@ -149,7 +149,6 @@ $container-desktop: 940px
 // Large screen / wide desktop
 $container-large-desktop: 1170px  //light
 
-
 // Menu
 $gray-dark-menu: #363a41
 $widthSidebarNav: 210px
@@ -163,7 +162,10 @@ $gray-dark-text-hover: #ffffff
 $size-navbar-width: 13.13rem
 $size-navbar-width-mini: 3.125rem
 $size-header-height: 2.5rem
+$header-mobile-padding-y: .625rem
 $medium-gray: #6c868e
 $gray-medium: $medium-gray
-$grid-breakpoints: (xs: 0,sm: 544px, md: 768px, lg: 1024px, xl: 1300px)
-$header-height: 40px
+
+// use rems to ensure homogeneity on all zoom scales
+// xs: 0, sm: 544px, md: 768px, lg: 1024px, xl: 1300px
+$grid-breakpoints: (xs: 0, sm: 34rem, md: 48rem, lg: 64rem, xl: 81.25rem)
