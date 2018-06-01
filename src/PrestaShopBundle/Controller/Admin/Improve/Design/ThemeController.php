@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ThemeController extends FrameworkBundleAdminController
 {
-
     /**
      * Displays themes from Addons under "Improve > Design > Themes Catalog"
      *
