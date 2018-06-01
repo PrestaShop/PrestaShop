@@ -1,11 +1,12 @@
 .notification-center {
-  margin-left: 0.3125rem;
   > .notification {
-    @include notification_container($size-header-height);
-    position: relative;
+    padding: 9px 5px;
+    border: none;
+    color: $medium-gray;
+    background: transparent;
 
     > .material-icons {
-      font-size: 1.5rem;
+      font-size: 1.375rem;
       line-height: 1.375rem;
       vertical-align: middle;
     }
