@@ -53,6 +53,14 @@
           {{ form_errors(geolocationOptionsForm.geolocation_na_behaviour) }}
           {{ form_widget(geolocationOptionsForm.geolocation_na_behaviour) }}
         </div>
+
+        <div class="form-group">
+          <label class="form-control-label">
+            {{ 'Select the countries from which your store is accessible'|trans }}
+          </label>
+          {{ form_errors(geolocationOptionsForm.geolocation_countries) }}
+          {{ form_widget(geolocationOptionsForm.geolocation_countries) }}
+        </div>
       </div>
     </div>
     <div class="card-footer">

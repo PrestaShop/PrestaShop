@@ -52,6 +52,7 @@ final class GeolocationOptionsConfiguration implements DataConfigurationInterfac
         return [
             'geolocation_behaviour' => $this->configuration->get('PS_GEOLOCATION_BEHAVIOR'),
             'geolocation_na_behaviour' => $this->configuration->getInt('PS_GEOLOCATION_NA_BEHAVIOR'),
+            'geolocation_countries' => $this->configuration->get('PS_ALLOWED_COUNTRIES'),
         ];
     }
 
@@ -63,6 +64,7 @@ final class GeolocationOptionsConfiguration implements DataConfigurationInterfac
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_GEOLOCATION_BEHAVIOR', $config['geolocation_behaviour']);
             $this->configuration->set('PS_GEOLOCATION_NA_BEHAVIOR', $config['geolocation_na_behaviour']);
+            $this->configuration->set('PS_ALLOWED_COUNTRIES', $config['geolocation_countries']);
         }
 
         return [];

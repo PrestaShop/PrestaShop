@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class GeolocationFormDataProvider
@@ -50,18 +52,34 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
     private $geolocationOptionsConfiguration;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var GeoLiteCityCheckerInterface
+     */
+    private $geoLiteCityChecker;
+
+    /**
      * @param DataConfigurationInterface $geolocationByIpAddressConfiguration
      * @param DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration
      * @param DataConfigurationInterface $geolocationOptionsConfiguration
+     * @param TranslatorInterface $translator
+     * @param GeoLiteCityCheckerInterface $geoLiteCityChecker
      */
     public function __construct(
         DataConfigurationInterface $geolocationByIpAddressConfiguration,
         DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration,
-        DataConfigurationInterface $geolocationOptionsConfiguration
+        DataConfigurationInterface $geolocationOptionsConfiguration,
+        TranslatorInterface $translator,
+        GeoLiteCityCheckerInterface $geoLiteCityChecker
     ) {
         $this->geolocationByIpAddressConfiguration = $geolocationByIpAddressConfiguration;
         $this->geolocationIpAddressWhitelistConfiguration = $geolocationIpAddressWhitelistConfiguration;
         $this->geolocationOptionsConfiguration = $geolocationOptionsConfiguration;
+        $this->translator = $translator;
+        $this->geoLiteCityChecker = $geoLiteCityChecker;
     }
 
     /**
@@ -81,7 +99,19 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
+        if ($data['geolocation_by_id_address']['geolocation_enabled'] &&
+            !$this->geoLiteCityChecker->isAvailable()
+        ) {
+            $error = $this->translator->trans('The geolocation database is unavailable.', [], 'Admin.International.Notification');
 
+            return [$error];
+        }
+
+        if (empty($data['geolocation_options']['geolocation_countries'])) {
+            $error = $this->translator->trans('Country selection is invalid.', [], 'Admin.International.Notification');
+
+            return [$error];
+        }
 
         return array_merge(
             $this->geolocationByIpAddressConfiguration->updateConfiguration($data['geolocation_by_id_address']),
