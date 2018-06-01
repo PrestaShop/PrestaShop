@@ -3,7 +3,7 @@ app:
     resource: "@PrestaShopBundle/Resources/config/routing.yml"
 
 app_modules:
-    # Declare routing.yml file in modules/foo/config folder.
+    # Declare routing.yml file in modules/module-name/config folder.
     # v1: only YAML format is supported for now.
     resource: .
     type: module
