@@ -26,9 +26,11 @@
 <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
     {$current_shop_name} <i class="icon-caret-down"></i>
 </a>
-<div class="dropdown-menu">
+<div class="dropdown-menu dropdown-menu-right">
     <ul class="list-dropdown-menu">
-        <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}><a href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a></li>
+        <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}>
+            <a href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a>
+        </li>
         {foreach key=group_id item=group_data from=$tree}
             {if !isset($multishop_context) || $is_group_context}
                 <li class="group{if $current_shop_value == 'g-'|cat:$group_id} active{/if}{if $multishop_context_group == false} disabled{/if}">

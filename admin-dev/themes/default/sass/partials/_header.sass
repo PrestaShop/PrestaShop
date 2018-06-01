@@ -144,9 +144,6 @@ $search-border-color: #bbcdd2
 					&:hover, &:focus
 						color: $brand-info
 						text-decoration: none
-				&.gamification_notif
-					padding-left: 5px
-					padding-right: 8px
 
 	#maintenance-mode
 		a
@@ -168,6 +165,31 @@ $search-border-color: #bbcdd2
 			color: $brand-info
 		@media (max-width: 320px)
 			max-width: 140px
+
+	// multishop menu
+	#header_shop
+		.dropdown
+			&.open
+				.dropdown-toggle
+					background: none !important
+					color: $brand-info !important
+			.material-icons
+				color: $brand-info
+				top: -1px
+			.dropdown-toggle
+				display: inline-block !important
+				color: $header-text-color !important
+				text-decoration: none !important
+				&:hover
+					color: $brand-info !important
+				i
+					padding-left: 5px
+			.dropdown-menu
+				.list-dropdown-menu
+					overflow-y: auto
+					max-height: 500px
+					margin: 20px
+					padding: 0
 
 	// employee button
 	#header_employee_box
@@ -306,35 +328,6 @@ $search-border-color: #bbcdd2
 
 		.material-icons
 			font-size: 1.125rem
-
-// multishop menu
-#header_shop
-	@extend .nav
-	@extend .navbar-nav
-	@include ltr
-	@include rtl
-		@extend .navbar-right
-	.dropdown
-		&.open
-			.dropdown-toggle
-				background: none !important
-				color: $brand-info !important
-		.material-icons
-			color: $brand-info
-			top: -1px
-		.dropdown-toggle
-			display: inline-block !important
-			padding: 11px 0 0 0 !important
-			color: $header-text-color !important
-			i
-				padding-left: 5px
-		.dropdown-menu
-			.list-dropdown-menu
-				overflow-y: auto
-				max-height: 500px
-				margin: 20px
-				padding: 0
-
 
 #ajax_running
 	position: absolute

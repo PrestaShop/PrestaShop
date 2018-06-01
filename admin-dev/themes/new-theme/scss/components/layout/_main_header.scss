@@ -353,27 +353,34 @@ $header-text-color: #4e6167;
   }
 
 }
+
+// multishop
 #shop-list {
-  > .link {
-    display: inline-block;
-    color: $gray-dark;
-    @include single-line-block($size-header-height);
+  > .btn {
+    color: $header-text-color;
+    padding: 0;
+    font-weight: 400;
+    text-decoration: none !important;
+
+    &:hover {
+      color: $primary;
+    }
+
     .selected-item {
       font-size: .8125rem;
       line-height: 17px;
-      color: $header-text-color;
       .material-icons {
         font-size: 1.25rem;
         top: -1px;
         &.visibility {
-          color: $brand-info;
+          color: $primary;
         }
       }
     }
   }
   &.show {
     .selected-item {
-      color: $brand-info;
+      color: $primary;
     }
   }
   .dropdown-menu {
@@ -383,34 +390,8 @@ $header-text-color: #4e6167;
     min-width: 17.75rem !important;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
     border: 1px solid #bbcdd2;
-    top: 5px !important;
-    right: -100px !important;
-    padding-left: 0;
     font-size: 13px;
-    &:before, &:after {
-      bottom: 100%;
-      right: 95px;
-      left: 8.6rem !important;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-    }
-    &:after {
-      border-color: transparent;
-      border-bottom-color: white;
-      border-width: 7px;
-      margin-right: 1px;
-      left: 8.05rem !important;
-    }
-    &:before {
-      border-color: transparent;
-      border-bottom-color: #bbcdd2;
-      border-width: 8px;
-      margin-left: -10px;
-    }
+
     .items-list {
       list-style: none;
       padding-left: 0;
@@ -425,7 +406,7 @@ $header-text-color: #4e6167;
         font-size: 0.875rem !important;
         font-weight: bold;
         padding-left: 0;
-        &:hover{
+        &:hover {
           cursor: pointer;
         }
       }
@@ -501,14 +482,6 @@ $header-text-color: #4e6167;
       font-size: 1.25rem;
     }
     vertical-align: middle;
-  }
-  .dropdown-menu {
-    &::before {
-      left: 11.56rem;
-    }
-    &::after {
-      left: 11.63rem;
-    }
   }
   .dropdown-item {
     margin: 0;
