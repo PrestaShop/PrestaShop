@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve;
+namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display
  */
-class AddonsStoreController extends FrameworkBundleAdminController
+class ModuleCatalogController extends FrameworkBundleAdminController
 {
     /**
      * @var string The controller name for routing.
