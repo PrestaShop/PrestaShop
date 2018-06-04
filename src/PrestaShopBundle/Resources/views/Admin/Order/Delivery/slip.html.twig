@@ -38,12 +38,12 @@
               <div class="card-block">
                 <div class="card-text">
                   <div class="form-group">
-                    {{ ps.label_with_help('From'|trans({}, 'Admin.Globals'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+                    {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                     {{ form_errors(pdfForm.pdf.date_from) }}
                     {{ form_widget(pdfForm.pdf.date_from) }}
                   </div>
                   <div class="form-group">
-                    {{ ps.label_with_help('To'|trans({}, 'Admin.Globals'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+                    {{ ps.label_with_help('To'|trans({}, 'Admin.Global'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
 
                     {{ form_errors(pdfForm.pdf.date_to) }}
                     {{ form_widget(pdfForm.pdf.date_to) }}
@@ -53,7 +53,7 @@
               </div>
               <div class="card-footer">
                 <div class="d-flex justify-content-end">
-                  <button class="btn btn-primary">{{ 'Generate PDF'|trans({}, 'Admin.Actions') }}</button>
+                  <button class="btn btn-primary">{{ 'Generate PDF'|trans }}</button>
                 </div>
               </div>
             </div>
