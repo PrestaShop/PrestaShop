@@ -192,8 +192,10 @@ class AppKernel extends Kernel
     {
         $parameters = $this->getParameters();
 
+        $prefixDatabase = defined('_PS_IN_TEST_') ? 'test_' : '';
+
         return DriverManager::getConnection(array(
-            'dbname' => $parameters['database_name'],
+            'dbname' => $prefixDatabase . $parameters['database_name'],
             'user' => $parameters['database_user'],
             'password' => $parameters['database_password'],
             'host' => $parameters['database_host'],
