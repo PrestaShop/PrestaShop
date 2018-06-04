@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration;
+namespace Tests\PrestaShopBundle\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
@@ -32,7 +32,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Tests\TestCase\Module as HelperModule;
 
 
-class YamlModuleLoaderTest extends KernelTestCase
+class YamlRoutesInModuleTest extends KernelTestCase
 {
     /**
      * @var Container
