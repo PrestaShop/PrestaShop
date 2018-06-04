@@ -286,6 +286,14 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->cartRules[$cartRuleFixtureId] = $cartRule;
     }
 
+    /**
+     * Silently add the cart rules from data
+     * if a cart rule does not exist or if it is already in cart, do nothing
+     *
+     * @param array $cartRuleFixtureIds
+     *
+     * @return bool
+     */
     protected function addCartRulesToCart(array $cartRuleFixtureIds)
     {
         $allAdded = true;
