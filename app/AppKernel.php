@@ -161,7 +161,11 @@ class AppKernel extends Kernel
         if ($this->parametersFileExists()) {
             $config = require($this->getParametersFile());
 
-            return $config['parameters'];
+            $parameters = $config['parameters'];
+            $prefixDatabase = defined('_PS_IN_TEST_') ? 'test_' : '';
+            $parameters['database_name'] = $prefixDatabase . $parameters['database_name'];
+
+            return $parameters;
         }
 
         return array();

@@ -27,6 +27,7 @@
 namespace Tests\Integration\PrestaShopBundle\Test;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\NullLogger;
 use Tests\TestCase\Module as ModuleHelper;
 use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
@@ -208,7 +209,7 @@ class WebTestCase extends TestCase
      */
     protected function installModule($moduleName)
     {
-        if (ModuleHelper::addModuleInRealFolder($moduleName)) {
+        if (ModuleHelper::addModule($moduleName)) {
             $this->getModule($moduleName)->onInstall();
             $this->clearCache();
 
@@ -228,7 +229,7 @@ class WebTestCase extends TestCase
      */
     protected function uninstallModule($moduleName)
     {
-        if (ModuleHelper::removeModuleFromRealFolder($moduleName)) {
+        if (ModuleHelper::removeModule($moduleName)) {
             $this->getModule($moduleName)->onUninstall();
             $this->clearCache();
 
@@ -240,9 +241,22 @@ class WebTestCase extends TestCase
 
     /**
      * Allow to clear the cache.
+     * Clear Symfony cache, necessary to refresh the Container.
      */
-    private function clearCache()
+    protected function clearCache()
     {
         $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+    }
+
+    /**
+     * Helper: allow to emulate functional test of a shop with "test" database.
+     * Anytime you need to query the shop from HTTP layer "but" with "test" database
+     * you can't rely on an HTTP client.
+     * {@inheritdoc}
+     * @see Symfony\Component\HttpFoundation\Request::create
+     */
+    protected function createRequest($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
+    {
+        return Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
     }
 }
