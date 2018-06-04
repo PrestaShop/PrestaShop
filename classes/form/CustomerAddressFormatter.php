@@ -92,10 +92,14 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             $fieldParts = explode(':', $field, 2);
 
             if (count($fieldParts) === 1) {
-                if ($field === 'postcode') {
-                    if ($this->country->need_zip_code) {
-                        $formField->setRequired(true);
-                    }
+                if ($field === 'postcode' && $this->country->need_zip_code) {
+                    $formField->setRequired(true);
+                }
+                // for countries where DNI is mandatory
+                // but dni is unabled in Customers -> Address
+                // and enabled in Countries -> each country where DNI is not optional
+                if ($field === 'dni' && $this->country->need_identification_number) {
+                    $formField->setRequired(true);
                 }
             } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
