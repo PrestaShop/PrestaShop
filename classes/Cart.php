@@ -1181,7 +1181,7 @@ class CartCore extends ObjectModel
             Pack::STOCK_TYPE_PACK_BOTH
         );
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity 
+        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity
           FROM `'._DB_PREFIX_.'cart_product` cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
           FROM `'._DB_PREFIX_.'cart_product` cp' .
@@ -1217,9 +1217,9 @@ class CartCore extends ObjectModel
             pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
             AND ' . $packStockTypesDefaultSupported . ' = 1
         ))';
-        $parentSql = 'SELECT 
+        $parentSql = 'SELECT
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
-            COALESCE(SUM(first_level_quantity), 0) as quantity 
+            COALESCE(SUM(first_level_quantity), 0) as quantity
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
 
         return Db::getInstance()->getRow($parentSql);
@@ -1881,7 +1881,7 @@ class CartCore extends ObjectModel
 
         // CART CALCULATION
         $cartRules = array();
-        if ($type != Cart::ONLY_PRODUCTS) {
+        if (in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
@@ -3901,7 +3901,7 @@ class CartCore extends ObjectModel
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
-            'JOIN '._DB_PREFIX_.'product p 
+            'JOIN '._DB_PREFIX_.'product p
                 ON (p.is_virtual = 0 AND p.id_product = cp.id_product) '.
             'JOIN '._DB_PREFIX_.'product_shop ps
                 ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.
