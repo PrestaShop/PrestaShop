@@ -27,6 +27,7 @@
 namespace Tests\TestCase;
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
+define('REAL_MODULE_DIR', _PS_ROOT_DIR_.'/modules');
 
 class Module
 {
@@ -53,6 +54,36 @@ class Module
     {
         if (is_dir(_PS_MODULE_DIR_.'/'.$module_dir_name)) {
             File::recurseDelete(_PS_MODULE_DIR_.'/'.$module_dir_name);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Copy the directory in resources which get the name $module_dir_name in the module directory
+     *
+     * @var module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
+     * @return bool
+     */
+    public static function addModuleInRealFolder($module_dir_name)
+    {
+        if (is_dir(_RESSOURCE_MODULE_DIR_.'/'.$module_dir_name)) {
+            File::recurseCopy(_RESSOURCE_MODULE_DIR_.'/'.$module_dir_name, REAL_MODULE_DIR.'/'.$module_dir_name);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete the directory in /home/prestashop/module which get the name $module_dir_name
+     *
+     * @var module_dir_name take the directory name of a module contain in /home/prestashop/module
+     * @return bool
+     */
+    public static function removeModuleFromRealFolder($module_dir_name)
+    {
+        if (is_dir(REAL_MODULE_DIR.'/'.$module_dir_name)) {
+            File::recurseDelete(REAL_MODULE_DIR.'/'.$module_dir_name);
             return true;
         }
         return false;

@@ -13,6 +13,7 @@
         <group>admin</group>
         <group>api</group>
         <group>demo</group>
+        <group>module-features</group>
       </include>
     </groups>
     <testsuites>
