@@ -85,7 +85,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
         } else {
             if ($granularity == 'day') {
-                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                     '
 				SELECT date(`date_add`) as date, COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
 				FROM `'._DB_PREFIX_.'connections`
@@ -97,7 +97,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     $visits[strtotime($row['date'])] = $row['visits'];
                 }
             } elseif ($granularity == 'month') {
-                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                     '
 				SELECT LEFT(LAST_DAY(`date_add`), 7) as date, COUNT('.($unique ? 'DISTINCT id_guest' : '*').') as visits
 				FROM `'._DB_PREFIX_.'connections`
@@ -265,7 +265,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         if ($granularity == 'day') {
             $sales = array();
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 10) AS date, SUM(total_products / o.conversion_rate) AS sales
 			FROM `'._DB_PREFIX_.'orders` o
@@ -281,7 +281,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return $sales;
         } elseif ($granularity == 'month') {
             $sales = array();
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 7) AS date, SUM(total_products / o.conversion_rate) AS sales
 			FROM `'._DB_PREFIX_.'orders` o
@@ -328,7 +328,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         if ($granularity == 'day') {
             $orders = array();
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 10) AS date, COUNT(*) AS orders
 			FROM `'._DB_PREFIX_.'orders` o
@@ -344,7 +344,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return $orders;
         } elseif ($granularity == 'month') {
             $orders = array();
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 7) AS date, COUNT(*) AS orders
 			FROM `'._DB_PREFIX_.'orders` o
@@ -536,7 +536,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         if ($granularity == 'day') {
             $purchases = array();
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT
 				LEFT(`invoice_date`, 10) as date,
@@ -578,7 +578,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $expenses = ($granularity == 'day' ? array() : 0);
 
-        $orders = Db::getInstance()->ExecuteS(
+        $orders = Db::getInstance()->executeS(
             '
 		SELECT
 			LEFT(`invoice_date`, 10) AS date,

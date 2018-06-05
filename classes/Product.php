@@ -4306,7 +4306,7 @@ class ProductCore extends ObjectModel
     public static function duplicateTags($id_product_old, $id_product_new)
     {
         $tags = Db::getInstance()->executeS('SELECT `id_tag`, `id_lang` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
-        if (!Db::getInstance()->NumRows()) {
+        if (!Db::getInstance()->numRows()) {
             return true;
         }
 
@@ -5368,7 +5368,7 @@ class ProductCore extends ObjectModel
             if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
                 return false;
             }
-            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
+            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->numRows() > 0 ? true : false);
         }
         return self::$_incat[$hash];
     }
@@ -6685,7 +6685,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Return an array of customization fields IDs
-     * 
+     *
      * @return array|false
      */
     public function getUsedCustomizationFieldsIds()

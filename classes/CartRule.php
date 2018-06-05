@@ -254,7 +254,7 @@ class CartRuleCore extends ObjectModel
         // Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_cart_rule` = '.(int)$this->id);
         // Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
         // Copy products/category filters
-        $products_rules_group_source = Db::getInstance()->ExecuteS('
+        $products_rules_group_source = Db::getInstance()->executeS('
 		SELECT id_product_rule_group,quantity FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule_group`
 		WHERE `id_cart_rule` = ' . (int) $id_cart_rule_source . ' ');
 
@@ -264,7 +264,7 @@ class CartRuleCore extends ObjectModel
 			VALUES (' . (int) $id_cart_rule_destination . ',' . (int) $product_rule_group_source['quantity'] . ')');
             $id_product_rule_group_destination = Db::getInstance()->Insert_ID();
 
-            $products_rules_source = Db::getInstance()->ExecuteS('
+            $products_rules_source = Db::getInstance()->executeS('
 			SELECT id_product_rule,type FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule`
 			WHERE `id_product_rule_group` = ' . (int) $product_rule_group_source['id_product_rule_group'] . ' ');
 
@@ -274,7 +274,7 @@ class CartRuleCore extends ObjectModel
 				VALUES (' . (int) $id_product_rule_group_destination . ',"' . pSQL($product_rule_source['type']) . '")');
                 $id_product_rule_destination = Db::getInstance()->Insert_ID();
 
-                $products_rules_values_source = Db::getInstance()->ExecuteS('
+                $products_rules_values_source = Db::getInstance()->executeS('
 				SELECT id_item FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`
 				WHERE `id_product_rule` = ' . (int) $product_rule_source['id_product_rule'] . ' ');
 
@@ -443,7 +443,7 @@ class CartRuleCore extends ObjectModel
         foreach ($result_bak as $key => $cart_rule) {
             if ($cart_rule['country_restriction']) {
                 $country_restriction = true;
-                $countries = Db::getInstance()->ExecuteS('
+                $countries = Db::getInstance()->executeS('
                     SELECT `id_country`
                     FROM `' . _DB_PREFIX_ . 'address`
                     WHERE `id_customer` = ' . (int) $id_customer . '

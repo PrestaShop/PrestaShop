@@ -297,7 +297,7 @@ class Reader implements ReaderInterface
      * @todo use root aliases to fill up missing values (e.g.: missing symbols for exotic numbering systems).
      * @see  http://cldr.unicode.org/development/development-process/design-proposals/resolution-of-cldr-files
      */
-    protected function mapLocaleData(SimplexmlElement $xmlLocaleData, $supplementalData)
+    protected function mapLocaleData(SimpleXMLElement $xmlLocaleData, $supplementalData)
     {
         $localeData = new LocaleData();
         if (isset($xmlLocaleData->identity->language)) {
@@ -489,7 +489,7 @@ class Reader implements ReaderInterface
      *
      * @return mixed|string
      */
-    protected function extractParentLocale(SimplexmlElement $parentLocaleXmlData, $localeTag)
+    protected function extractParentLocale(SimpleXMLElement $parentLocaleXmlData, $localeTag)
     {
         if (self::CLDR_ROOT_LOCALE === $localeTag) {
             return null;
