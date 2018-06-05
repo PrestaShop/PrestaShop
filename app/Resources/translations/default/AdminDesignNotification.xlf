@@ -6,7 +6,7 @@
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
         <note>Context:
-File: classes/controller/FrontController.php:322</note>
+File: classes/controller/FrontController.php:323</note>
       </trans-unit>
     </body>
   </file>
@@ -16,37 +16,37 @@ File: classes/controller/FrontController.php:322</note>
         <source>The uploaded file is too large.</source>
         <target>The uploaded file is too large.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:409</note>
-      </trans-unit>
-      <trans-unit id="4a9fdf95b29176bd9260016655a80852">
-        <source>Your RTL stylesheets has been generated successfully</source>
-        <target>Your RTL stylesheets has been generated successfully</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:334</note>
-      </trans-unit>
-      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
-        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
-        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:349</note>
+File: controllers/admin/AdminThemesController.php:915</note>
       </trans-unit>
       <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
         <source>Invalid file format.</source>
         <target>Invalid file format.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:444</note>
+File: controllers/admin/AdminThemesController.php:364</note>
       </trans-unit>
       <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
         <source>Failed to move uploaded file.</source>
         <target>Failed to move uploaded file.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:457</note>
+File: controllers/admin/AdminThemesController.php:377</note>
       </trans-unit>
       <trans-unit id="3cb5c48f468125102a98fe83a277029d">
         <source>Warning: if no email logo is available, the main logo will be used instead.</source>
         <target>Warning: if no email logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:503</note>
+File: controllers/admin/AdminThemesController.php:423</note>
+      </trans-unit>
+      <trans-unit id="4a9fdf95b29176bd9260016655a80852">
+        <source>Your RTL stylesheets has been generated successfully</source>
+        <target>Your RTL stylesheets has been generated successfully</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:1052</note>
+      </trans-unit>
+      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
+        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
+        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:1071</note>
       </trans-unit>
     </body>
   </file>
@@ -176,6 +176,16 @@ File: controllers/admin/AdminImagesController.php:737</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f003149576f4755d74550952febe14bb">
@@ -208,17 +218,7 @@ File: src/Core/Addon/Theme/ThemeValidator.php:116</note>
         <source>This theme is not valid for PrestaShop 1.7</source>
         <target>This theme is not valid for PrestaShop 1.7</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:346</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
-        <source>Your theme has been correctly exported: %path%</source>
-        <target>Your theme has been correctly exported: %path%</target>
-        <note>Context:
-File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
+File: src/Core/Addon/Theme/ThemeManager.php:357</note>
       </trans-unit>
     </body>
   </file>
@@ -232,6 +232,28 @@ File: admin-dev/themes/default/template/controllers/modules_positions/list_modul
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8c9b2e81e93417bf65ee4d1c674d00e9">
+        <source>You can choose to keep your images stored in the previous system. There's nothing wrong with that.</source>
+        <target>You can choose to keep your images stored in the previous system. There's nothing wrong with that.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="1f424af91db226ac46ea712713a3728e">
+        <source>You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.</source>
+        <target>You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="cde488e6010c72acfb6ff2781683b030">
+        <source>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</source>
+        <target>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:46</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="feede4b4294c44c907966ddd76e23614">
@@ -239,28 +261,6 @@ File: admin-dev/themes/default/template/controllers/modules_positions/list_modul
         <target>Your page will be saved as a draft</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl:55</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8c9b2e81e93417bf65ee4d1c674d00e9">
-        <source>You can choose to keep your images stored in the previous system. There's nothing wrong with that.</source>
-        <target>You can choose to keep your images stored in the previous system. There's nothing wrong with that.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="1f424af91db226ac46ea712713a3728e">
-        <source>You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.</source>
-        <target>You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:38</note>
-      </trans-unit>
-      <trans-unit id="cde488e6010c72acfb6ff2781683b030">
-        <source>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</source>
-        <target>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:41</note>
       </trans-unit>
     </body>
   </file>

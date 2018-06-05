@@ -64,13 +64,13 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:928</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
         <target>Information</target>
         <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:27</note>
+File: themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:29</note>
       </trans-unit>
     </body>
   </file>
@@ -90,16 +90,6 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInfor
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="427e29628d9f5d9bfde0e58b32569619">
-        <source>Print this page</source>
-        <target>Print this page</target>
-        <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl:29</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="59a297091dace235b4bce5af7b86ead6">
@@ -107,6 +97,16 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.
         <target>My shopping cart</target>
         <note>Context:
 File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="427e29628d9f5d9bfde0e58b32569619">
+        <source>Print this page</source>
+        <target>Print this page</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl:29</note>
       </trans-unit>
     </body>
   </file>

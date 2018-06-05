@@ -18,78 +18,256 @@ File: modules/ps_facetedsearch/ps_facetedsearch.php:58</note>
         <source>"%s" is not a valid url</source>
         <target>"%s" is not a valid url</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:603</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:618</note>
       </trans-unit>
       <trans-unit id="ccc12c5568381293a27db0232877937b">
         <source>Filter template name required (cannot be empty)</source>
         <target>Filter template name required (cannot be empty)</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:981</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1043</note>
       </trans-unit>
       <trans-unit id="8c97e587c1b4e519bec26f3903561da3">
         <source>You must select at least one category.</source>
         <target>You must select at least one category.</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:983</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1045</note>
       </trans-unit>
       <trans-unit id="817c37b9c1f5cd4a450dad384e63e6c7">
         <source>Your filter</source>
         <target>Your filter</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1091</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1153</note>
       </trans-unit>
       <trans-unit id="3185cefd67b575e582063148e4f15860">
         <source>was updated successfully.</source>
         <target>was updated successfully.</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1092</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1154</note>
       </trans-unit>
       <trans-unit id="7ccab4d8de5d6b9bb61e99c7bba343ab">
         <source>was added successfully.</source>
         <target>was added successfully.</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1092</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1154</note>
       </trans-unit>
       <trans-unit id="fe016d3b990c2a9dd72ab6b45892f2ae">
         <source>Settings saved successfully</source>
         <target>Settings saved successfully</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1107</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1169</note>
       </trans-unit>
       <trans-unit id="0d07af70081a2421e2b2972609d699db">
         <source>Filter template deleted, categories updated (reverted to default Filter template).</source>
         <target>Filter template deleted, categories updated (reverted to default Filter template).</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1122</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1184</note>
       </trans-unit>
       <trans-unit id="491f46aa6101560e9f1e0d55a063231b">
         <source>Filter template not found</source>
         <target>Filter template not found</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1124</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1186</note>
       </trans-unit>
       <trans-unit id="fa03eb688ad8aa1db593d33dabd89bad">
         <source>Root</source>
         <target>Root</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1163</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1225</note>
       </trans-unit>
       <trans-unit id="a3868119dc6858db57127fd26e6f9656">
         <source>My template - %s</source>
         <target>My template - %s</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1190</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1252</note>
       </trans-unit>
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2609</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2675</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/admin/add.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
+        <source>New filters template</source>
+        <target>New filters template</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:3</note>
+      </trans-unit>
+      <trans-unit id="f8263d99054a4cdb3428196f078fa212">
+        <source>Template name:</source>
+        <target>Template name:</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:7</note>
+      </trans-unit>
+      <trans-unit id="4284fda63513b7da70b5d8f032900580">
+        <source>Only as a reminder</source>
+        <target>Only as a reminder</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:10</note>
+      </trans-unit>
+      <trans-unit id="5d9632c49fb1586eed7123afe2bd806f">
+        <source>Categories used for this template:</source>
+        <target>Categories used for this template:</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:14</note>
+      </trans-unit>
+      <trans-unit id="78587049e12fb4f6b12e2bb045f2880a">
+        <source>Categories selection is disabled because you have no categories or you are in a "all shops" context.</source>
+        <target>Categories selection is disabled because you have no categories or you are in a "all shops" context.</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:20</note>
+      </trans-unit>
+      <trans-unit id="c2d0bf5ad42279c519cdcb4a94eb46b6">
+        <source>Choose shop association:</source>
+        <target>Choose shop association:</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
+        <source>You can drag and drop filters to adjust position</source>
+        <target>You can drag and drop filters to adjust position</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
+        <source>Filters:</source>
+        <target>Filters:</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
+        <source>Total filters: %s</source>
+        <target>Total filters: %s</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="cfbc982f8fb7a0cc3abb3c85c795ab41">
+        <source>Sub-categories filter</source>
+        <target>Sub-categories filter</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:61</note>
+      </trans-unit>
+      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
+        <source>Filter result limit:</source>
+        <target>Filter result limit:</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:367</note>
+      </trans-unit>
+      <trans-unit id="af605ea55ee39e54c444f217e346048f">
+        <source>No limit</source>
+        <target>No limit</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:370</note>
+      </trans-unit>
+      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
+        <source>Filter style:</source>
+        <target>Filter style:</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:379</note>
+      </trans-unit>
+      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
+        <source>Checkbox</source>
+        <target>Checkbox</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:382</note>
+      </trans-unit>
+      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
+        <source>Radio button</source>
+        <target>Radio button</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:383</note>
+      </trans-unit>
+      <trans-unit id="5204077231fc7164e2269e96b584dd95">
+        <source>Drop-down list</source>
+        <target>Drop-down list</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:384</note>
+      </trans-unit>
+      <trans-unit id="cd50ff1c5332f9920acf8173c4aab425">
+        <source>Product stock filter</source>
+        <target>Product stock filter</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:98</note>
+      </trans-unit>
+      <trans-unit id="048c1728a0a6cf36f56c9dcdd23d8a14">
+        <source>Product condition filter</source>
+        <target>Product condition filter</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:135</note>
+      </trans-unit>
+      <trans-unit id="e581c019fe5c1b2aa8dfa18d93f88d13">
+        <source>Product brand filter</source>
+        <target>Product brand filter</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:172</note>
+      </trans-unit>
+      <trans-unit id="cc72ed9534a489b5d2e5882735bf1364">
+        <source>Product weight filter (slider)</source>
+        <target>Product weight filter (slider)</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:209</note>
+      </trans-unit>
+      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
+        <source>List of ranges</source>
+        <target>List of ranges</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:261</note>
+      </trans-unit>
+      <trans-unit id="0649bb392812f99ff6b0e2ba160675fa">
+        <source>Product price filter (slider)</source>
+        <target>Product price filter (slider)</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:243</note>
+      </trans-unit>
+      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
+        <source>Attribute group: %name% (%count% attributes)</source>
+        <target>Attribute group: %name% (%count% attributes)</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:281</note>
+      </trans-unit>
+      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
+        <source>Attribute group: %name% (%count% attribute)</source>
+        <target>Attribute group: %name% (%count% attribute)</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:290</note>
+      </trans-unit>
+      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
+        <source>This group will allow user to select a color</source>
+        <target>This group will allow user to select a color</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:300</note>
+      </trans-unit>
+      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
+        <source>Feature: %name% (%count% values)</source>
+        <target>Feature: %name% (%count% values)</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:346</note>
+      </trans-unit>
+      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
+        <source>Feature: %name% (%count% value)</source>
+        <target>Feature: %name% (%count% value)</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:355</note>
+      </trans-unit>
+      <trans-unit id="dc3f85827350641490287c65c0c4ddf8">
+        <source>You must select at least one filter</source>
+        <target>You must select at least one filter</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/add.tpl:409</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_facetedsearch/views/templates/admin/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
+        <source>You must select at least one category</source>
+        <target>You must select at least one category</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/admin/view.tpl:206</note>
+      </trans-unit>
       <trans-unit id="1f0f8b59397f34d499b181297714713a">
         <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
         <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
@@ -314,184 +492,6 @@ File: modules/ps_facetedsearch/views/templates/admin/view.tpl:205</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_facetedsearch/views/templates/admin/add.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="18c6120643596bd2626f3b0720b1df3a">
-        <source>You must select at least one category</source>
-        <target>You must select at least one category</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:408</note>
-      </trans-unit>
-      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
-        <source>New filters template</source>
-        <target>New filters template</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:3</note>
-      </trans-unit>
-      <trans-unit id="f8263d99054a4cdb3428196f078fa212">
-        <source>Template name:</source>
-        <target>Template name:</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:7</note>
-      </trans-unit>
-      <trans-unit id="4284fda63513b7da70b5d8f032900580">
-        <source>Only as a reminder</source>
-        <target>Only as a reminder</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:10</note>
-      </trans-unit>
-      <trans-unit id="5d9632c49fb1586eed7123afe2bd806f">
-        <source>Categories used for this template:</source>
-        <target>Categories used for this template:</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:14</note>
-      </trans-unit>
-      <trans-unit id="78587049e12fb4f6b12e2bb045f2880a">
-        <source>Categories selection is disabled because you have no categories or you are in a "all shops" context.</source>
-        <target>Categories selection is disabled because you have no categories or you are in a "all shops" context.</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:20</note>
-      </trans-unit>
-      <trans-unit id="c2d0bf5ad42279c519cdcb4a94eb46b6">
-        <source>Choose shop association:</source>
-        <target>Choose shop association:</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
-        <source>You can drag and drop filters to adjust position</source>
-        <target>You can drag and drop filters to adjust position</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="60266302eeda2ac9775c3a2036ae25ca">
-        <source>Filters:</source>
-        <target>Filters:</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="29da3cb8b65298a3e88f5041e9fb9761">
-        <source>Total filters: %s</source>
-        <target>Total filters: %s</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="cfbc982f8fb7a0cc3abb3c85c795ab41">
-        <source>Sub-categories filter</source>
-        <target>Sub-categories filter</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:61</note>
-      </trans-unit>
-      <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
-        <source>Filter result limit:</source>
-        <target>Filter result limit:</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:367</note>
-      </trans-unit>
-      <trans-unit id="af605ea55ee39e54c444f217e346048f">
-        <source>No limit</source>
-        <target>No limit</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:370</note>
-      </trans-unit>
-      <trans-unit id="284fd1ee8a33e84e08699ba0bbc44943">
-        <source>Filter style:</source>
-        <target>Filter style:</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:379</note>
-      </trans-unit>
-      <trans-unit id="4f8222964f9a317cef99dddc23a121bd">
-        <source>Checkbox</source>
-        <target>Checkbox</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:382</note>
-      </trans-unit>
-      <trans-unit id="07a9ca8c8228dd3399141e228034fedf">
-        <source>Radio button</source>
-        <target>Radio button</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:383</note>
-      </trans-unit>
-      <trans-unit id="5204077231fc7164e2269e96b584dd95">
-        <source>Drop-down list</source>
-        <target>Drop-down list</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:384</note>
-      </trans-unit>
-      <trans-unit id="cd50ff1c5332f9920acf8173c4aab425">
-        <source>Product stock filter</source>
-        <target>Product stock filter</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:98</note>
-      </trans-unit>
-      <trans-unit id="048c1728a0a6cf36f56c9dcdd23d8a14">
-        <source>Product condition filter</source>
-        <target>Product condition filter</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:135</note>
-      </trans-unit>
-      <trans-unit id="e581c019fe5c1b2aa8dfa18d93f88d13">
-        <source>Product brand filter</source>
-        <target>Product brand filter</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:172</note>
-      </trans-unit>
-      <trans-unit id="cc72ed9534a489b5d2e5882735bf1364">
-        <source>Product weight filter (slider)</source>
-        <target>Product weight filter (slider)</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:209</note>
-      </trans-unit>
-      <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
-        <source>List of ranges</source>
-        <target>List of ranges</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:261</note>
-      </trans-unit>
-      <trans-unit id="0649bb392812f99ff6b0e2ba160675fa">
-        <source>Product price filter (slider)</source>
-        <target>Product price filter (slider)</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:243</note>
-      </trans-unit>
-      <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
-        <source>Attribute group: %name% (%count% attributes)</source>
-        <target>Attribute group: %name% (%count% attributes)</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:281</note>
-      </trans-unit>
-      <trans-unit id="788a474b0e55d612b3d500743c6251a0">
-        <source>Attribute group: %name% (%count% attribute)</source>
-        <target>Attribute group: %name% (%count% attribute)</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:290</note>
-      </trans-unit>
-      <trans-unit id="ee59f74265cd7f85d0ad30206a1a89b0">
-        <source>This group will allow user to select a color</source>
-        <target>This group will allow user to select a color</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:300</note>
-      </trans-unit>
-      <trans-unit id="4127fb33c1db9597f3c881ae057f1370">
-        <source>Feature: %name% (%count% values)</source>
-        <target>Feature: %name% (%count% values)</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:346</note>
-      </trans-unit>
-      <trans-unit id="cadad7b648bb2b1d3f22421b00a14fd2">
-        <source>Feature: %name% (%count% value)</source>
-        <target>Feature: %name% (%count% value)</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:355</note>
-      </trans-unit>
-      <trans-unit id="dc3f85827350641490287c65c0c4ddf8">
-        <source>You must select at least one filter</source>
-        <target>You must select at least one filter</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/admin/add.tpl:409</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="28034a200e932f22b324a4dda1bb9f64">
@@ -528,12 +528,6 @@ File: modules/ps_facetedsearch/views/templates/hook/feature_form.tpl:78</note>
   </file>
   <file original="modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
-        <source>URL</source>
-        <target>URL</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:27</note>
-      </trans-unit>
       <trans-unit id="e919c0dcca631198a18993158182c96b">
         <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
         <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
@@ -545,6 +539,12 @@ File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:50</note>
         <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
         <note>Context:
 File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:78</note>
+      </trans-unit>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:27</note>
       </trans-unit>
     </body>
   </file>

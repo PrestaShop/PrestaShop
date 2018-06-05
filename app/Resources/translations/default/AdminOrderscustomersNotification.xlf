@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9cdca3c7972c48111e79648c942ac672">
-        <source>The message was successfully sent to the customer.</source>
-        <target>The message was successfully sent to the customer.</target>
-        <note>Context:
-File: classes/controller/AdminController.php:465</note>
-      </trans-unit>
-      <trans-unit id="1923e1e610686f1182bf54f573b86921">
-        <source>A partial refund was successfully created.</source>
-        <target>A partial refund was successfully created.</target>
-        <note>Context:
-File: classes/controller/AdminController.php:485</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/order/OrderHistory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f22b1baf8dcfb014646921be9841cb41">
@@ -35,6 +19,22 @@ File: classes/order/OrderHistory.php:146</note>
         <target>Invalid new order status</target>
         <note>Context:
 File: classes/order/OrderHistory.php:344</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9cdca3c7972c48111e79648c942ac672">
+        <source>The message was successfully sent to the customer.</source>
+        <target>The message was successfully sent to the customer.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:466</note>
+      </trans-unit>
+      <trans-unit id="1923e1e610686f1182bf54f573b86921">
+        <source>A partial refund was successfully created.</source>
+        <target>A partial refund was successfully created.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:486</note>
       </trans-unit>
     </body>
   </file>
@@ -108,42 +108,54 @@ File: controllers/admin/AdminCustomersController.php:1001</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminPdfController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7582ef2f5b5de8a479994d0412986bc2">
-        <source>An error occurred while deleting the details of your order return.</source>
-        <target>An error occurred while deleting the details of your order return.</target>
+      <trans-unit id="f193c3dd6da8a06a610c632db03d55c8">
+        <source>The order ID -- or the invoice order ID -- is missing.</source>
+        <target>The order ID -- or the invoice order ID -- is missing.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:224</note>
+File: controllers/admin/AdminPdfController.php:90</note>
       </trans-unit>
-      <trans-unit id="d4430672c8b3c123ae5f4c2f4b5b458d">
-        <source>You need at least one product.</source>
-        <target>You need at least one product.</target>
+      <trans-unit id="48607ff5af8c52b5efbc057b852a37ee">
+        <source>No invoice was found.</source>
+        <target>No invoice was found.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:227</note>
+File: controllers/admin/AdminPdfController.php:141</note>
       </trans-unit>
-      <trans-unit id="e7a58e52e848f513c3e9185d34d61a50">
-        <source>The order return is invalid.</source>
-        <target>The order return is invalid.</target>
+      <trans-unit id="57bf4b0dd7dd3e5af10533785a343f88">
+        <source>No order slips were found.</source>
+        <target>No order slips were found.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:230</note>
+File: controllers/admin/AdminPdfController.php:125</note>
       </trans-unit>
-      <trans-unit id="5431bd88788ce2df4278c84f402e3cb6">
-        <source>The order return content is invalid.</source>
-        <target>The order return content is invalid.</target>
+      <trans-unit id="f2e9d5988718c8a3dde49c6bcb55125b">
+        <source>The supply order ID is missing.</source>
+        <target>The supply order ID is missing.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:233</note>
+File: controllers/admin/AdminPdfController.php:150</note>
       </trans-unit>
-      <trans-unit id="16f2adf6c4fd1317acba5871267a60f2">
-        <source>No order return ID has been specified.</source>
-        <target>No order return ID has been specified.</target>
+      <trans-unit id="4fc152e203df7a77fa3c1bc7f1249f36">
+        <source>The supply order cannot be found within your database.</source>
+        <target>The supply order cannot be found within your database.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:281</note>
+File: controllers/admin/AdminPdfController.php:157</note>
+      </trans-unit>
+      <trans-unit id="d7e5dfc920c9871caaf7562d8ba9ab36">
+        <source>The order invoice cannot be found within your database.</source>
+        <target>The order invoice cannot be found within your database.</target>
+        <note>Context:
+File: controllers/admin/AdminPdfController.php:200</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
+        <source>The order cannot be found within your database.</source>
+        <target>The order cannot be found within your database.</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:1675</note>
+      </trans-unit>
       <trans-unit id="aea807cc550550acd7b8d9a7bc469f6a">
         <source>You have to select a shop before creating new orders.</source>
         <target>You have to select a shop before creating new orders.</target>
@@ -610,53 +622,39 @@ File: controllers/admin/AdminOrdersController.php:2782</note>
         <source>This product cannot be re-stocked.</source>
         <target>This product cannot be re-stocked.</target>
         <note>Context:
-File: controllers/admin/AdminOrdersController.php:2926</note>
+File: controllers/admin/AdminOrdersController.php:2936</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminPdfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1244f34e7f971d0b80cd2fd7cbbfb22c">
-        <source>The order cannot be found within your database.</source>
-        <target>The order cannot be found within your database.</target>
+      <trans-unit id="9e2dcf2660b82a0204f668565417010a">
+        <source>An account already exists for this email address:</source>
+        <target>An account already exists for this email address:</target>
         <note>Context:
-File: controllers/admin/AdminPdfController.php:188</note>
+File: controllers/admin/AdminEmployeesController.php:412</note>
       </trans-unit>
-      <trans-unit id="f193c3dd6da8a06a610c632db03d55c8">
-        <source>The order ID -- or the invoice order ID -- is missing.</source>
-        <target>The order ID -- or the invoice order ID -- is missing.</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5844cf5e9f752e6eb7cc1166a3022183">
+        <source>No order was found with this ID:</source>
+        <target>No order was found with this ID:</target>
         <note>Context:
-File: controllers/admin/AdminPdfController.php:90</note>
+File: controllers/admin/AdminSearchController.php:124</note>
       </trans-unit>
-      <trans-unit id="48607ff5af8c52b5efbc057b852a37ee">
-        <source>No invoice was found.</source>
-        <target>No invoice was found.</target>
+      <trans-unit id="3b27bc623d860beacbe5d5cde18fdec0">
+        <source>No invoice was found with this ID:</source>
+        <target>No invoice was found with this ID:</target>
         <note>Context:
-File: controllers/admin/AdminPdfController.php:141</note>
+File: controllers/admin/AdminSearchController.php:134</note>
       </trans-unit>
-      <trans-unit id="57bf4b0dd7dd3e5af10533785a343f88">
-        <source>No order slips were found.</source>
-        <target>No order slips were found.</target>
+      <trans-unit id="ec79affe41245b47969a2451211b263a">
+        <source>No cart was found with this ID:</source>
+        <target>No cart was found with this ID:</target>
         <note>Context:
-File: controllers/admin/AdminPdfController.php:125</note>
-      </trans-unit>
-      <trans-unit id="f2e9d5988718c8a3dde49c6bcb55125b">
-        <source>The supply order ID is missing.</source>
-        <target>The supply order ID is missing.</target>
-        <note>Context:
-File: controllers/admin/AdminPdfController.php:150</note>
-      </trans-unit>
-      <trans-unit id="4fc152e203df7a77fa3c1bc7f1249f36">
-        <source>The supply order cannot be found within your database.</source>
-        <target>The supply order cannot be found within your database.</target>
-        <note>Context:
-File: controllers/admin/AdminPdfController.php:157</note>
-      </trans-unit>
-      <trans-unit id="d7e5dfc920c9871caaf7562d8ba9ab36">
-        <source>The order invoice cannot be found within your database.</source>
-        <target>The order invoice cannot be found within your database.</target>
-        <note>Context:
-File: controllers/admin/AdminPdfController.php:200</note>
+File: controllers/admin/AdminSearchController.php:142</note>
       </trans-unit>
     </body>
   </file>
@@ -667,6 +665,28 @@ File: controllers/admin/AdminPdfController.php:200</note>
         <target>No delivery slip was found for this period.</target>
         <note>Context:
 File: controllers/admin/AdminDeliverySlipController.php:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
+        <source>You must add a minimum quantity of %d</source>
+        <target>You must add a minimum quantity of %d</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:489</note>
+      </trans-unit>
+      <trans-unit id="996a45aa702d041706f6388d54c53b12">
+        <source>Invalid order</source>
+        <target>Invalid order</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:569</note>
+      </trans-unit>
+      <trans-unit id="5125d7cea2749d85f13a55a023a56c71">
+        <source>The order cannot be renewed.</source>
+        <target>The order cannot be renewed.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:576</note>
       </trans-unit>
     </body>
   </file>
@@ -716,13 +736,53 @@ File: controllers/admin/AdminAddressesController.php:416</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9e2dcf2660b82a0204f668565417010a">
-        <source>An account already exists for this email address:</source>
-        <target>An account already exists for this email address:</target>
+      <trans-unit id="9178a1a9fc82617864593a784163d86a">
+        <source>Invalid "From" date</source>
+        <target>Invalid "From" date</target>
         <note>Context:
-File: controllers/admin/AdminEmployeesController.php:433</note>
+File: controllers/admin/AdminSlipController.php:148</note>
+      </trans-unit>
+      <trans-unit id="915bd2c5cf6e420095a64d309e443849">
+        <source>Invalid "To" date</source>
+        <target>Invalid "To" date</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:151</note>
+      </trans-unit>
+      <trans-unit id="cdbb58c797028e137b1ebf1dcc9efe92">
+        <source>No order slips were found for this period.</source>
+        <target>No order slips were found for this period.</target>
+        <note>Context:
+File: controllers/admin/AdminSlipController.php:158</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f775c161c8662af8f70a128ad5779036">
+        <source>No invoice has been found for this period.</source>
+        <target>No invoice has been found for this period.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:270</note>
+      </trans-unit>
+      <trans-unit id="eb9173ba78d315a23d8978a2b772bd9a">
+        <source>You must select at least one order status.</source>
+        <target>You must select at least one order status.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:274</note>
+      </trans-unit>
+      <trans-unit id="7af95cd9cbe318a15ef10e5e30000501">
+        <source>No invoice has been found for this status.</source>
+        <target>No invoice has been found for this status.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:282</note>
+      </trans-unit>
+      <trans-unit id="599b433088f71a8712de225a693ce20e">
+        <source>Invalid invoice number.</source>
+        <target>Invalid invoice number.</target>
+        <note>Context:
+File: controllers/admin/AdminInvoicesController.php:292</note>
       </trans-unit>
     </body>
   </file>
@@ -742,25 +802,37 @@ File: controllers/admin/AdminStatusesController.php:575</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5844cf5e9f752e6eb7cc1166a3022183">
-        <source>No order was found with this ID:</source>
-        <target>No order was found with this ID:</target>
+      <trans-unit id="7582ef2f5b5de8a479994d0412986bc2">
+        <source>An error occurred while deleting the details of your order return.</source>
+        <target>An error occurred while deleting the details of your order return.</target>
         <note>Context:
-File: controllers/admin/AdminSearchController.php:124</note>
+File: controllers/admin/AdminReturnController.php:224</note>
       </trans-unit>
-      <trans-unit id="3b27bc623d860beacbe5d5cde18fdec0">
-        <source>No invoice was found with this ID:</source>
-        <target>No invoice was found with this ID:</target>
+      <trans-unit id="d4430672c8b3c123ae5f4c2f4b5b458d">
+        <source>You need at least one product.</source>
+        <target>You need at least one product.</target>
         <note>Context:
-File: controllers/admin/AdminSearchController.php:134</note>
+File: controllers/admin/AdminReturnController.php:227</note>
       </trans-unit>
-      <trans-unit id="ec79affe41245b47969a2451211b263a">
-        <source>No cart was found with this ID:</source>
-        <target>No cart was found with this ID:</target>
+      <trans-unit id="e7a58e52e848f513c3e9185d34d61a50">
+        <source>The order return is invalid.</source>
+        <target>The order return is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminSearchController.php:142</note>
+File: controllers/admin/AdminReturnController.php:230</note>
+      </trans-unit>
+      <trans-unit id="5431bd88788ce2df4278c84f402e3cb6">
+        <source>The order return content is invalid.</source>
+        <target>The order return content is invalid.</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:233</note>
+      </trans-unit>
+      <trans-unit id="16f2adf6c4fd1317acba5871267a60f2">
+        <source>No order return ID has been specified.</source>
+        <target>No order return ID has been specified.</target>
+        <note>Context:
+File: controllers/admin/AdminReturnController.php:281</note>
       </trans-unit>
     </body>
   </file>
@@ -795,270 +867,6 @@ File: controllers/admin/AdminCustomerThreadsController.php:1151</note>
         <target>The message content is not valid, cannot import it.</target>
         <note>Context:
 File: controllers/admin/AdminCustomerThreadsController.php:1157</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminInvoicesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9178a1a9fc82617864593a784163d86a">
-        <source>Invalid "From" date</source>
-        <target>Invalid "From" date</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:258</note>
-      </trans-unit>
-      <trans-unit id="915bd2c5cf6e420095a64d309e443849">
-        <source>Invalid "To" date</source>
-        <target>Invalid "To" date</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:262</note>
-      </trans-unit>
-      <trans-unit id="f775c161c8662af8f70a128ad5779036">
-        <source>No invoice has been found for this period.</source>
-        <target>No invoice has been found for this period.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:270</note>
-      </trans-unit>
-      <trans-unit id="eb9173ba78d315a23d8978a2b772bd9a">
-        <source>You must select at least one order status.</source>
-        <target>You must select at least one order status.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:274</note>
-      </trans-unit>
-      <trans-unit id="7af95cd9cbe318a15ef10e5e30000501">
-        <source>No invoice has been found for this status.</source>
-        <target>No invoice has been found for this status.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:282</note>
-      </trans-unit>
-      <trans-unit id="599b433088f71a8712de225a693ce20e">
-        <source>Invalid invoice number.</source>
-        <target>Invalid invoice number.</target>
-        <note>Context:
-File: controllers/admin/AdminInvoicesController.php:292</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cdbb58c797028e137b1ebf1dcc9efe92">
-        <source>No order slips were found for this period.</source>
-        <target>No order slips were found for this period.</target>
-        <note>Context:
-File: controllers/admin/AdminSlipController.php:158</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="53a60d3bbec32a4bf2777704834dc35e">
-        <source>You must add a minimum quantity of %d</source>
-        <target>You must add a minimum quantity of %d</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:483</note>
-      </trans-unit>
-      <trans-unit id="996a45aa702d041706f6388d54c53b12">
-        <source>Invalid order</source>
-        <target>Invalid order</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:563</note>
-      </trans-unit>
-      <trans-unit id="5125d7cea2749d85f13a55a023a56c71">
-        <source>The order cannot be renewed.</source>
-        <target>The order cannot be renewed.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:570</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e1b638a956fae226de3740f63a4e7d48">
-        <source>Are you sure you want to add this quantity?</source>
-        <target>Are you sure you want to add this quantity?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:43</note>
-      </trans-unit>
-      <trans-unit id="e2103a9e878a2280b3163e5ee098cbdf">
-        <source>Are you sure you want to create a new invoice?</source>
-        <target>Are you sure you want to create a new invoice?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:44</note>
-      </trans-unit>
-      <trans-unit id="bcab2ed7cab19f8e119317a7e59d316a">
-        <source>Error: No product has been selected</source>
-        <target>Error: No product has been selected</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="cd5cb1c932fc6f41a4fb3f6ec2f0c2da">
-        <source>Error: Quantity of products must be set</source>
-        <target>Error: Quantity of products must be set</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:46</note>
-      </trans-unit>
-      <trans-unit id="894fdeeda7d3575fd6775732d026992c">
-        <source>Error: Product price must be set</source>
-        <target>Error: Product price must be set</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:47</note>
-      </trans-unit>
-      <trans-unit id="c4832c266d52c6cef340a9c656ddda26">
-        <source>Error. You cannot refund a negative amount.</source>
-        <target>Error. You cannot refund a negative amount.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:62</note>
-      </trans-unit>
-      <trans-unit id="14c7a12fdbf437a0545aed3365ce3f84">
-        <source>No merchandise returned yet</source>
-        <target>No merchandise returned yet</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:376</note>
-      </trans-unit>
-      <trans-unit id="153c7809e6b00b6cbfa01b8aa9db43e3">
-        <source>paid instead of</source>
-        <target>paid instead of</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:403</note>
-      </trans-unit>
-      <trans-unit id="7137dec9b59978006f8b0ec036099346">
-        <source>This warning also concerns order </source>
-        <target>This warning also concerns order </target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:408</note>
-      </trans-unit>
-      <trans-unit id="f38c718d5cc5ea7331d8acf533f9bf0d">
-        <source>This warning also concerns the next orders:</source>
-        <target>This warning also concerns the next orders:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:410</note>
-      </trans-unit>
-      <trans-unit id="de78da3154b793d64d302db27e65baec">
-        <source>No payment methods are available</source>
-        <target>No payment methods are available</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:493</note>
-      </trans-unit>
-      <trans-unit id="ecd2046a1d4a6e46c11914c04b9559e4">
-        <source>A registered customer account has already claimed this email address</source>
-        <target>A registered customer account has already claimed this email address</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:599</note>
-      </trans-unit>
-      <trans-unit id="341ee6bf57abde84135c32f55a607de2">
-        <source>Do you want to send this message to the customer?</source>
-        <target>Do you want to send this message to the customer?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:820</note>
-      </trans-unit>
-      <trans-unit id="dc8d1b4e8c9bdf1eed97eb9ed5877a43">
-        <source>Do you want to overwrite your existing message?</source>
-        <target>Do you want to overwrite your existing message?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:825</note>
-      </trans-unit>
-      <trans-unit id="44f36e0e113ab5d842c47691364f6eb4">
-        <source>This product cannot be returned.</source>
-        <target>This product cannot be returned.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:885</note>
-      </trans-unit>
-      <trans-unit id="b8d649752e2493d7d761b05cc255c3fd">
-        <source>Quantity to cancel is greater than quantity available.</source>
-        <target>Quantity to cancel is greater than quantity available.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:885</note>
-      </trans-unit>
-      <trans-unit id="49641a1085f245fe45d45881544d1cec">
-        <source>For this customer group, prices are displayed as: [1]%tax_method%[/1]</source>
-        <target>For this customer group, prices are displayed as: [1]%tax_method%[/1]</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:989</note>
-      </trans-unit>
-      <trans-unit id="ef5f330df17f8c955005c26466c2463c">
-        <source>Merchandise returns are disabled</source>
-        <target>Merchandise returns are disabled</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:999</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4d734cc32a5cac86597621969696baa8">
-        <source>This value must include taxes.</source>
-        <target>This value must include taxes.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_discount_form.tpl:62</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c6ba3f7beac8724d025d570d002b1579">
-        <source>No voucher was found</source>
-        <target>No voucher was found</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:104</note>
-      </trans-unit>
-      <trans-unit id="afdbd71037839ec5a581febacab7bad7">
-        <source>No customers found</source>
-        <target>No customers found</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:509</note>
-      </trans-unit>
-      <trans-unit id="29c14e1df15d10b73ec9605fd146b9fe">
-        <source>No carrier can be applied to this order</source>
-        <target>No carrier can be applied to this order</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:606</note>
-      </trans-unit>
-      <trans-unit id="b9af8635591dc44009ccd8e5389722ec">
-        <source>No products found</source>
-        <target>No products found</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:694</note>
-      </trans-unit>
-      <trans-unit id="43c2b5547b84d3fe632a8297c27ed20e">
-        <source>You must add at least one address to process the order.</source>
-        <target>You must add at least one address to process the order.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1057</note>
-      </trans-unit>
-      <trans-unit id="453c92894f48764318534163c2bb2830">
-        <source>The prices are without taxes.</source>
-        <target>The prices are without taxes.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1277</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_documents.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5db361171166373b9694fc4aeb0932b5">
-        <source>There is no available document</source>
-        <target>There is no available document</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:165</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_product_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="65247263c6ea1d91027b28a41db8cb4b">
-        <source>Editing this product line will remove the reduction and base price.</source>
-        <target>Editing this product line will remove the reduction and base price.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2e66149518ba8dc45a9e51c4f153cebf">
-        <source><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></source>
-        <target><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:101</note>
       </trans-unit>
     </body>
   </file>
@@ -1113,6 +921,198 @@ File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.
         <target>For this particular customer group, prices are displayed as:</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl:221</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4d734cc32a5cac86597621969696baa8">
+        <source>This value must include taxes.</source>
+        <target>This value must include taxes.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_discount_form.tpl:62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2e66149518ba8dc45a9e51c4f153cebf">
+        <source><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></source>
+        <target><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_documents.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5db361171166373b9694fc4aeb0932b5">
+        <source>There is no available document</source>
+        <target>There is no available document</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:165</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e1b638a956fae226de3740f63a4e7d48">
+        <source>Are you sure you want to add this quantity?</source>
+        <target>Are you sure you want to add this quantity?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="e2103a9e878a2280b3163e5ee098cbdf">
+        <source>Are you sure you want to create a new invoice?</source>
+        <target>Are you sure you want to create a new invoice?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="bcab2ed7cab19f8e119317a7e59d316a">
+        <source>Error: No product has been selected</source>
+        <target>Error: No product has been selected</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="cd5cb1c932fc6f41a4fb3f6ec2f0c2da">
+        <source>Error: Quantity of products must be set</source>
+        <target>Error: Quantity of products must be set</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="894fdeeda7d3575fd6775732d026992c">
+        <source>Error: Product price must be set</source>
+        <target>Error: Product price must be set</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="c4832c266d52c6cef340a9c656ddda26">
+        <source>Error. You cannot refund a negative amount.</source>
+        <target>Error. You cannot refund a negative amount.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="14c7a12fdbf437a0545aed3365ce3f84">
+        <source>No merchandise returned yet</source>
+        <target>No merchandise returned yet</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:380</note>
+      </trans-unit>
+      <trans-unit id="153c7809e6b00b6cbfa01b8aa9db43e3">
+        <source>paid instead of</source>
+        <target>paid instead of</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:407</note>
+      </trans-unit>
+      <trans-unit id="7137dec9b59978006f8b0ec036099346">
+        <source>This warning also concerns order </source>
+        <target>This warning also concerns order </target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:412</note>
+      </trans-unit>
+      <trans-unit id="f38c718d5cc5ea7331d8acf533f9bf0d">
+        <source>This warning also concerns the next orders:</source>
+        <target>This warning also concerns the next orders:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:414</note>
+      </trans-unit>
+      <trans-unit id="de78da3154b793d64d302db27e65baec">
+        <source>No payment methods are available</source>
+        <target>No payment methods are available</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:497</note>
+      </trans-unit>
+      <trans-unit id="ecd2046a1d4a6e46c11914c04b9559e4">
+        <source>A registered customer account has already claimed this email address</source>
+        <target>A registered customer account has already claimed this email address</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:603</note>
+      </trans-unit>
+      <trans-unit id="341ee6bf57abde84135c32f55a607de2">
+        <source>Do you want to send this message to the customer?</source>
+        <target>Do you want to send this message to the customer?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:824</note>
+      </trans-unit>
+      <trans-unit id="dc8d1b4e8c9bdf1eed97eb9ed5877a43">
+        <source>Do you want to overwrite your existing message?</source>
+        <target>Do you want to overwrite your existing message?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:829</note>
+      </trans-unit>
+      <trans-unit id="44f36e0e113ab5d842c47691364f6eb4">
+        <source>This product cannot be returned.</source>
+        <target>This product cannot be returned.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:889</note>
+      </trans-unit>
+      <trans-unit id="b8d649752e2493d7d761b05cc255c3fd">
+        <source>Quantity to cancel is greater than quantity available.</source>
+        <target>Quantity to cancel is greater than quantity available.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:889</note>
+      </trans-unit>
+      <trans-unit id="49641a1085f245fe45d45881544d1cec">
+        <source>For this customer group, prices are displayed as: [1]%tax_method%[/1]</source>
+        <target>For this customer group, prices are displayed as: [1]%tax_method%[/1]</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:993</note>
+      </trans-unit>
+      <trans-unit id="ef5f330df17f8c955005c26466c2463c">
+        <source>Merchandise returns are disabled</source>
+        <target>Merchandise returns are disabled</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1003</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_product_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="65247263c6ea1d91027b28a41db8cb4b">
+        <source>Editing this product line will remove the reduction and base price.</source>
+        <target>Editing this product line will remove the reduction and base price.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c6ba3f7beac8724d025d570d002b1579">
+        <source>No voucher was found</source>
+        <target>No voucher was found</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:104</note>
+      </trans-unit>
+      <trans-unit id="afdbd71037839ec5a581febacab7bad7">
+        <source>No customers found</source>
+        <target>No customers found</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:509</note>
+      </trans-unit>
+      <trans-unit id="29c14e1df15d10b73ec9605fd146b9fe">
+        <source>No carrier can be applied to this order</source>
+        <target>No carrier can be applied to this order</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:606</note>
+      </trans-unit>
+      <trans-unit id="b9af8635591dc44009ccd8e5389722ec">
+        <source>No products found</source>
+        <target>No products found</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:694</note>
+      </trans-unit>
+      <trans-unit id="43c2b5547b84d3fe632a8297c27ed20e">
+        <source>You must add at least one address to process the order.</source>
+        <target>You must add at least one address to process the order.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1057</note>
+      </trans-unit>
+      <trans-unit id="453c92894f48764318534163c2bb2830">
+        <source>The prices are without taxes.</source>
+        <target>The prices are without taxes.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1277</note>
       </trans-unit>
     </body>
   </file>

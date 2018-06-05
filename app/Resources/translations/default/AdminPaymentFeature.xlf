@@ -40,13 +40,13 @@ File: controllers/admin/AdminPaymentPreferencesController.php:262</note>
         <source>Active payment</source>
         <target>Active payment</target>
         <note>Context:
-File: controllers/admin/AdminPaymentController.php:128</note>
+File: controllers/admin/AdminPaymentController.php:125</note>
       </trans-unit>
       <trans-unit id="b89c0bf4a33aa644189880a46ac301fd">
         <source>Recommended payment gateways</source>
         <target>Recommended payment gateways</target>
         <note>Context:
-File: controllers/admin/AdminPaymentController.php:133</note>
+File: controllers/admin/AdminPaymentController.php:130</note>
       </trans-unit>
     </body>
   </file>
