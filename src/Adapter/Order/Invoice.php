@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -22,37 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter\Order;
 
-// Plugins CSS
+use OrderInvoice as InvoiceLegacy;
+use PrestaShop\PrestaShop\Core\Order\InvoiceInterface;
 
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-
-// Theme SCSS
-
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-Dropzone.autoDiscover = false;
-
-import NavBar from './nav_bar.js';
-
-// this needs to be ported into the UI kit
-import './clickable-dropdown';
-
-import './maintenance-page';
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-import initDatePickers from './app/utils/datepicker';
-
-const $ = global.$;
-
-new NavBar();
-new Header();
-
-$(() => {
-  initDatePickers();
-});
+final class Invoice implements InvoiceInterface
+{
+    /**
+     * Return collection of Invoice
+     *
+     * @param string $dateFrom Date From
+     * @param string $dateTo   Date To
+     *
+     * @return array[InvoiceLegacy]
+     */
+    public static function getByDeliveryDateInterval($dateFrom, $dateTo)
+    {
+        return InvoiceLegacy::getByDeliveryDateInterval($dateFrom, $dateTo);
+    }
+}

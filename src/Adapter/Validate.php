@@ -38,4 +38,9 @@ class Validate
     {
         return ValidateLegacy::isOrderBy($order);
     }
+
+    public static function isDate($date)
+    {
+        return ValidateLegacy::isDate($date);
+    }
 }

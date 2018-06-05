@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -23,36 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-// Plugins CSS
+namespace PrestaShopBundle\Form\Admin\Order\Delivery;
 
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
+use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-// Theme SCSS
+/**
+ * This class is responsible of managing the data manipulated pdf form
+ * in "Sells > Orders > Delivery Slips" page.
+ */
+final class SlipPdfFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * @var SlipPdfConfiguration
+     */
+    private $configuration;
 
-import '../scss/theme.scss';
+    public function __construct(SlipPdfConfiguration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
 
-// Theme Javascript
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return [];
+    }
 
-Dropzone.autoDiscover = false;
-
-import NavBar from './nav_bar.js';
-
-// this needs to be ported into the UI kit
-import './clickable-dropdown';
-
-import './maintenance-page';
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-import initDatePickers from './app/utils/datepicker';
-
-const $ = global.$;
-
-new NavBar();
-new Header();
-
-$(() => {
-  initDatePickers();
-});
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->configuration->updateConfiguration($data['pdf']);
+    }
+}

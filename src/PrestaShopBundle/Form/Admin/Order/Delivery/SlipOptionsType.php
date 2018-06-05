@@ -23,42 +23,47 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Form\Admin\Order\Delivery;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class is responsible to create a date picker field
+ * This form class generates the "Options" form in Delivery slips page
  */
-class DatePickerType extends AbstractType
+class SlipOptionsType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return TextType::class;
+        $builder
+            ->add(
+                'prefix',
+                TranslateTextType::class,
+                [
+                    'locales' => $this->locales,
+                ]
+            )
+            ->add(
+                'number',
+                FormType\NumberType::class
+            )
+            ->add(
+                'enable_product_image',
+                SwitchType::class
+            );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'widget' => 'single_text'
-        ));
-    }
-
-    /**
-     * Returns the block prefix of this type.
-     *
-     * @return string The prefix name
-     */
     public function getBlockPrefix()
     {
-        return 'date_picker';
+        return 'order_delivery_slip_options';
     }
 }

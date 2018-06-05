@@ -27,6 +27,7 @@
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
+use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -98,7 +99,7 @@ abstract class ApiTestCase extends WebTestCase
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
         $legacyContextMock->method('getRootUrl')->willReturn(null);
-        $legacyContextMock->method('getLanguage')->willReturn(new \Language());
+        $legacyContextMock->method('getLanguage')->willReturn(new Language());
 
         return $legacyContextMock;
     }
