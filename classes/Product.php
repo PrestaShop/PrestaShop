@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -254,7 +254,7 @@ class ProductCore extends ObjectModel
     /**
      * @var int tell the type of stock management to apply on the pack
      */
-    public $pack_stock_type = 3;
+    public $pack_stock_type = Pack::STOCK_TYPE_DEFAULT;
 
     /**
      * Type of delivery time
@@ -300,7 +300,7 @@ class ProductCore extends ObjectModel
     protected static $_tax_rules_group = array();
     protected static $_cacheFeatures = array();
     protected static $_frontFeaturesCache = array();
-    protected static $producPropertiesCache = array();
+    protected static $productPropertiesCache = array();
 
     /** @var array cache stock data in getStock() method */
     protected static $cacheStock = array();
@@ -3585,22 +3585,38 @@ class ProductCore extends ObjectModel
     }
 
     /**
-    * Get available product quantities
+    * Get available product quantities (this method already have decreased products in cart)
     *
-    * @param int $id_product Product id
-    * @param int $id_product_attribute Product attribute id (optional)
+    * @param int $idProduct Product id
+    * @param int $idProductAttribute Product attribute id (optional)
+    * @param bool|null $cacheIsPack
+    * @param Cart|null $cart
+    * @param int $idCustomization Product customization id (optional)
     * @return int Available quantities
     */
-    public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
-    {
-        if ((int)$cache_is_pack || ($cache_is_pack === null && Pack::isPack((int)$id_product))) {
-            if (!Pack::isInStock((int)$id_product)) {
-                return 0;
+    public static function getQuantity(
+        $idProduct,
+        $idProductAttribute = null,
+        $cacheIsPack = null,
+        Cart $cart = null,
+        $idCustomization = null
+    ) {
+        if (Pack::isPack((int)$idProduct)) {
+            return Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
+        }
+        $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
+        $nbProductInCart = 0;
+
+        if (!empty($cart)) {
+            $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
+
+            if (!empty($cartProduct['deep_quantity'])) {
+                $nbProductInCart = $cartProduct['deep_quantity'];
             }
         }
 
         // @since 1.5.0
-        return (StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute));
+        return $availableQuantity - $nbProductInCart;
     }
 
     /**
@@ -3689,25 +3705,17 @@ class ProductCore extends ObjectModel
      * Check product availability
      *
      * @param int $qty Quantity desired
-     * @return bool True if product is available with this quantity
+     * @return bool True if product is available with this quantity, false otherwise
      */
     public function checkQty($qty)
     {
-        if (Pack::isPack((int)$this->id) && !Pack::isInStock((int)$this->id)) {
-            return false;
-        }
-
         if ($this->isAvailableWhenOutOfStock(StockAvailable::outOfStock($this->id))) {
             return true;
         }
+        $id_product_attribute = isset($this->id_product_attribute) ? $this->id_product_attribute : null;
+        $availableQuantity = StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute);
 
-        if (isset($this->id_product_attribute)) {
-            $id_product_attribute = $this->id_product_attribute;
-        } else {
-            $id_product_attribute = 0;
-        }
-
-        return ($qty <= StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute));
+        return $qty <= $availableQuantity;
     }
 
     /**
@@ -4298,7 +4306,7 @@ class ProductCore extends ObjectModel
     public static function duplicateTags($id_product_old, $id_product_new)
     {
         $tags = Db::getInstance()->executeS('SELECT `id_tag`, `id_lang` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
-        if (!Db::getInstance()->NumRows()) {
+        if (!Db::getInstance()->numRows()) {
             return true;
         }
 
@@ -4617,8 +4625,8 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack'.$row['id_product_pack'];
         }
 
-        if (isset(self::$producPropertiesCache[$cache_key])) {
-            return array_merge($row, self::$producPropertiesCache[$cache_key]);
+        if (isset(self::$productPropertiesCache[$cache_key])) {
+            return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
 
         // Datas
@@ -4718,7 +4726,8 @@ class ProductCore extends ObjectModel
         $row['quantity'] = Product::getQuantity(
             (int)$row['id_product'],
             0,
-            isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+            isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
+            $context->cart
         );
 
         $row['quantity_all_versions'] = $row['quantity'];
@@ -4727,7 +4736,8 @@ class ProductCore extends ObjectModel
             $row['quantity'] = Product::getQuantity(
                 (int)$row['id_product'],
                 $id_product_attribute,
-                isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+                isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
+                $context->cart
             );
 
             $row['available_date'] = Product::getAvailableDate(
@@ -4750,7 +4760,8 @@ class ProductCore extends ObjectModel
         $row['pack'] = (!isset($row['cache_is_pack']) ? Pack::isPack($row['id_product']) : (int)$row['cache_is_pack']);
         $row['packItems'] = $row['pack'] ? Pack::getItemTable($row['id_product'], $id_lang) : array();
         $row['nopackprice'] = $row['pack'] ? Pack::noPackPrice($row['id_product']) : 0;
-        if ($row['pack'] && !Pack::isInStock($row['id_product'])) {
+
+        if ($row['pack'] && !Pack::isInStock($row['id_product'], $quantity, $context->cart)) {
             $row['quantity'] = 0;
         }
 
@@ -4786,8 +4797,8 @@ class ProductCore extends ObjectModel
 
         $row['unit_price'] = ($row['unit_price_ratio'] != 0  ? $row['price'] / $row['unit_price_ratio'] : 0);
 
-        self::$producPropertiesCache[$cache_key] = $row;
-        return self::$producPropertiesCache[$cache_key];
+        self::$productPropertiesCache[$cache_key] = $row;
+        return self::$productPropertiesCache[$cache_key];
     }
 
     public static function getTaxesInformations($row, Context $context = null)
@@ -5357,7 +5368,7 @@ class ProductCore extends ObjectModel
             if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
                 return false;
             }
-            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
+            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->numRows() > 0 ? true : false);
         }
         return self::$_incat[$hash];
     }
@@ -6048,44 +6059,100 @@ class ProductCore extends ObjectModel
         return !empty($attributes);
     }
 
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
+    /**
+     * Get an id_product_attribute by an id_product and one or more
+     * id_attribute.
+     *
+     * e.g: id_product 8 with id_attribute 4 (size medium) and
+     * id_attribute 5 (color blue) returns id_product_attribute 9 which
+     * is the dress size medium and color blue.
+     *
+     * @param int $idProduct
+     * @param int|int[] $idAttributes
+     * @param bool $findBest
+     * @return int
+     * @throws PrestaShopException
+     */
+    public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
-        if (!is_array($id_attributes)) {
-            return 0;
+        $idProduct = (int) $idProduct;
+
+        if (!is_array($idAttributes) && is_numeric($idAttributes)) {
+            $idAttributes = array((int) $idAttributes);
         }
 
-        $id_product_attribute =  Db::getInstance()->getValue('
-        SELECT pac.`id_product_attribute`
-        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-        WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $id_attributes)).')
-        GROUP BY id_product_attribute
-        HAVING COUNT(id_product) = '.count($id_attributes));
+        if (!is_array($idAttributes) || empty($idAttributes)) {
+            throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
+        }
+        $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
+        $idProductAttribute =  Db::getInstance()->getValue('
+            SELECT 
+                pac.`id_product_attribute`
+            FROM 
+                `' . _DB_PREFIX_ . 'product_attribute_combination` pac
+                INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+            WHERE 
+                pa.id_product = ' . $idProduct . '
+                AND pac.id_attribute IN (' . $idAttributesImploded . ')
+            GROUP BY 
+                pac.`id_product_attribute`
+            HAVING 
+                COUNT(pa.id_product) = ' . count($idAttributes)
+        );
 
-        if ($id_product_attribute === false && $find_best) {
+        if ($idProductAttribute === false && $find_best) {
             //find the best possible combination
-            //first we order $id_attributes by the group position
+            //first we order $idAttributes by the group position
             $orderred = array();
-            $result = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'attribute` a
-            INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
-            WHERE `id_attribute` IN ('.implode(',', array_map('intval', $id_attributes)).') ORDER BY g.`position` ASC');
+            $result = Db::getInstance()->executeS('
+                SELECT 
+                    a.`id_attribute`
+                FROM 
+                    `'._DB_PREFIX_.'attribute` a
+                    INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
+                WHERE 
+                    a.`id_attribute` IN (' . $idAttributesImploded . ')
+                ORDER BY 
+                    g.`position` ASC'
+            );
 
             foreach ($result as $row) {
                 $orderred[] = $row['id_attribute'];
             }
 
-            while ($id_product_attribute === false && count($orderred) > 0) {
+            while ($idProductAttribute === false && count($orderred) > 0) {
                 array_pop($orderred);
-                $id_product_attribute =  Db::getInstance()->getValue('
-                SELECT pac.`id_product_attribute`
-                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
-                GROUP BY id_product_attribute
-                HAVING COUNT(id_product) = '.count($orderred));
+                $idProductAttribute =  Db::getInstance()->getValue('
+                    SELECT 
+                        pac.`id_product_attribute`
+                    FROM 
+                        `'._DB_PREFIX_.'product_attribute_combination` pac
+                        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                    WHERE 
+                        pa.id_product = '.(int)$idProduct.'
+                        AND pac.id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
+                    GROUP BY 
+                        pac.id_product_attribute
+                    HAVING 
+                        COUNT(pa.id_product) = '.count($orderred)
+                );
             }
         }
-        return $id_product_attribute;
+
+        if (empty($idProductAttribute)) {
+            throw new PrestaShopObjectNotFoundException('Can not retrieve the id_product_attribute');
+        }
+
+        return $idProductAttribute;
+    }
+
+    /**
+     * @deprecated 1.7.3.1
+     * @see Product::getIdProductAttributeByIdAttributes()
+     */
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
+    {
+        return self::getIdProductAttributeByIdAttributes($id_product, $id_attributes, $find_best);
     }
 
     /**
@@ -6618,7 +6685,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Return an array of customization fields IDs
-     * 
+     *
      * @return array|false
      */
     public function getUsedCustomizationFieldsIds()

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,10 +38,13 @@ interface FormHandlerInterface
     public function getForm();
 
     /**
+     * Describe what need to be done on saving the form: mostly persists the data
+     * using a form data provider, but it's also the right place to dispatch events/log something.
+     *
      * @param array $data data retrieved from form that need to be persisted in database
      * @throws \Exception if the data can't be handled
      *
-     * @return void
+     * @return array $errors if data can't persisted an array of errors messages
      */
     public function save(array $data);
 }

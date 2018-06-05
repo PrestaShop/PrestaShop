@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,6 +82,7 @@ class Module implements ModuleInterface
         'need_instance' => 0,
         'limited_countries' => array(),
         'parent_class' => 'Module',
+        'is_paymentModule' => false,
         'productType' => 'module',
         'warning' => '',
         'img' => '',
@@ -183,21 +184,24 @@ class Module implements ModuleInterface
      */
     public function hasValidInstance()
     {
-        if (($this->disk->has('is_present') && $this->disk->get('is_present') == false)
-            || ($this->disk->has('is_valid') && $this->disk->get('is_valid') == false)) {
+        if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
+            || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)) {
+
             return false;
         }
 
         if ($this->instance === null) {
-            // We try to instanciate the legacy class if not done yet
+            // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
             } catch (\Exception $e) {
                 $this->disk->set('is_valid', false);
-                throw $e;
+
+                return false;
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
+
+        $this->disk->set('is_valid', $this->instance instanceof LegacyModule);
 
         return $this->disk->get('is_valid');
     }
@@ -214,6 +218,8 @@ class Module implements ModuleInterface
 
         $result = $this->instance->install();
         $this->database->set('installed', $result);
+        $this->database->set('active', $result);
+        $this->database->set('version', $this->attributes->get('version'));
         return $result;
     }
 
@@ -236,6 +242,7 @@ class Module implements ModuleInterface
      */
     public function onUpgrade($version)
     {
+        $this->database->set('version', $this->attributes->get('version_available'));
         return true;
     }
 
@@ -355,6 +362,11 @@ class Module implements ModuleInterface
         }
     }
 
+    /**
+     * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace
+     *
+     * @return boolean
+     */
     public function canBeUpgraded()
     {
         if ($this->database->get('installed') == 0) {
@@ -362,12 +374,22 @@ class Module implements ModuleInterface
         }
 
         // Potential update from API
-        if ($this->attributes->get('version_available') !== 0
-            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')) {
+        if ($this->canBeUpgradedFromAddons()) {
             return true;
         }
 
         // Potential update from disk
         return version_compare($this->database->get('version'), $this->disk->get('version'), '<');
+    }
+
+    /**
+     * Only check if an upgrade is available on the marketplace
+     *
+     * @return boolean
+     */
+    public function canBeUpgradedFromAddons()
+    {
+        return $this->attributes->get('version_available') !== 0
+            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
     }
 }

@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -40,7 +40,7 @@
         itemscope
         itemtype="https://schema.org/Offer"
       >
-        <link itemprop="availability" href="https://schema.org/InStock"/>
+        <link itemprop="availability" href="{$product.seo_availability}"/>
         <meta itemprop="priceCurrency" content="{$currency.iso_code}">
 
         <div class="current-price">
@@ -102,7 +102,8 @@
       {elseif $product.additional_delivery_times == 2}
         {if $product.quantity > 0}
           <span class="delivery-information">{$product.delivery_in_stock}</span>
-        {else}
+        {* Out of stock message should not be displayed if customer can't order the product. *}
+        {elseif $product.quantity == 0 && $product.add_to_cart_url}
           <span class="delivery-information">{$product.delivery_out_stock}</span>
         {/if}
       {/if}

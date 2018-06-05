@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -107,7 +107,7 @@ class AdminCategoriesControllerCore extends AdminController
         parent::init();
 
         // context->shop is set in the init() function, so we move the _category instanciation after that
-        if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete') {
+        if (($id_category = Tools::getValue('id_category')) && $this->action != 'select_delete') {
             $this->_category = new Category($id_category);
         } else {
             if (Shop::getContext() == Shop::CONTEXT_SHOP) {
@@ -202,9 +202,9 @@ class AdminCategoriesControllerCore extends AdminController
         parent::initContent();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryUi('ui.widget');
         $this->addJqueryPlugin('tagify');
     }
@@ -524,6 +524,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
+                    'hint' => $this->trans('Click on "Displayed" to index the category on your shop.', array(), 'Admin.Catalog.Help'),
                     'values' => array(
                         array(
                             'id' => 'active_on',

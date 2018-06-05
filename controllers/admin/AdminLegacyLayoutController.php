@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,6 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
-    private $routeName = '';
     private $headerToolbarBtn = array();
     private $title;
     private $showContentHeader = true;
@@ -35,7 +34,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     private $enableSidebar = false;
     private $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '', $routeName = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
@@ -51,15 +50,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
-        $this->routeName = $routeName;
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         parent::setMedia(true);
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
@@ -112,16 +110,6 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
-    }
-
-    /**
-     * Returns the route name (this allow to identify the page)
-     *
-     * @return string
-     */
-    public function getRoute()
-    {
-        return $this->routeName;
     }
 
     public function display()

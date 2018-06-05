@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1506,7 +1506,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        usort($module_list, create_function('$a,$b', 'return strnatcasecmp($a->displayName, $b->displayName);'));
+        usort($module_list, function ($a, $b) { return strnatcasecmp($a->displayName, $b->displayName); });
         if ($errors) {
             if (!isset(Context::getContext()->controller) && !Context::getContext()->controller->controller_name) {
                 echo '<div class="alert error"><h3>'.Context::getContext()->getTranslator()->trans('The following module(s) could not be loaded', array(), 'Admin.Modules.Notification').':</h3><ol>';
@@ -1891,11 +1891,7 @@ abstract class ModuleCore implements ModuleInterface
             return $string;
         }
 
-        if (($translation = Context::getContext()->getTranslator()->trans($string, array(), null, $locale)) !== $string) {
-            return $translation;
-        }
-
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, false, $locale);
+        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
     }
 
     /*
@@ -3189,15 +3185,16 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isSymfonyContext()
     {
-        return !defined('ADMIN_LEGACY_CONTEXT');
+        return !defined('ADMIN_LEGACY_CONTEXT') && $this->context->controller instanceof AdminLegacyLayoutControllerCore;
     }
 
     /**
      * Access the Symfony Container if we are in Symfony Context.
      * Note: in this case, we must get a container from SymfonyContainer class.
+     * Note: if not in Symfony context, fallback to legacy Container for FO/BO.
      * @param string $serviceName
      *
-     * @return Object|false if Symfony is not booted, it returns false.
+     * @return Object|false if a container is not available, it returns false.
      */
     public function get($serviceName)
     {
@@ -3207,6 +3204,10 @@ abstract class ModuleCore implements ModuleInterface
             }
 
             return $this->container->get($serviceName);
+        }
+
+        if ($this->context->controller instanceof Controller) {
+            return $this->context->controller->get($serviceName);
         }
 
         return false;

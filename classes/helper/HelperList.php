@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -203,7 +203,7 @@ class HelperListCore extends Helper
                 $position_group_identifier = Category::getRootCategory()->id;
             }
 
-            $positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
+            $positions = array_map(function($elem) { return (int)($elem['position']); }, $this->_list);
             sort($positions);
         }
 
@@ -662,7 +662,7 @@ class HelperListCore extends Helper
                 case 'date':
                 case 'datetime':
                     if (is_string($value)) {
-                        $value = Tools::unSerialize($value);
+                        $value = json_decode($value, true);
                     }
                     if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
                         $value = '';

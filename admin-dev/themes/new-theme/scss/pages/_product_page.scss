@@ -63,7 +63,7 @@
     display: block;
     position: fixed;
     top: $size-header-height - 0.0625rem;
-    left: $size-navbar-width;
+    left: 0;
     right: 0;
     box-shadow: $gray-dark 0 0 10px;
     z-index: 400;
@@ -174,7 +174,7 @@
   .token {
     display: inline-block;
     padding: .4rem;
-    margin-right: .4rem;
+    margin: .1rem;
     line-height: 1;
     color: #fff;
     text-align: center;
@@ -535,26 +535,6 @@
     }
   }
 
-  #categories {
-    // probably needs to be updated in PrestaKit
-    .pstaggerTag {
-      font-size: .75rem;
-      padding: .3rem 0.15rem .3rem .4rem;
-
-      .pstaggerClosingCross {
-        font-size: 0;
-        margin: 0 .3rem;
-        &::after {
-          @extend .material-icons;
-          content: "\E5CD";
-          font-size: 1rem;
-          vertical-align: bottom;
-          line-height: .85rem;
-        }
-      }
-    }
-  }
-
   #add-categories {
     margin-top: 2.5rem;
   }
@@ -578,15 +558,47 @@
     }
   }
 
+  .category-tree-overflow {
+    white-space: nowrap;
+    overflow: auto;
+    ul.category-tree {
+      display: inline-block;
+      min-width: 100%;
+      padding-top: .625rem;
+      .main-category {
+        font-size: .625rem;
+        font-weight: 600;
+      }
+      label {
+        position: relative;
+        padding-right: 1.5rem;
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 0;
+        .default-category {
+          position: absolute;
+          top: 5px;
+          right: 3px;
+        }
+      }
+      ul {
+        padding-left: 0.75rem;
+      }
+    }
+  }
+
   .categories-tree {
     padding: 0.625rem;
     border: $gray-light 1px solid;
     border-radius: 0.1875rem;
     .categories-tree-actions {
+      display: flex;
+      align-items: center;
       text-transform: uppercase;
       font-size: 0.625rem;
       font-weight: 600;
-      clear: both;
+      border-bottom: .063rem solid $gray-light;
+
       [data-action="expand"],
       [data-action="reduce"] {
         cursor: pointer;
@@ -599,7 +611,7 @@
       }
       .material-icons {
         font-size: 1.25rem;
-        vertical-align: bottom;
+        vertical-align: middle;
       }
     }
   }
@@ -893,15 +905,11 @@
 }
 
 .table {
-  &.table-no-bordered {
-    tbody,
-    th,
-    thead {
-      border: 0;
+  th {
+    padding: {
+      top: 0.625rem;
+      bottom: 0.625rem;
     }
-  }
-  th{
-    padding: 1.25rem 0.625rem;
   }
   td {
     vertical-align: middle;
@@ -1043,9 +1051,6 @@
         width: auto;
         float: right;
       }
-    }
-    .category-hr {
-      width: 100%;
     }
     .checkbox label {
       max-width: 80%;

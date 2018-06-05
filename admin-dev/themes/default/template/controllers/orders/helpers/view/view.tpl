@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -66,6 +66,10 @@
   {if ($hook_invoice)}
   <div>{$hook_invoice}</div>
   {/if}
+
+  {assign var="order_documents" value=$order->getDocuments()}
+  {assign var="order_shipping" value=$order->getShipping()}
+  {assign var="order_return" value=$order->getReturn()}
 
   <div class="panel kpi-container">
     <div class="row">
@@ -184,7 +188,7 @@
           <li>
             <a href="#documents">
               <i class="icon-file-text"></i>
-              {l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order->getDocuments()|@count}</span>
+              {l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order_documents|@count}</span>
             </a>
           </li>
         </ul>
@@ -246,7 +250,7 @@
                   <input type="hidden" name="id_order" value="{$order->id}" />
                 </div>
                 <div class="col-lg-3">
-                  <button type="submit" name="submitState" class="btn btn-primary">
+                  <button type="submit" name="submitState" id="submit_state" class="btn btn-primary">
                     {l s='Update status' d='Admin.Orderscustomers.Feature'}
                   </button>
                 </div>
@@ -255,7 +259,7 @@
           </div>
           <!-- Tab documents -->
           <div class="tab-pane" id="documents">
-            <h4 class="visible-print">{l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order->getDocuments()|@count})</span></h4>
+            <h4 class="visible-print">{l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order_documents|@count})</span></h4>
             {* Include document template *}
             {include file='controllers/orders/_documents.tpl'}
           </div>
@@ -273,13 +277,13 @@
           <li class="active">
             <a href="#shipping">
               <i class="icon-truck "></i>
-              {l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">{$order->getShipping()|@count}</span>
+              {l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">{$order_shipping|@count}</span>
             </a>
           </li>
           <li>
             <a href="#returns">
               <i class="icon-undo"></i>
-              {l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order->getReturn()|@count}</span>
+              {l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order_return|@count}</span>
             </a>
           </li>
         </ul>
@@ -288,7 +292,7 @@
         {$HOOK_CONTENT_SHIP}
           <!-- Tab shipping -->
           <div class="tab-pane active" id="shipping">
-            <h4 class="visible-print">{l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">({$order->getShipping()|@count})</span></h4>
+            <h4 class="visible-print">{l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">({$order_shipping|@count})</span></h4>
             <!-- Shipping block -->
             {if !$order->isVirtual()}
             <div class="form-horizontal">
@@ -321,10 +325,10 @@
           </div>
           <!-- Tab returns -->
           <div class="tab-pane" id="returns">
-            <h4 class="visible-print">{l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order->getReturn()|@count})</span></h4>
+            <h4 class="visible-print">{l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order_return|@count})</span></h4>
             {if !$order->isVirtual()}
             <!-- Return block -->
-              {if $order->getReturn()|count > 0}
+              {if $order_return|count > 0}
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -336,7 +340,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {foreach from=$order->getReturn() item=line}
+                    {foreach from=$order_return item=line}
                     <tr>
                       <td>{$line.date_add}</td>
                       <td>{$line.type}</td>

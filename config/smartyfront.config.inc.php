@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,7 +79,7 @@ function withWidget($params, callable $cb)
 function smartyWidget($params, &$smarty)
 {
     return withWidget($params, function ($widget, $params) {
-        return $widget->renderWidget(null, $params);
+        return $widget->renderWidget(isset($params['hook']) ? $params['hook'] : null, $params);
     });
 }
 
@@ -94,7 +94,7 @@ function smartyRender($params, &$smarty)
     return $ui->render($params);
 }
 
-function smartyFormField($params, &$smarty)
+function smartyFormField($params, $smarty)
 {
     $scope = $smarty->createData(
         $smarty
@@ -113,7 +113,7 @@ function smartyFormField($params, &$smarty)
     return $tpl->fetch();
 }
 
-function smartyWidgetBlock($params, $content, &$smarty)
+function smartyWidgetBlock($params, $content, $smarty)
 {
     static $backedUpVariablesStack = array();
 
@@ -151,7 +151,7 @@ function smartyWidgetBlock($params, $content, &$smarty)
     }
 }
 
-function smartyTranslate($params, &$smarty)
+function smartyTranslate($params, $smarty)
 {
     global $_LANG;
 

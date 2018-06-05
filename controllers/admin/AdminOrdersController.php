@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -143,7 +143,7 @@ class AdminOrdersControllerCore extends AdminController
         ));
 
         if (Country::isCurrentlyUsed('country', true)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT DISTINCT c.id_country, cl.`name`
 			FROM `'._DB_PREFIX_.'orders` o
 			'.Shop::addSqlAssociation('orders', 'o').'
@@ -327,9 +327,9 @@ class AdminOrdersControllerCore extends AdminController
         return $res;
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS(_PS_JS_DIR_.'vendor/d3.v3.min.js');
@@ -2850,7 +2850,11 @@ class AdminOrdersControllerCore extends AdminController
                 $left_to_reinject -= $quantity_to_reinject;
                 if (Pack::isPack((int)$product->id)) {
                     // Gets items
-                    if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
+                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
+                    ) {
                         $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
                         // Foreach item
                         foreach ($products_pack as $product_pack) {
@@ -2867,8 +2871,14 @@ class AdminOrdersControllerCore extends AdminController
                             }
                         }
                     }
-                    if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-                            ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
+
+                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
+                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
+                                || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                        )
+                    ) {
                         $manager->addProduct(
                                 $order_detail->product_id,
                                 $order_detail->product_attribute_id,

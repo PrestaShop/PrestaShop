@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,7 +49,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
             'pageContent' => file_get_contents($this->getAddonsUrl($request)),
             'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Modules catalog', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -66,7 +66,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
      */
     private function getAddonsUrl(Request $request)
     {
-        $psVersion = $this->get('prestashop.adapter.legacy.configuration')->get('__PS_VERSION__');
+        $psVersion = $this->get('prestashop.adapter.legacy.configuration')->get('_PS_VERSION_');
         $parent_domain = $request->getSchemeAndHttpHost();
         $context = $this->getContext();
         $currencyCode = $context->currency->iso_code;
@@ -74,6 +74,6 @@ class AddonsStoreController extends FrameworkBundleAdminController
         $countryCode = $context->country->iso_code;
         $activity = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY');
 
-        return "http://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
+        return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
     }
 }

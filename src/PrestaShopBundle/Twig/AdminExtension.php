@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,18 +20,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Twig;
 
-use PrestaShop\PrestaShop\Adapter\ClassLang;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Twig extension for the Symfony Asset component.
@@ -73,77 +69,6 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
     public function initRuntime(\Twig_Environment $environment)
     {
         $this->environment = $environment;
-    }
-
-    final private function buildTopNavMenu(ParameterBag $parameterBag)
-    {
-        static $tabDataContent = null;
-
-        if (null === $tabDataContent) {
-            $yamlParser = new Parser();
-            $yamlNavigationPath = __DIR__.'/../Resources/config/admin/navigation.yml';
-            $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
-            $explodedControllerInfo = explode('::', $parameterBag->get('_controller'));
-            $explodedControllerName = explode('\\', $explodedControllerInfo[0]);
-            $controllerNameIndex = count($explodedControllerName) - 1;
-            $controllerName = $explodedControllerName[$controllerNameIndex];
-
-            $moduleManager = $this->container->get('prestashop.module.manager');
-
-            if (isset($tabConfiguration[$controllerName])) {
-                // Construct tabs and inject into twig tpl
-                $tabDataContent = array();
-                // Get current route name to know when to put "current" class on HTML dom
-                $currentRouteName = $parameterBag->get('_route');
-
-                $translator = $this->container->get('translator');
-                $locale = $translator->getLocale();
-
-                $tabMenu = (new ClassLang($locale))->getClassLang('TabLangCore');
-
-                foreach ($tabConfiguration[$controllerName] as $tabName => $tabData) {
-                    if (!empty($tabMenu)) {
-                        $untranslated = $translator->getSourceString($tabData['title'], $tabMenu->getDomain());
-                        $translatedField = $tabMenu->getFieldValue('name', $untranslated);
-                        if (!empty($translatedField) && $translatedField != $tabData['title']) {
-                            $tabData['title'] = $translatedField;
-                        }
-                    }
-
-                    $tabData['isCurrent'] = false;
-                    if ($currentRouteName === $tabData['route']) {
-                        $tabData['isCurrent'] = true;
-                    }
-
-                    if ($tabName === 'module_tab_notifications') {
-                        $tabData['notificationsCounter'] = $moduleManager->countModulesWithNotifications();
-                    }
-
-                    $tabDataContent[] = $this->environment->render(
-                        'PrestaShopBundle:Admin/Common/_partials:_header_tab.html.twig',
-                        array('tabData' => $tabData)
-                    );
-                }
-                // Inject them to templating system as global to be able to pass it to the legacy afterwards and once
-                // controller has given a response
-            }
-        }
-
-        return $tabDataContent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGlobals()
-    {
-        $globals = array();
-
-        if (null !== $this->requestStack->getCurrentRequest()) {
-            $globals['headerTabContent'] = $this->buildTopNavMenu($this->requestStack->getCurrentRequest()->attributes);
-        }
-
-        return $globals;
     }
 
     /**

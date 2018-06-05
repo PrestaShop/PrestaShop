@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Cookie;
 use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
+use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use InstallSession;
 use Language as LanguageLegacy;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
@@ -239,20 +240,17 @@ class Install extends AbstractInstall
 
     protected function clearCache()
     {
-        $output = Tools::clearSf2Cache('prod');
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
-            return false;
+        if (defined('_PS_IN_TEST_')) {
+            return true;
         }
 
-        $output = Tools::clearSf2Cache();
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
+        try {
+            Tools::clearSf2Cache('prod');
+            Tools::clearSf2Cache('dev');
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage());
             return false;
         }
-
         return true;
     }
 
@@ -305,7 +303,10 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new UpgradeDatabase(defined('_PS_IN_TEST_') ? 'test' : null);
+        if (defined('_PS_IN_TEST_')) {
+            return true;
+        }
+        $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 
@@ -536,6 +537,7 @@ class Install extends AbstractInstall
             $this->setError($this->translator->trans('Cannot create shop', array(), 'Install').' / '.Db::getInstance()->getMsgError());
             return false;
         }
+        $shop->setTheme();
         Context::getContext()->shop = $shop;
 
         // Create default shop URL
@@ -698,6 +700,7 @@ class Install extends AbstractInstall
             'smtp_encryption' => 'off',
             'smtp_port' => 25,
             'rewrite_engine' => false,
+            'enable_ssl' => false,
         );
 
         foreach ($default_data as $k => $v) {
@@ -722,6 +725,10 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', $data['shop_country']);
         Configuration::updateGlobalValue('PS_TIMEZONE', $data['shop_timezone']);
         Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT', (int)$data['configuration_agrement']);
+
+        // Set SSL configuration
+        Configuration::updateGlobalValue('PS_SSL_ENABLED', (int)$data['enable_ssl']);
+        Configuration::updateGlobalValue('PS_SSL_ENABLED_EVERYWHERE', (int)$data['enable_ssl']);
 
         // Set mails configuration
         Configuration::updateGlobalValue('PS_MAIL_METHOD', ($data['use_smtp']) ? 2 : 1);
@@ -844,6 +851,7 @@ class Install extends AbstractInstall
             }
         } else {
             $modules = array(
+                'contactform',
                 'dashactivity',
                 'dashtrends',
                 'dashgoals',
@@ -869,6 +877,7 @@ class Install extends AbstractInstall
                 'ps_sharebuttons',
                 'ps_shoppingcart',
                 'ps_socialfollow',
+                'ps_themecusto',
                 'ps_wirepayment',
                 'pagesnotfound',
                 'sekeywords',
@@ -1091,7 +1100,13 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        Search::indexation(true);
+        if ($entity === 'category') {
+            Category::regenerateEntireNtree();
+        }
+
+        if ($entity === null) {
+            Search::indexation(true);
+        }
 
         // Update fixtures lang
         foreach ($languages as $lang) {

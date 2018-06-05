@@ -112,41 +112,41 @@ File: modules/dashgoals/dashgoals.php:489</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/dashgoals/views/templates/hook/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
         <source>Traffic</source>
         <target>Traffic</target>
         <note>Context:
-File: modules/dashgoals/views/templates/hook/config.tpl:32</note>
+File: modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl:58</note>
       </trans-unit>
-      <trans-unit id="8c804960da61b637c548c951652b0cac">
-        <source>Average Cart Value</source>
-        <target>Average Cart Value</target>
-        <note>Context:
-File: modules/dashgoals/views/templates/hook/config.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="e4c3da18c66c0147144767efeb59198f">
-        <source>Conversion Rate</source>
-        <target>Conversion Rate</target>
-        <note>Context:
-File: modules/dashgoals/views/templates/hook/config.tpl:33</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="3bb1503332637805beddb73a2dd1fe1b">
         <source>Conversion</source>
         <target>Conversion</target>
         <note>Context:
 File: modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl:61</note>
       </trans-unit>
+      <trans-unit id="8c804960da61b637c548c951652b0cac">
+        <source>Average Cart Value</source>
+        <target>Average Cart Value</target>
+        <note>Context:
+File: modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl:64</note>
+      </trans-unit>
       <trans-unit id="89c1265be62d3ba835a3d963db5956b0">
         <source>Forecast</source>
         <target>Forecast</target>
         <note>Context:
 File: modules/dashgoals/views/templates/hook/dashboard_zone_two.tpl:38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/dashgoals/views/templates/hook/config.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e4c3da18c66c0147144767efeb59198f">
+        <source>Conversion Rate</source>
+        <target>Conversion Rate</target>
+        <note>Context:
+File: modules/dashgoals/views/templates/hook/config.tpl:33</note>
       </trans-unit>
     </body>
   </file>

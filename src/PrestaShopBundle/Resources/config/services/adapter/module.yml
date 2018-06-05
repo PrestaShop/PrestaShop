@@ -1,0 +1,61 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.module.self_configurator:
+        class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
+        arguments:
+            - "@prestashop.core.admin.module.repository"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@doctrine.dbal.default_connection"
+            - "@filesystem"
+
+    # MODULE TAB MANAGEMENT
+    prestashop.adapter.module.tab.register:
+        class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister
+        arguments:
+            - "@prestashop.core.admin.tab.repository"
+            - "@prestashop.core.admin.lang.repository"
+            - "@logger"
+            - "@translator"
+            - "@filesystem"
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+
+    prestashop.adapter.module.tab.unregister:
+        class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
+        arguments:
+            - "@prestashop.core.admin.tab.repository"
+            - "@prestashop.core.admin.lang.repository"
+            - "@logger"
+            - "@translator"
+
+    prestashop.adapter.module.tab.eventsubscriber:
+        class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabManagementSubscriber
+        arguments:
+            - "@prestashop.adapter.module.tab.register"
+            - "@prestashop.adapter.module.tab.unregister"
+        tags:
+            - { name: kernel.event_subscriber }
+
+    prestashop.module.manager:
+        class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+        arguments:
+            - "@prestashop.adapter.admin.data_provider.module"
+            - "@prestashop.adapter.data_provider.module"
+            - "@prestashop.core.module.updater"
+            - "@prestashop.core.admin.module.repository"
+            - "@prestashop.module.zip.manager"
+            - "@translator"
+            - "@event_dispatcher"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+
+    prestashop.module.zip.manager:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
+        arguments:
+            - "@filesystem"
+            - "@translator"
+            - "@event_dispatcher"
+
+    prestashop.adapter.presenter.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
+        arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price"]

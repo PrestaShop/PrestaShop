@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="employee-dropdown dropdown">
   {if isset($employee)}
     <div class="rounded-circle person" data-toggle="dropdown">
-      <i class="material-icons">person</i>
+      <img class="avatar rounded-circle" src="{$employee->getImage()}" width="26" height="26"/>
     </div>
   {/if}
   <div class="dropdown-menu dropdown-menu-right">
-    <div class="text-xs-center employee_avatar">
+    <div class="text-center employee_avatar">
       <img class="avatar rounded-circle" src="{$employee->getImage()}" /><br>
       <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
@@ -40,7 +40,7 @@
     </div>
     <div>
       <a class="employee-link" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
-        <i class="material-icons">power_settings_new</i> {l s='Sign out'}
+          <i class="material-icons">power_settings_new</i> <span>{l s='Sign out'}</span>
       </a>
     </div>
   </div>

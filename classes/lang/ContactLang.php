@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,21 +32,4 @@ class ContactLangCore extends DataLangCore
     protected $keys = array('id_contact');
 
     protected $fieldsToUpdate = array('name', 'description');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Webmaster') => $this->translator->trans('Webmaster', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Customer service') => $this->translator->trans('Customer service', array(), 'Admin.Shopparameters.Feature', $this->locale),
-            ),
-            'description' => array(
-                md5('If a technical problem occurs on this website')
-                    => $this->translator->trans('If a technical problem occurs on this website', array(), 'Admin.Shopparameters.Feature', $this->locale),
-
-                md5('For any question about a product, an order')
-                    => $this->translator->trans('For any question about a product, an order', array(), 'Admin.Shopparameters.Feature', $this->locale),
-            ),
-        );
-    }
 }

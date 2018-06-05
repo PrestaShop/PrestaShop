@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -92,11 +92,38 @@ class Tools
 
     public function refreshCaCertFile()
     {
-        LegacyTools::refreshCaCertFile();
+        LegacyTools::refreshCACertFile();
     }
 
     public function generateHtaccess()
     {
         return LegacyTools::generateHtaccess();
+    }
+
+    /**
+     * returns the rounded value of $value to specified precision, according to your configuration;
+     *
+     * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
+     *
+     * @param float $value
+     * @param int $precision
+     * @return float
+     */
+    public function round($value, $precision = 0, $round_mode = null)
+    {
+        return LegacyTools::ps_round($value, $precision, $round_mode);
+    }
+
+    /**
+     * Return domain name according to configuration and depending on ssl activation
+     *
+     * @param bool $http if true, return domain name with protocol
+     * @param bool $entities if true, convert special chars to HTML entities
+     *
+     * @return string domain
+     */
+    public function getShopDomainSsl($http = false, $entities = false)
+    {
+        return LegacyTools::getShopDomainSsl($http, $entities);
     }
 }

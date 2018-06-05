@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
+use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -74,7 +75,6 @@ abstract class ApiTestCase extends WebTestCase
         self::$container = null;
         self::$kernel = null;
         self::$client = null;
-
     }
 
     /**
@@ -99,7 +99,7 @@ abstract class ApiTestCase extends WebTestCase
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
         $legacyContextMock->method('getRootUrl')->willReturn(null);
-        $legacyContextMock->method('getLanguage')->willReturn(new \Language());
+        $legacyContextMock->method('getLanguage')->willReturn(new Language());
 
         return $legacyContextMock;
     }
@@ -227,7 +227,7 @@ abstract class ApiTestCase extends WebTestCase
      * @param $route
      * @param $params
      */
-    protected function assetOkRequest($route, $params)
+    protected function assertOkRequest($route, $params)
     {
         $route = $this->router->generate($route, $params);
         self::$client->request('GET', $route);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -321,6 +321,7 @@ class ContextCore
             $idCarrier = (int) $this->cart->id_carrier;
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
+            $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
             $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
             $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
         }
@@ -347,12 +348,30 @@ class ContextCore
             return $this->translator;
         }
 
+        $translator = $this->getTranslatorFromLocale($this->language->locale);
+        // In case we have at least 1 translated message, we return the current translator.
+        if (count($translator->getCatalogue($this->language->locale)->all())) {
+            $this->translator = $translator;
+        }
+
+        return $translator;
+    }
+
+    /**
+     * Returns a new instance of Translator for the provided locale code
+     *
+     * @param string $locale 5-letter iso code
+     *
+     * @return Translator
+     */
+    public function getTranslatorFromLocale($locale)
+    {
         $cacheDir = _PS_CACHE_DIR_.'translations';
-        $translator = new Translator($this->language->locale, null, $cacheDir, false);
+        $translator = new Translator($locale, null, $cacheDir, false);
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if (count($translator->getCatalogue($this->language->locale)->all())) {
+        if (count($translator->getCatalogue($locale)->all())) {
             $this->translator = $translator;
             return $translator;
         }
@@ -364,7 +383,7 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.'.$this->language->locale.'.*');
+                ->name('*.'.$locale.'.*');
             (new Filesystem())->remove($cache_file);
         }
 
@@ -381,7 +400,7 @@ class ContextCore
 
         $finder = Finder::create()
             ->files()
-            ->name('*.'.$this->language->locale.'.xlf')
+            ->name('*.'.$locale.'.xlf')
             ->notName($notName)
             ->in($this->getTranslationResourcesDirectories())
         ;
@@ -393,11 +412,6 @@ class ContextCore
             if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
                 $translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
-        }
-
-        // In case we have at least 1 translated message, we return the current translator.
-        if (count($translator->getCatalogue($this->language->locale)->all())) {
-            $this->translator = $translator;
         }
 
         return $translator;

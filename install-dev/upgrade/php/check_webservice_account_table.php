@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,10 +33,10 @@
 function check_webservice_account_table()
 {
     $sql = 'SHOW COLUMNS FROM '._DB_PREFIX_.'webservice_account';
-    $return = DB::getInstance()->executeS($sql);
+    $return = Db::getInstance()->executeS($sql);
     if (count($return) < 7) {
         $sql = 'ALTER TABLE `'._DB_PREFIX_.'webservice_account` ADD `is_module` TINYINT( 2 ) NOT NULL DEFAULT \'0\' AFTER `class_name` ,
 		ADD `module_name` VARCHAR( 50 ) NULL DEFAULT NULL AFTER `is_module`';
-        DB::getInstance()->executeS($sql);
+        Db::getInstance()->executeS($sql);
     }
 }

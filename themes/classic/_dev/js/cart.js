@@ -5,7 +5,10 @@ prestashop.cart = prestashop.cart || {};
 
 prestashop.cart.active_inputs = null;
 
-var spinnerSelector = 'input[name="product-quantity-spin"]';
+let spinnerSelector = 'input[name="product-quantity-spin"]';
+let hasError = false;
+let isUpdateOperation = false;
+let errorMsg = '';
 
 /**
  * Attach Bootstrap TouchSpin event handlers
@@ -23,6 +26,8 @@ function createSpin()
       max: 1000000
     });
   });
+  
+  CheckUpdateQuantityOperations.switchErrorStat();
 }
 
 
@@ -146,6 +151,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       var $quantityInput = getTouchSpinInput($target);
       $quantityInput.val(resp.quantity);
 
@@ -183,6 +189,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       $target.val(resp.quantity);
 
       var dataset;
@@ -274,4 +281,46 @@ $(document).ready(() => {
   )
 });
 
+const CheckUpdateQuantityOperations = {
+  'switchErrorStat': () => {
+    /*
+    if errorMsg is not empty or if notifications are shown, we have error to display
+    if hasError is true, quantity was not updated : we don't disable checkout button
+     */
+    let $checkoutBtn = $('.checkout a');
+    if ($("#notifications article.alert-danger").length || ('' !== errorMsg && !hasError)) {
+      $checkoutBtn.addClass('disabled');
+    }
 
+    if ('' !== errorMsg) {
+      let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
+      $('#notifications .container').html(strError);
+      errorMsg = '';
+      isUpdateOperation = false;
+      if (hasError) {
+        // if hasError is true, quantity was not updated : allow checkout
+        $checkoutBtn.removeClass('disabled');
+      }
+    } else if (!hasError && isUpdateOperation) {
+      hasError = false;
+      isUpdateOperation = false;
+      $('#notifications .container').html('');
+      $checkoutBtn.removeClass('disabled');
+    }
+  },
+  'checkUpdateOpertation': (resp) => {
+    /*
+    resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
+    when resp.hasError=true, quantity is not updated
+     */
+    hasError = resp.hasOwnProperty('hasError');
+    let errors = resp.errors || "";
+    // 1.7.2.x returns errors as string, 1.7.3.x returns array
+    if (errors instanceof Array) {
+      errorMsg = errors.join(" ");
+    } else {
+      errorMsg = errors;
+    }
+    isUpdateOperation = true;
+  }
+};

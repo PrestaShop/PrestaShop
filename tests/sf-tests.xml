@@ -8,8 +8,9 @@
   bootstrap                   = "bootstrap-sf.php"
 >
   <php>
-    <server name="KERNEL_DIR" value="app" />
+    <server name="KERNEL_CLASS" value="AppKernel" />
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+    <const name="_PS_IN_TEST_" value="1" />
   </php>
 
   <groups>
@@ -23,4 +24,10 @@
       <directory>PrestaShopBundle</directory>
     </testsuite>
   </testsuites>
+
+  <filter>
+    <whitelist>
+      <directory suffix=".php">../src</directory>
+    </whitelist>
+  </filter>
 </phpunit>

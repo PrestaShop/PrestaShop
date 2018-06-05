@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,9 +31,6 @@ class AdminEmployeesControllerCore extends AdminController
 {
     /** @var array profiles list */
     protected $profiles_array = array();
-
-    /** @var array themes list*/
-    protected $themes = array();
 
     /** @var array tabs list*/
     protected $tabs_list = array();
@@ -121,24 +118,6 @@ class AdminEmployeesControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             )
         );
-        $rtl = $this->context->language->is_rtl ? '_rtl' : '';
-        $path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
-
-        if (file_exists($path)) {
-            foreach (scandir($path) as $theme) {
-                if ($theme[0] != '.' && is_dir($path.$theme) && (@filemtime($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'admin-theme.css'))) {
-                    $this->themes[] = array('id' => $theme.'|admin-theme'.$rtl.'.css', 'name' => $theme == 'default' ? $this->trans('Default', array(), 'Admin.Global') : ucfirst($theme));
-                    if (file_exists($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl)) {
-                        foreach (scandir($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl) as $css) {
-                            if ($css[0] != '.' && preg_match('/\.css$/', $css)) {
-                                $name = strpos($css, 'admin-theme-') !== false ? Tools::ucfirst(preg_replace('/^admin-theme-(.*)\.css$/', '$1', $css)) : $css;
-                                $this->themes[] = array('id' => $theme.'|schemes'.$rtl.'/'.$css, 'name' => $name);
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         $home_tab = Tab::getInstanceFromClassName('AdminDashboard', $this->context->language->id);
         $this->tabs_list[$home_tab->id] = array(
@@ -172,9 +151,9 @@ class AdminEmployeesControllerCore extends AdminController
         }
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-passy.js');
         $this->addjQueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
@@ -558,21 +537,9 @@ class AdminEmployeesControllerCore extends AdminController
                 return false;
             }
 
-            if (Tools::getvalue('active') == 0) {
+            if (Tools::getValue('active') == 0) {
                 $this->errors[] = $this->trans('You cannot disable or delete the administrator account.', array(), 'Admin.Advparameters.Notification');
                 return false;
-            }
-        }
-
-        if (Tools::getValue('bo_theme_css')) {
-            $bo_theme = explode('|', Tools::getValue('bo_theme_css'));
-            $_POST['bo_theme'] = $bo_theme[0];
-            if (!in_array($bo_theme[0], scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'))) {
-                $this->errors[] = $this->trans('Invalid theme', array(), 'Admin.Advparameters.Notification');
-                return false;
-            }
-            if (isset($bo_theme[1])) {
-                $_POST['bo_css'] = $bo_theme[1];
             }
         }
 
@@ -594,7 +561,7 @@ class AdminEmployeesControllerCore extends AdminController
     {
         $employee = new Employee((int)Tools::getValue('id_employee'));
 
-        if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
+        if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getValue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
             return !($this->errors[] = $this->trans('The password must be at least %length% characters long.', array('%length%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Notification'));
         }
 

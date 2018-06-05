@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -159,9 +159,9 @@ class AdminModulesControllerCore extends AdminController
         return (bool)($a['name'] > $b['name']);
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'tablefilter'));
 
         if ($this->context->mode == Context::MODE_HOST && Tools::isSubmit('addnewmodule')) {
@@ -920,6 +920,7 @@ class AdminModulesControllerCore extends AdminController
                             $back_link = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
                             $hook_link = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
                             $trad_link = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+                            $rtl_link = 'index.php?tab=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&configure='.$module->name.'&generate_rtl=1';
                             $disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
                             $uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
                             $reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
@@ -941,6 +942,7 @@ class AdminModulesControllerCore extends AdminController
                                     'module_reset_link' => $reset_link,
                                     'module_update_link' => $update_link,
                                     'trad_link' => $trad_link,
+                                    'module_rtl_link' => ($this->context->language->is_rtl ? $rtl_link : null),
                                     'module_languages' => Language::getLanguages(false),
                                     'theme_language_dir' => _THEME_LANG_DIR_,
                                     'page_header_toolbar_title' => $this->page_header_toolbar_title,
@@ -1129,6 +1131,7 @@ class AdminModulesControllerCore extends AdminController
         if (!Tools::getIsset('configure') && !Tools::getIsset('module_name')) {
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
         }
+
         // Parent Post Process
         parent::postProcess();
 
@@ -1162,6 +1165,16 @@ class AdminModulesControllerCore extends AdminController
         // Call appropriate module callback
         if (!isset($ppm_return)) {
             $this->postProcessCallback();
+        }
+
+        if (Tools::getValue('generate_rtl') && Tools::getValue('configure') != '') {
+            Language::getRtlStylesheetProcessor()
+                ->setProcessPaths(array(
+                    _PS_MODULE_DIR_.Tools::getValue('configure')
+                ))
+                ->setRegenerate(true)
+                ->process();
+            Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&conf=6');
         }
 
         if ($back = Tools::getValue('back')) {
@@ -1396,7 +1409,7 @@ class AdminModulesControllerCore extends AdminController
 
         $languages = Language::getLanguages(false);
         $translateLinks = array();
-        
+
         if (Tools::getIsset('configure')) {
             $module = Module::getInstanceByName(Tools::getValue('configure'));
             $isNewTranslateSystem = $module->isUsingNewTranslationSystem();

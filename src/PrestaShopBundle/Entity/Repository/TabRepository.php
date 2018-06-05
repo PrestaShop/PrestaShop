@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShopBundle\Entity\Tab;
 
 class TabRepository extends EntityRepository
 {
@@ -37,6 +38,15 @@ class TabRepository extends EntityRepository
     public function findByModule($moduleName)
     {
         return $this->findBy(['module' => $moduleName]);
+    }
+
+    /**
+     * @param $idParent
+     * @return array
+     */
+    public function findByParentId($idParent)
+    {
+        return $this->findBy(['idParent' => $idParent]);
     }
     
     /**
@@ -59,5 +69,29 @@ class TabRepository extends EntityRepository
             return $tab->getId();
         }
         return null;
+    }
+
+    /**
+     * Changes tab status
+     *
+     * @param string $className tab's class name
+     * @param bool $status wanted status for the tab
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function changeStatusByClassName($className, $status)
+    {
+        if (!is_bool($status)) {
+            throw new \InvalidArgumentException(sprintf('Invalid type: bool expected, got %s', gettype($status)));
+        }
+
+        /** @var Tab $tab */
+        $tab = $this->findOneByClassName($className);
+
+        if (null !== $tab) {
+            $tab->setActive($status);
+            $this->getEntityManager()->persist($tab);
+            $this->getEntityManager()->flush();
+        }
     }
 }

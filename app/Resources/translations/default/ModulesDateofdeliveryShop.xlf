@@ -8,16 +8,16 @@
         <note>Context:
 File: modules/dateofdelivery/orderDetail.tpl:26</note>
       </trans-unit>
-      <trans-unit id="c9ed8c0b07828727ca6653924b0498d3">
-        <source>with direct payment methods (e.g. credit card)</source>
-        <target>with direct payment methods (e.g. credit card)</target>
-        <note>Context:
-File: modules/dateofdelivery/orderDetail.tpl:27</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/dateofdelivery/beforeCarrier.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c9ed8c0b07828727ca6653924b0498d3">
+        <source>with direct payment methods (e.g. credit card)</source>
+        <target>with direct payment methods (e.g. credit card)</target>
+        <note>Context:
+File: modules/dateofdelivery/beforeCarrier.tpl:89</note>
+      </trans-unit>
       <trans-unit id="75261aaef97717dda0ca98743b24f8f3">
         <source>Approximate date of delivery with this carrier is between</source>
         <target>Approximate date of delivery with this carrier is between</target>

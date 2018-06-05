@@ -40,9 +40,9 @@
 		<language iso_code="fa" is_rtl="1" name="پارسی (Persian)" />
 	</languages>
 	<taxes>
-		<tax id="1" name="8% مالیات بر ارزش افزوده" rate="8" />
+		<tax id="1" name="9% مالیات بر ارزش افزوده" rate="9" />
 		
-		<taxRulesGroup name="IR VAT(8%)">
+		<taxRulesGroup name="IR VAT(9%)">
 			<taxRule iso_code_country="ir" id_tax="1" />
 		</taxRulesGroup>
 	</taxes>

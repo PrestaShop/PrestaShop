@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -28,11 +28,15 @@
       <div class="mb-2">
         <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
-          <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
-          <PSButton @click="onClick" class="search-button" :primary="true">
-            <i class="material-icons">search</i>
-            {{trans('button_search')}}
-          </PSButton>
+          <div class="input-group">
+            <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
+            <div class="input-group-append">
+              <PSButton @click="onClick" class="search-button" :primary="true">
+                <i class="material-icons">search</i>
+                {{trans('button_search')}}
+              </PSButton>
+            </div>
+          </div>
         </form>
       </div>
       <Filters @applyFilter="applyFilter"/>
@@ -109,41 +113,3 @@
     }),
   };
 </script>
-
-<style lang="sass">
-  @import "../../../../../../scss/config/_settings.scss";
-  #search {
-    .search-input {
-      box-shadow: none;
-      border: $gray-light 1px solid;
-      background-color: white;
-      min-height: 35px;
-      outline: none;
-      border-radius: 0;
-    }
-    .alert-box {
-      padding-top: 28px;
-      z-index: 3;
-      position: fixed;
-      right: 5px;
-      top: 40px;
-    }
-    .search-form {
-      width: calc(100% - 130px);
-      .search-button {
-        float: right;
-        position: absolute;
-        right: 22px;
-        top: 1px;
-        margin-top: 28px;
-        height: 35px;
-      }
-    }
-    .fade-enter-active, .fade-leave-active {
-      transition: opacity .5s;
-    }
-    .fade-enter, .fade-leave-to {
-      opacity: 0;
-    }
-  }
-</style>

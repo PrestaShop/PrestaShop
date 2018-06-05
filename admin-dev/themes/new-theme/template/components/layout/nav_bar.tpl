@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<nav class="nav-bar">
+<nav class="nav-bar d-none d-md-block">
+  <span class="menu-collapse">
+    <i class="material-icons">chevron_left</i>
+    <i class="material-icons">chevron_left</i>
+  </span>
+
   <ul class="main-menu">
 
     {foreach $tabs as $level1}
@@ -40,7 +45,7 @@
 
         {if $level1.icon != ''}
 
-          <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
+          <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
             <a href="{$level1Href}" class="link" >
               <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>
             </a>
@@ -48,7 +53,7 @@
 
         {else}
 
-          <li class="category-title d-none d-sm-block {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
+          <li class="category-title {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -61,17 +66,29 @@
                 {if $level2.name eq ''}
                   {$level2Name = $level2.class_name|escape:'html':'UTF-8'}
                 {/if}
+                {assign var="levelOneClass" value=''}
 
-                <li class="link-levelone {if $level2.current}-active{/if}" data-submenu="{$level2.id_tab}">
+                {if $level2.current and not $collapse_menu}
+                    {assign var="levelOneClass" value=" -active open ul-open"}
+                {elseif $level2.current and $collapse_menu}
+                    {assign var="levelOneClass" value=" -active"}
+                {/if}
+
+                <li class="link-levelone{if $level2.sub_tabs|@count} has_submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
                   <a href="{$level2Href}" class="link">
-                    <i class="material-icons">{$level2.icon}</i>
+                    <i class="material-icons mi-{$level2.icon}">{$level2.icon}</i>
                     <span>
                     {$level2Name}
-                    {if $level2.sub_tabs|@count}
-                      <i class="material-icons float-right d-md-none">keyboard_arrow_down</i>
-                    {/if}
                     </span>
-
+                      {if $level1.sub_tabs|@count}
+                          <i class="material-icons sub-tabs-arrow">
+                              {if $level2.current}
+                                  keyboard_arrow_up
+                              {else}
+                                  keyboard_arrow_down
+                              {/if}
+                          </i>
+                      {/if}
                   </a>
                     {if $level2.sub_tabs|@count}
                       <ul id="collapse-{$level2.id_tab}" class="submenu panel-collapse">
@@ -85,7 +102,7 @@
                               {$level3Name = $level3.class_name|escape:'html':'UTF-8'}
                             {/if}
 
-                            <li class="link-leveltwo {if $level3.current}-active{/if}" data-submenu="{$level3.id_tab}">
+                            <li class="link-leveltwo {if $level3.current}-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
                               <a href="{$level3Href}" class="link"> {$level3Name}
                               </a>
                             </li>
@@ -103,10 +120,5 @@
       {/if}
     {/foreach}
   </ul>
-
-  <span class="menu-collapse d-none d-md-inline-block">
-    <i class="material-icons">&#xE8EE;</i>
-  </span>
-
   {hook h='displayAdminNavBarBeforeEnd'}
 </nav>

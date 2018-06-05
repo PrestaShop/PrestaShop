@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,18 +53,18 @@ class CustomerPersisterCore
         return $this->errors;
     }
 
-    public function save(Customer $customer, $clearTextPassword, $newPassword = '')
+    public function save(Customer $customer, $clearTextPassword, $newPassword = '', $passwordRequired = true)
     {
         if ($customer->id) {
-            return $this->update($customer, $clearTextPassword, $newPassword);
+            return $this->update($customer, $clearTextPassword, $newPassword, $passwordRequired);
         } else {
             return $this->create($customer, $clearTextPassword);
         }
     }
 
-    private function update(Customer $customer, $clearTextPassword, $newPassword)
+    private function update(Customer $customer, $clearTextPassword, $newPassword, $passwordRequired = true)
     {
-        if (!$customer->is_guest && !$this->crypto->checkHash(
+        if (!$customer->is_guest && $passwordRequired && !$this->crypto->checkHash(
             $clearTextPassword,
             $customer->passwd,
             _COOKIE_KEY_
@@ -86,7 +86,7 @@ class CustomerPersisterCore
             );
         }
 
-        if ($customer->is_guest) {
+        if ($customer->is_guest || !$passwordRequired) {
             // TODO SECURITY: Audit requested
             if ($customer->id != $this->context->customer->id) {
 

@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.admin.search_parameters:
+        class: PrestaShop\PrestaShop\Core\Search\SearchParameters

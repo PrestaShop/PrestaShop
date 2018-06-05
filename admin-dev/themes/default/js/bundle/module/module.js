@@ -117,6 +117,7 @@ var AdminModuleController = function() {
     this.initPlaceholderMechanism();
     this.initFilterStatusDropdown();
     this.fetchModulesList();
+    this.getNotificationsCount();
   };
 
   this.initFilterStatusDropdown = function() {
@@ -189,7 +190,8 @@ var AdminModuleController = function() {
         var stylesheet = document.styleSheets[0];
         var stylesheetRule = '{display: none}';
         var moduleGlobalSelector = '.modules-list';
-        var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
+        var moduleSortingSelector = '.module-sorting-menu';
+        var requiredSelectorCombination = moduleGlobalSelector + ', ' + moduleSortingSelector;
 
         if (stylesheet.insertRule) {
           stylesheet.insertRule(
@@ -208,7 +210,8 @@ var AdminModuleController = function() {
           $.each(response.domElements, function(index, element){
             $(element.selector).append(element.content);
           });
-          $(requiredSelectorCombination).fadeIn(800);
+          $(moduleGlobalSelector).fadeIn(800).css('display','flex');
+          $(moduleSortingSelector).fadeIn(800);
           $('[data-toggle="popover"]').popover();
           self.initCurrentDisplay();
           self.fetchModulesList();
@@ -518,6 +521,7 @@ var AdminModuleController = function() {
       addRemoveLinks: true,
       dictDefaultMessage: '',
       hiddenInputContainer: self.dropZoneImportZoneSelector,
+      timeout:0, // add unlimited timeout. Otherwise dropzone timeout is 30 seconds and if a module is long to install, it is not possible to install the module.
       addedfile: function() {
         self.animateStartUpload();
       },
@@ -652,6 +656,30 @@ var AdminModuleController = function() {
     return this.currentDisplay == 'grid'
       ? this.moduleItemGridSelector
       : this.moduleItemListSelector;
+  };
+  
+  /**
+   * Get the module notifications count and displays it as a badge on the notification tab
+   * @return void
+   */
+  this.getNotificationsCount = function () {
+    var destinationTab = $("#subtab-AdminModulesNotifications");
+    if (destinationTab.length === 0) {
+        return;
+    }
+    var token = window.location.search;
+    var urlToCall = this.baseAdminDir+'module/notifications/count' + token;
+
+    $.getJSON(urlToCall, function(badge) {
+        // TODO: This HTML code comes from an already specific template.
+        // To be moved in a template, with generic classes for badges
+        destinationTab.append('<span class="notification-container">\
+            <span class="notification-counter">'+badge.count+'</span>\
+          </span>\
+        ');
+    }).fail(function() {
+        console.error('Could not retrieve module notifications count.');
+    });
   };
 
   this.initAddonsSearch = function () {

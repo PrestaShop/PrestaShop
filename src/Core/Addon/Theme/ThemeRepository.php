@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,22 +51,21 @@ class ThemeRepository implements AddonRepositoryInterface
 
     public function getInstanceByName($name)
     {
-        $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$name;
-        $themeCachePath = $this->appConfiguration->get(
-                '_PS_CACHE_DIR_'
-            ) . 'themes/' . $name;
+        $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $name;
 
+        $confDir = $this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name;
+        $jsonConf = $confDir . '/theme.json';
         if ($this->shop) {
-            $jsonConf = $themeCachePath . '/shop' . $this->shop->id . '.json';
-        } else {
-            $jsonConf = $themeCachePath . '/theme.json';
+            $jsonConf = $confDir . '/shop' . $this->shop->id . '.json';
         }
 
         if ($this->filesystem->exists($jsonConf)) {
             $data = $this->getConfigFromFile($jsonConf);
         } else {
-            $data = $this->getConfigFromFile($dir.'/config/theme.yml');
-            $this->filesystem->dumpFile($jsonConf, json_encode($data));
+            $data = $this->getConfigFromFile($dir . '/config/theme.yml');
+
+            // Write parsed yml data into json conf (faster parsing next time)
+            $this->filesystem->dumpFile($jsonConf, json_encode($data), 0777);
         }
 
         $data['directory'] = $dir;
@@ -130,7 +129,10 @@ class ThemeRepository implements AddonRepositoryInterface
     private function getConfigFromFile($file)
     {
         if (!$this->filesystem->exists($file)) {
-            throw new PrestaShopException(sprintf('[ThemeRepository] Theme configuration file not found for theme at `%s`.', $file));
+            throw new PrestaShopException(sprintf(
+                '[ThemeRepository] Theme configuration file not found for theme at `%s`.',
+                $file
+            ));
         }
 
         $content = file_get_contents($file);

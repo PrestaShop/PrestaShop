@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -162,7 +162,7 @@ class FrameworkBundleAdminController extends Controller
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
+        $docLink = urlencode('https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
             .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', [
@@ -252,5 +252,18 @@ class FrameworkBundleAdminController extends Controller
         foreach ($errorMessages as $error) {
             $this->addFlash('error', $this->trans($error['key'], $error['domain'], $error['parameters']));
         }
+    }
+
+    /**
+     * Redirect employee to default page
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    protected function redirectToDefaultPage()
+    {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $defaultTab = $legacyContext->getDefaultEmployeeTab();
+
+        return $this->redirect($legacyContext->getAdminLink($defaultTab));
     }
 }

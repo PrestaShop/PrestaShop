@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,27 +18,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="ps-spinner"></div>
 </template>
-
-<style lang="sass" scoped>
-  @import "../../../scss/config/_settings.scss";
-  .ps-spinner {
-    color: #ffffff;
-    background-color: #ffffff;
-    width: 40px;
-    height: 40px;
-    border-radius: 40px;
-    font-size: 0;
-    outline: none;
-    border: 3px solid $gray-light;
-    border-left-color: $primary;
-    animation: rotating 2s linear infinite;
-    margin: 50px auto;
-  }
-</style>

@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,23 +18,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 
  <template>
-  <div class="ps-number">
+  <div class="ps-number" :class="{'hover-buttons': hoverButtons}">
     <input
       type="number"
-      class="ps-number form-control"
-      :class="{'danger' : danger}"
+      class="form-control"
+      :class="{'danger': danger}"
       :value="value"
       @keyup="onKeyup($event)"
       @focus="focusIn"
-      @blur="focusOut($event)"
+      @blur.native="focusOut($event)"
     />
-    <div class="ps-number-button d-flex" v-if="buttons">
+    <div class="ps-number-spinner d-flex" v-if="buttons">
       <span class="ps-number-up" @click="increment"></span>
       <span class="ps-number-down" @click="decrement"></span>
     </div>
@@ -47,6 +47,7 @@
       value: 0,
       danger: false,
       buttons: false,
+      hoverButtons: false,
     },
     methods: {
       onKeyup($event) {
@@ -59,65 +60,13 @@
         this.$emit('blur', $event);
       },
       increment() {
-        const value = parseInt(this.value, 10) + 1;
-        this.$emit('change', value);
+        const value = parseInt(this.value, 10);
+        this.$emit('change', isNaN(value) ? 0 : value + 1);
       },
       decrement() {
-        const value = parseInt(this.value, 10) - 1;
-        this.$emit('change', value);
+        const value = parseInt(this.value, 10);
+        this.$emit('change', isNaN(value) ? -1 : value - 1);
       },
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../scss/config/_settings.scss";
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
-  input[type=number] {
-    -moz-appearance:textfield;
-  }
-  .danger {
-    border: 1px solid $danger;
-    background-color: #fff;
-    color: $gray-dark;
-    &:focus {
-      outline: none;
-    }
-  }
-  .ps-number {
-    position: relative;
-    width: 95px;
-    .ps-number-button {
-      position: absolute;
-      top: 1px;
-      flex-direction: column;
-      right: 30px;
-      cursor: pointer;
-      line-height:17px;
-      transition: all 0.2s ease;
-      .product-actions & {
-        right: 7px;
-      }
-    }
-    .ps-number-up::before {
-      font-family: 'Material Icons';
-      content: "\E5C7";
-      font-size: 20px;
-      color: $gray-dark;
-      position: relative;
-    }
-    .ps-number-down::before {
-      font-family: 'Material Icons';
-      content: "\E5C5";
-      font-size: 20px;
-      color: $gray-dark;
-      bottom: 6px;
-      position: relative;
-    }
-  }
-</style>

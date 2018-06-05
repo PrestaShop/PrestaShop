@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -203,11 +203,7 @@ class SearchCore
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
-                $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
-                $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
-                $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
-                $start_pos = (int)$word[0] == '-';
-                $sql_param_search = $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
+                $sql_param_search = self::getSearchParamFromWord($word);
 
                 $intersect_array[] = 'SELECT DISTINCT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
@@ -330,11 +326,12 @@ class SearchCore
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
-				'.(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
+				'.(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop FORCE INDEX (id_product)
+				    ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
 				'.Product::sqlStock('p', 0).'
-				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m FORCE INDEX (PRIMARY) 
+				    ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop FORCE INDEX (id_product)
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE p.`id_product` '.$product_pool.'
@@ -872,5 +869,22 @@ class SearchCore
         }
 
         return Product::getProductsProperties((int)$id_lang, $result);
+    }
+
+    /**
+     * Prepare a word for the SQL requests (Remove hyphen if present, add percentage signs)
+     *
+     * @internal Public for tests
+     * @param string $word
+     * @return string
+     */
+    public static function getSearchParamFromWord($word)
+    {
+        $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
+        $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
+        $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
+        $start_pos = (int)($word[0] == '-');
+
+        return $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
     }
 }

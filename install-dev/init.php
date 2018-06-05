@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 ob_start();
+
+require_once 'install_version.php';
 
 // Set execution time and time_limit to infinite if available
 @set_time_limit(0);
@@ -51,11 +53,6 @@ if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
     $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
 }
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
-
-// Check PHP version
-if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.4', '<')) {
-    die('You need at least PHP 5.4 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
-}
 
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
@@ -97,9 +94,7 @@ define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
 define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
 define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 
-require_once _PS_INSTALL_PATH_.'install_version.php';
-
-// PrestaShop autoload is used to load some helpfull classes like Tools.
+// PrestaShop autoload is used to load some helpful classes like Tools.
 // Add classes used by installer bellow.
 
 require_once _PS_CORE_DIR_.'/config/alias.php';

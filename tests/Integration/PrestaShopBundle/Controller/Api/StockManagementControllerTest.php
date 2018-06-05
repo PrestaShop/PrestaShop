@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,7 +45,7 @@ class StockManagementControllerTest extends ApiTestCase
             ->getMock();
 
         $stockMovementRepository->method('saveStockMvt')->willReturn(true);
-        self::$container->set('prestashop.core.api.stockMovement.repository', $stockMovementRepository);
+        self::$container->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
 
         $this->restoreQuantityEditionFixtures();
     }
@@ -84,7 +84,7 @@ class StockManagementControllerTest extends ApiTestCase
         foreach ($routes as $route) {
             self::$client->request('GET', $route, array('page_index' => 0));
             $response = self::$client->getResponse();
-            $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+            $this->assertSame(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
         }
     }
 
@@ -114,19 +114,19 @@ class StockManagementControllerTest extends ApiTestCase
             ),
             array(
                 array('page_index' => 1, 'page_size' => 2),
-                $expectedTotalPages = 23
+                $expectedTotalPages = 24
             ),
             array(
                 array('supplier_id' => 1, 'page_index' => 2, 'page_size' => 2),
-                $expectedTotalPages = 23
+                $expectedTotalPages = 0
             ),
             array(
                 array('supplier_id' => array(1, 2), 'page_index' => 2, 'page_size' => 2),
-                $expectedTotalPages = 23
+                $expectedTotalPages = 0
             ),
             array(
                 array('category_id' => 5, 'page_index' => 1, 'page_size' => 1),
-                $expectedTotalPages = 6
+                $expectedTotalPages = 4
             ),
             array(
                 array('category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
@@ -164,11 +164,11 @@ class StockManagementControllerTest extends ApiTestCase
             ),
             array(
                 array('productId' => 7, 'page_index' => 1, 'page_size' => 2),
-                $expectedTotalPages = 3
+                $expectedTotalPages = 1
             ),
             array(
                 array('productId' => 1, 'category_id' => array(4, 5), 'page_index' => 1, 'page_size' => 1),
-                $expectedTotalPages = 6
+                $expectedTotalPages = 8
             )
         );
     }
@@ -182,14 +182,13 @@ class StockManagementControllerTest extends ApiTestCase
         $routeName,
         $parameters = array(),
         $expectedTotalPages = null
-    )
-    {
+    ) {
         $route = $this->router->generate($routeName, $parameters);
         self::$client->request('GET', $route);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        $this->assertSame(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
 
         if ($expectedTotalPages) {
             $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
@@ -217,7 +216,7 @@ class StockManagementControllerTest extends ApiTestCase
         /** @var \Symfony\Component\HttpFoundation\ResponseHeaderBag $headers */
         $headers = $response->headers;
         $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
-        $this->assertEquals(
+        $this->assertSame(
             $expectedTotalPages,
             $headers->get('Total-Pages'),
             sprintf(
@@ -330,8 +329,8 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertProductQuantity(
             array(
                 'available_quantity' => 10,
-                'physical_quantity' => 12,
-                'reserved_quantity' => 2
+                'physical_quantity' => 10,
+                'reserved_quantity' => 0
             ),
             $content
         );
@@ -343,8 +342,8 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertProductQuantity(
             array(
                 'available_quantity' => 6,
-                'physical_quantity' => 8,
-                'reserved_quantity' => 2
+                'physical_quantity' => 6,
+                'reserved_quantity' => 0
             ),
             $content
         );
@@ -359,13 +358,13 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertProductQuantity($expectedQuantities, $content)
     {
-        $this->assertEquals($expectedQuantities['available_quantity'], $content['product_available_quantity'],
+        $this->assertSame($expectedQuantities['available_quantity'], $content['product_available_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
-        $this->assertEquals($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
+        $this->assertSame($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
             'The response body should contain the newly updated quantity.'
         );
-        $this->assertEquals($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
+        $this->assertSame($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
     }
@@ -405,8 +404,8 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertProductQuantity(
             array(
                 'available_quantity' => 10,
-                'physical_quantity' => 12,
-                'reserved_quantity' => 2
+                'physical_quantity' => 10,
+                'reserved_quantity' => 0
             ),
             $content[1]
         );
@@ -421,8 +420,8 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertProductQuantity(
             array(
                 'available_quantity' => 10,
-                'physical_quantity' => 12,
-                'reserved_quantity' => 2
+                'physical_quantity' => 10,
+                'reserved_quantity' => 0
             ),
             $content[1]
         );

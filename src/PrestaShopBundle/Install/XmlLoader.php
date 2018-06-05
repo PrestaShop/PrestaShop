@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Install;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Pack;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestashopInstallerException;
+use PrestaShopDatabaseException;
 use PrestaShop\PrestaShop\Adapter\Entity\Tag;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
@@ -261,7 +263,8 @@ class XmlLoader
             throw new PrestashopInstallerException('List of fields not found for entity '.$entity);
         }
 
-        if ($this->isMultilang($entity)) {
+        $is_multi_lang_entity = $this->isMultilang($entity);
+        if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
             $xml_langs = array();
             $default_lang = null;
@@ -278,8 +281,8 @@ class XmlLoader
             }
         }
 
-
         // Load all row for current entity and prepare data to be populated
+        $i = 0;
         foreach ($xml->entities->$entity as $node) {
             $data = array();
             $identifier = (string)$node['id'];
@@ -298,7 +301,7 @@ class XmlLoader
 
             // Load multilang data
             $data_lang = array();
-            if ($this->isMultilang($entity)) {
+            if ($is_multi_lang_entity) {
                 $xpath_query = $entity.'[@id="'.$identifier.'"]';
                 foreach ($xml_langs as $id_lang => $xml_lang) {
                     if (!$xml_lang) {
@@ -337,6 +340,12 @@ class XmlLoader
                 } else {
                     $this->copyImages($entity, $identifier, (string)$xml->fields['image'], $data);
                 }
+            }
+            $i++;
+
+            if ($i >= 100) {
+                $this->flushDelayedInserts();
+                $i = 0;
             }
         }
 
@@ -557,6 +566,20 @@ class XmlLoader
         }
 
         $this->storeId($entity, $identifier, $entity_id);
+    }
+
+    /**
+     * @param string $identifier
+     * @param array $data
+     * @param array $data_lang
+     * @return $this
+     * @throws PrestaShopDatabaseException
+     */
+    public function createEntityPack($identifier, array $data, array $data_lang)
+    {
+        Pack::addItem($data['id_product_pack'], $data['id_product_item'], $data['quantity']);
+
+        return $this;
     }
 
     public function createEntityStockAvailable($identifier, array $data, array $data_lang)

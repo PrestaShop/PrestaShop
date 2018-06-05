@@ -11,7 +11,7 @@
     <taxRulesGroup name="TVA Tunisie">
       <taxRule iso_code_country="tn" behavior="0" id_tax="55"/>
     </taxRulesGroup>
-    <tax id="55" name="TVA" rate="18.000"/>
+    <tax id="55" name="TVA" rate="19.000"/>
   </taxes>
   <units>
     <unit type="weight" value="kg"/>

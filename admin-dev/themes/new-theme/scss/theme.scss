@@ -27,11 +27,17 @@
 @import "components/datepicker";
 @import "components/help_box";
 @import "components/ps_dropdown";
+@import "components/ps_number";
+@import "components/ps_radio";
+@import "components/ps_spinner";
+@import "components/ps_tree";
+@import "components/translatable_input";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
 @import "pages/products_catalog";
 @import "pages/translation_page";
+@import "pages/stock_page";
 
 // Main Layout
 @import "pages/modules";
@@ -49,41 +55,6 @@ body {
 }
 
 // To put into the PrestaKit
-$color-icons: #6c868e;
-.breadcrumb {
-  padding: 0.3125rem;
-  background: none;
-  border-radius: 0;
-  font-size: 0.75rem;
-  > li + li::before {
-    padding-right: 0;
-    padding-left: 0.1875rem;
-  }
-  > li > a {
-    color: #363A41; // TODO: Place the text color
-  }
-}
-.toolbar-button {
-  color: $color-icons;
-  text-align: center;
-  display: inline-block;
-  margin: 0 0.3125rem;
-  > .material-icons {
-    font-size: 1.5rem;
-  }
-  > .title {
-    font-size: 0.75rem;
-    color: $color-icons;
-    display: block;
-  }
-  &:hover {
-    text-decoration: none;
-  }
-}
-.col-center {
-  float: none;
-  margin: 0 auto;
-}
 ._fullspace {
   width: 100%;
   height: 100%;
@@ -110,10 +81,41 @@ span.twitter-typeahead {
   }
 }
 
+// text buttons
+.btn.btn-text {
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// setting dropdown button
+.dropdown-toggle.tool-button {
+  &:after {
+    content: "settings";
+    font-size: 1.375rem;
+    color: #6b868f;
+  }
+}
+
 .translation-field {
   display: none;
 
   &.visible {
     display: block;
+  }
+}
+
+table.table {
+  font-size: 0.8rem;
+}
+
+// Needed to override the default inline style of modal header in translations-app
+.translations-app{
+  .modal-header{
+    display: initial;
   }
 }

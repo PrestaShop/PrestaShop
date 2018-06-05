@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -266,14 +266,14 @@ class PrestaShopBackupCore
 
             if (!in_array($schema[0]['Table'], $ignoreInsertTable)) {
                 $data = Db::getInstance()->query('SELECT * FROM `'.$schema[0]['Table'].'`', false);
-                $sizeof = DB::getInstance()->NumRows();
+                $sizeof = Db::getInstance()->numRows();
                 $lines = explode("\n", $schema[0]['Create Table']);
 
                 if ($data && $sizeof > 0) {
                     // Export the table data
                     fwrite($fp, 'INSERT INTO `'.$schema[0]['Table']."` VALUES\n");
                     $i = 1;
-                    while ($row = DB::getInstance()->nextRow($data)) {
+                    while ($row = Db::getInstance()->nextRow($data)) {
                         $s = '(';
 
                         foreach ($row as $field => $value) {

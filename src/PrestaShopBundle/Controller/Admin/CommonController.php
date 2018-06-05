@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,10 +64,8 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
-        // base elements
-        if ($limit <= 0) {
-            $limit = 10;
-        }
+        $limit = max($limit, 10);
+
         $currentPage = floor($offset/$limit)+1;
         $pageCount = ceil($total/$limit);
         $from = $offset;
@@ -87,6 +86,7 @@ class CommonController extends FrameworkBundleAdminController
                 'limit' => $limit
             )
         ));
+
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
@@ -122,7 +122,7 @@ class CommonController extends FrameworkBundleAdminController
                 'limit' => $limit
             )
         ));
-        $limitChoices = $request->attributes->get('limit_choices', array(20, 50, 100));
+        $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
 
         // Template vars injection
         $vars = array(
@@ -157,11 +157,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
-        $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
+        $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
         /* @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
@@ -180,7 +180,8 @@ class CommonController extends FrameworkBundleAdminController
         }
 
         $modules = $recommendedModules->filterInstalledAndBadModules($modules);
-        $modules = $modulesProvider->generateAddonsUrls($modules);
+        $collection = AddonsCollection::createFrom($modules);
+        $modules = $modulesProvider->generateAddonsUrls($collection);
 
         return array(
             'domain' => $domain,
@@ -198,7 +199,7 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {
-        $tools = $this->container->get('prestashop.adapter.tools');
+        $tools = $this->get('prestashop.adapter.tools');
 
         return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', [
             'footer' => $tools->purifyHTML($footer),

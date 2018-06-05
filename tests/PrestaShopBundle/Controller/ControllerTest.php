@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -87,26 +87,26 @@ class ControllerTest extends TestCase
         $testedController->run();
     }
 
+    /**
+     * @return array list of all legacy controllers (Back Office)
+     * If you have migrated a page on Symfony, please remove the related test.
+     */
     public function getControllersClasses()
     {
         return array(
             array('AdminCarriersController'),
-            array('AdminPreferencesController'),
             array('AdminStatusesController'),
             array('AdminZonesController'),
             array('AdminCurrenciesController'),
             array('AdminLoginController'),
             array('AdminCustomersController'),
-            array('AdminCustomerPreferencesController'),
             array('AdminLogsController'),
             array('AdminProfilesController'),
             array('AdminCustomersController'),
-            array('AdminMaintenanceController'),
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
             array('AdminManufacturersController'),
             array('AdminReferrersController'),
-            array('AdminAdminPreferencesController'),
             array('AdminMetaController'),
             array('AdminAttachmentsController'),
             array('AdminReturnController'),
@@ -120,7 +120,6 @@ class ControllerTest extends TestCase
             array('AdminOrderMessageController'),
             array('AdminSearchEnginesController'),
             array('AdminGendersController'),
-            array('AdminOrderPreferencesController'),
             array('AdminShippingController'),
             array('AdminTagsController'),
             array('AdminGeolocationController'),
@@ -142,7 +141,6 @@ class ControllerTest extends TestCase
             array('AdminStatsController'),
             array('AdminContactsController'),
             array('AdminLegacyLayoutController'),
-            array('AdminPPreferencesController'),
         );
     }
 

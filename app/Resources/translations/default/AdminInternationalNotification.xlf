@@ -1,121 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="41ca3d8439f6e8beab7af312714e37f0">
-        <source>Translation successfully updated</source>
-        <target>Translation successfully updated</target>
-        <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:220</note>
-      </trans-unit>
-      <trans-unit id="b3991113a051bbeb759a923bc636ad8d">
-        <source>Failed to update translation</source>
-        <target>Failed to update translation</target>
-        <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:225</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
-        <source>The translation was successfully copied.</source>
-        <target>The translation was successfully copied.</target>
-        <note>Context:
-File: classes/controller/AdminController.php:467</note>
-      </trans-unit>
-      <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
-        <source>Cannot add configuration %1$s for %2$s language</source>
-        <target>Cannot add configuration %1$s for %2$s language</target>
-        <note>Context:
-File: classes/controller/AdminController.php:1480</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/autoupgrade/AdminSelfTab.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
-        <source>The translations have been successfully added.</source>
-        <target>The translations have been successfully added.</target>
-        <note>Context:
-File: modules/autoupgrade/AdminSelfTab.php:182</note>
-      </trans-unit>
-      <trans-unit id="bb01c8c21884e974df8517110c92b22a">
-        <source>The translation was added successfully, but the language has not been created.</source>
-        <target>The translation was added successfully, but the language has not been created.</target>
-        <note>Context:
-File: modules/autoupgrade/AdminSelfTab.php:184</note>
-      </trans-unit>
-      <trans-unit id="c9468b4bd45a165049277af6756db10e">
-        <source>Localization pack imported successfully.</source>
-        <target>Localization pack imported successfully.</target>
-        <note>Context:
-File: modules/autoupgrade/AdminSelfTab.php:186</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Language.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="52326ecbfcdff77b4bc9dcf7f055c2eb">
-        <source>Fatal error: ISO code is not correct</source>
-        <target>Fatal error: ISO code is not correct</target>
-        <note>Context:
-File: classes/Language.php:722</note>
-      </trans-unit>
-      <trans-unit id="87c6e26b4d5c8e6c145691758c25b769">
-        <source>Fatal error: IETF code %s is not correct</source>
-        <target>Fatal error: IETF code %s is not correct</target>
-        <note>Context:
-File: classes/Language.php:731</note>
-      </trans-unit>
-      <trans-unit id="bec88b0b441e9deb3008eb5b2a57ec70">
-        <source>Sorry this language is not available</source>
-        <target>Sorry this language is not available</target>
-        <note>Context:
-File: classes/Language.php:993</note>
-      </trans-unit>
-      <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
-        <source>Server does not have permissions for writing.</source>
-        <target>Server does not have permissions for writing.</target>
-        <note>Context:
-File: classes/Language.php:1022
- Comment: @todo Throw exception</note>
-      </trans-unit>
-      <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
-        <source>Language pack unavailable.</source>
-        <target>Language pack unavailable.</target>
-        <note>Context:
-File: classes/Language.php:1049
- Comment: @todo Throw exception</note>
-      </trans-unit>
-      <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
-        <source>An error occurred while creating the language: %s</source>
-        <target>An error occurred while creating the language: %s</target>
-        <note>Context:
-File: classes/Language.php:1095</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Translate.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="753200ddd6c25c2b4875afc70bb6d4fc">
-        <source>Invalid language ISO code (%s)</source>
-        <target>Invalid language ISO code (%s)</target>
-        <note>Context:
-File: classes/Translate.php:289</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/tax/TaxRulesGroup.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6f3455d187a23443796efdcbe044096b">
-        <source>No tax</source>
-        <target>No tax</target>
-        <note>Context:
-File: classes/tax/TaxRulesGroup.php:151</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/tax/TaxManagerModule.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="253356cdb3cd6af1a6028200326de711">
@@ -129,6 +13,16 @@ File: classes/tax/TaxManagerModule.php:41</note>
         <target>Tax Manager class not found [%s]</target>
         <note>Context:
 File: classes/tax/TaxManagerModule.php:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/tax/TaxRulesGroup.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f3455d187a23443796efdcbe044096b">
+        <source>No tax</source>
+        <target>No tax</target>
+        <note>Context:
+File: classes/tax/TaxRulesGroup.php:151</note>
       </trans-unit>
     </body>
   </file>
@@ -256,6 +150,146 @@ File: classes/LocalizationPack.php:508</note>
       </trans-unit>
     </body>
   </file>
+  <file original="classes/Translate.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="753200ddd6c25c2b4875afc70bb6d4fc">
+        <source>Invalid language ISO code (%s)</source>
+        <target>Invalid language ISO code (%s)</target>
+        <note>Context:
+File: classes/Translate.php:297</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Language.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="52326ecbfcdff77b4bc9dcf7f055c2eb">
+        <source>Fatal error: ISO code is not correct</source>
+        <target>Fatal error: ISO code is not correct</target>
+        <note>Context:
+File: classes/Language.php:773</note>
+      </trans-unit>
+      <trans-unit id="87c6e26b4d5c8e6c145691758c25b769">
+        <source>Fatal error: IETF code %s is not correct</source>
+        <target>Fatal error: IETF code %s is not correct</target>
+        <note>Context:
+File: classes/Language.php:782</note>
+      </trans-unit>
+      <trans-unit id="bec88b0b441e9deb3008eb5b2a57ec70">
+        <source>Sorry this language is not available</source>
+        <target>Sorry this language is not available</target>
+        <note>Context:
+File: classes/Language.php:1044</note>
+      </trans-unit>
+      <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
+        <source>Server does not have permissions for writing.</source>
+        <target>Server does not have permissions for writing.</target>
+        <note>Context:
+File: classes/Language.php:1073
+ Comment: @todo Throw exception</note>
+      </trans-unit>
+      <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
+        <source>Language pack unavailable.</source>
+        <target>Language pack unavailable.</target>
+        <note>Context:
+File: classes/Language.php:1100
+ Comment: @todo Throw exception</note>
+      </trans-unit>
+      <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
+        <source>An error occurred while creating the language: %s</source>
+        <target>An error occurred while creating the language: %s</target>
+        <note>Context:
+File: classes/Language.php:1146</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6cfb80c26b415f8f6467cf07b0c700dd">
+        <source>The translation was successfully copied.</source>
+        <target>The translation was successfully copied.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:469</note>
+      </trans-unit>
+      <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
+        <source>Cannot add configuration %1$s for %2$s language</source>
+        <target>Cannot add configuration %1$s for %2$s language</target>
+        <note>Context:
+File: classes/controller/AdminController.php:1480</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/autoupgrade/AdminSelfTab.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f22def68c5c456936078623b6dcd27ff">
+        <source>The translations have been successfully added.</source>
+        <target>The translations have been successfully added.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:182</note>
+      </trans-unit>
+      <trans-unit id="bb01c8c21884e974df8517110c92b22a">
+        <source>The translation was added successfully, but the language has not been created.</source>
+        <target>The translation was added successfully, but the language has not been created.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:184</note>
+      </trans-unit>
+      <trans-unit id="c9468b4bd45a165049277af6756db10e">
+        <source>Localization pack imported successfully.</source>
+        <target>Localization pack imported successfully.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:186</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
+        <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
+        <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:169</note>
+      </trans-unit>
+      <trans-unit id="34f9488516199cf18114f12369c71a59">
+        <source>Cannot load the localization pack.</source>
+        <target>Cannot load the localization pack.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:190</note>
+      </trans-unit>
+      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
+        <source>Please select at least one item to import.</source>
+        <target>Please select at least one item to import.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:194</note>
+      </trans-unit>
+      <trans-unit id="e2e54c736346106b561a0795cbaec1b1">
+        <source>%language% could not be loaded</source>
+        <target>%language% could not be loaded</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:265</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45f3b37902e09b041709484fd75cab22">
+        <source>A tax rule already exists for this country/state with tax only behavior.</source>
+        <target>A tax rule already exists for this country/state with tax only behavior.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:437</note>
+      </trans-unit>
+      <trans-unit id="97d8fb4588d1efe9731fd4f82e071924">
+        <source>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</source>
+        <target>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:464</note>
+      </trans-unit>
+      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
+        <source>An error has occurred: Cannot save the current tax rule.</source>
+        <target>An error has occurred: Cannot save the current tax rule.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:490</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4749a02e87a1b69cc421bf97c5353956">
@@ -280,119 +314,97 @@ File: controllers/admin/AdminLanguagesController.php:126</note>
         <source>You cannot delete the default language.</source>
         <target>You cannot delete the default language.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:336</note>
+File: controllers/admin/AdminLanguagesController.php:335</note>
       </trans-unit>
       <trans-unit id="f25eedbf89efbd0cfce488fe01f9c4cb">
         <source>You cannot delete the language currently in use. Please select a different language.</source>
         <target>You cannot delete the language currently in use. Please select a different language.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:338</note>
+File: controllers/admin/AdminLanguagesController.php:337</note>
       </trans-unit>
       <trans-unit id="2f236f9450ce8714611e468181064659">
         <source>You cannot change the status of the default language.</source>
         <target>You cannot change the status of the default language.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:359</note>
+File: controllers/admin/AdminLanguagesController.php:358</note>
       </trans-unit>
       <trans-unit id="59382adebc7f0d65c42fe773d443e4c7">
         <source>This ISO code is already linked to another language.</source>
         <target>This ISO code is already linked to another language.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:399</note>
+File: controllers/admin/AdminLanguagesController.php:398</note>
       </trans-unit>
       <trans-unit id="5c61f1e9d7d492c795142ceb39900050">
         <source>Flag and "No picture" image fields are required.</source>
         <target>Flag and "No picture" image fields are required.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:407</note>
+File: controllers/admin/AdminLanguagesController.php:406</note>
       </trans-unit>
       <trans-unit id="8037670f9e6df1f09e040ff8ab047fac">
         <source>An error occurred while copying "No Picture" image to your product folder.</source>
         <target>An error occurred while copying "No Picture" image to your product folder.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:458</note>
+File: controllers/admin/AdminLanguagesController.php:457</note>
       </trans-unit>
       <trans-unit id="0773497a933e6c2b618678b02cbdf7a1">
         <source>An error occurred while copying "No picture" image to your category folder.</source>
         <target>An error occurred while copying "No picture" image to your category folder.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:461</note>
+File: controllers/admin/AdminLanguagesController.php:460</note>
       </trans-unit>
       <trans-unit id="6509c8bfa3f06725a6016e6a429dbcd9">
         <source>An error occurred while copying "No picture" image to your brand folder.</source>
         <target>An error occurred while copying "No picture" image to your brand folder.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:464</note>
+File: controllers/admin/AdminLanguagesController.php:463</note>
       </trans-unit>
       <trans-unit id="1b3a472a4556d51d2169e947280e0400">
         <source>An error occurred while resizing "No picture" image to your product directory.</source>
         <target>An error occurred while resizing "No picture" image to your product directory.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:469</note>
+File: controllers/admin/AdminLanguagesController.php:468</note>
       </trans-unit>
       <trans-unit id="2b9a5da945495f5101d57abbf2a7083c">
         <source>An error occurred while resizing "No picture" image to your category directory.</source>
         <target>An error occurred while resizing "No picture" image to your category directory.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:472</note>
+File: controllers/admin/AdminLanguagesController.php:471</note>
       </trans-unit>
       <trans-unit id="fea874a66e2e09d727c76264844ff688">
         <source>An error occurred while resizing "No picture" image to your brand directory.</source>
         <target>An error occurred while resizing "No picture" image to your brand directory.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:475</note>
+File: controllers/admin/AdminLanguagesController.php:474</note>
       </trans-unit>
       <trans-unit id="5f17acb89d2ab83c9138774bfd05ab16">
         <source>An error occurred during image deletion process.</source>
         <target>An error occurred during image deletion process.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:506</note>
+File: controllers/admin/AdminLanguagesController.php:505</note>
       </trans-unit>
       <trans-unit id="7aa19852b281887173d096f6700cdebf">
         <source>Iso code is not valid</source>
         <target>Iso code is not valid</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:533</note>
+File: controllers/admin/AdminLanguagesController.php:532</note>
       </trans-unit>
       <trans-unit id="da7e8b45fda5783ed027b88cc33fdfc1">
         <source>Technical Error: ps_version is not valid</source>
         <target>Technical Error: ps_version is not valid</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:538</note>
+File: controllers/admin/AdminLanguagesController.php:537</note>
       </trans-unit>
       <trans-unit id="29298b5d89d0bbdfa92fb1d6e27188bd">
         <source>Wrong ISO code, or the selected language pack is unavailable.</source>
         <target>Wrong ISO code, or the selected language pack is unavailable.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:550</note>
+File: controllers/admin/AdminLanguagesController.php:549</note>
       </trans-unit>
       <trans-unit id="dc2dde59d57d3bfd6881be1392c54280">
         <source>Technical Error: translation server unreachable.</source>
         <target>Technical Error: translation server unreachable.</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:554</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
-        <source>The geolocation database is unavailable.</source>
-        <target>The geolocation database is unavailable.</target>
-        <note>Context:
-File: controllers/admin/AdminGeolocationController.php:94</note>
-      </trans-unit>
-      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
-        <source>Country selection is invalid.</source>
-        <target>Country selection is invalid.</target>
-        <note>Context:
-File: controllers/admin/AdminGeolocationController.php:99</note>
-      </trans-unit>
-      <trans-unit id="0861a67f819158c5690a1844d95390b4">
-        <source>Invalid whitelist</source>
-        <target>Invalid whitelist</target>
-        <note>Context:
-File: controllers/admin/AdminGeolocationController.php:110</note>
+File: controllers/admin/AdminLanguagesController.php:553</note>
       </trans-unit>
     </body>
   </file>
@@ -428,287 +440,26 @@ File: controllers/admin/AdminTaxesController.php:176</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="bec0779bd472133db9982f210d249a42">
-        <source>Cannot create the folder "%s". Please check your directory writing permissions.</source>
-        <target>Cannot create the folder "%s". Please check your directory writing permissions.</target>
+      <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
+        <source>The geolocation database is unavailable.</source>
+        <target>The geolocation database is unavailable.</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:315</note>
+File: controllers/admin/AdminGeolocationController.php:93
+ Comment: stop processing if geolocation is set to yes but geolite pack is not available</note>
       </trans-unit>
-      <trans-unit id="102c75f83994f206179912d118b8bc3c">
-        <source>You must select two languages in order to copy data from one to another.</source>
-        <target>You must select two languages in order to copy data from one to another.</target>
+      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
+        <source>Country selection is invalid.</source>
+        <target>Country selection is invalid.</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:410</note>
+File: controllers/admin/AdminGeolocationController.php:98</note>
       </trans-unit>
-      <trans-unit id="fc15f62c244c6d8035874d556e6a7f7b">
-        <source>You must select two themes in order to copy data from one to another.</source>
-        <target>You must select two themes in order to copy data from one to another.</target>
+      <trans-unit id="0861a67f819158c5690a1844d95390b4">
+        <source>Invalid whitelist</source>
+        <target>Invalid whitelist</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:412</note>
-      </trans-unit>
-      <trans-unit id="c4e5aa158727e2041778d545424797da">
-        <source>An error occurred while copying data.</source>
-        <target>An error occurred while copying data.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:414</note>
-      </trans-unit>
-      <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
-        <source>There is nothing to copy (same language and theme).</source>
-        <target>There is nothing to copy (same language and theme).</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:416</note>
-      </trans-unit>
-      <trans-unit id="6b5324e2e711f17c4d3db1f625178e86">
-        <source>Theme(s) not found</source>
-        <target>Theme(s) not found</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:428</note>
-      </trans-unit>
-      <trans-unit id="71e6da3cddad67ae6d48cbeb5246191b">
-        <source>Impossible to create the directory "%s".</source>
-        <target>Impossible to create the directory "%s".</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:439</note>
-      </trans-unit>
-      <trans-unit id="af66446752e8b3d3054f6337afa9fb75">
-        <source>Impossible to copy "%s" to "%s".</source>
-        <target>Impossible to copy "%s" to "%s".</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:441</note>
-      </trans-unit>
-      <trans-unit id="506ea915e7b7f5683f811fd09f0373b4">
-        <source>Impossible to translate "$dest".</source>
-        <target>Impossible to translate "$dest".</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:444</note>
-      </trans-unit>
-      <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
-        <source>A part of the data has been copied but some of the language files could not be found.</source>
-        <target>A part of the data has been copied but some of the language files could not be found.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:451</note>
-      </trans-unit>
-      <trans-unit id="ec531fd2b656df91f11e8f94b2bd2f9b">
-        <source>An error occurred while creating archive.</source>
-        <target>An error occurred while creating archive.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:556</note>
-      </trans-unit>
-      <trans-unit id="b10dfa68dec5e313508a4a55eedae7d1">
-        <source>Please select a language and a theme.</source>
-        <target>Please select a language and a theme.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:558</note>
-      </trans-unit>
-      <trans-unit id="02ae08296d544eb7c674182122645631">
-        <source>Tab "%s" is not valid</source>
-        <target>Tab "%s" is not valid</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:718</note>
-      </trans-unit>
-      <trans-unit id="00ab48dc84eab4a3effe37be6dc55392">
-        <source>Validation failed for: %s</source>
-        <target>Validation failed for: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:796</note>
-      </trans-unit>
-      <trans-unit id="022fdb1ef2a4a458114f8cb8aa38c967">
-        <source>Unidentified file found: %s</source>
-        <target>Unidentified file found: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:799</note>
-      </trans-unit>
-      <trans-unit id="9831c9e35b4d39d939363aa5629e00f2">
-        <source>The archive cannot be extracted.</source>
-        <target>The archive cannot be extracted.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:861</note>
-      </trans-unit>
-      <trans-unit id="30a5e2c0c99e2615a1f4eef6162e7674">
-        <source>ISO CODE invalid "%1$s" for the following file: "%2$s"</source>
-        <target>ISO CODE invalid "%1$s" for the following file: "%2$s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:863</note>
-      </trans-unit>
-      <trans-unit id="299dd7d59920216689a1749def7fd939">
-        <source>Cannot write to the theme's language file (%s). Please check writing permissions.</source>
-        <target>Cannot write to the theme's language file (%s). Please check writing permissions.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:975</note>
-      </trans-unit>
-      <trans-unit id="1970e39c8995f0f6c227f94fc01e35dd">
-        <source>Invalid theme "%s"</source>
-        <target>Invalid theme "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1807</note>
-      </trans-unit>
-      <trans-unit id="8b2e38b1190fe7c4546f89769ecd6657">
-        <source>Invalid iso code "%s"</source>
-        <target>Invalid iso code "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1420</note>
-      </trans-unit>
-      <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
-        <source>This %type_content% file extension is not accepted.</source>
-        <target>This %type_content% file extension is not accepted.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1650</note>
-      </trans-unit>
-      <trans-unit id="5154da9633f2cb69c72cdb07b28a102d">
-        <source>Invalid module name "%s"</source>
-        <target>Invalid module name "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1659</note>
-      </trans-unit>
-      <trans-unit id="e2865d85227e45bdc6fb87bf5df2b1f3">
-        <source>Invalid mail name "%s"</source>
-        <target>Invalid mail name "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1663</note>
-      </trans-unit>
-      <trans-unit id="a3c085f0d457ae1104bf59365beb675a">
-        <source>Directory "%s" cannot be created</source>
-        <target>Directory "%s" cannot be created</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1685</note>
-      </trans-unit>
-      <trans-unit id="ccdf1aa6f4cb029f9846e53006115905">
-        <source>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</source>
-        <target>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1691</note>
-      </trans-unit>
-      <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
-        <source>Your HTML email templates cannot contain JavaScript code.</source>
-        <target>Your HTML email templates cannot contain JavaScript code.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1697</note>
-      </trans-unit>
-      <trans-unit id="d6355ab1d18f77d87dffcf2a55f680e7">
-        <source>Empty string found, please edit: "%s"</source>
-        <target>Empty string found, please edit: "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1840</note>
-      </trans-unit>
-      <trans-unit id="8d3f73d1c4f2384de35da04cc6a7a919">
-        <source>There is an error in template, an empty string has been found. Please edit: "%s"</source>
-        <target>There is an error in template, an empty string has been found. Please edit: "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2109</note>
-      </trans-unit>
-      <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
-        <source>The module directory must be writable.</source>
-        <target>The module directory must be writable.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2171</note>
-      </trans-unit>
-      <trans-unit id="aae8520eb4046d46fe9c6fb5ca6aacb6">
-        <source>A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s</source>
-        <target>A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2428</note>
-      </trans-unit>
-      <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
-        <source>missing translation(s)</source>
-        <target>missing translation(s)</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2483</note>
-      </trans-unit>
-      <trans-unit id="1126cc7046d573e5fd9f631ec792770f">
-        <source>No Subject was found for %s in the database.</source>
-        <target>No Subject was found for %s in the database.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2522</note>
-      </trans-unit>
-      <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
-        <source>There was a problem getting the mail files.</source>
-        <target>There was a problem getting the mail files.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2559</note>
-      </trans-unit>
-      <trans-unit id="86ec02e176255a2545c850847cdc7218">
-        <source>English language files must exist in %s folder</source>
-        <target>English language files must exist in %s folder</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2560</note>
-      </trans-unit>
-      <trans-unit id="31370967686edafc2c4ae48d5870f47f">
-        <source>Cannot write language file for email subjects. Path is: %s</source>
-        <target>Cannot write language file for email subjects. Path is: %s</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2946</note>
-      </trans-unit>
-      <trans-unit id="61ca54d9195f5aa91fd0d41968f7e668">
-        <source>Cannot write into the "%s"</source>
-        <target>Cannot write into the "%s"</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:3145</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
-        <source>This expression uses a special syntax:</source>
-        <target>This expression uses a special syntax:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:140</note>
-      </trans-unit>
-      <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
-        <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
-        <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="1f0f8b59397f34d499b181297714713a">
-        <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
-        <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
-        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
-        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
-        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
-        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:43</note>
-      </trans-unit>
-      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
-        <source>for max_input_vars.</source>
-        <target>for max_input_vars.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:44</note>
-      </trans-unit>
-      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
-        <source>Please ask your hosting provider to increase this limit to</source>
-        <target>Please ask your hosting provider to increase this limit to</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
-        <source>%limit% for suhosin.post.max_vars.</source>
-        <target>%limit% for suhosin.post.max_vars.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
-        <source>%limit% for suhosin.request.max_vars.</source>
-        <target>%limit% for suhosin.request.max_vars.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
-        <source>%s at least, or you will have to edit the translation files.</source>
-        <target>%s at least, or you will have to edit the translation files.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:47</note>
+File: controllers/admin/AdminGeolocationController.php:109</note>
       </trans-unit>
     </body>
   </file>
@@ -740,56 +491,6 @@ File: controllers/admin/AdminCurrenciesController.php:285</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45f3b37902e09b041709484fd75cab22">
-        <source>A tax rule already exists for this country/state with tax only behavior.</source>
-        <target>A tax rule already exists for this country/state with tax only behavior.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:436</note>
-      </trans-unit>
-      <trans-unit id="97d8fb4588d1efe9731fd4f82e071924">
-        <source>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</source>
-        <target>The Zip/postal code is invalid. It must be typed as follows: %format% for %country%.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:463</note>
-      </trans-unit>
-      <trans-unit id="2ff5095fd8289ccdaeca9c5e7d379fd2">
-        <source>An error has occurred: Cannot save the current tax rule.</source>
-        <target>An error has occurred: Cannot save the current tax rule.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:489</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="53802fa30d7e83f77eccfa376c33e6fa">
-        <source>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</source>
-        <target>Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:169</note>
-      </trans-unit>
-      <trans-unit id="34f9488516199cf18114f12369c71a59">
-        <source>Cannot load the localization pack.</source>
-        <target>Cannot load the localization pack.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:190</note>
-      </trans-unit>
-      <trans-unit id="ecb8838ce98cd126849fc083f0070bcd">
-        <source>Please select at least one item to import.</source>
-        <target>Please select at least one item to import.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:194</note>
-      </trans-unit>
-      <trans-unit id="e2e54c736346106b561a0795cbaec1b1">
-        <source>%language% could not be loaded</source>
-        <target>%language% could not be loaded</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:264</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
@@ -806,6 +507,296 @@ File: controllers/admin/AdminCountriesController.php:444</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4d7541fb66c9fc832a20a6f48b4d5613">
+        <source>Cannot create the folder "%folder%". Please check your directory writing permissions.</source>
+        <target>Cannot create the folder "%folder%". Please check your directory writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:303</note>
+      </trans-unit>
+      <trans-unit id="102c75f83994f206179912d118b8bc3c">
+        <source>You must select two languages in order to copy data from one to another.</source>
+        <target>You must select two languages in order to copy data from one to another.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:395</note>
+      </trans-unit>
+      <trans-unit id="fc15f62c244c6d8035874d556e6a7f7b">
+        <source>You must select two themes in order to copy data from one to another.</source>
+        <target>You must select two themes in order to copy data from one to another.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:397</note>
+      </trans-unit>
+      <trans-unit id="c4e5aa158727e2041778d545424797da">
+        <source>An error occurred while copying data.</source>
+        <target>An error occurred while copying data.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:399</note>
+      </trans-unit>
+      <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
+        <source>There is nothing to copy (same language and theme).</source>
+        <target>There is nothing to copy (same language and theme).</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:401</note>
+      </trans-unit>
+      <trans-unit id="6b5324e2e711f17c4d3db1f625178e86">
+        <source>Theme(s) not found</source>
+        <target>Theme(s) not found</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:413</note>
+      </trans-unit>
+      <trans-unit id="b5f3291b6db7481e8ca0da4a00718cf9">
+        <source>Impossible to create the directory "%folder%".</source>
+        <target>Impossible to create the directory "%folder%".</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:424</note>
+      </trans-unit>
+      <trans-unit id="434464e4353199dd20af7bd3cf8e6c64">
+        <source>Impossible to copy "%source%" to "%dest%".</source>
+        <target>Impossible to copy "%source%" to "%dest%".</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:426</note>
+      </trans-unit>
+      <trans-unit id="07b33077111c506cf81b6cc5ef42a170">
+        <source>Impossible to translate "%dest%".</source>
+        <target>Impossible to translate "%dest%".</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:429</note>
+      </trans-unit>
+      <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
+        <source>A part of the data has been copied but some of the language files could not be found.</source>
+        <target>A part of the data has been copied but some of the language files could not be found.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:436</note>
+      </trans-unit>
+      <trans-unit id="ec531fd2b656df91f11e8f94b2bd2f9b">
+        <source>An error occurred while creating archive.</source>
+        <target>An error occurred while creating archive.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:541</note>
+      </trans-unit>
+      <trans-unit id="b10dfa68dec5e313508a4a55eedae7d1">
+        <source>Please select a language and a theme.</source>
+        <target>Please select a language and a theme.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:543</note>
+      </trans-unit>
+      <trans-unit id="02ae08296d544eb7c674182122645631">
+        <source>Tab "%s" is not valid</source>
+        <target>Tab "%s" is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:703</note>
+      </trans-unit>
+      <trans-unit id="737b7d8e0108e60b272f6e5a0eaf6ef2">
+        <source>Validation failed for: %file%</source>
+        <target>Validation failed for: %file%</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:781</note>
+      </trans-unit>
+      <trans-unit id="e7e5ca2e62158b89d7583ac6936830a5">
+        <source>Unidentified file found: %file%</source>
+        <target>Unidentified file found: %file%</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:784</note>
+      </trans-unit>
+      <trans-unit id="9831c9e35b4d39d939363aa5629e00f2">
+        <source>The archive cannot be extracted.</source>
+        <target>The archive cannot be extracted.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:846</note>
+      </trans-unit>
+      <trans-unit id="6f2981f3239ff532c94509a6f98e11c3">
+        <source>ISO CODE invalid "%iso_code%" for the following file: "%file%"</source>
+        <target>ISO CODE invalid "%iso_code%" for the following file: "%file%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:848</note>
+      </trans-unit>
+      <trans-unit id="299dd7d59920216689a1749def7fd939">
+        <source>Cannot write to the theme's language file (%s). Please check writing permissions.</source>
+        <target>Cannot write to the theme's language file (%s). Please check writing permissions.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:960</note>
+      </trans-unit>
+      <trans-unit id="78973deca6d26ce225f6f66c6c30dd54">
+        <source>Invalid theme "%theme%"</source>
+        <target>Invalid theme "%theme%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1791</note>
+      </trans-unit>
+      <trans-unit id="7d65d1400b9d08c5c638682170ff4d7c">
+        <source>Invalid iso code "%iso_code%"</source>
+        <target>Invalid iso code "%iso_code%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1404</note>
+      </trans-unit>
+      <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
+        <source>This %type_content% file extension is not accepted.</source>
+        <target>This %type_content% file extension is not accepted.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1634</note>
+      </trans-unit>
+      <trans-unit id="1e5ec3cd42b5bac1b06b99f67cba41dd">
+        <source>Invalid module name "%module%"</source>
+        <target>Invalid module name "%module%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1643</note>
+      </trans-unit>
+      <trans-unit id="c68e9fe9015c5779289f32e2bdef0a7b">
+        <source>Invalid mail name "%mail%"</source>
+        <target>Invalid mail name "%mail%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1647</note>
+      </trans-unit>
+      <trans-unit id="40f5c232e433d178a4f912b3092d7df1">
+        <source>Directory "%folder%" cannot be created</source>
+        <target>Directory "%folder%" cannot be created</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1669</note>
+      </trans-unit>
+      <trans-unit id="ccdf1aa6f4cb029f9846e53006115905">
+        <source>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</source>
+        <target>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1675</note>
+      </trans-unit>
+      <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
+        <source>Your HTML email templates cannot contain JavaScript code.</source>
+        <target>Your HTML email templates cannot contain JavaScript code.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1681</note>
+      </trans-unit>
+      <trans-unit id="5dc4babbd10d00e89d8e46a12942d394">
+        <source>Empty string found, please edit: "%file%"</source>
+        <target>Empty string found, please edit: "%file%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1824</note>
+      </trans-unit>
+      <trans-unit id="f2aca97fb94315864fd2fa52f3100f1e">
+        <source>There is an error in template, an empty string has been found. Please edit: "%file%"</source>
+        <target>There is an error in template, an empty string has been found. Please edit: "%file%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2093</note>
+      </trans-unit>
+      <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
+        <source>The module directory must be writable.</source>
+        <target>The module directory must be writable.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2155</note>
+      </trans-unit>
+      <trans-unit id="1078d7e980a5a2fe78762cafd8480f0a">
+        <source>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</source>
+        <target>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2412</note>
+      </trans-unit>
+      <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
+        <source>missing translation(s)</source>
+        <target>missing translation(s)</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2468</note>
+      </trans-unit>
+      <trans-unit id="fda679a1f72b8a9676b6926a81c5e139">
+        <source>No Subject was found for %mail_name% in the database.</source>
+        <target>No Subject was found for %mail_name% in the database.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2507</note>
+      </trans-unit>
+      <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
+        <source>There was a problem getting the mail files.</source>
+        <target>There was a problem getting the mail files.</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2544</note>
+      </trans-unit>
+      <trans-unit id="3eefb74a46023e6c9152c92803750f2b">
+        <source>English language files must exist in %folder% folder</source>
+        <target>English language files must exist in %folder% folder</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2545</note>
+      </trans-unit>
+      <trans-unit id="c4c005678d26a593268006bc4a44c179">
+        <source>Cannot write language file for email subjects. Path is: %folder%</source>
+        <target>Cannot write language file for email subjects. Path is: %folder%</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2932</note>
+      </trans-unit>
+      <trans-unit id="05b17ff64944116b14a3ec88f2080a5e">
+        <source>Cannot write into the "%file%"</source>
+        <target>Cannot write into the "%file%"</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:3131</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
+        <source>This expression uses a special syntax:</source>
+        <target>This expression uses a special syntax:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:140</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41ca3d8439f6e8beab7af312714e37f0">
+        <source>Translation successfully updated</source>
+        <target>Translation successfully updated</target>
+        <note>Context:
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:220</note>
+      </trans-unit>
+      <trans-unit id="b3991113a051bbeb759a923bc636ad8d">
+        <source>Failed to update translation</source>
+        <target>Failed to update translation</target>
+        <note>Context:
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:225</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/localization/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7da16b055b9db528a9b4aa9c4ad674ca">
+        <source>Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.</source>
+        <target>Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/localization/content.tpl:31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f1dd3f4aa197c3cb588dce3911e990b2">
+        <source>A language pack is available for this ISO.</source>
+        <target>A language pack is available for this ISO.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="3ad7d3a0bcf9313e6efc3ef183b779d0">
+        <source>The Prestashop version compatible with this language and your system is:</source>
+        <target>The Prestashop version compatible with this language and your system is:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="6b1fb1c361571071fe0f6e2055c39dcb">
+        <source>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</source>
+        <target>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="a6669356dbb699457f5750c1b6e0ab0d">
+        <source>No language pack is available on prestashop.com for this ISO code</source>
+        <target>No language pack is available on prestashop.com for this ISO code</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="2c148c0631e11553ded2c0cb527be862">
+        <source>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</source>
+        <target>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:64</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/countries/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="708526e44bef1d8fcd0d67ddf61044d5">
@@ -813,6 +804,64 @@ File: controllers/admin/AdminCountriesController.php:444</note>
         <target>Are you sure you want to restore the default address format for this country?</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/countries/helpers/form/form.tpl:109</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="06a92b5dc72bff3b98bf4b932ce72864">
+        <source>Apache mod_security is activated on your server. This could result in some Bad Request errors</source>
+        <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="1f0f8b59397f34d499b181297714713a">
+        <source>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="308c1cf98be9973142833c9a9dbbc2ef">
+        <source>Please ask your hosting provider to increase the Suhosin limit to</source>
+        <target>Please ask your hosting provider to increase the Suhosin limit to</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="5ad040870ae5ccaeb2d57e4d052163a4">
+        <source>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</source>
+        <target>Warning! Your PHP configuration limits the maximum number of fields allowed in a form:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
+        <source>for max_input_vars.</source>
+        <target>for max_input_vars.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="6e709babf4b5a0ed4194ad5240e1be2c">
+        <source>Please ask your hosting provider to increase this limit to</source>
+        <target>Please ask your hosting provider to increase this limit to</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="4fb6a3beb82f8d8aa4bbdf8f5a0c35fa">
+        <source>%s at least, or you will have to edit the translation files.</source>
+        <target>%s at least, or you will have to edit the translation files.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="bbfb7a636f839052067cc86c39fa595a">
+        <source>%limit% for suhosin.post.max_vars.</source>
+        <target>%limit% for suhosin.post.max_vars.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="e97da54b23c78752578cd7fa01e8866d">
+        <source>%limit% for suhosin.request.max_vars.</source>
+        <target>%limit% for suhosin.request.max_vars.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:42</note>
       </trans-unit>
     </body>
   </file>
@@ -854,40 +903,6 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/ma
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1dd3f4aa197c3cb588dce3911e990b2">
-        <source>A language pack is available for this ISO.</source>
-        <target>A language pack is available for this ISO.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="3ad7d3a0bcf9313e6efc3ef183b779d0">
-        <source>The Prestashop version compatible with this language and your system is:</source>
-        <target>The Prestashop version compatible with this language and your system is:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="553acf804efe9d99a96cc14026780010">
-        <source>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations.</source>
-        <target>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="a6669356dbb699457f5750c1b6e0ab0d">
-        <source>No language pack is available on prestashop.com for this ISO code</source>
-        <target>No language pack is available on prestashop.com for this ISO code</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="2c148c0631e11553ded2c0cb527be862">
-        <source>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</source>
-        <target>This language pack is NOT complete and cannot be used in the front or back office because some files are missing.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:64</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0f4a4ca4bdfda88bb59a4ba4814a5f78">
@@ -895,16 +910,6 @@ File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.
         <target>Please install the %module_name% module before using this feature.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/localization/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7da16b055b9db528a9b4aa9c4ad674ca">
-        <source>Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.</source>
-        <target>Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/localization/content.tpl:31</note>
       </trans-unit>
     </body>
   </file>

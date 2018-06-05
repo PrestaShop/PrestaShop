@@ -1,0 +1,139 @@
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+@font-face {
+    font-family: OpenSans;
+    src: url('index.php?element=font');
+}
+
+body {
+  font-family: 'OpenSans', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#content {
+  width: 100%;
+}
+
+.spinner {
+  display: inline-block;
+  width: 128px;
+  text-align: center;
+  vertical-align: top;
+  margin-top: 32px;
+}
+
+.spinner > svg {
+  width: 32px;
+  height: 32px;
+
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+#progressContainer {
+  width: 450px;
+  margin: 30px auto;
+}
+
+#progressContainer > .progress {
+  background: #363A41;
+  border-radius: 16px;
+  box-sizing: border-box;
+  height: 16px;
+}
+
+#progressContainer > .progress > .current {
+  position: relative;
+  height: 100%;
+  background: #25B9D7;
+  border-radius: 16px;
+  -webkit-transition: all 400ms linear;
+     -moz-transition: all 400ms linear;
+      -ms-transition: all 400ms linear;
+       -o-transition: all 400ms linear;
+          transition: all 400ms linear;
+  width: 0;
+}
+
+#progressContainer > .progressNumber {
+  border-radius: 2px;
+  background: #363A41;
+  font-size: 14px;
+  width: 60px;
+  padding: 5px;
+  color: white;
+  position: relative;
+  right: 0;
+  top: -5px;
+  margin-left: -35px;
+  -webkit-transition: all 400ms linear;
+     -moz-transition: all 400ms linear;
+      -ms-transition: all 400ms linear;
+       -o-transition: all 400ms linear;
+          transition: all 400ms linear;
+}
+
+#progressContainer > .progressNumber:after {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(136, 183, 213, 0);
+  border-top-color: #363A41;
+  border-width: 5px;
+  margin-left: -5px;
+}

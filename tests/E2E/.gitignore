@@ -1,0 +1,6 @@
+node_modules/*
+.DS_Store
+.idea/*
+**.log
+**/mochawesome-report
+email_sender/test_report.html

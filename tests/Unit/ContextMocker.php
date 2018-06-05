@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,7 +39,9 @@ use Phake;
 use Product;
 use Shop;
 use Smarty;
+use SpecificPrice;
 use Tools;
+use Pack;
 
 /**
  * This helper class provides methods to initialize context for front controller tests
@@ -77,13 +79,17 @@ class ContextMocker
     {
         // need to reset loooot of things
         Product::flushPriceCache();
+        SpecificPrice::flushCache();
         Configuration::clearConfigurationCacheForTesting();
         Configuration::loadConfiguration();
         Cache::clear();
         Cart::resetStaticCache();
         Carrier::resetStaticCache();
         CartRule::resetStaticCache();
+        Currency::resetStaticCache();
         Shop::resetContext();
+        Pack::resetStaticCache();
+        Tools::$round_mode = null;
 
         $this->contextBackup = Context::getContext();
         $context             = clone($this->contextBackup);
@@ -91,6 +97,7 @@ class ContextMocker
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = Phake::mock('Customer');
+        Phake::when($context->customer)->getGroups()->thenReturn(array());
         $context->cookie   = Phake::mock('Cookie');
         $context->country  = Phake::mock('Country');
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));

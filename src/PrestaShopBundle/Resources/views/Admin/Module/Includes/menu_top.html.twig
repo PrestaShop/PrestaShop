@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="module-top-menu">
     <div class="row">
         <div class="col-md-8">
-            <div class="input-group">
+            <div class="input-group" id="search-input-group">
                 <input type="text" id="module-search-bar" class="form-control">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary float-right search-button">
+                <div class="input-group-append">
+                    <button class="btn btn-primary float-right search-button" id="module-search-button">
                         <i class="material-icons">search</i>
                         {{ 'Search'|trans({}, 'Admin.Actions') }}
                     </button>

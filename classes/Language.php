@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
+use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
+use PrestaShopBundle\Translation\Translator;
+use Symfony\Component\Filesystem\Filesystem;
 
 class LanguageCore extends ObjectModel
 {
@@ -185,9 +188,13 @@ class LanguageCore extends ObjectModel
         if (!parent::add($autodate, $nullValues)) {
             return false;
         }
-        
+
         if ($this->is_rtl) {
-            self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false));
+            self::getRtlStylesheetProcessor()
+                ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
+                ->setProcessBOTheme(true)
+                ->setProcessDefaultModules(true)
+                ->process();
         }
 
         if ($only_add) {
@@ -199,17 +206,21 @@ class LanguageCore extends ObjectModel
 
         return true;
     }
-    
+
     public function update($nullValues = false)
     {
         if (!parent::update($nullValues)) {
             return false;
         }
-        
-        if ($this->is_rtl) {
-             self::installRtlStylesheets(true, false);
+
+        // Generate RTL stylesheets if language is_rtl parameter changes
+		if ($this->is_rtl) {
+            self::getRtlStylesheetProcessor()
+                ->setProcessBOTheme(true)
+                ->setProcessDefaultModules(true)
+                ->process();
         }
- 
+
         return true;
     }
 
@@ -395,7 +406,7 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * loadUpdateSQL will create default lang values when you create a new lang, based on default id lang.
+     * loadUpdateSQL will create default lang values when you create a new lang, based on current lang id.
      *
      * @return bool true if succeed
      */
@@ -412,63 +423,81 @@ class LanguageCore extends ObjectModel
 
         $return = true;
 
+        /* @var Shop[] $shops */
         $shops = Shop::getShopsCollection(false);
         foreach ($shops as $shop) {
-            /* @var Shop $shop */
-            $id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+            // retrieve default language to duplicate database rows
+            // this language is used later to untranslate/retranslate rows
+            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
 
             foreach ($langTables as $name) {
-                preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
-                $identifier = 'id_'.$m[1];
-
-                $fields = '';
-                // We will check if the table contains a column "id_shop"
-                // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
-                $shop_field_exists = $primary_key_exists = false;
-                $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
-                foreach ($columns as $column) {
-                    $fields .= '`'.$column['Field'].'`, ';
-                    if ($column['Field'] == 'id_shop') {
-                        $shop_field_exists = true;
-                    }
-                    if ($column['Field'] == $identifier) {
-                        $primary_key_exists = true;
-                    }
-                }
-                $fields = rtrim($fields, ', ');
-
-                if (!$primary_key_exists) {
-                    continue;
-                }
-
-                $sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
-
-                // For each column, copy data from default language
-                reset($columns);
-                foreach ($columns as $column) {
-                    if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
-                        $sql .= '(
-							SELECT `'.bqSQL($column['Field']).'`
-							FROM `'.bqSQL($name).'` tl
-							WHERE tl.`id_lang` = '.(int) $id_lang_default.'
-							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shop->id : '').'
-							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $name)).'`.`'.bqSQL($identifier).'`
-						),';
-                    } else {
-                        $sql .= '`'.bqSQL($column['Field']).'`,';
-                    }
-                }
-                $sql = rtrim($sql, ', ');
-                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'` ';
-
-                // prevent insert with where initial data exists
-                $sql .= ' WHERE `'.bqSQL($identifier).'` IN (SELECT `'.bqSQL($identifier).'` FROM `'.bqSQL($name).'`) )';
-
-                $return &= Db::getInstance()->execute($sql);
+                $return &= $this->duplicateRowsFromDefaultShopLang($name, $shopDefaultLangId, $shop->id);
             }
         }
 
         return $return;
+    }
+
+    /**
+     * duplicate translated rows from xxx_lang tables
+     * from the shop default language
+     *
+     * @param $tableName
+     * @param $shopDefaultLangId
+     * @param $shopId
+     *
+     * @return bool
+     * @throws \PrestaShopDatabaseException
+     */
+    private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId){
+        preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $tableName, $m);
+        $identifier = 'id_'.$m[1];
+
+        $fields = [];
+        // We will check if the table contains a column "id_shop"
+        // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
+        $shop_field_exists = $primary_key_exists = false;
+        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$tableName.'`');
+        foreach ($columns as $column) {
+            $fields[]= '`'.$column['Field'].'`';
+            if ($column['Field'] == 'id_shop') {
+                $shop_field_exists = true;
+            }
+            if ($column['Field'] == $identifier) {
+                $primary_key_exists = true;
+            }
+        }
+        $fields = implode(',', $fields);
+
+        if (!$primary_key_exists) {
+            return true;
+        }
+
+        $sql = 'INSERT IGNORE INTO `'.$tableName.'` ('.$fields.') (SELECT ';
+
+        // For each column, copy data from default language
+        reset($columns);
+        $selectQueries = [];
+        foreach ($columns as $column) {
+            if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
+                $selectQueries[] = '(
+							SELECT `'.bqSQL($column['Field']).'`
+							FROM `'.bqSQL($tableName).'` tl
+							WHERE tl.`id_lang` = '.(int) $shopDefaultLangId.'
+							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shopId : '').'
+							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $tableName)).'`.`'.bqSQL($identifier).'`
+						)';
+            } else {
+                $selectQueries[] = '`'.bqSQL($column['Field']).'`';
+            }
+        }
+        $sql .= implode(',', $selectQueries);
+        $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $tableName)).'` ';
+
+        // prevent insert with where initial data exists
+        $sql .= ' WHERE `'.bqSQL($identifier).'` IN (SELECT `'.bqSQL($identifier).'` FROM `'.bqSQL($tableName).'`) )';
+
+        return Db::getInstance()->execute($sql);
     }
 
     /**
@@ -1045,36 +1074,36 @@ class LanguageCore extends ObjectModel
     {
         $file = _PS_TRANSLATIONS_DIR_.$type.'-'.$locale.'.zip';
         $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
-        $content = Tools::file_get_contents(
-            str_replace(
-                array(
-                    '%version%',
-                    '%locale%',
-                ),
-                array(
-                    _PS_VERSION_,
-                    $locale,
-                ),
-                $url
-            )
+        $url = str_replace(
+            array(
+                '%version%',
+                '%locale%',
+            ),
+            array(
+                _PS_VERSION_,
+                $locale,
+            ),
+            $url
         );
 
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification').' ('.$file.')';
         } else {
-            @file_put_contents($file, $content);
+            $fs = new Filesystem();
+            $fs->copy($url, $file, true);
         }
     }
 
     public static function installSfLanguagePack($locale, &$errors = array())
     {
-        if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip')) {
+        $zipFilePath = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
+        if (!file_exists($zipFilePath)) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
         } else {
             $zipArchive = new ZipArchive();
-            $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
+            $zipArchive->open($zipFilePath);
             $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
             $zipArchive->close();
         }
@@ -1083,7 +1112,7 @@ class LanguageCore extends ObjectModel
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
         $folder = _PS_TRANSLATIONS_DIR_.'emails-'.$lang_pack['locale'];
-        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $fileSystem = new Filesystem();
         $finder = new \Symfony\Component\Finder\Finder();
 
         if (!file_exists($folder.'.zip')) {
@@ -1283,89 +1312,124 @@ class LanguageCore extends ObjectModel
             return;
         }
 
-        $translator = Context::getContext()->getTranslator();
-
+        /** @var DataLangCore $classObject */
         $classObject = new $className($lang->locale);
 
         $keys = $classObject->getKeys();
         $fieldsToUpdate = $classObject->getFieldsToUpdate();
 
         if (!empty($keys) && !empty($fieldsToUpdate)) {
+            $shops = Shop::getShopsCollection(false);
+            foreach ($shops as $shop) {
+                static::updateMultilangFromClassForShop($table, $classObject, $lang, $shop, $keys, $fieldsToUpdate);
+            }
+        }
+    }
 
-            // get table data
-            $tableData = Db::getInstance()->executeS('SELECT * FROM `' . bqSQL($table) . '`
-                WHERE `id_lang` = "' . (int)$lang->id . '"', true, false);
+    /**
+     * untranslate then re-translate duplicated rows in tables with pattern xxx_lang
+     *
+     * @param string   $tableName
+     * @param DataLang $classObject
+     * @param string   $lang
+     * @param Shop     $shop
+     * @param array    $keys
+     * @param array    $fieldsToUpdate
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    private static function updateMultilangFromClassForShop($tableName, $classObject, $lang, $shop, $keys, $fieldsToUpdate)
+    {
+        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+        $shopDefaultLanguage = new Language($shopDefaultLangId);
+        $translatorDefaultShopLanguage = Context::getContext()->getTranslatorFromLocale($shopDefaultLanguage->locale);
 
-            if (!empty($tableData)) {
-                foreach ($tableData as $data) {
-                    $updateWhere = '';
-                    $updateField = '';
+        $shopFieldExists = $primary_key_exists = false;
+        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$tableName.'`');
+        foreach ($columns as $column) {
+            $fields[]= '`'.$column['Field'].'`';
+            if ($column['Field'] == 'id_shop') {
+                $shopFieldExists = true;
+            }
+        }
 
-                    // Construct update where
-                    foreach ($keys as $key) {
-                        if (!empty($updateWhere)) {
-                            $updateWhere .= ' AND ';
-                        }
-                        $updateWhere .= '`'.bqSQL($key).'` = "' . pSQL($data[$key]) . '"';
+        // get table data
+        $tableData = Db::getInstance()->executeS(
+            'SELECT * FROM `' . bqSQL($tableName) . '`
+            WHERE `id_lang` = "' . (int) $lang->id . '"'
+            . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : ''),
+            true,
+            false
+        );
+
+        if (!empty($tableData)) {
+            foreach ($tableData as $data) {
+                $updateWhere = '';
+                $updateField = '';
+
+                // Construct update where
+                foreach ($keys as $key) {
+                    if (!empty($updateWhere)) {
+                        $updateWhere .= ' AND ';
+                    }
+                    $updateWhere .= '`'.bqSQL($key).'` = "' . pSQL($data[$key]) . '"';
+                }
+
+                // Construct update field
+                foreach ($fieldsToUpdate as $toUpdate) {
+                    if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
+                        continue;
                     }
 
-                    // Construct update field
-                    foreach ($fieldsToUpdate as $toUpdate) {
-                        if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
-                            continue;
+                    $untranslated = $translatorDefaultShopLanguage->getSourceString($data[$toUpdate], $classObject->getDomain());
+                    $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
+
+                    if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
+                        if (!empty($updateField)) {
+                            $updateField .= ' , ';
                         }
-
-                        $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
-                        $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
-
-                        if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
-                            if (!empty($updateField)) {
-                                $updateField .= ' , ';
-                            }
-                            $updateField .= '`'.bqSQL($toUpdate).'` = "' . pSQL($translatedField) . '"';
-                        }
+                        $updateField .= '`'.bqSQL($toUpdate).'` = "' . pSQL($translatedField) . '"';
                     }
+                }
 
-                    // Update table
-                    if (!empty($updateWhere) && !empty($updateField)) {
-                        $sql = 'UPDATE `' . bqSQL($table) . '` SET ' . $updateField . ' WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
-                        Db::getInstance()->execute($sql);
-                    }
+                // Update table
+                if (!empty($updateWhere) && !empty($updateField)) {
+                    $sql = 'UPDATE `' . bqSQL($tableName) . '` SET ' . $updateField . ' 
+                    WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int) $lang->id . '"
+                    ' . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : '') . '
+                    LIMIT 1;';
+                    Db::getInstance()->execute($sql);
                 }
             }
         }
     }
-    
+
     /**
-     * Language::installRtlStylesheets()
-     * @param bool $bo_theme
-     * @param bool $fo_theme
-     * @param null $theme_name
-     * @param null $iso
-     * @param bool $install
-     * @param null $path
+     * Returns an RTL stylesheet processor instance
+     *
+     * @return RtlStylesheetProcessor
      */
-    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false, $theme_name = null, $iso = null, $install = false, $path = null)
+    public static function getRtlStylesheetProcessor()
     {
-        $admin_dir = ($install) ? _PS_ROOT_DIR_.'/admin/' : _PS_ADMIN_DIR_.'/';
-        $front_dir = _PS_ROOT_DIR_.'/themes/';
-        if ($iso) {
-            $lang_pack = Language::getLangDetails($iso);
-            if (!$lang_pack['is_rtl']) {
-                return;
-            }
+        if (defined('_PS_ADMIN_DIR_')) {
+            $adminDir = _PS_ADMIN_DIR_;
+        } else {
+            $adminDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin';
+            $adminDir = (is_dir($adminDir)) ? $adminDir : ($adminDir.'-dev');
         }
-        
-        if ($bo_theme) {
-            \RTLGenerator::generate($admin_dir.'themes');
-        }
-        
-        if ($fo_theme) {
-            \RTLGenerator::generate($front_dir.($theme_name?$theme_name:'classic'));
-        }
-        
-        if ($path && is_dir($path)) {
-            \RTLGenerator::generate($path);
-        }
+
+        $themesDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
+
+        $processor = new RtlStylesheetProcessor(
+            $adminDir,
+            $themesDir,
+            array(
+                _PS_MODULE_DIR_.'gamification',
+                _PS_MODULE_DIR_.'welcome',
+                _PS_MODULE_DIR_.'cronjobs',
+            )
+        );
+
+        return $processor;
     }
 }

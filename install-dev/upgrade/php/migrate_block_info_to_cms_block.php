@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,7 @@ function migrate_block_info_to_cms_block()
         // 2) parent::install()
         $result = Db::getInstance()->insert('module',
             array('name' => 'blockcms', 'active' => 1));
-        $id_module = Db::getInstance()->insert_Id();
+        $id_module = Db::getInstance()->Insert_ID();
         // 3) hooks
         $hooks = array('leftColumn', 'rightColumn', 'footer', 'header');
         foreach ($hooks as $hook_name) {
@@ -117,7 +117,7 @@ function migrate_block_info_to_cms_block()
             $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block`
 				(`id_cms_category`, `name`, `location`, `position`)
 				VALUES( 1, "", 0, 0)');
-        $id_block = Db::getInstance()->insert_id();
+        $id_block = Db::getInstance()->Insert_ID();
 
         foreach ($languages as $language) {
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES ('.(int)$id_block.', '.(int)$language['id_lang'].', \'Information\')');

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -138,7 +138,7 @@ class CountryCore extends ObjectModel
     public static function getCountries($idLang, $active = false, $containStates = false, $listStates = true)
     {
         $countries = array();
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cl.*,c.*, cl.`name` country, z.`name` zone
 		FROM `'._DB_PREFIX_.'country` c '.Shop::addSqlAssociation('country', 'c').'
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int) $idLang.')

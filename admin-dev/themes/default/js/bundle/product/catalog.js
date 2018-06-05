@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+var $ = window.$;
 
 $(document).ready(function() {
 	var form = $('form#product_catalog_list');
@@ -60,7 +62,7 @@ $(document).ready(function() {
 	/*
 	 * Filter columns inputs behavior
 	 */
-	$('tr.column-filters input:text, tr.column-filters select', form).change(function() {
+	$('tr.column-filters input:text, tr.column-filters select', form).on('change input', function() {
 		productCatalogFilterChanged = true;
 		updateFilterMenu();
 	});
@@ -133,64 +135,48 @@ function updateBulkMenu() {
 
 var productCatalogFilterChanged = false;
 function updateFilterMenu() {
-	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').length;
-	$('form#product_catalog_list tr.column-filters input[type="text"]:visible').each(function() {
-		if ($(this).val() !== '') {
-			count ++;
-		}
-	});
-	$('form#product_catalog_list tr.column-filters input[type="text"][sql!=""][sql]').each(function() {
-		if ($(this).val() !== '') {
-			count ++;
-		}
-	});
-	$('button[name="products_filter_submit"]').prop('disabled', (count === 0) && productCatalogFilterChanged === false);
-	if (count === 0 && productCatalogFilterChanged === false) {
-		$('button[name="products_filter_reset"]').hide();
-	}else {
-		$('button[name="products_filter_reset"]').show();
-	}
+  var columnFilters = $('#product_catalog_list').find('tr.column-filters');
+  var count = columnFilters.find('option:selected[value!=""]').length;
+  columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function() {
+    if ($(this).val() !== '') {
+      count++;
+    }
+  });
+  var filtersNotUpdatedYet = (count === 0 && productCatalogFilterChanged === false);
+	$('button[name="products_filter_submit"]').prop('disabled', filtersNotUpdatedYet);
+	$('button[name="products_filter_reset"]').toggle(!filtersNotUpdatedYet);
 }
 
 function productCategoryFilterReset(div) {
-	$('div#choice_tree').categorytree('unselect');
-	$('form#product_catalog_list input[name="filter_category"]').val('');
-	$('form#product_catalog_list').submit();
+	$('#choice_tree').categorytree('unselect');
+	$('#product_catalog_list input[name="filter_category"]').val('');
+	$('#product_catalog_list').submit();
 }
 
 function productCategoryFilterExpand(div, btn) {
-	$('div#choice_tree').categorytree('unfold');
+	$('#choice_tree').categorytree('unfold');
 }
 
 function productCategoryFilterCollapse(div, btn) {
-	$('div#choice_tree', div).categorytree('fold');
+	$('#choice_tree').categorytree('fold');
 }
 
 function categoryFilterButtons() {
-	if ($('div#product_catalog_category_tree_filter ul ul:visible').length === 0) {
-		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_collapse"]').hide();
-	} else {
-		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_collapse"]').show();
-	}
-	if ($('div#product_catalog_category_tree_filter ul ul:hidden').length === 0) {
-		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_expand"]').hide();
-	} else {
-		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_expand"]').show();
-	}
-	if ($('div#product_catalog_category_tree_filter ul input:checked').length === 0) {
-		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_reset"]').hide();
-	} else {
-		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_reset"]').show();
-	}
+        var catTree = $('#product_catalog_category_tree_filter');
+        var catTreeSiblingDivs = $('#product_catalog_category_tree_filter ~ div');
+        var catTreeList = catTree.find('ul ul');
+        catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_collapse"]').toggle(!catTreeList.filter(':visible').length);
+        catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_expand"]').toggle(!catTreeList.filter(':hidden').length);
+        catTreeSiblingDivs.find('button[name="product_catalog_category_tree_filter_reset"]').toggle(!catTree.find('ul input:checked').length);
 }
 
 function productColumnFilterReset(tr) {
 	$('input:text', tr).val('');
 	$('select option:selected', tr).prop('selected', false);
-	$('input#filter_column_price', tr).attr('sql', '');
-	$('input#filter_column_sav_quantity', tr).attr('sql', '');
-	$('input#filter_column_id_product', tr).attr('sql', '');
-	$('form#product_catalog_list').submit();
+	$('#filter_column_price', tr).attr('sql', '');
+	$('#filter_column_sav_quantity', tr).attr('sql', '');
+	$('#filter_column_id_product', tr).attr('sql', '');
+	$('#product_catalog_list').submit();
 }
 
 function bulkModalAction(allItems, postUrl, redirectUrl, action) {
@@ -256,7 +242,7 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
 }
 
 function bulkProductAction(element, action) {
-  var form = $('form#product_catalog_list');
+  var form = $('#product_catalog_list');
   var postUrl = '';
   var redirectUrl = '';
   var urlHandler = null;

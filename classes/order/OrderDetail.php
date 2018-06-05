@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -668,7 +668,7 @@ class OrderDetailCore extends ObjectModel
         $this->product_weight = $product['id_product_attribute'] ? (float)$product['weight_attribute'] : (float)$product['weight'];
         $this->id_warehouse = $id_warehouse;
 
-        $product_quantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id);
+        $product_quantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
         $this->product_quantity_in_stock = ($product_quantity - (int)$product['cart_quantity'] < 0) ?
             $product_quantity : (int)$product['cart_quantity'];
 

@@ -5,8 +5,6 @@ Your message to {shop_name} Customer Service
 
 Your message has been sent successfully.
 
-MESSAGE: {message}
-
 ORDER ID: {order_name}
 
 PRODUCT: {product_name}

@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div :class="{className}">
+  <div class="ps-tree-items" :class="{className}">
     <div class="d-flex tree-name" :class="{active: active, disable: model.disable}" @click="clickElement">
-      <div class="d-flex" :class="chevron">
-        <i class="material-icons" v-if="open">keyboard_arrow_down</i>
-        <i class="material-icons" v-else>chevron_right</i>
-      </div>
+      <button class="btn btn-text" :class="[{hidden: isHidden}, chevronStatus]">
+        <span v-if="translations" class="sr-only">{{this.model.open ? translations.reduce : translations.expand}}</span>
+      </button>
       <PSCheckbox :ref="model.name" :id="id" :model="model" @checked="onCheck" v-if="hasCheckbox"/>
       <span class="tree-label" :class="{warning: isWarning}">{{model.name}}</span>
       <span class="tree-extra-label d-sm-none d-xl-inline-block" v-if="displayExtraLabel">{{getExtraLabel}}</span>
@@ -86,8 +85,11 @@
 
         return extraLabel;
       },
-      chevron() {
-        return !this.isFolder ? 'hidden' : '';
+      isHidden() {
+        return !this.isFolder;
+      },
+      chevronStatus() {
+        return this.open? 'open' : 'closed';
       },
       isWarning() {
         return !this.isFolder && this.model.warning;
@@ -153,34 +155,3 @@
     }),
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../scss/config/_settings.scss";
-  .tree {
-    .material-icons {
-      vertical-align: middle;
-      font-size: 20px;
-      cursor: pointer;
-    }
-  }
-  .tree-label {
-    margin-left: 5px;
-  }
-  .warning {
-    color: $danger;
-    background: none;
-  }
-  .hidden {
-    visibility: hidden;
-  }
-  .tree {
-    padding: 0 0 0 20px;
-    .tree-item {
-      margin: 5px 0;
-      list-style-type: none;
-    }
-  }
-  .disable {
-    display: none;
-  }
-</style>

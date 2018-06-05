@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -66,5 +66,5 @@
 	</div>
 {/if}
 <div class="alert alert-addons row-margin-top">
-	<a href="http://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}{if $admin_list_from_source}&amp;utm_term={$admin_list_from_source}{/if}" onclick="return !window.open(this.href);">{l s='More modules on addons.prestashop.com'}</a>
+	<a href="https://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}{if $admin_list_from_source}&amp;utm_term={$admin_list_from_source}{/if}" onclick="return !window.open(this.href);">{l s='More modules on addons.prestashop.com'}</a>
 </div>

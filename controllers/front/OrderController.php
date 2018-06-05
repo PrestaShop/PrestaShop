@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -243,12 +243,14 @@ class OrderControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'preview' => $this->render('checkout/_partials/cart-summary', array(
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
             ))
         )));
+
+        return;
     }
 
     public function initContent()
@@ -265,7 +267,16 @@ class OrderControllerCore extends FrontController
         $presentedCart = $this->cart_presenter->present($this->context->cart);
 
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
-            Tools::redirect('index.php?controller=cart');
+            // if there is no product in current cart, redirect to cart page
+            $cartLink = $this->context->link->getPageLink('cart');
+            Tools::redirect($cartLink);
+        }
+
+        $product = $this->context->cart->checkQuantities(true);
+        if (is_array($product)) {
+            // if there is an issue with product quantities, redirect to cart page
+            $cartLink = $this->context->link->getPageLink('cart', null, null, array('action' => 'show'));
+            Tools::redirect($cartLink);
         }
 
         $this->checkoutProcess
@@ -320,11 +331,13 @@ class OrderControllerCore extends FrontController
         ob_end_clean();
         header('Content-Type: application/json');
 
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'address_form' => $this->render(
                 'checkout/_partials/address-form',
                 $templateParams
             ),
         )));
+
+        return;
     }
 }

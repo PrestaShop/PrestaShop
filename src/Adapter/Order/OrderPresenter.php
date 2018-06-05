@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,6 +63,9 @@ class OrderPresenter implements PresenterInterface
     /* @var TaxConfiguration */
     private $taxConfiguration;
 
+    /* @var bool */
+    private $skipProductDetails = false;
+
     public function __construct()
     {
         $this->cartPresenter = new CartPresenter();
@@ -73,9 +76,28 @@ class OrderPresenter implements PresenterInterface
     }
 
     /**
+     * Set if we need to skip product details from the results
+     *
+     * @param $value
+     */
+    public function setSkipProductDetails($value)
+    {
+        $this->skipProductDetails = (bool) $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSkipProductDetails()
+    {
+        return $this->skipProductDetails;
+    }
+
+    /**
      * @param Order $order
      *
      * @return array
+     * @throws \Exception
      */
     public function present($order)
     {
@@ -83,25 +105,37 @@ class OrderPresenter implements PresenterInterface
             throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
-        $products = $this->getProducts($order);
-        $amounts = $this->getAmounts($order);
+        $amounts = $this->getAmounts($order, !$this->skipProductDetails);
 
-        return array(
-            'products' => $products,
-            'products_count' => count($products),
+        $result = array(
             'totals' => $amounts['totals'],
-            'subtotals' => $amounts['subtotals'],
-            'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
-            'messages' => $this->getMessages($order),
-            'carrier' => $this->getCarrier($order),
-            'addresses' => $this->getAddresses($order),
-            'follow_up' => $this->getFollowUp($order),
-            'shipping' => $this->getShipping($order),
             'id_address_delivery' => $order->id_address_delivery,
             'id_address_invoice' => $order->id_address_invoice,
-            'labels' => $this->getLabels(),
         );
+
+        if (!$this->skipProductDetails) {
+            $productsOrder = $this->getProducts($order);
+
+            $result += array(
+                'messages' => $this->getMessages($order),
+                'follow_up' => $this->getFollowUp($order),
+                'details' => $this->getDetails($order, true),
+                'subtotals' => $amounts['subtotals'],
+                'products' => $productsOrder,
+                'products_count' => count($productsOrder),
+                'addresses' => $this->getAddresses($order),
+                'carrier' => $this->getCarrier($order),
+                'labels' => $this->getLabels(),
+            );
+
+            // backward compat
+            $result['shipping'] = $result['details']['shipping'];
+        } else {
+            $result['details'] = $this->getDetails($order, false);
+        }
+
+        return $result;
     }
 
     /**
@@ -117,11 +151,15 @@ class OrderPresenter implements PresenterInterface
         $cartProducts = $this->cartPresenter->present($cart);
         $orderPaid = $order->getCurrentOrderState() && $order->getCurrentOrderState()->paid;
 
+        $includeTaxes = $this->includeTaxes();
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price'], Currency::getCurrencyInstance((int)$order->id_currency));
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price'], Currency::getCurrencyInstance((int)$order->id_currency));
+
+            $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
+            $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct[$productPrice], Currency::getCurrencyInstance((int)$order->id_currency));
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct[$totalPrice], Currency::getCurrencyInstance((int)$order->id_currency));
 
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
@@ -158,12 +196,12 @@ class OrderPresenter implements PresenterInterface
      *
      * @return array
      */
-    private function getAmounts(Order $order)
+    private function getSubTotal(Order $order)
     {
-        $amounts = array();
         $subtotals = array();
 
-        $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
+        $includeTaxes = $this->includeTaxes();
+        $total_products = $includeTaxes ? $order->total_products_wt : $order->total_products;
         $subtotals['products'] = array(
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
@@ -171,7 +209,7 @@ class OrderPresenter implements PresenterInterface
             'value' => $this->priceFormatter->format($total_products, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
-        $discount_amount = ($this->includeTaxes())
+        $discount_amount = $includeTaxes
             ? $order->total_discounts_tax_incl
             : $order->total_discounts_tax_excl;
         if ((float) $discount_amount) {
@@ -185,7 +223,7 @@ class OrderPresenter implements PresenterInterface
 
         $cart = new Cart($order->id_cart);
         if (!$cart->isVirtualCart()) {
-            $shippingCost = ($this->includeTaxes()) ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+            $shippingCost = $includeTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
             $subtotals['shipping'] = array(
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
@@ -211,7 +249,7 @@ class OrderPresenter implements PresenterInterface
         }
 
         if ($order->gift) {
-            $giftWrapping = ($this->includeTaxes())
+            $giftWrapping = $includeTaxes
                 ? $order->total_wrapping_tax_incl
                 : $order->total_wrapping_tax_excl;
             $subtotals['gift_wrapping'] = array(
@@ -222,7 +260,21 @@ class OrderPresenter implements PresenterInterface
             );
         }
 
-        $amounts['subtotals'] = $subtotals;
+        return $subtotals;
+    }
+
+    /**
+     * @param Order $order
+     * @param bool  $withSubTotal
+     *
+     * @return array
+     */
+    private function getAmounts(Order $order, $withSubTotal = true)
+    {
+        $amounts = array();
+        if ($withSubTotal) {
+            $amounts['subtotals'] = $this->getSubTotal($order);
+        }
 
         $amounts['totals'] = array();
         $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
@@ -245,30 +297,36 @@ class OrderPresenter implements PresenterInterface
 
     /**
      * @param Order $order
+     * @param bool  $getExtraInfos
      *
      * @return array
      */
-    private function getDetails(Order $order)
+    private function getDetails(Order $order, $getExtraInfos = true)
     {
         $context = Context::getContext();
-        $cart = new Cart($order->id_cart);
 
-        return array(
+        $result = array(
             'id' => $order->id,
             'reference' => $order->reference,
             'order_date' => Tools::displayDate($order->date_add, null, false),
-            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order='.$order->id),
-            'reorder_url' => HistoryController::getUrlToReorder((int) $order->id, $context),
+            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order=' . $order->id),
+            'reorder_url' => HistoryController::getUrlToReorder((int)$order->id, $context),
             'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
-            'is_returnable' => (int) $order->isReturnable(),
-            'is_virtual' => $cart->isVirtualCart(),
+            'is_returnable' => (int)$order->isReturnable(),
             'payment' => $order->payment,
             'module' => $order->module,
-            'recyclable' => (bool) $order->recyclable,
-            'shipping' => $this->getShipping($order),
+            'recyclable' => (bool)$order->recyclable,
             'is_valid' => $order->valid,
         );
+
+        if ($getExtraInfos) {
+            $cart = new Cart($order->id_cart);
+            $result['shipping'] = $this->getShipping($order);
+            $result['is_virtual'] = $cart->isVirtualCart();
+        }
+
+        return $result;
     }
 
     /**
@@ -450,11 +508,12 @@ class OrderPresenter implements PresenterInterface
 
     private function getLabels()
     {
+        $includeTaxes = $this->includeTaxes();
         return array(
-            'tax_short' => ($this->includeTaxes())
+            'tax_short' => $includeTaxes
                 ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
                 : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
-            'tax_long' => ($this->includeTaxes())
+            'tax_long' => $includeTaxes
                 ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
                 : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
         );

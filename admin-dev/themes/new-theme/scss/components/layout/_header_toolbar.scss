@@ -3,64 +3,92 @@
   background: #ffffff;
   top: $size-header-height;
   left: $size-navbar-width;
-  height: $size-header-toolbar-height;
   right: 0;
   z-index: 501;
-  padding-left: 0.625rem;
   border-bottom: 0.0625rem solid $color-separator;
 
-  > .title {
+  transition: left .5s ease; // transition when collapsing the nav menu
+
+  @include media-breakpoint-down(md) {
+    left: 0;
+  }
+
+  @include media-breakpoint-down(sm) {
+    padding-top: 0.3rem;
+    top: 3.5rem;
+  }
+
+  // page title
+  .title {
     padding: 0.3125rem;
+    padding-left: 0;
     font-size: 1.625rem;
     font-weight: normal;
-    margin-top: -0.625rem;
+    margin-bottom: 0;
+    float: left;
+    @include media-breakpoint-down(sm) {
+      float: none;
+    }
   }
 
-  > .breadcrumb {
-    margin: 0;
+  // breadcrumb
+  nav > ol {
+    padding-left: 0;
   }
-}
 
-.toolbar-icons {
-  position: absolute;
-  top: 1.25rem;
-  right: 0.625rem;
-  display: flex;
-  align-items: center;
+  // toolbar buttons
+  .toolbar-icons {
+
+    @include media-breakpoint-down(sm) {
+      overflow-x: auto;
+      float: none;
+    }
+
+    > .wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+
+      @include media-breakpoint-down(sm) {
+        justify-content: flex-start;
+      }
+
+      a + a {
+        margin-left: $grid-gutter-width / 2;
+      }
+    }
+  }
+
+  // bottom spacing for title & toolbar row
+  .title-row {
+    @include clearfix;
+    margin-bottom: $grid-gutter-width / 2;
+  }
 }
 
 .page-head-tabs {
-    display: inline-block;
-    position: absolute;
-    bottom: 0;
 
-    > .tab {
-        display: inline-block;
-        float: left;
-        height: 40px;
-        line-height: 40px;
-        padding: 0 10px;
-        vertical-align: middle;
-        color: #363a41;
-        box-sizing: border-box;
-        font-size: 16px;
-        text-decoration: none;
+  background: #fff;
 
-        .notification-container {
-            @include notification_container();
+  > ul {
+    border-bottom: 0;
+  }
 
-            .notification-counter {
-                @include notification_counter();
-            }
-        }
+  .tab {
+    .notification-container {
+      @include notification_container(1.5rem);
+
+      .notification-counter {
+        @include notification_counter();
+        top: -0.063rem;
+        right: initial;
+      }
     }
+  }
 
-    > .current {
-        border-bottom: 3px solid #3ed2f0;
-    }
 }
 
-.page-sidebar-closed {
+.page-sidebar-closed:not(.mobile) {
   .header-toolbar {
     left: $size-navbar-width-mini;
   }

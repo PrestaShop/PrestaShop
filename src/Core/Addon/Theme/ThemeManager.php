@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -161,7 +161,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         /* if file exits, remove it and use YAML configuration file instead */
-        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
@@ -202,7 +202,7 @@ class ThemeManager implements AddonManagerInterface
 
         $this->doDisableModules($theme->getModulesToDisable());
 
-        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         return true;
     }
@@ -281,11 +281,22 @@ class ThemeManager implements AddonManagerInterface
     private function doEnableModules(array $modules)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
+        $moduleManager = $moduleManagerBuilder->build()->setActionParams(['confirmPrestaTrust' => true]);
 
         foreach ($modules as $key => $moduleName) {
-            if (!$moduleManager->isInstalled($moduleName)) {
-                $moduleManager->install($moduleName);
+            if (!$moduleManager->isInstalled($moduleName)
+                && !$moduleManager->install($moduleName)
+            ) {
+                throw new PrestaShopException(
+                    $this->translator->trans(
+                        'Cannot %action% module %module%. %error_details%',
+                        array(
+                            '%action%' => 'install',
+                            '%module%' => $moduleName,
+                            '%error_details%' => $moduleManager->getError($moduleName),
+                        ),
+                        'Admin.Modules.Notification')
+                );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
                 $moduleManager->enable($moduleName);
@@ -395,14 +406,20 @@ class ThemeManager implements AddonManagerInterface
         return $this->sandbox;
     }
 
+    /**
+     * @param Theme $theme
+     */
     public function saveTheme($theme)
     {
-        $jsonConfigFolder = $this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$theme->getName();
+        $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
         if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
             mkdir($jsonConfigFolder, 0777, true);
         }
 
-        file_put_contents($jsonConfigFolder.'/shop'.$this->shop->id.'.json', json_encode($theme->get(null)));
+        file_put_contents(
+            $jsonConfigFolder.'/shop'.$this->shop->id.'.json',
+            json_encode($theme->get(null))
+        );
     }
 
     /**

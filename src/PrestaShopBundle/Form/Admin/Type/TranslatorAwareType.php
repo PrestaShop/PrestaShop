@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -33,13 +32,21 @@ use Symfony\Component\Translation\TranslatorInterface;
  * This feature is not available in Symfony so we need to inject the translator
  * for constraints messages only.
  */
-abstract class TranslatorAwareType extends AbstractType
+abstract class TranslatorAwareType extends CommonAbstractType
 {
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    /**
+     * All languages available on shop. Used for translations
+     *
+     * @param array $locales
+     */
+    protected $locales;
+
+    public function __construct(TranslatorInterface $translator, array $locales)
     {
         $this->translator = $translator;
+        $this->locales = $locales;
     }
 
     /**
@@ -47,12 +54,28 @@ abstract class TranslatorAwareType extends AbstractType
      *
      * @param $key the key to be translated
      * @param $domain the domain to be selected
-     * @param $parameters Optional, pass parameters if needed (uncommon)
+     * @param array $parameters Optional, pass parameters if needed (uncommon)
      *
      * @returns string
      */
     protected function trans($key, $domain, $parameters = array())
     {
         return $this->translator->trans($key, $parameters, $domain);
+    }
+
+    /**
+     * Get locales to be used in form type
+     *
+     * @return array
+     */
+    protected function getLocaleChoices()
+    {
+        $locales = [];
+
+        foreach ($this->locales as $locale) {
+            $locales[$locale['name']] = $locale['iso_code'];
+        }
+
+        return $locales;
     }
 }

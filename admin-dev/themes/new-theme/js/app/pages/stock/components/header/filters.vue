@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div>
+  <div id="filters-container">
     <button class="search-input collapse-button" type="button" data-toggle="collapse" data-target="#filters">
       <i class="material-icons mr-1">filter_list</i>
       <i class="material-icons float-right ">keyboard_arrow_down</i>
@@ -37,6 +37,7 @@
             <FilterComponent
               :placeholder="trans('filter_search_suppliers')"
               :list="this.$store.getters.suppliers"
+              class="filter-suppliers"
               itemID="supplier_id"
               label="name"
               @active="onFilterActive"
@@ -70,6 +71,7 @@
             <FilterComponent
               :placeholder="trans('filter_search_category')"
               :list="categoriesList"
+              class="filter-categories"
               itemID="id_category"
               label="name"
               @active="onFilterActive"
@@ -205,27 +207,3 @@
     }),
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  #filters {
-    background: white;
-    border-radius: 2px;
-    box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
-    border: solid 1px #b9cdd2;
-    width: 150%;
-
-    .row {
-      padding: 0.625rem; // 10px
-    }
-  }
-  .collapse-button {
-    width: 100%;
-    text-align: left;
-    .material-icons {
-      vertical-align: bottom;
-      font-size: 20px;
-      color: $gray-medium;
-    }
-  }
-</style>

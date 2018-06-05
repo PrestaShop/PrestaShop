@@ -1,58 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
-        <source>Your theme has been correctly exported: %path%</source>
-        <target>Your theme has been correctly exported: %path%</target>
-        <note>Context:
-File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
-        <source>This theme is not valid for PrestaShop 1.7</source>
-        <target>This theme is not valid for PrestaShop 1.7</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:318</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="832e8c53e8d05c52c824912c28933917">
-        <source>An error occurred. The information "%s" is missing.</source>
-        <target>An error occurred. The information "%s" is missing.</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:72</note>
-      </trans-unit>
-      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
-        <source>An error occurred. The template "%s" is missing.</source>
-        <target>An error occurred. The template "%s" is missing.</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeValidator.php:116</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f003149576f4755d74550952febe14bb">
-        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
-        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
-        <note>Context:
-File: src/Core/Shop/LogoUploader.php:172</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
         <note>Context:
-File: classes/controller/FrontController.php:324</note>
+File: classes/controller/FrontController.php:322</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:409</note>
+      </trans-unit>
+      <trans-unit id="4a9fdf95b29176bd9260016655a80852">
+        <source>Your RTL stylesheets has been generated successfully</source>
+        <target>Your RTL stylesheets has been generated successfully</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:334</note>
+      </trans-unit>
+      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
+        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
+        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:349</note>
+      </trans-unit>
+      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
+        <source>Invalid file format.</source>
+        <target>Invalid file format.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:444</note>
+      </trans-unit>
+      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
+        <source>Failed to move uploaded file.</source>
+        <target>Failed to move uploaded file.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:457</note>
+      </trans-unit>
+      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
+        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
+        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:503</note>
       </trans-unit>
     </body>
   </file>
@@ -66,11 +60,21 @@ File: controllers/admin/AdminCmsCategoriesController.php:105</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
+        <source>No items found</source>
+        <target>No items found</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:274</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="20f2087fb2ccaa45caf5984bebbfc1a6">
-        <source>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.</source>
-        <target>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.</target>
+      <trans-unit id="ffddcc65274efa9b4c624b34289c922c">
+        <source>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.</source>
+        <target>Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.</target>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:338</note>
       </trans-unit>
@@ -172,47 +176,69 @@ File: controllers/admin/AdminImagesController.php:737</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
-        <source>The uploaded file is too large.</source>
-        <target>The uploaded file is too large.</target>
+      <trans-unit id="f003149576f4755d74550952febe14bb">
+        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
+        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:400</note>
-      </trans-unit>
-      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
-        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
-        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:340</note>
-      </trans-unit>
-      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
-        <source>Invalid file format.</source>
-        <target>Invalid file format.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:435</note>
-      </trans-unit>
-      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
-        <source>Failed to move uploaded file.</source>
-        <target>Failed to move uploaded file.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:448</note>
-      </trans-unit>
-      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
-        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
-        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:494</note>
+File: src/Core/Shop/LogoUploader.php:172</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Addon/Theme/ThemeValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
-        <source>No items found</source>
-        <target>No items found</target>
+      <trans-unit id="832e8c53e8d05c52c824912c28933917">
+        <source>An error occurred. The information "%s" is missing.</source>
+        <target>An error occurred. The information "%s" is missing.</target>
         <note>Context:
-File: controllers/admin/AdminCmsController.php:274</note>
+File: src/Core/Addon/Theme/ThemeValidator.php:72</note>
+      </trans-unit>
+      <trans-unit id="7d88c564a7f74d56564402cd5e054b13">
+        <source>An error occurred. The template "%s" is missing.</source>
+        <target>An error occurred. The template "%s" is missing.</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeValidator.php:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
+        <source>This theme is not valid for PrestaShop 1.7</source>
+        <target>This theme is not valid for PrestaShop 1.7</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeManager.php:346</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="307cd46da080d0ad19ec342feb2aa6d6">
+        <source>If you want to order/move the following data, please select a shop from the shop list.</source>
+        <target>If you want to order/move the following data, please select a shop from the shop list.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="feede4b4294c44c907966ddd76e23614">
+        <source>Your page will be saved as a draft</source>
+        <target>Your page will be saved as a draft</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl:55</note>
       </trans-unit>
     </body>
   </file>
@@ -235,26 +261,6 @@ File: admin-dev/themes/default/template/controllers/images/content.tpl:38</note>
         <target>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/images/content.tpl:41</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="feede4b4294c44c907966ddd76e23614">
-        <source>Your page will be saved as a draft</source>
-        <target>Your page will be saved as a draft</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl:55</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="307cd46da080d0ad19ec342feb2aa6d6">
-        <source>If you want to order/move the following data, please select a shop from the shop list.</source>
-        <target>If you want to order/move the following data, please select a shop from the shop list.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:34</note>
       </trans-unit>
     </body>
   </file>

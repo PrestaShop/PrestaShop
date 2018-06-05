@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -369,7 +370,7 @@ class FrontControllerCore extends Controller
                 $cart = new Cart($this->context->cookie->id_cart);
             }
 
-            if (Validate::isLoadedObject($cart) && $cart->OrderExists()) {
+            if (Validate::isLoadedObject($cart) && $cart->orderExists()) {
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
@@ -454,12 +455,6 @@ class FrontControllerCore extends Controller
             }
         }
 
-        $languages = Language::getLanguages(true, $this->context->shop->id);
-        $meta_language = array();
-        foreach ($languages as $lang) {
-            $meta_language[] = $lang['iso_code'];
-        }
-
         /*
          * These shortcuts are DEPRECATED as of version 1.5.0.1
          * Use the Context to access objects instead.
@@ -480,6 +475,8 @@ class FrontControllerCore extends Controller
         $this->iso = $iso;
         $this->context->cart = $cart;
         $this->context->currency = $currency;
+
+        Hook::exec('actionFrontControllerAfterInit');
     }
 
     /**
@@ -494,17 +491,6 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
-        /* Begin patch to purge sensible data from cart to avoid expose them in html page */
-        $cleancart = $this->cart_presenter->present($this->context->cart);
-        if (count($cleancart['products']) > 0) {
-            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
-                unset($cleancart['products'][$idx_cart_line]['id_supplier']);
-                unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
-                unset($cleancart['products'][$idx_cart_line]['wholesale_price']);
-                unset($cleancart['products'][$idx_cart_line]['embedded_attributes']);
-            }
-        }
-        /* /patch */
         $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
@@ -523,7 +509,31 @@ class FrontControllerCore extends Controller
         );
 
         $this->context->smarty->assign($templateVars);
-        Media::addJsDef(array('prestashop' => $templateVars));
+
+        Media::addJsDef(array (
+            'prestashop' => $this->buildFrontEndObject($templateVars)
+        ));
+    }
+
+    /**
+     * Builds the "prestashop" javascript object that will be sent to the front end
+     *
+     * @param array $object Variables inserted in the template (see FrontController::assignGeneralPurposeVariables)
+     *
+     * @return array Variables to be inserted in the "prestashop" javascript object
+     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     * @throws PrestaShopException
+     */
+    protected function buildFrontEndObject($object)
+    {
+        $object = $this->get('prestashop.core.filter.front_end_object.main')
+            ->filter($object);
+
+        Hook::exec('actionBuildFrontEndObject', array(
+            'obj' => &$object
+        ));
+
+        return $object;
     }
 
     /**
@@ -1200,7 +1210,7 @@ class FrontControllerCore extends Controller
         foreach ($libraries as $library) {
             if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
                 foreach ($assets as $asset) {
-                    $this->$asset['type']($library, $asset['path'], $asset['params']);
+                    $this->{$asset['type']}($library, $asset['path'], $asset['params']);
                 }
             }
         }
@@ -1324,7 +1334,7 @@ class FrontControllerCore extends Controller
         }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
-        
+
         $content_only = (int) Tools::getValue('content_only');
 
         if ($overridden_layout = Hook::exec(
@@ -1495,11 +1505,16 @@ class FrontControllerCore extends Controller
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, array('login' => '1'));
         $urls['pages'] = $pages;
 
+        $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
+
         $urls['theme_assets'] = __PS_BASE_URI__.'themes/'.$this->context->shop->theme->getName().'/assets/';
 
         $urls['actions'] = array(
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
         );
+
+        $imageRetriever = new ImageRetriever($this->context->link);
+        $urls['no_picture_image'] =  $imageRetriever->getNoPictureImage($this->context->language);
 
         return $urls;
     }
@@ -1715,7 +1730,11 @@ class FrontControllerCore extends Controller
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
         $params = array();
-        parse_str($_SERVER['QUERY_STRING'], $params);
+        $paramsFromUri = '';
+        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
+        }
+        parse_str($paramsFromUri, $params);
 
         if (null !== $extraParams) {
             foreach ($extraParams as $key => $value) {
@@ -1949,5 +1968,24 @@ class FrontControllerCore extends Controller
         $container->compile();
 
         return $container;
+    }
+
+    /**
+     * @return array containing the URLs of the same page but for different languages
+     */
+    protected function getAlternativeLangsUrl()
+    {
+        $alternativeLangs = array();
+        $languages = Language::getLanguages(true, $this->context->shop->id);
+
+        if ($languages < 2) {
+            // No need to display alternative lang if there is only one enabled
+            return $alternativeLangs;
+        }
+
+        foreach ($languages as $lang) {
+            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+        }
+        return $alternativeLangs;
     }
 }

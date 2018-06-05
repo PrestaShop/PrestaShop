@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const keepLicense = require('uglify-save-license');
 
 let config = {
   entry: {
@@ -42,11 +43,29 @@ let config = {
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
     ],
+    catalog: [
+      './js/app/pages/catalog',
+    ],
     stock: [
       './js/app/pages/stock',
     ],
     translations: [
       './js/app/pages/translations',
+    ],
+    logs: [
+      './js/app/pages/logs',
+    ],
+    order_preferences: [
+      './js/pages/order-preferences',
+    ],
+    product_preferences: [
+      './js/pages/product-preferences',
+    ],
+    order_delivery: [
+      './js/pages/order/delivery',
+    ],
+    imports: [
+      './js/pages/import'
     ]
   },
   output: {
@@ -68,6 +87,18 @@ let config = {
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'js'),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['es2015', { modules: false }]
+            ]
+          }
+        }]
+      },
       {
         test: /jquery-ui\.js/,
         use: "imports-loader?define=>false&this=>window"
@@ -155,26 +186,26 @@ let config = {
   ]
 };
 
-// if (process.env.NODE_ENV === 'production') {
-//   config.plugins.push(
-//     new webpack.optimize.UglifyJsPlugin({
-//       sourceMap: false,
-//       compress: {
-//         sequences: true,
-//         conditionals: true,
-//         booleans: true,
-//         if_return: true,
-//         join_vars: true,
-//         drop_console: true
-//       },
-//       output: {
-//         comments: false
-//       }
-//     })
-//   );
-// } else {
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        sequences: true,
+        conditionals: true,
+        booleans: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true
+      },
+      output: {
+        comments: keepLicense
+      }
+    })
+  );
+} else {
   config.entry.stock.push('webpack/hot/only-dev-server');
   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
-// }
+}
 
 module.exports = config;

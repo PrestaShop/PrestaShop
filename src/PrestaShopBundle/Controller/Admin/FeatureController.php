@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,19 +42,19 @@ class FeatureController extends FrameworkBundleAdminController
     public function getFeatureValuesAction($idFeature)
     {
         $response = new JsonResponse();
-        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
         $data = array();
 
         if ($idFeature == 0) {
             return $response;
         }
 
-        $featuresValues = $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
+        $featuresValues = $this->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
 
         if (count($featuresValues) !== 0) {
             $data['0'] = array(
                 'id' => 0,
-                'value' => $this->get('translator')->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
+                'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
             );
         }
 

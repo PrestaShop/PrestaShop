@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,17 +33,22 @@ class CategoryLangCore extends DataLangCore
 
     protected $fieldsToUpdate = array('name', 'link_rewrite');
 
-    protected function init()
+    public function getFieldValue($field, $value)
     {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Root') => $this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale),
-                md5('Home') => $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale),
-            ),
-            'link_rewrite' => array(
-                md5('root') => $this->slugify($this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale)),
-                md5('home') => $this->slugify($this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale)),
-            ),
-        );
+        if ($field == 'link_rewrite') {
+            $replacements = array(
+                'home' => 'Home',
+                'root' => 'Root',
+            );
+            $value        = str_replace(array_keys($replacements), array_values($replacements), $value);
+        }
+
+        $value = parent::getFieldValue($field, $value);
+
+        if ($field == 'link_rewrite') {
+            $value = $this->slugify($value);
+        }
+
+        return $value;
     }
 }
