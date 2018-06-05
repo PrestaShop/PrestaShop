@@ -34,6 +34,7 @@ class Module
      * Copy the directory in resources which get the name $module_dir_name in the module directory
      *
      * @var module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
+     * @return bool
      */
     public static function addModule($module_dir_name)
     {
@@ -48,6 +49,7 @@ class Module
      * Delete the directory in /home/prestashop/module which get the name $module_dir_name
      *
      * @var module_dir_name take the directory name of a module contain in /home/prestashop/module
+     * @return bool
      */
     public static function removeModule($module_dir_name)
     {

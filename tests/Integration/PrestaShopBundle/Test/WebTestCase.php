@@ -26,8 +26,11 @@
 
 namespace Tests\Integration\PrestaShopBundle\Test;
 
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\NullLogger;
+use Tests\TestCase\Module as ModuleHelper;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 
 class WebTestCase extends TestCase
@@ -47,12 +50,17 @@ class WebTestCase extends TestCase
      */
     protected $translator;
 
+    /**
+     * @var \Symfony\Component\DependencyInjection\Container
+     */
+    protected $container;
+
     public static function setUpBeforeClass()
     {
         Database::restoreTestDB();
     }
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->client = self::createClient();
@@ -109,7 +117,8 @@ class WebTestCase extends TestCase
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
-                'getRootUrl'
+                'getRootUrl',
+                'getLanguages'
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
@@ -118,8 +127,32 @@ class WebTestCase extends TestCase
         $legacyContextMock->method('getContext')
             ->will($this->returnValue($contextMock));
 
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
-        self::$kernel->getContainer()->set('logger', new NullLogger());
+        $legacyContextMock->method('getLanguages')
+            ->will(
+                self::returnValue(
+                    [
+                        [
+                            'id_lang' => '1',
+                            'name' => 'English (English)',
+                            'iso_code' => 'en',
+                            'language_code' => 'en-us',
+                            'locale' => 'en-US',
+                        ],
+                        [
+                            'id_lang' => '2',
+                            'name' => 'Français (French)',
+                            'iso_code' => 'fr',
+                            'language_code' => 'fr',
+                            'locale' => 'fr-FR'
+                        ]
+                    ]
+                )
+            );
+
+        $this->container = self::$kernel->getContainer();
+
+        $this->container->set('prestashop.adapter.legacy.context', $legacyContextMock);
+        $this->container->set('logger', new NullLogger());
     }
 
     protected function enableDemoMode()
@@ -138,6 +171,92 @@ class WebTestCase extends TestCase
         $configurationMock->method('get')
             ->will($this->returnValueMap($values));
 
-        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
+        $this->container->set('prestashop.adapter.legacy.configuration', $configurationMock);
+    }
+
+    /**
+     * Little helper to retrieve service from Container.
+     *
+     * @param $serviceName
+     *
+     * @return \StdClass
+     * @throws \Exception
+     */
+    protected function get($serviceName)
+    {
+        return $this->container->get($serviceName);
+    }
+
+    /**
+     * Retrieves an instance of Module by module name
+     * @param $moduleName
+     *
+     * @return Module
+     * @throws \Exception
+     */
+    protected function getModule($moduleName)
+    {
+        return $this->get('prestashop.core.admin.module.repository')->getModule($moduleName);
+    }
+
+    /**
+     * Copy a module from "module" folder in "tests" folder to the right one.
+     * Also install the module.
+     *
+     * @param string $moduleName
+     * @return bool
+     * @throws \Exception
+     */
+    protected function installModule($moduleName)
+    {
+        if (ModuleHelper::addModule($moduleName)) {
+            $this->getModule($moduleName)->onInstall();
+            $this->clearCache();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove a module from "modules" folder.
+     * Also uninstall the module.
+     *
+     * @param string $moduleName
+     * @return bool
+     * @throws \Exception
+     */
+    protected function uninstallModule($moduleName)
+    {
+        if (ModuleHelper::removeModule($moduleName)) {
+            $this->getModule($moduleName)->onUninstall();
+            $this->clearCache();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Allow to clear the cache.
+     * Clear Symfony cache, necessary to refresh the Container.
+     */
+    protected function clearCache()
+    {
+        $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+    }
+
+    /**
+     * Helper: allow to emulate functional test of a shop with "test" database.
+     * Anytime you need to query the shop from HTTP layer "but" with "test" database
+     * you can't rely on an HTTP client.
+     * {@inheritdoc}
+     * @see Symfony\Component\HttpFoundation\Request::create
+     */
+    protected function createRequest($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
+    {
+        return Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
     }
 }
