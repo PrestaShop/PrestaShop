@@ -4,8 +4,8 @@ module.exports = {
     click_outside: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[1]/th[3]',
     logout: '#header_logout',
     products_subtab: '#subtab-AdminCatalog',
-    go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
-    new_product_dropdown_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.new-product.js-btn-save',
+    go_to_catalog_button: '//a[contains(@class, "go-catalog")]',
+    new_product_dropdown_button: '//a[contains(@class, "new-product")]',
     more_option_button: '.btn.btn-primary.dropdown-toggle',
     basic_settings_tab: '//*[@id="tab_step1"]/a',
     new_product_button: '#page-header-desc-configuration-add',
@@ -192,13 +192,14 @@ module.exports = {
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
-    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]',
+    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "%BUTTON")]',
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
     combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
     home_delete_button: '//*[@id="ps_categoryTags"]/span[1]/a',
-    created_category: '//*[@id="ps_categoryTags"]/span[2]/span'
+    created_category: '//*[@id="ps_categoryTags"]/span[2]/span',
+    preview_link: '//a'
   },
 
   ProductList: {
