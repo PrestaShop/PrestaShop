@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e42deb22e5fd961b542f88303763eae",
+    "content-hash": "5d21c634786fb65f7608aec9756798d3",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2756,20 +2756,20 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v4.1.0",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "a2a7d20c207cead6f2f6e23bb13af97ad4e59ded"
+                "reference": "2be28a7a905db9e03f6be033b0185e7f0b3e69f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/a2a7d20c207cead6f2f6e23bb13af97ad4e59ded",
-                "reference": "a2a7d20c207cead6f2f6e23bb13af97ad4e59ded",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/2be28a7a905db9e03f6be033b0185e7f0b3e69f1",
+                "reference": "2be28a7a905db9e03f6be033b0185e7f0b3e69f1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.4.0"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -2784,7 +2784,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2018-05-23T16:27:31+00:00"
+            "time": "2018-06-05T12:44:40+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -3284,16 +3284,16 @@
         },
         {
             "name": "prestashop/ps_customtext",
-            "version": "v2.0.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_customtext.git",
-                "reference": "56fdf8e41f8fe2dcd64db66bd048979f4cbde58b"
+                "reference": "06f8b844690da20fd2517858402943873967ae55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_customtext/zipball/56fdf8e41f8fe2dcd64db66bd048979f4cbde58b",
-                "reference": "56fdf8e41f8fe2dcd64db66bd048979f4cbde58b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_customtext/zipball/06f8b844690da20fd2517858402943873967ae55",
+                "reference": "06f8b844690da20fd2517858402943873967ae55",
                 "shasum": ""
             },
             "require": {
@@ -3302,7 +3302,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3312,7 +3312,7 @@
             ],
             "description": "PrestaShop module ps_customtext",
             "homepage": "https://github.com/PrestaShop/ps_customtext",
-            "time": "2017-02-01T09:36:40+00:00"
+            "time": "2018-06-05T10:01:21+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",
@@ -3348,16 +3348,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "ddc3e6c0772e62b75717b5d2f0cf83b836397e02"
+                "reference": "d131df75a252948b0f03f39ec59900d8a28fb1c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/ddc3e6c0772e62b75717b5d2f0cf83b836397e02",
-                "reference": "ddc3e6c0772e62b75717b5d2f0cf83b836397e02",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/d131df75a252948b0f03f39ec59900d8a28fb1c0",
+                "reference": "d131df75a252948b0f03f39ec59900d8a28fb1c0",
                 "shasum": ""
             },
             "require": {
@@ -3379,7 +3379,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2018-02-19T15:32:21+00:00"
+            "time": "2018-06-05T10:06:18+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3415,16 +3415,16 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v2.1.1",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "4d34cbce0d5edce787c1914c25b405450b6055d7"
+                "reference": "c676ded1614abaad4f3b251784eef8b8a2f6b961"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/4d34cbce0d5edce787c1914c25b405450b6055d7",
-                "reference": "4d34cbce0d5edce787c1914c25b405450b6055d7",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/c676ded1614abaad4f3b251784eef8b8a2f6b961",
+                "reference": "c676ded1614abaad4f3b251784eef8b8a2f6b961",
                 "shasum": ""
             },
             "require": {
@@ -3443,7 +3443,7 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
-            "time": "2018-02-05T21:41:01+00:00"
+            "time": "2018-06-05T10:10:47+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -3511,16 +3511,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v2.1.4",
+            "version": "v2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "a8957320ee2f7ba529252a975ffda6543ee65d60"
+                "reference": "a901d458f8f6a90059399a3f40166851e956642b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/a8957320ee2f7ba529252a975ffda6543ee65d60",
-                "reference": "a8957320ee2f7ba529252a975ffda6543ee65d60",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/a901d458f8f6a90059399a3f40166851e956642b",
+                "reference": "a901d458f8f6a90059399a3f40166851e956642b",
                 "shasum": ""
             },
             "require": {
@@ -3529,7 +3529,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3539,20 +3539,20 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2017-08-04T15:16:47+00:00"
+            "time": "2018-06-05T12:03:41+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_mainmenu.git",
-                "reference": "4a16eeb69d06ba868ef5c1c26aa697e3d265f613"
+                "reference": "6bc5ddd52ce92b32f6a6a6e296bba09ecf2e6ed1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/4a16eeb69d06ba868ef5c1c26aa697e3d265f613",
-                "reference": "4a16eeb69d06ba868ef5c1c26aa697e3d265f613",
+                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/6bc5ddd52ce92b32f6a6a6e296bba09ecf2e6ed1",
+                "reference": "6bc5ddd52ce92b32f6a6a6e296bba09ecf2e6ed1",
                 "shasum": ""
             },
             "require": {
@@ -3571,7 +3571,7 @@
             ],
             "description": "PrestaShop - Main menu",
             "homepage": "https://github.com/PrestaShop/ps_mainmenu",
-            "time": "2018-02-05T21:56:20+00:00"
+            "time": "2018-06-05T12:09:19+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
