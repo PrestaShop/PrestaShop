@@ -33,6 +33,7 @@
   }
   &.mobile-nav {
     margin-left: -100%;
+    margin-top: $size-header-height + ($header-mobile-padding-y * 2);
     width: 70%;
 
     @include media-breakpoint-only(sm) {
@@ -86,6 +87,7 @@
       img {
         width: 3.75rem;
         height: 3.75rem;
+        margin-bottom: .625rem;
 
         &.img-thumbnail {
           border-radius: 36px;

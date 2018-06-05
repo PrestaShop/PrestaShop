@@ -72,6 +72,9 @@ body {
 #product_filter_column_active .select2 {
   min-width: 4.375rem;
 }
+.nav-pills {
+  font-weight: 400;
+}
 // Needed to override the default inline style of typeahead and take all the width
 span.twitter-typeahead {
   display: block !important;

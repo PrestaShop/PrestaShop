@@ -9,6 +9,10 @@
 
   transition: left .5s ease; // transition when collapsing the nav menu
 
+  .mobile & {
+    top: $size-header-height + ($header-mobile-padding-y * 2);
+  }
+
   @include media-breakpoint-down(md) {
     left: 0;
   }
@@ -76,12 +80,12 @@
 
   .tab {
     .notification-container {
-      @include notification_container(1.5rem);
+      @include notification_container(1.5rem)
 
       .notification-counter {
         @include notification_counter();
-        top: -0.063rem;
-        right: initial;
+        top: -0.5625rem;
+        right: -0.9375rem;
       }
     }
   }

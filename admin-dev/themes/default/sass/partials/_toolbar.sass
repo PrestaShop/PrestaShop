@@ -10,7 +10,10 @@
 	color: #363A41
 	padding: 0 0 0 210px
 
-	@media (max-width: 1024px)
+	.mobile &
+		top: $size-header-height + ($header-mobile-padding-y * 2)
+
+	@media (max-width: breakpoint-max('md'))
 		padding: 0
 
 	transition: padding-left .5s ease-out
@@ -122,7 +125,7 @@
 		ul
 			border-top: 1px solid #dfdfdf
 			border-bottom: 1px solid #dfdfdf
-			font-weight: 600
+			font-weight: 400
 
 		li
 			display: inline-block
