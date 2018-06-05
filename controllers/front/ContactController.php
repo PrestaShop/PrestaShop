@@ -63,6 +63,14 @@ class ContactControllerCore extends FrontController
 
                 $id_order = (int)$this->getOrder();
 
+                /**
+                 * Check if customer select his order.
+                 */
+                if (!empty($id_order)) {
+                    $order = new Order($id_order);
+                    $id_order = (int) $order->id_customer === (int) $customer->id ? $id_order : 0;
+                }
+
                 if (!((
                         ($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
                         && (int)Db::getInstance()->getValue('
