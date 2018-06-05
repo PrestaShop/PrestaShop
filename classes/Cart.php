@@ -1650,10 +1650,10 @@ class CartCore extends ObjectModel
         }
 
         $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-        if ($preservedGifts[$id_product.'-'.$id_product_attribute] > 0) {
+        if ($preservedGifts[(int)$id_product.'-'.(int)$id_product_attribute] > 0) {
             return Db::getInstance()->execute(
                 'UPDATE `'._DB_PREFIX_.'cart_product`
-                SET `quantity` = '.(int)$preservedGifts[$id_product.'-'.$id_product_attribute].'
+                SET `quantity` = '.(int)$preservedGifts[(int)$id_product.'-'.(int)$id_product_attribute].'
                 WHERE `id_cart` = '.(int)$this->id.'
                 AND `id_product` = '.(int)$id_product.
                 ($id_product_attribute != null ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '')
