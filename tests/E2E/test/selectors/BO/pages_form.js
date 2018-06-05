@@ -52,7 +52,7 @@ module.exports = {
       delivery_form: '//*[@id="delivery_form"]'
     },
     Payment: {
-      recommended_payment: '//*[@id="recommended-payment-gateways-panel"]',
+      active_payment: '//*[@id="content"]//h3[text()[contains(., "Active payment")]]',
       currency_form: '//*[@id="form_currency"]'
     },
     International: {
@@ -69,7 +69,8 @@ module.exports = {
     },
     ShopParameters: {
       general_form: '//*[@id="configuration_form"]',
-      order_settings_form: '//*[@id="configuration_fieldset_general"]',
+      maintenance_tab_form:'(//a[text() = "Maintenance"])[2]',
+      order_settings_form: '//*[@id="configuration_form"]',
       statuses_form: '//*[@id="form-order_state"]',
       product_settings_form: '//*[@id="configuration_form"]',
       customers_form: '//*[@id="configuration_form"]',
@@ -86,10 +87,10 @@ module.exports = {
     },
     AdvancedParameters: {
       check_configuration_box: '//*[@id="checkConfiguration"]',
-      debug_mode_select: '//form[contains(@class, "form-horizontal")]', // performance page
+      debug_mode_button: '//form[contains(@class, "form-horizontal")]', // performance page
       administration_form: '//form[contains(@class, "form-horizontal")]',
       mail_form: '//*[@id="form-mail"]',
-      preview_import_form: '//*[@id="preview_import"]',
+      preview_import_form: '//form[contains(@class, "import")]',
       employee_form: '//*[@id="form-employee"]', //team page
       profiles_form: '//*[@id="form-profile"]',
       permissions_form: '//*[@id="access_form"]',

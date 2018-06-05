@@ -50,7 +50,7 @@ scenario('Create product with combination in the Back Office', client => {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
     });
   }, 'product/product');
 
@@ -146,13 +146,13 @@ scenario('Create product with combination in the Back Office', client => {
         .then(() => client.showElement("td.attribute-price", 1))
         .then(() => client.waitAndSetValue(AddProductPage.combination_impact_price_input.replace('%NUMBER', global.combinationId), '2,5'));
     });
-    test('should click on "Basic settings"', () => client.scrollWaitForExistAndClick(AddProductPage.basic_settings_tab, 50));
+    test('should click on "Basic settings" tab', () => client.scrollWaitForExistAndClick(AddProductPage.basic_settings_tab, 50));
     test('should set the "Tax exclude" price', () => {
       return promise
         .then(() => client.scrollTo(AddProductPage.priceTE_shortcut, 50))
         .then(() => client.waitAndSetValue(AddProductPage.priceTE_shortcut, data.common.priceTE));
     });
-    test('should click on "Combinations"', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
+    test('should click on "Combinations" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
     test('should check that the final price is equal to "26.666666 €"', () => {
       return promise
         .then(() => client.showElement("td.attribute-finalprice", 1))
@@ -176,13 +176,13 @@ scenario('Create product with combination in the Back Office', client => {
       test('should click on "SEO" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_SEO_tab, 50));
       test('should set the "Meta title" input', () => client.waitAndSetValue(AddProductPage.SEO_meta_title, data.common.metatitle));
       test('should set the "Meta description" input', () => client.waitAndSetValue(AddProductPage.SEO_meta_description, data.common.metadesc));
-      test('should set the "Friendly URL"', () => client.waitAndSetValue(AddProductPage.SEO_friendly_url, data.common.shortlink));
+      test('should set the "Friendly URL" input', () => client.waitAndSetValue(AddProductPage.SEO_friendly_url, data.common.shortlink));
     }, 'product/product');
 
     scenario('Edit product options', client => {
       test('should click on "Options" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
       test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'both'));
-      test('should click on "Web only (not sold in your retail store)"', () => client.waitForExistAndClick(AddProductPage.options_online_only));
+      test('should click on "Web only (not sold in your retail store)" checkbox', () => client.waitForExistAndClick(AddProductPage.options_online_only));
       test('should select the "Condition"', () => client.selectCondition());
       test('should set the "ISBN" input', () => client.waitAndSetValue(AddProductPage.options_isbn, data.common.isbn));
       test('should set the "EAN-13" input', () => client.waitAndSetValue(AddProductPage.options_ean13, data.common.ean13));
@@ -190,14 +190,14 @@ scenario('Create product with combination in the Back Office', client => {
       test('should click on "ADD A CUSTOMIZAITION" button', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_customization_field_button, 50));
       test('should set the customization field "Label"', () => client.waitAndSetValue(AddProductPage.options_first_custom_field_label, data.common.personalization.perso_text.name));
       test('should select the customization field "Type" Text', () => client.waitAndSelectByValue(AddProductPage.options_first_custom_field_type, '1'));
-      test('should click on "Required"', () => client.waitForExistAndClick(AddProductPage.options_first_custom_field_require));
+      test('should click on "Required" checkbox', () => client.waitForExistAndClick(AddProductPage.options_first_custom_field_require));
       test('should click on "ADD A CUSTOMIZAITION" button', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_customization_field_button, 50));
       test('should set the second customization field "Label"', () => client.waitAndSetValue(AddProductPage.options_second_custom_field_label, data.common.personalization.perso_file.name));
       test('should select the customization field "Type" File', () => client.waitAndSelectByValue(AddProductPage.options_second_custom_field_type, '0'));
       test('should click on "ATTACH A NEW FILE" button', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_new_file_button, 50));
       test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
-      test('should set the file "Title"', () => client.waitAndSetValue(AddProductPage.options_file_name, data.common.document_attach.name));
-      test('should set the file "Description" ', () => client.waitAndSetValue(AddProductPage.options_file_description, data.common.document_attach.desc));
+      test('should set the file "Title" input', () => client.waitAndSetValue(AddProductPage.options_file_name, data.common.document_attach.name));
+      test('should set the file "Description" input', () => client.waitAndSetValue(AddProductPage.options_file_description, data.common.document_attach.desc));
       test('should add the previous added file', () => client.scrollWaitForExistAndClick(AddProductPage.options_file_add_button, 50));
     }, 'product/product');
 
@@ -219,7 +219,7 @@ scenario('Check the product creation in the Back Office', client => {
   test('should check the existence of product price TE', () => client.checkProductPriceTE(data.common.priceTE));
   test('should check the existence of product quantity Combination', () => client.checkTextValue(AddProductPage.catalog_product_quantity, (parseInt(data.standard.variations[0].quantity) + parseInt(data.standard.variations[1].quantity)).toString()));
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
-  test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+  test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
 scenario('Check the product with combination in the Front Office', () => {

@@ -18,7 +18,7 @@ let secondProductData = {
   picture_name: '1.png'
 };
 
-scenario('Check product page buttons', client => {
+scenario('Check product page buttons', () => {
 
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -60,13 +60,13 @@ scenario('Check product page buttons', client => {
 
   scenario('Testing "Duplicate" button', client => {
     test('should go back to the Back Office', () => client.switchWindow(0));
-    test('should click on the "Duplicate" button', () => {
+    test('should click on "Duplicate" button', () => {
       return promise
         .then(() => client.waitForExistAndClick(AddProductPage.dropdown_button))
         .then(() => client.waitForExistAndClick(AddProductPage.duplicate_button));
     });
     test('should check the duplication success message', () => client.checkTextValue(AddProductPage.success_panel, "Product successfully duplicated."));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     scenario('Check that the product is well duplicated', client => {
@@ -82,13 +82,13 @@ scenario('Check product page buttons', client => {
   }, 'product/product');
 
   scenario('Testing "Online" button', client => {
-    test('should set the product "Offline"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product "Offline"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons));
     test('should switch to the Front Office', () => client.switchWindow(2));
     test('should check the offline warning message', () => client.checkTextValue(productPage.offline_warning_message, "This product is not visible to your customers.", "contain"));
     test('should go back to the Back Office', () => client.switchWindow(0));
-    test('should set the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
   }, 'product/product');
 
   scenario('Check "Go to catalog" button', client => {
@@ -102,16 +102,16 @@ scenario('Check product page buttons', client => {
   }, 'product/check_product');
 
   scenario('Testing "Add new product" button', client => {
-    test('should click on the "Add new product" button', () => {
+    test('should click on "Add new product" button', () => {
       return promise
         .then(() => client.waitForExistAndClick(AddProductPage.dropdown_button))
         .then(() => client.waitForExistAndClick(AddProductPage.new_product_dropdown_button))
         .then(() => client.pause(5000));
     });
-    test('should set "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, secondProductData.name + date_time));
-    test('should set "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, secondProductData.quantity));
+    test('should set "product name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, secondProductData.name + date_time));
+    test('should set "Quantity" input', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, secondProductData.quantity));
     test('should set the "Tax exclude" price', () => client.waitAndSetValue(AddProductPage.priceTE_shortcut, secondProductData.price));
-    test('should set the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should click on "Go to catalog" button', () => {
@@ -129,9 +129,9 @@ scenario('Check product page buttons', client => {
      * This scenario is based on the bug described in this ticket
      * http://forge.prestashop.com/browse/BOOM-4950
      **/
-    test('should click on "Yes" of the confirmation modal', () => client.waitForExistAndClick(AddProductPage.delete_confirmation_button));
+    test('should click on "Yes" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, "Product successfully deleted."));
-    test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+    test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
   }, 'product/product');
 
   scenario('Logout from the Back Office', client => {

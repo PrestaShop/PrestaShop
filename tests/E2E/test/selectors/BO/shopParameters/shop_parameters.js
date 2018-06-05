@@ -20,7 +20,7 @@ module.exports = {
   TrafficAndSeo: {
     SeoAndUrls: {
       friendly_url_button: '//*[@id="conf_id_PS_REWRITING_SETTINGS"]//label[contains(@for, "%s")]',
-      save_button: '//*[@id="meta_fieldset_general"]//button[text()=" Save"]'
+      save_button: '//*[@id="meta_form"]//button[text()=" Save"]'
     }
   }
 };

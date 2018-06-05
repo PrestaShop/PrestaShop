@@ -4,11 +4,12 @@ global.tab = [];
 
 class ModifyQuantity extends CommonClient {
 
-  goToStockMovements(Movement) {
+  goToStockMovements(Menu, Movement) {
     return this.client
-      .waitForExistAndClick(Movement.tabs)
+      .waitForExistAndClick(Menu.Sell.Catalog.movement_tab)
       .waitForExist(Movement.variation, 90000)
       .pause(1000)
+      .waitForExistAndClick(Movement.sort_data_time_icon, 2000);
   }
 
   modifyProductQuantity(Stock, order, quantity) {

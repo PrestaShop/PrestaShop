@@ -66,15 +66,25 @@ scenario('Create "Product"', () => {
           .then(() => client.waitAndSetValue(AddProductPage.pricing_tax_rule_input, taxData.name + date_time))
           .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_option));
       });
-      test('should click on "Add specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
-      test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[0].starting_at));
-      test('should set the "Leave initial price" input', () => client.waitForExistAndClick(AddProductPage.leave_initial_price_checkbox));
+      test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
+      test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[0].starting_at, 3000));
+      test('should set the "Leave initial price" input', () => client.scrollWaitForExistAndClick(AddProductPage.leave_initial_price_checkbox, 150, 2000));
       test('should set the "Product price" input', () => client.waitAndSetValue(AddProductPage.specific_product_price_input, productData.pricing[0].product_price));
       test('should select "Tax exclude"', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_tax_select, productData.pricing[0].discount_type));
       test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
-      test('should click on "Add specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button, 3000));
-      test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[1].starting_at));
-      test('should set the "Leave initial price" input', () => client.waitForExistAndClick(AddProductPage.leave_initial_price_checkbox));
+      test('should click on "Save" button', () => {
+        return promise
+          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            }
+          })
+          .then(() => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
+      });
+      test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
+      test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[1].starting_at, 3000));
+      test('should set the "Leave initial price" input', () => client.scrollWaitForExistAndClick(AddProductPage.leave_initial_price_checkbox, 150, 2000));
       test('should set the "Product price" input', () => client.waitAndSetValue(AddProductPage.specific_product_price_input, productData.pricing[1].product_price));
       test('should click on "Apply" button', () => {
         return promise
