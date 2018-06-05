@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
-use Access;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -60,7 +60,7 @@ class Admin
 
     /**
      * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
+     * If not logged in, redirect to admin home page
      *
      * @param GetResponseEvent $event
      *
@@ -74,6 +74,13 @@ class Admin
             $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
             $this->securityTokenStorage->setToken($token);
 
+            return true;
+        }
+
+        // in case of exception handler sub request, avoid infinite redirection
+        if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
+            && isset($event->getRequest()->attributes['exception'])
+        ) {
             return true;
         }
 

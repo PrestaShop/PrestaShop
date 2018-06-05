@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle;
+namespace Tests\Unit\PrestaShopBundle;
 
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Tests\TestCase\UnitTestCase;
+use Tests\Unit\ContextMocker;
 use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Shop;
@@ -73,6 +73,7 @@ class MultishopCommandListenerTest extends UnitTestCase
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
+
 
     public function testDefaultMultishopContext()
     {

@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+var $ = window.$;
 
 $(document).ready(function() {
 	var form = $('form#product_catalog_list');
@@ -60,7 +62,7 @@ $(document).ready(function() {
 	/*
 	 * Filter columns inputs behavior
 	 */
-	$('tr.column-filters input:text, tr.column-filters select', form).change(function() {
+	$('tr.column-filters input:text, tr.column-filters select', form).on('change input', function() {
 		productCatalogFilterChanged = true;
 		updateFilterMenu();
 	});
@@ -133,14 +135,14 @@ function updateBulkMenu() {
 
 var productCatalogFilterChanged = false;
 function updateFilterMenu() {
-         var columnFilters = $('#product_catalog_list').find('tr.column-filters');
-	var count = columnFilters.find('option:selected[value!=""]').length;
-	columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function() {
-		if ($(this).val() !== '') {
-			count ++;
-		}
-	});
-         var filtersNotUpdatedYet = (count === 0 && productCatalogFilterChanged === false);
+  var columnFilters = $('#product_catalog_list').find('tr.column-filters');
+  var count = columnFilters.find('option:selected[value!=""]').length;
+  columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function() {
+    if ($(this).val() !== '') {
+      count++;
+    }
+  });
+  var filtersNotUpdatedYet = (count === 0 && productCatalogFilterChanged === false);
 	$('button[name="products_filter_submit"]').prop('disabled', filtersNotUpdatedYet);
 	$('button[name="products_filter_reset"]').toggle(!filtersNotUpdatedYet);
 }

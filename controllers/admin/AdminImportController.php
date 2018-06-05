@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -588,7 +588,7 @@ class AdminImportControllerCore extends AdminController
         $this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator :  ',';
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         $bo_theme = ((Validate::isLoadedObject($this->context->employee)
             && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
@@ -599,7 +599,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         // We need to set parent media first, so that jQuery is loaded before the dependant plugins
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
         $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
@@ -611,6 +611,12 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        // Import form is reworked in Symfony.
+        // If user tries to access legacy form directly,
+        // we redirect him to new form.
+        $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
+        Tools::redirectAdmin($symfonyImportForm);
+
         if (!is_dir(AdminImportController::getPath())) {
             return !($this->errors[] = $this->trans('The import directory doesn\'t exist. Please check your file path.', array(), 'Admin.Advparameters.Notification'));
         }
@@ -996,7 +1002,7 @@ class AdminImportControllerCore extends AdminController
                 $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->trans('or', array(), 'Admin.Advparameters.Help').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
             } else {
                 if (isset($field['help'])) {
-                    $html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';
+                    $html = '&nbsp;<span class="help-box" data-toggle="popover" data-content="'.$field['help'].'"></span>';
                 } else {
                     $html = '';
                 }
@@ -1278,10 +1284,6 @@ class AdminImportControllerCore extends AdminController
             );
         }
 
-        if (!$validateOnly) {
-            /* Import has finished, we can regenerate the categories nested tree */
-            Category::regenerateEntireNtree();
-        }
         $this->closeCsvFile($handle);
 
         if ($crossStepsVariables !== false) {
@@ -1439,6 +1441,9 @@ class AdminImportControllerCore extends AdminController
             $category->force_id = (bool)$force_ids;
             if (!$res && !$validateOnly) {
                 $res = $category->add();
+                if (isset($info['id']) && $category->id != $info['id']) {
+                    $cat_moved[$info['id']] = $category->id;
+                }
             }
         }
 
@@ -4416,6 +4421,7 @@ class AdminImportControllerCore extends AdminController
             }
             $import_type = false;
             $doneCount = 0;
+            $moreStepLabels = array();
             // Sometime, import will use registers to memorize data across all elements to import (for trees, or else).
             // Since import is splitted in multiple ajax calls, we must keep these data across all steps of the full import.
             $crossStepsVariables = array();
@@ -4426,10 +4432,15 @@ class AdminImportControllerCore extends AdminController
                 }
             }
             Db::getInstance()->disableCache();
+            $clearCache = false;
             switch ((int)Tools::getValue('entity')) {
                 case $this->entities[$import_type = $this->trans('Categories', array(), 'Admin.Global')]:
                     $doneCount += $this->categoryImport($offset, $limit, $crossStepsVariables, $validateOnly);
-                    $this->clearSmartyCache();
+                    if ($doneCount < $limit && !$validateOnly) {
+                        /* Import has finished, we can regenerate the categories nested tree */
+                        Category::regenerateEntireNtree();
+                    }
+                    $clearCache = true;
                     break;
                 case $this->entities[$import_type = $this->trans('Products', array(), 'Admin.Global')]:
                     if (!defined('PS_MASS_PRODUCT_CREATION')) {
@@ -4437,7 +4448,7 @@ class AdminImportControllerCore extends AdminController
                     }
                     $moreStepLabels = array($this->trans('Linking Accessories...', array(), 'Admin.Advparameters.Notification'));
                     $doneCount += $this->productImport($offset, $limit, $crossStepsVariables, $validateOnly, $moreStep);
-                    $this->clearSmartyCache();
+                    $clearCache = true;
                     break;
                 case $this->entities[$import_type = $this->trans('Customers', array(), 'Admin.Global')]:
                     $doneCount += $this->customerImport($offset, $limit, $validateOnly);
@@ -4447,22 +4458,22 @@ class AdminImportControllerCore extends AdminController
                     break;
                 case $this->entities[$import_type = $this->trans('Combinations', array(), 'Admin.Global')]:
                     $doneCount += $this->attributeImport($offset, $limit, $crossStepsVariables, $validateOnly);
-                    $this->clearSmartyCache();
+                    $clearCache = true;
                     break;
                 case $this->entities[$import_type = $this->trans('Brands', array(), 'Admin.Global')]:
                     $doneCount += $this->manufacturerImport($offset, $limit, $validateOnly);
-                    $this->clearSmartyCache();
+                    $clearCache = true;
                     break;
                 case $this->entities[$import_type = $this->trans('Suppliers', array(), 'Admin.Global')]:
                     $doneCount += $this->supplierImport($offset, $limit, $validateOnly);
-                    $this->clearSmartyCache();
+                    $clearCache = true;
                     break;
                 case $this->entities[$import_type = $this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
                     $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
                     break;
                 case $this->entities[$import_type = $this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
                     $doneCount += $this->storeContactImport($offset, $limit, $validateOnly);
-                    $this->clearSmartyCache();
+                    $clearCache = true;
                     break;
             }
 
@@ -4484,6 +4495,9 @@ class AdminImportControllerCore extends AdminController
 
             if ($results !== null) {
                 $results['isFinished'] = ($doneCount < $limit);
+                if ($results['isFinished'] && $clearCache && !$validateOnly) {
+                    $this->clearSmartyCache();
+                }
                 $results['doneCount'] = $offset + $doneCount;
                 if ($offset === 0) {
                     // compute total count only once, because it takes time

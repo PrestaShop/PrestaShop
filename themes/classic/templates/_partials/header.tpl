@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -59,9 +59,17 @@
     <div class="container">
        <div class="row">
         <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
-          <a href="{$urls.base_url}">
-            <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
-          </a>
+            {if $page.page_name == 'index'}
+              <h1>
+                <a href="{$urls.base_url}">
+                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
+                </a>
+              </h1>
+            {else}
+                <a href="{$urls.base_url}">
+                  <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
+                </a>
+            {/if}
         </div>
         <div class="col-md-10 col-sm-12 position-static">
           {hook h='displayTop'}

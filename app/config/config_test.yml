@@ -1,6 +1,6 @@
 parameters:
-    AdapterSecurityAdminClass:                PrestaShopBundle\Tests\Mock\AdapterSecurityAdminMock
-    prestashop.security.voter.product.class:  PrestaShopBundle\Tests\Mock\PageVoter
+    AdapterSecurityAdminClass:                Tests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
+    prestashop.security.voter.product.class:  Tests\PrestaShopBundle\Mock\PageVoter
 
 imports:
     - { resource: config_dev.yml }

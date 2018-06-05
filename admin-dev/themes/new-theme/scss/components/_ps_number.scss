@@ -1,6 +1,6 @@
 .ps-number {
   position: relative;
-  width: 95px;
+  display: inline-block;
 
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
@@ -9,7 +9,7 @@
     appearance: none;
   }
   input[type=number] {
-    -moz-appearance:textfield;
+    -moz-appearance: textfield;
   }
   .danger {
     border: 1px solid $danger;
@@ -20,14 +20,25 @@
     }
   }
 
-  .ps-number-button {
+  .ps-number-spinner {
     position: absolute;
     top: 1px;
     flex-direction: column;
     right: 0;
     cursor: pointer;
     line-height: 17px;
-    transition: all 0.2s ease;
+  }
+
+  &.hover-buttons {
+    .ps-number-spinner {
+      display: none;
+      opacity: 0;
+    }
+
+    &:hover .ps-number-spinner {
+      opacity: 1;
+      display: inline-block;
+    }
   }
 
   .ps-number-up::before {

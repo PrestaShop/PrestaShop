@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,21 +19,26 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
+namespace Tests\Unit\Core\Foundation\IoC;
 
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
+use Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
+use Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
 
-class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
+class Core_Foundation_IoC_Container_Test extends TestCase
 {
+    /**
+     * @var Container
+     */
+    private $container;
+
     public function setUp()
     {
         $this->container = new Container();
@@ -83,25 +88,25 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
 
     public function test_bind_className()
     {
-        $this->container->bind('dummy', 'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy');
+        $this->container->bind('dummy', 'Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy');
 
-        $this->assertEquals('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        $this->assertEquals('Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('dummy')
         ));
     }
 
     public function test_make_without_bind()
     {
-        $this->assertEquals('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
-            $this->container->make('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy')
+        $this->assertEquals('Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+            $this->container->make('Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy')
         ));
     }
 
     public function test_classes_can_be_loaded_with_custom_namespace_prefix()
     {
-        $this->container->aliasNamespace('Fixtures', 'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures');
+        $this->container->aliasNamespace('Fixtures', 'Tests\Unit\Core\Foundation\IoC\Fixtures');
 
-        $this->assertEquals('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
+        $this->assertEquals('Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy', get_class(
             $this->container->make('Fixtures:Dummy')
         ));
     }
@@ -111,21 +116,21 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
      */
     public function test_an_alias_cannot_be_changed()
     {
-        $this->container->aliasNamespace('Fixtures', 'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures');
-        $this->container->aliasNamespace('Fixtures', 'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Other');
+        $this->container->aliasNamespace('Fixtures', 'Tests\Unit\Core\Foundation\IoC\Fixtures');
+        $this->container->aliasNamespace('Fixtures', 'Tests\Unit\Core\Foundation\Other');
     }
 
     public function test_deps_are_fetched_automagically()
     {
-        $this->assertEquals('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep', get_class(
-            $this->container->make('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep')
+        $this->assertEquals('Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep', get_class(
+            $this->container->make('Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep')
         ));
     }
 
     public function test_deps_are_fetched_automagically_When_dependsOnThingWithADefaultValue()
     {
-        $this->assertEquals('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault', get_class(
-            $this->container->make('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault')
+        $this->assertEquals('Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault', get_class(
+            $this->container->make('Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDepAndDefault')
         ));
     }
 
@@ -134,7 +139,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
      */
     public function test_unbuildable_not_built()
     {
-        $this->container->make('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\UnBuildable');
+        $this->container->make('Tests\Unit\Core\Foundation\IoC\Fixtures\UnBuildable');
     }
 
     /**
@@ -142,7 +147,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
      */
     public function test_non_existing_class_not_built()
     {
-        $this->container->make('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\AClassThatDoesntExistAtAll');
+        $this->container->make('Tests\Unit\Core\Foundation\IoC\Fixtures\AClassThatDoesntExistAtAll');
     }
 
     /**
@@ -154,20 +159,20 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
          * CycleA depends on CycleB,
          * CycleB depends on CycleA
          */
-        $this->container->make('PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\CycleA');
+        $this->container->make('Tests\Unit\Core\Foundation\IoC\Fixtures\CycleA');
     }
 
     public function test_can_build_class_whose_dependency_is_buit_by_closure()
     {
         $this->container->bind(
-            'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure',
+            'Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure',
             function () {
                 return new DepBuiltByClosure(42);
             }
         );
 
         $instance = $this->container->make(
-            'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassDependingOnClosureBuiltDep'
+            'Tests\Unit\Core\Foundation\IoC\Fixtures\ClassDependingOnClosureBuiltDep'
         );
         $this->assertEquals(42, $instance->getDep()->getValue());
     }

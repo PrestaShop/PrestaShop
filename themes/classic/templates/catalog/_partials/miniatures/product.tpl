@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -26,18 +26,30 @@
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemscope itemtype="http://schema.org/Product">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
-        <a href="{$product.url}" class="thumbnail product-thumbnail">
-          <img
-            src = "{$product.cover.bySize.home_default.url}"
-            alt = "{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
-            data-full-size-image-url = "{$product.cover.large.url}"
-          >
-        </a>
+        {if $product.cover}
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
+            <img
+              src = "{$product.cover.bySize.home_default.url}"
+              alt = "{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
+              data-full-size-image-url = "{$product.cover.large.url}"
+            >
+          </a>
+        {else}
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
+            <img
+              src = "{$urls.no_picture_image.bySize.home_default.url}"
+            >
+          </a>
+        {/if}
       {/block}
 
       <div class="product-description">
         {block name='product_name'}
-          <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h1>
+          {if $page.page_name == 'index'}
+            <h3 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h3>
+          {else}
+            <h2 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h2>
+          {/if}
         {/block}
 
         {block name='product_price_and_shipping'}

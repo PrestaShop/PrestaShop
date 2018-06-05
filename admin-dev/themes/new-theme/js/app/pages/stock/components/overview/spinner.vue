@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <form
-    class="qty text-sm-right"
+    class="qty"
     :class="classObject"
     @mouseover="focusIn"
     @mouseleave="focusOut($event)"
@@ -36,8 +36,9 @@
       placeholder="0"
       pattern="\d*"
       step="1"
+      buttons="true"
+      hoverButtons="true"
       :value="qty"
-      :buttons="this.isActive"
       @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
@@ -51,6 +52,9 @@
 
 <script>
   import PSNumber from 'app/widgets/ps-number';
+
+  const $ = global.$;
+
   export default {
     props: ['product'],
     computed: {
@@ -96,7 +100,8 @@
         this.isActive = true;
       },
       focusOut(event) {
-        if (!$(event.target).hasClass('ps-number') && !this.value) {
+        const value = parseInt(this.value, 10);
+        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;

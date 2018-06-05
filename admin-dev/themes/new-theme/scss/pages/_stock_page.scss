@@ -1,36 +1,14 @@
 .stock-app {
 
-  padding: 3em 0 0 0;
+  padding: 0;
 
   .table {
-    td {
-      padding: 5px 5px 5px;
-      word-wrap: break-word;
-      white-space: normal;
-    }
-    thead th {
-      padding: 5px inherit;
-      vertical-align: middle;
-      .material-icons {
-        color: $gray-medium;
-        vertical-align: middle;
-      }
-    }
     td:first-child {
       // product description inside the product column
       p {
         margin-bottom: 0;
       }
     }
-  }
-
-  .stock-header {
-    position: fixed;
-    top: 39px;
-    background: white;
-    width: 100%;
-    z-index: 3;
-    margin-left: -15px;
   }
 
   #search {
@@ -44,10 +22,10 @@
     }
     .alert-box {
       padding-top: 28px;
-      z-index: 3;
       position: fixed;
       right: 5px;
       top: 40px;
+      z-index: 502; // above header toolbar
     }
     .fade-enter-active, .fade-leave-active {
       transition: opacity .5s;
@@ -105,11 +83,19 @@
   // form that allows changing stock quantities
   form.qty {
     position: relative;
-    width: 120px;
+    display: inline-block;
+    width: 7rem;
 
-    .ps-number-button {
-      // we need this offset to make room for the confirmation button
-      right: 34px;
+    &:hover,
+    &.active {
+      input[type=number] {
+        // we need this offset to make room for the confirmation button
+        padding-right: 34px;
+      }
+
+      .ps-number-spinner {
+        right: 34px;
+      }
     }
 
     .check-button {
@@ -117,13 +103,14 @@
       opacity: 0;
       position: absolute;
       top: 1px;
-      right: 26px;
+      right: 1px;
       border: none;
       height: 33px;
       width: 33px;
       background: $brand-primary;
       z-index: 2;
       padding: 0;
+      cursor: pointer;
       .material-icons {
         color: white;
         vertical-align: middle;
@@ -168,19 +155,15 @@
 
   .stock-overview {
     .table {
-      font-size: .9em;
       table-layout: fixed;
-      width: 100%;
-      white-space: nowrap;
 
       thead {
         th {
-          color: $gray-dark;
-          padding: 10px 0;
-          &.thead-title {
-            padding-left: 88px;
+          &.product-title {
+            padding-left: 6rem;
           }
           &:last-child {
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             .material-icons {
@@ -218,6 +201,9 @@
     }
 
     .product-actions {
+      small {
+        display: block;
+      }
       .bulk-qty {
         max-width: 100px;
       }

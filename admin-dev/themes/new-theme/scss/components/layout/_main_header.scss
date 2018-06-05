@@ -11,6 +11,7 @@
     padding: 0.625rem 0;
     height: $size-header-height + 1;
   }
+
   .mobile & {
     > .component {
       margin-right: 0;
@@ -21,7 +22,7 @@
     .notification-center .dropdown-menu {
       margin-top: 0.3125rem;
     }
-    > .material-icons {
+    > .material-icons:not(.js-mobile-menu) {
       padding-top: 0.625rem;
       font-size: 1.313rem;
     }

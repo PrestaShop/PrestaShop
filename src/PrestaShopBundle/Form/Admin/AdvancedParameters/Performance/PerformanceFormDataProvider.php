@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,25 +19,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration;
-use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
-use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
 use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
-use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
+use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
 use PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
+use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration;
 
 /**
  * This class is responsible of managing the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-class PerformanceFormDataProvider
+final class PerformanceFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var SmartyCacheConfiguration
@@ -87,7 +87,7 @@ class PerformanceFormDataProvider
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getData()
     {
@@ -102,11 +102,7 @@ class PerformanceFormDataProvider
     }
 
     /**
-     * Persists form Data in Database and Filesystem
-     *
-     * @param array $data
-     * @return array $errors if data can't persisted an array of errors messages
-     * @throws UndefinedOptionsException
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {

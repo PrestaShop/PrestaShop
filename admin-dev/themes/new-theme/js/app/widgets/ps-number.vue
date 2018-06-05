@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,23 +18,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 
  <template>
-  <div class="ps-number">
+  <div class="ps-number" :class="{'hover-buttons': hoverButtons}">
     <input
       type="number"
-      class="ps-number form-control"
-      :class="{'danger' : danger}"
+      class="form-control"
+      :class="{'danger': danger}"
       :value="value"
       @keyup="onKeyup($event)"
       @focus="focusIn"
-      @blur="focusOut($event)"
+      @blur.native="focusOut($event)"
     />
-    <div class="ps-number-button d-flex" v-if="buttons">
+    <div class="ps-number-spinner d-flex" v-if="buttons">
       <span class="ps-number-up" @click="increment"></span>
       <span class="ps-number-down" @click="decrement"></span>
     </div>
@@ -47,6 +47,7 @@
       value: 0,
       danger: false,
       buttons: false,
+      hoverButtons: false,
     },
     methods: {
       onKeyup($event) {

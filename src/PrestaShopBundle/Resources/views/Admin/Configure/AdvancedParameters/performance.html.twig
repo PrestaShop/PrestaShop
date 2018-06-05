@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -67,10 +67,13 @@
                                 {{ form_errors(smartyForm.clear_cache) }}
                                 {{ form_widget(smartyForm.clear_cache) }}
                             </div>
+                            {{ form_rest(smartyForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -99,10 +102,13 @@
                                 {{ form_errors(debugModeForm.debug_mode) }}
                                 {{ form_widget(debugModeForm.debug_mode) }}
                             </div>
+                            {{ form_rest(debugModeForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,10 +147,13 @@
                                 {{ form_errors(optionalFeaturesForm.customer_groups) }}
                                 {{ form_widget(optionalFeaturesForm.customer_groups) }}
                             </div>
+                            {{ form_rest(optionalFeaturesForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,10 +185,13 @@
                                 {{ form_errors(combineCompressCacheForm.apache_optimization) }}
                                 {{ form_widget(combineCompressCacheForm.apache_optimization) }}
                             </div>
+                            {{ form_rest(combineCompressCacheForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -213,10 +225,13 @@
                                 {{ form_errors(mediaServersForm.media_server_three) }}
                                 {{ form_widget(mediaServersForm.media_server_three) }}
                             </div>
+                            {{ form_rest(mediaServersForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -240,11 +255,14 @@
                                 {{ form_errors(cachingForm.caching_system) }}
                                 {{ form_widget(cachingForm.caching_system) }}
                             </div>
+                            {{ form_rest(cachingForm) }}
                             {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>

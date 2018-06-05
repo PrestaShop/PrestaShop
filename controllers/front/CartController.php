@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -136,20 +136,25 @@ class CartControllerCore extends FrontController
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
                 ->filter($presentedCart['products']);
 
-            $this->ajaxDie(Tools::jsonEncode([
+            $this->ajaxRender(Tools::jsonEncode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
+                'id_customization' => $this->customization_id,
                 'quantity' => $productQuantity,
                 'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
+
+            return;
         } else {
-            $this->ajaxDie(Tools::jsonEncode([
+            $this->ajaxRender(Tools::jsonEncode([
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
             ]));
+
+            return;
         }
     }
 
@@ -162,7 +167,7 @@ class CartControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode([
+        $this->ajaxRender(Tools::jsonEncode([
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
             'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
@@ -170,11 +175,27 @@ class CartControllerCore extends FrontController
             'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
         ]));
+
+        return;
     }
 
+    /**
+     * @deprecated 1.7.3.1 the product link is now accessible
+     *                     in #quantity_wanted[data-url-update]
+     */
     public function displayAjaxProductRefresh()
     {
         if ($this->id_product) {
+            $idProductAttribute = 0;
+            $groups = Tools::getValue('group');
+
+            if (!empty($groups)) {
+                $idProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
+                    $this->id_product,
+                    $groups,
+                    true
+                );
+            }
             $url = $this->context->link->getProductLink(
                 $this->id_product,
                 null,
@@ -182,7 +203,7 @@ class CartControllerCore extends FrontController
                 null,
                 $this->context->language->id,
                 null,
-                (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'), true),
+                $idProductAttribute,
                 false,
                 false,
                 true,
@@ -196,10 +217,12 @@ class CartControllerCore extends FrontController
         }
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode([
+        $this->ajaxRender(Tools::jsonEncode([
             'success' => true,
             'productUrl' => $url
         ]));
+
+        return;
     }
 
     public function postProcess()

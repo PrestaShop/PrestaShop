@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -171,13 +171,11 @@ class SupplierCore extends ObjectModel
                 $counts[(int) $result['id_supplier']] = (int) $result['nb_products'];
             }
 
-            if (count($counts) && is_array($suppliers)) {
-                foreach ($suppliers as $key => $supplier) {
-                    if (isset($counts[(int) $supplier['id_supplier']])) {
-                        $suppliers[$key]['nb_products'] = $counts[(int) $supplier['id_supplier']];
-                    } else {
-                        $suppliers[$key]['nb_products'] = 0;
-                    }
+            foreach ($suppliers as $key => $supplier) {
+                if (array_key_exists((int) $supplier['id_supplier'], $counts)) {
+                    $suppliers[$key]['nb_products'] = $counts[(int) $supplier['id_supplier']];
+                } else {
+                    $suppliers[$key]['nb_products'] = 0;
                 }
             }
         }

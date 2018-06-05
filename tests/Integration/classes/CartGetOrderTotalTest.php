@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,14 +20,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\classes;
+namespace Tests\Integration\classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
 use Exception;
 use Address;
@@ -40,7 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
-use PrestaShopBundle\Tests\Utils\Database;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use Product;
 use Tools;
 use Tax;

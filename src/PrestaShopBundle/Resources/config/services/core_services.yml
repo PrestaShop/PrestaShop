@@ -1,0 +1,5 @@
+imports:
+    - { resource: core/import.yml }
+    - { resource: core/configuration.yml }
+    - { resource: core/search.yml }
+    - { resource: core/addon.yml }

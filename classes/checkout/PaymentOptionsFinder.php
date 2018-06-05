@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,44 +31,39 @@ use PrestaShopBundle\Service\Hook\HookFinder;
 
 class PaymentOptionsFinderCore extends HookFinder
 {
+    /**
+     * Collects available payment options from three different hooks
+     * 
+     * @return array An array of available payment options
+     * 
+     * @see HookFinder::find()
+     */
     public function find() //getPaymentOptions()
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API
         $this->hookName = 'displayPaymentEU';
         $rawDisplayPaymentEUOptions = parent::find();
-
-        if (!is_array($rawDisplayPaymentEUOptions)) {
-            $rawDisplayPaymentEUOptions = array();
-        }
-
-        $displayPaymentEUOptions = array_map(
+        $paymentOptions = array_map(
             array('PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'),
             $rawDisplayPaymentEUOptions
         );
 
-        // Payment options coming from regular Advanced API
+        // Advanced payment options coming from regular Advanced API
         $this->hookName = 'advancedPaymentOptions';
-        $advancedPaymentOptions = parent::find();
-        if (!is_array($advancedPaymentOptions)) {
-            $advancedPaymentOptions = array();
-        }
+        $paymentOptions = array_merge($paymentOptions, parent::find());
 
         // Payment options coming from regular Advanced API
         $this->hookName = 'paymentOptions';
         $this->expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Payment\PaymentOption');
-        $newOption = parent::find();
-        if (!is_array($newOption)) {
-            $newOption = array();
+        $paymentOptions = array_merge($paymentOptions, parent::find());
+        
+        // Safety check
+        foreach ($paymentOptions as $moduleName => $paymentOption) {	
+            if (!is_array($paymentOption)) {	
+                unset($paymentOptions[$moduleName]);	
+            }	
         }
-
-        $paymentOptions = array_merge($displayPaymentEUOptions, $advancedPaymentOptions, $newOption);
-
-        foreach ($paymentOptions as $paymentOptionKey => $paymentOption) {
-            if (!is_array($paymentOption)) {
-                unset($paymentOptions[$paymentOptionKey]);
-            }
-        }
-
+        
         return $paymentOptions;
     }
 

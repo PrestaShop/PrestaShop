@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -159,16 +159,16 @@ class AdminPreferencesControllerCore extends AdminController
                         array(
                             'name' => $this->trans('Round on each item', array(), 'Admin.Shopparameters.Feature'),
                             'id' => Order::ROUND_ITEM
-                            ),
+                        ),
                         array(
                             'name' => $this->trans('Round on each line', array(), 'Admin.Shopparameters.Feature'),
                             'id' => Order::ROUND_LINE
-                            ),
+                        ),
                         array(
                             'name' => $this->trans('Round on the total', array(), 'Admin.Shopparameters.Feature'),
                             'id' => Order::ROUND_TOTAL
-                            ),
                         ),
+                    ),
                     'identifier' => 'id'
                 ),
                 'PS_PRICE_DISPLAY_PRECISION' => array(
@@ -246,7 +246,9 @@ class AdminPreferencesControllerCore extends AdminController
         Configuration::updateValue('PS_MULTISHOP_FEATURE_ACTIVE', $value);
 
         $tab = Tab::getInstanceFromClassName('AdminShopGroup');
-        $tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-        $tab->update();
+        if (Validate::isLoadedObject($tab)) {
+            $tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+            $tab->update();
+        }
     }
 }

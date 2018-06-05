@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -460,12 +460,12 @@ class ReleaseCreator
      */
     protected function createAndRenameFolders()
     {
-        if (!file_exists($this->tempProjectPath . '/app/cache/')) {
-            mkdir($this->tempProjectPath . '/app/cache', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/var/cache/')) {
+            mkdir($this->tempProjectPath . '/var/cache', 0777, true);
         }
 
-        if (!file_exists($this->tempProjectPath . '/app/logs/')) {
-            mkdir($this->tempProjectPath . '/app/logs', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/var/logs/')) {
+            mkdir($this->tempProjectPath . '/var/logs', 0777, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
         $basePath = $this->tempProjectPath;

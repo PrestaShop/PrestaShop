@@ -1,6 +1,6 @@
 module.exports = {
   productPage: {
-    first_product: '(//*[@id="content"]//h1[@itemprop="name"])[1]',
+    first_product: '(//*[@id="content"]//h3[@itemprop="name"])[1]',
     first_product_size: '//*[@id="group_1"]',
     first_product_quantity: '//*[@id="quantity_wanted"]',
     first_product_color: '//*[@id="group_2"]/li[2]/label/input',
@@ -20,9 +20,13 @@ module.exports = {
     pagination_previous: '//*[@id="js-product-list"]//a[contains(@class, "previous")]',
     current_page: '//*[@id="js-product-list"]//ul[contains(@class, "page-list")]/li[@class="current"]/a',
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
-    quick_view_add_to_cart:'//*[@id="add-to-cart-or-refresh"]//button[contains(@data-button-action, "add-to-cart")]',
+    quick_view_add_to_cart: '//*[@id="add-to-cart-or-refresh"]//button[contains(@data-button-action, "add-to-cart")]',
     //Get the number of products in front office after clicking on "SEE ALL PRODUCTS" link
     products_number: '//*[@id="js-product-list-top"]//p',
+    offline_warning_message: '//div[contains(@class, "alert-warning")]//p',
     product_discounts_table: '//*[@id="add-to-cart-or-refresh"]//tbody/tr[%R]/td[%D]',
+    product_summary: '(//*[@itemprop="description"]//p)[1]',
+    product_description: '//*[@id="description"]',
+    product_detail_tab: '//*[@role="tablist"]//li[2]'
   }
 };

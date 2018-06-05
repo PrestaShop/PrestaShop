@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 class CombinationController extends FrameworkBundleAdminController
@@ -47,7 +48,7 @@ class CombinationController extends FrameworkBundleAdminController
         foreach ($combinations as $combinationId => $combination) {
             $forms[] = $formFactory->createNamed(
                 "combination_$combinationId",
-                'PrestaShopBundle\Form\Admin\Product\ProductCombination',
+                ProductCombination::class,
                 $combination
             )->createView();
         }
@@ -72,22 +73,22 @@ class CombinationController extends FrameworkBundleAdminController
         $response = new JsonResponse();
 
         //get product
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct((int)$idProduct);
 
         //get combinations
         $modelMapper = new ProductAdminModelAdapter(
             $product,
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
-            $this->container->get('prestashop.adapter.data_provider.product'),
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context'),
-            $this->container->get('prestashop.adapter.data_provider.tax')
+            $this->get('prestashop.adapter.legacy.context'),
+            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get('prestashop.adapter.tools'),
+            $this->get('prestashop.adapter.data_provider.product'),
+            $this->get('prestashop.adapter.data_provider.supplier'),
+            $this->get('prestashop.adapter.data_provider.warehouse'),
+            $this->get('prestashop.adapter.data_provider.feature'),
+            $this->get('prestashop.adapter.data_provider.pack'),
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
 
         $combinations = $modelMapper->getAttributesResume();

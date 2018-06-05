@@ -69,17 +69,34 @@ ul.category-tree {
   padding: 0.625rem;
 
   .categories-tree-actions {
-    display: inline-block;
-    margin-right: 0.9375rem;
+    border-bottom: .063rem solid $gray-light;
+    margin-bottom: .625rem;
+    white-space: nowrap; // prevent buttons from collapsing
 
-    &:hover {
-      text-decoration: none;
-    }
+    > a {
+      display: inline-block;
 
-    i.material-icons {
-      font-size: 1.25rem;
-      vertical-align: bottom;
+      margin-bottom: .625rem;
+
+      + a {
+        margin-left: 0.9375rem;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      i.material-icons {
+        font-size: 1.25rem;
+        vertical-align: bottom;
+      }
+      color: $gray-medium;
     }
-    color: $gray-medium;
+  }
+
+  #choice_tree {
+    .category-tree {
+      margin-bottom: 0;
+    }
   }
 }

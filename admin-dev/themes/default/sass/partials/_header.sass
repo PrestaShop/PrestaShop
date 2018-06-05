@@ -1,5 +1,3 @@
-$header-height: 36px
-
 .material-icons
 	line-height: inherit
 
@@ -9,7 +7,7 @@ $header-height: 36px
 	@extend .navbar
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
-	height: $header-height
+	height: $size-header-height
 	@media (max-width: $screen-sm)
 		height: auto
 	.navbar-header
@@ -137,15 +135,19 @@ $header-height: 36px
 	.maintenance-mode + .debug-mode
 		margin-left: 0
 #employee_infos
-	width: $header-height
+	width: $size-header-height
 	box-sizing: border-box
 	.employee_name
 		position: relative
-		height: $header-height
+		height: $size-header-height
 	.employee_avatar_small
 		.img-thumbnail
-			@include border-radius($header-height)
-		@include avatar($header-height, 0px)
+			@include border-radius($size-header-height)
+			width: 26px
+			height: 26px
+			margin-top: 5px
+			border: 1px solid #6c868e
+		@include avatar($size-header-height, 0px)
 		position: absolute
 		top: 0
 		@include right(0)
@@ -233,16 +235,16 @@ $header-height: 36px
 	@include rtl
 		@extend .navbar-right
 	@extend .hidden-sm
-	height:     $header-height
+	height:     $size-header-height
 	box-sizing: border-box
 	margin: 0 10px !important
 	li
 		> a
 			&.notifs
 				display:        block
-				height:         $header-height
-				min-width:      $header-height
-				line-height:    $header-height
+				height:         $size-header-height
+				min-width:      $size-header-height
+				line-height:    $size-header-height
 				box-sizing:     border-box
 				padding:        0 5px !important
 				vertical-align: middle

@@ -1,27 +1,38 @@
 .page-head
 	width: 100%
 	height: 100px
-	&.with-tabs
-		height: 130px
-	padding: 0
 	margin: 0
 	position: fixed
-	top: 36px
+	top: $size-header-height
 	z-index: 499
 	background-color: white
 	border-bottom: #DFDFDF 1px solid
 	color: #363A41
-	@include left(0)
-	h2.page-title
-		@include float(left)
+	padding: 0 0 0 210px
+
+	@media (max-width: 1024px)
+		padding: 0
+
+	transition: padding-left .5s ease-out
+	left: 0
+
+	&.with-tabs
+		height: 140px
+
+	> .wrapper
+	  padding-left: 15px
+
+	.page-title
+		float: left
+		clear: left
 		position: relative
-		margin: 0
+		margin: 0 0 .9375rem
 		font: 20pt $font-family-sans-serif
 		color: #363A41
 		white-space: nowrap
-		@include padding(26px, 0, 0, ($widthSidebarNav+20px))
-		@media (max-width: $screen-tablet)
-			@include padding(26px, 0, 0, 70px)
+		padding: .3125rem 0
+		line-height: 1.2
+
 		a
 			border-bottom: dotted 1px white
 			&:hover
@@ -42,7 +53,6 @@
 		position: absolute
 		background-color: transparent!important
 		@include right(0)
-		@media (max-width: $screen-sm)
 		#toolbar-nav
 			border: none
 		.btn-toolbar
@@ -76,23 +86,18 @@
 				@media (max-width: $screen-sm)
 					display: block
 	ul.page-breadcrumb
-		position: absolute
 		list-style: none
 		margin: 0
-		padding: 0
-		top: 4px
-		height: 20px
-		line-height: 20px
+		padding: .3125rem 0
+		line-height: 1.5
 		color: black
 		font-size: 12px
 		color: rgba(black,0.5)
 		background: transparent !important
 		border: none !important
 		white-space: nowrap
+		float: left
 		@include border-radius(0)
-		@include left($widthSidebarNav+20px)
-		@media (max-width: $screen-tablet)
-			@include left(70px)
 		li
 			i
 				font-size: 10px
@@ -111,27 +116,33 @@
 				&:hover
 					color: #363A41
 	.page-head-tabs
-		display:  inline-block
-		position: absolute
-		bottom:   0
-		left:     220px
-		a
-			display:        inline-block
-			float:          left
-			height:         40px
-			line-height:    40px
-			padding:        0 10px
-			vertical-align: middle
-			color:          #363a41
-			box-sizing:     border-box
-			font-size:      16px
-			&.current
-				border-bottom: 3px solid #3ed2f0
+		clear: left
+		background-color: #fff
+
+		ul
+			border-top: 1px solid #dfdfdf
+			border-bottom: 1px solid #dfdfdf
+			font-weight: 600
+
+		li
+			display: inline-block
+
+			a
+				padding: .9375rem 1.25rem
+				vertical-align: middle
+				color: #6c868e
+				box-sizing: border-box
+				font-size: .875rem
+				line-height: 1.5
+
+				&.current
+					border-bottom: 3px solid #3ed2f0
+					background-color: #f4f9fb
+					color: #363a41
 
 .page-sidebar-closed
 	.page-head
-		.page-head-tabs
-			left: 60px
+		padding-left: 4.0625rem
 
 .page-header-toolbar-back
 	border: none!important

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -242,7 +242,8 @@ class ProductPresenter
 
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
-            && $product['quantity'] <= 0
+            && ($product['quantity'] <= 0
+            || $product['quantity'] - $this->getQuantityWanted() < 0)
         ) {
             $shouldEnable = false;
         }
@@ -258,6 +259,13 @@ class ProductPresenter
         );
     }
 
+    /**
+     * @inheritdoc
+     * @param array $product
+     * @param Language $language
+     * @param bool $canonical
+     * @return string
+     */
     private function getProductURL(
         array $product,
         Language $language,
@@ -279,6 +287,14 @@ class ProductPresenter
             false,
             true
         );
+    }
+
+    /**
+     * @return int Quantity of product requested by the customer
+     */
+    private function getQuantityWanted()
+    {
+        return (int) Tools::getValue('quantity_wanted', 1);
     }
 
     private function addMainVariantsInformation(
@@ -441,7 +457,7 @@ class ProductPresenter
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
         $presentedProduct['show_availability'] = $show_availability;
-        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', 1);
+        $product['quantity_wanted'] = $this->getQuantityWanted();
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;
@@ -687,6 +703,16 @@ class ProductPresenter
         // if product has features
         if (isset($presentedProduct['features'])) {
             $presentedProduct['grouped_features'] = $this->buildGroupedFeatures($presentedProduct['features']);
+        }
+
+        //microdata availability
+        $presentedProduct['seo_availability'] = 'https://schema.org/';
+        if ($product['quantity'] > 0) {
+            $presentedProduct['seo_availability'] .= 'InStock';
+        } elseif ($product['quantity'] <= 0 && $product['allow_oosp']) {
+            $presentedProduct['seo_availability'] .= 'PreOrder';
+        } else {
+            $presentedProduct['seo_availability'] .= 'OutOfStock';
         }
 
         return $presentedProduct;

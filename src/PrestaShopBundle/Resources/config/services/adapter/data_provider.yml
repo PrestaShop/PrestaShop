@@ -1,0 +1,90 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.admin.data_provider.addons:
+        class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+        decorates: prestashop.core.admin.data_provider.addons_interface
+        arguments:
+            - '@prestashop.addons.client_api'
+            - '@prestashop.module.zip.manager'
+        properties:
+            cacheDir: "%kernel.cache_dir%"
+        public: false
+
+    prestashop.adapter.admin.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+        arguments:
+             - "@translator"
+             - "@logger"
+             - "@prestashop.core.admin.data_provider.addons_interface"
+             - "@prestashop.categories_provider"
+             - "@prestashop.adapter.data_provider.module"
+             - "@doctrine.cache.provider"
+             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+        calls:
+            - [ setRouter, ['@router']]
+        decorates: prestashop.core.admin.data_provider.module_interface
+        public: false
+
+    prestashop.adapter.data_provider.supplier:
+        class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
+
+    prestashop.adapter.data_provider.warehouse:
+        class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
+
+    prestashop.adapter.data_provider.category:
+        class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
+        arguments: ["@=service('prestashop.adapter.legacy.context')"]
+
+    prestashop.adapter.data_provider.country:
+        class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
+
+    prestashop.adapter.data_provider.currency:
+        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
+
+    prestashop.adapter.data_provider.group:
+        class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
+
+    prestashop.adapter.data_provider.tax:
+        class: PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider
+
+    prestashop.adapter.data_provider.manufacturer:
+        class: PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider
+
+    prestashop.adapter.data_provider.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
+
+    prestashop.adapter.data_provider.attachment:
+        class: PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider
+
+    prestashop.adapter.data_provider.feature:
+        class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
+
+    prestashop.adapter.data_provider.carrier:
+        class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
+
+    prestashop.adapter.data_provider.attribute:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
+
+    prestashop.adapter.data_provider.customer:
+        class: PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider
+
+    prestashop.adapter.data_provider.combination:
+        class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
+
+    prestashop.adapter.data_provider.cms:
+        class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
+
+    prestashop.adapter.data_provider.pack:
+        class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
+
+    prestashop.adapter.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+        arguments: ["@prestashop.adapter.legacy.logger", "@translator", "@doctrine.orm.entity_manager"]
+        calls:
+                - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
+
+    prestashop.categories_provider:
+        class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
+        arguments: ['@prestashop.addons.client_api', '@logger']

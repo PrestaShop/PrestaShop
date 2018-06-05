@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -179,7 +179,6 @@ abstract class QueryParamsCollection
      */
     protected function parsePaginationParams(array $queryParams)
     {
-
         if (!array_key_exists('page_index', $queryParams)) {
             $queryParams['page_index'] = $this->getDefaultPageIndex();
         }
@@ -213,7 +212,8 @@ abstract class QueryParamsCollection
     /**
      * @return array
      */
-    protected function getValidPaginationParams() {
+    protected function getValidPaginationParams()
+    {
         return array(
             'page_size',
             'page_index',
@@ -367,7 +367,7 @@ abstract class QueryParamsCollection
             return ':' . $column . '_' . $index;
         }, array_keys($value));
 
-        $filters[] = sprintf('AND {%s} IN (%s)', $column,  implode(',', $placeholders));
+        $filters[] = sprintf('AND {%s} IN (%s)', $column, implode(',', $placeholders));
 
         return $filters;
     }
@@ -469,7 +469,8 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlCategoryFilter(array $filters)
     {
-        $filters[] = sprintf('AND FIND_IN_SET({%s}, %s)', 'category_id', ':categories_ids');
+        $filters[] = 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))';
 
         return $filters;
     }
@@ -578,10 +579,14 @@ abstract class QueryParamsCollection
 
         $attributesKeys = array_keys($attributes);
         array_walk($attributesKeys, function ($key) use (&$filters) {
-            $filters[] = sprintf(
-                'AND FIND_IN_SET(:attribute_%d, {attributes})',
-                $key
-            );
+            $filters[] = sprintf('AND EXISTS(SELECT 1
+                    FROM {table_prefix}product_attribute_combination pac
+                        LEFT JOIN {table_prefix}attribute a ON (
+                            pac.id_attribute = a.id_attribute
+                        )                   
+                    WHERE pac.id_product_attribute=pa.id_product_attribute 
+                    AND a.id_attribute=:attribute_id_%d
+                    AND a.id_attribute_group=:attribute_group_id_%d)', $key, $key);
         });
 
         return $filters;
@@ -599,7 +604,9 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            $sqlParams['attribute_' . $index] = strval($value);
+            list($idAttributeGroup, $idAttribute) = explode(':', $value);
+            $sqlParams['attribute_id_' . $index] = strval($idAttribute);
+            $sqlParams['attribute_group_id_' . $index] = strval($idAttributeGroup);
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
@@ -619,10 +626,22 @@ abstract class QueryParamsCollection
 
         $attributesKeys = array_keys($attributes);
         array_walk($attributesKeys, function ($key) use (&$filters) {
-            $filters[] = sprintf(
-                'AND FIND_IN_SET(:feature_%d, {features})',
-                $key
-            );
+            $filters[] = sprintf('AND EXISTS(SELECT 1
+                    FROM {table_prefix}feature_product fp
+                        LEFT JOIN  {table_prefix}feature f ON (
+                            fp.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_shop fs ON (
+                            fs.id_shop = :shop_id AND
+                            fs.id_feature = f.id_feature
+                        )
+                        LEFT JOIN {table_prefix}feature_value fv ON (
+                            f.id_feature = fv.id_feature AND
+                            fp.id_feature_value = fv.id_feature_value
+                        )
+                    WHERE fv.custom = 0 AND fp.id_product=p.id_product
+                    AND fp.id_feature=:feature_id_%d 
+                    AND fp.id_feature_value=:feature_value_id_%d)', $key, $key);
         });
 
         return $filters;
@@ -640,7 +659,9 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            $sqlParams['feature_' . $index] = strval($value);
+            list($idFeature, $idFeatureValue) = explode(':', $value);
+            $sqlParams['feature_id_' . $index] = strval($idFeature);
+            $sqlParams['feature_value_id_' . $index] = strval($idFeatureValue);
         }, range(0, count($value) - 1), $value);
 
         return $sqlParams;
@@ -657,6 +678,10 @@ abstract class QueryParamsCollection
             return $filters;
         }
 
+        if (!is_array($this->queryParams['filter']['keywords'])) {
+            $this->queryParams['filter']['keywords'] = (array)$this->queryParams['filter']['keywords'];
+        }
+
         $parts = array_map(function ($index) {
             return sprintf(
                 'AND (' .
@@ -665,7 +690,11 @@ abstract class QueryParamsCollection
                 '{product_name} LIKE :keyword_%d OR ' .
                 '{combination_name} LIKE :keyword_%d' .
                 ')',
-                $index, $index, $index, $index);
+                $index,
+                $index,
+                $index,
+                $index
+            );
         }, range(0, count($this->queryParams['filter']['keywords']) - 1));
 
         $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);
@@ -688,10 +717,10 @@ abstract class QueryParamsCollection
 
     protected function isTimestamp($timestamp)
     {
-        $check = (is_int($timestamp) OR is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
+        $check = (is_int($timestamp) || is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
 
         return  ($check === $timestamp)
-            AND ( (int) $timestamp <=  PHP_INT_MAX)
-            AND ( (int) $timestamp >= ~PHP_INT_MAX);
+            && ((int) $timestamp <=  PHP_INT_MAX)
+            && ((int) $timestamp >= ~PHP_INT_MAX);
     }
 }

@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -111,10 +111,10 @@
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
 			<div class="navbar-header">
+				<i class="material-icons js-mobile-menu">menu</i>
 				<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
 					<i class="icon-reorder"></i>
 				</button>
-
 				{* Logo *}
 				<a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}">
 				</a>
@@ -220,7 +220,7 @@
 					<li id="employee_infos" class="dropdown hidden-xs">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
-                <img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
+								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="26" height="26" />
 							</span>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
@@ -236,7 +236,7 @@
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
+							<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="material-icons">power_settings_new</i> <span>{l s='Sign out' d='Admin.Navigation.Header'}</span></a></li>
 						</ul>
 					</li>
 				</ul>
@@ -361,10 +361,9 @@
 			</div>
 		</nav>{* end header_infos*}
 	</header>
+    {include file='nav.tpl'}
 
 	<div id="main">
-		{include file='nav.tpl'}
-
 		<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}{if !isset($page_header_toolbar)} no-header-toolbar{/if} {if $current_tab_level == 3}with-tabs{/if}">
 			{if isset($page_header_toolbar)}{$page_header_toolbar}{/if}
 			{if isset($modal_module_list)}{$modal_module_list}{/if}

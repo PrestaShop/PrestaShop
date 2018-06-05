@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Employee;
+use RuntimeException;
 use Symfony\Component\Process\Exception\LogicException;
 use Context;
 use Language;
 use AdminController;
 use Link;
+use Tab;
 use Tools as ToolsLegacy;
 use Dispatcher;
 use AdminLegacyLayoutControllerCore;
@@ -227,5 +230,26 @@ class LegacyContext
         }
 
         return new Language;
+    }
+
+    /**
+     * Get employee's default tab name
+     *
+     * @return string           Default tab name for employee
+     *
+     * @throws RuntimeException Throws exception if employee does not exist in context
+     */
+    public function getDefaultEmployeeTab()
+    {
+        $employee = $this->getContext()->employee;
+
+        if (!$employee instanceof Employee) {
+            throw new RuntimeException('Cannot retrieve default employee tab. Employee does not exist in context!');
+        }
+
+        $idTab = $idTab = $employee->default_tab;
+        $tab = new Tab($idTab);
+
+        return $tab->class_name;
     }
 }

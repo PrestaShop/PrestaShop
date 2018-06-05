@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 var PerformancePageUI = {
     displaySmartyCache: function() {
         var CACHE_ENABLED = '1';
-        var smartyCacheSelected = document.getElementById('form_smarty_cache');
+        var smartyCacheSelected = document.querySelector('input[name="form[smarty][cache]"]:checked');
         var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
         if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
           for(var i = 0; i < smartyCacheOptions.length; i++) {
@@ -41,7 +41,7 @@ var PerformancePageUI = {
     },
     displayCacheSystems: function() {
         var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.getElementById('form_caching_use_cache');
+        var cacheEnabledInput = document.querySelector('input[name="form[caching][use_cache]"]:checked');
         var cachingElements = document.getElementsByClassName('memcache');
 
         if(cacheEnabledInput.value === CACHE_ENABLED) {
@@ -57,7 +57,7 @@ var PerformancePageUI = {
     },
     displayMemcacheServers: function() {
         var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.getElementById('form_caching_use_cache');
+        var cacheEnabledInput = document.querySelector('input[name="form[caching][use_cache]"]:checked');
         var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
         var memcacheServersListBlock = document.getElementById('servers-list');
         var newServerBtn = document.getElementById('new-server-btn');
@@ -78,10 +78,6 @@ var PerformancePageUI = {
 /**
  * Animations on form values.
  */
-document.getElementById('form_caching_use_cache').addEventListener('change', function() {
-    PerformancePageUI.displayCacheSystems();
-});
-
 window.addEventListener('load', function() {
     PerformancePageUI.displaySmartyCache();
     PerformancePageUI.displayCacheSystems();
@@ -92,13 +88,17 @@ var cacheSystemInputs = document.querySelectorAll('input[type=radio]');
 var length = cacheSystemInputs.length;
 
 while(length--) {
-    cacheSystemInputs[length].addEventListener('change', function() {
-        PerformancePageUI.displayMemcacheServers();
+    cacheSystemInputs[length].addEventListener('change', function(e) {
+        var name = e.target.getAttribute('name');
+        if ('form[caching][use_cache]' === name) {
+            return PerformancePageUI.displayCacheSystems();
+        }
+        if ('form[smarty][cache]' === name) {
+            return PerformancePageUI.displaySmartyCache();
+        }
+        if ('form[caching][caching_system]' === name) {
+            return PerformancePageUI.displayMemcacheServers();
+        }
     });
 }
 
-var smartyCacheOption = document.getElementById('form_smarty_cache');
-
-smartyCacheOption.addEventListener('change', function() {
-  PerformancePageUI.displaySmartyCache();
-});

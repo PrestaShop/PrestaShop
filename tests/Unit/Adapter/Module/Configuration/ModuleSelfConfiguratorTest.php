@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace PrestaShop\PrestaShop\Tests\Unit\Adapter\Module\Configuration;
+namespace Tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
@@ -32,7 +31,7 @@ use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
@@ -101,7 +100,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Module installed
         $name = 'ganalytics';
         $filepath = $this->defaultDir.'/moduleConfExample.yml';
-        $this->assertEmpty($this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate());
+        $result = $this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate();
+        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: '.var_export($result, true));
     }
 
     public function testModuleInstallationRequirementFail()
@@ -311,12 +311,12 @@ class ConfigurationMock extends Configuration
         return $this;
     }
 
-    public function get($key)
+    public function get($key, $default = null)
     {
-        return isset($this->configurationData[$key])?$this->configurationData[$key]:null;
+        return isset($this->configurationData[$key])?$this->configurationData[$key]:$default;
     }
 
-    public function delete($key)
+    public function remove($key)
     {
         unset($this->configurationData[$key]);
         return $this;

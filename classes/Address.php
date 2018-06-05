@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -291,7 +291,7 @@ class AddressCore extends ObjectModel
 
         $cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
         if (!Cache::isStored($cache_id)) {
-            $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
+            $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT c.`active`
 			FROM `'._DB_PREFIX_.'address` a
 			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`

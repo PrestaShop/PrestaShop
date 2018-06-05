@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Adding\CartRule;
+namespace Tests\Unit\Core\Cart\Adding\CartRule;
 
 use Configuration;
 use Product;
 use Pack;
 use StockAvailable;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
+use Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddPackTest extends AbstractCartTest
 {
@@ -54,35 +54,53 @@ class AddPackTest extends AbstractCartTest
      */
     protected $productInPack;
 
+    protected $oldConfig = [
+        'PS_PACK_STOCK_TYPE' => null,
+    ];
+
     /**
      * Populate pack and product in pack properties from the test database
      */
     public function setUp()
     {
         parent::setUp();
-        $this->pack = $this->getProductFromFixtureId(self::ID_PACK_FIXTURE);
+        // store previous config values
+        foreach (array_keys($this->oldConfig) as $k) {
+            $this->oldConfig[$k] = Configuration::get($k);
+        }
+        $this->pack          = $this->getProductFromFixtureId(self::ID_PACK_FIXTURE);
         $this->productInPack = $this->getProductFromFixtureId(self::ID_PRODUCT_IN_PACK_FIXTURE);
+    }
+
+    public function tearDown()
+    {
+        // restore previous config values
+        foreach (array_keys($this->oldConfig) as $k) {
+            Configuration::set($k, $this->oldConfig[$k]);
+        }
+
+        parent::tearDown();
     }
 
     public function testProductStockNumberMatch()
     {
         // Pack type decrement pack only
         Configuration::set('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_ONLY);
-        $nbPack = Product::getQuantity($this->pack->id);
+        $nbPack    = Product::getQuantity($this->pack->id);
         $nbProduct = Product::getQuantity($this->productInPack->id);
         $this->assertEquals(10, $nbPack);
         $this->assertEquals(50, $nbProduct);
 
         // Pack type decrement products only
         Configuration::set('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PRODUCTS_ONLY);
-        $nbPack = Product::getQuantity($this->pack->id);
+        $nbPack    = Product::getQuantity($this->pack->id);
         $nbProduct = Product::getQuantity($this->productInPack->id);
         $this->assertEquals(5, $nbPack);
         $this->assertEquals(50, $nbProduct);
 
         // Pack type decrement pack and products
         Configuration::set('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_BOTH);
-        $nbPack = Product::getQuantity($this->pack->id);
+        $nbPack    = Product::getQuantity($this->pack->id);
         $nbProduct = Product::getQuantity($this->productInPack->id);
         $this->assertEquals(5, $nbPack);
         $this->assertEquals(50, $nbProduct);
@@ -136,6 +154,7 @@ class AddPackTest extends AbstractCartTest
      * @param int $productDeepQuantity
      * @param int $packLeftExpected
      * @param int $productLeftExpected
+     *
      * @return $this
      */
     private function calculProductsQuantitiesIncart(
@@ -149,7 +168,7 @@ class AddPackTest extends AbstractCartTest
         $this->assertTrue($this->cart->updateQty(2, $this->pack->id));
         $this->assertTrue($this->cart->updateQty(30, $this->productInPack->id));
 
-        $nbPackInCart = $this->cart->getProductQuantity($this->pack->id);
+        $nbPackInCart    = $this->cart->getProductQuantity($this->pack->id);
         $nbProductInCart = $this->cart->getProductQuantity($this->productInPack->id);
 
         $this->assertEquals($packQuantity, $nbPackInCart['quantity']);
@@ -161,12 +180,18 @@ class AddPackTest extends AbstractCartTest
         $this->assertCount(2, $cartProducts);
 
         foreach ($cartProducts as $cartProduct) {
-            $this->assertContains($cartProduct['id_product'], array($this->pack->id, $this->productInPack->id));
+            $this->assertContains($cartProduct['id_product'], [$this->pack->id, $this->productInPack->id]);
 
             if ($cartProduct['id_product'] == $this->pack->id) {
-                $this->assertEquals($packLeftExpected, Product::getQuantity($cartProduct['id_product'], null, null, $this->cart));
+                $this->assertEquals(
+                    $packLeftExpected,
+                    Product::getQuantity($cartProduct['id_product'], null, null, $this->cart)
+                );
             } else {
-                $this->assertEquals($productLeftExpected, Product::getQuantity($cartProduct['id_product'], null, null, $this->cart));
+                $this->assertEquals(
+                    $productLeftExpected,
+                    Product::getQuantity($cartProduct['id_product'], null, null, $this->cart)
+                );
             }
         }
         $this->resetCart();

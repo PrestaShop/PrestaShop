@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,7 +41,7 @@ function add_new_status_stock()
             (`id_tab`, `id_parent`, `position`, `module`, `class_name`, `active`, `hide_host_mode`, `icon`)
             VALUES (null, 9, 7, NULL, \'AdminStockManagement\', 1, 0, \'\')'
         );
-        $lastIdTab = (int)Db::getInstance()->insert_id();
+        $lastIdTab = (int)Db::getInstance()->Insert_ID();
 
         // ps_tab_lang
         foreach ($languages as $lang) {
@@ -102,7 +102,7 @@ function add_new_status_stock()
         );
 
         // ps_configuration
-        $lastInsertedId = Db::getInstance()->insert_id();
+        $lastInsertedId = Db::getInstance()->Insert_ID();
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'configuration` (`name`, `value`, `date_add`, `date_upd`)
             VALUES ("' . $d['conf'] . '", ' . (int)$lastInsertedId . ', NOW(), NOW())'

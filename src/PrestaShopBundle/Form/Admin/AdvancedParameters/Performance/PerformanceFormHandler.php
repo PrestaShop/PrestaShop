@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,25 +19,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-class PerformanceFormHandler implements FormHandlerInterface
+final class PerformanceFormHandler extends AbstractFormHandler
 {
     /**
-     * @var FormFactory
+     * @var FormFactoryInterface
      */
     private $formFactory;
 
@@ -47,48 +47,54 @@ class PerformanceFormHandler implements FormHandlerInterface
     private $combinationFeature;
 
     /**
-     * @var PerformanceFormDataProvider
+     * @var FormDataProviderInterface
      */
     private $formDataProvider;
 
     public function __construct(
-        FormFactory $formFactory,
-        PerformanceFormDataProvider $formDataProvider,
+        FormFactoryInterface $formFactory,
+        FormDataProviderInterface $formDataProvider,
         CombinationFeature $combinationFeature
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->combinationFeature = $combinationFeature;
         $this->formDataProvider = $formDataProvider;
     }
 
     /**
-     * @return \Symfony\Component\Form\FormInterface
+     * {@inheritdoc}
      */
     public function getForm()
     {
-        return $this->formFactory->createBuilder()
-            ->add('smarty', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType')
-            ->add('debug_mode', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType')
-            ->add('optional_features', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType', array(
+        $formBuilder = $this->formFactory->createBuilder()
+            ->add('smarty', SmartyType::class)
+            ->add('debug_mode', DebugModeType::class)
+            ->add('optional_features', OptionalFeaturesType::class, array(
                 'are_combinations_used' => $this->combinationFeature->isUsed()
             ))
-            ->add('ccc', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType')
-            ->add('media_servers', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType')
-            ->add('caching', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType')
-            ->add('add_memcache_server', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType')
+            ->add('ccc', CombineCompressCacheType::class)
+            ->add('media_servers', MediaServersType::class)
+            ->add('caching', CachingType::class)
+            ->add('add_memcache_server', MemcacheServerType::class)
             ->setData($this->formDataProvider->getData())
-            ->getForm()
         ;
+
+        $this->hookDispatcher->dispatchForParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
+
+        return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
     /**
-     * @param array $data
-     * @return array errors found if not empty
-     * @throws UndefinedOptionsException if data is invalid
+     * {@inheritdoc}
      */
     public function save(array $data)
     {
-        return $this->formDataProvider->setData($data);
+        $errors = $this->formDataProvider->setData($data);
+        $this->hookDispatcher->dispatchForParameters(
+            'actionPerformancePageFormSave',
+            ['errors' => &$errors, 'form_data' => &$data]
+        );
+
+        return $errors;
     }
 }

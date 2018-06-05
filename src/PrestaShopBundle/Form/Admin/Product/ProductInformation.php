@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,20 +19,27 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
+use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -62,8 +69,15 @@ class ProductInformation extends CommonAbstractType
      * @param object $featureDataProvider
      * @param object $manufacturerDataProvider
      */
-    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $featureDataProvider, $manufacturerDataProvider)
-    {
+    public function __construct(
+        $translator,
+        $legacyContext,
+        $router,
+        $categoryDataProvider,
+        $productDataProvider,
+        $featureDataProvider,
+        $manufacturerDataProvider
+    ) {
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->router = $router;
@@ -82,7 +96,8 @@ class ProductInformation extends CommonAbstractType
                 $root_category = null,
                 $id_lang = false,
                 $active = false
-            ), 'id_category'
+            ),
+            'id_category'
         );
 
         $this->nested_categories = $this->categoryDataProvider->getNestedCategories(
@@ -100,7 +115,8 @@ class ProductInformation extends CommonAbstractType
                 $n = false,
                 $all_group = false,
                 $group_by = true
-            ), 'id_manufacturer'
+            ),
+            'id_manufacturer'
         );
     }
 
@@ -113,7 +129,7 @@ class ProductInformation extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
-        $builder->add('type_product', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+        $builder->add('type_product', FormType\ChoiceType::class, array(
             'choices'  => array(
                 $this->translator->trans('Standard product', [], 'Admin.Catalog.Feature') => 0,
                 $this->translator->trans('Pack of products', [], 'Admin.Catalog.Feature') => 1,
@@ -122,11 +138,10 @@ class ProductInformation extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'label' =>  $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'required' => true,
         ))
-        ->add('inputPackItems', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType', array(
+        ->add('inputPackItems', TypeaheadProductPackCollectionType::class, array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
@@ -140,8 +155,8 @@ class ProductInformation extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Add products to your pack', [], 'Admin.Catalog.Feature'),
         ))
-        ->add('name', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+        ->add('name', TranslateType::class, array(
+            'type' => FormType\TextType::class,
             'options' => [
                 'constraints' => array(
                     new Assert\Regex(array(
@@ -150,33 +165,28 @@ class ProductInformation extends CommonAbstractType
                     )),
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3, 'max' => 128))
-                ), 'attr' => ['placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'), 'class' => 'edit js-edit']
+                ),
+                'attr' => [
+                    'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
+                    'class' => 'edit js-edit'
+                ]
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Name', [], 'Admin.Global')
         ))
-        ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-            'options' => [
-                'attr' => array(
-                    'class' => 'autoload_rte',
-                    'counter' => 21844
-                ),
-                'constraints' => array(
-                    new TinyMceMaxLength(array(
-                        'max' => 21844
-                    ))
-                ),
-                'required' => false
-            ],
+        ->add('description', TranslateType::class, array(
+            'type' => FormattedTextareaType::class,
+            'options' => array(
+                'required' => false,
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' =>  $this->translator->trans('Description', [], 'Admin.Global'),
             'required' => false
         ))
-        ->add('description_short', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType', // https://github.com/symfony/symfony/issues/5906
+        ->add('description_short', TranslateType::class, array(
+            'type' => FormType\TextareaType::class, // https://github.com/symfony/symfony/issues/5906
             'options' => [
                 'attr' => array(
                     'class' => 'autoload_rte',
@@ -197,15 +207,14 @@ class ProductInformation extends CommonAbstractType
         ))
 
         //FEATURES & ATTRIBUTES
-        ->add('features', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+        ->add('features', FormType\CollectionType::class, array(
             'entry_type' =>'PrestaShopBundle\Form\Admin\Feature\ProductFeature',
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
         ))
-        ->add('id_manufacturer', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+        ->add('id_manufacturer', FormType\ChoiceType::class, array(
             'choices' => $this->manufacturers,
-            'choices_as_values' => true,
             'required' => false,
             'attr' => array(
                 'data-toggle' => 'select2',
@@ -215,11 +224,11 @@ class ProductInformation extends CommonAbstractType
         ))
 
         //RIGHT COL
-        ->add('active', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+        ->add('active', FormType\CheckboxType::class, array(
             'label' => $this->translator->trans('Enabled', [], 'Admin.Global'),
             'required' => false,
         ))
-        ->add('price_shortcut', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+        ->add('price_shortcut', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
@@ -229,14 +238,14 @@ class ProductInformation extends CommonAbstractType
             ),
             'attr' => []
         ))
-        ->add('price_ttc_shortcut', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+        ->add('price_ttc_shortcut', FormType\MoneyType::class, array(
             'required' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'Admin.Catalog.Feature'),
             'mapped' => false,
             'currency' => $this->currency->iso_code,
         ));
         if ($is_stock_management) {
-            $builder->add('qty_0_shortcut', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+            $builder->add('qty_0_shortcut', FormType\NumberType::class, array(
                 'required' => false,
                 'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
                 'constraints' => array(
@@ -245,21 +254,20 @@ class ProductInformation extends CommonAbstractType
                 )
             ));
         }
-        $builder->add('categories', 'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType', array(
+        $builder->add('categories', ChoiceCategoriesTreeType::class, array(
             'label' => $this->translator->trans('Associated categories', [], 'Admin.Catalog.Feature'),
             'list' => $this->nested_categories,
             'valid_list' => $this->categories,
             'multiple' => true,
         ))
-        ->add('id_category_default', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+        ->add('id_category_default', FormType\ChoiceType::class, array(
             'choices' =>  $this->categories,
-            'choices_as_values' => true,
             'expanded' => true,
             'multiple' => false,
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'Admin.Catalog.Feature')
         ))
-        ->add('new_category', 'PrestaShopBundle\Form\Admin\Category\SimpleCategory', array(
+        ->add('new_category', SimpleCategory::class, array(
             'ajax' => true,
             'required' => false,
             'mapped' => false,
@@ -269,7 +277,7 @@ class ProductInformation extends CommonAbstractType
         ->add('ignore', null, [
             'mapped' => false
         ])
-        ->add('related_products', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
+        ->add('related_products', TypeaheadProductCollectionType::class, array(
             'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
@@ -291,7 +299,11 @@ class ProductInformation extends CommonAbstractType
             if ($data['type_product'] == 1) {
                 if (!isset($data['inputPackItems']) || empty($data['inputPackItems']['data'])) {
                     $form = $event->getForm();
-                    $error = $this->translator->trans('This pack is empty. You must add at least one product item.', [], 'Admin.Catalog.Notification');
+                    $error = $this->translator->trans(
+                        'This pack is empty. You must add at least one product item.',
+                        [],
+                        'Admin.Catalog.Notification'
+                    );
                     $form->get('inputPackItems')->addError(new FormError($error));
                 }
             }

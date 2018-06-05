@@ -24,10 +24,10 @@ scenario('Create, edit, check and delete "Cart Rule" in the Back Office', () => 
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
   for (let i = 0; i < cartRuleData.length; i++) {
-    commonScenarios.createCartRule(cartRuleData[i], 'code' + (i+1));
-    commonScenarios.checkCartRule(cartRuleData[i], 'code' + (i+1));
+    commonScenarios.createCartRule(cartRuleData[i], 'code' + (i + 1));
+    commonScenarios.checkCartRule(cartRuleData[i], 'code' + (i + 1));
     commonScenarios.editCartRule(cartRuleData[i]);
-    commonScenarios.checkCartRule(cartRuleData[i], 'code' + (i+1));
+    commonScenarios.checkCartRule(cartRuleData[i], 'code' + (i + 1));
     commonScenarios.deleteCartRule(cartRuleData[i].name);
   }
   scenario('Logout from the Back Office', client => {

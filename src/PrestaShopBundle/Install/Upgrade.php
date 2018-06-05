@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -641,11 +641,11 @@ namespace PrestaShopBundle\Install {
                 }
             }
 
-            if (file_exists(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php')) {
+                unlink(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php')) {
+                unlink(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php');
             }
 
             // Clear XML files
@@ -786,7 +786,7 @@ namespace PrestaShopBundle\Install {
             }
 
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
-                $url_rewrite = (bool)$this->db->getvalue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
+                $url_rewrite = (bool)$this->db->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 
                 \Tools2::generateHtaccess(null, $url_rewrite);
             }

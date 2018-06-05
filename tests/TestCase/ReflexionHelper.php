@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace Tests\TestCase;
 
 use ReflectionClass;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ReflexionHelper
- * @package PrestaShop\PrestaShop\Tests\TestCase
+ * @package Tests\TestCase
  *
  * Provides utilities to access private or protected properties inside classes.
  *
@@ -41,7 +41,7 @@ use PHPUnit_Framework_TestCase;
  *
  * In the end, this kind of features is here just for convenience to be able to test quickly dirty legacy code.
  */
-class ReflexionHelper extends PHPUnit_Framework_TestCase
+class ReflexionHelper extends TestCase
 {
     public static function invoke($object, $method)
     {

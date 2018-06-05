@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -300,7 +300,7 @@ class ProductCore extends ObjectModel
     protected static $_tax_rules_group = array();
     protected static $_cacheFeatures = array();
     protected static $_frontFeaturesCache = array();
-    protected static $producPropertiesCache = array();
+    protected static $productPropertiesCache = array();
 
     /** @var array cache stock data in getStock() method */
     protected static $cacheStock = array();
@@ -4306,7 +4306,7 @@ class ProductCore extends ObjectModel
     public static function duplicateTags($id_product_old, $id_product_new)
     {
         $tags = Db::getInstance()->executeS('SELECT `id_tag`, `id_lang` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
-        if (!Db::getInstance()->NumRows()) {
+        if (!Db::getInstance()->numRows()) {
             return true;
         }
 
@@ -4625,8 +4625,8 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack'.$row['id_product_pack'];
         }
 
-        if (isset(self::$producPropertiesCache[$cache_key])) {
-            return array_merge($row, self::$producPropertiesCache[$cache_key]);
+        if (isset(self::$productPropertiesCache[$cache_key])) {
+            return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
 
         // Datas
@@ -4797,8 +4797,8 @@ class ProductCore extends ObjectModel
 
         $row['unit_price'] = ($row['unit_price_ratio'] != 0  ? $row['price'] / $row['unit_price_ratio'] : 0);
 
-        self::$producPropertiesCache[$cache_key] = $row;
-        return self::$producPropertiesCache[$cache_key];
+        self::$productPropertiesCache[$cache_key] = $row;
+        return self::$productPropertiesCache[$cache_key];
     }
 
     public static function getTaxesInformations($row, Context $context = null)
@@ -5368,7 +5368,7 @@ class ProductCore extends ObjectModel
             if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
                 return false;
             }
-            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
+            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->numRows() > 0 ? true : false);
         }
         return self::$_incat[$hash];
     }
@@ -6059,44 +6059,100 @@ class ProductCore extends ObjectModel
         return !empty($attributes);
     }
 
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
+    /**
+     * Get an id_product_attribute by an id_product and one or more
+     * id_attribute.
+     *
+     * e.g: id_product 8 with id_attribute 4 (size medium) and
+     * id_attribute 5 (color blue) returns id_product_attribute 9 which
+     * is the dress size medium and color blue.
+     *
+     * @param int $idProduct
+     * @param int|int[] $idAttributes
+     * @param bool $findBest
+     * @return int
+     * @throws PrestaShopException
+     */
+    public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
-        if (!is_array($id_attributes)) {
-            return 0;
+        $idProduct = (int) $idProduct;
+
+        if (!is_array($idAttributes) && is_numeric($idAttributes)) {
+            $idAttributes = array((int) $idAttributes);
         }
 
-        $id_product_attribute =  Db::getInstance()->getValue('
-        SELECT pac.`id_product_attribute`
-        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-        WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $id_attributes)).')
-        GROUP BY id_product_attribute
-        HAVING COUNT(id_product) = '.count($id_attributes));
+        if (!is_array($idAttributes) || empty($idAttributes)) {
+            throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
+        }
+        $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
+        $idProductAttribute =  Db::getInstance()->getValue('
+            SELECT 
+                pac.`id_product_attribute`
+            FROM 
+                `' . _DB_PREFIX_ . 'product_attribute_combination` pac
+                INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+            WHERE 
+                pa.id_product = ' . $idProduct . '
+                AND pac.id_attribute IN (' . $idAttributesImploded . ')
+            GROUP BY 
+                pac.`id_product_attribute`
+            HAVING 
+                COUNT(pa.id_product) = ' . count($idAttributes)
+        );
 
-        if ($id_product_attribute === false && $find_best) {
+        if ($idProductAttribute === false && $find_best) {
             //find the best possible combination
-            //first we order $id_attributes by the group position
+            //first we order $idAttributes by the group position
             $orderred = array();
-            $result = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'attribute` a
-            INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
-            WHERE `id_attribute` IN ('.implode(',', array_map('intval', $id_attributes)).') ORDER BY g.`position` ASC');
+            $result = Db::getInstance()->executeS('
+                SELECT 
+                    a.`id_attribute`
+                FROM 
+                    `'._DB_PREFIX_.'attribute` a
+                    INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
+                WHERE 
+                    a.`id_attribute` IN (' . $idAttributesImploded . ')
+                ORDER BY 
+                    g.`position` ASC'
+            );
 
             foreach ($result as $row) {
                 $orderred[] = $row['id_attribute'];
             }
 
-            while ($id_product_attribute === false && count($orderred) > 0) {
+            while ($idProductAttribute === false && count($orderred) > 0) {
                 array_pop($orderred);
-                $id_product_attribute =  Db::getInstance()->getValue('
-                SELECT pac.`id_product_attribute`
-                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
-                GROUP BY id_product_attribute
-                HAVING COUNT(id_product) = '.count($orderred));
+                $idProductAttribute =  Db::getInstance()->getValue('
+                    SELECT 
+                        pac.`id_product_attribute`
+                    FROM 
+                        `'._DB_PREFIX_.'product_attribute_combination` pac
+                        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                    WHERE 
+                        pa.id_product = '.(int)$idProduct.'
+                        AND pac.id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
+                    GROUP BY 
+                        pac.id_product_attribute
+                    HAVING 
+                        COUNT(pa.id_product) = '.count($orderred)
+                );
             }
         }
-        return $id_product_attribute;
+
+        if (empty($idProductAttribute)) {
+            throw new PrestaShopObjectNotFoundException('Can not retrieve the id_product_attribute');
+        }
+
+        return $idProductAttribute;
+    }
+
+    /**
+     * @deprecated 1.7.3.1
+     * @see Product::getIdProductAttributeByIdAttributes()
+     */
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
+    {
+        return self::getIdProductAttributeByIdAttributes($id_product, $id_attributes, $find_best);
     }
 
     /**
@@ -6629,7 +6685,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Return an array of customization fields IDs
-     * 
+     *
      * @return array|false
      */
     public function getUsedCustomizationFieldsIds()

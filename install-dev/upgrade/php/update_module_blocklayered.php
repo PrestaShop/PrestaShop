@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@
 function update_module_blocklayered()
 {
     if (Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = \'blocklayered\'')) {
-        @Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'layered_price_index` ADD INDEX id_product (`id_product`)');
+        @Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_price_index` ADD INDEX id_product (`id_product`)');
     }
 
     return true;

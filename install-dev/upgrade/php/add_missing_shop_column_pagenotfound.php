@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,7 +40,7 @@ function add_missing_shop_column_pagenotfound()
         }
 
         if (!in_array('id_shop', $fields)) {
-            $res &= DB::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound`
+            $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound`
 				ADD `id_shop` INT(10) AFTER `id_pagenotfound`');
         }
     }

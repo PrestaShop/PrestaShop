@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,9 +45,8 @@ class AddonsController extends Controller
      */
     public function loginAction(Request $request)
     {
-        $addonsProvider = $this->container->get('prestashop.core.admin.data_provider.addons_interface');
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $translator = $this->container->get('translator');
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $response = new JsonResponse();
 
         // Parameters needed in order to authenticate the merchant : login and password
@@ -77,9 +76,8 @@ class AddonsController extends Controller
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
-                'message' => $translator->trans(
+                'message' => $this->trans(
                     'PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
-                    array(),
                     'Admin.Notifications.Error'
                 ),
             ]);
@@ -95,7 +93,7 @@ class AddonsController extends Controller
      */
     public function logoutAction(Request $request)
     {
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $modulesProvider->clearCatalogCache();
 
         if ($request->isXmlHttpRequest()) {

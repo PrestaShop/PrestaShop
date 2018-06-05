@@ -1,8 +1,9 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 const {ProductList} = require('../../selectors/BO/add_product_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
 
-/****Exemple of product data ****
+/**** Example of product data ****
  * var productData = {
  *  name: 'product_name',
  *  reference: 'product_reference',
@@ -30,10 +31,10 @@ const {ProductList} = require('../../selectors/BO/add_product_page');
 module.exports = {
   createProduct: function (AddProductPage, productData) {
     scenario('Create a new product in the Back Office', client => {
-      test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+      test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
       test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
       test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time));
-      test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]));
+      test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]));
       test('should set the "Quantity" input', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]));
       test('should set the "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]));
       test('should upload the first product picture', () => client.uploadPicture(productData["image_name"], AddProductPage.picture));
@@ -52,7 +53,7 @@ module.exports = {
           test('should select the variation', () => {
             if (productData.type === 'combination') {
               return promise
-                .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige))
+                .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige));
             } else {
               return promise
                 .then(() => client.waitAndSetValue(AddProductPage.variations_input, productData['attribute']['name'] + date_time + " : All"))
@@ -62,7 +63,7 @@ module.exports = {
           test('should click on "Generate" button', () => {
             return promise
               .then(() => client.waitForExistAndClick(AddProductPage.variations_generate))
-              .then(() => client.getCombinationData(1))
+              .then(() => client.getCombinationData(1));
           });
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
@@ -95,17 +96,17 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
-        test('should click on "Save" button', () => {
+        test('should switch the product online', () => {
           return promise
-            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
             .then(() => {
               if (global.isVisible) {
                 client.waitForExistAndClick(AddProductPage.symfony_toolbar)
               }
             })
-            .then(() => client.waitForExistAndClick(AddProductPage.save_product_button))
+            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
         });
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 
@@ -115,7 +116,7 @@ module.exports = {
 
   checkProductBO(AddProductPage, productData) {
     scenario('Check the product creation in the Back Office', client => {
-      test('should go to "Catalog"', () => client.goToCatalog());
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
       test('should search for product by name', () => client.searchProductByName(productData.name + date_time));
       test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, productData.name + date_time));
       test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, productData.reference));
@@ -134,27 +135,24 @@ module.exports = {
           promise = client.getProductsInformation(selector, j);
         }
         return promise
-          .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")))
+          .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")));
       });
-
       test('should check that the products is well sorted by ASC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
           .then(() => client.sortTable("ASC", sortBy))
-          .then(() => client.checkSortProduct())
+          .then(() => client.checkSortProduct());
       });
-
       test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc")));
-
       test('should check that the products is well sorted by DESC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
           .then(() => client.sortTable("DESC", sortBy))
-          .then(() => client.checkSortProduct())
+          .then(() => client.checkSortProduct());
       });
     }, 'product/product');
   },
@@ -164,9 +162,51 @@ module.exports = {
     test('should click on "' + buttonName + '" button', () => {
       return promise
         .then(() => client.isVisible(selectorButton))
-        .then(() => client.clickPageNextOrPrevious(selectorButton));
+        .then(() => client.clickNextOrPrevious(selectorButton));
     });
-    test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
-    test('should check that the value page in URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
+    test('should check that the current page number is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
+    test('should check that the page value in the URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
+  },
+
+
+  checkPaginationBO(nextOrPrevious, pageNumber, itemPerPage, close = false, paginateBetweenPages = false) {
+    scenario('Navigate between catalog pages and set the paginate limit equal to "' + itemPerPage + '"', client => {
+      let selectorButton = nextOrPrevious === 'Next' ? ProductList.pagination_next : ProductList.pagination_previous;
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should set the "item per page" to "' + itemPerPage + '"', () => client.waitAndSelectByValue(ProductList.item_per_page, itemPerPage));
+      test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkAttributeValue(ProductList.page_active_number, 'value', pageNumber, 'contain', 3000));
+      test('should check that the number of products is less or equal to "' + itemPerPage + '"', () => {
+        return promise
+          .then(() => client.getProductPageNumber('product_catalog_list'))
+          .then(() => expect(global.productsPageNumber).to.be.at.most(itemPerPage));
+      });
+      if (paginateBetweenPages) {
+        /** @todo to be removed when the PR that creates a global variable to determine if we are in the debug mode or not will be merged **/
+        test('should close the symfony toolbar if exists', () => {
+          return promise
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+            .then(() => {
+              if (global.isVisible) {
+                client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+              }
+            });
+        });
+        test('should click on "' + nextOrPrevious + '" button', () => {
+          return promise
+            .then(() => client.isVisible(selectorButton))
+            .then(() => client.clickNextOrPrevious(selectorButton));
+        });
+        test('should check that the current page is equal to 2', () => client.checkAttributeValue(ProductList.page_active_number, 'value', '2', 'contain', 3000));
+        test('should set the "Page value" input to "' + pageNumber + '"', () => {
+          return promise
+            .then(() => client.waitAndSetValue(ProductList.page_active_number, pageNumber))
+            .then(() => client.keys('Enter'))
+        });
+        test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkAttributeValue(ProductList.page_active_number, 'value', pageNumber, 'contain', 3000));
+      }
+
+      if (close)
+        test('should set the "item per page" to 20 (back to normal)', () => client.waitAndSelectByValue(ProductList.item_per_page, 20));
+    }, 'product/product', close);
   }
 };

@@ -6,5 +6,5 @@ scenario('Create account from checkout in Front Office', () => {
     test('should open the browser', () => client.open());
     test('should access to the Front Office', () => client.accessToFO(AccessPageFO));
   }, 'order');
-  common_scenarios.createOrder("create_account");
+  common_scenarios.createOrderFO("create_account");
 }, 'order', true);

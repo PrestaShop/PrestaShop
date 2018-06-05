@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -174,7 +174,7 @@ class ModuleManagerBuilder
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
-        $kernelDir = dirname(__FILE__) . '/../../../../app';
+        $kernelDir = dirname(__FILE__) . '/../../../../var';
         self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
         if (_PS_MODE_DEV_) {
             self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';

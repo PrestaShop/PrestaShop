@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Admin controller for the International pages.
@@ -45,7 +46,14 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     const controller_name = self::CONTROLLER_NAME;
 
-    // overview method on FrameworkBundleAdminController for all vue-js app
+    /**
+     * @Template("@PrestaShop/Admin/Translations/overview.html.twig")
+     */
+    public function overviewAction()
+    {
+        return parent::overviewAction();
+    }
+
     // redirect to the new translation application
     // before, clean request params
     private function redirectToTranslationApp(Request $request)
@@ -54,7 +62,7 @@ class TranslationsController extends FrameworkBundleAdminController
         foreach ($request->request->all() as $k => $p) {
             if (strstr($k, 'selected')) {
                 $k = 'selected';
-            } else if ('locale' === $k) {
+            } elseif ('locale' === $k) {
                 $translationService = $this->get('prestashop.service.translation');
                 $p = $translationService->langToLocale($p);
             }
@@ -78,17 +86,15 @@ class TranslationsController extends FrameworkBundleAdminController
             return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
         }
 
-        if (
-            !in_array(
-                $this->authorizationLevel($this::CONTROLLER_NAME),
-                array(
-                    PageVoter::LEVEL_READ,
-                    PageVoter::LEVEL_UPDATE,
-                    PageVoter::LEVEL_CREATE,
-                    PageVoter::LEVEL_DELETE,
-                )
+        if (!in_array(
+            $this->authorizationLevel(self::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
             )
-        ) {
+        )) {
             return $this->redirect('admin_dashboard');
         }
 

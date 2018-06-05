@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -41,6 +44,11 @@ class PerformanceController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminPerformance';
 
     /**
+     * Displays the Performance main page.
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param FormInterface $form
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
@@ -53,9 +61,9 @@ class PerformanceController extends FrameworkBundleAdminController
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
-        $twigValues = array(
+        return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
-            'layoutTitle' => $this->get('translator')->trans('Performance', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -64,39 +72,22 @@ class PerformanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
-        );
-
-        return $this->render('@AdvancedParameters/performance.html.twig', $twigValues);
+        ];
     }
 
     /**
+     * Process the Performance configuration form.
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.")
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @param Request $request
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_performance');
-        }
-
         $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', array('controller' => $this));
         $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
         $form->handleRequest($request);
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_performance');
-        }
 
         if ($form->isSubmitted()) {
             $data = $form->getData();

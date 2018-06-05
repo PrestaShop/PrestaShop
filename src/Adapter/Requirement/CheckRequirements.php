@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,7 +115,7 @@ class CheckRequirements
             'fopen' => $this->translator->trans('Allow the PHP fopen() function on your server.', array(), 'Admin.Advparameters.Notification'),
             'gz' => $this->translator->trans('Enable GZIP compression on your server.', array(), 'Admin.Advparameters.Notification'),
             'files' => $this->translator->trans('Some PrestaShop files are missing from your server.', array(), 'Admin.Advparameters.Notification'),
-            'new_phpversion' => $this->translator->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!', array('%s' => phpversion()), 'Admin.Advparameters.Notification'),
+            'new_phpversion' => $this->translator->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!', array('%s' => phpversion()), 'Admin.Advparameters.Notification'),
             'apache_mod_rewrite' => $this->translator->trans('Enable the Apache mod_rewrite module', array(), 'Admin.Advparameters.Notification')
         );
     }

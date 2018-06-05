@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <ul class="nav nav-tabs" id="tab" role="tablist">
-    <li class="nav-item">
-      <router-link data-toggle="tab" class="nav-link" :class="{active : isOverview}" to="/" role="tab">{{trans('menu_stock')}}</router-link>
-    </li>
-    <li class="nav-item">
-       <router-link data-toggle="tab" class="nav-link" :class="{active : isMovements}" to="/movements" role="tab">{{trans('menu_movements')}}</router-link>
-    </li>
-  </ul>
+  <div class="page-head-tabs" id="head_tabs">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <router-link data-toggle="tab" class="nav-link" :class="{active : isOverview}" to="/" role="tab">{{trans('menu_stock')}}</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link data-toggle="tab" class="nav-link" :class="{active : isMovements}" to="/movements" role="tab">{{trans('menu_movements')}}</router-link>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -45,14 +47,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .nav-item {
-    cursor: pointer;
-  }
-  .nav-link.active, .nav-link.active:hover, .nav-link.active:focus {
-    border-top: none;
-    border-bottom: 3px solid $brand-primary;
-  }
-</style>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -131,12 +131,7 @@ class StockManager implements StockInterface
                 SELECT SUM(od.product_quantity - od.product_quantity_refunded)
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
-                INNER JOIN {table_prefix}order_history oh ON (
-                    oh.id_order = o.id_order AND
-                    oh.id_order_state = o.current_state AND
-                    oh.id_order_history = (SELECT MAX(id_order_history) FROM {table_prefix}order_history WHERE id_order = o.id_order)
-                )
-                INNER JOIN {table_prefix}order_state os ON os.id_order_state = oh.id_order_state
+                INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
                 WHERE o.id_shop = :shop_id AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
@@ -145,7 +140,7 @@ class StockManager implements StockInterface
                     )
                 ) AND sa.id_product = od.product_id AND
                 sa.id_product_attribute = od.product_attribute_id
-                GROUP BY sa.id_product, sa.id_product_attribute
+                GROUP BY od.product_id, od.product_attribute_id
             )
             WHERE sa.id_shop = :shop_id
         ';

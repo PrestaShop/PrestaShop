@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -283,7 +283,7 @@ class FeatureCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        return Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
+        return (bool) Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
     }
 
     /**
@@ -354,7 +354,7 @@ class FeatureCore extends ObjectModel
     {
         $sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'feature`';
-        $position = DB::getInstance()->getValue($sql);
+        $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? $position : - 1;
     }
