@@ -132,7 +132,7 @@ class ToolsCore
      * Replace text within a portion of a string
      *
      * Replaces a string matching a search, (optionally) string from a certain position
-     *  
+     *
      * @param  string  $search  The string to search in the input string
      * @param  string  $replace The replacement string
      * @param  string  $subject The input string
@@ -515,9 +515,9 @@ class ToolsCore
 
     /**
      * Checks if a key exists either in $_POST or $_GET
-     * 
+     *
      * @param string $key
-     * 
+     *
      * @return bool
      */
     public static function getIsset($key)
@@ -1055,7 +1055,7 @@ class ToolsCore
         if (null !== $context) {
             self::displayParameterAsDeprecated('context');
         }
-        
+
         if (null === $errorMessage) {
             $errorMessage = Context::getContext()
                 ->getTranslator()
@@ -1065,7 +1065,7 @@ class ToolsCore
         if (_PS_MODE_DEV_) {
             throw new PrestaShopException($errorMessage);
         }
-        
+
         return $errorMessage;
     }
 
@@ -2230,7 +2230,7 @@ class ToolsCore
             return constant('_MEDIA_SERVER_'.$id_media_server.'_');
         }
 
-        return Tools::usingSecureMode() ? Tools::getShopDomainSSL() : Tools::getShopDomain();
+        return Tools::usingSecureMode() ? Tools::getShopDomainSsl() : Tools::getShopDomain();
     }
 
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)

@@ -177,7 +177,7 @@ class HookCore extends ObjectModel
             // Get all hook ID by name and alias
             $hook_ids = array();
             $db = Db::getInstance();
-            $result = $db->ExecuteS('
+            $result = $db->executeS('
 			SELECT `id_hook`, `name`
 			FROM `'._DB_PREFIX_.'hook`
 			UNION

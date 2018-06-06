@@ -26,24 +26,34 @@
 
 namespace Tests\Integration\PrestaShopBundle\Test;
 
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Context;
+use Currency;
+use Employee;
+use Language;
 use Psr\Log\NullLogger;
+use Shop;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\Translator;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use Theme;
 
 class WebTestCase extends TestCase
 {
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Client
+     * @var Client
      */
     protected $client;
 
     /**
-     * @var \Symfony\Component\Routing\Router
+     * @var Router
      */
     protected $router;
 
     /**
-     * @var \Symfony\Component\Translation\Translator
+     * @var Translator
      */
     protected $translator;
 
@@ -59,11 +69,11 @@ class WebTestCase extends TestCase
         $this->router = self::$kernel->getContainer()->get('router');
         $this->translator = self::$kernel->getContainer()->get('translator');
 
-        $employeeMock = $this->getMockBuilder('\Employee')
+        $employeeMock = $this->getMockBuilder(Employee::class)
             ->getMock();
         $employeeMock->id_profile = 1;
 
-        $contextMock = $this->getMockBuilder('\Context')
+        $contextMock = $this->getMockBuilder(Context::class)
             ->setMethods(array('getTranslator', 'getBaseURL'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -73,7 +83,7 @@ class WebTestCase extends TestCase
 
         $contextMock->employee = $employeeMock;
 
-        $shopMock = $this->getMockBuilder('\Shop')
+        $shopMock = $this->getMockBuilder(Shop::class)
             ->setMethods(array('getBaseURL'))
             ->getMock();
         $shopMock->id = 1;
@@ -82,7 +92,7 @@ class WebTestCase extends TestCase
 
         $contextMock->shop = $shopMock;
 
-        $themeMock = $this->getMockBuilder('\Theme')
+        $themeMock = $this->getMockBuilder(Theme::class)
             ->setMethods(array('getName'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -92,24 +102,25 @@ class WebTestCase extends TestCase
 
         $contextMock->shop->theme = $themeMock;
 
-        $languageMock = $this->getMockBuilder('\Language')
+        $languageMock = $this->getMockBuilder(Language::class)
             ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock();
         $contextMock->language = $languageMock;
 
-        $currencyMock = $this->getMockBuilder('\Currency')
+        $currencyMock = $this->getMockBuilder(Currency::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $contextMock->currency = $currencyMock;
 
-        $legacyContextMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Adapter\LegacyContext')
+        $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
-                'getRootUrl'
+                'getRootUrl',
+                'getLanguages',
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
@@ -117,6 +128,28 @@ class WebTestCase extends TestCase
 
         $legacyContextMock->method('getContext')
             ->will($this->returnValue($contextMock));
+
+        $legacyContextMock->method('getLanguages')
+            ->will(
+                $this->returnValue(
+                    [
+                        [
+                            'id_lang' => '1',
+                            'name' => 'English (English)',
+                            'iso_code' => 'en',
+                            'language_code' => 'en-us',
+                            'locale' => 'en-US',
+                        ],
+                        [
+                            'id_lang' => '2',
+                            'name' => 'Français (French)',
+                            'iso_code' => 'fr',
+                            'language_code' => 'fr',
+                            'locale' => 'fr-FR'
+                        ]
+                    ]
+                )
+            );
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());

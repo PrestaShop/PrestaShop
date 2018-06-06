@@ -933,7 +933,7 @@ class DispatcherCore
     public function getController($id_shop = null)
     {
         if (defined('_PS_ADMIN_DIR_')) {
-            $_GET['controllerUri'] = Tools::getvalue('controller');
+            $_GET['controllerUri'] = Tools::getValue('controller');
         }
         if ($this->controller) {
             $_GET['controller'] = $this->controller;

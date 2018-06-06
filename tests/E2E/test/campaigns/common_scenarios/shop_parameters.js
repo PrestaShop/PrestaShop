@@ -71,7 +71,7 @@ module.exports = {
           return promise
             .then(() => client.waitAndSetValue(AddProductPage.catalogue_filter_by_name_input, 'productTest' + date_time));
         });
-        test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.catalog_submit_filter));
+        test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.catalog_submit_filter_button));
         test('should check the product', () => client.checkTextValue(ProductList.product_name.replace("%ID", '1'), 'productTest' + date_time));
         test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
       }, 'common_client');

@@ -786,7 +786,7 @@ namespace PrestaShopBundle\Install {
             }
 
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
-                $url_rewrite = (bool)$this->db->getvalue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
+                $url_rewrite = (bool)$this->db->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 
                 \Tools2::generateHtaccess(null, $url_rewrite);
             }
