@@ -72,10 +72,10 @@ scenario('Catalog bulk action', () => {
         .then(() => client.getProductPageNumber('product_catalog_list'))
         .then(() => client.isVisible(ProductList.pagination_products))
         .then(() =>{
-            if(global.isVisible){
-              return promise
-                .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsPageNumber) + number, 'contain'));
-            }
+          if(global.isVisible){
+            return promise
+              .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsNumber) + number, 'contain'));
+          }
         });
     });
   }, 'catalogbulkaction');

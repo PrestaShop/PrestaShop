@@ -175,7 +175,7 @@ module.exports = {
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
       test('should click on "Sort by ASC" icon', () => {
         let sortSelector = sortBy === 'name' || sortBy === 'reference' ? ProductList.sort_button.replace("%B", sortBy) : sortBy === 'id_product' ? ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc") : ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc");
-        for (let j = 0; j < global.productsPageNumber; j++) {
+        for (let j = 0; j < global.productsNumber; j++) {
           promise = client.getProductsInformation(selector, j);
         }
         return promise
@@ -183,7 +183,7 @@ module.exports = {
           .then(() => client.waitForExistAndClick(sortSelector));
       });
       test('should check that the products is well sorted by ASC', () => {
-        for (let j = 0; j < global.productsPageNumber; j++) {
+        for (let j = 0; j < global.productsNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
@@ -196,7 +196,7 @@ module.exports = {
           .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")));
       });
       test('should check that the products is well sorted by DESC', () => {
-        for (let j = 0; j < global.productsPageNumber; j++) {
+        for (let j = 0; j < global.productsNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
@@ -216,7 +216,6 @@ module.exports = {
     test('should check that the page value in the URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
   },
 
-
   checkPaginationBO(nextOrPrevious, pageNumber, itemPerPage, close = false, paginateBetweenPages = false) {
     scenario('Navigate between catalog pages and set the paginate limit equal to "' + itemPerPage + '"', client => {
       let selectorButton = nextOrPrevious === 'Next' ? ProductList.pagination_next : ProductList.pagination_previous;
@@ -226,7 +225,7 @@ module.exports = {
       test('should check that the number of products is less or equal to "' + itemPerPage + '"', () => {
         return promise
           .then(() => client.getProductPageNumber('product_catalog_list'))
-          .then(() => expect(global.productsPageNumber).to.be.at.most(itemPerPage));
+          .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage));
       });
       if (paginateBetweenPages) {
         /** @todo to be removed when the PR that creates a global variable to determine if we are in the debug mode or not will be merged **/
@@ -248,11 +247,10 @@ module.exports = {
         test('should set the "Page value" input to "' + pageNumber + '"', () => {
           return promise
             .then(() => client.waitAndSetValue(ProductList.page_active_number, pageNumber))
-            .then(() => client.keys('Enter'))
+            .then(() => client.keys('Enter'));
         });
         test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkAttributeValue(ProductList.page_active_number, 'value', pageNumber, 'contain', 3000));
       }
-
       if (close)
         test('should set the "item per page" to 20 (back to normal)', () => client.waitAndSelectByValue(ProductList.item_per_page, 20));
     }, 'product/product', close);
@@ -268,5 +266,91 @@ module.exports = {
       test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, 'Product successfully deleted.'));
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
+  },
+
+  checkProductInListFO(AccessPageFO, productPage, productData) {
+    scenario('Check the created product in the Front Office', () => {
+
+      scenario('Login in the Front Office', client => {
+        test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+      }, 'product/product');
+
+      scenario('Open the created product', client => {
+        test('should set the language of shop to "English"', () => client.changeLanguage());
+        test('should click on "SEE ALL PRODUCTS" link', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
+        for (let i = 0; i <= pagination; i++) {
+          for (let j = 0; j < 4 ; j++) {
+              test('should check the ' + productData[j].name + ' product existence in the ' + (Number(i) + 1) + ' page', () => {
+                return promise
+                  .then(() => client.pause(4000))
+                  .then(() => client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
+              });
+              test('should open the product in new tab if exist', () =>  client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
+          }
+          if (i !== pagination) {
+            test('should click on "NEXT" button', () => {
+              return promise
+                .then(() => client.isVisible(productPage.pagination_next))
+                .then(() => {
+                  if (global.isVisible) {
+                    client.clickPageNext(productPage.pagination_next);
+                  }
+                });
+            });
+          }
+        }
+      }, 'product/product');
+      scenario('Check "standard" product information', client => {
+        test('should go to the "' + productData[0].name + '" product', () => client.switchWindow(4));
+        test('should check that the product name is equal to "' + (productData[0].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase()));
+        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
+        test('should check that the product reference is equal to "' + productData[0].reference + '"', () => {
+          return promise
+            .then(() => client.scrollTo(productPage.product_reference))
+            .then(() => client.checkTextValue(productPage.product_reference, productData[0].reference));
+        });
+        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[0].quantity));
+      }, 'product/product');
+
+      scenario('Check "pack" product information', client => {
+        test('should go to the "' + productData[1].name + '" product', () => client.switchWindow(3));
+        test('should check that the product name is equal to "' + (productData[1].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[1].name + date_time).toUpperCase()));
+        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
+        test('should check that the first product pack name is equal to "standard"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 1), productData[0].name + date_time));
+        test('should check that the first product pack price is equal to "€12.80"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€12.00'));
+        test('should check that the first product pack quantity is equal to "1"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 1), 'x 1'));
+        test('should check that the product reference is equal to "' + productData[1].reference + '"', () => {
+          return promise
+            .then(() => client.scrollTo(productPage.product_reference))
+            .then(() => client.checkTextValue(productPage.product_reference, productData[1].reference));
+        });
+        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[1].quantity));
+      }, 'product/product');
+
+      scenario('Check "combination" product information', client => {
+        test('should go to the "' + productData[2].name + '" product', () => client.switchWindow(2));
+        test('should check that the product name is equal to "' + (productData[2].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[2].name + date_time).toUpperCase()));
+        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
+        test('should check that the product reference is equal to "' + productData[2].reference + '"', () => {
+          return promise
+            .then(() => client.scrollTo(productPage.product_reference))
+            .then(() => client.checkTextValue(productPage.product_reference, productData[2].reference));
+        });
+        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[2].quantity));
+      }, 'product/product');
+
+      scenario('Check "virtual" product information', client => {
+        test('should go to the "' + productData[3].name + '" product', () => client.switchWindow(1));
+        test('should check that the product name is equal to "' + (productData[3].name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (productData[3].name + date_time).toUpperCase()));
+        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, "€12.00", "contain"));
+        test('should check that the product reference is equal to "' + productData[3].reference + '"', () => {
+          return promise
+            .then(() => client.scrollTo(productPage.product_reference))
+            .then(() => client.checkTextValue(productPage.product_reference, productData[3].reference));
+        });
+        test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[3].quantity));
+      }, 'product/product');
+
+    }, 'product/product', true);
   }
 };

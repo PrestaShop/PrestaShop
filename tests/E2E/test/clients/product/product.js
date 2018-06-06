@@ -167,7 +167,7 @@ class Product extends CommonClient {
         return count;
       }, selector)
       .then((count) => {
-        global.productsPageNumber = count.value;
+        global.productsNumber = count.value;
       });
   }
 
@@ -222,7 +222,7 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             sort_mode === 'ASC' ? this.sortByAsc(type) : this.sortByDesc(type);
-          }, 1000 * global.productsPageNumber);
+          }, 1000 * global.productsNumber);
       });
   }
 
@@ -237,8 +237,15 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             expect(productsTable).to.deep.equal(productsSortedTable);
-          }, 1000 * global.productsPageNumber);
+          }, 1000 * global.productsNumber);
       });
+  }
+
+  clickPageNext(selector) {
+    if (global.isVisible) {
+      return this.client
+        .scrollWaitForExistAndClick(selector);
+    }
   }
 
   UrlModification(globalVar, productName) {
