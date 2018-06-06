@@ -32,3 +32,23 @@ services:
             - "@=service('kernel').getRootDir()"
         tags:
             - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+
+    prestashop.access_denied.listener:
+        class: PrestaShopBundle\EventListener\AccessDeniedListener
+        arguments:
+            - "@router"
+            - "@translator"
+            - "@session"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    prestashop.demo_mode_enabled.listener:
+        class: PrestaShopBundle\EventListener\DemoModeEnabledListener
+        arguments:
+            - "@router"
+            - "@translator"
+            - "@session"
+            - "@annotation_reader"
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

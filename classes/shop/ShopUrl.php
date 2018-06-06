@@ -96,7 +96,7 @@ class ShopUrlCore extends ObjectModel
         }
 
         $url = ($ssl) ? 'https://'.$this->domain_ssl : 'http://'.$this->domain;
-        return $url.$this->getBaseUri();
+        return $url.$this->getBaseURI();
     }
 
     /**

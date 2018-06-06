@@ -59,6 +59,11 @@ _admin_configure_routing:
     resource: "admin/routing_configure.yml"
     prefix: /configure
 
+_admin_order_routing:
+    resource: "admin/routing_order.yml"
+    prefix: /order
+
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}/{view}
