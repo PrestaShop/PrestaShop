@@ -371,11 +371,10 @@ services:
     form.type.localization_configuration:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
         arguments:
-            - '@prestashop.adapter.legacy.context'
-            - '@prestashop.adapter.data_provider.language'
-            - '@prestashop.adapter.data_provider.country'
-            - '@prestashop.adapter.data_provider.currency'
-            - '@prestashop.core.admin.timezone.repository'
+            - '@=service("prestashop.form.choice_provider.language").getChoices()'
+            - '@=service("prestashop.form.choice_provider.country").getChoices()'
+            - '@=service("prestashop.form.choice_provider.currency").getChoices()'
+            - '@=service("prestashop.form.choice_provider.timezone").getChoices()'
         tags:
             - { name: form.type }
 

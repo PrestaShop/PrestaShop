@@ -117,7 +117,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
         $localizationPack->loadLocalisationPack(
             $pack,
             $config->getContentToImport(),
-            $installMode = false,
+            false,
             $config->getCountryIsoCode()
         );
 

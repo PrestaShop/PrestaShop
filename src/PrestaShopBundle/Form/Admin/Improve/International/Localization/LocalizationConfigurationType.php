@@ -26,11 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,49 +38,41 @@ use Symfony\Component\Form\FormBuilderInterface;
 class LocalizationConfigurationType extends AbstractType
 {
     /**
-     * @var LegacyContext
+     * @var array
      */
-    private $legacyContext;
+    private $languageChoices;
 
     /**
-     * @var LanguageDataProvider
+     * @var array
      */
-    private $languageDataProvider;
+    private $countryChoices;
 
     /**
-     * @var CountryDataProvider
+     * @var array
      */
-    private $countryDataProvider;
+    private $currencyChoices;
 
     /**
-     * @var CurrencyDataProvider
+     * @var array
      */
-    private $currencyDataProvider;
+    private $timezoneChoices;
 
     /**
-     * @var TimezoneRepository
-     */
-    private $timezoneRepository;
-
-    /**
-     * @param LegacyContext $legacyContext
-     * @param LanguageDataProvider $languageDataProvider
-     * @param CountryDataProvider $countryDataProvider
-     * @param CurrencyDataProvider $currencyDataProvider
-     * @param TimezoneRepository $timezoneRepository
+     * @param array $languageChoices
+     * @param array $countryChoices
+     * @param array $currencyChoices
+     * @param array $timezoneChoices
      */
     public function __construct(
-        LegacyContext $legacyContext,
-        LanguageDataProvider $languageDataProvider,
-        CountryDataProvider $countryDataProvider,
-        CurrencyDataProvider $currencyDataProvider,
-        TimezoneRepository $timezoneRepository
+        array $languageChoices,
+        array $countryChoices,
+        array $currencyChoices,
+        array $timezoneChoices
     ) {
-        $this->languageDataProvider = $languageDataProvider;
-        $this->countryDataProvider = $countryDataProvider;
-        $this->legacyContext = $legacyContext;
-        $this->currencyDataProvider = $currencyDataProvider;
-        $this->timezoneRepository = $timezoneRepository;
+        $this->languageChoices = $languageChoices;
+        $this->countryChoices = $countryChoices;
+        $this->currencyChoices = $currencyChoices;
+        $this->timezoneChoices = $timezoneChoices;
     }
 
     /**
@@ -95,90 +82,19 @@ class LocalizationConfigurationType extends AbstractType
     {
         $builder
             ->add('default_language', ChoiceType::class, [
-                'choices' => $this->getLanguageChoices(),
+                'choices' => $this->languageChoices,
             ])
             ->add('detect_language_from_browser', SwitchType::class)
             ->add('default_country', ChoiceType::class, [
-                'choices' => $this->getCountryChoices(),
+                'choices' => $this->countryChoices,
             ])
             ->add('detect_country_from_browser', SwitchType::class)
             ->add('default_currency', ChoiceType::class, [
-                'choices' => $this->getCurrencyChoices(),
+                'choices' => $this->currencyChoices,
             ])
             ->add('timezone', ChoiceType::class, [
-                'choices' => $this->getTimezoneChoices(),
+                'choices' => $this->timezoneChoices,
             ])
         ;
-    }
-
-    /**
-     * Get available language choices
-     *
-     * @return array
-     */
-    private function getLanguageChoices()
-    {
-        $languages = $this->languageDataProvider->getLanguages();
-        $choices = [];
-
-        foreach ($languages as $language) {
-            $choices[$language['name']] = $language['id_lang'];
-        }
-
-        return $choices;
-    }
-
-    /**
-     * Get available country choices
-     */
-    private function getCountryChoices()
-    {
-        $contextLanguage = $this->legacyContext->getLanguage();
-        $countries = $this->countryDataProvider->getCountries($contextLanguage->id);
-        $choices = [];
-
-        foreach ($countries as $country) {
-            $choices[$country['name']] = $country['id_country'];
-        }
-
-        return $choices;
-    }
-
-    /**
-     * Get available currency choices
-     *
-     * @return array
-     */
-    private function getCurrencyChoices()
-    {
-        $currencies = $this->currencyDataProvider->getCurrencies(
-            $asObjects = false,
-            $onlyActive = true,
-            $group = true
-        );
-        $choices = [];
-
-        foreach ($currencies as $currency) {
-            $choices[$currency['name']] = $currency['id_currency'];
-        }
-
-        return $choices;
-    }
-
-    /**
-     * Get timezone choices
-     *
-     * @return array
-     */
-    private function getTimezoneChoices()
-    {
-        $timezones = $this->timezoneRepository->findAll();
-        $choices = [];
-
-        foreach ($timezones as $timezone) {
-            $choices[$timezone['name']] = $timezone['name'];
-        }
-
-        return $choices;
     }
 }
