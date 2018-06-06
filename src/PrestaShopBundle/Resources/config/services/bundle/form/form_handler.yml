@@ -106,3 +106,23 @@ services:
             - '@prestashop.admin.import.form_data_provider'
             - []
             - 'ImportPage'
+
+    prestashop.adapter.order.delivery.slip.options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.adapter.order.delivery.slip.options.form_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType'
+            - 'OrderDeliverySlipPage'
+
+    prestashop.adapter.order.delivery.slip.pdf.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.adapter.order.delivery.slip.pdf.form_provider'
+            -
+              'pdf': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipPdfType'
+            - 'OrderDeliverySlipPage'

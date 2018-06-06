@@ -1439,7 +1439,7 @@ class CarrierCore extends ObjectModel
         $sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'carrier`
 				WHERE `deleted` = 0';
-        $position = DB::getInstance()->getValue($sql);
+        $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? $position : -1;
     }

@@ -1445,7 +1445,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function cacheFieldsRequiredDatabase($all = true)
     {
         if (!is_array(self::$fieldsRequiredDatabase)) {
-            $fields = $this->getfieldsRequiredDatabase((bool)$all);
+            $fields = $this->getFieldsRequiredDatabase((bool)$all);
             if ($fields) {
                 foreach ($fields as $row) {
                     self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);

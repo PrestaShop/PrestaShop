@@ -27,10 +27,10 @@
 function block_category_1521()
 {
     if (!Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'BLOCK_CATEG_MAX_DEPTH\' ')) {
-        Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'configuration`
+        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration`
 			(`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`)
 			VALUES (NULL, NULL, NULL, \'BLOCK_CATEG_MAX_DEPTH\', 4, NOW(), NOW())');
     } elseif ($maxdepth = (int)Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `value` IS NOT NULL AND `value` <> 0 AND `name` = \'BLOCK_CATEG_MAX_DEPTH\'')) {
-        Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = '.($maxdepth + 1).' WHERE `name` = \'BLOCK_CATEG_MAX_DEPTH\'');
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = '.($maxdepth + 1).' WHERE `name` = \'BLOCK_CATEG_MAX_DEPTH\'');
     }
 }

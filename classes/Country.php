@@ -138,7 +138,7 @@ class CountryCore extends ObjectModel
     public static function getCountries($idLang, $active = false, $containStates = false, $listStates = true)
     {
         $countries = array();
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cl.*,c.*, cl.`name` country, z.`name` zone
 		FROM `'._DB_PREFIX_.'country` c '.Shop::addSqlAssociation('country', 'c').'
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int) $idLang.')
