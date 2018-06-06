@@ -26,12 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -43,39 +40,23 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ImportLocalizationPackType extends TranslatorAwareType
 {
     /**
-     * @var LocalizationPackLoaderInterface
+     * @var array
      */
-    private $remoteLocalizationPackLoader;
-
-    /**
-     * @var LocalizationPackLoaderInterface
-     */
-    private $localLocalizationPackLoader;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
+    private $localizationPackChoices;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param LocalizationPackLoaderInterface $remoteLocalizationPackLoader
-     * @param LocalizationPackLoaderInterface $localLocalizationPackLoader
-     * @param ConfigurationInterface $configuration
+     * @param array $localizationPackChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LocalizationPackLoaderInterface $remoteLocalizationPackLoader,
-        LocalizationPackLoaderInterface $localLocalizationPackLoader,
-        ConfigurationInterface $configuration
+        array $localizationPackChoices
     ) {
         parent::__construct($translator, $locales);
 
-        $this->remoteLocalizationPackLoader = $remoteLocalizationPackLoader;
-        $this->localLocalizationPackLoader = $localLocalizationPackLoader;
-        $this->configuration = $configuration;
+        $this->localizationPackChoices = $localizationPackChoices;
     }
 
     /**
@@ -85,7 +66,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
     {
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
-                'choices' =>  $this->getLocalizationPackChoices(),
+                'choices' => $this->localizationPackChoices,
             ])
             ->add('content_to_import', ChoiceType::class, [
                 'expanded' => true,
@@ -103,53 +84,6 @@ class ImportLocalizationPackType extends TranslatorAwareType
                 'data' => 1,
             ])
         ;
-    }
-
-    /**
-     * Get available localization packs as choices
-     *
-     * @return array
-     */
-    private function getLocalizationPackChoices()
-    {
-        $localizationPacks = $this->remoteLocalizationPackLoader->getLocalizationPackList();
-        if (null === $localizationPacks) {
-            $localizationPacks = $this->localLocalizationPackLoader->getLocalizationPackList();
-        }
-
-        $choices = [];
-
-        if ($localizationPacks) {
-            foreach ($localizationPacks as $pack) {
-                $choices[(string) $pack->name] = (string) $pack->iso;
-            }
-        }
-
-        $rootDir = $this->configuration->get('_PS_ROOT_DIR_');
-
-        $finder = (new Finder())
-            ->files()
-            ->depth('0')
-            ->in($rootDir.'/localization')
-            ->name('/^([a-z]{2})\.xml$/');
-
-        foreach ($finder as $file) {
-            list($iso) = explode('.', $file->getFilename());
-
-            // if localization pack was not loaded yet and it exists locally
-            // then add it to choices list
-            if (!in_array($iso, $choices)) {
-                $pack = $this->localLocalizationPackLoader->getLocalizationPack($iso);
-                $packName = $this->trans('%s (local)', 'Admin.International.Feature', [(string) $pack['name']]);
-
-                $choices[$packName] = $iso;
-            }
-        }
-
-        // sort choices alphabetically
-        ksort($choices);
-
-        return $choices;
     }
 
     /**

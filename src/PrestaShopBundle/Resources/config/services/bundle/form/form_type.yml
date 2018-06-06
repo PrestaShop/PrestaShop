@@ -383,8 +383,6 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.localization.pack.loader.remote'
-            - '@prestashop.core.localization.pack.loader.local'
-            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.form.choice_provider.localization_pack").getChoices()'
         tags:
             - { name: form.type }
