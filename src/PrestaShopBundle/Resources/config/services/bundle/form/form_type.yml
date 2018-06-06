@@ -362,7 +362,7 @@ services:
             - { name: form.type }
 
     form.type.order.delivery.slip.options:
-        class: 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType'
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:

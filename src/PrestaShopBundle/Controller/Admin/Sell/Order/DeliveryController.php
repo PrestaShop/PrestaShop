@@ -23,20 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Controller\Admin\Order;
+namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Exception\FileUploadException;
-use PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
-use PrestaShop\PrestaShop\Adapter\Order\Invoice;
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Form;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Form;
 
 /**
  * Admin controller for the Order Delivery
@@ -46,7 +41,7 @@ class DeliveryController extends FrameworkBundleAdminController
     /**
      * Main page for Delivery slips.
      *
-     * @Template("@PrestaShop/Admin/Order/Delivery/slip.html.twig")
+     * @Template("@PrestaShop/Admin/Sell/Order/Delivery/slip.html.twig")
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
