@@ -141,7 +141,7 @@
 		{l s='Restrictions' d='Admin.Catalog.Feature'}
 	</label>
 	<div class="col-lg-9">
-		{if $countries.unselected|@count + $countries.selected|@count > 1}
+		{if ($countries.unselected|@count) + ($countries.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="country_restriction" name="country_restriction" value="1" {if $countries.unselected|@count}checked="checked"{/if} />
@@ -176,7 +176,7 @@
 			</div>
 		{/if}
 
-		{if $carriers.unselected|@count + $carriers.selected|@count > 1}
+		{if ($carriers.unselected|@count) + ($carriers.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="carrier_restriction" name="carrier_restriction" value="1" {if $carriers.unselected|@count}checked="checked"{/if} />
@@ -210,7 +210,7 @@
 			</div>
 		{/if}
 
-		{if $groups.unselected|@count + $groups.selected|@count > 1}
+		{if ($groups.unselected|@count) + ($groups.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="group_restriction" name="group_restriction" value="1" {if $groups.unselected|@count}checked="checked"{/if} />
@@ -244,7 +244,7 @@
 			</div>
 		{/if}
 
-		{if $cart_rules.unselected|@count + $cart_rules.selected|@count > 0}
+		{if ($cart_rules.unselected|@count) + ($cart_rules.selected|@count) > 0}
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} />
@@ -294,7 +294,7 @@
 				</a>
 			</div>
 
-		{if $shops.unselected|@count + $shops.selected|@count > 1}
+		{if ($shops.unselected|@count) + ($shops.selected|@count) > 1}
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} />
