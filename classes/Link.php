@@ -734,23 +734,23 @@ class LinkCore
                 $routes = array(
                     'AdminAddonsCatalog' => 'admin_module_addons_store',
                     'AdminAdminPreferences' => 'admin_administration',
+                    'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
                     'AdminImport' => 'admin_import',
                     'AdminInformation' => 'admin_system_information',
+                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
                     'AdminMaintenance' => 'admin_maintenance',
                     'AdminModulesCatalog' => 'admin_module_catalog',
                     'AdminModulesManage' => 'admin_module_manage',
                     'AdminModulesNotifications' => 'admin_module_notification',
                     'AdminModulesSf' => 'admin_module_manage',
-                    'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPerformance' => 'admin_performance',
+                    'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
                     'AdminStockManagement' => 'admin_stock_overview',
-                    'AdminTranslationSf' => 'admin_international_translation_overview',
-                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
                     'AdminThemesCatalog' => 'admin_theme_catalog',
+                    'AdminTranslationSf' => 'admin_international_translation_overview',
                 );
 
                 if (isset($routes[$controller])) {
