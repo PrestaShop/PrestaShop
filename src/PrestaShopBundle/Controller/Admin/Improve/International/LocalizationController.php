@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,6 +47,8 @@ class LocalizationController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Improve/International/Localization/localization.html.twig")
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
      * @param Request $request
      *
      * @return array|RedirectResponse
@@ -52,22 +56,6 @@ class LocalizationController extends FrameworkBundleAdminController
     public function showSettingsAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            return $this->redirectToDefaultPage();
-        }
-
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-        }
 
         if (!extension_loaded('openssl')) {
             $this->addFlash('warning', $this->trans('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.', 'Admin.International.Notification'));
@@ -90,31 +78,15 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Save localization settings
      *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_localization_show_settings")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if ($this->isDemoModeEnabled()) {
-            return $this->redirectToRoute('admin_localization_show_settings');
-        }
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_localization_show_settings');
-        }
-
         $localizationFormHandler = $this->getLocalizationFormHandler();
 
         $localizationForm = $localizationFormHandler->getForm();
@@ -139,16 +111,15 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Handles localization pack import
      *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_localization_show_settings")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function importLocalizationPackAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            return $this->redirectToRoute('admin_localization_show_settings');
-        }
-
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
         $localizationPackImportForm->handleRequest($request);
 
