@@ -79,21 +79,4 @@ class ModuleTemplateLoader extends FilesystemLoader
             $this->setPaths($templatePaths, $namespace);
         }
     }
-
-    /**
-     * @return array
-     */
-    public function getRegisteredPaths()
-    {
-        return $this->registeredPaths;
-    }
-
-    /**
-     * @param array $registeredPaths
-     */
-    public function setRegisteredPaths($registeredPaths)
-    {
-        dump($registeredPaths);
-        $this->registeredPaths = $registeredPaths;
-    }
 }
