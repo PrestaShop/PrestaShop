@@ -39,11 +39,17 @@ class ModuleTemplateLoader extends FilesystemLoader
     private $rootPath;
 
     /**
+     * @var array $registeredPaths The list of Paths and namespaces registered in configuration.
+     * @see app/config/config.yml
+     */
+    private $registeredPaths;
+
+    /**
      * @param string|array $paths    A path or an array of paths where to look for templates
      * @param string|null  $rootPath The root path common to all relative paths (null for getcwd())
-     * @param string|null  $namespace A path namespace
+     * @param array  $namespaces A collection of path namespaces with namespace names.
      */
-    public function __construct($paths = array(), $rootPath = null, $namespace = 'PrestaShop')
+    public function __construct($paths = array(), $rootPath = null, array $namespaces)
     {
         $this->rootPath = (null === $rootPath ? getcwd() : $rootPath).DIRECTORY_SEPARATOR;
         if (false !== $realPath = realpath($rootPath)) {
@@ -51,14 +57,43 @@ class ModuleTemplateLoader extends FilesystemLoader
         }
 
         if ($paths) {
+            $this->registerNamespacesFromConfig($paths, $namespaces);
+        }
+    }
+
+    /**
+     * Register namespaces in module and link them to the right paths.
+     * @param $paths
+     * @param array $namespaces
+     */
+    private function registerNamespacesFromConfig($paths, array $namespaces)
+    {
+        foreach($namespaces as $namespace => $namespacePath) {
             $templatePaths = array();
 
             foreach ($paths as $path) {
-                if (is_dir($dir = $path . '/views/'. $namespace)) {
+                if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {
                     $templatePaths[] = $dir;
                 }
             }
             $this->setPaths($templatePaths, $namespace);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRegisteredPaths()
+    {
+        return $this->registeredPaths;
+    }
+
+    /**
+     * @param array $registeredPaths
+     */
+    public function setRegisteredPaths($registeredPaths)
+    {
+        dump($registeredPaths);
+        $this->registeredPaths = $registeredPaths;
     }
 }

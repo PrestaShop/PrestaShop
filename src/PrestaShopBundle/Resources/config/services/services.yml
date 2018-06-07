@@ -325,6 +325,14 @@ services:
 
     prestashop.twig.modules.loader:
         class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
-        arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
+        arguments:
+          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+          - ~
+          -
+            'PrestaShop': ''
+            'Product': '/Admin/Product'
+            'Twig': '/Admin/TwigTemplateForm'
+            'AdvancedParameters': '/Admin/Configure/AdvancedParameters'
+            'ShopParameters': '/Admin/Configure/ShopParameters'
         tags:
           - { name: twig.loader, priority: 1}
