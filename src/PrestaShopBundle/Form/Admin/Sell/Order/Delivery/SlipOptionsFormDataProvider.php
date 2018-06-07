@@ -24,12 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * This class is responsible of managing the data manipulated options form
+ * in "Sells > Orders > Delivery Slips" page.
+ */
+final class SlipOptionsFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * @var SlipOptionsConfiguration
+     */
+    private $configuration;
+
+    public function __construct(SlipOptionsConfiguration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return [
+            'options' => $this->configuration->getConfiguration(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->configuration->updateConfiguration($data['options']);
+    }
+}

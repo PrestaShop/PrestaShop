@@ -134,7 +134,6 @@ class ControllerTest extends TestCase
             array('AdminCartsController'),
             array('AdminImagesController'),
             array('AdminShopUrlController'),
-            array('AdminThemesCatalogController'),
             array('AdminThemesController'),
             array('AdminStatesController'),
             array('AdminLanguagesController'),

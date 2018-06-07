@@ -24,23 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Order\Delivery;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
-use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration;
+use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * This class is responsible of managing the data manipulated options form
+ * This class is responsible of managing the data manipulated pdf form
  * in "Sells > Orders > Delivery Slips" page.
  */
-final class SlipOptionsFormDataProvider implements FormDataProviderInterface
+final class SlipPdfFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var SlipOptionsConfiguration
+     * @var SlipPdfConfiguration
      */
     private $configuration;
 
-    public function __construct(SlipOptionsConfiguration $configuration)
+    public function __construct(SlipPdfConfiguration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -50,9 +50,7 @@ final class SlipOptionsFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'options' => $this->configuration->getConfiguration(),
-        ];
+        return [];
     }
 
     /**
@@ -60,6 +58,6 @@ final class SlipOptionsFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->configuration->updateConfiguration($data['options']);
+        return $this->configuration->updateConfiguration($data['pdf']);
     }
 }

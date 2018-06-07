@@ -114,7 +114,7 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.order.delivery.slip.options.form_provider'
             -
-              'options': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipOptionsType'
+              'options': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
             - 'OrderDeliverySlipPage'
 
     prestashop.adapter.order.delivery.slip.pdf.form_handler:
@@ -124,5 +124,5 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.order.delivery.slip.pdf.form_provider'
             -
-              'pdf': 'PrestaShopBundle\Form\Admin\Order\Delivery\SlipPdfType'
+              'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
             - 'OrderDeliverySlipPage'

@@ -738,18 +738,19 @@ class LinkCore
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
                     'AdminImport' => 'admin_import',
                     'AdminInformation' => 'admin_system_information',
+                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
                     'AdminMaintenance' => 'admin_maintenance',
                     'AdminModulesCatalog' => 'admin_module_catalog',
                     'AdminModulesManage' => 'admin_module_manage',
                     'AdminModulesNotifications' => 'admin_module_notification',
                     'AdminModulesSf' => 'admin_module_manage',
                     'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPerformance' => 'admin_performance',
+                    'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
                     'AdminStockManagement' => 'admin_stock_overview',
+                    'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
-                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
                 );
 
                 if (isset($routes[$controller])) {
