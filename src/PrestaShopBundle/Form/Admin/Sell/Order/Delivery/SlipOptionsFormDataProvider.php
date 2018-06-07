@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Order\Delivery;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
 use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;

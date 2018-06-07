@@ -23,47 +23,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\Order\Delivery;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
-use Symfony\Component\Form\FormBuilderInterface;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
+
+use PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * This form class generates the "Options" form in Delivery slips page
+ * This class is responsible of managing the data manipulated pdf form
+ * in "Sells > Orders > Delivery Slips" page.
  */
-class SlipOptionsType extends TranslatorAwareType
+final class SlipPdfFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var SlipPdfConfiguration
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $configuration;
+
+    public function __construct(SlipPdfConfiguration $configuration)
     {
-        $builder
-            ->add(
-                'prefix',
-                TranslateTextType::class,
-                [
-                    'locales' => $this->locales,
-                ]
-            )
-            ->add(
-                'number',
-                FormType\NumberType::class
-            )
-            ->add(
-                'enable_product_image',
-                SwitchType::class
-            );
+        $this->configuration = $configuration;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getData()
     {
-        return 'order_delivery_slip_options';
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->configuration->updateConfiguration($data['pdf']);
     }
 }
