@@ -72,22 +72,4 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
         ]);
     }
-
-    /**
-     * Extracts the major version part of a PrestaShop version string
-     *
-     * For "1.7.4.0" the method returns "1.7", etc.
-     *
-     * @param string $version
-     *
-     * @return bool|string
-     */
-    private function getMajorVersion($version)
-    {
-        return substr(
-            $version,
-            0,
-            strpos($version, '.', strpos($version, '.') + 1)
-        );
-    }
 }
