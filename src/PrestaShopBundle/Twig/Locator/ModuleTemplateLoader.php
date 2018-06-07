@@ -39,17 +39,11 @@ class ModuleTemplateLoader extends FilesystemLoader
     private $rootPath;
 
     /**
-     * @var array $registeredPaths The list of Paths and namespaces registered in configuration.
-     * @see app/config/config.yml
-     */
-    private $registeredPaths;
-
-    /**
+     * @param array  $namespaces A collection of path namespaces with namespace names.
      * @param string|array $paths    A path or an array of paths where to look for templates
      * @param string|null  $rootPath The root path common to all relative paths (null for getcwd())
-     * @param array  $namespaces A collection of path namespaces with namespace names.
      */
-    public function __construct($paths = array(), $rootPath = null, array $namespaces)
+    public function __construct(array $namespaces, $paths = array(), $rootPath = null)
     {
         $this->rootPath = (null === $rootPath ? getcwd() : $rootPath).DIRECTORY_SEPARATOR;
         if (false !== $realPath = realpath($rootPath)) {
@@ -78,22 +72,5 @@ class ModuleTemplateLoader extends FilesystemLoader
             }
             $this->setPaths($templatePaths, $namespace);
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getRegisteredPaths()
-    {
-        return $this->registeredPaths;
-    }
-
-    /**
-     * @param array $registeredPaths
-     */
-    public function setRegisteredPaths($registeredPaths)
-    {
-        dump($registeredPaths);
-        $this->registeredPaths = $registeredPaths;
     }
 }
