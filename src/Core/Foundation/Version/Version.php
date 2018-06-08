@@ -223,7 +223,7 @@ class Version
             throw new InvalidVersionException('A valid version must be a string.');
         }
 
-        if (!preg_match('/^[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*$/', $version)) {
+        if (!preg_match('/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
             throw new InvalidVersionException(sprintf('You provided an invalid version string ("%s"). A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".', $version));
         }
     }
