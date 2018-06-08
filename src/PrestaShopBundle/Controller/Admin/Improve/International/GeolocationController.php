@@ -72,9 +72,9 @@ class GeolocationController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation_show"
+     *     redirectRoute="admin_geolocation"
      * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_show")
+     * @DemoRestricted(redirectRoute="admin_geolocation")
      *
      * @param Request $request
      *
@@ -93,13 +93,13 @@ class GeolocationController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_geolocation_show');
+                return $this->redirectToRoute('admin_geolocation');
             }
 
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_geolocation_show');
+        return $this->redirectToRoute('admin_geolocation');
     }
 
     /**

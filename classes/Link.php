@@ -752,6 +752,7 @@ class LinkCore
                     'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
                     'AdminLocalization' => 'admin_localization_show_settings',
+                    'AdminGeolocation' => 'admin_geolocation',
                 );
 
                 if (isset($routes[$controller])) {
