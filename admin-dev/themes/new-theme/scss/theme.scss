@@ -32,13 +32,13 @@
 @import "components/ps_spinner";
 @import "components/ps_tree";
 @import "components/translatable_input";
+@import "components/choice_table";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
 @import "pages/products_catalog";
 @import "pages/translation_page";
 @import "pages/stock_page";
-@import "pages/geolocation";
 
 // Main Layout
 @import "pages/modules";
