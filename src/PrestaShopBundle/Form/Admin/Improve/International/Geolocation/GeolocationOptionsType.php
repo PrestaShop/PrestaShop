@@ -28,11 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
-use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
