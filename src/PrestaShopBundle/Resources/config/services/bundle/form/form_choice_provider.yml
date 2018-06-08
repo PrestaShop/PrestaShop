@@ -30,3 +30,9 @@ services:
             - '@prestashop.core.localization.pack.loader.local'
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+
+    prestashop.bundle.form.choice_provider.country:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\CountryChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.adapter.data_provider.country'

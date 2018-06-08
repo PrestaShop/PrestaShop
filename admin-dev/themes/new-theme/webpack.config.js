@@ -69,6 +69,9 @@ let config = {
     ],
     localization: [
       './js/pages/localization'
+    ],
+    geolocation: [
+      './js/pages/geolocation'
     ]
   },
   output: {

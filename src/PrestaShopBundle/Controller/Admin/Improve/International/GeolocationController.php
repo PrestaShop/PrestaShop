@@ -28,16 +28,23 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class GeolocationController is responsible for "Improve > International > Localization > Geolocation" page
+ */
 class GeolocationController extends FrameworkBundleAdminController
 {
     /**
      * Show geolocation page
      *
      * @Template("@PrestaShop/Admin/Improve/International/Geolocation/geolocation.html.twig")
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      *
@@ -61,6 +68,13 @@ class GeolocationController extends FrameworkBundleAdminController
 
     /**
      * Process geolocation configuration form
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_geolocation_show"
+     * )
+     * @DemoRestricted(redirectRoute="admin_geolocation_show")
      *
      * @param Request $request
      *
