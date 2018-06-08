@@ -96,9 +96,7 @@ class GeolocationController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_geolocation_show');
             }
 
-            foreach ($errors as $error) {
-                $this->addFlash('error', $error);
-            }
+            $this->flashErrors($errors);
         }
 
         return $this->redirectToRoute('admin_geolocation_show');
