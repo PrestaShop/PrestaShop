@@ -66,6 +66,9 @@ let config = {
     ],
     imports: [
       './js/pages/import'
+    ],
+    geolocation: [
+      './js/pages/geolocation'
     ]
   },
   output: {

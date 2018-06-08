@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,25 +23,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
-
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+const $ = window.$;
 
 /**
- * Class GeolocationByIpAddressType is responsible for handling "Improve > International > Localization > Geolocation"
- * IP addresses whitelist form
+ * ChoiceTable is responsible for managing common actions in choice table form type
  */
-class GeolocationByIpAddressType extends AbstractType
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('geolocation_enabled', SwitchType::class)
-        ;
-    }
+export default class ChoiceTable {
+  /**
+   * Initialize component
+   */
+  init() {
+    $(document).on('change', '.js-choice-table-select-all', (e) => {
+      this.handleSelectAll(e);
+    });
+  }
+
+  /**
+   * Check/uncheck all boxes in table
+   *
+   * @param {Event} event
+   */
+  handleSelectAll(event) {
+    const $selectAllChecbox = $(event.target);
+    const isSelectAllChecked = $selectAllChecbox.is(':checked');
+
+    $selectAllChecbox.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
+  }
 }

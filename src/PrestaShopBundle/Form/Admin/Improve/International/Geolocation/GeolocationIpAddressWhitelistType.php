@@ -31,6 +31,10 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Class GeolocationIpAddressWhitelistType is responsible for handling "Improve > International > Localization > Geolocation"
+ * IP addresses whitelist form
+ */
 class GeolocationIpAddressWhitelistType extends AbstractType
 {
     /**
@@ -54,7 +58,7 @@ class GeolocationIpAddressWhitelistType extends AbstractType
                     return str_replace(';', "\n", $ipWhitelistTextWithSemiColons);
                 },
                 function ($ipWhitelistTextWithNewLines) {
-                    return preg_replace('/\r\n|\r|\n/', ';', $ipWhitelistTextWithNewLines);
+                    return str_replace(["\r\n", "\r", "\n"], ';', $ipWhitelistTextWithNewLines);
                 }
             ))
         ;

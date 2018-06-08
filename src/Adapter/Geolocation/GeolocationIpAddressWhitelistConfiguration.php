@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Geolocation;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
+/**
+ * Class GeolocationIpAddressWhitelistConfiguration is responsible for configuring geolocation IP address whitelist data
+ */
 final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurationInterface
 {
     /**
