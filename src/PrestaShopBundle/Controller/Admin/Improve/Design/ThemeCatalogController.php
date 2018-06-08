@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
-use PrestaShop\PrestaShop\Core\Foundation\PrestaShopVersion\PrestaShopVersion;
+use PrestaShop\PrestaShop\Core\Foundation\Version\Version;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,12 +45,12 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
-        $prestaShopVersion = new PrestaShopVersion();
+        $version = new Version();
 
         $pageContent = file_get_contents(
-            'https://addons.prestashop.com/iframe/search-' . $prestaShopVersion->getMajorVersion() . '.php?'
+            'https://addons.prestashop.com/iframe/search-' . $version->getMajorVersion() . '.php?'
             . http_build_query([
-                'psVersion' => $prestaShopVersion->getVersion(),
+                'psVersion' => $version->getVersion(),
                 'isoLang' => $this->getContext()->language->iso_code,
                 'isoCurrency' => $this->getContext()->currency->iso_code,
                 'isoCountry' => $this->getContext()->country->iso_code,

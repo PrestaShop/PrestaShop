@@ -23,13 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\PrestaShopVersion;
+namespace PrestaShop\PrestaShop\Core\Foundation\Version;
 
 use AppKernel;
-use PrestaShop\PrestaShop\Core\Foundation\PrestaShopVersion\Exception\InvalidVersionException;
+use PrestaShop\PrestaShop\Core\Foundation\Version\Exception\InvalidVersionException;
 use InvalidArgumentException;
 
-class PrestaShopVersion
+class Version
 {
     const STRING = 0;
     const INTEGER = 1;
