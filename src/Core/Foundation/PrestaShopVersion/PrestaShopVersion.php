@@ -34,6 +34,27 @@ class PrestaShopVersion
     const STRING = 0;
     const INTEGER = 1;
 
+    private $version;
+    private $majorVersionString;
+    private $majorVersion;
+    private $minorVersion;
+    private $releaseVersion;
+
+    public function __construct(
+        $version = AppKernel::VERSION,
+        $majorVersionString = AppKernel::MAJOR_VERSION_STRING,
+        $majorVersion = AppKernel::MAJOR_VERSION,
+        $minorVersion = AppKernel::MINOR_VERSION,
+        $releaseVersion = AppKernel::RELEASE_VERSION
+    )
+    {
+        $this->version = $version;
+        $this->majorVersionString = $majorVersionString;
+        $this->majorVersion = $majorVersion;
+        $this->minorVersion = $minorVersion;
+        $this->releaseVersion = $releaseVersion;
+    }
+
     /**
      * Returns the current PrestaShop version which is hardcoded in \AppKernel::VERSION
      *
@@ -41,7 +62,7 @@ class PrestaShopVersion
      */
     public function getVersion()
     {
-        return AppKernel::VERSION;
+        return $this->version;
     }
 
     /**
@@ -54,11 +75,11 @@ class PrestaShopVersion
     public function getMajorVersion($type = self::STRING)
     {
         if (self::STRING === $type) {
-            return AppKernel::MAJOR_VERSION_STRING;
+            return $this->majorVersionString;
         }
 
         if (self::INTEGER === $type) {
-            return AppKernel::MAJOR_VERSION;
+            return $this->majorVersion;
         }
 
         throw new InvalidArgumentException('The major version can only be retrieved via \AppKernel::STRING or \AppKernel::INTEGER.');
@@ -71,7 +92,7 @@ class PrestaShopVersion
      */
     public function getMinorVersion()
     {
-        return AppKernel::MINOR_VERSION;
+        return $this->minorVersion;
     }
 
     /**
@@ -81,7 +102,7 @@ class PrestaShopVersion
      */
     public function getReleaseVersion()
     {
-        return AppKernel::RELEASE_VERSION;
+        return $this->releaseVersion;
     }
 
     /**
@@ -186,7 +207,7 @@ class PrestaShopVersion
             throw new InvalidArgumentException($e->getMessage());
         }
 
-        return version_compare(AppKernel::VERSION, $version, $operator);
+        return version_compare($this->version, $version, $operator);
     }
 
     /**
