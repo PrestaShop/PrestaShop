@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface;
 
 /**
- * Class GeolocationFormDataProvider
+ * Class GeolocationFormDataProvider is responsible for handling geolocation form data
  */
 final class GeolocationFormDataProvider implements FormDataProviderInterface
 {

@@ -751,6 +751,7 @@ class LinkCore
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminGeolocation' => 'admin_geolocation',
                 );
 
                 if (isset($routes[$controller])) {
