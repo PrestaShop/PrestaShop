@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Geolocation;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * Class GeolocationByIpAddressConfiguration is responsible for configuring geolocation configuration
+ */
 final class GeolocationByIpAddressConfiguration implements DataConfigurationInterface
 {
     /**

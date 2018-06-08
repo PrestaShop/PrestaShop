@@ -24,25 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
+namespace PrestaShopBundle\Form\Admin\Type\Material;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class GeolocationByIpAddressType is responsible for handling "Improve > International > Localization > Geolocation"
- * IP addresses whitelist form
- */
-class GeolocationByIpAddressType extends AbstractType
+class MaterialChoiceTableType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $builder
-            ->add('geolocation_enabled', SwitchType::class)
-        ;
+        $resolver->setDefaults([
+            'expanded' => true,
+            'multiple' => true,
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return ChoiceType::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'material_choice_table';
     }
 }

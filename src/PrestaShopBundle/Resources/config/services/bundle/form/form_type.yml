@@ -372,5 +372,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@=service("prestashop.bundle.form.choice_provider.country").getChoices()'
+            - '@prestashop.adapter.legacy.configuration'
         tags:
             - { name: form.type }

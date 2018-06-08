@@ -29,7 +29,7 @@
 {% set geolocationByIpAddressForm, geolocationIpAddressWhitelistForm, geolocationOptionsForm = geolocationForm.geolocation_by_id_address, geolocationForm.geolocation_ip_address_whitelist, geolocationForm.geolocation_options %}
 
 {% block content %}
-  <div class="container">
+  <div class="container" id="geolocationContent">
     {% if not geolocationDatabaseAvailable %}
     <div class="row">
       <div class="col">
@@ -62,4 +62,10 @@
     </div>
     {{ form_end(geolocationForm) }}
   </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/geolocation.bundle.js') }}"></script>
 {% endblock %}
