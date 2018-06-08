@@ -59,7 +59,7 @@
             {{ 'Select the countries from which your store is accessible'|trans }}
           </label>
 
-          <div class="js-country-choices countries-choice-table">
+          <div class="form-group">
             {{ form_errors(geolocationOptionsForm.geolocation_countries) }}
             {{ form_widget(geolocationOptionsForm.geolocation_countries) }}
           </div>
