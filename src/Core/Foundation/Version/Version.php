@@ -211,7 +211,10 @@ class Version
     }
 
     /**
+     * Checks if a given version is a valid version string
+     *
      * @param $version
+     *
      * @throws InvalidVersionException If the provided version is invalid
      */
     private function checkVersion($version)
@@ -220,16 +223,8 @@ class Version
             throw new InvalidVersionException('A valid version must be a string.');
         }
 
-        $versionParts = explode('.', $version);
-
-        if (4 !== count($versionParts)) {
-            throw new InvalidVersionException('A valid version string must contain three times the "." character, for example "1.7.4.0".');
-        }
-
-        foreach ($versionParts as $versionPart) {
-            if (!is_numeric($versionPart)) {
-                throw new InvalidVersionException('A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".');
-            }
+        if (!preg_match('/^[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*$/', $version)) {
+            throw new InvalidVersionException(sprintf('You provided an invalid version string ("%s"). A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".', $version));
         }
     }
 }
