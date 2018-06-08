@@ -45,8 +45,8 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
-        $version = new Version();
-        
+        $version = $this->get('prestashop.core.foundation.version');
+
         $pageContent = file_get_contents(
             'https://addons.prestashop.com/iframe/search-' . $version->getMajorVersion() . '.php?'
             . http_build_query([

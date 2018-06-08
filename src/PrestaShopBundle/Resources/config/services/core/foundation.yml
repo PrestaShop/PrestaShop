@@ -1,0 +1,9 @@
+services:
+    prestashop.core.foundation.version:
+        class: PrestaShop\PrestaShop\Core\Foundation\Version\Version
+        arguments:
+            - !php/const:AppKernel::VERSION
+            - !php/const:AppKernel::MAJOR_VERSION_STRING
+            - !php/const:AppKernel::MAJOR_VERSION
+            - !php/const:AppKernel::MINOR_VERSION
+            - !php/const:AppKernel::RELEASE_VERSION

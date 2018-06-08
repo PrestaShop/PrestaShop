@@ -25,7 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Version;
 
-use AppKernel;
 use PrestaShop\PrestaShop\Core\Foundation\Version\Exception\InvalidVersionException;
 use InvalidArgumentException;
 
@@ -40,13 +39,7 @@ class Version
     private $minorVersion;
     private $releaseVersion;
 
-    public function __construct(
-        $version = AppKernel::VERSION,
-        $majorVersionString = AppKernel::MAJOR_VERSION_STRING,
-        $majorVersion = AppKernel::MAJOR_VERSION,
-        $minorVersion = AppKernel::MINOR_VERSION,
-        $releaseVersion = AppKernel::RELEASE_VERSION
-    )
+    public function __construct($version, $majorVersionString, $majorVersion, $minorVersion, $releaseVersion)
     {
         $this->version = $version;
         $this->majorVersionString = $majorVersionString;
