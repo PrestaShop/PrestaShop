@@ -55,14 +55,17 @@ let config = {
     logs: [
       './js/app/pages/logs',
     ],
+    improve_design_positions: [
+      './js/pages/improve/design_positions',
+    ],
     order_preferences: [
       './js/pages/order-preferences',
     ],
-    product_preferences: [
-      './js/pages/product-preferences',
-    ],
     order_delivery: [
       './js/pages/order/delivery',
+    ],
+    product_preferences: [
+      './js/pages/product-preferences',
     ],
     imports: [
       './js/pages/import'

@@ -1,0 +1,228 @@
+{#**
+  * 2007-2018 PrestaShop
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to http://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2018 PrestaShop SA
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Design.Feature" %}
+
+{% block content %}
+  <div class="justify-content-center">
+    {% if not canMove %}
+	    <p class="alert alert-warning">
+        {{ 'If you want to order/move the following data, please select a shop from the shop list.' | trans({}, 'Admin.Design.Notification') }}
+	    </p>
+    {% endif %}
+
+    <div class="card col-10">
+		  <div class="card-body">
+			  <form class="card form-inline">
+					<div class="form-group col-6">
+						<label class="form-control-label col-4 text-left">{{ 'Show' | trans({}, 'Admin.Actions') }}</label>
+						<div class="col-7">
+							<select id="show_modules" class="filter">
+								<option value="all">{{ 'All modules' | trans }}&nbsp;</option>
+								{% for module in modules %}
+									<option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %} >{{ module.displayName }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group col-6">
+						<label class="form-control-label col-4 text-left">{{ 'Search for a hook' | trans }}</label>
+						<div class="col-lg-7">
+							<div class="input-group">
+								<div class="input-group-prepend"><i class="icon icon-search"></i></div>
+								<input type="text" class="form-control" id="hook_search" name="hook_search" placeholder="">
+							</div>
+						</div>
+					</div>
+
+				  <div class="row">
+					  <div class="col-sm-12">
+							<p class="checkbox">
+								<label class="form-control-label" for="hook_position">
+									<input type="checkbox" id="hook_position"/>
+									{{ 'Display non-positionable hooks' | trans }}
+								</label>
+							</p>
+					  </div>
+				  </div>
+			  </form>
+			  <div id="modulePosition">
+				  <form method="post" action="" >
+					  {% for hook in hooks %}
+					    <section class="hook_panel {% if hook['position'] == 0 %}hook_position hide{% endif %}">
+						    <a name="{{ hook['name'] }}"></a>
+						    <header class="hook_panel_header">
+							    <span class="hook_name">{{ hook['name'] }}</span>
+							    <span class="badge float-right">
+								    {% if hook['modules_count'] and canMove %}
+								      <input type="checkbox" id="Ghook{{ hook['id_hook'] }}" onclick="hookCheckboxes({{ hook['id_hook'] }}, 0, this)"/>
+								    {% endif %}
+								    {{ hook['modules_count'] }}
+                    {{ ((hook['modules_count'] > 1) ? 'Modules' : 'Module') | trans({}, 'Admin.Global') }}
+							    </span>
+
+							    {% if hook['description'] is defined %}
+							      <div class="hook_description">{{ hook['description'] }}</div>
+							    {% endif %}
+						    </header>
+
+						    {% if hook['modules_count'] %}
+						      <section class="module_list">
+						        <ul class="list-unstyled{% if hook['modules_count'] > 1 %} sortable{% endif %}">
+
+							        {% for position, module in hook['modules'] %}
+							          {% if modules[module['id_module']] is defined %}
+                          {% set moduleInstance = modules[module['id_module']] %}
+							            <li id="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" class="module_position_{{ moduleInstance.id }} module_list_item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
+								            <div class="module_col_select">
+									            <input type="checkbox" id="mod{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" onclick="hookCheckboxes({{ hook['id_hook'] }}, 1, this)" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
+								            </div>
+
+								            {% if not selectedModule %}
+								              <div class="module_col_position{% if canMove and hook['modules_count'] >= 2 %} dragHandle{% endif %}" id="td_{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}">
+									              <span class="positions">{{ position }}</span>
+									              {% if canMove %}
+									                <div class="btn-group-vertical">
+										                <a class="btn btn-default btn-xs"
+                                      href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;direction=0&amp;changePosition#{{ hook['name'] }}">
+											                <i class="icon-chevron-up"></i>
+										                </a>
+
+										                <a class="btn btn-default btn-xs"
+                                      href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;direction=1&amp;changePosition#{{ hook['name'] }}">
+											                <i class="icon-chevron-down"></i>
+										                </a>
+									                </div>
+									              {% endif %}
+								              </div>
+								            {% endif %}
+
+								            <div class="module_col_icon">
+									            <img width="57" src="/modules/{{ moduleInstance.name }}/logo.png" alt="{{ moduleInstance.displayName| escape }}" />
+								            </div>
+
+								            <div class="module_col_infos">
+									            <span class="module-name">
+										            {{ moduleInstance.displayName| escape }}
+                                {% if moduleInstance.version %}
+										              <small class="text-muted">&nbsp;-&nbsp;{{ 'v%s' | format(moduleInstance.version) }}</small>
+                                {% endif %}
+									            </span>
+									            <div class="module_description">{{ moduleInstance.description | escape }}</div>
+								            </div>
+								            <div class="module_col_actions">
+									            <div class="btn-group">
+										            <a class="btn btn-default" href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{if $display_key}&amp;show_modules={{ selectedModule }}{% endif %}&amp;token={$token|escape:'html':'UTF-8'}">
+											            <i class="icon-pencil"></i>
+											            {{ 'Edit' | trans({}, 'Admin.Actions') }}
+										            </a>
+										            <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+											            <span class="caret"></span>&nbsp;
+										            </a>
+										            <ul class="dropdown-menu">
+											            <li>
+												            <a href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;deleteGraft{% if selectedModule %}&amp;show_modules={{ selectedModule }}{% endif %}">
+													            <i class="icon-minus-sign-alt"></i>
+													            {{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}
+												            </a>
+											            </li>
+										            </ul>
+									            </div>
+								            </div>
+							            </li>
+						          {% endfor %}
+						        </ul>
+						      </section>
+	              {% endif %}
+					    </section>
+            {% endfor %}
+
+					  <div id="unhook_button_position_bottom">
+						  <button type="submit" class="btn btn-default" name="unhookform">
+							  <i class="icon-minus-sign-alt"></i>
+							  {{ 'Unhook the selection' | trans({}, 'Admin.Design.Feature') }}
+						  </button>
+					  </div>
+				  </form>
+			  </div>
+	    </div>
+
+	    <div class="col-lg-3">
+		    <div class="panel" id="modules-position-selection-panel">
+			    <h3><i class="icon-check"></i> {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
+			    <p>
+				    <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
+				    <span id="modules-position-multiple-selection">
+					    <span id="modules-position-selection-count"></span> {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
+				    </span>
+			    </p>
+			    <div class="text-center">
+				    <button class="btn btn-default"><i class="icon-remove"></i> {{ 'Unhook the selection' | trans }}</button>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script type="text/javascript">
+	  var come_from = 'AdminModulesPositions';
+  </script>
+  <script type="text/javascript">
+	  $('.sortable').sortable({
+		  forcePlaceholderSize: true
+	  }).bind('sortupdate', function(e, ui) {
+		  var ids = ui.item.attr('id').split('_');
+		  var way = (ui.start_index < ui.end_index)? 1 : 0;
+		  var data = ids[0]+'[]=';
+
+		  $.each(e.target.children, function(index, element) {
+			  data += '&'+ids[0]+'[]='+$(element).attr('id');
+		  });
+
+		  $.ajax({
+			  type: 'POST',
+			  headers: { "cache-control": "no-cache" },
+			  async: false,
+			  url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
+			  data: data + '&action=updatePositions&id_hook='+ids[0]+'&id_module='+ids[1]+'&way='+way+'&ajax=1' ,
+			  success: function(data) {
+				  start = 0;
+
+				  $.each(e.target.children, function(index, element) {
+					  $(element).find('.positions').html(++start);
+				  });
+
+				  showSuccessMessage(update_success_msg);
+			  }
+		  });
+	  });
+  </script>
+  <script src="{{ asset('themes/new-theme/public/order_delivery.bundle.js') }}"></script>
+{% endblock %}

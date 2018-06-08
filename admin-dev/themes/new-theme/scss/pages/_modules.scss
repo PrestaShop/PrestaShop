@@ -136,18 +136,18 @@
     }
     .module-name-list {
       font-weight: bolder;
-      color: $gray-dark;
+      color: #7A7A7A-dark;
       margin: 0;
     }
     .module-version-author-list {
       font-weight: bold;
-      color: $gray-medium;
+      color: #7A7A7A-medium;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       b {
         font-weight: bold;
-        color: $gray-dark;
+        color: #7A7A7A-dark;
       }
     }
 
@@ -203,7 +203,7 @@
 }
 
 /**
-* Addons Module Cast (List view)
+* Addons Module Cast (List view);
 **/
 .module-addons-item-list {
   display: none;
@@ -293,7 +293,7 @@
         font-family: 'Material Icons';
         font-size: 1.5rem;
         position: relative;
-        color: $gray-medium;
+        color: #7A7A7A-medium;
         right: 20px;
       }
     }
@@ -475,10 +475,148 @@ form#importDropzone {
 }
 
 /**
-* PrestaTrust modal
-**/
+ * PrestaTrust modal
+ **/
 
 #pstrust-img {
     max-height: 64px;
     max-width: 64px;
+}
+
+/**
+ *
+ */
+
+.hook-panel {
+	margin-bottom: 10px!important;
+	border: solid #E6E6E6 1px;
+	box-shadow: rgba(black,0.10) 0 -2px 0 inset;
+	border-radius: 3px;
+	padding: 10px 10px 5px 10px;
+}
+.module-name {
+	font-size: 1.2em;
+}
+
+.module_description {
+	@extend .text-muted;
+}
+
+.hook_panel_header {
+	margin: 0 -10px 0 -10px;
+	padding: 0 10px 10px 10px;
+
+	.hook_name {
+		font-size: 1.4em;
+		color: $brand-primary;
+		background-color: white;
+		padding: 0 4px;
+		border-radius: 3px;
+  }
+	.hook_title {
+		@extend .text-muted;
+  }
+	.hook_description {
+		@extend .text-muted;
+		padding: 3px 0 0 3px;
+  }
+}
+.modules_list_container_tab {
+	img {
+		max-width: 66px;
+  }
+}
+
+.module_list {
+	.module_list_item {
+		display: table;
+		width: 100%;
+		padding: 5px 0;
+		margin-bottom: -1px;
+		border: solid 1px #9ED0EC;
+		&.highlight {
+			background-color: #F7E69F;
+    }
+  }
+}
+.module_list {
+	.draggable {
+		cursor: pointer;
+  }
+}
+.module_col_select {
+	display: table-cell;
+	width: 22px;
+	min-height: 35px;
+	vertical-align: middle;
+	text-align: center;
+	border-right: 1px solid #ddd;
+}
+.module_col_position {
+	display: table-cell;
+	width: 70px;
+	vertical-align: middle;
+	text-align: right;
+
+	.positions {
+		border: solid 1px #ccc;
+		background-color: #eee;
+		padding: 0 5px;
+		font-size: 1.4em;
+		color: #aaa;
+		cursor: move;
+		text-shadow: white 1px 1px;
+		border-radius: 3px;
+		box-shadow: rgba(0,0,0,0.2) 0 1px 3px inset;
+  }
+}
+
+.module_col_icon {
+	display: table-cell;
+	width: 75px;
+	text-align: center;
+	vertical-align: middle;
+}
+.module_col_infos {
+	display: table-cell;
+	height: 50px;
+	vertical-align: middle;
+}
+.module_col_actions {
+	display: table-cell;
+	width: 160px;
+	padding: 0 10px;
+	vertical-align: middle;
+	text-align: right;
+	.btn-group {
+		text-align: left;
+  }
+}
+
+li.sortable-placeholder {
+	border: 1px dashed #CCC;
+	background-color: #eee;
+	margin: 4px;
+	border-radius: 5px;
+}
+td.module_active {
+	background-color: lighten($brand-success,10%)!important;
+}
+td.module_inactive {
+	background-color: lighten(#7A7A7A,50%)!important;
+}
+.module-badge-popular,
+.module-badge-partner,
+.module-badge-bought {
+	@extend .badge;
+	font-size: 12px;
+}
+.module-badge-popular {
+	background-color: #F01778;
+}
+.module-badge-partner {
+	background-color: $brand-primary;
+}
+.module-badge-bought {
+	background-color: #8BC954;
 }

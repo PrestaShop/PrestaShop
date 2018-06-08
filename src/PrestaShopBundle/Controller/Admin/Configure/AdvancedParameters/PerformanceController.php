@@ -53,11 +53,13 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function indexAction(FormInterface $form = null)
     {
-        $toolbarButtons['clear_cache'] = array(
-            'href' => $this->generateUrl('admin_clear_cache'),
-            'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
-            'icon' => 'delete',
-        );
+        $toolbarButtons = [
+            'clear_cache' => [
+                'href' => $this->generateUrl('admin_clear_cache'),
+                'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
+                'icon' => 'delete',
+            ]
+        ];
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
