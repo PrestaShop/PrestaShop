@@ -51,8 +51,8 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             'https://addons.prestashop.com/iframe/search-' . $prestaShopVersion->getMajorVersion() . '.php?'
             . http_build_query([
                 'psVersion' => $prestaShopVersion->getVersion(),
-                'isoLang' => $this->getContext->language->iso_code,
-                'isoCurrency' => $this->getContext->currency->iso_code,
+                'isoLang' => $this->getContext()->language->iso_code,
+                'isoCurrency' => $this->getContext()->currency->iso_code,
                 'isoCountry' => $this->getContext()->country->iso_code,
                 'activity' => $configuration->getInt('PS_SHOP_ACTIVITY'),
                 'parentUrl' => $request->getSchemeAndHttpHost(),
