@@ -25,139 +25,137 @@
 
 const $ = window.$;
 
+console.log('here');
 $(() => {
 
-	//
-	// Used for the modules listing
-	//
-	if ($("#position_filer").length !== 0) {
-		  var panel_selection = $("#modules-position-selection-panel");
-		  var panel_selection_single_selection = panel_selection.find("#modules-position-single-selection");
-		  var panel_selection_multiple_selection = panel_selection.find("#modules-position-multiple-selection");
+	if ($("#position-filters").length === 0) {
+    return;
+  }
 
-		  var panel_selection_original_y = panel_selection.offset().top;
-		  var panel_selection_original_y_top_margin = 111;
+	const $panelSelection = $("#modules-position-selection-panel");
+	var $panelSelectionSingleSelection = $panelSelection.find("#modules-position-single-selection");
+	var $panelSelectionMultipleSelection = $panelSelection.find("#modules-position-multiple-selection");
 
-		  panel_selection.css("position", "relative").hide();
+	var $panelSelectionOriginalY = $panelSelection.offset().top;
+	var $panelSelectionOriginalYTopMargin = 111;
 
-		  $(window).on("scroll", function (event) {
-			  var scroll_top = $(window).scrollTop();
-			  panel_selection.css(
-				  "top",
-				  scroll_top < panel_selection_original_y_top_margin
-					? 0
-					: scroll_top - panel_selection_original_y + panel_selection_original_y_top_margin
-			  );
-		  });
+	$(window).on('scroll', function (event) {
+		var $scrollTop = $(window).scrollTop();
+		$panelSelection.css(
+			'top',
+			$scrollTop < $panelSelectionOriginalYTopMargin
+			? 0
+			: $scrollTop - $panelSelectionOriginalY + $panelSelectionOriginalYTopMargin
+		);
+	});
 
-		  var modules_list = $(".modules-position-checkbox");
+	var modules_list = $(".modules-position-checkbox");
 
-		  modules_list.on("change", function () {
+	modules_list.on("change", function () {
 
-			  var checked_count = modules_list.filter(":checked").length;
+		var checked_count = modules_list.filter(":checked").length;
 
-			  panel_selection.hide();
-			  panel_selection_single_selection.hide();
-			  panel_selection_multiple_selection.hide();
+		$panelSelection.hide();
+		$panelSelectionSingleSelection.hide();
+		$panelSelectionMultipleSelection.hide();
 
-			  if (checked_count == 1)
-			    {
-				    panel_selection.show();
-				    panel_selection_single_selection.show();
-			    }
-			  else if (checked_count > 1)
-			    {
-				    panel_selection.show();
-				    panel_selection_multiple_selection.show();
-				    panel_selection_multiple_selection.find("#modules-position-selection-count").html(checked_count);
-			    }
-		  });
+		if (checked_count == 1)
+			{
+				$panelSelection.show();
+				$panelSelectionSingleSelection.show();
+			}
+		else if (checked_count > 1)
+			{
+				$panelSelection.show();
+				$panelSelectionMultipleSelection.show();
+				$panelSelectionMultipleSelection.find("#modules-position-selection-count").html(checked_count);
+			}
+	});
 
-		  panel_selection.find("button").click(function () {
-			  $("button[name='unhookform']").trigger("click");
-		  });
+	$panelSelection.find("button").click(function () {
+		$("button[name='unhookform']").trigger("click");
+	});
 
-		  var hooks_list = [];
-		  $("section.hook_panel").find(".hook_name").each(function () {
-			  var $this = $(this);
-			  hooks_list.push({
-				  'title': $this.html(),
-				  'element': $this,
-				  'container': $this.parents(".hook_panel")
-			  });
-		  });
+	var hooks_list = [];
+	$("section.hook_panel").find(".hook_name").each(function () {
+		var $this = $(this);
+		hooks_list.push({
+			'title': $this.html(),
+			'element': $this,
+			'container': $this.parents(".hook_panel")
+		});
+	});
 
-		  var show_modules = $("#show_modules");
-		  show_modules.select2();
-		  show_modules.bind("change", function () {
-			  modulesPositionFilterHooks();
-		  });
+	var show_modules = $("#show_modules");
+	show_modules.select2();
+	show_modules.bind("change", function () {
+		modulesPositionFilterHooks();
+	});
 
-		  var hook_position = $("#hook_position");
-		  hook_position.bind("change", function () {
-			  modulesPositionFilterHooks();
-		  });
+	var hook_position = $("#hook_position");
+	hook_position.bind("change", function () {
+		modulesPositionFilterHooks();
+	});
 
-		  $('#hook_search').bind('input', function () {
-			  modulesPositionFilterHooks();
-		  });
+	$('#hook_search').bind('input', function () {
+		modulesPositionFilterHooks();
+	});
 
-		  function modulesPositionFilterHooks()
-		  {
-			  var id;
-			  var hook_name = $('#hook_search').val();
-			  var module_id = $("#show_modules").val();
-			  var position = hook_position.prop('checked');
-			  var regex = new RegExp("(" + hook_name + ")", "gi");
+	function modulesPositionFilterHooks()
+	{
+		var id;
+		var hook_name = $('#hook_search').val();
+		var module_id = $("#show_modules").val();
+		var position = hook_position.prop('checked');
+		var regex = new RegExp("(" + hook_name + ")", "gi");
 
-			  for (id = 0; id < hooks_list.length; id++)
-			    {
-				    hooks_list[id].container.toggle(hook_name == "" && module_id == "all");
-				    hooks_list[id].element.html(hooks_list[id].title);
-				    hooks_list[id].container.find('.module_list_item').removeClass('highlight');
-			    }
+		for (id = 0; id < hooks_list.length; id++)
+			{
+				hooks_list[id].container.toggle(hook_name == "" && module_id == "all");
+				hooks_list[id].element.html(hooks_list[id].title);
+				hooks_list[id].container.find('.module_list_item').removeClass('highlight');
+			}
 
-			  if (hook_name != "" || module_id != "all")
-			    {
-				    var hooks_to_show_from_module = $();
-				    var hooks_to_show_from_hook_name = $();
+		if (hook_name != "" || module_id != "all")
+			{
+				var hooks_to_show_from_module = $();
+				var hooks_to_show_from_hook_name = $();
 
-				    if (module_id != "all")
-					    for (id = 0; id < hooks_list.length; id++)
-					      {
-						      var current_hooks = hooks_list[id].container.find(".module_position_" + module_id);
-						      if (current_hooks.length > 0)
-						        {
-							        hooks_to_show_from_module = hooks_to_show_from_module.add(hooks_list[id].container);
-							        current_hooks.addClass('highlight');
-						        }
-					      }
+				if (module_id != "all")
+					for (id = 0; id < hooks_list.length; id++)
+					  {
+						  var current_hooks = hooks_list[id].container.find(".module_position_" + module_id);
+						  if (current_hooks.length > 0)
+						    {
+							    hooks_to_show_from_module = hooks_to_show_from_module.add(hooks_list[id].container);
+							    current_hooks.addClass('highlight');
+						    }
+					  }
 
-				    if (hook_name != "")
-					    for (id = 0; id < hooks_list.length; id++)
-					      {
-						      var start = hooks_list[id].title.toLowerCase().search(hook_name.toLowerCase());
-						      if (start != -1)
-						        {
-							        hooks_to_show_from_hook_name = hooks_to_show_from_hook_name.add(hooks_list[id].container);
-							        hooks_list[id].element.html(hooks_list[id].title.replace(regex, '<span class="highlight">$1</span>'));
-						        }
-					      }
+				if (hook_name != "")
+					for (id = 0; id < hooks_list.length; id++)
+					  {
+						  var start = hooks_list[id].title.toLowerCase().search(hook_name.toLowerCase());
+						  if (start != -1)
+						    {
+							    hooks_to_show_from_hook_name = hooks_to_show_from_hook_name.add(hooks_list[id].container);
+							    hooks_list[id].element.html(hooks_list[id].title.replace(regex, '<span class="highlight">$1</span>'));
+						    }
+					  }
 
-				    if (module_id == "all" && hook_name != "")
-					    hooks_to_show_from_hook_name.show();
-				    else if (hook_name == "" && module_id != "all")
-					    hooks_to_show_from_module.show();
-				    else
-					    hooks_to_show_from_hook_name.filter(hooks_to_show_from_module).show();
-			    }
+				if (module_id == "all" && hook_name != "")
+					hooks_to_show_from_hook_name.show();
+				else if (hook_name == "" && module_id != "all")
+					hooks_to_show_from_module.show();
+				else
+					hooks_to_show_from_hook_name.filter(hooks_to_show_from_module).show();
+			}
 
-			  if (!position)
-				  for (id = 0; id < hooks_list.length; id++)
-					  if (hooks_list[id].container.is('.hook_position'))
-						  hooks_list[id].container.hide();
-		  }
-	  }
+		if (!position)
+			for (id = 0; id < hooks_list.length; id++)
+				if (hooks_list[id].container.is('.hook_position'))
+					hooks_list[id].container.hide();
+	}
 
 	//
 	// Used for the anchor module page
