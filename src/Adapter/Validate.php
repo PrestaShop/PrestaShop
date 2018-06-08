@@ -43,4 +43,16 @@ class Validate
     {
         return ValidateLegacy::isDate($date);
     }
+
+    /**
+     * Check if HTML content is clean
+     *
+     * @param string $html
+     *
+     * @return bool
+     */
+    public function isCleanHtml($html)
+    {
+        return ValidateLegacy::isCleanHtml($html);
+    }
 }

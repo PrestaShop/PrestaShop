@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class GeolocationFormDataProvider
@@ -52,34 +52,34 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
     private $geolocationOptionsConfiguration;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var GeoLiteCityCheckerInterface
      */
     private $geoLiteCityChecker;
 
     /**
+     * @var Validate
+     */
+    private $validate;
+
+    /**
      * @param DataConfigurationInterface $geolocationByIpAddressConfiguration
      * @param DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration
      * @param DataConfigurationInterface $geolocationOptionsConfiguration
-     * @param TranslatorInterface $translator
      * @param GeoLiteCityCheckerInterface $geoLiteCityChecker
+     * @param Validate $validate
      */
     public function __construct(
         DataConfigurationInterface $geolocationByIpAddressConfiguration,
         DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration,
         DataConfigurationInterface $geolocationOptionsConfiguration,
-        TranslatorInterface $translator,
-        GeoLiteCityCheckerInterface $geoLiteCityChecker
+        GeoLiteCityCheckerInterface $geoLiteCityChecker,
+        Validate $validate
     ) {
         $this->geolocationByIpAddressConfiguration = $geolocationByIpAddressConfiguration;
         $this->geolocationIpAddressWhitelistConfiguration = $geolocationIpAddressWhitelistConfiguration;
         $this->geolocationOptionsConfiguration = $geolocationOptionsConfiguration;
-        $this->translator = $translator;
         $this->geoLiteCityChecker = $geoLiteCityChecker;
+        $this->validate = $validate;
     }
 
     /**
@@ -99,18 +99,34 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($data['geolocation_by_id_address']['geolocation_enabled'] &&
-            !$this->geoLiteCityChecker->isAvailable()
-        ) {
-            $error = $this->translator->trans('The geolocation database is unavailable.', [], 'Admin.International.Notification');
+        $errors = [];
 
-            return [$error];
+        if ($data['geolocation_by_id_address']['geolocation_enabled'] && !$this->geoLiteCityChecker->isAvailable()) {
+            $errors[] = [
+                'key' => 'The geolocation database is unavailable.',
+                'parameters' => [],
+                'domain' => 'Admin.International.Notification',
+            ];
         }
 
         if (empty($data['geolocation_options']['geolocation_countries'])) {
-            $error = $this->translator->trans('Country selection is invalid.', [], 'Admin.International.Notification');
+            $errors[] = [
+                'key' => 'Country selection is invalid.',
+                'parameters' => [],
+                'domain' => 'Admin.International.Notification',
+            ];
+        }
 
-            return [$error];
+        if (!$this->validate->isCleanHtml($data['geolocation_ip_address_whitelist']['geolocation_whitelist'])) {
+            $errors[] = [
+                'key' => 'Invalid whitelist',
+                'parameters' => [],
+                'domain' => 'Admin.International.Notification',
+            ];
+        }
+
+        if (!empty($errors)) {
+            return $errors;
         }
 
         return array_merge(
