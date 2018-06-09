@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+require_once __DIR__.'/../vendor/autoload.php';
 
-define('_PS_VERSION_', '1.7.4.0');
+define('_PS_VERSION_', AppKernel::VERSION);
 
-require_once(_PS_CONFIG_DIR_.'alias.php');
-require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
+require_once _PS_CONFIG_DIR_.'alias.php';
+require_once _PS_CLASS_DIR_.'PrestaShopAutoload.php';
 spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
-
-require_once(__DIR__.'/../vendor/autoload.php');

@@ -26,18 +26,52 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Version;
 
 use PrestaShop\PrestaShop\Core\Foundation\Version\Exception\InvalidVersionException;
-use InvalidArgumentException;
 
+
+/**
+ * Class responsible of managing the right version of Shop
+ * for every internal/external services.
+ */
 class Version
 {
     const STRING = 0;
     const INTEGER = 1;
 
-    private $version;
+    /**
+     * Full version name.
+     *
+     * @var string
+     */
+    private $fullVersion;
+
+    /**
+     * Major version name.
+     *
+     * @var string
+     */
     private $majorVersionString;
+
+    /**
+     * Major version.
+     *
+     * @var int
+     */
     private $majorVersion;
+
+    /**
+     * Minor version.
+     *
+     * @var int
+     */
     private $minorVersion;
+
+    /**
+     * Release version.
+     *
+     * @var int
+     */
     private $releaseVersion;
+
 
     public function __construct($version, $majorVersionString, $majorVersion, $minorVersion, $releaseVersion)
     {
@@ -49,37 +83,37 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop version which is hardcoded in \AppKernel::VERSION
+     * Returns the current PrestaShop version which is hardcoded in \AppKernel::VERSION.
      *
      * @return string For example "1.7.4.0"
      */
-    public function getVersion()
+    public function getFullVersion()
     {
-        return $this->version;
+        return $this->fullVersion;
     }
 
     /**
-     * Returns the current PrestaShop major version as string or integer
+     * Returns the current PrestaShop major version as a string.
      *
-     * @param int $type Defines the datatype of the returned major version (\AppKernel::STRING or \AppKernel::INTEGER)
-     *
-     * @return int|string For example "1.7" or 17
+     * @return string For example "1.7"
      */
-    public function getMajorVersion($type = self::STRING)
+    public function getStringMajorVersion()
     {
-        if (self::STRING === $type) {
-            return $this->majorVersionString;
-        }
-
-        if (self::INTEGER === $type) {
-            return $this->majorVersion;
-        }
-
-        throw new InvalidArgumentException('The major version can only be retrieved via \AppKernel::STRING or \AppKernel::INTEGER.');
+        return $this->majorVersionString;
     }
 
     /**
-     * Returns the current PrestaShop minor version
+     * Returns the current PrestaShop major version as an integer.
+     *
+     * @return string For example 17
+     */
+    public function getMajorVersion()
+    {
+        return $this->majorVersion;
+    }
+
+    /**
+     * Returns the current PrestaShop minor version.
      *
      * @return int
      */
@@ -99,7 +133,7 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is greater than the provided version
+     * Returns if the current PrestaShop version is greater than the provided version.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      *
@@ -113,7 +147,7 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is greater than or equal to the provided version
+     * Returns if the current PrestaShop version is greater than or equal to the provided version.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      *
@@ -127,7 +161,7 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is less than the provided version
+     * Returns if the current PrestaShop version is less than the provided version.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      *
@@ -141,7 +175,7 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is less than or equal to the provided version
+     * Returns if the current PrestaShop version is less than or equal to the provided version.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      *
@@ -155,7 +189,7 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is equal to the provided version
+     * Returns if the current PrestaShop version is equal to the provided version.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      *
@@ -169,7 +203,7 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is not equal to the provided version
+     * Returns if the current PrestaShop version is not equal to the provided version.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      *
@@ -183,24 +217,20 @@ class Version
     }
 
     /**
-     * Compares the current PrestaShop version with the provided version depending on the provided operator
+     * Compares the current PrestaShop version with the provided version depending on the provided operator.
      *
      * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
      * @param $operator Operator for version_compare(), allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
      *
-     * @return boolean Result of the comparison
+     * @return boolean Result of the comparison.
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     private function versionCompare($version, $operator)
     {
-        try {
-            $this->checkVersion($version);
-        } catch(InvalidVersionException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        if ($this->checkVersion($version)) {
+            return version_compare($this->version, $version, $operator);
         }
-
-        return version_compare($this->version, $version, $operator);
     }
 
     /**
@@ -208,16 +238,19 @@ class Version
      *
      * @param $version
      *
+     * @return bool true only if version is valid, else throw an exception.
      * @throws InvalidVersionException If the provided version is invalid
      */
     private function checkVersion($version)
     {
         if (!is_string($version)) {
-            throw new InvalidVersionException('A valid version must be a string.');
+            throw InvalidVersionException::mustBeAString();
         }
 
         if (!preg_match('/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
-            throw new InvalidVersionException(sprintf('You provided an invalid version string ("%s"). A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".', $version));
+            throw InvalidVersionException::mustBeValidName();
         }
+
+        return true;
     }
 }
