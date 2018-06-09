@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
+use AppKernel;
 use Db;
 use Context;
 use Hook;
@@ -297,7 +298,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingFieldsModifier', array(
-            '_ps_version' => _PS_VERSION_,
+            '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
@@ -328,7 +329,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingFieldsModifier', array(
-            '_ps_version' => _PS_VERSION_,
+            '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
@@ -360,7 +361,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         // post treatment by hooks
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingResultsModifier', array(
-            '_ps_version' => _PS_VERSION_,
+            '_ps_version' => AppKernel::VERSION,
             'products' => &$products,
             'total' => $total,
         ));
