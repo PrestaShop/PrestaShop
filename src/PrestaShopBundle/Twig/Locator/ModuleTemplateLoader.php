@@ -62,7 +62,7 @@ class ModuleTemplateLoader extends FilesystemLoader
      */
     private function registerNamespacesFromConfig($paths, array $namespaces)
     {
-        foreach($namespaces as $namespace => $namespacePath) {
+        foreach ($namespaces as $namespace => $namespacePath) {
             $templatePaths = array();
 
             foreach ($paths as $path) {
