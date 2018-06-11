@@ -2151,7 +2151,7 @@ class AdminControllerCore extends Controller
         $this->filterTabModuleList();
 
         /**
-         * @TODO remove isInstalled mbo module
+         * @TODO remove isInstalled when MBO module will be released
          */
         if (!Module::isInstalled('ps_mbo') &&
             is_array($this->tab_modules_list['slider_list']) &&
