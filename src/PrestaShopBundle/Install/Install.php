@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Category;
+use AppKernel;
 use InstallSession;
 use Language as LanguageLegacy;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
@@ -430,7 +431,7 @@ class Install extends AbstractInstall
             if (!$all_languages) {
                 $iso_codes_to_install = array($this->language->getLanguageIso());
                 if ($iso_country) {
-                    $version = str_replace('.', '', _PS_VERSION_);
+                    $version = str_replace('.', '', AppKernel::VERSION);
                     $version = substr($version, 0, 2);
                     $localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
 
@@ -789,7 +790,7 @@ class Install extends AbstractInstall
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET active = 0 WHERE id_country != '.(int)$id_country);
 
         // Set localization configuration
-        $version = str_replace('.', '', _PS_VERSION_);
+        $version = str_replace('.', '', AppKernel::VERSION);
         $version = substr($version, 0, 2);
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
