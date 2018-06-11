@@ -19,6 +19,6 @@ scenario('Check the sort of products in the Back Office', client => {
   common_scenarios.sortProduct(ProductList.product_reference, 'reference');
 
   scenario('Back to the default sort', client => {
-    test('should click on "Sort by ASC" icon By ID', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", 'id_product').replace("%W", "asc")));
+    test('should click on "Sort by DESC" icon By ID', () => client.waitForExistAndClick(ProductList.sort_button.replace("%B", 'id_product')));
   }, 'product/product');
 }, 'product/product', true);

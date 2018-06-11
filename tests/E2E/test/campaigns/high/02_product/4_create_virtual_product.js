@@ -46,10 +46,10 @@ scenario('Create virtual Product in the Back Office', client => {
         .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
           if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
     });
   }, 'product/product');
 
@@ -125,7 +125,7 @@ scenario('Check the product creation in the Back Office', client => {
   test('should check the existence of product price TE', () => client.checkProductPriceTE(data.common.priceTE));
   test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, data.common.quantity));
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
-  test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+  test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
 scenario('Check the virtual product in the Front Office', () => {
@@ -147,14 +147,14 @@ scenario('Check the virtual product in the Front Office', () => {
         .then(() => client.waitForExistAndClick(productPage.product_detail_tab, 2000))
         .then(() => client.scrollTo(productPage.product_detail_tab, 180))
         .then(() => client.pause(2000))
-        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference));
     });
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {
       return promise
         .then(() => client.scrollTo(AccessPageFO.sign_out_button))
-        .then(() => client.signOutFO(AccessPageFO))
+        .then(() => client.signOutFO(AccessPageFO));
     });
   }, 'product/product');
 }, 'product/product', true);
