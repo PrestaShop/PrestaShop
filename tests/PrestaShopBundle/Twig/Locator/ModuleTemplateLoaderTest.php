@@ -91,8 +91,8 @@ class ModuleTemplateLoaderTest extends TestCase
     public function testGetSourceContext($sourceContent, $twigPathAsked, $successMessage)
     {
         self::assertEquals(
-            $sourceContent,
-            $this->loader->getSourceContext($twigPathAsked)->getCode() . PHP_EOL,
+            $sourceContent . PHP_EOL,
+            $this->loader->getSourceContext($twigPathAsked)->getCode(),
             $successMessage
         );
     }
