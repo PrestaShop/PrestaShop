@@ -167,7 +167,7 @@ class ValidateCore
      */
     public static function isHookName($hook)
     {
-        return preg_match('/^[a-zA-Z0-9_-]+$/', $hook);
+        return preg_match('/^[a-z0-9_\-\\\\]+$/i', $hook);
     }
 
     /**
