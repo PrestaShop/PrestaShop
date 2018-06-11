@@ -25,51 +25,45 @@
 
 const $ = window.$;
 
-console.log('here');
 $(() => {
-
 	if ($("#position-filters").length === 0) {
     return;
   }
 
 	const $panelSelection = $("#modules-position-selection-panel");
-	var $panelSelectionSingleSelection = $panelSelection.find("#modules-position-single-selection");
-	var $panelSelectionMultipleSelection = $panelSelection.find("#modules-position-multiple-selection");
+	const $panelSelectionSingleSelection = $("#modules-position-single-selection");
+	const $panelSelectionMultipleSelection = $("#modules-position-multiple-selection");
 
-	var $panelSelectionOriginalY = $panelSelection.offset().top;
-	var $panelSelectionOriginalYTopMargin = 111;
+	const $panelSelectionOriginalY = $panelSelection.offset().top;
+	const $panelSelectionOriginalYTopMargin = 140;
 
-	$(window).on('scroll', function (event) {
-		var $scrollTop = $(window).scrollTop();
+	$(window).on('scroll', () => {
+		const $scrollTop = $(window).scrollTop();
 		$panelSelection.css(
 			'top',
-			$scrollTop < $panelSelectionOriginalYTopMargin
+			$scrollTop < 20
 			? 0
 			: $scrollTop - $panelSelectionOriginalY + $panelSelectionOriginalYTopMargin
 		);
 	});
 
-	var modules_list = $(".modules-position-checkbox");
+	var modules_list = $('.modules-position-checkbox');
 
-	modules_list.on("change", function () {
-
+	modules_list.on('change', function () {
 		var checked_count = modules_list.filter(":checked").length;
 
 		$panelSelection.hide();
 		$panelSelectionSingleSelection.hide();
 		$panelSelectionMultipleSelection.hide();
 
-		if (checked_count == 1)
-			{
-				$panelSelection.show();
-				$panelSelectionSingleSelection.show();
-			}
-		else if (checked_count > 1)
-			{
-				$panelSelection.show();
-				$panelSelectionMultipleSelection.show();
-				$panelSelectionMultipleSelection.find("#modules-position-selection-count").html(checked_count);
-			}
+		if (checked_count === 1) {
+			$panelSelection.show();
+			$panelSelectionSingleSelection.show();
+		} else if (checked_count > 1) {
+			$panelSelection.show();
+			$panelSelectionMultipleSelection.show();
+			$panelSelectionMultipleSelection.find("#modules-position-selection-count").html(checked_count);
+		}
 	});
 
 	$panelSelection.find("button").click(function () {
@@ -78,7 +72,7 @@ $(() => {
 
 	var hooks_list = [];
 	$("section.hook_panel").find(".hook_name").each(function () {
-		var $this = $(this);
+		const $this = $(this);
 		hooks_list.push({
 			'title': $this.html(),
 			'element': $this,
@@ -162,7 +156,7 @@ $(() => {
 	//
 	$("#hook_module_form").find("select[name='id_module']").change(function(){
 
-		var $this = $(this);
+		const $this = $(this);
 		var hook_select = $("select[name='id_hook']");
 
 		if ($this.val() != 0)
@@ -204,5 +198,5 @@ $(() => {
 				  }
 			  });
 		  }
-	})
+	});
 });
