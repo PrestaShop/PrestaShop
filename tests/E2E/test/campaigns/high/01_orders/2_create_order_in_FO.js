@@ -61,7 +61,7 @@ scenario('Check that Ordering more than the stock is giving a wrong message', ()
     test('Should click "Save" button', () => client.scrollWaitForExistAndClick(ProductSettings.save_button.replace('%POS', 3)));
   }, 'order');
 
-  scenario('Create a product with the quantity equal to 50', () => {
+  scenario('Create a product with the quantity equal to 5', () => {
     commonProduct.createProduct(AddProductPage, productDataOrder[0])
   }, 'order');
 
@@ -79,7 +79,7 @@ scenario('Check that Ordering more than the stock is giving a wrong message', ()
         .then(() => client.pause(2000))
     });
     test('should set the product quantity to 50', () => client.waitAndSetValue(productPage.first_product_quantity, 50));
-    test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(productPage.quick_view_add_to_cart));
+    test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(productPage.quick_view_add_to_cart, 3000));
     test('should check that the success message does not appear', () => client.checkIsNotVisible(CheckoutOrderPage.success_product_add_to_cart_modal));
   }, 'order');
 

@@ -24,7 +24,6 @@
  */
 
 import TableSorting from '../../utils/table-sorting';
-import initDatePickers from '../../utils/datepicker';
 import SqlManager from '../../utils/sql-manager';
 
 const $ = global.$;
@@ -41,7 +40,6 @@ class LogsPage {
     this.sqlManager = new SqlManager();
 
     new TableSorting($sortableTables).attach();
-    initDatePickers();
 
     $deleteAllLogsButton.on('click', this._onDeleteAllLogsClick.bind(this));
     $refreshButton.on('click', this._onRefreshClick.bind(this));

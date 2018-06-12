@@ -33,7 +33,7 @@ scenario('Delete product', () => {
     test('should verify the appearance of the green validation message', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct successfully deleted.'));
 
     scenario('should check that the created product has been deleted', client => {
-      test('should set "copy" in the search input', () => client.waitAndSetValue(CatalogPage.name_search_input, productData.name + date_time));
+      test('should search for the created product', () => client.waitAndSetValue(CatalogPage.name_search_input, productData.name + date_time));
       test('should click on the "ENTER" key', () => client.keys('Enter'));
       test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain"));
       test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));

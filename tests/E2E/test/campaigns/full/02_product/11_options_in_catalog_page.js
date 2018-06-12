@@ -50,6 +50,8 @@ scenario('Check the options in the catalog page', () => {
   }, 'common_client');
   scenario('Delete the first product from the list in the Back Office', client => {
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+    test('should search for the duplicated product', () => client.waitAndSetValue(CatalogPage.name_search_input, 'copy'));
+    test('should click on the "ENTER" key', () => client.keys('Enter'));
     test('should click on "Dropdown > Delete" button', () => {
       return promise
         .then(() => client.getTextInVar(ProductList.product_name.replace('%ID', 1), 'duplicatedProductName'))
@@ -65,4 +67,4 @@ scenario('Check the options in the catalog page', () => {
         .then(() => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     });
   }, 'product/check_product');
-}, 'common_client');
+}, 'common_client', true);

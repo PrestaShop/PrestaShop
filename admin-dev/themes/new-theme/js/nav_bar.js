@@ -22,6 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+const $ = window.$;
 
 export default class NavBar {
   constructor() {
@@ -132,26 +133,27 @@ export default class NavBar {
     let $logout = $('#header_logout').addClass('link').removeClass('m-t-1').prop('outerHTML');
     let $employee = $('.employee_avatar').prop('outerHTML');
     let profileLink = $('.profile-link').attr('href');
+    const $mainMenu = $('.main-menu');
 
     $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
     $('body').addClass('mobile');
     $('.nav-bar').addClass('mobile-nav').attr('style', 'margin-left: -100%;');
     $('.panel-collapse').addClass('collapse');
-    $('.link-levelone a').each((index, el)=> {
+    $('.link-levelone a').each((index, el) => {
       let id = $(el).parent().find('.collapse').attr('id');
-      if(id) {
-        $(el).attr('href', `#${id}`).attr('data-toggle','collapse');
+      if (id) {
+        $(el).attr('href', `#${id}`).attr('data-toggle', 'collapse');
       }
     });
-    $('.main-menu').append(`<li class="link-levelone" data-submenu="">${$logout}</li>`);
-    $('.main-menu').prepend(`<li class="link-levelone">${$employee}</li>`);
+    $mainMenu.append(`<li class="link-levelone" data-submenu="">${$logout}</li>`);
+    $mainMenu.prepend(`<li class="link-levelone">${$employee}</li>`);
     $('.collapse').collapse({
       toggle: false
     });
-    $('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
+    $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
-      'height' : window.innerHeight
+      'height': window.innerHeight
     });
 
     function expand(e) {
