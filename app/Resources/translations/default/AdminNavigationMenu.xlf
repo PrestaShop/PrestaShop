@@ -42,6 +42,36 @@ File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:50</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
+        <source>Module selection</source>
+        <target>Module selection</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:84</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SystemInformationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SystemInformationController.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
+        <source>Performance</source>
+        <target>Performance</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:66</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="72d6d7a1885885bb55a565fd1070581a">
@@ -62,6 +92,36 @@ File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/LogsCon
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7258e7251413465e0a3eb58094430bde">
+        <source>Administration</source>
+        <target>Administration</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerPreferencesController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MaintenanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="10d0de28911c5f66463b9c8783f8148a">
+        <source>Maintenance</source>
+        <target>Maintenance</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MaintenanceController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
@@ -69,6 +129,26 @@ File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/LogsCon
         <target>Preferences</target>
         <note>Context:
 File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php:70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3821c92eff2643b0d1ccdce26d2e8e48">
+        <source>Product Settings</source>
+        <target>Product Settings</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php:70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/AddonsStoreController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
+        <source>Modules catalog</source>
+        <target>Modules catalog</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Improve/AddonsStoreController.php:52</note>
       </trans-unit>
     </body>
   </file>

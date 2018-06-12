@@ -50,20 +50,64 @@ File: classes/Mail.php:410</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="af395851b27882221a6df82c727bca3e">
         <source>The import directory doesn't exist. Please check your file path.</source>
         <target>The import directory doesn't exist. Please check your file path.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:621</note>
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php:63</note>
       </trans-unit>
       <trans-unit id="c775530fad852632f78395a11820ba23">
         <source>The import directory must be writable (CHMOD 755 / 777).</source>
         <target>The import directory must be writable (CHMOD 755 / 777).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:625</note>
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php:69</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Import/File/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
+        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
+        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
+        <note>Context:
+File: src/Core/Import/File/FileUploader.php:111</note>
+      </trans-unit>
+      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
+        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
+        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
+        <note>Context:
+File: src/Core/Import/File/FileUploader.php:114</note>
+      </trans-unit>
+      <trans-unit id="4f12b222c9659d62afa795987259933f">
+        <source>The uploaded file was only partially uploaded.</source>
+        <target>The uploaded file was only partially uploaded.</target>
+        <note>Context:
+File: src/Core/Import/File/FileUploader.php:118</note>
+      </trans-unit>
+      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
+        <source>No file was uploaded.</source>
+        <target>No file was uploaded.</target>
+        <note>Context:
+File: src/Core/Import/File/FileUploader.php:121</note>
+      </trans-unit>
+      <trans-unit id="fc2e88db6e13898dab6ddf3b44c5d68a">
+        <source>The extension of your file should be .csv.</source>
+        <target>The extension of your file should be .csv.</target>
+        <note>Context:
+File: src/Core/Import/File/FileUploader.php:130</note>
+      </trans-unit>
+      <trans-unit id="50844c635a86264cc59d737d532df573">
+        <source>An error occurred while uploading / copying the file.</source>
+        <target>An error occurred while uploading / copying the file.</target>
+        <note>Context:
+File: src/Core/Import/File/FileUploader.php:90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="5b8f192b08644fdc9fd1fd86bcbbc57b">
         <source>(click to open "Generators" page)</source>
         <target>(click to open "Generators" page)</target>
@@ -465,46 +509,6 @@ File: controllers/admin/AdminImportController.php:4533</note>
         <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
         <note>Context:
 File: controllers/admin/AdminImportController.php:4661</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/File/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
-        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
-        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
-        <note>Context:
-File: src/Core/Import/File/FileUploader.php:111</note>
-      </trans-unit>
-      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
-        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
-        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
-        <note>Context:
-File: src/Core/Import/File/FileUploader.php:114</note>
-      </trans-unit>
-      <trans-unit id="4f12b222c9659d62afa795987259933f">
-        <source>The uploaded file was only partially uploaded.</source>
-        <target>The uploaded file was only partially uploaded.</target>
-        <note>Context:
-File: src/Core/Import/File/FileUploader.php:118</note>
-      </trans-unit>
-      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
-        <source>No file was uploaded.</source>
-        <target>No file was uploaded.</target>
-        <note>Context:
-File: src/Core/Import/File/FileUploader.php:121</note>
-      </trans-unit>
-      <trans-unit id="fc2e88db6e13898dab6ddf3b44c5d68a">
-        <source>The extension of your file should be .csv.</source>
-        <target>The extension of your file should be .csv.</target>
-        <note>Context:
-File: src/Core/Import/File/FileUploader.php:130</note>
-      </trans-unit>
-      <trans-unit id="50844c635a86264cc59d737d532df573">
-        <source>An error occurred while uploading / copying the file.</source>
-        <target>An error occurred while uploading / copying the file.</target>
-        <note>Context:
-File: src/Core/Import/File/FileUploader.php:90</note>
       </trans-unit>
     </body>
   </file>
@@ -925,6 +929,60 @@ File: admin-dev/backup.php:85</note>
         <target>Unable to display backup file(s).</target>
         <note>Context:
 File: admin-dev/backup.php:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="023d53a99c8074e823e5b2db4c19dfa4">
+        <source>(you must install the [a]Memcache PECL extension[/a])</source>
+        <target>(you must install the [a]Memcache PECL extension[/a])</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:118</note>
+      </trans-unit>
+      <trans-unit id="82742001d67f4446f50d68908f0f8b96">
+        <source>(you must install the [a]Memcached PECL extension[/a])</source>
+        <target>(you must install the [a]Memcached PECL extension[/a])</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:128</note>
+      </trans-unit>
+      <trans-unit id="78ae94b19fc38f9a35d20bc67cde2d61">
+        <source>(you must install the [a]APC PECL extension[/a])</source>
+        <target>(you must install the [a]APC PECL extension[/a])</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:138</note>
+      </trans-unit>
+      <trans-unit id="8b763a82c2aa7875f3da39399ba350d7">
+        <source>(you must install the [a]Xcache extension[/a])</source>
+        <target>(you must install the [a]Xcache extension[/a])</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:148</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fd4adc19ae7e0f0391f617451f3729cf">
+        <source>All caches cleared successfully</source>
+        <target>All caches cleared successfully</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:115</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ad28fef1c6184adfe7397838891ba76">
+        <source>The Memcached server cannot be added.</source>
+        <target>The Memcached server cannot be added.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:118</note>
+      </trans-unit>
+      <trans-unit id="bf4ddd37d9f82a3ad1f405891dfaa235">
+        <source>There was an error when attempting to delete the Memcached server.</source>
+        <target>There was an error when attempting to delete the Memcached server.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:153</note>
       </trans-unit>
     </body>
   </file>

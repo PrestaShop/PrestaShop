@@ -1240,12 +1240,6 @@ File: src/PrestaShopBundle/Form/Admin/Feature/ProductFeature.php:84</note>
         <note>Context:
 File: src/PrestaShopBundle/Form/Admin/Feature/ProductFeature.php:143</note>
       </trans-unit>
-      <trans-unit id="fd380496c889dcb05d6e996fd1ecaf0b">
-        <source>Choose a value</source>
-        <target>Choose a value</target>
-        <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Feature/ProductFeature.php:151</note>
-      </trans-unit>
       <trans-unit id="5da9eb58e1c3816d0a2fbaa50e9de78e">
         <source>OR Customized value</source>
         <target>OR Customized value</target>
@@ -2079,13 +2073,25 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:82</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductAttachement.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/ProductImageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b3d4e2bcdbf72f5828b3ef09b238c072">
         <source>Please select a file</source>
         <target>Please select a file</target>
         <note>Context:
-File: src/PrestaShopBundle/Form/Admin/Product/ProductAttachement.php:68</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:61</note>
+      </trans-unit>
+      <trans-unit id="272ba7d164aa836995be6319a698be84">
+        <source>Caption</source>
+        <target>Caption</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:135</note>
+      </trans-unit>
+      <trans-unit id="84967207ddc311cfbe8ee66f677a1544">
+        <source>Cover image</source>
+        <target>Cover image</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:139</note>
       </trans-unit>
     </body>
   </file>
@@ -2102,6 +2108,16 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_
         <target>Add a brand</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_manufacturer.html.twig:44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fd380496c889dcb05d6e996fd1ecaf0b">
+        <source>Choose a value</source>
+        <target>Choose a value</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/FeatureController.php:57</note>
       </trans-unit>
     </body>
   </file>

@@ -192,12 +192,6 @@ File: controllers/admin/AdminEmailsController.php:287</note>
         <note>Context:
 File: controllers/admin/AdminImportController.php:411</note>
       </trans-unit>
-      <trans-unit id="6b127dc82937049e45e74aebca783e74">
-        <source>Store contacts</source>
-        <target>Store contacts</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4474</note>
-      </trans-unit>
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
@@ -720,6 +714,16 @@ File: controllers/admin/AdminLoginController.php:209</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6b127dc82937049e45e74aebca783e74">
+        <source>Store contacts</source>
+        <target>Store contacts</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php:60</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
@@ -980,6 +984,12 @@ File: controllers/admin/AdminEmployeesController.php:360</note>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:146</note>
       </trans-unit>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:66</note>
+      </trans-unit>
       <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
         <source>Smarty</source>
         <target>Smarty</target>
@@ -1015,12 +1025,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/pe
         <target>Caching type</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:61</note>
-      </trans-unit>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:66</note>
       </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
@@ -1474,6 +1478,44 @@ File: controllers/admin/AdminBackupController.php:61</note>
         <target>Drop existing tables during import</target>
         <note>Context:
 File: controllers/admin/AdminBackupController.php:69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
+        <source>megabytes</source>
+        <target>megabytes</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bd74be2b0190f4b7f3ef117342771f70">
+        <source>Memcached via PHP::Memcache</source>
+        <target>Memcached via PHP::Memcache</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:115</note>
+      </trans-unit>
+      <trans-unit id="e6f9c14400a56127e7397b4f8afeae10">
+        <source>Memcached via PHP::Memcached</source>
+        <target>Memcached via PHP::Memcached</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:125</note>
+      </trans-unit>
+      <trans-unit id="0e68f753bc601f5d9d04717f95042762">
+        <source>APC</source>
+        <target>APC</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:135</note>
+      </trans-unit>
+      <trans-unit id="38ca568bbe61771c6456a5c7b8d419ee">
+        <source>Xcache</source>
+        <target>Xcache</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:145</note>
       </trans-unit>
     </body>
   </file>

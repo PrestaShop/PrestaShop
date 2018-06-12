@@ -22,6 +22,72 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_grid_addon
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bbd7449d4bfdf59cd99a54fe82a3b7da">
+        <source>Manage installed modules</source>
+        <target>Manage installed modules</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:245</note>
+      </trans-unit>
+      <trans-unit id="17e0ca27e686200d42e478e2457052aa">
+        <source>Module notifications</source>
+        <target>Module notifications</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:403</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+        <source>Upload a module</source>
+        <target>Upload a module</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:30</note>
+      </trans-unit>
+      <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
+        <source>Drop your module archive here or [1]select file[/1]</source>
+        <target>Drop your module archive here or [1]select file[/1]</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
+        <source>Connect to Addons marketplace</source>
+        <target>Connect to Addons marketplace</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:30</note>
+      </trans-unit>
+      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
+        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
+        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:48</note>
+      </trans-unit>
+      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
+        <source>Sign up now</source>
+        <target>Sign up now</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:49</note>
+      </trans-unit>
+      <trans-unit id="b09249132bbed9baecd987cf73200b44">
+        <source>Confirm logout</source>
+        <target>Confirm logout</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:84</note>
+      </trans-unit>
+      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
+        <source>Yes, log out</source>
+        <target>Yes, log out</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:97</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="90406afefae30826692e7f7480f7467c">
@@ -246,22 +312,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
-        <source>Upload a module</source>
-        <target>Upload a module</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:30</note>
-      </trans-unit>
-      <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
-        <source>Drop your module archive here or [1]select file[/1]</source>
-        <target>Drop your module archive here or [1]select file[/1]</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:51</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
@@ -269,40 +319,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.ht
         <target>All Categories</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig:38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
-        <source>Connect to Addons marketplace</source>
-        <target>Connect to Addons marketplace</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:30</note>
-      </trans-unit>
-      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
-        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:48</note>
-      </trans-unit>
-      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
-        <source>Sign up now</source>
-        <target>Sign up now</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:49</note>
-      </trans-unit>
-      <trans-unit id="b09249132bbed9baecd987cf73200b44">
-        <source>Confirm logout</source>
-        <target>Confirm logout</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:84</note>
-      </trans-unit>
-      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
-        <source>Yes, log out</source>
-        <target>Yes, log out</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:97</note>
       </trans-unit>
     </body>
   </file>

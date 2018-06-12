@@ -584,6 +584,16 @@ File: controllers/admin/AdminStoresController.php:453</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2593c7ce3ff937293feb1e61c152e551">
+        <source>characters</source>
+        <target>characters</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php:55</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="885af23392ddb34eaabf65d3b86b216c">

@@ -190,16 +190,6 @@ File: controllers/admin/AdminStatusesController.php:686</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7173e38e8a10ed379625687638ddfe74">
-        <source>Successful deletion</source>
-        <target>Successful deletion</target>
-        <note>Context:
-File: src/Adapter/Product/AdminProductWrapper.php:453</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
@@ -207,6 +197,16 @@ File: src/Adapter/Product/AdminProductWrapper.php:453</note>
         <target>Update successful</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:228</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7173e38e8a10ed379625687638ddfe74">
+        <source>Successful deletion</source>
+        <target>Successful deletion</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:453</note>
       </trans-unit>
     </body>
   </file>

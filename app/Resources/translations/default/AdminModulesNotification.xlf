@@ -494,8 +494,76 @@ File: controllers/admin/AdminModulesPositionsController.php:210</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="385b04e1b2442530341b51c2d3b216a3">
+        <source>Cannot get catalog data, please try again later. Reason: %error_details%</source>
+        <target>Cannot get catalog data, please try again later. Reason: %error_details%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:130</note>
+      </trans-unit>
+      <trans-unit id="71d827dd0d049981403f27fb7af0991c">
+        <source>%module% did not return a valid response on %action% action.</source>
+        <target>%module% did not return a valid response on %action% action.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:300</note>
+      </trans-unit>
+      <trans-unit id="8e7e1a7e5fa9edcd7139f569d07fc5b9">
+        <source>Confirmation needed by module %module% on %action% (%subject%).</source>
+        <target>Confirmation needed by module %module% on %action% (%subject%).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:644</note>
+      </trans-unit>
+      <trans-unit id="bf0edb2da5a51620141bff55d3060a63">
+        <source>Exception thrown by module %module% on %action%. %error_details%</source>
+        <target>Exception thrown by module %module% on %action%. %error_details%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:349</note>
+      </trans-unit>
+      <trans-unit id="89d371deca1b2b50a933fabc8005ccfb">
+        <source>%module% did not return a valid response on installation.</source>
+        <target>%module% did not return a valid response on installation.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:607</note>
+      </trans-unit>
+      <trans-unit id="35e839bc1864dd50a75500028c3ebb33">
+        <source>Installation of module %module% was successful.</source>
+        <target>Installation of module %module% was successful.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:613</note>
+      </trans-unit>
+      <trans-unit id="f52c6f7b6fcbd586aee22044aeb6c897">
+        <source>Installation of module %module% failed. %error%</source>
+        <target>Installation of module %module% failed. %error%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:621</note>
+      </trans-unit>
+      <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
+        <source>Synchronized with Addons marketplace!</source>
+        <target>Synchronized with Addons marketplace!</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:771</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
+        <source>Cannot %action% module %module%. %error_details%</source>
+        <target>Cannot %action% module %module%. %error_details%</target>
+        <note>Context:
+File: src/Core/Addon/Theme/ThemeManager.php:292</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Command/ModuleCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
+        <source>%action% action on module %module% succeeded.</source>
+        <target>%action% action on module %module% succeeded.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ModuleCommand.php:154</note>
+      </trans-unit>
       <trans-unit id="6867740141667a3da88ac51e48ed1d9d">
         <source>Unknown module action. It must be one of these values: %actions%</source>
         <target>Unknown module action. It must be one of these values: %actions%</target>
@@ -513,22 +581,6 @@ File: src/PrestaShopBundle/Command/ModuleCommand.php:130</note>
         <target>Configuration successfully applied.</target>
         <note>Context:
 File: src/PrestaShopBundle/Command/ModuleCommand.php:141</note>
-      </trans-unit>
-      <trans-unit id="9dca2e42fe7a0db763b8737e9a8f9133">
-        <source>%action% action on module %module% succeeded.</source>
-        <target>%action% action on module %module% succeeded.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Command/ModuleCommand.php:154</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1ff626f78b7506f340c7b2ce3398367a">
-        <source>Cannot %action% module %module%. %error_details%</source>
-        <target>Cannot %action% module %module%. %error_details%</target>
-        <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:292</note>
       </trans-unit>
     </body>
   </file>

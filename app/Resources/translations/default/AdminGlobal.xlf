@@ -1172,31 +1172,13 @@ File: admin-dev/themes/default/template/controllers/login/content.tpl:123</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
         <source>Customers</source>
         <target>Customers</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4453</note>
-      </trans-unit>
-      <trans-unit id="675056ad1441b6375b2c5abd48c27ef1">
-        <source>Depth</source>
-        <target>Depth</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:249</note>
-      </trans-unit>
-      <trans-unit id="f54a73382e8bd64066339d60c9fc4bde">
-        <source>First name </source>
-        <target>First name</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:416</note>
-      </trans-unit>
-      <trans-unit id="5020eaae41baf0caa37bcb73b4a12934">
-        <source>Mobile Phone</source>
-        <target>Mobile Phone</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:425</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php:55</note>
       </trans-unit>
     </body>
   </file>
@@ -1239,6 +1221,28 @@ File: controllers/admin/AdminImagesController.php:219</note>
         <target>Stores</target>
         <note>Context:
 File: controllers/admin/AdminImagesController.php:403</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="675056ad1441b6375b2c5abd48c27ef1">
+        <source>Depth</source>
+        <target>Depth</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:249</note>
+      </trans-unit>
+      <trans-unit id="f54a73382e8bd64066339d60c9fc4bde">
+        <source>First name </source>
+        <target>First name</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:416</note>
+      </trans-unit>
+      <trans-unit id="5020eaae41baf0caa37bcb73b4a12934">
+        <source>Mobile Phone</source>
+        <target>Mobile Phone</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:425</note>
       </trans-unit>
     </body>
   </file>
@@ -1744,6 +1748,16 @@ File: admin-dev/themes/default/template/controllers/request_sql/helpers/form/for
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
+        <source>Help</source>
+        <target>Help</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl:31</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="dddc702fcffceb2ac77291954897d747">
@@ -1811,16 +1825,6 @@ File: admin-dev/themes/default/template/helpers/list/list_footer.tpl:32</note>
         <target>Quick navigation</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Blocks/header.html.twig:64</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
-        <source>Help</source>
-        <target>Help</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl:31</note>
       </trans-unit>
     </body>
   </file>
