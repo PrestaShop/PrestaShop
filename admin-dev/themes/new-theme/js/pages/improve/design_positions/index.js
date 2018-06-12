@@ -47,26 +47,25 @@ $(() => {
 		);
 	});
 
-	var modules_list = $('.modules-position-checkbox');
+	const $modulesList = $('.modules-position-checkbox');
 
-	modules_list.on('change', function () {
-		var checked_count = modules_list.filter(":checked").length;
-
-		$panelSelection.hide();
-		$panelSelectionSingleSelection.hide();
-		$panelSelectionMultipleSelection.hide();
-
-		if (checked_count === 1) {
+	$modulesList.on('change', function () {
+		const $checkedCount = $modulesList.filter(':checked').length;
+    if ($checkedCount === 0) {
+		  $panelSelection.hide();
+		  $panelSelectionSingleSelection.hide();
+		  $panelSelectionMultipleSelection.hide();
+		} else if ($checkedCount === 1) {
 			$panelSelection.show();
 			$panelSelectionSingleSelection.show();
-		} else if (checked_count > 1) {
+		} else {
 			$panelSelection.show();
 			$panelSelectionMultipleSelection.show();
-			$panelSelectionMultipleSelection.find("#modules-position-selection-count").html(checked_count);
+			$panelSelectionMultipleSelection.find("#modules-position-selection-count").html($checkedCount);
 		}
 	});
 
-	$panelSelection.find("button").click(function () {
+	$panelSelection.find('button').click(function () {
 		$("button[name='unhookform']").trigger("click");
 	});
 
