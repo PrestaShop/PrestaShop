@@ -33,22 +33,12 @@ use PrestaShop\PrestaShop\Core\Foundation\Version\Exception\InvalidVersionExcept
  */
 class Version
 {
-    const STRING = 0;
-    const INTEGER = 1;
-
     /**
      * Full version name.
      *
      * @var string
      */
-    private $fullVersion;
-
-    /**
-     * Major version name.
-     *
-     * @var string
-     */
-    private $majorVersionString;
+    private $version;
 
     /**
      * Major version.
@@ -71,11 +61,9 @@ class Version
      */
     private $releaseVersion;
 
-
-    public function __construct($version, $majorVersionString, $majorVersion, $minorVersion, $releaseVersion)
+    public function __construct($version, $majorVersion, $minorVersion, $releaseVersion)
     {
         $this->version = $version;
-        $this->majorVersionString = $majorVersionString;
         $this->majorVersion = $majorVersion;
         $this->minorVersion = $minorVersion;
         $this->releaseVersion = $releaseVersion;
@@ -86,25 +74,15 @@ class Version
      *
      * @return string For example "1.7.4.0"
      */
-    public function getFullVersion()
+    public function getVersion()
     {
-        return $this->fullVersion;
+        return $this->version;
     }
 
     /**
-     * Returns the current PrestaShop major version as a string.
+     * Returns the current PrestaShop major version.
      *
      * @return string For example "1.7"
-     */
-    public function getStringMajorVersion()
-    {
-        return $this->majorVersionString;
-    }
-
-    /**
-     * Returns the current PrestaShop major version as an integer.
-     *
-     * @return int For example 17
      */
     public function getMajorVersion()
     {
@@ -114,7 +92,7 @@ class Version
     /**
      * Returns the current PrestaShop minor version.
      *
-     * @return int
+     * @return string For example "1"
      */
     public function getMinorVersion()
     {
@@ -122,9 +100,9 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop release version
+     * Returns the current PrestaShop release version.
      *
-     * @return int
+     * @return string For example "0"
      */
     public function getReleaseVersion()
     {
@@ -138,7 +116,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     public function isGreaterThan($version)
     {
@@ -152,7 +130,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     public function isGreaterThanOrEqualTo($version)
     {
@@ -166,7 +144,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     public function isLessThan($version)
     {
@@ -180,7 +158,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     public function isLessThanOrEqualTo($version)
     {
@@ -194,7 +172,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     public function isEqualTo($version)
     {
@@ -208,7 +186,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     public function isNotEqualTo($version)
     {
@@ -218,8 +196,9 @@ class Version
     /**
      * Compares the current PrestaShop version with the provided version depending on the provided operator.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
-     * @param $operator Operator for version_compare(), allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
+     * @param $version      Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $operator     Operator for version_compare(), allowed values are:
+     *                      <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
      *
      * @return boolean Result of the comparison.
      *
@@ -238,16 +217,17 @@ class Version
      * @param $version
      *
      * @return bool true only if version is valid, else throw an exception.
-     * @throws InvalidVersionException If the provided version is invalid
+     *
+     * @throws InvalidVersionException If the provided version is invalid.
      */
     private function checkVersion($version)
     {
         if (!is_string($version)) {
-            throw InvalidVersionException::mustBeAString();
+            throw InvalidVersionException::mustBeString();
         }
 
         if (!preg_match('/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
-            throw InvalidVersionException::mustBeValidName();
+            throw InvalidVersionException::mustBeValidString($version);
         }
 
         return true;

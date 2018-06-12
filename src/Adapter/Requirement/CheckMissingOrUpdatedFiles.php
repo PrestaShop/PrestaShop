@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
 
-use AppKernel;
+use PrestaShop\PrestaShop\Core\Foundation\Version\Version;
 
 /**
  * Part of requirements for a PrestaShop website
@@ -34,6 +34,16 @@ use AppKernel;
  */
 class CheckMissingOrUpdatedFiles
 {
+    /**
+     * @var Version
+     */
+    private $version;
+
+    public function __construct(Version $version)
+    {
+        $this->version = $version;
+    }
+
     /**
      * @return array
      */
@@ -43,9 +53,9 @@ class CheckMissingOrUpdatedFiles
             'missing' => array(),
             'updated' => array(),
         );
-        
+
         if (is_null($dir)) {
-            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'.AppKernel::VERSION.'.xml');
+            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'.$this->version->getVersion().'.xml');
             if (!$xml) {
                 return $fileList;
             }

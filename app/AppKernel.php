@@ -33,10 +33,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AppKernel extends Kernel
 {
     const VERSION = '1.7.4.0';
-    const MAJOR_VERSION_STRING = '1.7';
-    const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 4;
-    const RELEASE_VERSION = 0;
+    const MAJOR_VERSION = '1.7';
+    const MINOR_VERSION = '4';
+    const RELEASE_VERSION = '0';
 
     /**
      * @{inheritdoc}

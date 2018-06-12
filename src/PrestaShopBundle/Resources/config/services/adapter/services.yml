@@ -7,7 +7,7 @@ services:
 
     prestashop.adapter.shop_information:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopInformation'
-        arguments: ['@prestashop.adapter.legacy.context']
+        arguments: ['@prestashop.adapter.legacy.context', '@prestashop.core.foundation.version']
 
     prestashop.adapter.mailing_information:
         class: 'PrestaShop\PrestaShop\Adapter\Mail\MailingInformation'
@@ -25,6 +25,8 @@ services:
 
     prestashop.adapter.check_missing_files:
         class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
+        arguments: ['@prestashop.core.foundation.version']
+
     prestashop.adapter.cache_clearer:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\CacheClearer'
 

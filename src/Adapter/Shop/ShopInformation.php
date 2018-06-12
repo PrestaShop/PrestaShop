@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Foundation\Version\Version;
 
 
 /**
@@ -42,11 +43,17 @@ class ShopInformation
     private $context;
 
     /**
+     * @var Version
+     */
+    private $version;
+
+    /**
      * @param LegacyContext $legacyContext
      */
-    public function __construct(LegacyContext $legacyContext)
+    public function __construct(LegacyContext $legacyContext, Version $version)
     {
         $this->context = $legacyContext->getContext();
+        $this->version = $version;
     }
 
     /**
@@ -55,7 +62,7 @@ class ShopInformation
     public function getShopInformation()
     {
         return array(
-            'version' => AppKernel::VERSION,
+            'version' => $this->version->getVersion(),
             'url' => $this->context->shop->getBaseURL(),
             'theme' => $this->context->shop->theme->getName(),
         );

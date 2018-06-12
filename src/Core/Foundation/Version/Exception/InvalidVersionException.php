@@ -38,7 +38,7 @@ class InvalidVersionException extends Exception
      *
      * @return static The created exception.
      */
-    public static function mustBeAString()
+    public static function mustBeString()
     {
         return new static('A valid version must be a string.');
     }
@@ -50,7 +50,7 @@ class InvalidVersionException extends Exception
      *
      * @return static The created exception.
      */
-    public static function mustBeValidName($versionName)
+    public static function mustBeValidString($versionName)
     {
         return new static(sprintf(
             'You provided an invalid version string ("%s"). A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".',

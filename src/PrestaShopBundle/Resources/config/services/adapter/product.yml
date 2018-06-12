@@ -8,6 +8,7 @@ services:
             arguments:
                 - "@doctrine.orm.entity_manager"
                 - "@prestashop.adapter.image_manager"
+                - "@prestashop.core.foundation.version"
             public: false
 
     prestashop.adapter.admin.data_updater.product:

@@ -156,15 +156,17 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function generateSidebarLink($section, $title = false)
     {
-        $fullVersion = $this->get('prestashop.core.foundation.version')->getFullVersion();
+        $version = $this->get('prestashop.core.foundation.version');
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         if (empty($title)) {
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
-            .$section.'?version='.$fullVersion.'&country='.$legacyContext->getEmployeeLanguageIso());
+        $docLink = urlencode(
+            'https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'.$section.'?'.
+            'version='.$version->getVersion().'&country='.$legacyContext->getEmployeeLanguageIso()
+        );
 
         return $this->generateUrl('admin_common_sidebar', [
             'url' => $docLink,
