@@ -99,23 +99,23 @@ $(() => {
     const $hookName = $hookSearch.val();
     const $moduleId = $showModules.val();
     const $position = $hookPosition.prop('checked');
-    const $regex = new RegExp('(${$hookName})', 'gi');
+    const $regex = new RegExp(`(${$hookName})`, 'gi');
 
     for (let $id = 0; $id < $hooksList.length; $id++) {
       $hooksList[$id].container.toggle($hookName === '' && $moduleId === 'all');
       $hooksList[$id].element.html($hooksList[$id].title);
-      $hooksList[$id].container.find('.module_list_item').removeClass('highlight');
+      $hooksList[$id].container.find('.module-item').removeClass('highlight');
     }
 
     if ($hookName !== '' || $moduleId !== 'all') {
-      let $hooksToShowFromModule;
-      let $hooksToShowFromHookName;
+      let $hooksToShowFromModule = $();
+      let $hooksToShowFromHookName = $();
       let $currentHooks;
       let $start;
 
       for (let $id = 0; $id < $hooksList.length; $id++) {
         if ($moduleId !== 'all') {
-          $currentHooks = $hooksList[$id].container.find('.module_position_${$moduleId}');
+          $currentHooks = $(`.module-position-${$moduleId}`);
           if ($currentHooks.length > 0) {
             $hooksToShowFromModule = $hooksToShowFromModule.add($hooksList[$id].container);
             $currentHooks.addClass('highlight');

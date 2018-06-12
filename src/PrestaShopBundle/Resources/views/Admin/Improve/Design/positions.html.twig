@@ -107,7 +107,7 @@
 							        {% for module in hook['modules'] if modules[module['id_module']] is defined %}
                         {% set moduleInstance = modules[module['id_module']] %}
 							          <li id="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
-                          class="module_position_{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
+                          class="module-position-{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
 
 								          <div class="module-column-select">
 									          <input type="checkbox" id="mod{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" onclick="hookCheckboxes({{ hook['id_hook'] }}, 1, this)" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
