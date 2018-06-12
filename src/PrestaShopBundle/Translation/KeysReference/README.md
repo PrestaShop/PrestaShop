@@ -1,0 +1,2 @@
+This directory aims to get all translation keys that need to be referenced, but not cearly visible in code.
+The translation parser will be grateful to find such readable keys, and will not delete them from the translation system
