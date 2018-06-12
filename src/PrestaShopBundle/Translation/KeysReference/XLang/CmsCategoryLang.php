@@ -39,6 +39,5 @@ class CmsCategoryLang
     protected function init()
     {
          $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale);
-         $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale);
     }
 }

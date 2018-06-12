@@ -40,7 +40,5 @@ class CategoryLang
     {
         $this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale);
         $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale);
-        $this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale);
-        $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale);
     }
 }

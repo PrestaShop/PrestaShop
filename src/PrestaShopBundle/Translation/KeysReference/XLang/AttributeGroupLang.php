@@ -41,7 +41,5 @@ class AttributeGroupLang
         $this->translator->trans('Size', array(), 'Shop.Demo.Catalog', $this->locale);
         $this->translator->trans('Shoe size', array(), 'Shop.Demo.Catalog', $this->locale);
         $this->translator->trans('Color', array(), 'Shop.Demo.Catalog', $this->locale);
-        $this->translator->trans('Size', array(), 'Shop.Demo.Catalog', $this->locale);
-        $this->translator->trans('Color', array(), 'Shop.Demo.Catalog', $this->locale);
     }
 }
