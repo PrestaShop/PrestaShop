@@ -201,11 +201,8 @@ module.exports = {
     combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
     home_delete_button: '//*[@id="ps_categoryTags"]/span[1]/a',
     created_category: '//*[@id="ps_categoryTags"]/span[2]/span',
-<<<<<<< HEAD
-    preview_link: '//a'
-=======
-    continue_confirmation: '//*[@id="confirmation_modal"]//button[2]'
->>>>>>> 86320e1f0b9ad2d9be0a1c4b90377f94b7a05e6d
+    preview_link: '//a',
+    continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
   },
 
   ProductList: {
