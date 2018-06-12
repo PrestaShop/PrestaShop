@@ -88,19 +88,15 @@ class PositionsController extends FrameworkBundleAdminController
             ]
         ];
 
-
-        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
-
         return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
+            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
+            'requireFilterStatus' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminModulesPositions'),
-            'requireFilterStatus' => false,
-            'form' => $form->createView(),
 
             'urlShowModules' => '?show_modules=',
             'urlShowInvisible' => '?show_modules='.(int)$request->query->get('show_modules').'&hook_position=',

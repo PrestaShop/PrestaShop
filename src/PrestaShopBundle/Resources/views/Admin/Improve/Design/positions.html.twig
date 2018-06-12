@@ -42,7 +42,7 @@
 					      <div class="row col-md-12 col-lg-6">
 						      <label class="form-control-label col-4 text-left mt-1">{{ 'Show' | trans({}, 'Admin.Actions') }}</label>
 						      <div class="col-8">
-							      <select id="show_modules" class="filter">
+							      <select id="show-modules" class="filter">
 								      <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
 								      {% for module in modules %}
 									      <option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %} >{{ module.displayName }}</option>
@@ -65,12 +65,12 @@
               </div>
             </div>
 
-            <div class="container mt-2">
+            <div class="container mt-3">
 				      <div class="row">
 					      <div class="col-lg-12">
 							    <p class="checkbox">
-								    <label class="form-control-label" for="hook_position">
-									    <input type="checkbox" id="hook_position"/>
+								    <label class="form-control-label" for="hook-position">
+									    <input type="checkbox" id="hook-position"/>
 									    {{ 'Display non-positionable hooks' | trans }}
 								    </label>
 							    </p>
@@ -83,19 +83,18 @@
 			  <div id="modulePosition">
 				  <form method="post" action="" >
 					  {% for hook in hooks %}
-					    <section class="hook-panel {% if hook['position'] == 0 %}hook_position hide{% endif %}">
+					    <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}"{% if not hook['position'] %} style="display:none;"{% endif %}>
 						    <a name="{{ hook['name'] }}"></a>
 						    <header class="hook-panel-header">
 							    <span class="hook-name">{{ hook['name'] }}</span>
-
-							    <span class="badge float-right">
+							    <label class="badge badge-primary badge-pill float-right">
 								    {% if hook['modules_count'] and canMove %}
 								      <input type="checkbox" id="Ghook{{ hook['id_hook'] }}" onclick="hookCheckboxes({{ hook['id_hook'] }}, 0, this)"/>
 								    {% endif %}
 
 								    {{ hook['modules_count'] }}
                     {{ ((hook['modules_count'] > 1) ? 'Modules' : 'Module') | trans({}, 'Admin.Global') }}
-							    </span>
+							    </label>
 
 							    {% if hook['description'] is defined %}
 							      <div class="hook_description">{{ hook['description'] }}</div>
@@ -152,7 +151,7 @@
 
 								          <div class="module-column-actions">
                             <div class="btn-group">
-										          <a class="btn btn-outline-primary btn-sm" href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if selectedModule %}&amp;show_modules={{ selectedModule }}{% endif %}&amp;token={$token|escape:'html':'UTF-8'}">
+										          <a class="btn btn-outline-primary btn-sm" href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if selectedModule %}&amp;show-modules={{ selectedModule }}{% endif %}&amp;token={$token|escape:'html':'UTF-8'}">
 											          <i class="material-icons">edit</i>
 											          {{ 'Edit' | trans({}, 'Admin.Actions') }}
 										          </a>
@@ -161,14 +160,12 @@
 											          <i class="material-icons">expand_more</i>
 										          </button>
 
-										          <ul class="dropdown-menu">
-											          <li>
-												          <a href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;deleteGraft{% if selectedModule %}&amp;show_modules={{ selectedModule }}{% endif %}">
-													          <i class="material-icons">indeterminate_check_box</i>
-													          {{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}
-												          </a>
-											          </li>
-										          </ul>
+										          <div class="dropdown-menu">
+												        <a class="dropdown-item" href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;deleteGraft{% if selectedModule %}&amp;show-modules={{ selectedModule }}{% endif %}">
+													        <i class="material-icons">indeterminate_check_box</i>
+													        {{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}
+												        </a>
+										          </div>
 									          </div>
 								          </div>
 							          </li>
@@ -239,7 +236,6 @@
 			  }
 		  });
 	  });
-    console.log('here');
   </script>
   <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}?{{ random() }}"></script>
 {% endblock %}
