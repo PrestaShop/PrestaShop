@@ -54,16 +54,8 @@
       {/if}
       {if $contact_infos.email}
         <br>
-        {* [1][/1] is for a HTML tag. *}
-        {l
-          s='Email us: [1]%email%[/1]'
-          sprintf=[
-            '[1]' => '<a href="mailto:'|cat:$contact_infos.email|cat:'" class="dropdown">',
-            '[/1]' => '</a>',
-            '%email%' => $contact_infos.email
-          ]
-          d='Shop.Theme.Global'
-        }
+        {l s='Email us: ' d='Shop.Theme.Global'}
+        {mailto address={$contact_infos.email} encode="javascript"}
       {/if}
   </div>
   <div class="hidden-md-up">
