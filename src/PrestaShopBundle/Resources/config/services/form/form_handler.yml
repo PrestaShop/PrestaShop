@@ -41,7 +41,7 @@ services:
             - 'AdministrationPage'
 
     prestashop.admin.customer_preferences.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
@@ -49,6 +49,10 @@ services:
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
             - 'CustomerPreferencesPage'
+        calls:
+            - method: setTabRepository
+              arguments:
+                  - '@prestashop.core.admin.tab.repository'
 
     prestashop.admin.product_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
