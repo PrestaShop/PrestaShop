@@ -2,8 +2,8 @@ services:
     _defaults:
         public: true
 
-    prestashop.core.form.provider.choice.country_by_iso_code:
-        class: 'PrestaShop\PrestaShop\Core\Form\Provider\Choice\CountryByIsoCodeChoiceProvider'
+    prestashop.core.form.choice_provider.country_by_iso_code:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
         arguments:
             - '@prestashop.adapter.legacy.context'
             - '@prestashop.adapter.data_provider.country'
