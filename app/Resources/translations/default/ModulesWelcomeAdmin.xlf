@@ -182,66 +182,6 @@ File: modules/welcome/welcome.php:58</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/welcome/views/templates/tooltip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="48c7c41b72e1d678923ce3571aa65b2d">
-        <source>Step</source>
-        <target>Step</target>
-        <note>Context:
-File: modules/welcome/views/templates/tooltip.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
-        <source>Next</source>
-        <target>Next</target>
-        <note>Context:
-File: modules/welcome/views/templates/tooltip.tpl:33</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
-        <source>Hey! Are you lost?</source>
-        <target>Hey! Are you lost?</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="bfc5a2ef18761320c6f699d790a204c4">
-        <source>To continue, click here:</source>
-        <target>To continue, click here:</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="bf7b3e2996598c588ca98a6715c5cde9">
-        <source>If you want to stop the tutorial for good, click here:</source>
-        <target>If you want to stop the tutorial for good, click here:</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:33</note>
-      </trans-unit>
-      <trans-unit id="44ae30cf103b6835c27cd42bd0352038">
-        <source>Quit the Welcome tutorial</source>
-        <target>Quit the Welcome tutorial</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:35</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/welcome/views/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
-        <source>Continue</source>
-        <target>Continue</target>
-        <note>Context:
-File: modules/welcome/views/content.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="3342209ae0c129fabccab65b82a503a6">
-        <source>Skip this tutorial</source>
-        <target>Skip this tutorial</target>
-        <note>Context:
-File: modules/welcome/views/content.tpl:41</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/welcome/views/navbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5288ff6ac61192d7aaa0cde233172439">
@@ -359,6 +299,66 @@ File: modules/welcome/views/contents/welcome.tpl:38</note>
         <target>Start</target>
         <note>Context:
 File: modules/welcome/views/contents/welcome.tpl:39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
+        <source>Continue</source>
+        <target>Continue</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
+        <source>Hey! Are you lost?</source>
+        <target>Hey! Are you lost?</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="bfc5a2ef18761320c6f699d790a204c4">
+        <source>To continue, click here:</source>
+        <target>To continue, click here:</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="bf7b3e2996598c588ca98a6715c5cde9">
+        <source>If you want to stop the tutorial for good, click here:</source>
+        <target>If you want to stop the tutorial for good, click here:</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="44ae30cf103b6835c27cd42bd0352038">
+        <source>Quit the Welcome tutorial</source>
+        <target>Quit the Welcome tutorial</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3342209ae0c129fabccab65b82a503a6">
+        <source>Skip this tutorial</source>
+        <target>Skip this tutorial</target>
+        <note>Context:
+File: modules/welcome/views/content.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/templates/tooltip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="48c7c41b72e1d678923ce3571aa65b2d">
+        <source>Step</source>
+        <target>Step</target>
+        <note>Context:
+File: modules/welcome/views/templates/tooltip.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
+        <source>Next</source>
+        <target>Next</target>
+        <note>Context:
+File: modules/welcome/views/templates/tooltip.tpl:33</note>
       </trans-unit>
     </body>
   </file>

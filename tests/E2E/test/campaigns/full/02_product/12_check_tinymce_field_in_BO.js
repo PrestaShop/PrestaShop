@@ -1,8 +1,10 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const {OnBoarding} = require('../../../selectors/BO/onboarding');
 const common_scenarios = require('../../common_scenarios/employee');
 const common_international_scenarios = require('../../common_scenarios/international');
+let promise = Promise.resolve();
 
 let employeeData = [
   {
@@ -38,7 +40,12 @@ scenario('Edit the connected employee profile in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-  }, 'common_client');
+    test('should check and click on "Stop the OnBoarding" button', () => {
+      return promise
+        .then(() => client.isVisible(OnBoarding.stop_button))
+        .then(() => client.stopOnBoarding(OnBoarding.stop_button))
+    });
+  }, 'onboarding');
   common_scenarios.editEmployee(employeeData[0]);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());

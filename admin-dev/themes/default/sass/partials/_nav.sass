@@ -12,7 +12,7 @@
 	+media-breakpoint-down(md)
 		display: inline-flex
 
-.nav-bar 
+.nav-bar
 	position: fixed
 	top: 0
 	bottom: 0
@@ -24,33 +24,34 @@
 	overflow-y: auto
 	transition: all .5s ease-out
 
-	.material-icons 
+	.material-icons
 		color: white
 		font-size: 1.188rem
 		line-height: inherit
 
-	&.mobile-nav 
+	&.mobile-nav
 		margin-left: -100%
 		width: 70%
+		margin-top: $size-header-height + (.625rem * 2)
 
-		+media-breakpoint-only(sm) 
+		+media-breakpoint-only(sm)
 			width: 60%
 
 		+media-breakpoint-only(md)
 			width: 40%
 
-		&.expanded 
+		&.expanded
 			display: block
 			margin-left: 0
 			overflow-y: scroll
-	
-		.onboarding-navbar 
+
+		.onboarding-navbar
 			display: none
-	
-		.panel-collapse 
+
+		.panel-collapse
 			padding-left: 0
 
-			.link-leveltwo .link 
+			.link-leveltwo .link
 				padding-left: 0.75rem
 
 		.employee_avatar
@@ -58,36 +59,36 @@
 			text-align: center
 			padding-top: 1rem
 
-			.material-icons 
+			.material-icons
 				line-height: 3.75rem
 				font-size: 3.75rem
 
-				+media-breakpoint-down(md) 
+				+media-breakpoint-down(md)
 					line-height: 4.6875rem
 					font-size: 4.6875rem
 
-			span 
+			span
 				color: white
 				display: block
 				margin-bottom: 0.625rem
 
-				+media-breakpoint-down(md) 
+				+media-breakpoint-down(md)
 					font-size: 1.09375rem
 
-			img 
+			img
 				width: 3.75rem
 				height: 3.75rem
 
 				&.img-thumbnail
 					border-radius: 36px
 
-		.shop-list 
+		.shop-list
 			padding-bottom: 1rem
 			text-align: center
 			font-weight: bold
 
-			a 
-				+media-breakpoint-down(md) 
+			a
+				+media-breakpoint-down(md)
 					font-size: 1.09375rem
 
 		.main-menu
@@ -96,13 +97,13 @@
 			& > li:first-child
 				padding-bottom: 1rem
 
-		.shop-list-title 
+		.shop-list-title
 			color: $brand-primary
 			text-transform: uppercase
 			font-size: 1rem
 			text-align: center
 			margin-bottom: 0.9375rem
-			&::after 
+			&::after
 				font-family: 'Material Icons'
 				content: "\E313"
 				font-size: 1.25rem
@@ -110,30 +111,30 @@
 				margin-left: 0.625rem
 				vertical-align: bottom
 
-		.items-list 
+		.items-list
 			padding-left: 0
-			a:focus 
+			a:focus
 				background-color: transparent
-		
-			li 
+
+			li
 				background-color: white
 				border-bottom: $gray-light 1px solid
 				&.group a
 					padding: 0.9375rem 2.5rem
 					font-weight: bold
-			
-				&.shop 
+
+				&.shop
 					padding: 0.9375rem 0.9375rem 0.9375rem 2.5rem
-					a 
+					a
 						display: inline-block
 						width: auto
-						&.link-shop 
+						&.link-shop
 							float: right
-							.material-icons 
+							.material-icons
 								font-size: 1.25rem
 								color: $gray-medium
 
-			li:first-child a 
+			li:first-child a
 				color: $brand-primary
 				text-transform: uppercase
 				font-size: 0.9375rem
@@ -143,50 +144,50 @@
 	padding: 0 0 5.313rem 0
 	margin: 0
 
-	.category-title > .title 
+	.category-title > .title
 		text-transform: uppercase
 
-	.link-levelone 
+	.link-levelone
 		$padding-size: 1.25rem
 		display: block
 
-		&[data-submenu] 
-			+media-breakpoint-down(md) 
-				a.link 
+		&[data-submenu]
+			+media-breakpoint-down(md)
+				a.link
 					font-size: 1.25rem
 					padding-top: 1.25rem
 					padding-bottom: 1.25rem
 					line-height: inherit
 
-					.material-icons 
+					.material-icons
 						font-size: 2rem
 						line-height: 2rem
 
-						&.sub-tabs-arrow 
+						&.sub-tabs-arrow
 							padding-right: 1.2rem
 
-			&.has_submenu 
-				+media-breakpoint-down(md) 
-					.sub-tabs-arrow 
+			&.has_submenu
+				+media-breakpoint-down(md)
+					.sub-tabs-arrow
 						visibility: visible
 
 		&.-active
-			+media-breakpoint-down(md) 
+			+media-breakpoint-down(md)
 				border-right: none
 
-			> .link 
+			> .link
 				border-left: .25rem solid #25b9d7
 				padding-left: .638rem
 
-				.material-icons 
-					&:first-child 
+				.material-icons
+					&:first-child
 						color: #25b9d7
 
-		&:not(#subtab-AdminParentModulesSf) 
+		&:not(#subtab-AdminParentModulesSf)
 			i.material-icons.mi-extension
 				color: #6c868e
 
-		> .link 
+		> .link
 			font-size: .75rem
 			display: flex
 			height: initial
@@ -199,10 +200,10 @@
 			white-space: initial
 			text-overflow: initial
 			overflow: hidden
-			+media-breakpoint-down(md) 
+			+media-breakpoint-down(md)
 				font-size: 1rem
 
-			span 
+			span
 				padding-left: .625rem
 
 			.sub-tabs-arrow
@@ -214,77 +215,77 @@
 
 		&.ul-open,
 		&.-active,
-		&.-hover 
-			& > .link 
+		&.-hover
+			& > .link
 				background: #202226
 				color: white
 				transition: background 300ms ease
 
-				+media-breakpoint-down(md) 
+				+media-breakpoint-down(md)
 					background: $gray-dark-menu
 
-			&.has_submenu 
-				.link 
-					.sub-tabs-arrow 
+			&.has_submenu
+				.link
+					.sub-tabs-arrow
 						visibility: visible
 
-		> .submenu 
+		> .submenu
 			list-style: none
 			background: #202226
 			display: none
 			white-space: nowrap
 			padding-left: 2.75rem
 
-			& > li 
-				+media-breakpoint-down(md) 
-					a.link 
+			& > li
+				+media-breakpoint-down(md)
+					a.link
 						padding-top: 0.75rem
 						padding-bottom: 0.75rem
 
-				&:first-of-type 
+				&:first-of-type
 					padding-top: .625rem
 
-					+media-breakpoint-down(md) 
+					+media-breakpoint-down(md)
 						padding-top: 0
 
-				&:last-of-type 
+				&:last-of-type
 					padding-bottom: .750rem
 
-					+media-breakpoint-down(md) 
+					+media-breakpoint-down(md)
 						padding-bottom: 0
 
-						a.link 
+						a.link
 							padding-bottom: 1.5rem
 
 		&.ul-open,
-		&.-active 
-			.link 
+		&.-active
+			.link
 				background: #202226
 
-		&.open 
-			> .submenu 
+		&.open
+			> .submenu
 				display: block
 
-	.link-leveltwo 
+	.link-leveltwo
 		@extend .link-levelone
 
-		&.-active 
-			> .link 
+		&.-active
+			> .link
 				padding-left: 0
 				border-left: none
 				color: white
 
-		> .link 
+		> .link
 			height: initial
 			line-height: 0.9rem
 			padding: 0.3125rem 0.3rem 0.3125rem 0
 
-			+media-breakpoint-down(md) 
+			+media-breakpoint-down(md)
 				padding-top: 1.4rem
 				padding-bottom: 1.4rem
 				line-height: 1.6rem
 
-		> .link:hover 
+		> .link:hover
 			color: $gray-dark-text-hover
 
 .category-title
@@ -299,7 +300,7 @@
 	+media-breakpoint-down(md)
 		display: none
 
-	& > .title 
+	& > .title
 		color: white
 		background: $gray-dark-menu
 
@@ -317,55 +318,55 @@
 		display: none
 		padding-bottom: 1rem
 
-	.material-icons 
+	.material-icons
 		color: #BEBEBE
 
-		&:last-child 
+		&:last-child
 			margin-left: -1.313rem
 
-.page-sidebar-closed:not(.mobile) 
+.page-sidebar-closed:not(.mobile)
 	.content-div, #content
 		transition: padding 1s ease
 
-	.menu-collapse 
+	.menu-collapse
 		transform: rotate(180deg)
 		padding-right: .8rem
 
-	.nav-bar 
+	.nav-bar
 		overflow: visible
 		width: $size-navbar-width-mini
 
-		.main-menu 
+		.main-menu
 			.category-title > .title,
-			.link-levelone span 
+			.link-levelone span
 				display: none
 
 			.sub-tabs-arrow
 				display: none !important
 
-			.category-title 
+			.category-title
 				margin-top: 0.8rem
 				padding-bottom: 0
 
-			.link-levelone 
+			.link-levelone
 				position: relative
 
 				.link
 					line-height: initial
 
-				&:first-of-type 
+				&:first-of-type
 					margin-bottom: 0
 
-				&.-hover 
-					> .link 
+				&.-hover
+					> .link
 						transition: all 0s ease 0s
 						width: 14.6875rem
 
-						> span 
+						> span
 							display: inline-block
 							padding-left: 1.563rem
 
-					ul.submenu 
+					ul.submenu
 						position: absolute !important
 						display: block !important
 						top: 34px !important
@@ -378,11 +379,11 @@
 						padding-top: 0 !important
 						margin-top: .2rem
 
-					&:last-of-type 
+					&:last-of-type
 						padding-bottom: 0 !important
 						margin-bottom: 1rem
 
-					.link 
+					.link
 						padding-left: 1.5rem
 
 		@media (max-height: 870px)

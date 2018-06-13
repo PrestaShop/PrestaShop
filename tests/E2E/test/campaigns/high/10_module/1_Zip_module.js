@@ -20,7 +20,7 @@ scenario('Install "PrestaShop Security" module', () => {
         .then(() => client.checkTextValue(ModulePage.module_import_success, "Module installed!"))
     });
     test('should click on close modal button', () => client.waitForExistAndClick(ModulePage.close_modal_button));
-    test('should click on "Installed Modules"', () => client.waitForExistAndClick(ModulePage.installed_modules_tabs, 1000));
+    test('should click on "Installed Modules"', () => client.waitForExistAndClick(Menu.Improve.Modules.installed_modules_tabs, 1000));
     test('should search for "PrestaShop Security" module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, "prestafraud"));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
     test('should check if the module "prestafraud" was installed', () => client.checkTextValue(ModulePage.built_in_module_span, "1", "contain"));

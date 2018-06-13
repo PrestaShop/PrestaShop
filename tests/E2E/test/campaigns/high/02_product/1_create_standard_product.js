@@ -58,7 +58,7 @@ scenario('Create Standard Product in the Back Office', client => {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
     });
   }, 'product/product');
 
@@ -138,7 +138,7 @@ scenario('Check the product creation in the Back Office', client => {
   test('should check the existence of product price TE', () => client.checkProductPriceTE(data.common.priceTE));
   test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, data.common.quantity));
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
-  test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+  test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
 scenario('Check the standard product in the Front Office', () => {
