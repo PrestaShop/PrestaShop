@@ -392,7 +392,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@=service("prestashop.bundle.form.choice_provider.country").getChoices()'
+            - '@=service("prestashop.core.form.provider.choice.country_by_iso_code").getChoices()'
             - '@prestashop.adapter.legacy.configuration'
         tags:
             - { name: form.type }

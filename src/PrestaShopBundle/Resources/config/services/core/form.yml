@@ -36,3 +36,9 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.context'
             - '@prestashop.adapter.data_provider.country'
+
+    prestashop.core.form.provider.choice.country_by_iso_code:
+        class: 'PrestaShop\PrestaShop\Core\Form\Provider\Choice\CountryByIsoCodeChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.adapter.data_provider.country'

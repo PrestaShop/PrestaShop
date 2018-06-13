@@ -24,13 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
+namespace PrestaShop\PrestaShop\Core\Form\Provider\Choice;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-
-class CountryChoiceProvider
+/**
+ * Class CountryChoiceProvider is responsible for providing both enabled/disabled country choices with ISO code values
+ */
+final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var LegacyContext

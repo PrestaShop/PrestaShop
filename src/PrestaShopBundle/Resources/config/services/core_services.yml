@@ -7,3 +7,4 @@ imports:
     - { resource: core/localization.yml }
     - { resource: core/geolocation.yml }
     - { resource: core/validation.yml }
+    - { resource: core/form.yml }
