@@ -147,7 +147,7 @@ final class GridPresenter implements GridPresenterInterface
 
             $renderer = $gridAction->getRenderer();
             if (is_callable($renderer)) {
-                $actionView['content'] = call_user_func($renderer);
+                $actionView['content'] = $renderer();
                 $actionView['is_rendered'] = true;
             }
 
@@ -199,7 +199,7 @@ final class GridPresenter implements GridPresenterInterface
             // then let developer know that something is wrong
             if (!isset($row[$column->getId()]) && !is_callable($column->getModifier())) {
                 throw new MissingColumnInRowException(
-                    sprintf('Column "%s" does not exist in row "%s"', $column->getIdentifier(), json_encode($row))
+                    sprintf('Column "%s" does not exist in row "%s"', $column->getId(), json_encode($row))
                 );
             }
 

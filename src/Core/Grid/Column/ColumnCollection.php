@@ -27,9 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 
 /**
  * Class ColumnCollection holds collection of columns for grid
+ *
+ * @property Column[] $items
  */
 final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
 {
@@ -42,16 +45,14 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
      */
     public static function fromArray(array $data)
     {
-        $columns = new ColumnCollection();
+        $columns = new self();
         $position = 0;
 
         foreach ($data as $columnData) {
-            $columnData['position'] = $position;
+            $columnData['position'] = $position++;
 
             $column = Column::fromArray($columnData);
             $columns->add($column);
-
-            $position += 2;
         }
 
         return $columns;
@@ -63,5 +64,20 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     public function add(ColumnInterface $column)
     {
         $this->items[$column->getId()] = $column;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addAfter($id, ColumnInterface $newColumn)
+    {
+        if (!isset($this->items[$id])) {
+            throw new ColumnNotFoundException(sprintf('Column with id "%s" was not founds', $id));
+        }
+
+        $newColumnPosition = $this->items[$id]->getPosition() + 1;
+        $newColumn->setPosition($newColumnPosition);
+
+        $this->add($newColumn);
     }
 }

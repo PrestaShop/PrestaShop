@@ -42,7 +42,7 @@ final class GridActionCollection extends AbstractCollection implements GridActio
      */
     public static function fromArray(array $data)
     {
-        $actions = new GridActionCollection();
+        $actions = new self();
 
         foreach ($data as $actionArray) {
             $action = GridAction::fromArray($actionArray);

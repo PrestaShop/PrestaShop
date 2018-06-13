@@ -92,10 +92,7 @@ final class Column implements ColumnInterface
      */
     public static function fromArray(array $data)
     {
-        $column = new Column(
-            $data['identifier'],
-            $data['name']
-        );
+        $column = new Column($data['id'], $data['name']);
 
         if (isset($data['position'])) {
             $column->setPosition($data['position']);

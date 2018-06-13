@@ -34,7 +34,7 @@ final class GridAction implements GridActionInterface
     /**
      * @var string
      */
-    private $identifier;
+    private $id;
 
     /**
      * @var string
@@ -52,15 +52,17 @@ final class GridAction implements GridActionInterface
     private $renderer;
 
     /**
-     * @param string $identifier Unique action identifier
-     * @param string $name       Translated action name
-     * @param string $icon       Action icon name
+     * @param string $id Unique action identifier
+     * @param string $name Translated action name
+     * @param string $icon Action icon name
+     * @param callable $renderer
      */
-    public function __construct($identifier, $name, $icon)
+    public function __construct($id, $name, $icon, callable $renderer = null)
     {
-        $this->identifier = $identifier;
+        $this->id = $id;
         $this->name = $name;
         $this->icon = $icon;
+        $this->renderer = $renderer;
     }
 
     /**
@@ -73,7 +75,7 @@ final class GridAction implements GridActionInterface
     public static function fromArray(array $data)
     {
         $action = new GridAction(
-            $data['identifier'],
+            $data['id'],
             $data['name'],
             $data['icon']
         );
@@ -90,7 +92,7 @@ final class GridAction implements GridActionInterface
      */
     public function getId()
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     /**

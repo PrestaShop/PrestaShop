@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Templating\EngineInterface;
@@ -43,17 +44,24 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $templating;
 
     /**
-     * @param EngineInterface $templating
+     * @var ColumnInterface
      */
-    public function __construct(EngineInterface $templating)
+    private $employeeNameWithAvatarColumn;
+
+    /**
+     * @param EngineInterface $templating
+     * @param ColumnInterface $employeeNameWithAvatarColumn
+     */
+    public function __construct(EngineInterface $templating, ColumnInterface $employeeNameWithAvatarColumn)
     {
         $this->templating = $templating;
+        $this->employeeNameWithAvatarColumn = $employeeNameWithAvatarColumn;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getIdentifier()
+    protected function getId()
     {
         return 'logs';
     }
@@ -71,57 +79,47 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        $templating = $this->templating;
-        $displayEmployee = function ($row) use ($templating) {
-            return $templating->render('@AdvancedParameters/LogsPage/Blocks/employee_block.html.twig', [
-                'log' => $row,
-            ]);
-        };
-
-        return ColumnCollection::fromArray([
+        $columns = ColumnCollection::fromArray([
             [
-                'identifier' => 'id_log',
+                'id' => 'id_log',
                 'name' => $this->trans('ID', [], 'Admin.Global'),
                 'filter_form_type' => TextType::class,
             ],
             [
-                'identifier' => 'employee',
-                'name' => $this->trans('Employee', [], 'Admin.Global'),
-                'filter_form_type' => TextType::class,
-                'modifier' => $displayEmployee,
-                'raw_content' => true,
-            ],
-            [
-                'identifier' => 'severity',
+                'id' => 'severity',
                 'name' => $this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'),
                 'filter_form_type' => TextType::class,
             ],
             [
-                'identifier' => 'message',
+                'id' => 'message',
                 'name' => $this->trans('Message', [], 'Admin.Global'),
                 'filter_form_type' => TextType::class,
             ],
             [
-                'identifier' => 'object_type',
+                'id' => 'object_type',
                 'name' => $this->trans('Object type', [], 'Admin.Advparameters.Feature'),
                 'filter_form_type' => TextType::class,
             ],
             [
-                'identifier' => 'object_id',
+                'id' => 'object_id',
                 'name' => $this->trans('Object ID', [], 'Admin.Advparameters.Feature'),
                 'filter_form_type' => TextType::class,
             ],
             [
-                'identifier' => 'error_code',
+                'id' => 'error_code',
                 'name' => $this->trans('Error code', [], 'Admin.Advparameters.Feature'),
                 'filter_form_type' => TextType::class,
             ],
             [
-                'identifier' => 'date_add',
+                'id' => 'date_add',
                 'name' => $this->trans('Date', [], 'Admin.Global'),
                 'filter_form_type' => DateRangeType::class,
             ],
         ]);
+
+        $columns->addAfter('id_log', $this->employeeNameWithAvatarColumn);
+
+        return $columns;
     }
 
     /**
@@ -136,23 +134,23 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 
         return GridActionCollection::fromArray([
             [
-                'identifier' => 'delete',
+                'id' => 'delete',
                 'name' => $this->trans('Erase all', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'delete_forever',
                 'renderer' => $renderDeleteAllAction,
             ],
             [
-                'identifier' => 'ps_refresh_list',
+                'id' => 'ps_refresh_list',
                 'name' => $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'refresh',
             ],
             [
-                'identifier' => 'ps_show_query',
+                'id' => 'ps_show_query',
                 'name' => $this->trans('Show SQL query', [], 'Admin.Actions'),
                 'icon' => 'code',
             ],
             [
-                'identifier' => 'ps_export_sql_manager',
+                'id' => 'ps_export_sql_manager',
                 'name' => $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'icon' => 'storage',
             ],
