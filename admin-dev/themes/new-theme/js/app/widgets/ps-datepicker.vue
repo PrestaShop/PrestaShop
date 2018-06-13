@@ -24,7 +24,7 @@
  *-->
 <template>
   <div class="input-group date">
-    <input type='text' class="form-control" />
+    <input ref="datepicker" type="text" class="form-control" />
     <div class="input-group-append">
       <span class="input-group-text">
         <i class="material-icons">event</i>
@@ -38,19 +38,24 @@
     props: {
       locale: {
         type: String,
+        required: true,
         default: 'en',
+      },
+      type: {
+        type: String,
+        required: true,
       },
     },
     mounted() {
-      $(this.$el).datetimepicker({
-        format: 'MM/DD/YYYY',
+      $(this.$refs.datepicker).datetimepicker({
+        format: 'YYYY-MM-DD',
         showClear: true,
       }).on('dp.change', (infos) => {
-        if (infos.date) {
-          this.$emit('dpChange', infos);
-        } else {
-          this.$emit('reset', infos);
-        }
+        infos.dateType = this.type;
+        this.$emit(
+          infos.date ? 'dpChange' : 'reset',
+          infos,
+        );
       });
     },
   };

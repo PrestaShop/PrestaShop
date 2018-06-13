@@ -6,7 +6,7 @@
         <source>Click here to log in.</source>
         <target>Click here to log in.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:810</note>
+File: controllers/admin/AdminModulesController.php:809</note>
       </trans-unit>
     </body>
   </file>
@@ -23,6 +23,16 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:
         <target>Update these modules to enjoy their latest versions.</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/notifications.html.twig:61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9e3c05bc84491dcd2464d72fae22e6b6">
+        <source>Search modules: keyword, name, author...</source>
+        <target>Search modules: keyword, name, author...</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig:53</note>
       </trans-unit>
     </body>
   </file>
@@ -45,16 +55,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.ht
         <target>What happened?</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9e3c05bc84491dcd2464d72fae22e6b6">
-        <source>Search modules: keyword, name, author...</source>
-        <target>Search modules: keyword, name, author...</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/menu_top.html.twig:53</note>
       </trans-unit>
     </body>
   </file>

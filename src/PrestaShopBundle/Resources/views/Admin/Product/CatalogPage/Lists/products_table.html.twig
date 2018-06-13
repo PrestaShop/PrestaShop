@@ -65,7 +65,7 @@
           {% endif %}
 
           <th scope="col" class="text-center">
-            {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active') }}
+            {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
           </th>
           {% if has_category_filter == true %}
             <th scope="col">

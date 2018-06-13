@@ -14,7 +14,7 @@ let firstProductData = {
   reference: 'a'
 };
 
-scenario('Check product page buttons', client => {
+scenario('Check product page buttons', () => {
 
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -47,7 +47,7 @@ scenario('Check product page buttons', client => {
         .then(() => client.waitForExistAndClick(AddProductPage.duplicate_button));
     });
     test('should check the duplication success message', () => client.checkTextValue(AddProductPage.success_panel, "Product successfully duplicated."));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     scenario('Check that the product is well duplicated', client => {
@@ -100,7 +100,7 @@ scenario('Check product page buttons', client => {
   }, 'product/check_product');
 
   scenario('Testing "Add new product" button', client => {
-    test('should click on the "Add new product" button', () => {
+    test('should click on "Add new product" button', () => {
       return promise
         .then(() => client.waitForExistAndClick(AddProductPage.dropdown_button))
         .then(() => client.waitForExistAndClick(AddProductPage.new_product_dropdown_button))

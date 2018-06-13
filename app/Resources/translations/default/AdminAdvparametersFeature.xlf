@@ -1,33 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/lang/ProfileLang.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0b28a5799a32c687dad2c5183718ceac">
-        <source>SuperAdmin</source>
-        <target>SuperAdmin</target>
-        <note>Context:
-File: classes/lang/ProfileLang.php:40</note>
-      </trans-unit>
-      <trans-unit id="f5130b14aee3fd950fae10a832e4aefe">
-        <source>Logistician</source>
-        <target>Logistician</target>
-        <note>Context:
-File: classes/lang/ProfileLang.php:41</note>
-      </trans-unit>
-      <trans-unit id="8d4f90eeea46d604a6410c9bd877f582">
-        <source>Translator</source>
-        <target>Translator</target>
-        <note>Context:
-File: classes/lang/ProfileLang.php:42</note>
-      </trans-unit>
-      <trans-unit id="5ae0061f57027b2344a537eab86c1de2">
-        <source>Salesman</source>
-        <target>Salesman</target>
-        <note>Context:
-File: classes/lang/ProfileLang.php:43</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">
@@ -35,12 +7,6 @@ File: classes/lang/ProfileLang.php:43</note>
         <target>Both</target>
         <note>Context:
 File: controllers/admin/AdminEmailsController.php:122</note>
-      </trans-unit>
-      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
-        <source>Erase all</source>
-        <target>Erase all</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:259</note>
       </trans-unit>
       <trans-unit id="278c491bdd8a53618c149c4ac790da34">
         <source>Template</source>
@@ -226,23 +192,17 @@ File: controllers/admin/AdminEmailsController.php:287</note>
         <note>Context:
 File: controllers/admin/AdminImportController.php:411</note>
       </trans-unit>
-      <trans-unit id="6b127dc82937049e45e74aebca783e74">
-        <source>Store contacts</source>
-        <target>Store contacts</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4463</note>
-      </trans-unit>
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4472</note>
+File: controllers/admin/AdminImportController.php:4483</note>
       </trans-unit>
       <trans-unit id="9f954c5e16659673382f03fa027772ea">
         <source>Supply Order Details</source>
         <target>Supply Order Details</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4477</note>
+File: controllers/admin/AdminImportController.php:4488</note>
       </trans-unit>
       <trans-unit id="b8495b50f5c172ebad1cc5c615548afa">
         <source>Ignore this column</source>
@@ -740,7 +700,7 @@ File: controllers/admin/AdminImportController.php:575</note>
         <source>Import .CSV data</source>
         <target>Import .CSV data</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:818</note>
+File: controllers/admin/AdminImportController.php:824</note>
       </trans-unit>
     </body>
   </file>
@@ -754,401 +714,88 @@ File: controllers/admin/AdminLoginController.php:209</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8ceefbf99a59faebc1abfe60004fa5cd">
-        <source>%class_name% addition</source>
-        <target>%class_name% addition</target>
+      <trans-unit id="6b127dc82937049e45e74aebca783e74">
+        <source>Store contacts</source>
+        <target>Store contacts</target>
         <note>Context:
-File: controllers/admin/AdminQuickAccessesController.php:192
- Comment: voluntary do affectation here</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php:60</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
-        <source>Key</source>
-        <target>Key</target>
+      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
+        <source>Price per unit</source>
+        <target>Price per unit</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:133</note>
-      </trans-unit>
-      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
-        <source>Key description</source>
-        <target>Key description</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:147</note>
-      </trans-unit>
-      <trans-unit id="a3946b47f44a8f7adf9c9b6e38911790">
-        <source>Enable PrestaShop's webservice</source>
-        <target>Enable PrestaShop's webservice</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:80</note>
-      </trans-unit>
-      <trans-unit id="8a05d87b51cc003b5a3c018b37a6d311">
-        <source>Enable CGI mode for PHP</source>
-        <target>Enable CGI mode for PHP</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:95</note>
-      </trans-unit>
-      <trans-unit id="644ebe55744f361a22bc3c9be9bc4ccf">
-        <source>Add new webservice key</source>
-        <target>Add new webservice key</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:108</note>
-      </trans-unit>
-      <trans-unit id="58af3456f86b42c86f963d896a62644f">
-        <source>Webservice Accounts</source>
-        <target>Webservice Accounts</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:127</note>
-      </trans-unit>
-      <trans-unit id="20eebdc752ee86d49f5d090759b237aa">
-        <source>Webservice account key.</source>
-        <target>Webservice account key.</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:137</note>
-      </trans-unit>
-      <trans-unit id="45fff8bcdd979fde32df8435f29553ab">
-        <source>Generate!</source>
-        <target>Generate!</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:139</note>
-      </trans-unit>
-      <trans-unit id="d08ccf52b4cdd08e41cfb99ec42e0b29">
-        <source>Permissions</source>
-        <target>Permissions</target>
-        <note>Context:
-File: controllers/admin/AdminWebserviceController.php:174</note>
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:926</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminLogsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ecb833e2dc5d6c03d4d0cddf1b15e85a">
         <source>Severity (1-4)</source>
         <target>Severity (1-4)</target>
         <note>Context:
-File: controllers/admin/AdminLogsController.php:55</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/table.html.twig:39</note>
       </trans-unit>
       <trans-unit id="0610bbb9dba03bb8037e468534b65a1a">
         <source>Object type</source>
         <target>Object type</target>
         <note>Context:
-File: controllers/admin/AdminLogsController.php:63</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/table.html.twig:45</note>
       </trans-unit>
       <trans-unit id="d95fc016a6eee828f434ed5f55504427">
         <source>Object ID</source>
         <target>Object ID</target>
         <note>Context:
-File: controllers/admin/AdminLogsController.php:67</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/table.html.twig:48</note>
       </trans-unit>
       <trans-unit id="5f36cf760a5c474cc32a6d35d9c50d05">
         <source>Error code</source>
         <target>Error code</target>
         <note>Context:
-File: controllers/admin/AdminLogsController.php:72</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/table.html.twig:51</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/logs.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="5d1f62be1608c8c55ca77098efe5f053">
         <source>Logs by email</source>
         <target>Logs by email</target>
         <note>Context:
-File: controllers/admin/AdminLogsController.php:86</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/logs.html.twig:46</note>
       </trans-unit>
       <trans-unit id="daf5a89c7110f00485d0737ff765e830">
         <source>Minimum severity level</source>
         <target>Minimum severity level</target>
         <note>Context:
-File: controllers/admin/AdminLogsController.php:90</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/logs.html.twig:52</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/actions.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4493e821e06072415518bd7ae4077996">
-        <source>Shop group</source>
-        <target>Shop group</target>
+      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
+        <source>Erase all</source>
+        <target>Erase all</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:177</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/actions.html.twig:34</note>
       </trans-unit>
-      <trans-unit id="90f72fb554403a6b1cb46741c5f348f2">
-        <source>Multistore options</source>
-        <target>Multistore options</target>
+      <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
+        <source>Refresh list</source>
+        <target>Refresh list</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:66</note>
-      </trans-unit>
-      <trans-unit id="8cdf1c6345219fcfde50615a78ad3ce6">
-        <source>Default shop</source>
-        <target>Default shop</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:69</note>
-      </trans-unit>
-      <trans-unit id="d60f2e4b0fe028af01eb653ff90f7675">
-        <source>Add a new shop group</source>
-        <target>Add a new shop group</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:167</note>
-      </trans-unit>
-      <trans-unit id="99dba47935ec26654ca99c21650779e6">
-        <source>Add a new shop</source>
-        <target>Add a new shop</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:153</note>
-      </trans-unit>
-      <trans-unit id="07a415776bc6aefc538acd85f4d56730">
-        <source>Shop group name</source>
-        <target>Shop group name</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:184</note>
-      </trans-unit>
-      <trans-unit id="5b55607ff39362e86c0693626a6cc20f">
-        <source>Share customers</source>
-        <target>Share customers</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:190</note>
-      </trans-unit>
-      <trans-unit id="4a1f6ec3d9ae0c871dfb29d01a150d6f">
-        <source>Share available quantities to sell</source>
-        <target>Share available quantities to sell</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:210</note>
-      </trans-unit>
-      <trans-unit id="166dcd2b34652eee355742934826795a">
-        <source>Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.</source>
-        <target>Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:225</note>
-      </trans-unit>
-      <trans-unit id="a23a8100bb34ea482c8fb134da89710e">
-        <source>Share orders</source>
-        <target>Share orders</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:229</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
-        <source>Multistore tree</source>
-        <target>Multistore tree</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:364</note>
-      </trans-unit>
-      <trans-unit id="4a4d1260782270739eeeef6d58db0f73">
-        <source>Shop URL ID</source>
-        <target>Shop URL ID</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:57</note>
-      </trans-unit>
-      <trans-unit id="e93c33bd1341ab74195430daeb63db13">
-        <source>Shop name</source>
-        <target>Shop name</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:62</note>
-      </trans-unit>
-      <trans-unit id="71a7f085c9ecfd1ac1042c32c0656927">
-        <source>Is it the main URL?</source>
-        <target>Is it the main URL?</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:71</note>
-      </trans-unit>
-      <trans-unit id="bfc70beddce99a8ab159563d4e03f7af">
-        <source>URL options</source>
-        <target>URL options</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:134</note>
-      </trans-unit>
-      <trans-unit id="438ddd6a05ebb1af2b3e5dc794489f57">
-        <source>Is it the main URL for this shop?</source>
-        <target>Is it the main URL for this shop?</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:157</note>
-      </trans-unit>
-      <trans-unit id="37d00f4554dc3c0baeb34a9c22d787d9">
-        <source>Shop URL</source>
-        <target>Shop URL</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:210</note>
-      </trans-unit>
-      <trans-unit id="eae639a70006feff484a39363c977e24">
-        <source>Domain</source>
-        <target>Domain</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:216</note>
-      </trans-unit>
-      <trans-unit id="f9f0dece476d9f76e4130347b6e31b94">
-        <source>SSL Domain</source>
-        <target>SSL Domain</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:222</note>
-      </trans-unit>
-      <trans-unit id="4f04a71599485ace316aa8ed38348875">
-        <source>Physical URL</source>
-        <target>Physical URL</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:239</note>
-      </trans-unit>
-      <trans-unit id="bbc1203755645168294af35f880d61e5">
-        <source>Virtual URL</source>
-        <target>Virtual URL</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:252</note>
-      </trans-unit>
-      <trans-unit id="1dcec4396291e2fbdc02c03526fe2b88">
-        <source>Final URL</source>
-        <target>Final URL</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:260</note>
-      </trans-unit>
-      <trans-unit id="d63c1ea9ab7850a74940ff760f25034b">
-        <source>Edit this shop</source>
-        <target>Edit this shop</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:309</note>
-      </trans-unit>
-      <trans-unit id="157d64669ca816a7153ac30d2e16690a">
-        <source>Add a new URL</source>
-        <target>Add a new URL</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:334</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="822376c59b7b86a05a2519f85f88da55">
-        <source>SQL query Name</source>
-        <target>SQL query Name</target>
-        <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:52</note>
-      </trans-unit>
-      <trans-unit id="dddc702fcffceb2ac77291954897d747">
-        <source>SQL query</source>
-        <target>SQL query</target>
-        <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:150</note>
-      </trans-unit>
-      <trans-unit id="10d8074bf1e35bcac9911c5fe26261cf">
-        <source>Select your default file encoding</source>
-        <target>Select your default file encoding</target>
-        <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:61</note>
-      </trans-unit>
-      <trans-unit id="bbed49e90ee59ac450e80b492f452d0e">
-        <source>Edit this SQL query</source>
-        <target>Edit this SQL query</target>
-        <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:98</note>
-      </trans-unit>
-      <trans-unit id="9b5c3d6674b3af1946fb50faae7079e2">
-        <source>SQL query name</source>
-        <target>SQL query name</target>
-        <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:143</note>
-      </trans-unit>
-      <trans-unit id="26420bd9e260012164a58a0f002e4821">
-        <source>Add new SQL query</source>
-        <target>Add new SQL query</target>
-        <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:308</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminProfilesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cce99c598cfdb9773ab041d54c3d973a">
-        <source>Profile</source>
-        <target>Profile</target>
-        <note>Context:
-File: controllers/admin/AdminProfilesController.php:67</note>
-      </trans-unit>
-      <trans-unit id="69d18853cb35672b765f55ae37ae4967">
-        <source>Add new profile</source>
-        <target>Add new profile</target>
-        <note>Context:
-File: controllers/admin/AdminProfilesController.php:111</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a19df5d477865657e2e2d4f9c30325db">
-        <source>Employee options</source>
-        <target>Employee options</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:99</note>
-      </trans-unit>
-      <trans-unit id="67dc4a38907a53d52fb27cd3ae7972d6">
-        <source>Password regeneration</source>
-        <target>Password regeneration</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:102</note>
-      </trans-unit>
-      <trans-unit id="4513dcc4cec4ce6e5a428c81ce7592ae">
-        <source>Security: Minimum time to wait between two password changes.</source>
-        <target>Security: Minimum time to wait between two password changes.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:103</note>
-      </trans-unit>
-      <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
-        <source>minutes</source>
-        <target>minutes</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:106</note>
-      </trans-unit>
-      <trans-unit id="987f9e9654b8201f8a428d71d903b1d2">
-        <source>Memorize the language used in Admin panel forms</source>
-        <target>Memorize the language used in Admin panel forms</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:110</note>
-      </trans-unit>
-      <trans-unit id="4696cdea33eee7e2c4fcb5dca30ccf56">
-        <source>Allow employees to select a specific language for the Admin panel form.</source>
-        <target>Allow employees to select a specific language for the Admin panel form.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:111</note>
-      </trans-unit>
-      <trans-unit id="485263210a4a12e35e3426045e3301b1">
-        <source>Add new employee</source>
-        <target>Add new employee</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:190</note>
-      </trans-unit>
-      <trans-unit id="04acbae6db9450374e9102fffd51d802">
-        <source>Edit: %lastname% %firstname%</source>
-        <target>Edit: %lastname% %firstname%</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:200</note>
-      </trans-unit>
-      <trans-unit id="d52c376b3badee6132116bb9af74d0d2">
-        <source>Subscribe to PrestaShop newsletter</source>
-        <target>Subscribe to PrestaShop newsletter</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:310</note>
-      </trans-unit>
-      <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
-        <source>Default page</source>
-        <target>Default page</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:330</note>
-      </trans-unit>
-      <trans-unit id="57452e2dda1a10cfe2cc34c575e6b9d0">
-        <source>Permission profile</source>
-        <target>Permission profile</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:381</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/actions.html.twig:38</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
-        <source>Employees</source>
-        <target>Employees</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:541</note>
-      </trans-unit>
       <trans-unit id="5e3d6d040d8a81befd75127d526646bc">
         <source>Contact information</source>
         <target>Contact information</target>
@@ -1247,53 +894,85 @@ File: controllers/admin/AdminShopController.php:842</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9d20a93036ba910dd75ffbcec173798e">
-        <source>Price per unit</source>
-        <target>Price per unit</target>
+      <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
+        <source>Employees</source>
+        <target>Employees</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:922</note>
+File: controllers/admin/AdminEmployeesController.php:219</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
-        <source>Port</source>
-        <target>Port</target>
+      <trans-unit id="cce99c598cfdb9773ab041d54c3d973a">
+        <source>Profile</source>
+        <target>Profile</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:72</note>
+File: controllers/admin/AdminEmployeesController.php:88</note>
       </trans-unit>
-      <trans-unit id="74c9e12c3a19cfb79b79faf579934844">
-        <source>Add server</source>
-        <target>Add server</target>
+      <trans-unit id="a19df5d477865657e2e2d4f9c30325db">
+        <source>Employee options</source>
+        <target>Employee options</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:35</note>
+File: controllers/admin/AdminEmployeesController.php:96</note>
       </trans-unit>
-      <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
-        <source>IP Address</source>
-        <target>IP Address</target>
+      <trans-unit id="67dc4a38907a53d52fb27cd3ae7972d6">
+        <source>Password regeneration</source>
+        <target>Password regeneration</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:40</note>
+File: controllers/admin/AdminEmployeesController.php:99</note>
       </trans-unit>
-      <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
-        <source>Weight</source>
-        <target>Weight</target>
+      <trans-unit id="4513dcc4cec4ce6e5a428c81ce7592ae">
+        <source>Security: Minimum time to wait between two password changes.</source>
+        <target>Security: Minimum time to wait between two password changes.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:73</note>
+File: controllers/admin/AdminEmployeesController.php:100</note>
       </trans-unit>
-      <trans-unit id="003744a685f896a2d9764655f67f1a24">
-        <source>Add Server</source>
-        <target>Add Server</target>
+      <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
+        <source>minutes</source>
+        <target>minutes</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:59</note>
+File: controllers/admin/AdminEmployeesController.php:103</note>
       </trans-unit>
-      <trans-unit id="dd11871dd215aec96a2eb051116bac00">
-        <source>Test Server</source>
-        <target>Test Server</target>
+      <trans-unit id="987f9e9654b8201f8a428d71d903b1d2">
+        <source>Memorize the language used in Admin panel forms</source>
+        <target>Memorize the language used in Admin panel forms</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:60</note>
+File: controllers/admin/AdminEmployeesController.php:107</note>
+      </trans-unit>
+      <trans-unit id="4696cdea33eee7e2c4fcb5dca30ccf56">
+        <source>Allow employees to select a specific language for the Admin panel form.</source>
+        <target>Allow employees to select a specific language for the Admin panel form.</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:108</note>
+      </trans-unit>
+      <trans-unit id="485263210a4a12e35e3426045e3301b1">
+        <source>Add new employee</source>
+        <target>Add new employee</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:169</note>
+      </trans-unit>
+      <trans-unit id="04acbae6db9450374e9102fffd51d802">
+        <source>Edit: %lastname% %firstname%</source>
+        <target>Edit: %lastname% %firstname%</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:179</note>
+      </trans-unit>
+      <trans-unit id="d52c376b3badee6132116bb9af74d0d2">
+        <source>Subscribe to PrestaShop newsletter</source>
+        <target>Subscribe to PrestaShop newsletter</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:289</note>
+      </trans-unit>
+      <trans-unit id="435a2d71a0c6c33cd2c917b00b8e0da1">
+        <source>Default page</source>
+        <target>Default page</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:309</note>
+      </trans-unit>
+      <trans-unit id="57452e2dda1a10cfe2cc34c575e6b9d0">
+        <source>Permission profile</source>
+        <target>Permission profile</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:360</note>
       </trans-unit>
     </body>
   </file>
@@ -1303,7 +982,13 @@ File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/me
         <source>Customer groups</source>
         <target>Customer groups</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:140</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:146</note>
+      </trans-unit>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:66</note>
       </trans-unit>
       <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
         <source>Smarty</source>
@@ -1341,119 +1026,424 @@ File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/pe
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:61</note>
       </trans-unit>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:66</note>
-      </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:98</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:101</note>
       </trans-unit>
       <trans-unit id="0da6a47faba382116423315f9e61b9e2">
         <source>Disable non PrestaShop modules</source>
         <target>Disable non PrestaShop modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:88</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:91</note>
       </trans-unit>
       <trans-unit id="edf05af828595f01ae00b209ef0b1e1f">
         <source>Enable or disable non PrestaShop Modules.</source>
         <target>Enable or disable non PrestaShop Modules.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:88</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:91</note>
       </trans-unit>
       <trans-unit id="03a9e6840847f96325b7184d5f3c2769">
         <source>Disable all overrides</source>
         <target>Disable all overrides</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:93</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:96</note>
       </trans-unit>
       <trans-unit id="29826f9f4da3d473c1e4ecf2f6c4ef9f">
         <source>Enable or disable all classes and controllers overrides.</source>
         <target>Enable or disable all classes and controllers overrides.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:93</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:96</note>
       </trans-unit>
       <trans-unit id="010a6cb0eccdea35662ad711d443f2ec">
         <source>Optional features</source>
         <target>Optional features</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:117</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:123</note>
       </trans-unit>
       <trans-unit id="f4efdd180586cba038b52f2471e4075d">
         <source>CCC (Combine, Compress and Cache)</source>
         <target>CCC (Combine, Compress and Cache)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:157</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:166</note>
       </trans-unit>
       <trans-unit id="c7ceaefb9d7fd3731ae2a28abad2cb95">
         <source>Smart cache for CSS</source>
         <target>Smart cache for CSS</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:165</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:174</note>
       </trans-unit>
       <trans-unit id="cf00874a93cf1cca317853c54c9f40e3">
         <source>Smart cache for JavaScript</source>
         <target>Smart cache for JavaScript</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:170</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:179</note>
       </trans-unit>
       <trans-unit id="0b388064aa29e8576990d9eb5da8d43e">
         <source>Apache optimization</source>
         <target>Apache optimization</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:175</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:184</note>
       </trans-unit>
       <trans-unit id="3ffcac2b857b421d5418b748b411265b">
         <source>Media servers (use only with CCC)</source>
         <target>Media servers (use only with CCC)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:194</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:206</note>
       </trans-unit>
       <trans-unit id="2d29e91503465ed72170623f37458e32">
         <source>You must enter another domain, or subdomain, in order to use cookieless static content.</source>
         <target>You must enter another domain, or subdomain, in order to use cookieless static content.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:199</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:211</note>
       </trans-unit>
       <trans-unit id="3ed7fddd0f381c4fe4683fc9e856dbcf">
         <source>Media server #1</source>
         <target>Media server #1</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:202</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:214</note>
       </trans-unit>
       <trans-unit id="9dafd449b62301e26c635b976b231b88">
         <source>Media server #2</source>
         <target>Media server #2</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:207</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:219</note>
       </trans-unit>
       <trans-unit id="391e79edab921e1974705a7096055dde">
         <source>Media server #3</source>
         <target>Media server #3</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:212</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:224</note>
       </trans-unit>
       <trans-unit id="02d56cf7754ce16d7ce0193fbca7c90a">
         <source>Caching</source>
         <target>Caching</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:229</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:244</note>
       </trans-unit>
       <trans-unit id="276e3171a63595e207ec292fce891277">
         <source>Use cache</source>
         <target>Use cache</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:234</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:249</note>
       </trans-unit>
       <trans-unit id="aa7ef82bc75491903bfc4838957265be">
         <source>Caching system</source>
         <target>Caching system</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:239</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:254</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
+        <source>Port</source>
+        <target>Port</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:74</note>
+      </trans-unit>
+      <trans-unit id="74c9e12c3a19cfb79b79faf579934844">
+        <source>Add server</source>
+        <target>Add server</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:35</note>
+      </trans-unit>
+      <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
+        <source>IP Address</source>
+        <target>IP Address</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:40</note>
+      </trans-unit>
+      <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
+        <source>Weight</source>
+        <target>Weight</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:75</note>
+      </trans-unit>
+      <trans-unit id="003744a685f896a2d9764655f67f1a24">
+        <source>Add Server</source>
+        <target>Add Server</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:61</note>
+      </trans-unit>
+      <trans-unit id="dd11871dd215aec96a2eb051116bac00">
+        <source>Test Server</source>
+        <target>Test Server</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="822376c59b7b86a05a2519f85f88da55">
+        <source>SQL query Name</source>
+        <target>SQL query Name</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:52</note>
+      </trans-unit>
+      <trans-unit id="dddc702fcffceb2ac77291954897d747">
+        <source>SQL query</source>
+        <target>SQL query</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:150</note>
+      </trans-unit>
+      <trans-unit id="10d8074bf1e35bcac9911c5fe26261cf">
+        <source>Select your default file encoding</source>
+        <target>Select your default file encoding</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:61</note>
+      </trans-unit>
+      <trans-unit id="bbed49e90ee59ac450e80b492f452d0e">
+        <source>Edit this SQL query</source>
+        <target>Edit this SQL query</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:98</note>
+      </trans-unit>
+      <trans-unit id="9b5c3d6674b3af1946fb50faae7079e2">
+        <source>SQL query name</source>
+        <target>SQL query name</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:143</note>
+      </trans-unit>
+      <trans-unit id="26420bd9e260012164a58a0f002e4821">
+        <source>Add new SQL query</source>
+        <target>Add new SQL query</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:308</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4a4d1260782270739eeeef6d58db0f73">
+        <source>Shop URL ID</source>
+        <target>Shop URL ID</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:57</note>
+      </trans-unit>
+      <trans-unit id="e93c33bd1341ab74195430daeb63db13">
+        <source>Shop name</source>
+        <target>Shop name</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:62</note>
+      </trans-unit>
+      <trans-unit id="71a7f085c9ecfd1ac1042c32c0656927">
+        <source>Is it the main URL?</source>
+        <target>Is it the main URL?</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:71</note>
+      </trans-unit>
+      <trans-unit id="bfc70beddce99a8ab159563d4e03f7af">
+        <source>URL options</source>
+        <target>URL options</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:134</note>
+      </trans-unit>
+      <trans-unit id="438ddd6a05ebb1af2b3e5dc794489f57">
+        <source>Is it the main URL for this shop?</source>
+        <target>Is it the main URL for this shop?</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:157</note>
+      </trans-unit>
+      <trans-unit id="37d00f4554dc3c0baeb34a9c22d787d9">
+        <source>Shop URL</source>
+        <target>Shop URL</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:210</note>
+      </trans-unit>
+      <trans-unit id="eae639a70006feff484a39363c977e24">
+        <source>Domain</source>
+        <target>Domain</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:216</note>
+      </trans-unit>
+      <trans-unit id="f9f0dece476d9f76e4130347b6e31b94">
+        <source>SSL Domain</source>
+        <target>SSL Domain</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:222</note>
+      </trans-unit>
+      <trans-unit id="4f04a71599485ace316aa8ed38348875">
+        <source>Physical URL</source>
+        <target>Physical URL</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:239</note>
+      </trans-unit>
+      <trans-unit id="bbc1203755645168294af35f880d61e5">
+        <source>Virtual URL</source>
+        <target>Virtual URL</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:252</note>
+      </trans-unit>
+      <trans-unit id="1dcec4396291e2fbdc02c03526fe2b88">
+        <source>Final URL</source>
+        <target>Final URL</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:260</note>
+      </trans-unit>
+      <trans-unit id="d63c1ea9ab7850a74940ff760f25034b">
+        <source>Edit this shop</source>
+        <target>Edit this shop</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:309</note>
+      </trans-unit>
+      <trans-unit id="157d64669ca816a7153ac30d2e16690a">
+        <source>Add a new URL</source>
+        <target>Add a new URL</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:334</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
+        <source>Multistore tree</source>
+        <target>Multistore tree</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:111</note>
+      </trans-unit>
+      <trans-unit id="4493e821e06072415518bd7ae4077996">
+        <source>Shop group</source>
+        <target>Shop group</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:177</note>
+      </trans-unit>
+      <trans-unit id="90f72fb554403a6b1cb46741c5f348f2">
+        <source>Multistore options</source>
+        <target>Multistore options</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:66</note>
+      </trans-unit>
+      <trans-unit id="8cdf1c6345219fcfde50615a78ad3ce6">
+        <source>Default shop</source>
+        <target>Default shop</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:69</note>
+      </trans-unit>
+      <trans-unit id="d60f2e4b0fe028af01eb653ff90f7675">
+        <source>Add a new shop group</source>
+        <target>Add a new shop group</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:167</note>
+      </trans-unit>
+      <trans-unit id="99dba47935ec26654ca99c21650779e6">
+        <source>Add a new shop</source>
+        <target>Add a new shop</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:153</note>
+      </trans-unit>
+      <trans-unit id="07a415776bc6aefc538acd85f4d56730">
+        <source>Shop group name</source>
+        <target>Shop group name</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:184</note>
+      </trans-unit>
+      <trans-unit id="5b55607ff39362e86c0693626a6cc20f">
+        <source>Share customers</source>
+        <target>Share customers</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:190</note>
+      </trans-unit>
+      <trans-unit id="4a1f6ec3d9ae0c871dfb29d01a150d6f">
+        <source>Share available quantities to sell</source>
+        <target>Share available quantities to sell</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:210</note>
+      </trans-unit>
+      <trans-unit id="166dcd2b34652eee355742934826795a">
+        <source>Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.</source>
+        <target>Share available quantities between shops of this group. When changing this option, all available products quantities will be reset to 0.</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:225</note>
+      </trans-unit>
+      <trans-unit id="a23a8100bb34ea482c8fb134da89710e">
+        <source>Share orders</source>
+        <target>Share orders</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:229</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminProfilesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="69d18853cb35672b765f55ae37ae4967">
+        <source>Add new profile</source>
+        <target>Add new profile</target>
+        <note>Context:
+File: controllers/admin/AdminProfilesController.php:111</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8ceefbf99a59faebc1abfe60004fa5cd">
+        <source>%class_name% addition</source>
+        <target>%class_name% addition</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:192
+ Comment: voluntary do affectation here</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="897356954c2cd3d41b221e3f24f99bba">
+        <source>Key</source>
+        <target>Key</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:133</note>
+      </trans-unit>
+      <trans-unit id="52699c78843b98f98620186a59b0a3fa">
+        <source>Key description</source>
+        <target>Key description</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:147</note>
+      </trans-unit>
+      <trans-unit id="a3946b47f44a8f7adf9c9b6e38911790">
+        <source>Enable PrestaShop's webservice</source>
+        <target>Enable PrestaShop's webservice</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:80</note>
+      </trans-unit>
+      <trans-unit id="8a05d87b51cc003b5a3c018b37a6d311">
+        <source>Enable CGI mode for PHP</source>
+        <target>Enable CGI mode for PHP</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:95</note>
+      </trans-unit>
+      <trans-unit id="644ebe55744f361a22bc3c9be9bc4ccf">
+        <source>Add new webservice key</source>
+        <target>Add new webservice key</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:108</note>
+      </trans-unit>
+      <trans-unit id="58af3456f86b42c86f963d896a62644f">
+        <source>Webservice Accounts</source>
+        <target>Webservice Accounts</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:127</note>
+      </trans-unit>
+      <trans-unit id="20eebdc752ee86d49f5d090759b237aa">
+        <source>Webservice account key.</source>
+        <target>Webservice account key.</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:137</note>
+      </trans-unit>
+      <trans-unit id="45fff8bcdd979fde32df8435f29553ab">
+        <source>Generate!</source>
+        <target>Generate!</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:139</note>
+      </trans-unit>
+      <trans-unit id="d08ccf52b4cdd08e41cfb99ec42e0b29">
+        <source>Permissions</source>
+        <target>Permissions</target>
+        <note>Context:
+File: controllers/admin/AdminWebserviceController.php:174</note>
       </trans-unit>
     </body>
   </file>
@@ -1491,101 +1481,41 @@ File: controllers/admin/AdminBackupController.php:69</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="46f18d3960afc01e5a1a5a0e0e9d571b">
-        <source>Automatically check for module updates</source>
-        <target>Automatically check for module updates</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:52</note>
-      </trans-unit>
-      <trans-unit id="967db4d257af07feced01d6633f575f7">
-        <source>Check the cookie's IP address</source>
-        <target>Check the cookie's IP address</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:60</note>
-      </trans-unit>
-      <trans-unit id="dcfba1534995899d2ca36cda978da215">
-        <source>Lifetime of front office cookies</source>
-        <target>Lifetime of front office cookies</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:69</note>
-      </trans-unit>
-      <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
-        <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
-        <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:70</note>
-      </trans-unit>
-      <trans-unit id="73cdddd7730abfc13a55efb9f5685a3b">
-        <source>hours</source>
-        <target>hours</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:84</note>
-      </trans-unit>
-      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
-        <source>Lifetime of back office cookies</source>
-        <target>Lifetime of back office cookies</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:79</note>
-      </trans-unit>
-      <trans-unit id="ade28d54bcdbc7c4cfd45d84ad517f7b">
-        <source>Upload quota</source>
-        <target>Upload quota</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:92</note>
-      </trans-unit>
-      <trans-unit id="454036c51196464f8d9c84ded5808985">
-        <source>Maximum size for attached files</source>
-        <target>Maximum size for attached files</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:96</note>
-      </trans-unit>
       <trans-unit id="2c111a587b8e6a65856ac7933d76bdce">
         <source>megabytes</source>
         <target>megabytes</target>
         <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:119</note>
-      </trans-unit>
-      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
-        <source>Maximum size for a downloadable product</source>
-        <target>Maximum size for a downloadable product</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:105</note>
-      </trans-unit>
-      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
-        <source>Maximum size for a product's image</source>
-        <target>Maximum size for a product's image</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:114</note>
-      </trans-unit>
-      <trans-unit id="1b1befcb86d487715da458117710dfeb">
-        <source>Show notifications for new orders</source>
-        <target>Show notifications for new orders</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:131</note>
-      </trans-unit>
-      <trans-unit id="8004e61ca76ff500d1e6ee92f7cb7f93">
-        <source>Show notifications for new customers</source>
-        <target>Show notifications for new customers</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:138</note>
-      </trans-unit>
-      <trans-unit id="4e7ff7ca556a7ac8329ab27834e9631b">
-        <source>Show notifications for new messages</source>
-        <target>Show notifications for new messages</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:145</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Administration/UploadQuotaType.php:51</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/dashactivity/views/templates/hook/dashboard_zone_one.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a274f4d4670213a9045ce258c6c56b80">
-        <source>Notifications</source>
-        <target>Notifications</target>
+      <trans-unit id="bd74be2b0190f4b7f3ef117342771f70">
+        <source>Memcached via PHP::Memcache</source>
+        <target>Memcached via PHP::Memcache</target>
         <note>Context:
-File: modules/dashactivity/views/templates/hook/dashboard_zone_one.tpl:99</note>
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:115</note>
+      </trans-unit>
+      <trans-unit id="e6f9c14400a56127e7397b4f8afeae10">
+        <source>Memcached via PHP::Memcached</source>
+        <target>Memcached via PHP::Memcached</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:125</note>
+      </trans-unit>
+      <trans-unit id="0e68f753bc601f5d9d04717f95042762">
+        <source>APC</source>
+        <target>APC</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:135</note>
+      </trans-unit>
+      <trans-unit id="38ca568bbe61771c6456a5c7b8d419ee">
+        <source>Xcache</source>
+        <target>Xcache</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType.php:145</note>
       </trans-unit>
     </body>
   </file>
@@ -1602,6 +1532,206 @@ File: src/PrestaShopBundle/Controller/Api/StockController.php:155</note>
         <target>Combination reference</target>
         <note>Context:
 File: src/PrestaShopBundle/Controller/Api/StockController.php:156</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fdab87b387380c9bac4c542c90f1ce24">
+        <source>Available fields</source>
+        <target>Available fields</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:310</note>
+      </trans-unit>
+      <trans-unit id="25a7ad3a7ab1d5e1f468448adf17f963">
+        <source>* Required field</source>
+        <target>* Required field</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:315</note>
+      </trans-unit>
+      <trans-unit id="5489cb5630228b5afe0c21cc2ac9242c">
+        <source>What do you want to import?</source>
+        <target>What do you want to import?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="14020ff11547c4c18da91394d1cae2a6">
+        <source>Select a file to import</source>
+        <target>Select a file to import</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:74</note>
+      </trans-unit>
+      <trans-unit id="b70c07744607bb44ce5a520716a7f8ed">
+        <source>Choose from history / FTP</source>
+        <target>Choose from history / FTP</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:84</note>
+      </trans-unit>
+      <trans-unit id="2a1a026f56b4c51cc839e513370379fd">
+        <source>Language of the file</source>
+        <target>Language of the file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:189</note>
+      </trans-unit>
+      <trans-unit id="35ebd0ba1ead54eee9c5684437aa519b">
+        <source>Field separator</source>
+        <target>Field separator</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:202</note>
+      </trans-unit>
+      <trans-unit id="1269b023d7c37aceefb33ef49c9fec4d">
+        <source>Delete all [1]categories[/1] before import</source>
+        <target>Delete all [1]categories[/1] before import</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:218</note>
+      </trans-unit>
+      <trans-unit id="feae9fd88b4d107b4de593e8b5a494d8">
+        <source>Use product reference as key</source>
+        <target>Use product reference as key</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:237</note>
+      </trans-unit>
+      <trans-unit id="ff4ba5e49465c8bc4fb9ac41e57ae73d">
+        <source>Skip thumbnails regeneration</source>
+        <target>Skip thumbnails regeneration</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:252</note>
+      </trans-unit>
+      <trans-unit id="0cbac2aa7274da1457a7c645202fcfbc">
+        <source>Force all ID numbers</source>
+        <target>Force all ID numbers</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:267</note>
+      </trans-unit>
+      <trans-unit id="347ad906588aa29395f77470509165ec">
+        <source>Send notification email</source>
+        <target>Send notification email</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:284</note>
+      </trans-unit>
+      <trans-unit id="c290a5941ad6eb0d5fe8752c15c5fd78">
+        <source>Next step</source>
+        <target>Next step</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:299</note>
+      </trans-unit>
+      <trans-unit id="c67947a1e18c763a4fc8e973caafacd8">
+        <source>History of uploaded files</source>
+        <target>History of uploaded files</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:97</note>
+      </trans-unit>
+      <trans-unit id="8d97a849e6ac533d633f32fb829aa78c">
+        <source>Download sample csv files</source>
+        <target>Download sample csv files</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:320</note>
+      </trans-unit>
+      <trans-unit id="cbfb910715c99134a5987630fff104da">
+        <source>Sample Categories file</source>
+        <target>Sample Categories file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:325</note>
+      </trans-unit>
+      <trans-unit id="e6d1ad59ffb524154c47ef02bb67bb79">
+        <source>Sample Products file</source>
+        <target>Sample Products file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:328</note>
+      </trans-unit>
+      <trans-unit id="2a08996307b8694521492f3ca7b5df40">
+        <source>Sample Combinations file</source>
+        <target>Sample Combinations file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:331</note>
+      </trans-unit>
+      <trans-unit id="b12be4b8c3871a251b314b36da7b847e">
+        <source>Sample Customers file</source>
+        <target>Sample Customers file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:334</note>
+      </trans-unit>
+      <trans-unit id="eafce46b9013f4d12336785c388b664c">
+        <source>Sample Addresses file</source>
+        <target>Sample Addresses file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:337</note>
+      </trans-unit>
+      <trans-unit id="cadad3173909b0c9a319da9c48ebe8a8">
+        <source>Sample Brands file</source>
+        <target>Sample Brands file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:340</note>
+      </trans-unit>
+      <trans-unit id="2028e5ca793760b03ead6560e353b6f2">
+        <source>Sample Suppliers file</source>
+        <target>Sample Suppliers file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:343</note>
+      </trans-unit>
+      <trans-unit id="4e76fa0dec3ddee7efdb0871ef5dd37c">
+        <source>Sample Aliases file</source>
+        <target>Sample Aliases file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:346</note>
+      </trans-unit>
+      <trans-unit id="7c5b94a32245a59bf441c8dcd4d65cfd">
+        <source>Sample Store Contacts file</source>
+        <target>Sample Store Contacts file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:349</note>
+      </trans-unit>
+      <trans-unit id="754fec39af6e1ff8618a1a3cd414af47">
+        <source>Sample Supply Orders file</source>
+        <target>Sample Supply Orders file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:353</note>
+      </trans-unit>
+      <trans-unit id="85769e64d6e480bba48ea2332db57ed7">
+        <source>Sample Supply Order Details file</source>
+        <target>Sample Supply Order Details file</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:356</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e08caeac3f80ffa7889cdf1c8f30111f">
+        <source>Multiple value separator</source>
+        <target>Multiple value separator</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig:125</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
+        <source>Download</source>
+        <target>Download</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig:91</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9869fa659bd86f03aba826acd8db5b5">
+        <source>Meaning of severity levels:</source>
+        <target>Meaning of severity levels:</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/main_panel.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b2d37ae1cedf42ff874289b721860af2">
+        <source>Logs</source>
+        <target>Logs</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/main_panel.html.twig:31</note>
       </trans-unit>
     </body>
   </file>
@@ -1837,189 +1967,83 @@ File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/sy
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5489cb5630228b5afe0c21cc2ac9242c">
-        <source>What do you want to import?</source>
-        <target>What do you want to import?</target>
+      <trans-unit id="46f18d3960afc01e5a1a5a0e0e9d571b">
+        <source>Automatically check for module updates</source>
+        <target>Automatically check for module updates</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:52</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:43</note>
       </trans-unit>
-      <trans-unit id="14020ff11547c4c18da91394d1cae2a6">
-        <source>Select a file to import</source>
-        <target>Select a file to import</target>
+      <trans-unit id="967db4d257af07feced01d6633f575f7">
+        <source>Check the cookie's IP address</source>
+        <target>Check the cookie's IP address</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:74</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:48</note>
       </trans-unit>
-      <trans-unit id="b70c07744607bb44ce5a520716a7f8ed">
-        <source>Choose from history / FTP</source>
-        <target>Choose from history / FTP</target>
+      <trans-unit id="dcfba1534995899d2ca36cda978da215">
+        <source>Lifetime of front office cookies</source>
+        <target>Lifetime of front office cookies</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:84</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:53</note>
       </trans-unit>
-      <trans-unit id="c67947a1e18c763a4fc8e973caafacd8">
-        <source>History of uploaded files</source>
-        <target>History of uploaded files</target>
+      <trans-unit id="e62d77475fe6318731b4411ba1181dca">
+        <source>Lifetime of back office cookies</source>
+        <target>Lifetime of back office cookies</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:97</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:58</note>
       </trans-unit>
-      <trans-unit id="2a1a026f56b4c51cc839e513370379fd">
-        <source>Language of the file</source>
-        <target>Language of the file</target>
+      <trans-unit id="ade28d54bcdbc7c4cfd45d84ad517f7b">
+        <source>Upload quota</source>
+        <target>Upload quota</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:189</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:78</note>
       </trans-unit>
-      <trans-unit id="35ebd0ba1ead54eee9c5684437aa519b">
-        <source>Field separator</source>
-        <target>Field separator</target>
+      <trans-unit id="454036c51196464f8d9c84ded5808985">
+        <source>Maximum size for attached files</source>
+        <target>Maximum size for attached files</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:202</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:83</note>
       </trans-unit>
-      <trans-unit id="1269b023d7c37aceefb33ef49c9fec4d">
-        <source>Delete all [1]categories[/1] before import</source>
-        <target>Delete all [1]categories[/1] before import</target>
+      <trans-unit id="4ae386b852a3ee22324e8922e50c9aec">
+        <source>Maximum size for a downloadable product</source>
+        <target>Maximum size for a downloadable product</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:218</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:88</note>
       </trans-unit>
-      <trans-unit id="feae9fd88b4d107b4de593e8b5a494d8">
-        <source>Use product reference as key</source>
-        <target>Use product reference as key</target>
+      <trans-unit id="a1652ab7a761fa7bb3726fe28b97d1f3">
+        <source>Maximum size for a product's image</source>
+        <target>Maximum size for a product's image</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:237</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:93</note>
       </trans-unit>
-      <trans-unit id="ff4ba5e49465c8bc4fb9ac41e57ae73d">
-        <source>Skip thumbnails regeneration</source>
-        <target>Skip thumbnails regeneration</target>
+      <trans-unit id="1b1befcb86d487715da458117710dfeb">
+        <source>Show notifications for new orders</source>
+        <target>Show notifications for new orders</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:252</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:122</note>
       </trans-unit>
-      <trans-unit id="0cbac2aa7274da1457a7c645202fcfbc">
-        <source>Force all ID numbers</source>
-        <target>Force all ID numbers</target>
+      <trans-unit id="8004e61ca76ff500d1e6ee92f7cb7f93">
+        <source>Show notifications for new customers</source>
+        <target>Show notifications for new customers</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:267</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:127</note>
       </trans-unit>
-      <trans-unit id="347ad906588aa29395f77470509165ec">
-        <source>Send notification email</source>
-        <target>Send notification email</target>
+      <trans-unit id="4e7ff7ca556a7ac8329ab27834e9631b">
+        <source>Show notifications for new messages</source>
+        <target>Show notifications for new messages</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:284</note>
-      </trans-unit>
-      <trans-unit id="c290a5941ad6eb0d5fe8752c15c5fd78">
-        <source>Next step</source>
-        <target>Next step</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:299</note>
-      </trans-unit>
-      <trans-unit id="fdab87b387380c9bac4c542c90f1ce24">
-        <source>Available fields</source>
-        <target>Available fields</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:310</note>
-      </trans-unit>
-      <trans-unit id="25a7ad3a7ab1d5e1f468448adf17f963">
-        <source>* Required field</source>
-        <target>* Required field</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:315</note>
-      </trans-unit>
-      <trans-unit id="8d97a849e6ac533d633f32fb829aa78c">
-        <source>Download sample csv files</source>
-        <target>Download sample csv files</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:320</note>
-      </trans-unit>
-      <trans-unit id="cbfb910715c99134a5987630fff104da">
-        <source>Sample Categories file</source>
-        <target>Sample Categories file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:325</note>
-      </trans-unit>
-      <trans-unit id="e6d1ad59ffb524154c47ef02bb67bb79">
-        <source>Sample Products file</source>
-        <target>Sample Products file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:328</note>
-      </trans-unit>
-      <trans-unit id="2a08996307b8694521492f3ca7b5df40">
-        <source>Sample Combinations file</source>
-        <target>Sample Combinations file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:331</note>
-      </trans-unit>
-      <trans-unit id="b12be4b8c3871a251b314b36da7b847e">
-        <source>Sample Customers file</source>
-        <target>Sample Customers file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:334</note>
-      </trans-unit>
-      <trans-unit id="eafce46b9013f4d12336785c388b664c">
-        <source>Sample Addresses file</source>
-        <target>Sample Addresses file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:337</note>
-      </trans-unit>
-      <trans-unit id="cadad3173909b0c9a319da9c48ebe8a8">
-        <source>Sample Brands file</source>
-        <target>Sample Brands file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:340</note>
-      </trans-unit>
-      <trans-unit id="2028e5ca793760b03ead6560e353b6f2">
-        <source>Sample Suppliers file</source>
-        <target>Sample Suppliers file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:343</note>
-      </trans-unit>
-      <trans-unit id="4e76fa0dec3ddee7efdb0871ef5dd37c">
-        <source>Sample Aliases file</source>
-        <target>Sample Aliases file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:346</note>
-      </trans-unit>
-      <trans-unit id="7c5b94a32245a59bf441c8dcd4d65cfd">
-        <source>Sample Store Contacts file</source>
-        <target>Sample Store Contacts file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:349</note>
-      </trans-unit>
-      <trans-unit id="754fec39af6e1ff8618a1a3cd414af47">
-        <source>Sample Supply Orders file</source>
-        <target>Sample Supply Orders file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:353</note>
-      </trans-unit>
-      <trans-unit id="85769e64d6e480bba48ea2332db57ed7">
-        <source>Sample Supply Order Details file</source>
-        <target>Sample Supply Order Details file</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:356</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:132</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/dashactivity/views/templates/hook/dashboard_zone_one.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="99104e1966b34f0320d33c5892946a82">
-        <source>Import data from another shop</source>
-        <target>Import data from another shop</target>
+      <trans-unit id="a274f4d4670213a9045ce258c6c56b80">
+        <source>Notifications</source>
+        <target>Notifications</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl:75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/backup/download/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b3b5aea1ae3bf83287bde7e5295a22b4">
-        <source>Download the backup file (%s MB)</source>
-        <target>Download the backup file (%s MB)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="0478391d3c5bfff8ce84cabb1ac330ee">
-        <source>Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.</source>
-        <target>Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:40</note>
+File: modules/dashactivity/views/templates/hook/dashboard_zone_one.tpl:99</note>
       </trans-unit>
     </body>
   </file>
@@ -2039,13 +2063,69 @@ File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
-        <source>SQL query result</source>
-        <target>SQL query result</target>
+      <trans-unit id="99104e1966b34f0320d33c5892946a82">
+        <source>Import data from another shop</source>
+        <target>Import data from another shop</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl:30</note>
+File: admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl:75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51ba9470e0c6fcc53b976a6854b0f2e0">
+        <source>Set the resource permissions for this key:</source>
+        <target>Set the resource permissions for this key:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="f1a627ad565dc779ed5a01edafd18640">
+        <source>View (GET)</source>
+        <target>View (GET)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="9fd0670413556e6cbdc490e09833a30f">
+        <source>Modify (PUT)</source>
+        <target>Modify (PUT)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="b28e80674d48866203b7790f730dfa30">
+        <source>Add (POST)</source>
+        <target>Add (POST)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="6c0c2b9ec9a4188db4cfd4f8a0fee415">
+        <source>Delete (DELETE)</source>
+        <target>Delete (DELETE)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="028f42454a71f86007a79664b2a35882">
+        <source>Fast view (HEAD)</source>
+        <target>Fast view (HEAD)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b3b5aea1ae3bf83287bde7e5295a22b4">
+        <source>Download the backup file (%s MB)</source>
+        <target>Download the backup file (%s MB)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="0478391d3c5bfff8ce84cabb1ac330ee">
+        <source>Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.</source>
+        <target>Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:42</note>
       </trans-unit>
     </body>
   </file>
@@ -2089,6 +2169,16 @@ File: admin-dev/themes/default/template/controllers/request_sql/helpers/form/for
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="526a00f8a3c4c865b9c1834f38b5e2c6">
+        <source>SQL query result</source>
+        <target>SQL query result</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/employees/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e3a918d60c36cd5892cd6913d72f68d9">
@@ -2108,46 +2198,6 @@ File: admin-dev/themes/default/template/controllers/employees/helpers/form/form.
         <target>Sign in</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/employees/helpers/form/form.tpl:37</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="51ba9470e0c6fcc53b976a6854b0f2e0">
-        <source>Set the resource permissions for this key:</source>
-        <target>Set the resource permissions for this key:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="f1a627ad565dc779ed5a01edafd18640">
-        <source>View (GET)</source>
-        <target>View (GET)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="9fd0670413556e6cbdc490e09833a30f">
-        <source>Modify (PUT)</source>
-        <target>Modify (PUT)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:36</note>
-      </trans-unit>
-      <trans-unit id="b28e80674d48866203b7790f730dfa30">
-        <source>Add (POST)</source>
-        <target>Add (POST)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="6c0c2b9ec9a4188db4cfd4f8a0fee415">
-        <source>Delete (DELETE)</source>
-        <target>Delete (DELETE)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:38</note>
-      </trans-unit>
-      <trans-unit id="028f42454a71f86007a79664b2a35882">
-        <source>Fast view (HEAD)</source>
-        <target>Fast view (HEAD)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form.tpl:39</note>
       </trans-unit>
     </body>
   </file>

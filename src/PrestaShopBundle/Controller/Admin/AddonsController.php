@@ -29,14 +29,14 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Configuration;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use PhpEncryption;
 
-class AddonsController extends Controller
+class AddonsController extends FrameworkBundleAdminController
 {
     /**
      * Controller responsible of the authentication on PrestaShop Addons

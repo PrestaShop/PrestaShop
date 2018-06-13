@@ -1,6 +1,5 @@
 module.exports = {
   FeatureSubMenu: {
-    tabmenu: '//*[@id="content"]/div[1]/div/div[2]/a[2]',
     add_new_feature: '//*[@id="page-header-desc-feature-new_feature"]',
     name_input: '//*[@id="name_1"]',
     save_button: '//*[@id="feature_form_submit_btn"]',

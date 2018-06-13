@@ -15,12 +15,12 @@ module.exports = {
     maintenance_message: '//*[@id="content"]',
     success_box: '//*[@id="main-div"]//div[contains(@class, "success")]//div[contains(@class, "alert-text")]',
     menu_button: '//*[@id="subtab-ShopParameters"]',
-    maintenance_mode_link: '//*[@id="maintenance-mode"]/a',
+    maintenance_mode_link: '//*[@id="maintenance-mode"]',
   },
   TrafficAndSeo: {
     SeoAndUrls: {
       friendly_url_button: '//*[@id="conf_id_PS_REWRITING_SETTINGS"]//label[contains(@for, "%s")]',
-      save_button: '//*[@id="meta_fieldset_general"]//button[text()=" Save"]'
+      save_button: '//*[@id="meta_form"]//button[text()=" Save"]'
     }
   }
 };
