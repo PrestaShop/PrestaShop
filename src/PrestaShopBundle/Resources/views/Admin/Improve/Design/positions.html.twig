@@ -207,35 +207,5 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script type="text/javascript">
-	  $('.sortable').sortable({
-		  forcePlaceholderSize: true
-	  }).bind('sortupdate', function(e, ui) {
-		  var ids = ui.item.attr('id').split('_');
-		  var way = (ui.start_index < ui.end_index)? 1 : 0;
-		  var data = ids[0]+'[]=';
-
-		  $.each(e.target.children, function(index, element) {
-			  data += '&'+ids[0]+'[]='+$(element).attr('id');
-		  });
-
-		  $.ajax({
-			  type: 'POST',
-			  headers: { "cache-control": "no-cache" },
-			  async: false,
-			  url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
-			  data: data + '&action=updatePositions&id_hook='+ids[0]+'&id_module='+ids[1]+'&way='+way+'&ajax=1' ,
-			  success: function(data) {
-				  start = 0;
-
-				  $.each(e.target.children, function(index, element) {
-					  $(element).find('.index-position').html(++start);
-				  });
-
-				  showSuccessMessage(update_success_msg);
-			  }
-		  });
-	  });
-  </script>
   <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}?{{ random() }}"></script>
 {% endblock %}
