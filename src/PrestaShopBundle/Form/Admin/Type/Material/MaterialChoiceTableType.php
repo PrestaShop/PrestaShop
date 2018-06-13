@@ -30,6 +30,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class MaterialChoiceTableType renders checkbox choices using table layout
+ */
 class MaterialChoiceTableType extends AbstractType
 {
     /**
