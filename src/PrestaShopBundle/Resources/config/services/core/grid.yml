@@ -7,7 +7,6 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.admin.log.repository'
-            - '@prestashop.hook.dispatcher'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -31,3 +30,7 @@ services:
             - '@prestashop.core.grid.data_provider.log'
             - '@form.factory'
             - '@prestashop.hook.dispatcher'
+
+    # Grid presenter
+    prestashop.core.grid.presenter.grid_presenter:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'

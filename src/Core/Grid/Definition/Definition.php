@@ -96,7 +96,7 @@ final class Definition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getIdentifier()
+    public function getId()
     {
         return $this->identifier;
     }

@@ -36,7 +36,7 @@ interface GridActionInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getId();
 
     /**
      * Returns translated action name

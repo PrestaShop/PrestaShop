@@ -48,7 +48,7 @@ interface GridDefinitionInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getId();
 
     /**
      * Get grid columns

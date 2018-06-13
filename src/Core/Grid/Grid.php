@@ -26,21 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Grid\View\GridView;
 use Symfony\Component\Form\FormInterface;
 
 /**
  * Class Grid is responsible for holding final Grid data
  */
-final class Grid
+final class Grid implements GridInterface
 {
     /**
      * @var GridDefinitionInterface
@@ -81,198 +75,34 @@ final class Grid
     }
 
     /**
-     * @return GridView
+     * {@inheritdoc}
      */
-    public function createView()
+    public function getDefinition()
     {
-        $view = new GridView(
-            $this->definition->getIdentifier(),
-            $this->definition->getName(),
-            $this->createColumnsView(),
-            $this->filterForm->createView()
-        );
-        $view->setBulkActions($this->createBulkActionsView());
-        $view->setGridActions($this->createGridActionsView());
-        $view->setData([
-            'rows' => $this->createRowsView(),
-            'rows_total' => $this->data->getRowsTotal(),
-            'query' => $this->data->getQuery(),
-        ]);
-        $view->setPagination([
-            'offset' => $this->searchCriteria->getOffset(),
-            'limit' => $this->searchCriteria->getLimit(),
-        ]);
-        $view->setSorting([
-            'order_by' => $this->searchCriteria->getOrderBy(),
-            'order_way' => $this->searchCriteria->getOrderWay(),
-        ]);
-
-        return $view;
+        return $this->definition;
     }
 
     /**
-     * Get rows data ready for rendering in template
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    private function createRowsView()
+    public function getSearchCriteria()
     {
-        $rows = $this->data->getRows();
-
-        $rowsView = [];
-        foreach ($rows as $row) {
-            $rowActions = $this->getRowActions($row, $this->definition->getRowActions());
-            $rowData = $this->applyColumnModifications($row, $this->definition->getColumns());
-
-            $rowsView[] = [
-                'actions' => $rowActions,
-                'data' => $rowData,
-            ];
-        }
-
-        return $rowsView;
+        return $this->searchCriteria;
     }
 
     /**
-     * Get available actions for single row
-     *
-     * @param array                        $row
-     * @param RowActionCollectionInterface $rowActions
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    private function getRowActions(array $row, RowActionCollectionInterface $rowActions)
+    public function getFilterForm()
     {
-        $actions = [];
-
-        foreach ($rowActions as $rowAction) {
-            $url = call_user_func($rowAction->getCallback(), $row);
-
-            // we expect URL to be returned
-            // if callback does not return string
-            // then assume that row action is not available for current row
-            if (!is_string($url)) {
-                continue;
-            }
-
-            $actions[$rowAction->getIdentifier()] = [
-                'name' => $rowAction->getName(),
-                'icon' => $rowAction->getIcon(),
-                'url' => $url,
-            ];
-        }
-
-        return $actions;
+        return $this->filterForm;
     }
 
     /**
-     * Some columns may modify row data
-     *
-     * @param array                     $row
-     * @param ColumnCollectionInterface $columns
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    private function applyColumnModifications(array $row, ColumnCollectionInterface $columns)
+    public function getData()
     {
-        foreach ($columns as $column) {
-            // if for some reason column does not exist in a row
-            // and it doesn't have modifier
-            // then let developer know that something is wrong
-            if (!isset($row[$column->getIdentifier()]) && !is_callable($column->getModifier())) {
-                throw new MissingColumnInRowException(
-                    sprintf('Column "%s" does not exist in row "%s"', $column->getIdentifier(), json_encode($row))
-                );
-            }
-
-            // if column does not modify data
-            // then we keep original column data and skip modification
-            if (!is_callable($column->getModifier())) {
-                continue;
-            }
-
-            $row[$column->getIdentifier()] = call_user_func($column->getModifier(), $row);
-        }
-
-        return $row;
-    }
-
-    /**
-     * Create columns view ready for rendering
-     *
-     * @return array
-     */
-    private function createColumnsView()
-    {
-        $columns = $this->definition->getColumns();
-        $columnsView = [];
-        $positions = [];
-
-        /** @var ColumnInterface $column */
-        foreach ($columns as $key => $column) {
-            $columnsView[] = [
-                'identifier' => $column->getIdentifier(),
-                'name' => $column->getName(),
-                'is_sortable' => $column->isSortable(),
-                'is_filterable' => $column->isFilterable(),
-                'is_raw' => $column->isRawContent(),
-            ];
-
-            $positions[$key] = $column->getPosition();
-        }
-
-        array_multisort($positions, SORT_ASC, $columnsView);
-
-        return $columnsView;
-    }
-
-    /**
-     * Create bulk actions view ready for rendering
-     *
-     * @return array
-     */
-    private function createBulkActionsView()
-    {
-        $bulkActionsView = [];
-
-        foreach ($this->definition->getBulkActions() as $bulkAction) {
-            $bulkActionsView[] = [
-                'identifier' => $bulkAction->getIdentifier(),
-                'name' => $bulkAction->getName(),
-                'icon' => $bulkAction->getIcon(),
-            ];
-        }
-
-        return $bulkActionsView;
-    }
-
-    /**
-     * Prepare grid actions for rendering
-     *
-     * @return array
-     */
-    private function createGridActionsView()
-    {
-        $gridActionsView = [];
-
-        /** @var GridActionInterface $gridAction */
-        foreach ($this->definition->getGridActions() as $gridAction) {
-            $actionView = [
-                'identifier' => $gridAction->getIdentifier(),
-                'name' => $gridAction->getName(),
-                'icon' => $gridAction->getIcon(),
-                'is_rendered' => false,
-            ];
-
-            $renderer = $gridAction->getRenderer();
-            if (is_callable($renderer)) {
-                $actionView['content'] = call_user_func($renderer);
-                $actionView['is_rendered'] = true;
-            }
-
-            $gridActionsView[] = $actionView;
-        }
-
-        return $gridActionsView;
+        return $this->data;
     }
 }

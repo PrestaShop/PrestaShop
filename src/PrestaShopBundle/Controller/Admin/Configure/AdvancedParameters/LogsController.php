@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
@@ -60,6 +59,9 @@ class LogsController extends FrameworkBundleAdminController
         $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
         $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
 
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $twigValues = [
             'layoutHeaderToolbarBtn' => [],
@@ -70,7 +72,7 @@ class LogsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'gridView' => $grid->createView(),
+            'grid' => $presentedGrid,
         ];
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);

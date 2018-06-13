@@ -57,6 +57,6 @@ final class GridActionCollection extends AbstractCollection implements GridActio
      */
     public function add(GridActionInterface $action)
     {
-        $this->items[$action->getIdentifier()] = $action;
+        $this->items[$action->getId()] = $action;
     }
 }

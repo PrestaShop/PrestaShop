@@ -24,44 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column;
+namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\Form\FormInterface;
 
-/**
- * Class ColumnCollection holds collection of columns for grid
- */
-final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
+interface GridInterface
 {
     /**
-     * Create new columns collection from array data
+     * Get grid definition
      *
-     * @param array $data
-     *
-     * @return ColumnCollectionInterface
+     * @return GridDefinitionInterface
      */
-    public static function fromArray(array $data)
-    {
-        $columns = new ColumnCollection();
-        $position = 0;
-
-        foreach ($data as $columnData) {
-            $columnData['position'] = $position;
-
-            $column = Column::fromArray($columnData);
-            $columns->add($column);
-
-            $position += 2;
-        }
-
-        return $columns;
-    }
+    public function getDefinition();
 
     /**
-     * {@inheritdoc}
+     * Get grid data search criteria
+     *
+     * @return SearchCriteriaInterface
      */
-    public function add(ColumnInterface $column)
-    {
-        $this->items[$column->getId()] = $column;
-    }
+    public function getSearchCriteria();
+
+    /**
+     * Get filter form for grid
+     *
+     * @return FormInterface
+     */
+    public function getFilterForm();
+
+    /**
+     * Get grid data
+     *
+     * @return GridDataInterface
+     */
+    public function getData();
 }
