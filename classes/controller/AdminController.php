@@ -1980,21 +1980,26 @@ class AdminControllerCore extends Controller
         $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
 
         foreach ($tabs as $index => $tab) {
-            if (!Tab::checkTabRights($tab['id_tab'])
-                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
-                || $tab['class_name'] == 'AdminCarrierWizard') {
+            if (!Tab::checkTabRights($tab['id_tab']) ||
+                ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0) ||
+                $tab['class_name'] == 'AdminCarrierWizard' ||
+                (Module::isInstalled('ps_mbo') && $tab['class_name'] == 'AdminModulesCatalog')
+            ) {
                 unset($tabs[$index]);
-
                 continue;
             }
 
             // tab[class_name] does not contains the "Controller" suffix
-            if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $this->controller_name) {
+            if ($tab['class_name'].'Controller' == get_class($this) ||
+                $current_id == $tab['id_tab'] ||
+                $tab['class_name'] == $this->controller_name
+            ) {
                 $tabs[$index]['current'] = true;
                 $tabs[$index]['current_level'] = $level;
             } else {
                 $tabs[$index]['current'] = false;
             }
+
             $tabs[$index]['img'] = null;
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
@@ -2003,7 +2008,7 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
             } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
                 unset($tabs[$index]);
-            } else if (empty($tabs[$index]['icon'])) {
+            } elseif (empty($tabs[$index]['icon'])) {
                 $tabs[$index]['icon'] = 'extension';
             }
 
@@ -2145,7 +2150,12 @@ class AdminControllerCore extends Controller
     {
         $this->filterTabModuleList();
 
-        if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
+        /**
+         * @TODO remove isInstalled when MBO module will be released
+         */
+        if (!Module::isInstalled('ps_mbo') &&
+            is_array($this->tab_modules_list['slider_list']) &&
+            count($this->tab_modules_list['slider_list'])) {
             $this->page_header_toolbar_btn['modules-list'] = array(
                 'href' => $this->getAdminModulesUrl(),
                 'desc' => $this->l('Recommended Modules')
