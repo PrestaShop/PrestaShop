@@ -24,21 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
+trans('Awaiting check payment', 'Admin.Orderscustomers.Feature');
 
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+trans('Payment accepted', 'Admin.Orderscustomers.Feature');
 
-class OrderMessageLang
-{
-    /** @var Translator  */
-    protected $translator;
+trans('Processing in progress', 'Admin.Orderscustomers.Feature');
 
-    /** @var string */
-    protected $locale;
+trans('Shipped', 'Admin.Orderscustomers.Feature');
 
-    protected function init()
-    {
-        $this->translator->trans('Delay', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-        $this->translator->trans("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,", array(), 'Admin.Orderscustomers.Feature', $this->locale);
-    }
-}
+trans('Delivered', 'Admin.Orderscustomers.Feature');
+
+trans('Canceled', 'Admin.Orderscustomers.Feature');
+
+trans('Refunded', 'Admin.Orderscustomers.Feature');
+
+trans('Payment error', 'Admin.Orderscustomers.Feature');
+
+trans('On backorder (paid)', 'Admin.Orderscustomers.Feature');
+
+trans('On backorder (not paid)', 'Admin.Orderscustomers.Feature');
+
+trans('Awaiting bank wire payment', 'Admin.Orderscustomers.Feature');
+
+trans('Remote payment accepted', 'Admin.Orderscustomers.Feature');
+
+trans('Awaiting Cash On Delivery validation', 'Admin.Orderscustomers.Feature');

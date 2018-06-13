@@ -24,26 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
+trans('Increase', 'Admin.Catalog.Feature');
 
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+trans('Decrease', 'Admin.Catalog.Feature');
 
-class FeatureLang
-{
-    /** @var Translator  */
-    protected $translator;
+trans('Customer Order', 'Admin.Catalog.Feature');
 
-    /** @var string */
-    protected $locale;
+trans('Adjustment following an inventory of stock', 'Admin.Catalog.Feature');
 
-    protected function init()
-    {
-         $this->translator->trans('Height', array(), 'Shop.Demo.Catalog', $this->locale);
-         $this->translator->trans('Width', array(), 'Shop.Demo.Catalog', $this->locale);
-         $this->translator->trans('Depth', array(), 'Shop.Demo.Catalog', $this->locale);
-         $this->translator->trans('Weight', array(), 'Shop.Demo.Catalog', $this->locale);
-         $this->translator->trans('Compositions', array(), 'Shop.Demo.Catalog', $this->locale);
-         $this->translator->trans('Styles', array(), 'Shop.Demo.Catalog', $this->locale);
-         $this->translator->trans('Properties', array(), 'Shop.Demo.Catalog', $this->locale);
-    }
-}
+trans('Transfer to another warehouse', 'Admin.Catalog.Feature');
+
+trans('Transfer from another warehouse', 'Admin.Catalog.Feature');
+
+trans('Supply Order', 'Admin.Catalog.Feature');
+
+trans('Product Return', 'Admin.Catalog.Feature');
+
+trans('Manual Entry', 'Admin.Catalog.Feature');

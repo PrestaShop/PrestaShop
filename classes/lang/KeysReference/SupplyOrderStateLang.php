@@ -24,21 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
+trans('1 - Creation in progress', 'Admin.Orderscustomers.Feature');
 
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+trans('2 - Order validated', 'Admin.Orderscustomers.Feature');
 
-class CategoryLang
-{
-    /** @var Translator  */
-    protected $translator;
+trans('3 - Pending receipt', 'Admin.Orderscustomers.Feature');
 
-    /** @var string */
-    protected $locale;
+trans('4 - Order received in part', 'Admin.Orderscustomers.Feature');
 
-    protected function init()
-    {
-        $this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale);
-        $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale);
-    }
-}
+trans('5 - Order received completely', 'Admin.Orderscustomers.Feature');
+
+trans('6 - Order canceled', 'Admin.Orderscustomers.Feature');

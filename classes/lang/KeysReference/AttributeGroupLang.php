@@ -24,23 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
-
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-
-class ProfileLang
-{
-    /** @var Translator  */
-    protected $translator;
-
-    /** @var string */
-    protected $locale;
-
-    protected function init()
-    {
-         $this->translator->trans('SuperAdmin', array(), 'Admin.Advparameters.Feature', $this->locale);
-         $this->translator->trans('Logistician', array(), 'Admin.Advparameters.Feature', $this->locale);
-         $this->translator->trans('Translator', array(), 'Admin.Advparameters.Feature', $this->locale);
-         $this->translator->trans('Salesman', array(), 'Admin.Advparameters.Feature', $this->locale);
-    }
-}
+trans('Size', 'Shop.Demo.Catalog');
+trans('Shoe size', 'Shop.Demo.Catalog');
+trans('Color', 'Shop.Demo.Catalog');

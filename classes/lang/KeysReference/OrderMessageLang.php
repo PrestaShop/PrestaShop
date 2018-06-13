@@ -24,20 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
-
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-
-class CmsCategoryLang
-{
-    /** @var Translator  */
-    protected $translator;
-
-    /** @var string */
-    protected $locale;
-
-    protected function init()
-    {
-         $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale);
-    }
-}
+trans('Delay', 'Admin.Orderscustomers.Feature');
+trans("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,",
+    'Admin.Orderscustomers.Feature'
+);

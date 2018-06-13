@@ -24,24 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
+trans('Webmaster', 'Admin.Shopparameters.Feature');
+trans('Customer service', 'Admin.Shopparameters.Feature');
+trans('If a technical problem occurs on this website', 'Admin.Shopparameters.Feature');
 
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-
-class ContactLang
-{
-    /** @var Translator  */
-    protected $translator;
-
-    /** @var string */
-    protected $locale;
-
-    protected function init()
-    {
-         $this->translator->trans('Webmaster', array(), 'Admin.Shopparameters.Feature', $this->locale);
-         $this->translator->trans('Customer service', array(), 'Admin.Shopparameters.Feature', $this->locale);
-         $this->translator->trans('If a technical problem occurs on this website', array(), 'Admin.Shopparameters.Feature', $this->locale);
-
-         $this->translator->trans('For any question about a product, an order', array(), 'Admin.Shopparameters.Feature', $this->locale);
-    }
-}
+trans('For any question about a product, an order', 'Admin.Shopparameters.Feature');

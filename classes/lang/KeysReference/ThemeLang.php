@@ -24,24 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
+trans('Full width', 'Admin.Design.Feature');
+trans('Three columns', 'Admin.Design.Feature');
+trans('Two columns, small left column', 'Admin.Design.Feature');
+trans('Two columns, small right column', 'Admin.Design.Feature');
 
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+trans('No side columns, ideal for distraction-free pages such as product pages.', 'Admin.Design.Feature');
 
-class OrderReturnStateLang
-{
-    /** @var Translator  */
-    protected $translator;
+trans('One large central column and 2 side columns.', 'Admin.Design.Feature');
 
-    /** @var string */
-    protected $locale;
+trans('Two columns with a small left column.', 'Admin.Design.Feature');
 
-    protected function init()
-    {
-         $this->translator->trans('Waiting for confirmation', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('Waiting for package', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('Package received', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('Return denied', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('Return completed', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-    }
-}
+trans('Two columns with a small right column.', 'Admin.Design.Feature');

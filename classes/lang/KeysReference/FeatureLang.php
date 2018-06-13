@@ -24,23 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
-
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-
-class RiskLang
-{
-    /** @var Translator  */
-    protected $translator;
-
-    /** @var string */
-    protected $locale;
-
-    protected function init()
-    {
-         $this->translator->trans('None', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('Low', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('Medium', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-         $this->translator->trans('High', array(), 'Admin.Orderscustomers.Feature', $this->locale);
-    }
-}
+trans('Height', 'Shop.Demo.Catalog');
+trans('Width', 'Shop.Demo.Catalog');
+trans('Depth', 'Shop.Demo.Catalog');
+trans('Weight', 'Shop.Demo.Catalog');
+trans('Compositions', 'Shop.Demo.Catalog');
+trans('Styles', 'Shop.Demo.Catalog');
+trans('Properties', 'Shop.Demo.Catalog');

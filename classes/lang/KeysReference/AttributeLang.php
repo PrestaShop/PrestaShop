@@ -24,21 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation\KeysReference\Xlang;
-
-use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-
-class CarrierLang
-{
-    /** @var Translator  */
-    protected $translator;
-
-    /** @var string */
-    protected $locale;
-
-    protected function init()
-    {
-        $this->translator->trans('Pick up in-store', array(), 'Admin.Shipping.Feature', $this->locale);
-        $this->translator->trans('Delivery next day!', array(), 'Admin.Shipping.Feature', $this->locale);
-    }
-}
+trans('S', 'Shop.Demo.Catalog');
+trans('M', 'Shop.Demo.Catalog');
+trans('L', 'Shop.Demo.Catalog');
+trans('One size', 'Shop.Demo.Catalog');
+trans('Grey', 'Shop.Demo.Catalog');
+trans('Taupe', 'Shop.Demo.Catalog');
+trans('Beige', 'Shop.Demo.Catalog');
+trans('White', 'Shop.Demo.Catalog');
+trans('Off White', 'Shop.Demo.Catalog');
+trans('Red', 'Shop.Demo.Catalog');
+trans('Black', 'Shop.Demo.Catalog');
+trans('Camel', 'Shop.Demo.Catalog');
+trans('Orange', 'Shop.Demo.Catalog');
+trans('Blue', 'Shop.Demo.Catalog');
+trans('Green', 'Shop.Demo.Catalog');
+trans('Yellow', 'Shop.Demo.Catalog');
+trans('Brown', 'Shop.Demo.Catalog');
+trans('35', 'Shop.Demo.Catalog');
+trans('36', 'Shop.Demo.Catalog');
+trans('37', 'Shop.Demo.Catalog');
+trans('38', 'Shop.Demo.Catalog');
+trans('39', 'Shop.Demo.Catalog');
+trans('40', 'Shop.Demo.Catalog');
+trans('Pink', 'Shop.Demo.Catalog');
