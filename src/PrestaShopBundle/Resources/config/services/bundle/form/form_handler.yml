@@ -126,3 +126,13 @@ services:
             -
               'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
             - 'OrderDeliverySlipPage'
+
+    prestashop.adapter.improve.design.positions.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.adapter.improve.design.positions.form_provider'
+            -
+              'positions': 'PrestaShopBundle\Form\Admin\Improve\Design\PositionsType'
+            - 'ImproveDesignPositionsPage'

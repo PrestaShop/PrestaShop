@@ -151,7 +151,7 @@
 
 								          <div class="module-column-actions">
                             <div class="btn-group">
-										          <a class="btn btn-outline-primary btn-sm" href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if selectedModule %}&amp;show-modules={{ selectedModule }}{% endif %}&amp;token={$token|escape:'html':'UTF-8'}">
+										          <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_modules_positions_edit', {module_id: moduleInstance.id, hook_id: hook['id_hook']}) }}">
 											          <i class="material-icons">edit</i>
 											          {{ 'Edit' | trans({}, 'Admin.Actions') }}
 										          </a>
@@ -229,7 +229,7 @@
 				  start = 0;
 
 				  $.each(e.target.children, function(index, element) {
-					  $(element).find('.positions').html(++start);
+					  $(element).find('.index-position').html(++start);
 				  });
 
 				  showSuccessMessage(update_success_msg);

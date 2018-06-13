@@ -76,8 +76,7 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
         CombineCompressCacheConfiguration $combineCompressCacheConfiguration,
         MediaServerConfiguration $mediaServerConfiguration,
         CachingConfiguration $cachingConfiguration
-    )
-    {
+    ) {
         $this->smartyCacheConfiguration = $smartyCacheConfiguration;
         $this->debugModeConfiguration = $debugModeConfiguration;
         $this->optionalFeaturesConfiguration = $optionalFeaturesConfiguration;

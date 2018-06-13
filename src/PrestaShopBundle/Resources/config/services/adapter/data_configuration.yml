@@ -111,3 +111,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.improve.design.positions.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Improve\Design\PositionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

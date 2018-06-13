@@ -72,3 +72,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfFormDataProvider'
         arguments:
             - '@prestashop.adapter.order.delivery.slip.pdf.configuration'
+
+    prestashop.adapter.improve.design.positions.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\PositionsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.improve.design.positions.configuration'
