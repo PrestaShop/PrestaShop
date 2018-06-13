@@ -23,37 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShop\PrestaShop\Core\Validation;
 
-class Validate
+interface ValidatorInterface
 {
-    public static function isOrderWay($way)
-    {
-        return ValidateLegacy::isOrderWay($way);
-    }
-
-    public static function isOrderBy($order)
-    {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
-    }
-
     /**
-     * Check if HTML content is clean
+     * Check if HTML is clean
      *
      * @param string $html
-     * @param bool $allowIframe
+     * @param array $options
      *
      * @return bool
      */
-    public function isCleanHtml($html, $allowIframe = false)
-    {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
-    }
+    public function isCleanHtml($html, array $options = []);
 }

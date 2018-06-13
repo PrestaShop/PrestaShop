@@ -23,37 +23,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShop\PrestaShop\Core\Validation;
 
-class Validate
+use PrestaShop\PrestaShop\Adapter\Validate;
+
+/**
+ * Class Validator is responsible for validating data
+ */
+final class Validator implements ValidatorInterface
 {
-    public static function isOrderWay($way)
-    {
-        return ValidateLegacy::isOrderWay($way);
-    }
+    /**
+     * @var Validate
+     */
+    private $validate;
 
-    public static function isOrderBy($order)
+    /**
+     * @param Validate $validate
+     */
+    public function __construct(Validate $validate)
     {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
+        $this->validate = $validate;
     }
 
     /**
-     * Check if HTML content is clean
-     *
-     * @param string $html
-     * @param bool $allowIframe
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isCleanHtml($html, $allowIframe = false)
+    public function isCleanHtml($html, array $options = [])
     {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
+        $defaultOptions = [
+            'allow_iframe' => false,
+        ];
+        $options = array_merge($defaultOptions, $options);
+
+        return $this->validate->isCleanHtml($html, $options['allow_iframe']);
     }
 }

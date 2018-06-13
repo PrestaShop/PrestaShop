@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Geolocation;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Validation\ValidatorInterface;
 
 /**
  * Class GeolocationByIpAddressConfiguration is responsible for configuring geolocation configuration
@@ -42,8 +43,9 @@ final class GeolocationByIpAddressConfiguration implements DataConfigurationInte
     /**
      * @param Configuration $configuration
      */
-    public function __construct(Configuration $configuration)
-    {
+    public function __construct(
+        Configuration $configuration
+    ) {
         $this->configuration = $configuration;
     }
 
