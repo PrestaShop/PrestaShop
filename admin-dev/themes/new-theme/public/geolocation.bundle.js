@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 7;
+/******/ 			var chunkId = 9;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,18 +706,18 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(442)(__webpack_require__.s = 442);
+/******/ 	return hotCreateRequire(446)(__webpack_require__.s = 446);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 218:
+/***/ 222:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__ = __webpack_require__(31);
-/*
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_choice_table__ = __webpack_require__(255);
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -740,58 +740,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *
  */
 
 
 
-var $ = global.$;
+var $ = window.$;
 
 $(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__["a" /* default */]($('table.table')).attach();
+  new __WEBPACK_IMPORTED_MODULE_0__components_choice_table__["a" /* default */]().init();
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
 
-/***/ 3:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 31:
+/***/ 255:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -810,122 +780,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-var $ = global.$;
+var $ = window.$;
 
 /**
- * Makes a table sortable by columns.
- * This forces a page reload with more query parameters.
+ * ChoiceTable is responsible for managing common actions in choice table form type
  */
 
-var TableSorting = function () {
-
-  /**
-   * @param {jQuery} table
-   */
-  function TableSorting(table) {
-    _classCallCheck(this, TableSorting);
-
-    this.selector = '.ps-sortable-column';
-    this.columns = $(table).find(this.selector);
+var ChoiceTable = function () {
+  function ChoiceTable() {
+    _classCallCheck(this, ChoiceTable);
   }
 
-  /**
-   * Attaches the listeners
-   */
+  _createClass(ChoiceTable, [{
+    key: 'init',
 
-
-  _createClass(TableSorting, [{
-    key: 'attach',
-    value: function attach() {
+    /**
+     * Initialize component
+     */
+    value: function init() {
       var _this = this;
 
-      this.columns.on('click', function (e) {
-        var $column = $(e.delegateTarget);
-        _this._sortByColumn($column, _this._getToggledSortDirection($column));
+      $(document).on('change', '.js-choice-table-select-all', function (e) {
+        _this.handleSelectAll(e);
       });
     }
 
     /**
-     * Sort using a column name
-     * @param {string} columnName
-     * @param {string} direction "asc" or "desc"
+     * Check/uncheck all boxes in table
+     *
+     * @param {Event} event
      */
 
   }, {
-    key: 'sortBy',
-    value: function sortBy(columnName, direction) {
-      var $column = this.columns.is('[data-sort-col-name="' + columnName + '"]');
-      if (!$column) {
-        throw new Error('Cannot sort by "' + columnName + '": invalid column');
-      }
+    key: 'handleSelectAll',
+    value: function handleSelectAll(event) {
+      var $selectAllChecbox = $(event.target);
+      var isSelectAllChecked = $selectAllChecbox.is(':checked');
 
-      this._sortByColumn($column, direction);
-    }
-
-    /**
-     * Sort using a column element
-     * @param {jQuery} column
-     * @param {string} direction "asc" or "desc"
-     * @private
-     */
-
-  }, {
-    key: '_sortByColumn',
-    value: function _sortByColumn(column, direction) {
-      window.location = this._getUrl(column.data('sortColName'), direction === 'desc' ? 'desc' : 'asc');
-    }
-
-    /**
-     * Returns the inverted direction to sort according to the column's current one
-     * @param {jQuery} column
-     * @return {string}
-     * @private
-     */
-
-  }, {
-    key: '_getToggledSortDirection',
-    value: function _getToggledSortDirection(column) {
-      return column.data('sortDirection') === 'asc' ? 'desc' : 'asc';
-    }
-
-    /**
-     * Returns the url for the sorted table
-     * @param {string} colName
-     * @param {string} direction
-     * @return {string}
-     * @private
-     */
-
-  }, {
-    key: '_getUrl',
-    value: function _getUrl(colName, direction) {
-      var url = new URL(window.location.href);
-      var params = url.searchParams;
-
-      params.set('orderBy', colName);
-      params.set('sortOrder', direction);
-
-      return url.toString();
+      $selectAllChecbox.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
     }
   }]);
 
-  return TableSorting;
+  return ChoiceTable;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (TableSorting);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+/* harmony default export */ __webpack_exports__["a"] = (ChoiceTable);
 
 /***/ }),
 
-/***/ 442:
+/***/ 446:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(218);
+module.exports = __webpack_require__(222);
 
 
 /***/ })
