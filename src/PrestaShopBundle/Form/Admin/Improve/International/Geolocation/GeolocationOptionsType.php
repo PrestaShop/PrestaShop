@@ -81,6 +81,7 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') =>
                         $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
                 ],
+                'choice_translation_domain' => false,
             ])
             ->add('geolocation_na_behaviour', ChoiceType::class, [
                 'choices' => [
@@ -90,9 +91,11 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') =>
                         $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
                 ],
+                'choice_translation_domain' => false,
             ])
             ->add('geolocation_countries', MaterialChoiceTableType::class, [
                 'choices' => $this->countryChoices,
+                'choice_translation_domain' => false,
             ])
         ;
 
