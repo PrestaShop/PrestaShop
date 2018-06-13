@@ -44,7 +44,7 @@ final class RowAction implements RowActionInterface
     /**
      * @var string
      */
-    private $icon = '';
+    private $icon;
 
     /**
      * @var string

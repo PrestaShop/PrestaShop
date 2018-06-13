@@ -93,4 +93,11 @@ interface ColumnInterface
      * @return int
      */
     public function getPosition();
+
+    /**
+     * Set column position
+     *
+     * @param int $position
+     */
+    public function setPosition($position);
 }

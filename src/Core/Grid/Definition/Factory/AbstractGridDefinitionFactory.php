@@ -46,14 +46,10 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     final public function create()
     {
         $definition = new Definition(
-            $this->getIdentifier(),
+            $this->getId(),
             $this->getName()
         );
         $definition->setColumns($this->getColumns());
-
-        if (null !== $this->getRowActions()) {
-            $definition->setRowActions($this->getRowActions());
-        }
 
         if (null !== $this->getBulkActions()) {
             $definition->setBulkActions($this->getBulkActions());
@@ -71,7 +67,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      *
      * @return string
      */
-    abstract protected function getIdentifier();
+    abstract protected function getId();
 
     /**
      * Get translated grid name
@@ -97,17 +93,6 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected function trans($id, array $options, $domain)
     {
         return $this->translator->trans($id, $options, $domain);
-    }
-
-    /**
-     * Get row actions for grid.
-     * Override this method to add row actions for grid.
-     *
-     * @return RowActionCollectionInterface|null
-     */
-    protected function getRowActions()
-    {
-        return null;
     }
 
     /**
