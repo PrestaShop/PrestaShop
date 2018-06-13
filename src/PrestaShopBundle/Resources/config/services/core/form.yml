@@ -32,13 +32,13 @@ services:
             - '@translator'
 
     prestashop.bundle.form.choice_provider.country:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\CountryChoiceProvider'
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CountryChoiceProvider'
         arguments:
             - '@prestashop.adapter.legacy.context'
             - '@prestashop.adapter.data_provider.country'
 
     prestashop.core.form.provider.choice.country_by_iso_code:
-        class: 'PrestaShop\PrestaShop\Core\Form\Provider\Choice\CountryByIsoCodeChoiceProvider'
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
         arguments:
             - '@prestashop.adapter.legacy.context'
             - '@prestashop.adapter.data_provider.country'
