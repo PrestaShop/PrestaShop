@@ -88,7 +88,7 @@ final class GridAction implements GridActionInterface
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getId()
     {
         return $this->identifier;
     }

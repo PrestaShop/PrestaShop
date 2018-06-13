@@ -179,7 +179,7 @@ final class Column implements ColumnInterface
     /**
      * {@inheritdoc}
      */
-    public function getIdentifier()
+    public function getId()
     {
         return $this->identifier;
     }

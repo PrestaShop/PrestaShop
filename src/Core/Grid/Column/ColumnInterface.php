@@ -36,7 +36,7 @@ interface ColumnInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getId();
 
     /**
      * Get translated column name

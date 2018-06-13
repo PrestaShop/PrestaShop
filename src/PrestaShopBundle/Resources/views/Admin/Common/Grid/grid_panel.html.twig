@@ -23,20 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card js-grid-panel" id="{{ gridView.identifier }}_grid_panel">
+<div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
   <div class="card-header">
     <h3>
       <i class="material-icons">list</i>
-      {{ gridView.name }} ({{ gridView.data.rows_total }})
+      {{ grid.name }} ({{ grid.data.rows_total }})
       {% block grid_actions_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/grid_actions_block.html.twig', {'gridView': gridView }) }}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid_actions_block.html.twig', {'grid': grid }) }}
       {% endblock %}
     </h3>
   </div>
   <div class="card-block">
     <div class="card-text">
       {% block grid_view_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'gridView': gridView }) }}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
       {% endblock %}
     </div>
   </div>

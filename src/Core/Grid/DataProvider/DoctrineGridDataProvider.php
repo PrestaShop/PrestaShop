@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
  * Class DoctrineGridDataProvider is responsible for returing grid data using Doctrine query builders
@@ -42,20 +41,12 @@ final class DoctrineGridDataProvider implements GridDataProviderInterface
     private $gridQueryBuilder;
 
     /**
-     * @var HookDispatcher
-     */
-    private $hookDispatcher;
-
-    /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
-     * @param HookDispatcher $hookDispatcher
      */
     public function __construct(
-        DoctrineQueryBuilderInterface $gridQueryBuilder,
-        HookDispatcher $hookDispatcher
+        DoctrineQueryBuilderInterface $gridQueryBuilder
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
-        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**

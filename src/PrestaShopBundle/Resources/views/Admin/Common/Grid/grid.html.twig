@@ -23,11 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set filtersForm = gridView.filterForm %}
-{% set bulkActionsAvailable = gridView.bulkActionsAvailable %}
+{% set filterForm = grid.filter_form %}
+{% set bulkActionsAvailable = grid.bulk_actions %}
 
-<div class="js-grid" id="{{ gridView.identifier }}_grid">
-  {{ form_start(filtersForm) }}
+<div class="js-grid" id="{{ grid.id }}_grid">
+  {{ form_start(filterForm) }}
 
   {% if bulkActionsAvailable %}
     <div>
@@ -41,8 +41,8 @@
         </button>
 
         <div class="dropdown-menu">
-          {% for bulkAction in gridView.bulkActions %}
-            <button id="{{ '%s_grid_bulk_action_%s'|format(gridView.identifier, bulkAction.identifier) }}"
+          {% for bulkAction in grid.bulkActions %}
+            <button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, bulkAction.id) }}"
                     class="dropdown-item"
                     type="button"
             >
@@ -58,8 +58,8 @@
   {% endif %}
 
   <table class="js-grid-table table"
-         id="{{ gridView.identifier }}_grid_table"
-         data-query="{{ gridView.data.query }}"
+         id="{{ grid.id }}_grid_table"
+         data-query="{{ grid.data.query }}"
   >
     <thead class="thead-default">
       <tr class="column-headers">
@@ -67,12 +67,12 @@
           <th scope="col">&nbsp;</th>
         {% endif %}
 
-        {% set orderBy, orderWay = gridView.sorting.order_by, gridView.sorting.order_way %}
+        {% set orderBy, orderWay = grid.sorting.order_by, grid.sorting.order_way %}
 
-        {% for column in gridView.columns %}
+        {% for column in grid.columns %}
           <th scope="col">
             {% if column.is_sortable %}
-              {{ ps.sortable_column_header(column.name, column.identifier, orderBy, orderWay) }}
+              {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay) }}
             {% else %}
               {{ column.name }}
             {% endif %}
@@ -81,7 +81,7 @@
 
         <th scope="col">&nbsp;</th>
       </tr>
-      {% if filtersForm|length > 1 %}
+      {% if filterForm|length > 1 %}
         <tr class="column-filters">
           {% if bulkActionsAvailable %}
             <th>
@@ -92,10 +92,10 @@
             </th>
           {% endif %}
 
-          {% for column in gridView.columns %}
+          {% for column in grid.columns %}
             <th>
               {% if column.is_filterable %}
-                {{ form_widget(filtersForm[column.identifier]) }}
+                {{ form_widget(filterForm[column.id]) }}
               {% else %}
                 -
               {% endif %}
@@ -118,13 +118,13 @@
     </thead>
     <tbody>
     {# If table has any rows then render those here #}
-    {% if gridView.data.rows is not empty %}
-      {% for row in gridView.data.rows %}
+    {% if grid.data.rows is not empty %}
+      {% for row in grid.data.rows %}
         <tr>
           {% if bulkActionsAvailable %}
             <th>
               <input class="js-bulk-action-checkbox"
-                     name="{{ gridView.identifier }}_bulk[]"
+                     name="{{ grid.id }}_bulk[]"
                      type="checkbox"
                      title=""
                      value=""
@@ -133,8 +133,8 @@
           {% endif %}
 
           {# Render row columns here #}
-          {% for column in gridView.columns %}
-            {% set content = row.data[column.identifier] %}
+          {% for column in grid.columns %}
+            {% set content = row.data[column.id] %}
 
             {% if column.is_raw %}
               <td>{{ content|raw }}</td>
@@ -152,7 +152,7 @@
                   <a href="{{ rowActions|first.url }}"
                      title="{{ rowActions|first.name }}"
                      class="btn tooltip-link"
-                     id="{{ '%s_grid_row_action_%s'|format(gridView.identifier, rowActions|first.identifier) }}"
+                     id="{{ '%s_grid_row_action_%s'|format(grid.id, rowActions|first.id) }}"
                   >
                     <i class="material-icons">{{ rowActions|first.icon }}</i>
                   </a>
@@ -170,7 +170,7 @@
                       {% for rowAction in rowActions|slice(1) %}
                         <a class="dropdown-item"
                            href="{{ rowAction.url }}"
-                           id="{{ '%s_grid_row_action_%s'|format(gridView.identifier, rowAction.identifier) }}"
+                           id="{{ '%s_grid_row_action_%s'|format(grid.id, rowAction.id) }}"
                         >
                           <i class="material-icons">{{ rowAction.icon }}</i>
                           {{ rowAction.name }}
@@ -182,14 +182,14 @@
               </div>
             </td>
           {# If filters are available, it means we have "Search" button, then add empty column to fill the row #}
-          {% elseif filtersForm|length > 1 %}
+          {% elseif filterForm|length > 1 %}
             <td>&nbsp;</td>
           {% endif %}
         </tr>
       {% endfor %}
     {% else %}
       <tr>
-        <td colspan="{{ gridView.columns|length }}">
+        <td colspan="{{ grid.columns|length }}">
           <div class="text-center">
             <p><i class="material-icons">warning</i></p>
             <p>{{ 'No records found'|trans }}</p>
@@ -200,18 +200,18 @@
     </tbody>
   </table>
 
-  {% if gridView.data.rows_total > 10 %}
+  {% if grid.data.rows_total > 10 %}
     <div class="row">
       <div class="col-md-12">
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
-          'limit': gridView.pagination.limit,
-          'offset': gridView.pagination.offset,
-          'total': gridView.data.rows_total,
+          'limit': grid.pagination.limit,
+          'offset': grid.pagination.offset,
+          'total': grid.data.rows_total,
           'caller_route': app.request.attributes.get('_route')
         })) }}
       </div>
     </div>
   {% endif %}
 
-  {{ form_end(filtersForm) }}
+  {{ form_end(filterForm) }}
 </div>

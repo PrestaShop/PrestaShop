@@ -23,24 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if gridView.gridActions is not empty %}
+{% if grid.actions is not empty %}
   <div class="btn-toolbar float-right" role="toolbar">
     {{ renderhook('displayDashboardToolbarIcons') }}
 
-    {% for action in gridView.gridActions %}
+    {% for action in grid.actions %}
       {% if action.is_rendered %}
         {{ action.content|raw }}
       {% else %}
         <button type="button"
-                id="{{ gridView.identifier }}_grid_action_{{ action.identifier }}"
-                class="btn btn-link list-toolbar-btn js-{{ action.identifier }}-grid-action"
+                id="{{ grid.id }}_grid_action_{{ action.id }}"
+                class="btn btn-link list-toolbar-btn js-{{ action.id }}-grid-action"
         >
           {{ ps.tooltip(action.name, action.icon) }}
         </button>
 
-        {% if action.identifier == 'ps_show_query' %}
+        {% if action.id == 'ps_show_query' %}
           {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
-            'id': gridView.identifier ~ '_grid_ps_show_query_modal',
+            'id': grid.id ~ '_grid_ps_show_query_modal',
             'title': action.name,
             'closable': true,
             'actions': [{
@@ -53,7 +53,7 @@
             {% block content %}
               <form method="post"
                     action="{{ getAdminLink('AdminRequestSql', true, {'addrequest_sql': 1}) }}"
-                    id="{{ gridView.identifier ~ '_grid_ps_show_query_modal_form' }}"
+                    id="{{ grid.id ~ '_grid_ps_show_query_modal_form' }}"
               >
                 <div class="modal-body">
                   <textarea name="sql" rows="20" cols="65" title=""></textarea>

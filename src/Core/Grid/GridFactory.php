@@ -113,7 +113,7 @@ final class GridFactory implements GridFactoryInterface
      */
     private function createFilterFormFromDefinition(GridDefinitionInterface $definition)
     {
-        $formBuilder = $this->formFactory->createNamedBuilder($definition->getIdentifier());
+        $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
 
         foreach ($definition->getColumns() as $column) {
             if ($formType = $column->getFilterFormType()) {
@@ -124,7 +124,7 @@ final class GridFactory implements GridFactoryInterface
                 }
 
                 $formBuilder->add(
-                    $column->getIdentifier(),
+                    $column->getId(),
                     $formType,
                     $options
                 );

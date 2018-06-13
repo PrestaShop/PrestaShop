@@ -24,44 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column;
+namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
- * Class ColumnCollection holds collection of columns for grid
+ * Interface GridPresenterInterface defines contract for grid presenter
  */
-final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
+interface GridPresenterInterface
 {
     /**
-     * Create new columns collection from array data
+     * Present grid as plain array
      *
-     * @param array $data
+     * @param GridInterface $grid
      *
-     * @return ColumnCollectionInterface
+     * @return array
      */
-    public static function fromArray(array $data)
-    {
-        $columns = new ColumnCollection();
-        $position = 0;
-
-        foreach ($data as $columnData) {
-            $columnData['position'] = $position;
-
-            $column = Column::fromArray($columnData);
-            $columns->add($column);
-
-            $position += 2;
-        }
-
-        return $columns;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add(ColumnInterface $column)
-    {
-        $this->items[$column->getId()] = $column;
-    }
+    public function present(GridInterface $grid);
 }
