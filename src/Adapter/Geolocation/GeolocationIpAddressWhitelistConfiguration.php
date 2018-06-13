@@ -63,11 +63,7 @@ final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurat
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set(
-                'PS_GEOLOCATION_WHITELIST',
-                //preg_replace('/\r\n|\r|\n/', ';', $config['geolocation_whitelist'])
-                $config['geolocation_whitelist']
-            );
+            $this->configuration->set('PS_GEOLOCATION_WHITELIST', $config['geolocation_whitelist']);
         }
 
         return [];
