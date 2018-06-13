@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface;
+use PrestaShop\PrestaShop\Core\Validation\ValidatorInterface;
 
 /**
  * Class GeolocationFormDataProvider is responsible for handling geolocation form data
@@ -57,29 +57,29 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
     private $geoLiteCityChecker;
 
     /**
-     * @var Validate
+     * @var ValidatorInterface
      */
-    private $validate;
+    private $validator;
 
     /**
      * @param DataConfigurationInterface $geolocationByIpAddressConfiguration
      * @param DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration
      * @param DataConfigurationInterface $geolocationOptionsConfiguration
      * @param GeoLiteCityCheckerInterface $geoLiteCityChecker
-     * @param Validate $validate
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         DataConfigurationInterface $geolocationByIpAddressConfiguration,
         DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration,
         DataConfigurationInterface $geolocationOptionsConfiguration,
         GeoLiteCityCheckerInterface $geoLiteCityChecker,
-        Validate $validate
+        ValidatorInterface $validator
     ) {
         $this->geolocationByIpAddressConfiguration = $geolocationByIpAddressConfiguration;
         $this->geolocationIpAddressWhitelistConfiguration = $geolocationIpAddressWhitelistConfiguration;
         $this->geolocationOptionsConfiguration = $geolocationOptionsConfiguration;
         $this->geoLiteCityChecker = $geoLiteCityChecker;
-        $this->validate = $validate;
+        $this->validator = $validator;
     }
 
     /**
@@ -117,7 +117,7 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
             ];
         }
 
-        if (!$this->validate->isCleanHtml($data['geolocation_ip_address_whitelist']['geolocation_whitelist'])) {
+        if (!$this->validator->isCleanHtml($data['geolocation_ip_address_whitelist']['geolocation_whitelist'])) {
             $errors[] = [
                 'key' => 'Invalid whitelist',
                 'parameters' => [],

@@ -80,4 +80,4 @@ services:
             - '@prestashop.adapter.geolocation_ip_address_whitelist.configuration'
             - '@prestashop.adapter.geolocation_options.configuration'
             - '@prestashop.core.geolocation.geo_lite_city.checker'
-            - '@prestashop.adapter.validate'
+            - '@prestashop.core.validation.validator'
