@@ -4,3 +4,4 @@ imports:
     - { resource: core/search.yml }
     - { resource: core/addon.yml }
     - { resource: core/geolocation.yml }
+    - { resource: core/validation.yml }
