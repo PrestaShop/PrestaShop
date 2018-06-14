@@ -59,3 +59,9 @@ services:
     prestashop.adapter.presenter.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
         arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price"]
+
+    prestashop.adapter.module.data_provider.tab_module_list:
+        class: PrestaShop\PrestaShop\Adapter\Module\TabModuleListProvider
+
+    prestashop.adapter.module.filter.module_filter:
+        class: PrestaShop\PrestaShop\Adapter\Module\Filter\ModuleFilter
