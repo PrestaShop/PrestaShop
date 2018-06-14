@@ -63,6 +63,9 @@ _admin_order_routing:
     resource: "admin/routing_order.yml"
     prefix: /order
 
+_admin_improve_routing:
+    resource: 'admin/improve/_improve.yml'
+    prefix: /improve
 
 # include common routes for Admin interface
 admin_common_pagination:

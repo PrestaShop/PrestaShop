@@ -1,0 +1,3 @@
+_payment:
+    resource: 'payment/*.yml'
+    prefix: /payment/

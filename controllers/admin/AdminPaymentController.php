@@ -34,60 +34,6 @@ class AdminPaymentControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function initToolbarTitle()
-    {
-        $this->toolbar_title = array_unique($this->breadcrumbs);
-    }
-
-    public function initPageHeaderToolbar()
-    {
-        parent::initPageHeaderToolbar();
-        $this->page_header_toolbar_btn = array();
-    }
-
-    public function postProcess()
-    {
-        if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1') {
-            $this->ajaxProcessGetModuleQuickView();
-        }
-        if ($this->action) {
-            $this->saveRestrictions($this->action);
-        }
-    }
-
-    public function initContent()
-    {
-        $this->display = 'view';
-        return parent::initContent();
-    }
-
-    public function setMedia($isNewTheme = false)
-    {
-        parent::setMedia($isNewTheme);
-        $this->addJqueryPlugin('fancybox');
-    }
-
-    public function renderView()
-    {
-        $this->toolbar_title = $this->trans('Payment', array(), 'Admin.Global');
-        unset($this->toolbar_btn['back']);
-
-        $shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
-        if (!$shop_context) {
-            $this->tpl_view_vars = array('shop_context' => $shop_context);
-            return parent::renderView();
-        }
-
-        $this->tpl_view_vars = array(
-            'modules_list' => $this->renderModulesList('back-office,AdminPayment,index'),
-            'ps_base_uri' => __PS_BASE_URI__,
-            'url_submit' => self::$currentIndex.'&token='.$this->token,
-            'shop_context' => $shop_context
-        );
-
-        return parent::renderView();
-    }
-
     public function renderModulesList($tracking_source = false)
     {
         if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
