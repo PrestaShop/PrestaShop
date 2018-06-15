@@ -31,6 +31,9 @@ services:
     prestashop.adapter.debug_mode:
         class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
 
+    prestashop.adapter.database:
+        class: 'PrestaShop\PrestaShop\Adapter\Database'
+
     prestashop.adapter.memcache_server.manager:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
         arguments: ['@database_connection', '%database_prefix%']

@@ -42,6 +42,7 @@ class PositionsListHandler {
     self.$modulesList = $('.modules-position-checkbox');
     self.$hookPosition = $("#hook-position");
     self.$hookSearch = $("#hook-search");
+    self.$modulePositionsForm = $('#module-positions-form');
 
 
     self.handleList();
@@ -108,34 +109,38 @@ class PositionsListHandler {
   }
 
   handleSortable() {
-	  $('.sortable').sortable({
-		  forcePlaceholderSize: true
-	  }).bind('sortupdate', function(e, ui) {
-		  var ids = ui.item.attr('id').split('_');
-		  var way = (ui.start_index < ui.end_index)? 1 : 0;
-		  var data = ids[0]+'[]=';
+    const self = this;
 
-		  $.each(e.target.children, function(index, element) {
-			  data += '&'+ids[0]+'[]='+$(element).attr('id');
-		  });
+    $('.sortable').sortable({
+      forcePlaceholderSize: true
+    }).on('sortupdate', function(e, ui) {
+      const $ids = ui.item.attr('id').split('_');
+      const $data = {
+        hookId: $ids[0],
+        moduleId: $ids[1],
+        positions: []
+      };
 
-		  $.ajax({
-			  type: 'POST',
-			  headers: { "cache-control": "no-cache" },
-			  async: false,
-			  url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
-			  data: data + '&action=updatePositions&id_hook='+ids[0]+'&id_module='+ids[1]+'&way='+way+'&ajax=1' ,
-			  success: function(data) {
-				  let start = 0;
+      $.each(e.target.children, function(index, element) {
+        $data.positions.push($(element).attr('id'));
+      });
 
-				  $.each(e.target.children, function(index, element) {
-					  $(element).find('.index-position').html(++start);
-				  });
+      $.ajax({
+        type: 'POST',
+        headers: {'cache-control': 'no-cache'},
+        url: self.$modulePositionsForm.data('update-url'),
+        data: $data,
+        success: () => {
+          let start = 0;
 
-				  showSuccessMessage(update_success_msg);
-			  }
-		  });
-	  });
+          $.each(e.target.children, function(index, element) {
+            $(element).find('.index-position').html(++start);
+          });
+
+          window.showSuccessMessage(window.update_success_msg);
+        }
+      });
+    });
   }
 
   modulesPositionFilterHooks() {

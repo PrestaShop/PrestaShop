@@ -536,7 +536,8 @@ form#importDropzone {
     width: 100%;
     padding: 5px 0;
     margin-bottom: -1px;
-    border: solid 1px #9ED0EC;
+    border: solid 1px #9ed0ec;
+    background: #fff;
 
     &.draggable {
       cursor: pointer;
@@ -554,7 +555,7 @@ form#importDropzone {
 
   .module-column-position {
     display: table-cell;
-    width: 70px;
+    width: 80px;
     vertical-align: middle;
     text-align: right;
 

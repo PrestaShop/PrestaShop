@@ -24,3 +24,6 @@ _api_i18n:
 
 _api_translation:
     resource: "api/routing_translation.yml"
+
+_api_positions:
+    resource: "api/routing_positions.yml"

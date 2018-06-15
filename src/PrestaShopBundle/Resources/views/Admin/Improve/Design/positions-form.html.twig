@@ -29,16 +29,16 @@
   <div class="container">
     {{ form_start(form, {'attr' : {'class': 'form'}, 'action': path('admin_order_delivery_slip_pdf') }) }}
       {% if selectedModule %}
-		    <input type="hidden" name="show_modules" value="{{ selectedModule }}" />
-	    {% endif %}
+        <input type="hidden" name="show_modules" value="{{ selectedModule }}" />
+      {% endif %}
 
       <div class="row">
         <div class="card">
           <div class="card-header">
-		        <h3>
-			        <i class="material-icons">file_copy</i>
+            <h3>
+              <i class="material-icons">file_copy</i>
               {{ 'Transplant a module' | trans }}
-		        </h3>
+            </h3>
           </div>
 
           <div class="card-block">
@@ -59,12 +59,17 @@
 
               <p>
                 {{ 'Please specify the files for which you do not want the module to be displayed.' | trans({}, 'Admin.Design.Help') }}<br />
-						    {{ 'Please input each filename, separated by a comma (",").' | trans({}, 'Admin.Design.Help') }}<br />
-						    {{ 'You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.' | trans({}, 'Admin.Design.Help') }}
+                {{ 'Please input each filename, separated by a comma (",").' | trans({}, 'Admin.Design.Help') }}<br />
+                {{ 'You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.' | trans({}, 'Admin.Design.Help') }}
               </p>
 
-              {{ form_errors(form.positions.exceptions) }}
-              {{ form_widget(form.positions.exceptions) }}
+              {{ form_errors(form.positions.exceptions_text) }}
+              {{ form_widget(form.positions.exceptions_text) }}
+
+              <br />
+
+              {{ form_errors(form.positions.exceptions_list) }}
+              {{ form_widget(form.positions.exceptions_list) }}
             </div>
             {{ form_rest(form) }}
           </div>
@@ -74,11 +79,11 @@
               <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
             </div>
           </div>
-				  <input type="hidden" name="id_module" value="{$id_module}" />
-				  <input type="hidden" name="id_hook" value="{$id_hook}" />
-				  <input type="hidden" name="new_hook" id="new_hook" value="{$id_hook}" />
+          <input type="hidden" name="id_module" value="{$id_module}" />
+          <input type="hidden" name="id_hook" value="{$id_hook}" />
+          <input type="hidden" name="new_hook" id="new_hook" value="{$id_hook}" />
 
-	      </div>
+        </div>
       </div>
     {{ form_end(form) }}
   </div>
@@ -86,43 +91,43 @@
 
 {% block javascripts %}
   <script type="text/javascript">
-	  //<![CDATA
-	  function position_exception_textchange() {
-		  // TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
-		  var obj = $(this);
-		  var shopID = obj.attr('id').replace(/\D/g, '');
-		  var list = obj.closest('form').find('#em_list_' + shopID);
-		  var values = obj.val().split(',');
-		  var len = values.length;
+    //<![CDATA
+    function position_exception_textchange() {
+      // TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
+      var obj = $(this);
+      var shopID = obj.attr('id').replace(/\D/g, '');
+      var list = obj.closest('form').find('#em_list_' + shopID);
+      var values = obj.val().split(',');
+      var len = values.length;
 
-		  list.find('option').prop('selected', false);
-		  for (var i = 0; i < len; i++) {
-			  list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
+      list.find('option').prop('selected', false);
+      for (var i = 0; i < len; i++) {
+        list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
       }
-	  }
+    }
 
-	  function position_exception_listchange() {
-		  var obj = $(this);
-		  var shopID = obj.attr('id').replace(/\D/g, '');
-		  var val = obj.val();
-		  var str = '';
-		  if (val)
-			  str = val.join(', ');
-		  obj.closest('form').find('#em_text_' + shopID).val(str);
-	  }
+    function position_exception_listchange() {
+      var obj = $(this);
+      var shopID = obj.attr('id').replace(/\D/g, '');
+      var val = obj.val();
+      var str = '';
+      if (val)
+        str = val.join(', ');
+      obj.closest('form').find('#em_text_' + shopID).val(str);
+    }
 
-	  $(document).ready(function(){
-		  $('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
-			  $(this).change(position_exception_textchange).change();
-		  });
-		  $('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
-			  $(this).change(position_exception_listchange);
-		  });
-		  $('select[name=id_hook]').on('change', function() {
-			  $('#new_hook').attr('value', $(this).val());
-		  });
-	  });
-	  //]]>
+    $(document).ready(function(){
+      $('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
+        $(this).change(position_exception_textchange).change();
+      });
+      $('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
+        $(this).change(position_exception_listchange);
+      });
+      $('select[name=id_hook]').on('change', function() {
+        $('#new_hook').attr('value', $(this).val());
+      });
+    });
+    //]]>
   </script>
   <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}?{{ random() }}"></script>
 {% endblock %}

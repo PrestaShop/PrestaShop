@@ -367,3 +367,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.improve.design.positions:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\PositionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }

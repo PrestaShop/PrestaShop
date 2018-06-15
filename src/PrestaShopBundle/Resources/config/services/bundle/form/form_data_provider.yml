@@ -77,3 +77,4 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\PositionsFormDataProvider'
         arguments:
             - '@prestashop.adapter.improve.design.positions.configuration'
+            - '@prestashop.adapter.database'

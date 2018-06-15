@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
+use Module;
+
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Adapter\Database;
+use PrestaShopBundle\Exception\HookModuleNotFoundException;
 use PrestaShop\PrestaShop\Adapter\Improve\Design\PositionsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
@@ -40,10 +45,39 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
      */
     private $configuration;
 
+    /**
+     * @var Database
+     */
+    private $databaseAdapterxs;
+
     public function __construct(
-        PositionsConfiguration $configuration
+        PositionsConfiguration $configuration,
+        Database $databaseAdapter
     ) {
         $this->configuration = $configuration;
+        $this->databaseAdapter = $databaseAdapter;
+    }
+
+
+    public function load($moduleId, $hookId)
+    {
+        $sql = sprintf(
+            'SELECT id_module FROM %shook_module WHERE id_module = %d AND id_hook = %d AND id_shop IN(%s)',
+            _DB_PREFIX_,
+            $moduleId,
+            $hookId,
+            implode(', ', ShopContext::getContextListShopID())
+        );
+
+        if (!$this->databaseAdapter->getValue($sql)) {
+            throw new HookModuleNotFoundException();
+        }
+
+        $module = Module::getInstanceById($moduleId);
+        $exceptionsList = $module->getExceptions($hookId, true);
+        if (!empty($exceptionsList)) {
+            $excepts = implode(', ', current($exceptionsList));
+        }
     }
 
     /**

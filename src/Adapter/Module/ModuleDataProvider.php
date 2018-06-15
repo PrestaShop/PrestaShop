@@ -136,7 +136,7 @@ class ModuleDataProvider
         if (empty($module_id)) {
             return false;
         }
-        
+
         return LegacyModule::getPermissionStatic($module_id, $action);
     }
 

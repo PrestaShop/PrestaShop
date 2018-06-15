@@ -29,6 +29,7 @@ const $ = window.$;
 
 $(() => {
   new PositionsListHandler();
+
   //
   // Used for the anchor module page
   //

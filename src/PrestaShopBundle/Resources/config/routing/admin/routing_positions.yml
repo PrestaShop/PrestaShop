@@ -6,7 +6,7 @@ admin_modules_positions:
         _legacy_controller: AdminModulesPositions
 
 admin_modules_positions_edit:
-    path: /modules/positions/edit/{module_id}/{hook_id}
+    path: /modules/positions/edit/{moduleId}/{hookId}
     methods: [GET,POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:edit'
