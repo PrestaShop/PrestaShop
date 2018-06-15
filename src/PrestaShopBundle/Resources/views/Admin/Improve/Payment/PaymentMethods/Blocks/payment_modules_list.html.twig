@@ -28,13 +28,13 @@
   {% if paymentModules|length > 0 %}
   <div class="module-item-list">
   {% for module in paymentModules %}
-    <div class="row module-item-wrapper-list border-bottom mb-3">
-      <div class="col-1">
+    <div class="row module-item-wrapper-list border-bottom mb-sm-3">
+      <div class="col-12 col-sm-2 col-md-1">
         <div class="module-logo-thumb-list text-center">
           <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
         </div>
       </div>
-      <div class="col-9 pl-0">
+      <div class="col-12 col-sm-6 col-md-9 pl-0">
         <p class="mb-0">
           {{ module.attributes.displayName|raw }}
           <span class="text-muted">
@@ -45,7 +45,7 @@
           {{ module.attributes.description|raw }}
         </p>
       </div>
-      <div class="col-2">
+      <div class="col-12 col-sm-4 col-md-2 mb-3">
         <div class="text-center">
           <a href="{{ path('admin_module_configure_action', {'module_name': module.attributes.name}) }}"
              class="btn btn-primary-reverse btn-outline-primary light-button"
