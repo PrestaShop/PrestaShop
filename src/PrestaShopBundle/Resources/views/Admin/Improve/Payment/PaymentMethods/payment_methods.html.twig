@@ -29,14 +29,20 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <div class="card">
-          <h3 class="card-header">
-            <i class="material-icons">credit_card</i> {{ 'Active payment'|trans }}
-          </h3>
-          <div class="card-block">
-            {% include '@PrestaShop/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig' %}
+        {% if isSingleShopContext %}
+          <div class="card">
+            <h3 class="card-header">
+              <i class="material-icons">credit_card</i> {{ 'Active payment'|trans }}
+            </h3>
+            <div class="card-block">
+              {% include '@PrestaShop/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig' %}
+            </div>
           </div>
-        </div>
+        {% else %}
+          <div class="alert alert-warning" role="alert">
+            <p class="alert-text">{{ 'You have more than one shop and must select one to configure payment.'|trans({}, 'Admin.Payment.Notification') }}</p>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
