@@ -25,6 +25,7 @@
 {% trans_default_domain 'Admin.Payment.Feature' %}
 
 {% block payment_methods_module_list %}
+  {% if paymentModules|length > 0 %}
   <div class="module-item-list">
   {% for module in paymentModules %}
     <div class="row module-item-wrapper-list border-bottom mb-3">
@@ -56,4 +57,12 @@
     </div>
   {% endfor %}
   </div>
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">
+        {{ 'It seems there are no recommended payment solutions for your country.'|trans }} <br>
+        <a class="_blank" href="https://www.prestashop.com/en/contact-us">{{ 'Do you think there should be one? Let us know!'|trans }}</a>
+      </p>
+    </div>
+  {% endif %}
 {% endblock %}

@@ -85,8 +85,6 @@ class PaymentMethodsController extends FrameworkBundleAdminController
             }
         }
 
-        dump($paymentModulesToDisplay);
-
         return $paymentModulesToDisplay;
     }
 }
