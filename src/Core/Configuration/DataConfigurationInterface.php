@@ -25,7 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * Retrieve and Manage configuration (used to manage forms in "Configure" section of back office)
@@ -40,7 +39,6 @@ interface DataConfigurationInterface
     /**
      * @param array $configuration
      * @return array if not empty, populated by validation errors
-     * @throws UndefinedOptionsException
      */
     public function updateConfiguration(array $configuration);
 
@@ -49,7 +47,6 @@ interface DataConfigurationInterface
      *
      * @param array $configuration
      * @return bool Returns true if no exception are thrown
-     * @throws UndefinedOptionsException
      */
     public function validateConfiguration(array $configuration);
 }
