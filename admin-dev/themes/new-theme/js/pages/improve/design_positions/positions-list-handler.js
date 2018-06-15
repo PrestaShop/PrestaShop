@@ -112,34 +112,39 @@ class PositionsListHandler {
     const self = this;
 
     $('.sortable').sortable({
-      forcePlaceholderSize: true
-    }).on('sortupdate', function(e, ui) {
-      const $ids = ui.item.attr('id').split('_');
-      const $data = {
-        hookId: $ids[0],
-        moduleId: $ids[1],
-        positions: []
-      };
+      forcePlaceholderSize: true,
+      start: function(e, ui) {
+        $(this).data('previous-index', ui.item.index());
+      },
+      update:  function(e, ui) {
+        const $ids = ui.item.attr('id').split('_');
+        const $data = {
+          hookId: $ids[0],
+          moduleId: $ids[1],
+          way: ($(this).data('previous-index') < ui.item.index()) ? 1 : 0,
+          positions: [],
+        };
 
-      $.each(e.target.children, function(index, element) {
-        $data.positions.push($(element).attr('id'));
-      });
+        $.each(e.target.children, function(index, element) {
+          $data.positions.push($(element).attr('id'));
+        });
 
-      $.ajax({
-        type: 'POST',
-        headers: {'cache-control': 'no-cache'},
-        url: self.$modulePositionsForm.data('update-url'),
-        data: $data,
-        success: () => {
-          let start = 0;
+        $.ajax({
+          type: 'POST',
+          headers: {'cache-control': 'no-cache'},
+          url: self.$modulePositionsForm.data('update-url'),
+          data: $data,
+          success: () => {
+            let start = 0;
 
-          $.each(e.target.children, function(index, element) {
-            $(element).find('.index-position').html(++start);
-          });
+            $.each(e.target.children, function(index, element) {
+              $(element).find('.index-position').html(++start);
+            });
 
-          window.showSuccessMessage(window.update_success_msg);
-        }
-      });
+            window.showSuccessMessage(window.update_success_msg);
+          }
+        });
+      },
     });
   }
 

@@ -43,11 +43,11 @@ class PositionsController extends ApiController
      */
     public function updateAction(Request $request)
     {
-        $moduleId = $request->request->get('moduleId');
-        $hookId = $request->request->get('hookId');
-        $way = $request->request->get('way');
+        $moduleId = (int) $request->request->get('moduleId');
+        $hookId = (int) $request->request->get('hookId');
+        $way = (int) $request->request->get('way');
         $positions = $request->request->get('positions');
-        $position = is_array($positions) ? array_search($hookId.'_'.$moduleId, $positions) + 1 : null;
+        $position = (int) is_array($positions) ? array_search($hookId.'_'.$moduleId, $positions) + 1 : null;
 
         $module = LegacyModule::getInstanceById($moduleId);
         if (empty($module->id)) {
@@ -60,7 +60,6 @@ class PositionsController extends ApiController
             );
         }
 
-        var_dump($hookId, $way, $position);
         if (!$module->updatePosition($hookId, $way, $position)) {
             return $this->jsonResponse(
                 [
