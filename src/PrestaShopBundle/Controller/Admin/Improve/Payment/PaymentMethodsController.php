@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,45 +47,46 @@ class PaymentMethodsController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        //@todo: get module list for tab (controller) OK
-        //@todo: filter modules on disk OK
-        //@todo: check employee permission OK
-        //@todo: get active modules
-        //@todo: render active payment modules
-
-        $paymentModules = $this->getPaymentModulesToDisplay($legacyController);
-        dump($paymentModules);
-
         return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', [
-            'help_link' => $this->generateSidebarLink($legacyController),
-            'enableSidebar' => true,
+            'paymentModules' => $this->getPaymentModulesToDisplay($legacyController),
         ]);
     }
 
     /**
-     * Gets payment modules to display
+     * Gets installed and enabled payment modules to display
      *
      * @param string $legacyController
      *
-     * @return array
+     * @return ModuleInterface[]
      */
-    private function getPaymentModulesToDisplay($legacyController)
+    protected function getPaymentModulesToDisplay($legacyController)
     {
         $tabModuleListProvider = $this->get('prestashop.adapter.module.data_provider.tab_module_list');
-        $moduleFilter = $this->get('prestashop.adapter.module.filter.module_filter');
         $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-        $moduleRepository = $this->get('prestashop.module_kernel.repository');
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $adminModuleRepository = $this->get('prestashop.core.admin.module.repository');
 
-        $tabModules = $tabModuleListProvider->getTabModules($legacyController);
-        $tabModulesOnDisk = $moduleFilter->filterModulesOnDisk($tabModules);
-        $activeModules = $moduleRepository->getActiveModules();
+        $tabModuleNames = $tabModuleListProvider->getTabModules($legacyController);
 
-        foreach ($tabModulesOnDisk as $key => $module) {
-            if (!$moduleDataProvider->can('configure', $module->name) || !in_array($module->name, $activeModules)) {
-                unset($tabModulesOnDisk[$key]);
+        $installedModules = $adminModuleRepository->getInstalledModules();
+        $installedModuleNames = array_keys($installedModules);
+
+        $paymentModulesToDisplay = [];
+        foreach ($tabModuleNames as $moduleName) {
+            if (!in_array($moduleName, $installedModuleNames) ||
+                !$moduleDataProvider->can('configure', $moduleName)
+            ) {
+                continue;
+            }
+
+            $installedModule = $installedModules[$moduleName];
+            if ($installedModule->database->get('active')) {
+                $paymentModulesToDisplay[] = $modulePresenter->present($installedModule);
             }
         }
 
-        return $tabModulesOnDisk;
+        dump($paymentModulesToDisplay);
+
+        return $paymentModulesToDisplay;
     }
 }

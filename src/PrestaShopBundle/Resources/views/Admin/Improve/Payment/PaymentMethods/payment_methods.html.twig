@@ -25,4 +25,19 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 {% trans_default_domain 'Admin.Payment.Feature' %}
 
-
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">credit_card</i> {{ 'Active payment'|trans }}
+          </h3>
+          <div class="card-block">
+            {% include '@PrestaShop/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
