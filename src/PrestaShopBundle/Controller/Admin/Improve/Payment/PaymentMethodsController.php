@@ -47,13 +47,25 @@ class PaymentMethodsController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $isSingleShopContext = $shopContext->isSingleShopContext();
+        $paymentModules = [];
+
+        if ($isSingleShopContext) {
+            $paymentModules = $this->getPaymentModulesToDisplay($legacyController);
+        }
+
         return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', [
-            'paymentModules' => $this->getPaymentModulesToDisplay($legacyController),
+            'paymentModules' => $paymentModules,
+            'isSingleShopContext' => $isSingleShopContext,
+            'layoutTitle' => $this->trans('Payment Methods', 'Admin.Navigation.Menu'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
         ]);
     }
 
     /**
-     * Gets installed and enabled payment modules to display
+     * Gets installed and enabled payment modules for PaymentMethods controller to display
      *
      * @param string $legacyController
      *
