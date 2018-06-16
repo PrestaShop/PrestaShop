@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Parser;
 use Shop;
@@ -42,7 +42,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private $filesystem;
     private $shop;
 
-    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)
+    public function __construct(AdvancedConfigurationInterface $configuration, Filesystem $filesystem, Shop $shop = null)
     {
         $this->appConfiguration = $configuration;
         $this->filesystem = $filesystem;

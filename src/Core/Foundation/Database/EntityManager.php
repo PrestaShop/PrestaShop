@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 
 class EntityManager
 {
@@ -36,7 +37,7 @@ class EntityManager
 
     public function __construct(
         DatabaseInterface $db,
-        \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration
+        AdvancedConfigurationInterface $configuration
     ) {
         $this->db = $db;
         $this->configuration = $configuration;
