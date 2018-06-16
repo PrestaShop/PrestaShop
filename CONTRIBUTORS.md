@@ -189,6 +189,7 @@ GitHub contributors:
 - florervd
 - Florian Kwakkenbos
 - Florian Lemaitre
+- Florian Nolte
 - Flowster
 - fojtcz
 - Fourat ACHOUR
@@ -268,6 +269,7 @@ GitHub contributors:
 - jessylenne
 - jestemradek
 - Jérôme Nadaud
+- jGissinger
 - Joan
 - Joan Juvanteny
 - joce
@@ -366,6 +368,7 @@ GitHub contributors:
 - melvin
 - Michael Dekker
 - Michael Hjulskov
+- Michael Käfer
 - Michael Salihi
 - Michal Spaček
 - Michel ANTOINE
@@ -490,7 +493,7 @@ GitHub contributors:
 - Saycile
 - Seb
 - Sebastien
-- Sebastien Bareyre
+- Sébastien Bareyre
 - Sebastien Bocahu
 - Sebastien Monterisi
 - SebSept

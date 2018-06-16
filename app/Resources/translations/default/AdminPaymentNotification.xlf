@@ -36,19 +36,19 @@ File: classes/PaymentModule.php:707</note>
         <source>No carrier</source>
         <target>No carrier</target>
         <note>Context:
-File: classes/PaymentModule.php:799</note>
+File: classes/PaymentModule.php:801</note>
       </trans-unit>
       <trans-unit id="b08d3867be98e6fff3233cd40ab8134a">
         <source>Order creation failed</source>
         <target>Order creation failed</target>
         <note>Context:
-File: classes/PaymentModule.php:878</note>
+File: classes/PaymentModule.php:880</note>
       </trans-unit>
       <trans-unit id="43423b4056880b08f2c9aa50d8670531">
         <source>Cart cannot be loaded or an order has already been placed using this cart</source>
         <target>Cart cannot be loaded or an order has already been placed using this cart</target>
         <note>Context:
-File: classes/PaymentModule.php:895</note>
+File: classes/PaymentModule.php:897</note>
       </trans-unit>
     </body>
   </file>

@@ -338,7 +338,7 @@ class CartCore extends ObjectModel
      */
     public function delete()
     {
-        if ($this->OrderExists()) { //NOT delete a cart which is associated with an order
+        if ($this->orderExists()) { //NOT delete a cart which is associated with an order
             return false;
         }
 
@@ -1181,7 +1181,7 @@ class CartCore extends ObjectModel
             Pack::STOCK_TYPE_PACK_BOTH
         );
         $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
-        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity 
+        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity
           FROM `'._DB_PREFIX_.'cart_product` cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
           FROM `'._DB_PREFIX_.'cart_product` cp' .
@@ -1217,9 +1217,9 @@ class CartCore extends ObjectModel
             pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
             AND ' . $packStockTypesDefaultSupported . ' = 1
         ))';
-        $parentSql = 'SELECT 
+        $parentSql = 'SELECT
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
-            COALESCE(SUM(first_level_quantity), 0) as quantity 
+            COALESCE(SUM(first_level_quantity), 0) as quantity
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
 
         return Db::getInstance()->getRow($parentSql);
@@ -1462,7 +1462,7 @@ class CartCore extends ObjectModel
         /* Quantity update */
         if (!empty($id_customization)) {
             $result = Db::getInstance()->getRow('SELECT `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)$id_customization);
-            if ($result && Db::getInstance()->NumRows()) {
+            if ($result && Db::getInstance()->numRows()) {
                 if ($operator == 'down' && (int)$result['quantity'] - (int)$quantity < 1) {
                     return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)$id_customization);
                 }
@@ -1638,7 +1638,7 @@ class CartCore extends ObjectModel
         }
 
         /* If the product still possesses customization it does not have to be deleted */
-        if (Db::getInstance()->NumRows() && (int)$result['quantity']) {
+        if (Db::getInstance()->numRows() && (int)$result['quantity']) {
             return Db::getInstance()->execute(
                 'UPDATE `'._DB_PREFIX_.'cart_product`
                 SET `quantity` = '.(int)$result['quantity'].'
@@ -1650,10 +1650,10 @@ class CartCore extends ObjectModel
         }
 
         $preservedGifts = $this->getProductsGifts($id_product, $id_product_attribute);
-        if ($preservedGifts[$id_product.'-'.$id_product_attribute] > 0) {
+        if ($preservedGifts[(int)$id_product.'-'.(int)$id_product_attribute] > 0) {
             return Db::getInstance()->execute(
                 'UPDATE `'._DB_PREFIX_.'cart_product`
-                SET `quantity` = '.(int)$preservedGifts[$id_product.'-'.$id_product_attribute].'
+                SET `quantity` = '.(int)$preservedGifts[(int)$id_product.'-'.(int)$id_product_attribute].'
                 WHERE `id_cart` = '.(int)$this->id.'
                 AND `id_product` = '.(int)$id_product.
                 ($id_product_attribute != null ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '')
@@ -1881,7 +1881,7 @@ class CartCore extends ObjectModel
 
         // CART CALCULATION
         $cartRules = array();
-        if ($type != Cart::ONLY_PRODUCTS) {
+        if (in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
@@ -3819,7 +3819,7 @@ class CartCore extends ObjectModel
                     $delivery
                 );
             }
-            
+
             if (
                 ! $product['active'] ||
                 ! $product['available_for_order'] ||
@@ -3827,7 +3827,7 @@ class CartCore extends ObjectModel
             ) {
                 return $returnProductOnFailure ? $product : false;
             }
-            
+
             if (! $product['allow_oosp']) {
                 $productQuantity = Product::getQuantity(
                     $product['id_product'],
@@ -3919,7 +3919,7 @@ class CartCore extends ObjectModel
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
-            'JOIN '._DB_PREFIX_.'product p 
+            'JOIN '._DB_PREFIX_.'product p
                 ON (p.is_virtual = 0 AND p.id_product = cp.id_product) '.
             'JOIN '._DB_PREFIX_.'product_shop ps
                 ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.

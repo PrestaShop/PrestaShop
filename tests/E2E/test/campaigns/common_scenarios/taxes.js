@@ -21,7 +21,7 @@ module.exports = {
       test('should click on "Save and stay" button', () => client.waitForExistAndClick(Taxes.taxRules.save_and_stay_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nSuccessful creation.'));
       test('should select the "VAT IE 23%" from the tax dropdown list', () => client.waitAndSelectByValue(Taxes.taxRules.tax_select, value));
-      test('should click on "Save and stay" button', () => client.waitForExistAndClick(Taxes.taxRules.save_button));
+      test('should click on "Save and stay" button', () => client.waitForExistAndClick(Taxes.taxRules.save_button, 3000));
       test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nSuccessful update.'));
     }, 'common_client');
   },

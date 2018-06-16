@@ -32,12 +32,12 @@ function configuration_double_cleaner()
 	GROUP BY name
 	HAVING count(name) > 1');
     foreach ($result as $row) {
-        DB::getInstance()->execute('
+        Db::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'configuration
 		WHERE name = \''.addslashes($row['name']).'\'
 		AND id_configuration != '.(int)($row['minid']));
     }
-    DB::getInstance()->execute('
+    Db::getInstance()->execute('
 	DELETE FROM '._DB_PREFIX_.'configuration_lang
 	WHERE id_configuration NOT IN (
 		SELECT id_configuration

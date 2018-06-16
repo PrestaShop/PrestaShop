@@ -1,6 +1,7 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 const {ProductList} = require('../../selectors/BO/add_product_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
 
 /**** Example of product data ****
  * var productData = {
@@ -88,7 +89,11 @@ module.exports = {
           test('should set the "Unit"', () => client.waitAndSetValue(AddProductPage.unity, productData['pricing']['unity']));
           test('should set the "Price (tax excl.)"', () => client.waitAndSetValue(AddProductPage.pricing_wholesale, productData['pricing']['wholesale']));
           test('should click on "Add specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
-          test('should change the reduction type to "Percentage"', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, productData['pricing']['type']));
+          test('should change the reduction type to "Percentage"', () => {
+            return promise
+              .then(() => client.pause(3000))
+              .then(() => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, productData['pricing']['type']));
+          });
           test('should set the "Discount" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, productData['pricing']['discount']));
           test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
         }, 'product/product');
@@ -130,11 +135,13 @@ module.exports = {
   sortProduct: function (selector, sortBy) {
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
       test('should click on "Sort by ASC" icon', () => {
+        let sortSelector = sortBy === 'name' || sortBy === 'reference' ? ProductList.sort_button.replace("%B", sortBy) : sortBy === 'id_product' ? ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc") : ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc");
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j);
         }
         return promise
-          .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")));
+          .then(() => client.moveToObject(sortSelector))
+          .then(() => client.waitForExistAndClick(sortSelector));
       });
       test('should check that the products is well sorted by ASC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
@@ -144,7 +151,11 @@ module.exports = {
           .then(() => client.sortTable("ASC", sortBy))
           .then(() => client.checkSortProduct());
       });
-      test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc")));
+      test('should click on "Sort by DESC" icon', () => {
+        return promise
+          .then(() => client.moveToObject(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")))
+          .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")));
+      });
       test('should check that the products is well sorted by DESC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
@@ -161,9 +172,51 @@ module.exports = {
     test('should click on "' + buttonName + '" button', () => {
       return promise
         .then(() => client.isVisible(selectorButton))
-        .then(() => client.clickPageNextOrPrevious(selectorButton));
+        .then(() => client.clickNextOrPrevious(selectorButton));
     });
-    test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
-    test('should check that the value page in URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
+    test('should check that the current page number is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
+    test('should check that the page value in the URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
+  },
+
+
+  checkPaginationBO(nextOrPrevious, pageNumber, itemPerPage, close = false, paginateBetweenPages = false) {
+    scenario('Navigate between catalog pages and set the paginate limit equal to "' + itemPerPage + '"', client => {
+      let selectorButton = nextOrPrevious === 'Next' ? ProductList.pagination_next : ProductList.pagination_previous;
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should set the "item per page" to "' + itemPerPage + '"', () => client.waitAndSelectByValue(ProductList.item_per_page, itemPerPage));
+      test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkAttributeValue(ProductList.page_active_number, 'value', pageNumber, 'contain', 3000));
+      test('should check that the number of products is less or equal to "' + itemPerPage + '"', () => {
+        return promise
+          .then(() => client.getProductPageNumber('product_catalog_list'))
+          .then(() => expect(global.productsPageNumber).to.be.at.most(itemPerPage));
+      });
+      if (paginateBetweenPages) {
+        /** @todo to be removed when the PR that creates a global variable to determine if we are in the debug mode or not will be merged **/
+        test('should close the symfony toolbar if exists', () => {
+          return promise
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+            .then(() => {
+              if (global.isVisible) {
+                client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+              }
+            });
+        });
+        test('should click on "' + nextOrPrevious + '" button', () => {
+          return promise
+            .then(() => client.isVisible(selectorButton))
+            .then(() => client.clickNextOrPrevious(selectorButton));
+        });
+        test('should check that the current page is equal to 2', () => client.checkAttributeValue(ProductList.page_active_number, 'value', '2', 'contain', 3000));
+        test('should set the "Page value" input to "' + pageNumber + '"', () => {
+          return promise
+            .then(() => client.waitAndSetValue(ProductList.page_active_number, pageNumber))
+            .then(() => client.keys('Enter'))
+        });
+        test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkAttributeValue(ProductList.page_active_number, 'value', pageNumber, 'contain', 3000));
+      }
+
+      if (close)
+        test('should set the "item per page" to 20 (back to normal)', () => client.waitAndSelectByValue(ProductList.item_per_page, 20));
+    }, 'product/product', close);
   }
 };

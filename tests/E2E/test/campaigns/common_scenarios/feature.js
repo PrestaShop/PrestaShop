@@ -17,7 +17,7 @@ module.exports = {
   createFeature(data) {
     scenario('Create a new "Feature"', client => {
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
-      test('should click on "Feature" subtab', () => client.waitForExistAndClick(FeatureSubMenu.tabmenu));
+      test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
       test('should click on "Add new feature" button', () => client.waitForExistAndClick(FeatureSubMenu.add_new_feature));
       test('should set the "Name" input', () => client.waitAndSetValue(FeatureSubMenu.name_input, data.name + date_time));
       test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_button));
@@ -42,7 +42,7 @@ module.exports = {
   updateFeature(data) {
     scenario('Update the created "Feature"', client => {
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
-      test('should click on "Feature" subtab', () => client.waitForExistAndClick(FeatureSubMenu.tabmenu));
+      test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
       test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should click on "Edit" action', () => {
         return promise
@@ -64,7 +64,7 @@ module.exports = {
   deleteFeature(data) {
     scenario('Delete the created "Feature"', client => {
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
-      test('should click on "Feature" subtab', () => client.waitForExistAndClick(FeatureSubMenu.tabmenu));
+      test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
       test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should delete the created feature', () => client.clickOnAction(FeatureSubMenu.select_option, FeatureSubMenu.delete_feature, 'delete'));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
@@ -81,7 +81,7 @@ module.exports = {
   featureBulkActions(data, action) {
     scenario(action.charAt(0).toUpperCase() + action.slice(1) + ' the created "Feature" using the bulk actions', client => {
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
-      test('should click on "Feature" subtab', () => client.waitForExistAndClick(FeatureSubMenu.tabmenu));
+      test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
       test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should click on checkbox option', () => client.waitForExistAndClick(FeatureSubMenu.feature_checkbox));
       test('should ' + action + ' the created feature', () => client.clickOnAction(FeatureSubMenu.feature_bulk_actions, FeatureSubMenu.feature_delete_bulk_action, 'delete'));

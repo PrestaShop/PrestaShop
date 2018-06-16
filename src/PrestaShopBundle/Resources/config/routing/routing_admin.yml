@@ -35,6 +35,10 @@ _admin_supplier_routing:
     resource: "admin/routing_supplier.yml"
     prefix: /supplier
 
+_admin_theme_routing:
+    resource: "admin/routing_theme.yml"
+    prefix: /theme
+
 _admin_warehouse_routing:
     resource: "admin/routing_warehouse.yml"
     prefix: /warehouse
@@ -54,6 +58,11 @@ _admin_stock_routing:
 _admin_configure_routing:
     resource: "admin/routing_configure.yml"
     prefix: /configure
+
+_admin_order_routing:
+    resource: "admin/routing_order.yml"
+    prefix: /order
+
 
 # include common routes for Admin interface
 admin_common_pagination:

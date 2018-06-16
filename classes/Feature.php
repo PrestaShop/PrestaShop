@@ -354,7 +354,7 @@ class FeatureCore extends ObjectModel
     {
         $sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'feature`';
-        $position = DB::getInstance()->getValue($sql);
+        $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? $position : - 1;
     }

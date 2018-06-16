@@ -239,7 +239,7 @@ class GroupReductionCore extends ObjectModel
 
     public static function duplicateReduction($id_product_old, $id_product)
     {
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executes('
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction`
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = '.(int)$id_product_old
@@ -262,7 +262,7 @@ class GroupReductionCore extends ObjectModel
     public static function deleteCategory($id_category)
     {
         $query = 'DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_category` = '.(int)$id_category;
-        if (Db::getInstance()->Execute($query) === false) {
+        if (Db::getInstance()->execute($query) === false) {
             return false;
         }
         return true;

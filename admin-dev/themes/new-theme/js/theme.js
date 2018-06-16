@@ -24,19 +24,14 @@
  */
 
 // Plugins CSS
-
 import 'dropzone/dist/min/dropzone.min.css';
-
 import 'magnific-popup/dist/magnific-popup.css';
 
 // Theme SCSS
-
 import '../scss/theme.scss';
 
 // Theme Javascript
-
 Dropzone.autoDiscover = false;
-
 import NavBar from './nav_bar.js';
 
 // this needs to be ported into the UI kit
@@ -47,6 +42,13 @@ import './product-page/index';
 import './translation-page/index';
 
 import Header from './header.js';
+import initDatePickers from './app/utils/datepicker';
+
+const $ = global.$;
 
 new NavBar();
 new Header();
+
+$(() => {
+  initDatePickers();
+});

@@ -4,8 +4,9 @@ module.exports = {
     click_outside: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[1]/th[3]',
     logout: '#header_logout',
     products_subtab: '#subtab-AdminCatalog',
-    go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
-    new_product_dropdown_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.new-product.js-btn-save',
+    //go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
+    go_to_catalog_button: '#form > div.product-footer.justify-content-md-center > div.col-sm-5.col-lg-7.text-right > div.btn-group.hide.dropdown.show > div > a.dropdown-item.go-catalog.js-btn-save',
+    new_product_dropdown_button: '#form > div.product-footer.justify-content-md-center > div.col-sm-5.col-lg-7.text-right > div.btn-group.hide.dropdown.show > div > a.dropdown-item.new-product.js-btn-save',
     more_option_button: '.btn.btn-primary.dropdown-toggle',
     basic_settings_tab: '//*[@id="tab_step1"]/a',
     new_product_button: '#page-header-desc-configuration-add',
@@ -130,6 +131,7 @@ module.exports = {
     specific_price_reduction_tax_select: '//*[@id="form_step2_specific_price_sp_reduction_tax"]',
     specific_price_discount_input: '//*[@id="form_step2_specific_price_sp_reduction"]',
     specific_price_save_button: '//*[@id="form_step2_specific_price_save"]',
+    specific_price_delete_button: '//*[@id="js-specific-price-list"]//i[text()="delete"]',
     pricing_first_priorities_select: '//*[@id="form_step2_specificPricePriority_0"]',
     pricing_second_priorities_select: '//*[@id="form_step2_specificPricePriority_1"]',
     pricing_third_priorities_select: '//*[@id="form_step2_specificPricePriority_2"]',
@@ -158,14 +160,30 @@ module.exports = {
     options_file_add_button: '//*[@id="form_step6_attachment_product_add"]',
     options_file_checkbox: '//*[@id="form_step6_attachments_0"]',
     catalog_product_table: '#product_catalog_list table.product',
-    get catalog_product_name() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a'; },
-    get catalog_product_reference() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(5)'; },
-    get catalog_product_category() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(6)'; },
-    get catalog_product_price() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(7)'; },
-    get catalog_product_quantity() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(8)'; },
-    get catalog_product_online() { return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9) > a > i'; },
-    get catalog_reset_filter() { return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]'; },
-    get catalog_submit_filter() { return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]'; },
+    get catalog_product_name() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a';
+    },
+    get catalog_product_reference() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(5)';
+    },
+    get catalog_product_category() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(6)';
+    },
+    get catalog_product_price() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(7)';
+    },
+    get catalog_product_quantity() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(8)';
+    },
+    get catalog_product_online() {
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9) > a > i';
+    },
+    get catalog_reset_filter() {
+      return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]';
+    },
+    get catalog_submit_filter() {
+      return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]';
+    },
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
@@ -176,32 +194,36 @@ module.exports = {
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
-    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]',
+    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "%BUTTON")]',
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
     combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
     home_delete_button: '//*[@id="ps_categoryTags"]/span[1]/a',
-    created_category: '//*[@id="ps_categoryTags"]/span[2]/span'
+    created_category: '//*[@id="ps_categoryTags"]/span[2]/span',
+    preview_link: '//a',
+    continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
   },
 
   ProductList: {
-    product_id: '//*[@id="product_catalog_list"]//tbody//tr[%ID]/td[1]//label',
-    product_name: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[3]/a',
-    product_reference: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[4]',
-    sort_by_icon: '//*[@id="product_catalog_list"]//thead//span[@psorderby="%B" and @psorderway="%W"]',
-    first_product_id: '//*[@id="product_catalog_list"]//tr[1]/td[1]/div/label',
-    second_product_id: '//*[@id="product_catalog_list"]//tr[2]/td[1]/div/label',
-    third_product_id: '//*[@id="product_catalog_list"]//tr[3]/td[1]/div/label',
+    product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
+    product_name: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[4]/a',
+    product_reference: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[5]',
+    sort_by_icon: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B" and @data-sort-direction="%W"]/span[@role="button"]',
+    sort_button: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B"]/span[@role="button"]',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
-    first_product_status: '//*[@id="product_catalog_list"]//tr/td[8]/a/i[contains(@class, "action-%ACTION")]',
+    first_product_status: '//*[@id="product_catalog_list"]//tr/td[9]/a/i[contains(@class, "action-%ACTION")]',
     edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
     pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]',
-    dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[@data-toggle="dropdown"])[%POS]',
+    dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//button[@data-toggle="dropdown"])[%POS]',
     action_preview_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@target,"_blank")])[%POS]',
     action_duplicate_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"duplicate")])[%POS]',
     action_delete_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"delete")])[%POS]',
     delete_now_modal_button: '//*[@id="catalog_deletion_modal"]//button[contains(text(), "Delete now")]',
-    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td'
+    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td',
+    pagination_next: '//*[@id="pagination_next_url"]',
+    pagination_previous: '//*[@id="product_catalog_list"]//li[@class="page-item previous "]//a',
+    page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
+    item_per_page: '//*[@id="paginator_select_page_limit"]'
   }
 };

@@ -266,14 +266,14 @@ class PrestaShopBackupCore
 
             if (!in_array($schema[0]['Table'], $ignoreInsertTable)) {
                 $data = Db::getInstance()->query('SELECT * FROM `'.$schema[0]['Table'].'`', false);
-                $sizeof = DB::getInstance()->NumRows();
+                $sizeof = Db::getInstance()->numRows();
                 $lines = explode("\n", $schema[0]['Create Table']);
 
                 if ($data && $sizeof > 0) {
                     // Export the table data
                     fwrite($fp, 'INSERT INTO `'.$schema[0]['Table']."` VALUES\n");
                     $i = 1;
-                    while ($row = DB::getInstance()->nextRow($data)) {
+                    while ($row = Db::getInstance()->nextRow($data)) {
                         $s = '(';
 
                         foreach ($row as $field => $value) {
