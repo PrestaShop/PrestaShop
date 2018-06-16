@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace  PrestaShop\PrestaShop\Core\Configuration;
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
 /**
- * IniConfiguration is responsible for retrieving PHP configuration
+ * Interface IniConfigurationInterface defines contract for PHP configuration service
  */
-final class IniConfiguration implements IniConfigurationInterface
+interface IniConfigurationInterface
 {
     /**
-     * {@inheritdoc}
+     * Get post_max_size from PHP configuration in bytes
+     *
+     * @return int
      */
-    public function getPostMaxSizeInBytes()
-    {
-        $postMaxSize = ini_get('post_max_size');
-        $bytes = (int) trim($postMaxSize);
-        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
-
-        switch ($last) {
-            case 'g':
-                $bytes *= 1024;
-                // no break to fall-through
-            case 'm':
-                $bytes *= 1024;
-                // no break to fall-through
-            case 'k':
-                $bytes *= 1024;
-        }
-
-        return $bytes;
-    }
+    public function getPostMaxSizeInBytes();
 }
