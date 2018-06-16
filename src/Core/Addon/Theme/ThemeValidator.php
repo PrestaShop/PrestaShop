@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ThemeValidator
@@ -41,7 +41,7 @@ class ThemeValidator
 
     private $errors = array();
 
-    public function __construct(TranslatorInterface $translator, ConfigurationInterface $configuration)
+    public function __construct(TranslatorInterface $translator, AdvancedConfigurationInterface $configuration)
     {
         $this->translator = $translator;
         $this->appConfiguration = $configuration;

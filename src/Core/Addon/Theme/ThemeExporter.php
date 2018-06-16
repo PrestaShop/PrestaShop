@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -41,7 +41,7 @@ class ThemeExporter
     protected $translationsExporter;
 
     public function __construct(
-        ConfigurationInterface $configuration,
+        AdvancedConfigurationInterface $configuration,
         Filesystem $fileSystem,
         LangRepository $langRepository,
         TranslationsExporter $translationsExporter

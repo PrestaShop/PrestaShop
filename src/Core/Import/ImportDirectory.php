@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Import;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -35,14 +35,14 @@ use Symfony\Component\Filesystem\Filesystem;
 final class ImportDirectory
 {
     /**
-     * @var ConfigurationInterface
+     * @var AdvancedConfigurationInterface
      */
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param AdvancedConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(AdvancedConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
     }

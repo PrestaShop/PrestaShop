@@ -43,6 +43,8 @@ class ContainerBuilder
 
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
+        $container->bind('\\PrestaShop\\PrestaShop\\Core\\Configuration\\AdvancedConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Configuration\\AdvancedConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
 

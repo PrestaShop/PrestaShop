@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
@@ -61,7 +61,7 @@ class ThemeManager implements AddonManagerInterface
 
     public function __construct(
         Shop $shop,
-        ConfigurationInterface $configuration,
+        AdvancedConfigurationInterface $configuration,
         ThemeValidator $themeValidator,
         TranslatorInterface $translator,
         Employee $employee,
