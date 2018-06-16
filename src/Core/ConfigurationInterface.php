@@ -26,9 +26,30 @@
 
 namespace PrestaShop\PrestaShop\Core;
 
+/**
+ * Interface ConfigurationInterface defines contract for simple configuration
+ *
+ * @deprecated since 1.7.4.0. Use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface instead.
+ */
 interface ConfigurationInterface
 {
-    public function get($key);
+    /**
+     * Get configuration value
+     *
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null);
 
+    /**
+     * Set configuration value
+     *
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return bool
+     */
     public function set($key, $value);
 }
