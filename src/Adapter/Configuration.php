@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Shop;
@@ -35,21 +35,26 @@ use Feature;
 use Configuration as ConfigurationLegacy;
 
 /**
- * Adapter of Configuration ObjectModel.
+ * Class Configuration is responsible for managing shop configuration
  */
-class Configuration extends ParameterBag implements ConfigurationInterface
+class Configuration extends ParameterBag implements AdvancedConfigurationInterface
 {
     /**
      * @var Shop
      */
     private $shop;
 
+    /**
+     * @param array $parameters
+     */
     public function __construct(array $parameters = array())
     {
         // Do nothing
         if (!empty($parameters)) {
             throw new \LogicException('No parameter can be handled in constructor. Use method set() instead.');
         }
+
+        parent::__construct($parameters);
     }
 
     /**
@@ -87,13 +92,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration.
-     *
-     * @param string $key
-     * @param mixed $default The default value if the parameter key does not exist
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function get($key, $default = null)
     {
@@ -115,15 +114,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Set configuration value.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param array $options Options
-     *
-     * @return $this
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
     public function set($key, $value, array $options = [])
     {
@@ -162,11 +153,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Removes a configuration key.
-     *
-     * @param type $key
-     *
-     * @return type
+     * {@inheritdoc}
      */
     public function remove($key)
     {
@@ -182,19 +169,24 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Unset configuration value.
+     * Unset configuration value
      *
-     * @param $key
+     * @param string $key
      *
      * @return $this
      *
      * @throws \Exception
      *
-     * @deprecated since version 1.7.4.0
+     * @deprecated since version 1.7.4.0. Use $this->remove() instead.
      */
     public function delete($key)
     {
-        $this->remove($key);
+        @trigger_error(
+            sprintf('%s::delete() is deprecated as of 1.7.4.0. Use %s::remove() instead.', __CLASS__, __CLASS__),
+            E_USER_DEPRECATED
+        );
+
+        return $this->remove($key);
     }
 
     /**
@@ -214,7 +206,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Feature feature is active or not.
+     * Return if Feature feature is active or not
      *
      * @return bool
      */
@@ -224,7 +216,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Combination feature is active or not.
+     * Return if Combination feature is active or not
      *
      * @return bool
      */
@@ -241,5 +233,13 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     public function restrictUpdatesTo(Shop $shop)
     {
         $this->shop = $shop;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBool($key, $default = false)
+    {
+        return (bool) $this->getBoolean($key, $default);
     }
 }
