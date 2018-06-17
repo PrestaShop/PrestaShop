@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display
  */
-class ModuleCatalogController extends FrameworkBundleAdminController
+class CatalogController extends FrameworkBundleAdminController
 {
     /**
      * @var string The controller name for routing.
