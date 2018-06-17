@@ -26,14 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Improve > Modules > Modules Catalog" page display
+ * Responsible of "Improve > Modules > Catalog" page display
  */
-class ModuleCatalogController extends FrameworkBundleAdminController
+class CatalogController extends FrameworkBundleAdminController
 {
     /**
      * @var string The controller name for routing.
@@ -49,7 +48,7 @@ class ModuleCatalogController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
             'pageContent' => file_get_contents($this->getAddonsUrl($request)),
             'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Catalog', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,

@@ -142,13 +142,13 @@ File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPref
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Modules/ModuleCatalogController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Modules/CatalogController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
-        <source>Modules catalog</source>
-        <target>Modules catalog</target>
+        <source>Catalog</source>
+        <target>Catalog</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/Improve/Modules/ModuleCatalogController.php:52</note>
+File: src/PrestaShopBundle/Controller/Admin/Improve/Modules/CatalogController.php:52</note>
       </trans-unit>
     </body>
   </file>

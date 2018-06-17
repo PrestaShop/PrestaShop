@@ -96,5 +96,5 @@ admin_module_addons_store:
     path:     /addons-store
     methods:  [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Modules\ModuleCatalog:index'
+        _controller: 'PrestaShopBundle:Admin\Improve\Modules\Catalog:index'
         _legacy_controller: AdminAddonsCatalog

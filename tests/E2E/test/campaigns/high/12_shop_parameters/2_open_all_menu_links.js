@@ -58,7 +58,7 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu, PagesForm.Modules.modules_list, "Modules", "Selection", 5000);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu, PagesForm.Modules.modules_search_input, "Modules", "Installed modules", 0, Menu.Improve.Modules.installed_modules_tabs);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu, PagesForm.Modules.modules_to_configure, "Modules", "Notifications", 0, Menu.Improve.Modules.notifications_tabs);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu, PagesForm.Modules.addons_search_form, "Modules catalog");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu, PagesForm.Modules.addons_search_form, "Catalog");
     }, 'common_client');
     scenario('Check all the menu links of "Design" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_logo_submenu, PagesForm.Design.design_form, "Design");
