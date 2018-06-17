@@ -320,7 +320,7 @@ class DispatcherCore
      *
      * @return string
      */
-    private function useDefaultController()
+    public function useDefaultController()
     {
         $this->use_default_controller = true;
 
