@@ -237,7 +237,7 @@ class DispatcherCore
      *
      * @return string
      */
-    private function setDefaultController($frontControllerType, Employee $employee = null)
+    private function getDefaultController($frontControllerType, Employee $employee = null)
     {
         switch ($frontControllerType) {
             case self::FC_ADMIN:
@@ -245,17 +245,32 @@ class DispatcherCore
                 if (null !== $employee) {
                     $tabClassName = $employee->getDefaultTabClassName();
                     if (null !== $tabClassName) {
-                        return $this->default_controller = $tabClassName;
+                        $defaultController = $tabClassName;
                     }
                 }
                 // Default
-                return $this->default_controller = 'AdminDashboard';
+                $defaultController = 'AdminDashboard';
+                break;
             case self::FC_MODULE:
-                return $this->default_controller = 'default';
+                $defaultController = 'default';
                 break;
             default:
-                return $this->default_controller = 'index';
+                $defaultController = 'index';
         }
+
+        $this->setDefaultController($defaultController);
+
+        return $defaultController;
+    }
+
+    /**
+     * Sets the default controller.
+     *
+     * @param string $defaultController
+     */
+    private function setDefaultController($defaultController)
+    {
+        $this->default_controller = $defaultController;
     }
 
     /**
