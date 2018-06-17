@@ -270,7 +270,7 @@ class DispatcherCore
     {
         return $this->request;
     }
-
+    
     /**
      * Sets and returns the default controller.
      *
@@ -331,7 +331,7 @@ class DispatcherCore
 
         $employee = Context::getContext()->employee;
 
-        return $this->setDefaultController($this->front_controller, $employee);
+        return $this->getDefaultController($this->front_controller, $employee);
     }
     
     /**
