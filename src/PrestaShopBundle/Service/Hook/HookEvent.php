@@ -25,7 +25,6 @@
  */
 namespace PrestaShopBundle\Service\Hook;
 
-use AppKernel;
 use Symfony\Component\EventDispatcher\Event;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
