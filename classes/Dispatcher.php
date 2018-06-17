@@ -271,29 +271,54 @@ class DispatcherCore
         return $this->request;
     }
 
-    public function useDefaultController()
+    /**
+     * Sets and returns the default controller.
+     *
+     * @param int $frontControllerType The front controller type
+     * @param Employee|null $employee The current employee
+     *
+     * @return string
+     */
+    private function setDefaultController($frontControllerType, Employee $employee = null)
     {
-        $this->use_default_controller = true;
-        if ($this->default_controller === null) {
-            if (defined('_PS_ADMIN_DIR_')) {
-                if (isset(Context::getContext()->employee)
-                    && Validate::isLoadedObject(Context::getContext()->employee)
-                    && isset(Context::getContext()->employee->default_tab)) {
-                    $this->default_controller =
-                        Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
+        switch ($frontControllerType) {
+            case self::FC_ADMIN:
+                // If there is an employee with a default tab set
+                if (null !== $employee) {
+                    $tabClassName = $employee->getDefaultTabClassName();
+                    if (null !== $tabClassName) {
+                        return $this->default_controller = $tabClassName;
+                    }
                 }
-                if (empty($this->default_controller)) {
-                    $this->default_controller = 'AdminDashboard';
-                }
-            } elseif (Tools::getValue('fc') == 'module') {
-                $this->default_controller = 'default';
-            } else {
-                $this->default_controller = 'index';
-            }
+                // Default
+                return $this->default_controller = 'AdminDashboard';
+            case self::FC_MODULE:
+                return $this->default_controller = 'default';
+                break;
+            default:
+                return $this->default_controller = 'index';
         }
-        return $this->default_controller;
     }
 
+    /**
+     * Sets use_default_controller to true, sets and returns the default controller.
+     *
+     * @return string
+     */
+    private function useDefaultController()
+    {
+        $this->use_default_controller = true;
+
+        // If it was already set just return it
+        if (null !== $this->default_controller) {
+            return $this->default_controller;
+        }
+
+        $employee = Context::getContext()->employee;
+
+        return $this->setDefaultController($this->front_controller, $employee);
+    }
+    
     /**
      * Find the controller and instantiate it
      */
