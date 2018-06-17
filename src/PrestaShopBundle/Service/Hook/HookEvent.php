@@ -61,9 +61,10 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        $globalParameters = array('_ps_version' => AppKernel::VERSION);
-
         $sfContainer = SymfonyContainer::getInstance();
+
+        $globalParameters = ['_ps_version' => $sfContainer->get('prestashop.core.foundation.version')->getVersion()];
+
         if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
             $request = $sfContainer->get('request_stack')->getCurrentRequest();
             $globalParameters['request'] = $request;
