@@ -20,7 +20,7 @@ let catalogPriceRule = [{
  * http://forge.prestashop.com/browse/BOOM-3843
  **/
 
-scenario('Check double catalog price rules', client => {
+scenario('Check double catalog price rules', () => {
 
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());

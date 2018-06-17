@@ -18,6 +18,13 @@ class OnBoarding extends CommonClient {
         }
       });
   }
+
+  stopOnBoarding(selector) {
+    if (global.isVisible) {
+      return this.client
+        .waitForExistAndClick(selector);
+    }
+  }
 }
 
 module.exports = OnBoarding;

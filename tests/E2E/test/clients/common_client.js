@@ -50,11 +50,20 @@ class CommonClient {
       .isOpen(menuSelector)
       .then(() => {
         if (global.isOpen) {
-          this.client.waitForVisibleAndClick(selector, 2000);
+          this.client
+            .execute(function (selector) {
+              let element = document.querySelector(selector);
+              element.scrollIntoView();
+            }, selector)
+            .waitForVisibleAndClick(selector, 2000);
         } else {
           this.client
             .waitForExistAndClick(menuSelector, 2000)
             .pause(2000)
+            .execute(function (selector) {
+              let element = document.querySelector(selector);
+              element.scrollIntoView();
+            }, selector)
             .waitForVisibleAndClick(selector);
         }})
       .then(()=> this.client.pause(4000));
@@ -129,8 +138,10 @@ class CommonClient {
     return this.client.scrollTo(selector, margin);
   }
 
-  scrollWaitForExistAndClick(selector, margin, timeout = 90000) {
-    return this.client.scrollWaitForExistAndClick(selector, margin, timeout);
+  scrollWaitForExistAndClick(selector, margin, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .scrollWaitForExistAndClick(selector, margin, timeout);
   }
 
   waitForVisibleAndClick(selector, timeout = 90000) {
@@ -315,15 +326,6 @@ class CommonClient {
       .then((isExisting) => expect(isExisting).to.be.false);
   }
 
-  clickOnResumeButton(selector) {
-    if (!global.isVisible) {
-      return this.client
-        .click(selector)
-    } else {
-      return this.client.pause(1000);
-    }
-  }
-
   pause(timeout) {
     return this.client.pause(timeout);
   }
@@ -348,24 +350,6 @@ class CommonClient {
       .pause(2000)
       .isVisible(selector)
       .then((isVisible) => expect(isVisible).to.be.false);
-  }
-
-  editObjectData(object) {
-    for (let key in object) {
-      if (object.hasOwnProperty(key) && key !== 'type') {
-        if (typeof object[key] === 'string') {
-          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
-        } else if (typeof object[key] === 'number') {
-          object[key] += 10;
-        } else if (typeof object[key] === 'object') {
-          this.editObjectData(object[key]);
-        }
-      }
-    }
-  }
-
-  deleteObjectElement(object, pos) {
-    delete object[pos];
   }
 
   checkParamFromURL(param, value, pause = 0) {
@@ -447,13 +431,6 @@ class CommonClient {
 
   deleteObjectElement(object, pos) {
     delete object[pos];
-  }
-
-  setAttributeById(selector) {
-    return this.client
-      .execute(function (selector) {
-        document.getElementById(selector).style.display = 'none';
-      }, selector);
   }
 
 }

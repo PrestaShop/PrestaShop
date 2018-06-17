@@ -1,48 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
-        <source>New voucher for your order %s</source>
-        <target>New voucher for your order %s</target>
-        <note>Context:
-File: classes/PaymentModule.php:635</note>
-      </trans-unit>
-      <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
-        <source>Order confirmation</source>
-        <target>Order confirmation</target>
-        <note>Context:
-File: classes/PaymentModule.php:839</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/PrestaShopLogger.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
-        <source>Log: You have a new alert from your shop</source>
-        <target>Log: You have a new alert from your shop</target>
-        <note>Context:
-File: classes/PrestaShopLogger.php:93</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Customer.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
-        <source>Your guest account has been transformed into a customer account</source>
-        <target>Your guest account has been transformed into a customer account</target>
-        <note>Context:
-File: classes/Customer.php:1112</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/order/OrderCarrier.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="87405e011a2c4166bb685336827fbe81">
         <source>Package in transit</source>
         <target>Package in transit</target>
         <note>Context:
-File: classes/order/OrderCarrier.php:148</note>
+File: classes/order/OrderCarrier.php:149</note>
       </trans-unit>
     </body>
   </file>
@@ -66,25 +30,61 @@ File: classes/form/CustomerPersister.php:213</note>
       </trans-unit>
     </body>
   </file>
+  <file original="classes/PrestaShopLogger.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
+        <source>Log: You have a new alert from your shop</source>
+        <target>Log: You have a new alert from your shop</target>
+        <note>Context:
+File: classes/PrestaShopLogger.php:93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Customer.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
+        <source>Your guest account has been transformed into a customer account</source>
+        <target>Your guest account has been transformed into a customer account</target>
+        <note>Context:
+File: classes/Customer.php:1112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
+        <source>New voucher for your order %s</source>
+        <target>New voucher for your order %s</target>
+        <note>Context:
+File: classes/PaymentModule.php:635</note>
+      </trans-unit>
+      <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
+        <source>Order confirmation</source>
+        <target>Order confirmation</target>
+        <note>Context:
+File: classes/PaymentModule.php:841</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
+        <source>Message from contact form</source>
+        <target>Message from contact form</target>
+        <note>Context:
+File: modules/contactform/contactform.php:614</note>
+      </trans-unit>
       <trans-unit id="55c19f9aec68a1a320cbeba663f1e4c0">
         <source>Your message has been correctly sent #ct%thread_id% #tc%thread_token%</source>
         <target>Your message has been correctly sent #ct%thread_id% #tc%thread_token%</target>
         <note>Context:
-File: modules/contactform/contactform.php:305</note>
+File: modules/contactform/contactform.php:643</note>
       </trans-unit>
       <trans-unit id="d40cb87db94e750405e7b20a8a043d81">
         <source>Your message has been correctly sent</source>
         <target>Your message has been correctly sent</target>
         <note>Context:
-File: modules/contactform/contactform.php:305</note>
-      </trans-unit>
-      <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
-        <source>Message from contact form</source>
-        <target>Message from contact form</target>
-        <note>Context:
-File: modules/contactform/contactform.php:289</note>
+File: modules/contactform/contactform.php:649</note>
       </trans-unit>
     </body>
   </file>
@@ -94,29 +94,19 @@ File: modules/contactform/contactform.php:289</note>
         <source>Newsletter voucher</source>
         <target>Newsletter voucher</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:658</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:661</note>
       </trans-unit>
       <trans-unit id="efabbb0eb84d3c8e487a72e879953673">
         <source>Newsletter confirmation</source>
         <target>Newsletter confirmation</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:692</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:695</note>
       </trans-unit>
       <trans-unit id="732f1aa49f17856ff55a5aa0a88374d9">
         <source>Email verification</source>
         <target>Email verification</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:731</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2328a3f139e31d53016f94ea9477124">
-        <source>Your order return status has changed</source>
-        <target>Your order return status has changed</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:257</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:734</note>
       </trans-unit>
     </body>
   </file>
@@ -133,6 +123,16 @@ File: controllers/front/PasswordController.php:170</note>
         <target>Password query confirmation</target>
         <note>Context:
 File: controllers/front/PasswordController.php:92</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a218495ad30949e8ea1f64a261e37463">
+        <source>Import complete</source>
+        <target>Import complete</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4641</note>
       </trans-unit>
     </body>
   </file>
@@ -164,13 +164,13 @@ File: controllers/admin/AdminOrdersController.php:2010</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a218495ad30949e8ea1f64a261e37463">
-        <source>Import complete</source>
-        <target>Import complete</target>
+      <trans-unit id="f2328a3f139e31d53016f94ea9477124">
+        <source>Your order return status has changed</source>
+        <target>Your order return status has changed</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4627</note>
+File: controllers/admin/AdminReturnController.php:257</note>
       </trans-unit>
     </body>
   </file>
@@ -196,7 +196,7 @@ File: controllers/admin/AdminCustomerThreadsController.php:465</note>
         <source>Message from a customer</source>
         <target>Message from a customer</target>
         <note>Context:
-File: controllers/front/OrderDetailController.php:116</note>
+File: controllers/front/OrderDetailController.php:108</note>
       </trans-unit>
     </body>
   </file>

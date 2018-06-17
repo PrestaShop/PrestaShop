@@ -1,61 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
-        <source>Contact name (e.g. Customer Support).</source>
-        <target>Contact name (e.g. Customer Support).</target>
-        <note>Context:
-File: controllers/admin/AdminContactsController.php:74</note>
-      </trans-unit>
-      <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
-        <source>Emails will be sent to this address.</source>
-        <target>Emails will be sent to this address.</target>
-        <note>Context:
-File: controllers/admin/AdminContactsController.php:82</note>
-      </trans-unit>
-      <trans-unit id="0f28459fa87b1b3ce6e8b17932f08c3a">
-        <source>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</source>
-        <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
-        <note>Context:
-File: controllers/admin/AdminContactsController.php:91</note>
-      </trans-unit>
-      <trans-unit id="a2b086325f59e6c2fbd410511f4fdfb3">
-        <source>Further information regarding this contact.</source>
-        <target>Further information regarding this contact.</target>
-        <note>Context:
-File: controllers/admin/AdminContactsController.php:112</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6ca725316d3577fb24218119380f38fe">
-        <source>Leave blank if no change.</source>
-        <target>Leave blank if no change.</target>
-        <note>Context:
-File: controllers/admin/AdminReferrersController.php:229</note>
-      </trans-unit>
-      <trans-unit id="4181de604675ec0fb8d12202ec23964c">
-        <source>Fee given for each visit.</source>
-        <target>Fee given for each visit.</target>
-        <note>Context:
-File: controllers/admin/AdminReferrersController.php:266</note>
-      </trans-unit>
-      <trans-unit id="4b11cf76a471c13ba29b799772c90ddf">
-        <source>Fee given for each order placed.</source>
-        <target>Fee given for each order placed.</target>
-        <note>Context:
-File: controllers/admin/AdminReferrersController.php:272</note>
-      </trans-unit>
-      <trans-unit id="d3d12bc1b7512d954444ec7c368d7176">
-        <source>If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].</source>
-        <target>If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].</target>
-        <note>Context:
-File: controllers/admin/AdminReferrersController.php:331</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3ff4fabe93bbb10c32a27c54ea13a5e1">
@@ -166,6 +110,68 @@ File: controllers/admin/AdminGendersController.php:169</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
+        <source>Contact name (e.g. Customer Support).</source>
+        <target>Contact name (e.g. Customer Support).</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:74</note>
+      </trans-unit>
+      <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
+        <source>Emails will be sent to this address.</source>
+        <target>Emails will be sent to this address.</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:82</note>
+      </trans-unit>
+      <trans-unit id="0f28459fa87b1b3ce6e8b17932f08c3a">
+        <source>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</source>
+        <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:91</note>
+      </trans-unit>
+      <trans-unit id="a2b086325f59e6c2fbd410511f4fdfb3">
+        <source>Further information regarding this contact.</source>
+        <target>Further information regarding this contact.</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5c85aec638229f60a035c7a6ab3623c8">
+        <source>This field does not refer to the shop name visible in the front office.</source>
+        <target>This field does not refer to the shop name visible in the front office.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:368</note>
+      </trans-unit>
+      <trans-unit id="1561fa99e3814c72f5206ab48b472335">
+        <source>Follow [1]this link[/1] to edit the shop name used on the front office.</source>
+        <target>Follow [1]this link[/1] to edit the shop name used on the front office.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:369</note>
+      </trans-unit>
+      <trans-unit id="92aaf3cf7e8f1434886a8887e102391b">
+        <source>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</source>
+        <target>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:427</note>
+      </trans-unit>
+      <trans-unit id="fce5f624e66bd2e2f0296fc3bd2a8f64">
+        <source>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</source>
+        <target>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:437</note>
+      </trans-unit>
+      <trans-unit id="f0f7416fad0a9c9fc3163cabe68393c1">
+        <source>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</source>
+        <target>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:492</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="12399d580627a1a5889cdc44e6e48b5a">
@@ -254,31 +260,171 @@ File: controllers/admin/AdminSearchConfController.php:360</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f45ed1483cf46972b5f225656c9c8991">
-        <source>Whether or not to display this store.</source>
-        <target>Whether or not to display this store.</target>
+      <trans-unit id="0822f76515fa1d9ce38504176cb23bae">
+        <source>The group defined for your un-identified visitors.</source>
+        <target>The group defined for your un-identified visitors.</target>
         <note>Context:
-File: controllers/admin/AdminStoresController.php:265</note>
+File: controllers/admin/AdminGroupsController.php:111</note>
       </trans-unit>
-      <trans-unit id="b950eb0054205bc67aa88899eadded22">
-        <source>Storefront picture.</source>
-        <target>Storefront picture.</target>
+      <trans-unit id="e3e0c764f81f1a3677d59aa238fddd14">
+        <source>The group defined for your identified guest customers (used in guest checkout).</source>
+        <target>The group defined for your identified guest customers (used in guest checkout).</target>
         <note>Context:
-File: controllers/admin/AdminStoresController.php:274</note>
+File: controllers/admin/AdminGroupsController.php:119</note>
       </trans-unit>
-      <trans-unit id="d42de30e9e03274c5c83bd6ce5c27a6f">
-        <source>Displayed in emails sent to customers.</source>
-        <target>Displayed in emails sent to customers.</target>
+      <trans-unit id="e820b12959b64dfff397100db68cd951">
+        <source>The group defined for your identified registered customers.</source>
+        <target>The group defined for your identified registered customers.</target>
         <note>Context:
-File: controllers/admin/AdminStoresController.php:446</note>
+File: controllers/admin/AdminGroupsController.php:127</note>
       </trans-unit>
-      <trans-unit id="49aaf34d99febc7c13881d121288cd8a">
-        <source>Shop registration information (e.g. SIRET or RCS).</source>
-        <target>Shop registration information (e.g. SIRET or RCS).</target>
+      <trans-unit id="a5fa9ffd3ddf89fe263675358032e7fb">
+        <source>Automatically apply this value as a discount on all products for members of this customer group.</source>
+        <target>Automatically apply this value as a discount on all products for members of this customer group.</target>
         <note>Context:
-File: controllers/admin/AdminStoresController.php:453</note>
+File: controllers/admin/AdminGroupsController.php:288</note>
+      </trans-unit>
+      <trans-unit id="21e445ba767d4fd41332b6eceab2be1a">
+        <source>How prices are displayed in the order summary for this customer group.</source>
+        <target>How prices are displayed in the order summary for this customer group.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:295</note>
+      </trans-unit>
+      <trans-unit id="eaf74fe1658ada757063c8ddc4381ef9">
+        <source>Customers in this group can view prices.</source>
+        <target>Customers in this group can view prices.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:330</note>
+      </trans-unit>
+      <trans-unit id="d38245fbe312b2dafef8450b67e94f50">
+        <source>%group_name% - All persons without a customer account or customers that are not logged in.</source>
+        <target>%group_name% - All persons without a customer account or customers that are not logged in.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:571</note>
+      </trans-unit>
+      <trans-unit id="5125d0fd7b81fee95b7e4b7689a878a9">
+        <source>%group_name% - All persons who placed an order through Guest Checkout.</source>
+        <target>%group_name% - All persons who placed an order through Guest Checkout.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:572</note>
+      </trans-unit>
+      <trans-unit id="96f090b06e329e3d192c0ea3701f8cb5">
+        <source>%group_name% - All persons who created an account on this site.</source>
+        <target>%group_name% - All persons who created an account on this site.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:573</note>
+      </trans-unit>
+      <trans-unit id="a2ce271cf6d8afe81168fbfc4ccb492c">
+        <source>PrestaShop has three default customer groups:</source>
+        <target>PrestaShop has three default customer groups:</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:575</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6ca725316d3577fb24218119380f38fe">
+        <source>Leave blank if no change.</source>
+        <target>Leave blank if no change.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:229</note>
+      </trans-unit>
+      <trans-unit id="4181de604675ec0fb8d12202ec23964c">
+        <source>Fee given for each visit.</source>
+        <target>Fee given for each visit.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:266</note>
+      </trans-unit>
+      <trans-unit id="4b11cf76a471c13ba29b799772c90ddf">
+        <source>Fee given for each order placed.</source>
+        <target>Fee given for each order placed.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:272</note>
+      </trans-unit>
+      <trans-unit id="d3d12bc1b7512d954444ec7c368d7176">
+        <source>If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].</source>
+        <target>If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:331</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="500294c9fd031bb4f00a82b5d27dc22c">
+        <source>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</source>
+        <target>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:49</note>
+      </trans-unit>
+      <trans-unit id="a3a0f3b2f4c12d1c11b9916c8c10c48c">
+        <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
+        <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:45</note>
+      </trans-unit>
+      <trans-unit id="d86a9baf93dba6b27dbbb04cef8d3aae">
+        <source>When enabled, all the pages of your shop will be SSL-secured.</source>
+        <target>When enabled, all the pages of your shop will be SSL-secured.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:60</note>
+      </trans-unit>
+      <trans-unit id="a1202480ddcd8665114515ca380c0e5b">
+        <source>Enable or disable token in the Front Office to improve PrestaShop's security.</source>
+        <target>Enable or disable token in the Front Office to improve PrestaShop's security.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:66</note>
+      </trans-unit>
+      <trans-unit id="4f70bd9998bb35643fa3dfc88d6a6373">
+        <source>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</source>
+        <target>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:72</note>
+      </trans-unit>
+      <trans-unit id="7ba34b929c8241268ab5eac35a772ab1">
+        <source>Clean the HTML content on text fields. We recommend that you leave this option enabled.</source>
+        <target>Clean the HTML content on text fields. We recommend that you leave this option enabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:78</note>
+      </trans-unit>
+      <trans-unit id="71958504714b867b7f6f00f43b9c9bd0">
+        <source>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</source>
+        <target>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:84</note>
+      </trans-unit>
+      <trans-unit id="2b116a3c74c816d853b7d86abf838ebb">
+        <source>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</source>
+        <target>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:90</note>
+      </trans-unit>
+      <trans-unit id="2d21e9a3fe59f46db5ffdc26448e3ab6">
+        <source>Choose how many decimals you want to display</source>
+        <target>Choose how many decimals you want to display</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:96</note>
+      </trans-unit>
+      <trans-unit id="b6d90c5c27a4d2d48ead626c17be303c">
+        <source>Enable brands and suppliers pages on your front office even when their respective modules are disabled.</source>
+        <target>Enable brands and suppliers pages on your front office even when their respective modules are disabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:102</note>
+      </trans-unit>
+      <trans-unit id="0678cf17f202cb7fd14d79054a2e628c">
+        <source>Enable best sellers page on your front office even when its respective module is disabled.</source>
+        <target>Enable best sellers page on your front office even when its respective module is disabled.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:108</note>
+      </trans-unit>
+      <trans-unit id="d8942e5679a9104ae58333b9b4778b71">
+        <source>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</source>
+        <target>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig:114</note>
       </trans-unit>
     </body>
   </file>
@@ -364,46 +510,6 @@ File: controllers/admin/AdminOrderPreferencesController.php:155</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCustomerPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b9716d3d87447a2275318bf88ced7bf8">
-        <source>After a customer logs in, you can recall and display the content of his/her last shopping cart.</source>
-        <target>After a customer logs in, you can recall and display the content of his/her last shopping cart.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerPreferencesController.php:47</note>
-      </trans-unit>
-      <trans-unit id="751e29d82b27256878d1a38f2be4e118">
-        <source>Send an email with summary of the account information (email, password) after registration.</source>
-        <target>Send an email with summary of the account information (email, password) after registration.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerPreferencesController.php:54</note>
-      </trans-unit>
-      <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">
-        <source>Minimum time required between two requests for a password reset.</source>
-        <target>Minimum time required between two requests for a password reset.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerPreferencesController.php:61</note>
-      </trans-unit>
-      <trans-unit id="e0cf416b39580f321e4641721698560f">
-        <source>Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.</source>
-        <target>Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerPreferencesController.php:70</note>
-      </trans-unit>
-      <trans-unit id="69b3bcd0dba13c9f1188ab86480afca4">
-        <source>Display or not the birth date field.</source>
-        <target>Display or not the birth date field.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerPreferencesController.php:77</note>
-      </trans-unit>
-      <trans-unit id="3bc07e4ecf0660962221cf030b935d9d">
-        <source>Display or not the partner offers tick box, to receive offers from the store's partners.</source>
-        <target>Display or not the partner offers tick box, to receive offers from the store's partners.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerPreferencesController.php:84</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="83b262520a65657b95fd686817c56a09">
@@ -450,299 +556,209 @@ File: controllers/admin/AdminStatusesController.php:483</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminMaintenanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="23d2e4d116d9d457eed9dd3a29f7ac51">
-        <source>Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).</source>
-        <target>Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).</target>
+      <trans-unit id="f45ed1483cf46972b5f225656c9c8991">
+        <source>Whether or not to display this store.</source>
+        <target>Whether or not to display this store.</target>
         <note>Context:
-File: controllers/admin/AdminMaintenanceController.php:46</note>
+File: controllers/admin/AdminStoresController.php:265</note>
       </trans-unit>
-      <trans-unit id="c3e680954da4b0bbf8e4d380287f4a76">
-        <source>IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)</source>
-        <target>IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)</target>
+      <trans-unit id="b950eb0054205bc67aa88899eadded22">
+        <source>Storefront picture.</source>
+        <target>Storefront picture.</target>
         <note>Context:
-File: controllers/admin/AdminMaintenanceController.php:53</note>
+File: controllers/admin/AdminStoresController.php:274</note>
       </trans-unit>
-      <trans-unit id="c1c418380f12430665f311652395eb11">
-        <source>Custom text displayed on maintenance page while shop is deactivated.</source>
-        <target>Custom text displayed on maintenance page while shop is deactivated.</target>
+      <trans-unit id="d42de30e9e03274c5c83bd6ce5c27a6f">
+        <source>Displayed in emails sent to customers.</source>
+        <target>Displayed in emails sent to customers.</target>
         <note>Context:
-File: controllers/admin/AdminMaintenanceController.php:60</note>
+File: controllers/admin/AdminStoresController.php:446</note>
+      </trans-unit>
+      <trans-unit id="49aaf34d99febc7c13881d121288cd8a">
+        <source>Shop registration information (e.g. SIRET or RCS).</source>
+        <target>Shop registration information (e.g. SIRET or RCS).</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:453</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5c85aec638229f60a035c7a6ab3623c8">
-        <source>This field does not refer to the shop name visible in the front office.</source>
-        <target>This field does not refer to the shop name visible in the front office.</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:368</note>
-      </trans-unit>
-      <trans-unit id="1561fa99e3814c72f5206ab48b472335">
-        <source>Follow [1]this link[/1] to edit the shop name used on the front office.</source>
-        <target>Follow [1]this link[/1] to edit the shop name used on the front office.</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:369</note>
-      </trans-unit>
-      <trans-unit id="92aaf3cf7e8f1434886a8887e102391b">
-        <source>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</source>
-        <target>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:427</note>
-      </trans-unit>
-      <trans-unit id="fce5f624e66bd2e2f0296fc3bd2a8f64">
-        <source>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</source>
-        <target>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:437</note>
-      </trans-unit>
-      <trans-unit id="f0f7416fad0a9c9fc3163cabe68393c1">
-        <source>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</source>
-        <target>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:492</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0822f76515fa1d9ce38504176cb23bae">
-        <source>The group defined for your un-identified visitors.</source>
-        <target>The group defined for your un-identified visitors.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:111</note>
-      </trans-unit>
-      <trans-unit id="e3e0c764f81f1a3677d59aa238fddd14">
-        <source>The group defined for your identified guest customers (used in guest checkout).</source>
-        <target>The group defined for your identified guest customers (used in guest checkout).</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:119</note>
-      </trans-unit>
-      <trans-unit id="e820b12959b64dfff397100db68cd951">
-        <source>The group defined for your identified registered customers.</source>
-        <target>The group defined for your identified registered customers.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:127</note>
-      </trans-unit>
-      <trans-unit id="a5fa9ffd3ddf89fe263675358032e7fb">
-        <source>Automatically apply this value as a discount on all products for members of this customer group.</source>
-        <target>Automatically apply this value as a discount on all products for members of this customer group.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:288</note>
-      </trans-unit>
-      <trans-unit id="21e445ba767d4fd41332b6eceab2be1a">
-        <source>How prices are displayed in the order summary for this customer group.</source>
-        <target>How prices are displayed in the order summary for this customer group.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:295</note>
-      </trans-unit>
-      <trans-unit id="eaf74fe1658ada757063c8ddc4381ef9">
-        <source>Customers in this group can view prices.</source>
-        <target>Customers in this group can view prices.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:330</note>
-      </trans-unit>
-      <trans-unit id="d38245fbe312b2dafef8450b67e94f50">
-        <source>%group_name% - All persons without a customer account or customers that are not logged in.</source>
-        <target>%group_name% - All persons without a customer account or customers that are not logged in.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:571</note>
-      </trans-unit>
-      <trans-unit id="5125d0fd7b81fee95b7e4b7689a878a9">
-        <source>%group_name% - All persons who placed an order through Guest Checkout.</source>
-        <target>%group_name% - All persons who placed an order through Guest Checkout.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:572</note>
-      </trans-unit>
-      <trans-unit id="96f090b06e329e3d192c0ea3701f8cb5">
-        <source>%group_name% - All persons who created an account on this site.</source>
-        <target>%group_name% - All persons who created an account on this site.</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:573</note>
-      </trans-unit>
-      <trans-unit id="a2ce271cf6d8afe81168fbfc4ccb492c">
-        <source>PrestaShop has three default customer groups:</source>
-        <target>PrestaShop has three default customer groups:</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:575</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="500294c9fd031bb4f00a82b5d27dc22c">
-        <source>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</source>
-        <target>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:99</note>
-      </trans-unit>
-      <trans-unit id="a3a0f3b2f4c12d1c11b9916c8c10c48c">
-        <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
-        <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:100</note>
-      </trans-unit>
-      <trans-unit id="d86a9baf93dba6b27dbbb04cef8d3aae">
-        <source>When enabled, all the pages of your shop will be SSL-secured.</source>
-        <target>When enabled, all the pages of your shop will be SSL-secured.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:110</note>
-      </trans-unit>
-      <trans-unit id="a1202480ddcd8665114515ca380c0e5b">
-        <source>Enable or disable token in the Front Office to improve PrestaShop's security.</source>
-        <target>Enable or disable token in the Front Office to improve PrestaShop's security.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:121</note>
-      </trans-unit>
-      <trans-unit id="4f70bd9998bb35643fa3dfc88d6a6373">
-        <source>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</source>
-        <target>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:130</note>
-      </trans-unit>
-      <trans-unit id="7ba34b929c8241268ab5eac35a772ab1">
-        <source>Clean the HTML content on text fields. We recommend that you leave this option enabled.</source>
-        <target>Clean the HTML content on text fields. We recommend that you leave this option enabled.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:138</note>
-      </trans-unit>
-      <trans-unit id="71958504714b867b7f6f00f43b9c9bd0">
-        <source>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</source>
-        <target>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:146</note>
-      </trans-unit>
-      <trans-unit id="2b116a3c74c816d853b7d86abf838ebb">
-        <source>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</source>
-        <target>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:155</note>
-      </trans-unit>
-      <trans-unit id="2d21e9a3fe59f46db5ffdc26448e3ab6">
-        <source>Choose how many decimals you want to display</source>
-        <target>Choose how many decimals you want to display</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:176</note>
-      </trans-unit>
-      <trans-unit id="b6d90c5c27a4d2d48ead626c17be303c">
-        <source>Enable brands and suppliers pages on your front office even when their respective modules are disabled.</source>
-        <target>Enable brands and suppliers pages on your front office even when their respective modules are disabled.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:184</note>
-      </trans-unit>
-      <trans-unit id="0678cf17f202cb7fd14d79054a2e628c">
-        <source>Enable best sellers page on your front office even when its respective module is disabled.</source>
-        <target>Enable best sellers page on your front office even when its respective module is disabled.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:191</note>
-      </trans-unit>
-      <trans-unit id="d8942e5679a9104ae58333b9b4778b71">
-        <source>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</source>
-        <target>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</target>
-        <note>Context:
-File: controllers/admin/AdminPreferencesController.php:198</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminPPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ced9dd867a815a1d639fc77a4f7318cb">
-        <source>When active, all shopping features will be disabled.</source>
-        <target>When active, all shopping features will be disabled.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:50</note>
-      </trans-unit>
-      <trans-unit id="80af0f0b70143f575fdfd6fa3ca3cb89">
-        <source>Set the maximum size of the summary of your product description (in characters).</source>
-        <target>Set the maximum size of the summary of your product description (in characters).</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:64</note>
-      </trans-unit>
       <trans-unit id="2593c7ce3ff937293feb1e61c152e551">
         <source>characters</source>
         <target>characters</target>
         <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:68</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php:55</note>
       </trans-unit>
-      <trans-unit id="fc216bdfbaab3c5e3e87c70720110a08">
-        <source>How to calculate quantity discounts.</source>
-        <target>How to calculate quantity discounts.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:72</note>
-      </trans-unit>
-      <trans-unit id="07d295aa9281a95bf9c27348393f688a">
-        <source>When active, friendly URL will be updated on every save.</source>
-        <target>When active, friendly URL will be updated on every save.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:85</note>
-      </trans-unit>
-      <trans-unit id="3f141565d26297ff4449250743dba137">
-        <source>When active, new products will be activated by default during creation.</source>
-        <target>When active, new products will be activated by default during creation.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:93</note>
-      </trans-unit>
-      <trans-unit id="2724aaa50fa52662bc9b244cab7afcae">
-        <source>Number of products displayed per page. Default is 10.</source>
-        <target>Number of products displayed per page. Default is 10.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:107</note>
-      </trans-unit>
-      <trans-unit id="c18179baaeadd4a2fc27fafd3d6f40b1">
-        <source>The order in which products are displayed in the product list.</source>
-        <target>The order in which products are displayed in the product list.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:114</note>
-      </trans-unit>
-      <trans-unit id="043781290780f9b67e98fc277d7608ba">
-        <source>Default order method for product list.</source>
-        <target>Default order method for product list.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:130</note>
-      </trans-unit>
-      <trans-unit id="9175b705bec9604985209d1f2d88c785">
-        <source>Set to "0" to disable this feature.</source>
-        <target>Set to "0" to disable this feature.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:159</note>
-      </trans-unit>
-      <trans-unit id="265b491d10a9a79c9b43655659826614">
-        <source>Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.</source>
-        <target>Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:174</note>
-      </trans-unit>
-      <trans-unit id="f70d03fbb967b69ef8222c4a2b4ab334">
-        <source>In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").</source>
-        <target>In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").</target>
-        <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:190</note>
-      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="885af23392ddb34eaabf65d3b86b216c">
         <source>By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</source>
         <target>By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</target>
         <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:204</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig:35</note>
       </trans-unit>
       <trans-unit id="4b7f36059725914c3abe3fe69a42d860">
         <source>Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)</source>
         <target>Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)</target>
         <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:241</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig:68</note>
       </trans-unit>
       <trans-unit id="29474c2b0b3e4d053abd526ed118b420">
         <source>Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)</source>
         <target>Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)</target>
         <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:248</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig:74</note>
       </trans-unit>
       <trans-unit id="f9a436259aa8fcb0e45a2081a259e90d">
         <source>When selling packs of products, how do you want your stock to be calculated?</source>
         <target>When selling packs of products, how do you want your stock to be calculated?</target>
         <note>Context:
-File: controllers/admin/AdminPPreferencesController.php:252</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig:80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2724aaa50fa52662bc9b244cab7afcae">
+        <source>Number of products displayed per page. Default is 10.</source>
+        <target>Number of products displayed per page. Default is 10.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig:36</note>
+      </trans-unit>
+      <trans-unit id="c18179baaeadd4a2fc27fafd3d6f40b1">
+        <source>The order in which products are displayed in the product list.</source>
+        <target>The order in which products are displayed in the product list.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig:41</note>
+      </trans-unit>
+      <trans-unit id="043781290780f9b67e98fc277d7608ba">
+        <source>Default order method for product list.</source>
+        <target>Default order method for product list.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig:46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b9716d3d87447a2275318bf88ced7bf8">
+        <source>After a customer logs in, you can recall and display the content of his/her last shopping cart.</source>
+        <target>After a customer logs in, you can recall and display the content of his/her last shopping cart.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig:37</note>
+      </trans-unit>
+      <trans-unit id="751e29d82b27256878d1a38f2be4e118">
+        <source>Send an email with summary of the account information (email, password) after registration.</source>
+        <target>Send an email with summary of the account information (email, password) after registration.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig:42</note>
+      </trans-unit>
+      <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">
+        <source>Minimum time required between two requests for a password reset.</source>
+        <target>Minimum time required between two requests for a password reset.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig:47</note>
+      </trans-unit>
+      <trans-unit id="e0cf416b39580f321e4641721698560f">
+        <source>Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.</source>
+        <target>Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig:52</note>
+      </trans-unit>
+      <trans-unit id="69b3bcd0dba13c9f1188ab86480afca4">
+        <source>Display or not the birth date field.</source>
+        <target>Display or not the birth date field.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig:57</note>
+      </trans-unit>
+      <trans-unit id="3bc07e4ecf0660962221cf030b935d9d">
+        <source>Display or not the partner offers tick box, to receive offers from the store's partners.</source>
+        <target>Display or not the partner offers tick box, to receive offers from the store's partners.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig:62</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="54ae4e3e39f5a1f636cfcf2744433678">
+        <source>The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.</source>
+        <target>The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig:36</note>
+      </trans-unit>
+      <trans-unit id="80af0f0b70143f575fdfd6fa3ca3cb89">
+        <source>Set the maximum size of the summary of your product description (in characters).</source>
+        <target>Set the maximum size of the summary of your product description (in characters).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig:48</note>
+      </trans-unit>
+      <trans-unit id="fc216bdfbaab3c5e3e87c70720110a08">
+        <source>How to calculate quantity discounts.</source>
+        <target>How to calculate quantity discounts.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig:53</note>
+      </trans-unit>
+      <trans-unit id="07d295aa9281a95bf9c27348393f688a">
+        <source>When active, friendly URL will be updated on every save.</source>
+        <target>When active, friendly URL will be updated on every save.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig:58</note>
+      </trans-unit>
+      <trans-unit id="3f141565d26297ff4449250743dba137">
+        <source>When active, new products will be activated by default during creation.</source>
+        <target>When active, new products will be activated by default during creation.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig:63</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9175b705bec9604985209d1f2d88c785">
+        <source>Set to "0" to disable this feature.</source>
+        <target>Set to "0" to disable this feature.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig:43</note>
+      </trans-unit>
+      <trans-unit id="265b491d10a9a79c9b43655659826614">
+        <source>Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.</source>
+        <target>Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig:55</note>
+      </trans-unit>
+      <trans-unit id="f70d03fbb967b69ef8222c4a2b4ab334">
+        <source>In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").</source>
+        <target>In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig:72</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/maintenance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="23d2e4d116d9d457eed9dd3a29f7ac51">
+        <source>Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).</source>
+        <target>Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/maintenance.html.twig:45</note>
+      </trans-unit>
+      <trans-unit id="c3e680954da4b0bbf8e4d380287f4a76">
+        <source>IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)</source>
+        <target>IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/maintenance.html.twig:50</note>
+      </trans-unit>
+      <trans-unit id="c1c418380f12430665f311652395eb11">
+        <source>Custom text displayed on maintenance page while shop is deactivated.</source>
+        <target>Custom text displayed on maintenance page while shop is deactivated.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/maintenance.html.twig:55</note>
       </trans-unit>
     </body>
   </file>
@@ -753,6 +769,28 @@ File: controllers/admin/AdminPPreferencesController.php:252</note>
         <target>e.g. 10:00AM - 9:30PM</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/stores/helpers/form/form.tpl:67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ce162159505d90c37be3dd2b464c3360">
+        <source>There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it's only needed if you modified or added a referrer, or if you want changes to be retroactive.</source>
+        <target>There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it's only needed if you modified or added a referrer, or if you want changes to be retroactive.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="6c4defc21d9e7428d7fe81a81f8eb05d">
+        <source>Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.</source>
+        <target>Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="42bb6e7b5d150acfa5243c250d864cbc">
+        <source>Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.</source>
+        <target>Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:58</note>
       </trans-unit>
     </body>
   </file>
@@ -871,28 +909,6 @@ File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.
         <target>Get help!</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl:81</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ce162159505d90c37be3dd2b464c3360">
-        <source>There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it's only needed if you modified or added a referrer, or if you want changes to be retroactive.</source>
-        <target>There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it's only needed if you modified or added a referrer, or if you want changes to be retroactive.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:32</note>
-      </trans-unit>
-      <trans-unit id="6c4defc21d9e7428d7fe81a81f8eb05d">
-        <source>Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.</source>
-        <target>Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="42bb6e7b5d150acfa5243c250d864cbc">
-        <source>Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.</source>
-        <target>Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong need for it.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:58</note>
       </trans-unit>
     </body>
   </file>
