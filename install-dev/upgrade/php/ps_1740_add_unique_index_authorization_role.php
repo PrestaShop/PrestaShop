@@ -26,7 +26,6 @@
 
 function ps_1740_add_unique_index_authorization_role()
 {
-    echo "yo doge";
     $result = Db::getInstance()->getValue(
         "SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE
                    CONSTRAINT_SCHEMA = DATABASE() AND
@@ -34,7 +33,7 @@ function ps_1740_add_unique_index_authorization_role()
                    CONSTRAINT_TYPE   = 'UNIQUE' AND
                    TABLE_NAME        = '" . _DB_PREFIX_ . "authorization_role'"
     );
-    var_dump($result);
+
     // If we didn't find the index, we create it.
     if ((int)$result !== 1) {
         Db::getInstance()->execute("ALTER TABLE `" . _DB_PREFIX_ . "authorization_role` ADD UNIQUE KEY (`slug`)");
