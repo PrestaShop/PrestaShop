@@ -48,6 +48,11 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         $this->key = substr($hexString, 0, 32);
     }
 
+    /**
+     * Get Iv
+     *
+     * @return string
+     */
     protected function getIv()
     {
         if ($this->iv === null) {
@@ -57,6 +62,11 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         return $this->iv;
     }
 
+    /**
+     * Get Iv Size
+     *
+     * @return string
+     */
     protected function getIvSize()
     {
         if ($this->ivSize === null) {
