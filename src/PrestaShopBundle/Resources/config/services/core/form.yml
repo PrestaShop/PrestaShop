@@ -5,5 +5,5 @@ services:
     prestashop.core.form.choice_provider.country_by_iso_code:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
         arguments:
-            - '@prestashop.adapter.legacy.context'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
             - '@prestashop.adapter.data_provider.country'

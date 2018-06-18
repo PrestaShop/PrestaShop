@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -36,25 +35,25 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
      * @var CountryDataProvider
      */
     private $countryDataProvider;
 
     /**
-     * @param LegacyContext $legacyContext
+     * @var int
+     */
+    private $langId;
+
+    /**
+     * @param int $langId
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(
-        LegacyContext $legacyContext,
+        $langId,
         CountryDataProvider $countryDataProvider
     ) {
-        $this->legacyContext = $legacyContext;
         $this->countryDataProvider = $countryDataProvider;
+        $this->langId = $langId;
     }
 
     /**
@@ -65,9 +64,7 @@ final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterfac
     public function getChoices()
     {
         $choices = [];
-        $countries = $this->countryDataProvider->getCountries(
-            $this->legacyContext->getLanguage()->id
-        );
+        $countries = $this->countryDataProvider->getCountries($this->langId);
 
         foreach ($countries as $country) {
             $choices[$country['name']] = $country['iso_code'];
