@@ -53,12 +53,42 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 		');
     }
 
-    Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
+    if (version_compare(_PS_VERSION_, '1.7.0.0', '<')) {
+        Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
 								(SELECT `id_profile`, (
 								SELECT `id_tab`
 								FROM `'._DB_PREFIX_.'tab`
 								WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
 								), 1, 1, 1, 1 FROM `'._DB_PREFIX_.'profile` )');
+    } else {
+        // Preliminary - Get Parent class name for slug generation
+        $parentClassName = null;
+        if ($id_parent) {
+            $parentClassName = Db::getInstance()->getValue('
+                SELECT `class_name`
+                FROM `'._DB_PREFIX_.'tab`
+                WHERE `id_tab` = "'.(int) $id_parent.'"
+            ');
+        }
+
+        foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $role) {
+            // 1- Add role
+            $roleToAdd = 'ROLE_MOD_TAB_'.strtoupper($className).'_'.$role;
+            Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
+		VALUES ("'.$roleToAdd.'")');
+            $newID = Db::getInstance()->Insert_ID();
+
+            // 2- Copy access from the parent
+            if (!empty($parentClassName) && !empty($newID)) {
+                $parentRole = 'ROLE_MOD_TAB_'.strtoupper(pSQL($parentClassName)).'_'.$role;
+                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`) 
+                    SELECT a.`id_profile`, '. (int)$newID .' as `id_authorization_role`
+                    FROM `'._DB_PREFIX_.'access` a join `'._DB_PREFIX_.'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
+                    WHERE ar.`slug` = "'.pSQL($parentRole).'"'
+                );
+            }
+        }
+    }
 
     if ($returnId && strtolower(trim($returnId)) !== 'false') {
         return (int)Db::getInstance()->getValue('SELECT `id_tab`
