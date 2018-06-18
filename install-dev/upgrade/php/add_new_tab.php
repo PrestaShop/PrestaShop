@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShopBundle\Security\Voter\PageVoter;
+
 function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
     if (!is_null($parentTab) && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null') {
@@ -71,16 +73,16 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
             ');
         }
 
-        foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $role) {
+        foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
             // 1- Add role
-            $roleToAdd = 'ROLE_MOD_TAB_'.strtoupper($className).'_'.$role;
+            $roleToAdd = strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
             Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
 		VALUES ("'.$roleToAdd.'")');
             $newID = Db::getInstance()->Insert_ID();
 
             // 2- Copy access from the parent
             if (!empty($parentClassName) && !empty($newID)) {
-                $parentRole = 'ROLE_MOD_TAB_'.strtoupper(pSQL($parentClassName)).'_'.$role;
+                $parentRole = strtoupper('ROLE_MOD_TAB_'.pSQL($parentClassName).'_'.$role);
                 Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`) 
                     SELECT a.`id_profile`, '. (int)$newID .' as `id_authorization_role`
                     FROM `'._DB_PREFIX_.'access` a join `'._DB_PREFIX_.'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
