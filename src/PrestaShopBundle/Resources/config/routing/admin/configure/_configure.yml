@@ -1,7 +1,7 @@
 _admin_advanced_parameters_routing:
-    resource: "advanced_parameters/*.yml"
+    resource: "advanced_parameters/_advanced_parameters.yml"
     prefix: /advanced/
 
 _admin_shop_parameters_routing:
-    resource: "shop_parameters/*.yml"
+    resource: "shop_parameters/_shop_parameters.yml"
     prefix: /shop/

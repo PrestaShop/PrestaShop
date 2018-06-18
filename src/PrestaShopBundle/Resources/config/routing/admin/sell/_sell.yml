@@ -10,9 +10,9 @@ _catalog:
 #    resource: "customer-services/*.yml"
 #    prefix: /customer-services/
 
-#_orders:
-#    resource: "orders/*.yml"
-#    prefix: /orders/
+_orders:
+    resource: "orders/_orders.yml"
+    prefix: /orders/
 
 _stocks:
     resource: "stocks.yml"

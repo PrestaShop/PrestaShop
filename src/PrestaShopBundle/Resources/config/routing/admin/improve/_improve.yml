@@ -6,9 +6,9 @@ _modules:
     resource: "modules/modules.yml"
     prefix: /modules/
 
-#_design:
-#    resource: "design/*.yml"
-#    prefix: /design/
+_design:
+    resource: "design/_design.yml"
+    prefix: /design/
 #
 #_payment:
 #    resource: "payment/*.yml"
