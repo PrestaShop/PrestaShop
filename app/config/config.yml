@@ -88,6 +88,7 @@ doctrine:
 
                 options:
                     1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+                    collate: utf8_general_ci
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

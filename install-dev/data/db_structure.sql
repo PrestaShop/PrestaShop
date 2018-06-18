@@ -2624,3 +2624,24 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
   `name` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id_cms_role`,`id_lang`, id_shop)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_stock_mvt` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_tab` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_tab_lang` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_translation` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;

@@ -1,0 +1,89 @@
+#!/bin/bash
+
+if [[ $EXTRA_TESTS != *"sqldiff"* ]]; then
+  echo "Sql upgrade check is not requested in this build. Exiting."
+  exit 0
+fi
+
+forceAllUpgrades=1
+
+# Check only some changes are brought to a SQL file
+
+# Add a specific user with password (Cannot install PS on docker without password yet)
+mysql -u root --execute="GRANT ALL ON *.* to upgrade@'%' IDENTIFIED BY 'doge'; " 2> /dev/null;
+mysql -u root --execute="flush privileges; " 2> /dev/null;
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`upgrade\`;"
+
+
+# Temp change required for mysqldiff: disabling some rules to let the tool working properly
+echo -e '[mysqld]\nbind-address=0.0.0.0\n' | sudo tee -a /etc/mysql/conf.d/all-bind.cnf
+sudo service mysql restart
+
+# Create a network in order to use the local mysql
+docker network create -d bridge --subnet 192.167.0.0/24 --gateway 192.167.0.1 internalnetwork
+
+# Launch the requested release of PrestaShop
+docker run -tid --net internalnetwork --name upgrade-test -p 8085:80 \
+        -e PS_FOLDER_ADMIN=admin-dev -e PS_FOLDER_INSTALL=install-dev -e PS_DOMAIN="localhost:8085" \
+        -e PS_INSTALL_AUTO=1 -e DB_SERVER=192.167.0.1 -e DB_PASSWD=doge \
+        -e DB_USER=upgrade -e DB_NAME=upgrade prestashop/prestashop:$PRESTASHOP_REFERENCE_VERSION
+
+if [ $? -ne 0 ]; then
+    echo "Could not start container. Exiting..."
+    exit 1
+fi
+
+# Copy Travis folder into temp, then clean it and send to docker
+# (This avoids to send the parameters file, the cache and some other useless stuff)
+TMP_GIT_DIR=/tmp/fresh-git
+cp -R $TRAVIS_BUILD_DIR $TMP_GIT_DIR && cd $TMP_GIT_DIR && rm -rf var/cache/* app/config/parameters.* #git reset --hard && git clean -xf
+cd $TRAVIS_BUILD_DIR
+
+if [ $? -ne 0 ]; then
+    echo "Could not prepare git environment to copy in the container. Exiting..."
+    exit 1
+fi
+
+# Wait for it ...
+while [[ "$(curl -L -s -o /dev/null -w ''%{http_code}'' localhost:8085)" != "200" ]]; do sleep 5; done
+
+# Copy latests changes on the release content
+docker cp $TMP_GIT_DIR upgrade-test:/tmp
+docker exec -ti upgrade-test apt-get -qq update
+docker exec -ti upgrade-test apt-get -qq install -y rsync
+docker exec -ti upgrade-test rsync -ar /tmp/fresh-git/ /var/www/html/
+docker exec -ti upgrade-test chown root:root -R /var/www/html
+
+# If requested, bump version to execute ALL sql requests
+if [ $forceAllUpgrades -eq 1 ]; then
+    echo -e "<?php\ndefine('_PS_INSTALL_VERSION_', '9.9.9.9');" > /tmp/bump_version.php
+    docker cp /tmp/bump_version.php upgrade-test:/var/www/html/install-dev/install_version.php
+fi
+
+# Run SQL upgrade
+echo "Running SQL upgrade ..."
+docker exec -ti upgrade-test php /var/www/html/install-dev/upgrade/upgrade.php
+
+# Run doctrine upgrade
+echo "Running Doctrine database upgrade"
+docker exec -ti upgrade-test php bin/console doctrine:schema:update --force
+php bin/console doctrine:schema:update --force
+
+# Temp change required for mysqldiff: disabling some rules to let the tool working properly
+echo -e '[mysqld]\nsql_mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' | sudo tee -a /etc/mysql/conf.d/safe-mode.cnf
+sudo service mysql restart
+
+# Use MySQL tool to find differences between the fresh install & an upgraded database
+mysqldiff --server1=root@localhost --changes-for=server2 --skip-table-options --force prestashop:upgrade
+
+result=$?
+if [ $result -ne 0 ]; then
+    echo "There are some structure differences between a fresh install and a migrated shop from $PRESTASHOP_REFERENCE_VERSION. :("
+    echo "Please check the upgrade files in install-dev/upgrade/sql/ lead to the same result as install-dev/data/structure.sql."
+fi
+
+# Cleanup
+docker kill upgrade-test
+sudo rm /etc/mysql/conf.d/safe-mode.cnf && sudo rm /etc/mysql/conf.d/all-bind.cnf && sudo service mysql restart
+
+exit $result

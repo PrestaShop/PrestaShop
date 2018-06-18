@@ -3,6 +3,9 @@
 bash travis-scripts/run-selenium-tests;
 SELENIUM=$?
 
+bash travis-scripts/diff-upgrade-db
+MYSQLDIFF=$?
+
 # run-functional-tests must run before starter theme
 bash travis-scripts/run-functional-tests;
 FUNCTIONAL=$?
@@ -10,7 +13,7 @@ FUNCTIONAL=$?
 bash travis-scripts/test-startertheme;
 STARTER=$?
 
-if [[ "$SELENIUM" == "0" && "$FUNCTIONAL" == "0" && "$STARTER" == "0" ]]; then
+if [[ "$SELENIUM" == "0"  && "$MYSQLDIFF" == "0" && "$FUNCTIONAL" == "0" && "$STARTER" == "0" ]]; then
   echo -e "\e[92mE2E TESTS OK"
   exit 0;
 else

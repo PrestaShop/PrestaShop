@@ -1,6 +1,15 @@
 SET SESSION sql_mode = '';
 SET NAMES 'utf8';
 
+# Fixes for upgrade
+
+ALTER TABLE `PREFIX_authorization_role` ADD UNIQUE KEY (`slug`)
+ALTER TABLE `PREFIX_carrier_lang` CHANGE `delay` `delay` VARCHAR(512) NULL;
+ALTER TABLE `PREFIX_product` CHANGE `id_type_redirected` `id_type_redirected` INT(10) unsigned NOT NULL DEFAULT '0';
+ALTER TABLE `PREFIX_product_shop` CHANGE `id_type_redirected` `id_type_redirected` INT(10) unsigned NOT NULL DEFAULT '0';
+
+# End of fixes for upgrade
+
 ALTER TABLE `PREFIX_order_detail` DROP KEY product_id, ADD KEY product_id (product_id, product_attribute_id);
 
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
