@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     prestashop.core.foundation.version:
         class: PrestaShop\PrestaShop\Core\Foundation\Version\Version
         arguments:
