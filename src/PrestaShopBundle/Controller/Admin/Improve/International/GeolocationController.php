@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -103,7 +104,7 @@ class GeolocationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return FormHandler
+     * @return FormHandlerInterface
      */
     protected function getGeolocationFormHandler()
     {

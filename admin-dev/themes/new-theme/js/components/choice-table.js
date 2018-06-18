@@ -44,9 +44,9 @@ export default class ChoiceTable {
    * @param {Event} event
    */
   handleSelectAll(event) {
-    const $selectAllChecbox = $(event.target);
-    const isSelectAllChecked = $selectAllChecbox.is(':checked');
+    const $selectAllCheckboxes = $(event.target);
+    const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
 
-    $selectAllChecbox.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
+    $selectAllCheckboxes.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
   }
 }
