@@ -151,6 +151,11 @@ class WebTestCase extends TestCase
                 )
             );
 
+        $legacyContextMock->method('getLanguage')
+            ->will(
+                $this->returnValue($languageMock)
+            );
+
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
     }
