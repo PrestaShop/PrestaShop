@@ -56,39 +56,46 @@ class RijndaelCore
         } else {
             throw new RuntimeException('Either Mcrypt or OpenSSL extension is required to run Prestashop');
         }
-        return base64_encode($ciphertext) . sprintf('%06d', $length);
+
+        /**
+         * Just Encrypt-then-mac practice
+         */
+        $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->_key, $this->_iv, 32);
+        $hmac = hash_hmac('sha256', $this->_iv . MCRYPT_RIJNDAEL_128 . $ciphertext, $macKey);
+        return $hmac . ':' . base64_encode($ciphertext);
     }
 
     public function decrypt($ciphertext)
     {
+        list($hmac, $encrypted) = explode(':', $ciphertext);
+        $encrypted = base64_decode($encrypted);
+        $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->_key, $this->_iv, 32);
+        $newHmac = hash_hmac('sha256', $this->_iv . MCRYPT_RIJNDAEL_128 . $encrypted, $macKey);
+        if ($hmac !== $newHmac) {
+            return false;
+        }
+
         $output = null;
         if (ini_get('mbstring.func_overload') & 2) {
-            $length = intval(mb_substr($ciphertext, -6, 6, ini_get('default_charset')));
             $ciphertext = mb_substr($ciphertext, 0, -6, ini_get('default_charset'));
             if (function_exists('openssl_decrypt') && version_compare(phpversion(), '5.3.3', '>=')) {
-                $output = openssl_decrypt(base64_decode($ciphertext), 'AES-128-CBC', $this->_key, OPENSSL_RAW_DATA, $this->_iv);
+                $output = openssl_decrypt($encrypted, 'AES-128-CBC', $this->_key, OPENSSL_RAW_DATA, $this->_iv);
             } elseif (function_exists('mcrypt_decrypt')) {
-                $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->_key, base64_decode($ciphertext), MCRYPT_MODE_CBC, $this->_iv);
+                $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->_key, $encrypted, MCRYPT_MODE_CBC, $this->_iv);
             } else {
                 throw new RuntimeException('Either Mcrypt or OpenSSL extension is required to run Prestashop');
             }
-            return mb_substr(
-                $output,
-                0,
-                $length,
-                ini_get('default_charset')
-            );
         } else {
-            $length = intval(substr($ciphertext, -6));
             $ciphertext = substr($ciphertext, 0, -6);
             if (function_exists('openssl_decrypt') && version_compare(phpversion(), '5.3.3', '>=')) {
-                $output = openssl_decrypt(base64_decode($ciphertext), 'AES-128-CBC', $this->_key, OPENSSL_RAW_DATA, $this->_iv);
+                $output = openssl_decrypt($encrypted, 'AES-128-CBC', $this->_key, OPENSSL_RAW_DATA, $this->_iv);
             } elseif (function_exists('mcrypt_decrypt')) {
-                $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->_key, base64_decode($ciphertext), MCRYPT_MODE_CBC, $this->_iv);
+                $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->_key, $encrypted, MCRYPT_MODE_CBC, $this->_iv);
             } else {
                 throw new RuntimeException('Either Mcrypt or OpenSSL extension is required to run Prestashop');
             }
-            return substr($output, 0, $length);
         }
+
+        return rtrim($output, "\0");
     }
 }
