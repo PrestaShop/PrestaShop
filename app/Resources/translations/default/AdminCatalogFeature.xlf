@@ -1,5 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/KeysReference/CategoryLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fa03eb688ad8aa1db593d33dabd89bad">
+        <source>Root</source>
+        <target>Root</target>
+        <note>Context:
+File: classes/lang/KeysReference/CategoryLang.php:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/CmsCategoryLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
+        <source>Home</source>
+        <target>Home</target>
+        <note>Context:
+File: classes/lang/KeysReference/CmsCategoryLang.php:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/StockMvtReasonLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="aac247ca22789872bad95dc8f6c45d37">
+        <source>Increase</source>
+        <target>Increase</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="9e661cc6f7c72b95abfd6b372aacbfa1">
+        <source>Decrease</source>
+        <target>Decrease</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="c9ef04d431a0f72fec2712c575fcaf15">
+        <source>Customer Order</source>
+        <target>Customer Order</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:31</note>
+      </trans-unit>
+      <trans-unit id="2c9697ad1bb585d6d1d0fabcb1028926">
+        <source>Adjustment following an inventory of stock</source>
+        <target>Adjustment following an inventory of stock</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:33</note>
+      </trans-unit>
+      <trans-unit id="02ef8bd47ce057b792bbd620d6059caa">
+        <source>Transfer to another warehouse</source>
+        <target>Transfer to another warehouse</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:35</note>
+      </trans-unit>
+      <trans-unit id="7829dec62809e15c4bb9bbc002fc5614">
+        <source>Transfer from another warehouse</source>
+        <target>Transfer from another warehouse</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:37</note>
+      </trans-unit>
+      <trans-unit id="6ae30b0a1badc7bc37e9fd794bca7e3f">
+        <source>Supply Order</source>
+        <target>Supply Order</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:39</note>
+      </trans-unit>
+      <trans-unit id="d664291d8860308c25f148de5831ad55">
+        <source>Product Return</source>
+        <target>Product Return</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="1638bbd4664fd745118d95786b7e37b9">
+        <source>Manual Entry</source>
+        <target>Manual Entry</target>
+        <note>Context:
+File: classes/lang/KeysReference/StockMvtReasonLang.php:43</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
