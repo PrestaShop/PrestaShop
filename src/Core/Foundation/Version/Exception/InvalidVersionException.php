@@ -23,10 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-require_once __DIR__.'/../vendor/autoload.php';
+namespace PrestaShop\PrestaShop\Core\Foundation\Version\Exception;
 
-define('_PS_VERSION_', AppKernel::VERSION);
+use Exception;
 
-require_once _PS_CONFIG_DIR_.'alias.php';
-require_once _PS_CLASS_DIR_.'PrestaShopAutoload.php';
-spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
+/**
+ * This exception will be thrown if an invalid Shop version name is used
+ * in the application.
+ */
+class InvalidVersionException extends Exception
+{
+    /**
+     * Creates an exception for the invalid type.
+     *
+     * @return static The created exception.
+     */
+    public static function mustBeAString()
+    {
+        return new static('A valid version must be a string.');
+    }
+
+    /**
+     * Creates an exception for the invalid version name.
+     *
+     * @param string  $versionName  The version name.
+     *
+     * @return static The created exception.
+     */
+    public static function mustBeValidName($versionName)
+    {
+        return new static(sprintf(
+            'You provided an invalid version string ("%s"). A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".',
+            $versionName
+        ));
+    }
+}

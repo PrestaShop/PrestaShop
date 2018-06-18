@@ -160,7 +160,8 @@ class ModuleManagerBuilder
             self::$translator->getLocale(),
             $this->getCountryIso(),
             new Tools(),
-            (new Configuration())->get('_PS_BASE_URL_')
+            (new Configuration())->get('_PS_BASE_URL_'),
+            \AppKernel::VERSION
         );
 
         $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
