@@ -41,7 +41,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 	&& rm /tmp/oracle-license-debconf \
 	&& apt install -y oracle-java8-installer \
 		oracle-java8-set-default \
-	# chrome dependancies
+	# chrome dependencies
 	&& apt install -y postfix \
 		libappindicator3-1 \
 		libatk-bridge2.0-0 \
