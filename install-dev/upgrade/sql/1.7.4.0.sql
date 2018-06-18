@@ -3,10 +3,8 @@ SET NAMES 'utf8';
 
 # Fixes for upgrade
 
+ALTER TABLE `PREFIX_authorization_role` ADD UNIQUE KEY (`slug`)
 ALTER TABLE `PREFIX_carrier_lang` CHANGE `delay` `delay` VARCHAR(512) NULL;
-
-/* PHP:ps_1740_add_unique_index_authorization_role(); */;
-
 ALTER TABLE `PREFIX_product` CHANGE `id_type_redirected` `id_type_redirected` INT(10) unsigned NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_product_shop` CHANGE `id_type_redirected` `id_type_redirected` INT(10) unsigned NOT NULL DEFAULT '0';
 
