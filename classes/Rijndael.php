@@ -67,7 +67,13 @@ class RijndaelCore
 
     public function decrypt($ciphertext)
     {
-        list($hmac, $encrypted) = explode(':', $ciphertext);
+        $data = explode(':', $ciphertext);
+        if (count($data) != 2) {
+            return false;
+        }
+
+        list($hmac, $encrypted) = $data;
+
         $encrypted = base64_decode($encrypted);
         $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->_key, $this->_iv, 32);
         $newHmac = hash_hmac('sha256', $this->_iv . MCRYPT_RIJNDAEL_128 . $encrypted, $macKey);
