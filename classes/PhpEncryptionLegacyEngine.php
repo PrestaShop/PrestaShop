@@ -34,6 +34,8 @@
 class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 {
     protected $key;
+    protected $iv;
+    protected $ivSize;
 
     /**
      * PhpEncryptionCore constructor.
@@ -46,6 +48,24 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         $this->key = substr($hexString, 0, 32);
     }
 
+    protected function getIv()
+    {
+        if ($this->iv === null) {
+            $this->iv = substr(sha1(_COOKIE_IV_), 0, $this->getIvSize());
+        }
+
+        return $this->iv;
+    }
+
+    protected function getIvSize()
+    {
+        if ($this->ivSize === null) {
+            $this->ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+        }
+
+        return $this->ivSize;
+    }
+
     /**
      * Encrypt the plaintext.
      *
@@ -55,12 +75,15 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      */
     public function encrypt($plaintext)
     {
-        $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-        $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
-        $cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->key, $plaintext, MCRYPT_MODE_CBC, $iv);
-        $cipherText = $iv.$cipherText;
+        $cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->key, $plaintext, MCRYPT_MODE_CBC, $this->getIv());
+        $cipherText = $this->getIv().$cipherText;
 
-        return base64_encode($cipherText);
+        /**
+         * Just Encrypt-then-mac practice
+         */
+        $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->key, $this->getIv(), 32);
+        $hmac = hash_hmac('sha256', $this->getIv() . MCRYPT_RIJNDAEL_128 . $cipherText, $macKey);
+        return $hmac . ':' . base64_encode($cipherText);
     }
 
     /**
@@ -75,17 +98,32 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      */
     public function decrypt($cipherText)
     {
-        $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-        $cipherText = base64_decode($cipherText);
-        $ivDec = substr($cipherText, 0, $ivSize);
-        $cipherText = substr($cipherText, $ivSize);
+        $data = explode(':', $cipherText);
+        if (count($data) != 2) {
+            return false;
+        }
 
-        return trim(mcrypt_decrypt(
-            MCRYPT_RIJNDAEL_128,
-            $this->key,
-            $cipherText,
-            MCRYPT_MODE_CBC,
-            $ivDec
-        ));
+        list($hmac, $encrypted) = $data;
+        $encrypted = base64_decode($encrypted);
+        $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->key, $this->getIv(), 32);
+        $newHmac = hash_hmac('sha256', $this->getIv() . MCRYPT_RIJNDAEL_128 . $encrypted, $macKey);
+        if ($hmac !== $newHmac) {
+            return false;
+        }
+
+
+        $ivDec = substr($encrypted, 0, $this->getIvSize());
+        $cipherText = substr($encrypted, $this->getIvSize());
+
+        return rtrim(
+            mcrypt_decrypt(
+                MCRYPT_RIJNDAEL_128,
+                $this->key,
+                $cipherText,
+                MCRYPT_MODE_CBC,
+                $ivDec
+            ),
+            "\0"
+        );
     }
 }
