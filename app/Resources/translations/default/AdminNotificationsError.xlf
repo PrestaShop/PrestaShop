@@ -614,6 +614,12 @@ File: controllers/admin/AdminThemesController.php:316</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d3ee9a41133f8fc3c83c91d09053f249">
+        <source>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</source>
+        <target>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:506</note>
+      </trans-unit>
       <trans-unit id="11a257a80f8c8d76132470b171de6795">
         <source>You do not have permission to delete this.</source>
         <target>You do not have permission to delete this.</target>
