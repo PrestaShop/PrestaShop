@@ -283,6 +283,8 @@ class DispatcherCore
     {
         switch ($frontControllerType) {
             case self::FC_ADMIN:
+                // Default
+                $defaultController = 'AdminDashboard';
                 // If there is an employee with a default tab set
                 if (null !== $employee) {
                     $tabClassName = $employee->getDefaultTabClassName();
@@ -290,8 +292,6 @@ class DispatcherCore
                         $defaultController = $tabClassName;
                     }
                 }
-                // Default
-                $defaultController = 'AdminDashboard';
                 break;
             case self::FC_MODULE:
                 $defaultController = 'default';
