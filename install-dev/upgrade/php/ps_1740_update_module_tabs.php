@@ -38,7 +38,7 @@ function ps_1740_update_module_tabs()
 
     include_once('add_new_tab.php');
     foreach ($moduleTabsToBeAdded as $className => $translations) {
-        add_new_tab($className, $translations, 0, false, 'AdminModulesSf');
+        add_new_tab_17($className, $translations, 0, false, 'AdminModulesSf');
     }
 
     Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'tab` SET `active`=1 WHERE `class_name` IN ("AdminModulesManage", "AdminModulesCatalog", "AdminModulesNotifications")');
