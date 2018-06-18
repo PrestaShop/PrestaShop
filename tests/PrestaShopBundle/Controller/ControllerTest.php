@@ -122,7 +122,6 @@ class ControllerTest extends TestCase
             array('AdminGendersController'),
             array('AdminShippingController'),
             array('AdminTagsController'),
-            array('AdminGeolocationController'),
             array('AdminOrdersController'),
             array('AdminShopController'),
             array('AdminTaxesController'),
