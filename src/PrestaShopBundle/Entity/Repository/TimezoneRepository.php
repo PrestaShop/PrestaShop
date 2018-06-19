@@ -24,12 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShopBundle\Entity\Repository;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Class TimezoneRepository
+ */
+class TimezoneRepository implements RepositoryInterface
+{
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $tablePrefix;
+
+    /**
+     * @var string
+     */
+    private $timezoneTable;
+
+    /**
+     * @param Connection $connection
+     * @param $tablePrefix
+     */
+    public function __construct(Connection $connection, $tablePrefix)
+    {
+        $this->connection = $connection;
+        $this->tablePrefix = $tablePrefix;
+        $this->timezoneTable = $tablePrefix.'timezone';
+    }
+
+    /**
+     * Final all timezones from database
+     *
+     * @return array
+     */
+    public function findAll()
+    {
+        $statement = $this->connection->query("SELECT t.* FROM $this->timezoneTable t");
+
+        return $statement->fetchAll();
+    }
+}

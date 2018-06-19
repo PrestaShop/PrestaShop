@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,30 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{if isset($localization_form)}{$localization_form}{/if}
-{if isset($localization_options)}{$localization_options}{/if}
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#PS_CURRENCY_DEFAULT').change(function(e) {
-			alert("{l s='Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.' d='Admin.International.Notification' js=1}");
-		});
-	});
-</script>
+namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+/**
+ * Class LocalUnitsType is responsible for building 'Improve > International > Localization' page
+ * 'Local units' form
+ */
+class LocalUnitsType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('weight_unit', TextType::class)
+            ->add('distance_unit', TextType::class)
+            ->add('volume_unit', TextType::class)
+            ->add('dimension_unit', TextType::class)
+        ;
+    }
+}

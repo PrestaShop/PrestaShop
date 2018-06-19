@@ -1,0 +1,32 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.form.choice_provider.language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LanguageChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
+
+    prestashop.form.choice_provider.country:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CountryChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.adapter.data_provider.country'
+
+    prestashop.form.choice_provider.currency:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CurrencyChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+
+    prestashop.form.choice_provider.timezone:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\TimezoneChoiceProvider'
+        arguments:
+            - '@prestashop.core.admin.timezone.repository'
+
+    prestashop.form.choice_provider.localization_pack:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationPackChoiceProvider'
+        arguments:
+            - '@prestashop.core.localization.pack.loader.remote'
+            - '@prestashop.core.localization.pack.loader.local'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
