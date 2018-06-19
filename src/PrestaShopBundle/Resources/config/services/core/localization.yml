@@ -23,3 +23,4 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Loader\RemoteLocalizationPackLoader'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.foundation.version'

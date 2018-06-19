@@ -52,7 +52,7 @@ class LocalizationController extends FrameworkBundleAdminController
      *
      * @return array|RedirectResponse
      */
-    public function showSettingsAction(Request $request)
+    public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Version\Version;
 
 /**
  * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com
@@ -39,11 +40,18 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var Version
      */
-    public function __construct(ConfigurationInterface $configuration)
+    private $version;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param Version $version
+     */
+    public function __construct(ConfigurationInterface $configuration, Version $version)
     {
         $this->configuration = $configuration;
+        $this->version = $version;
     }
 
     /**
@@ -66,11 +74,8 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
      */
     public function getLocalizationPack($countryIso)
     {
-        $psVersion = str_replace('.', '', $this->configuration->get('_PS_VERSION_'));
-        $psVersion = substr($psVersion, 0, 2);
-
         $apiUrl = $this->configuration->get('_PS_API_URL_');
-        $localizationPackUrl = sprintf('%s/localization/%s/%s.xml', $apiUrl, $psVersion, $countryIso);
+        $localizationPackUrl = sprintf('%s/localization/%s/%s.xml', $apiUrl, $this->version->getMajorVersion(), $countryIso);
 
         $pack = $this->loadXml($localizationPackUrl);
         if (false === $pack) {

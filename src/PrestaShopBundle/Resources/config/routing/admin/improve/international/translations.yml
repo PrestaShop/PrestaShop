@@ -34,7 +34,7 @@ admin_localization_show_settings:
     path: /localization
     methods: [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Localization:showSettings
+        _controller: PrestaShopBundle:Admin\Improve\International\Localization:index
         _legacy_controller: AdminLocalization
 
 admin_localization_save_settings:
