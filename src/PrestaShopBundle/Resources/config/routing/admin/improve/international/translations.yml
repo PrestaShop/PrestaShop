@@ -27,17 +27,3 @@ admin_international_translations_export_theme:
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:exportTheme
         _legacy_controller: AdminTranslations
-
-admin_geolocation:
-    path: /geolocation
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:showGeolocation
-        _legacy_controller: AdminGeolocation
-
-admin_geolocation_process_form:
-    path: /geolocation/process_form
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:processForm
-        _legacy_controller: AdminGeolocation
