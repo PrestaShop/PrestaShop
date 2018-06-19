@@ -72,3 +72,10 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfFormDataProvider'
         arguments:
             - '@prestashop.adapter.order.delivery.slip.pdf.configuration'
+
+    prestashop.admin.localization.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.localization.configuration'
+            - '@prestashop.adapter.local_units.configuration'
+            - '@prestashop.adapter.localization_advanced.configuration'
