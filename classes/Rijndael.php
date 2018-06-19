@@ -57,12 +57,7 @@ class RijndaelCore
             throw new RuntimeException('Either Mcrypt or OpenSSL extension is required to run Prestashop');
         }
 
-        /**
-         * Just Encrypt-then-mac practice
-         */
-        $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->_key, $this->_iv, 32);
-        $hmac = hash_hmac('sha256', $this->_iv . MCRYPT_RIJNDAEL_128 . $ciphertext, $macKey);
-        return $hmac . ':' . base64_encode($ciphertext);
+        return $this->generateHmac($cipherText) . ':' . base64_encode($ciphertext);
     }
 
     public function decrypt($ciphertext)
@@ -75,8 +70,7 @@ class RijndaelCore
         list($hmac, $encrypted) = $data;
 
         $encrypted = base64_decode($encrypted);
-        $macKey = mhash_keygen_s2k(MHASH_SHA256, $this->_key, $this->_iv, 32);
-        $newHmac = hash_hmac('sha256', $this->_iv . MCRYPT_RIJNDAEL_128 . $encrypted, $macKey);
+        $newHmac = $this->generateHmac($encrypted);
         if ($hmac !== $newHmac) {
             return false;
         }
@@ -103,5 +97,51 @@ class RijndaelCore
         }
 
         return rtrim($output, "\0");
+    }
+
+    /**
+     * Generate Hmac
+     *
+     * @param string $encrypted
+     *
+     * @return string
+     */
+    protected function generateHmac($encrypted)
+    {
+        $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->_iv, 32);
+        return hash_hmac(
+            'sha256',
+            $this->_iv . MCRYPT_RIJNDAEL_128 . $encrypted,
+            $macKey
+        );
+    }
+
+    /**
+     * Alternative to mhash_keygen_s2k for security reason
+     * and php compatibilities.
+     *
+     * @param string  $hash
+     * @param string  $password
+     * @param string  $salt
+     * @param integer $bytes
+     *
+     * @return string
+     */
+    protected function generateKeygenS2k($hash, $password, $salt, $bytes)
+    {
+        $result = '';
+        foreach (range(0, ceil($bytes / strlen(hash($hash, null, true))) - 1) as $i) {
+            $result .= hash(
+                $hash,
+                str_repeat("\0", $i) . str_pad(substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT) . $password,
+                true
+            );
+        }
+
+        return substr(
+            $result,
+            0,
+            intval($bytes)
+        );
     }
 }
