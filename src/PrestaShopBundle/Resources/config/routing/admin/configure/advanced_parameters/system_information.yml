@@ -1,0 +1,14 @@
+admin_system_information:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:index'
+        _legacy_controller: AdminInformation
+
+admin_system_information_check_files:
+    path: /files
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:displayCheckFiles'
+        _legacy_controller: AdminInformation
+    condition: 'request.isXmlHttpRequest()'
