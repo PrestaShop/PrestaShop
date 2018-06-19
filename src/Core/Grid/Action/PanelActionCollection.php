@@ -29,16 +29,16 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class GridActionCollection is responsible for holding single grid actions
+ * Class PanelActionCollection is responsible for holding single grid actions
  */
-final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
+final class PanelActionCollection extends AbstractCollection implements PanelActionCollectionInterface
 {
     /**
      * Create grid action collection from array data
      *
      * @param array $data
      *
-     * @return GridActionCollection
+     * @return PanelActionCollection
      */
     public static function fromArray(array $data)
     {
