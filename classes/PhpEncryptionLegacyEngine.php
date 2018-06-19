@@ -88,9 +88,6 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         $cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->key, $plaintext, MCRYPT_MODE_CBC, $this->getIv());
         $cipherText = $this->getIv().$cipherText;
 
-        /**
-         * Just Encrypt-then-mac practice
-         */
         return $this->generateHmac($cipherText) . ':' . base64_encode($cipherText);
     }
 
