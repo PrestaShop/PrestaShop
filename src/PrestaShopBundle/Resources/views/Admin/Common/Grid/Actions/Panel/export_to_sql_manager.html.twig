@@ -1,0 +1,25 @@
+{{ include('@PrestaShop/Admin/Common/Grid/Actions/Panel/simple.html.twig', {'action': action, 'grid': grid}) }}
+
+{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': grid.id ~ '_grid_ps_show_query_modal',
+  'title': action.name,
+  'closable': true,
+  'actions': [{
+    'type': 'button',
+    'label': 'Export to SQL Manager'|trans({}, 'Admin.Actions'),
+    'value': 'sql_manager',
+    'class': 'btn btn-primary btn-lg btn-sql-submit',
+  }],
+} %}
+  {% block content %}
+    <form method="post"
+          action="{{ getAdminLink('AdminRequestSql', true, {'addrequest_sql': 1}) }}"
+          id="{{ grid.id ~ '_grid_ps_show_query_modal_form' }}"
+    >
+      <div class="modal-body">
+        <textarea name="sql" rows="20" cols="65" title=""></textarea>
+        <input type="hidden" name="name" value="" />
+      </div>
+    </form>
+  {% endblock %}
+{% endembed %}

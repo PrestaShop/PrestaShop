@@ -30,26 +30,12 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
-
-    /**
-     * @param EngineInterface $templating
-     */
-    public function __construct(EngineInterface $templating)
-    {
-        $this->templating = $templating;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -71,7 +57,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        $columns = ColumnCollection::fromArray([
+        return ColumnCollection::fromArray([
             [
                 'id' => 'id_log',
                 'name' => $this->trans('ID', [], 'Admin.Global'),
@@ -114,8 +100,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'filter_form_type' => DateRangeType::class,
             ],
         ]);
-
-        return $columns;
     }
 
     /**
@@ -123,17 +107,12 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getGridActions()
     {
-        $templating = $this->templating;
-        $renderDeleteAllAction = function () use ($templating) {
-            return $templating->render('@AdvancedParameters/LogsPage/Blocks/delete_all_grid_action.html.twig');
-        };
-
         return GridActionCollection::fromArray([
             [
                 'id' => 'delete',
                 'name' => $this->trans('Erase all', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'delete_forever',
-                'renderer' => $renderDeleteAllAction,
+                'type'=> 'delete_all_logs',
             ],
             [
                 'id' => 'ps_refresh_list',
@@ -149,6 +128,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'id' => 'ps_export_sql_manager',
                 'name' => $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'icon' => 'storage',
+                'type' => 'export_to_sql_manager',
             ],
         ]);
     }

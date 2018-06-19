@@ -69,11 +69,6 @@ final class Column implements ColumnInterface
     private $isSortable = true;
 
     /**
-     * @var bool True if column's content must not be escaped. Useful when modifier is set and it renders Html content.
-     */
-    private $isRawContent = false;
-
-    /**
      * @var int Column's position in grid
      */
     private $position = 0;
@@ -99,9 +94,11 @@ final class Column implements ColumnInterface
      */
     public static function fromArray(array $data)
     {
-        $type = isset($data['type']) ? $data['type'] : 'simple';
-
-        $column = new self($data['id'], $data['name'], $type);
+        $column = new self(
+            $data['id'],
+            $data['name'],
+            isset($data['type']) ? $data['type'] : 'simple'
+        );
 
         if (isset($data['position'])) {
             $column->setPosition($data['position']);
@@ -150,18 +147,6 @@ final class Column implements ColumnInterface
     public function setSortable($isSortable)
     {
         $this->isSortable = $isSortable;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $isRawContent
-     *
-     * @return $this
-     */
-    public function setRawContent($isRawContent)
-    {
-        $this->isRawContent = (bool) $isRawContent;
 
         return $this;
     }
@@ -234,14 +219,6 @@ final class Column implements ColumnInterface
         // if form type is set for column
         // then column is filterable
         return null !== $this->getFilterFormType();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isRawContent()
-    {
-        return $this->isRawContent;
     }
 
     /**

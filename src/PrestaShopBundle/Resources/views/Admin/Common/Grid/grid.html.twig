@@ -24,7 +24,7 @@
  *#}
 
 {% set filterForm = grid.filter_form %}
-{% set bulkActionsAvailable = grid.bulk_actions %}
+{% set bulkActionsAvailable = grid.actions.bulk %}
 
 <div class="js-grid" id="{{ grid.id }}_grid">
   {{ form_start(filterForm) }}

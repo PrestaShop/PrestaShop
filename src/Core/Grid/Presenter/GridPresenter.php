@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
@@ -47,10 +47,12 @@ final class GridPresenter implements GridPresenterInterface
             'name' => $grid->getDefinition()->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
         ];
-
         $gridArray['columns'] = $this->presentColumns($grid);
-        $gridArray['bulk_actions'] = $this->presentBulkActions($grid);
-        $gridArray['actions'] = $this->presentGridActions($grid);
+
+        $gridArray['actions'] = [
+            'panel' => $this->presentPanelAction($grid),
+            'bulk' => $this->presentBulkActions($grid),
+        ];
 
         $gridArray['data'] = [
             'rows' => $this->presentRows($grid),
@@ -92,7 +94,6 @@ final class GridPresenter implements GridPresenterInterface
                 'name' => $column->getName(),
                 'is_sortable' => $column->isSortable(),
                 'is_filterable' => $column->isFilterable(),
-                'is_raw' => $column->isRawContent(),
                 'type' => $column->getType(),
             ];
 
@@ -133,29 +134,23 @@ final class GridPresenter implements GridPresenterInterface
      *
      * @return array
      */
-    private function presentGridActions(GridInterface $grid)
+    private function presentPanelAction(GridInterface $grid)
     {
-        $gridActionsArray = [];
+        $panelActions = [];
 
-        /** @var GridActionInterface $gridAction */
-        foreach ($grid->getDefinition()->getGridActions() as $gridAction) {
+        /** @var PanelActionInterface $panelAction */
+        foreach ($grid->getDefinition()->getPanelActions() as $panelAction) {
             $actionView = [
-                'id' => $gridAction->getId(),
-                'name' => $gridAction->getName(),
-                'icon' => $gridAction->getIcon(),
-                'is_rendered' => false,
+                'id' => $panelAction->getId(),
+                'name' => $panelAction->getName(),
+                'icon' => $panelAction->getIcon(),
+                'type' => $panelAction->getType(),
             ];
 
-            $renderer = $gridAction->getRenderer();
-            if (is_callable($renderer)) {
-                $actionView['content'] = $renderer();
-                $actionView['is_rendered'] = true;
-            }
-
-            $gridActionsArray[] = $actionView;
+            $panelActions[] = $actionView;
         }
 
-        return $gridActionsArray;
+        return $panelActions;
     }
 
     /**
@@ -191,6 +186,7 @@ final class GridPresenter implements GridPresenterInterface
      */
     private function applyColumnModifications(array $row, ColumnCollectionInterface $columns)
     {
+        /** @var ColumnInterface $column */
         foreach ($columns as $column) {
             // if for some reason column does not exist in a row
             // and it doesn't have modifier

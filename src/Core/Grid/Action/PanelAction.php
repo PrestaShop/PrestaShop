@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Class GridAction is responsible for holding single grid action data
+ * Class PanelAction is responsible for holding single grid action data
  */
-final class GridAction implements GridActionInterface
+final class PanelAction implements PanelActionInterface
 {
     /**
      * @var string
@@ -44,25 +44,25 @@ final class GridAction implements GridActionInterface
     /**
      * @var string
      */
+    private $type;
+
+    /**
+     * @var string
+     */
     private $icon;
 
     /**
-     * @var callable|null Custom action renderer
-     */
-    private $renderer;
-
-    /**
-     * @param string $id Unique action identifier
+     * @param string $id   Unique action identifier
      * @param string $name Translated action name
-     * @param string $icon Action icon name
-     * @param callable $renderer
+     * @param string $icon Action icon
+     * @param string $type Type of grid action
      */
-    public function __construct($id, $name, $icon, callable $renderer = null)
+    public function __construct($id, $name, $icon, $type = 'simple')
     {
         $this->id = $id;
         $this->name = $name;
         $this->icon = $icon;
-        $this->renderer = $renderer;
+        $this->type = $type;
     }
 
     /**
@@ -70,25 +70,22 @@ final class GridAction implements GridActionInterface
      *
      * @param array $data
      *
-     * @return GridAction
+     * @return PanelAction
      */
     public static function fromArray(array $data)
     {
-        $action = new GridAction(
+        $action = new PanelAction(
             $data['id'],
             $data['name'],
-            $data['icon']
+            $data['icon'],
+            isset($data['type']) ? $data['type'] : 'simple'
         );
-
-        if (isset($data['renderer'])) {
-            $action->setRenderer($data['renderer']);
-        }
 
         return $action;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -96,7 +93,7 @@ final class GridAction implements GridActionInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -104,7 +101,7 @@ final class GridAction implements GridActionInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getIcon()
     {
@@ -112,18 +109,10 @@ final class GridAction implements GridActionInterface
     }
 
     /**
-     * @return callable|null
+     * {@inheritdoc}
      */
-    public function getRenderer()
+    public function getType()
     {
-        return $this->renderer;
-    }
-
-    /**
-     * @param callable $renderer
-     */
-    public function setRenderer(callable $renderer)
-    {
-        $this->renderer = $renderer;
+        return $this->type;
     }
 }

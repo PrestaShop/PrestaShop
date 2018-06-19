@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
+use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -58,7 +59,7 @@ final class DoctrineGridDataProvider implements GridDataProviderInterface
         $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
         $rows = $searchQueryBuilder->execute()->fetchAll();
-        $rowsTotal = (int) $countQueryBuilder->execute()->fetch(\PDO::FETCH_COLUMN);
+        $rowsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
         $rows = new RowCollection($rows);
 
