@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,21 +21,12 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Factory;
-
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-
-/**
- * Interface ColumnFactoryInterface defines contract for column factory
- */
-interface ColumnFactoryInterface
-{
-    /**
-     * Create new column
-     *
-     * @return ColumnInterface
-     */
-    public function create();
-}
+{%
+  set employeeName, employeeImage = row.employee, 'http://profile.prestashop.com/'~row.email|url_encode~'.jpg'
+%}
+<span class="employee_avatar_small">
+    <img class="img rounded-circle" alt="{{ employeeName }}" src="{{ employeeImage }}" height="32" width="32" />
+</span>
+{{ employeeName }}

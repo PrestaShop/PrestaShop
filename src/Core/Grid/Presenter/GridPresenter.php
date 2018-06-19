@@ -93,6 +93,7 @@ final class GridPresenter implements GridPresenterInterface
                 'is_sortable' => $column->isSortable(),
                 'is_filterable' => $column->isFilterable(),
                 'is_raw' => $column->isRawContent(),
+                'type' => $column->getType(),
             ];
 
             $positions[$key] = $column->getPosition();
@@ -174,10 +175,7 @@ final class GridPresenter implements GridPresenterInterface
         foreach ($rows as $row) {
             $rowData = $this->applyColumnModifications($row, $columns);
 
-            $presentedRows[] = [
-                'actions' => [],
-                'data' => $rowData,
-            ];
+            $presentedRows[] = $rowData;
         }
 
         return $presentedRows;

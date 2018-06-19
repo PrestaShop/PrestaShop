@@ -67,6 +67,20 @@ interface ColumnInterface
     public function getFilterFormTypeOptions();
 
     /**
+     * Get column position
+     *
+     * @return int
+     */
+    public function getPosition();
+
+    /**
+     * Get column type
+     *
+     * @return string
+     */
+    public function getType();
+
+    /**
      * Check if column is sortable
      *
      * @return bool
@@ -79,20 +93,6 @@ interface ColumnInterface
      * @return bool
      */
     public function isFilterable();
-
-    /**
-     * Check if column's content should be escaped or not
-     *
-     * @return bool
-     */
-    public function isRawContent();
-
-    /**
-     * Get column position
-     *
-     * @return int
-     */
-    public function getPosition();
 
     /**
      * Set column position
