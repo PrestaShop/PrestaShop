@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 
 /**
@@ -62,7 +62,7 @@ interface GridDefinitionInterface
     public function getBulkActions();
 
     /**
-     * @return GridActionCollectionInterface
+     * @return PanelActionCollectionInterface
      */
     public function getPanelActions();
 }

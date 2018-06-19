@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
@@ -107,7 +107,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     }
 
     /**
-     * @return GridActionCollectionInterface|null
+     * @return PanelActionCollectionInterface|null
      */
     protected function getGridActions()
     {

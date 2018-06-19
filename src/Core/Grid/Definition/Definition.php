@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
@@ -60,7 +60,7 @@ final class Definition implements GridDefinitionInterface
     private $bulkActions;
 
     /**
-     * @var GridActionCollectionInterface
+     * @var PanelActionCollectionInterface
      */
     private $gridActions;
 
@@ -75,7 +75,7 @@ final class Definition implements GridDefinitionInterface
 
         $this->columns = new ColumnCollection();
         $this->bulkActions = new BulkActionCollection();
-        $this->gridActions = new GridActionCollection();
+        $this->gridActions = new PanelActionCollection();
     }
 
     /**
@@ -143,9 +143,9 @@ final class Definition implements GridDefinitionInterface
     }
 
     /**
-     * @param GridActionCollectionInterface $gridActions
+     * @param PanelActionCollectionInterface $gridActions
      */
-    public function setGridActions(GridActionCollectionInterface $gridActions)
+    public function setGridActions(PanelActionCollectionInterface $gridActions)
     {
         $this->gridActions = $gridActions;
     }
