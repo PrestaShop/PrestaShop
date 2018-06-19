@@ -41,7 +41,7 @@ class Version
      *
      * @var string
      */
-    private $fullVersion;
+    private $version;
 
     /**
      * Major version name.
@@ -86,9 +86,9 @@ class Version
      *
      * @return string For example "1.7.4.0"
      */
-    public function getFullVersion()
+    public function getVersion()
     {
-        return $this->fullVersion;
+        return $this->version;
     }
 
     /**
@@ -138,7 +138,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isGreaterThan($version)
     {
@@ -152,7 +152,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isGreaterThanOrEqualTo($version)
     {
@@ -166,7 +166,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isLessThan($version)
     {
@@ -180,7 +180,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isLessThanOrEqualTo($version)
     {
@@ -194,7 +194,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isEqualTo($version)
     {
@@ -208,7 +208,7 @@ class Version
      *
      * @return bool
      *
-     * @throws InvalidArgumentException If the provided version is invalid
+     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isNotEqualTo($version)
     {
