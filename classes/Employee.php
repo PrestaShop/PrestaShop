@@ -242,7 +242,7 @@ class EmployeeCore extends ObjectModel
                 'visitorType' => 1,
                 'source' => 'backoffice'
             ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
