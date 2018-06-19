@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +51,8 @@ class PaymentMethodsController extends FrameworkBundleAdminController
         $paymentModules = [];
 
         if ($isSingleShopContext) {
-            $paymentModules = $this->getPaymentModulesToDisplay($legacyController);
+            $paymentMethodsPresenter = $this->get('prestashop.adapter.module.presenter.payment');
+            $paymentModules = $paymentMethodsPresenter->present();
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', [
@@ -62,41 +62,5 @@ class PaymentMethodsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
         ]);
-    }
-
-    /**
-     * Gets installed and enabled payment modules for PaymentMethods controller to display
-     *
-     * @param string $legacyController
-     *
-     * @return ModuleInterface[]
-     */
-    protected function getPaymentModulesToDisplay($legacyController)
-    {
-        $tabModuleListProvider = $this->get('prestashop.adapter.module.data_provider.tab_module_list');
-        $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $adminModuleRepository = $this->get('prestashop.core.admin.module.repository');
-
-        $tabModuleNames = $tabModuleListProvider->getTabModules($legacyController);
-
-        $installedModules = $adminModuleRepository->getInstalledModules();
-        $installedModuleNames = array_keys($installedModules);
-
-        $paymentModulesToDisplay = [];
-        foreach ($tabModuleNames as $moduleName) {
-            if (!in_array($moduleName, $installedModuleNames) ||
-                !$moduleDataProvider->can('configure', $moduleName)
-            ) {
-                continue;
-            }
-
-            $installedModule = $installedModules[$moduleName];
-            if ($installedModule->database->get('active')) {
-                $paymentModulesToDisplay[] = $modulePresenter->present($installedModule);
-            }
-        }
-
-        return $paymentModulesToDisplay;
     }
 }

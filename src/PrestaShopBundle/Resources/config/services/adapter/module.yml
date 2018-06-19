@@ -62,3 +62,11 @@ services:
 
     prestashop.adapter.module.data_provider.tab_module_list:
         class: PrestaShop\PrestaShop\Adapter\Module\TabModuleListProvider
+
+    prestashop.adapter.module.presenter.payment:
+        class: PrestaShop\PrestaShop\Adapter\Module\Presenter\PaymentModulesPresenter
+        arguments:
+            - '@prestashop.adapter.module.data_provider.tab_module_list'
+            - '@prestashop.adapter.data_provider.module'
+            - '@prestashop.adapter.presenter.module'
+            - '@prestashop.core.admin.module.repository'
