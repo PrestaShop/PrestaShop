@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use AppKernel;
 
 
 /**
