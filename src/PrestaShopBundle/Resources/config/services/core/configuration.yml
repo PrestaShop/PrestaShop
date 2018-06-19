@@ -1,3 +1,4 @@
 services:
     prestashop.core.configuration.ini_configuration:
         class: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
+        public: true
