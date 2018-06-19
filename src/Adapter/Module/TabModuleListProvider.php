@@ -29,8 +29,14 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Tab;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
+/**
+ * Class TabModuleListProvider is responsible for providing tab modules
+ */
 final class TabModuleListProvider implements TabModuleListProviderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getTabModules($tabClassName)
     {
         $tabId = Tab::getIdFromClassName($tabClassName);
