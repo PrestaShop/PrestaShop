@@ -74,14 +74,12 @@ final class PanelAction implements PanelActionInterface
      */
     public static function fromArray(array $data)
     {
-        $action = new PanelAction(
+        return new self(
             $data['id'],
             $data['name'],
             $data['icon'],
             isset($data['type']) ? $data['type'] : 'simple'
         );
-
-        return $action;
     }
 
     /**
