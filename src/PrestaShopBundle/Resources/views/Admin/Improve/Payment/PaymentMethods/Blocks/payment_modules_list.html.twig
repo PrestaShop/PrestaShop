@@ -60,8 +60,8 @@
   {% else %}
     <div class="alert alert-warning" role="alert">
       <p class="alert-text">
-        {{ 'It seems there are no recommended payment solutions for your country.'|trans }} <br>
-        <a class="_blank" href="https://www.prestashop.com/en/contact-us">{{ 'Do you think there should be one? Let us know!'|trans }}</a>
+        {{ 'It seems there are no recommended payment solutions for your country.'|trans({}, 'Admin.Payment.Notification') }} <br>
+        <a class="_blank" href="https://www.prestashop.com/en/contact-us">{{ 'Do you think there should be one? Let us know!'|trans({}, 'Admin.Shipping.Feature') }}</a>
       </p>
     </div>
   {% endif %}
