@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 
@@ -48,17 +47,12 @@ final class Definition implements GridDefinitionInterface
     /**
      * @var string  Unique grid identifier
      */
-    private $identifier;
+    private $id;
 
     /**
      * @var ColumnCollectionInterface
      */
     private $columns;
-
-    /**
-     * @var RowActionCollectionInterface
-     */
-    private $rowActions;
 
     /**
      * @var BulkActionCollectionInterface
@@ -71,15 +65,14 @@ final class Definition implements GridDefinitionInterface
     private $gridActions;
 
     /**
-     * @param string $identifier      Unique grid identifier (used as table ID when rendering table)
-     * @param string $name            Translated grid name
+     * @param string $id   Unique grid identifier (used as table ID when rendering table)
+     * @param string $name Translated grid name
      */
-    public function __construct($identifier, $name)
+    public function __construct($id, $name)
     {
-        $this->identifier = $identifier;
+        $this->id = $id;
         $this->name = $name;
 
-        $this->rowActions = new RowActionCollection();
         $this->columns = new ColumnCollection();
         $this->bulkActions = new BulkActionCollection();
         $this->gridActions = new GridActionCollection();
@@ -98,7 +91,7 @@ final class Definition implements GridDefinitionInterface
      */
     public function getId()
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     /**
@@ -112,14 +105,6 @@ final class Definition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getRowActions()
-    {
-        return $this->rowActions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getBulkActions()
     {
         return $this->bulkActions;
@@ -128,7 +113,7 @@ final class Definition implements GridDefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getGridActions()
+    public function getPanelActions()
     {
         return $this->gridActions;
     }

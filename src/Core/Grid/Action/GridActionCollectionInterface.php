@@ -36,7 +36,7 @@ interface GridActionCollectionInterface extends Iterator
     /**
      * Add grid action to collection
      *
-     * @param GridActionInterface $action
+     * @param PanelActionInterface $action
      */
-    public function add(GridActionInterface $action);
+    public function add(PanelActionInterface $action);
 }

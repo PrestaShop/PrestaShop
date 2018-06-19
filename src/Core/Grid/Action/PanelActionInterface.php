@@ -26,37 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
-
 /**
- * Class GridActionCollection is responsible for holding single grid actions
+ * Interface PanelActionInterface
  */
-final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
+interface PanelActionInterface
 {
     /**
-     * Create grid action collection from array data
+     * Return unique action identifier
      *
-     * @param array $data
-     *
-     * @return GridActionCollection
+     * @return string
      */
-    public static function fromArray(array $data)
-    {
-        $actions = new self();
-
-        foreach ($data as $actionArray) {
-            $action = PanelAction::fromArray($actionArray);
-            $actions->add($action);
-        }
-
-        return $actions;
-    }
+    public function getId();
 
     /**
-     * {@inheritdoc}
+     * Returns translated action name
+     *
+     * @return string
      */
-    public function add(PanelActionInterface $action)
-    {
-        $this->items[$action->getId()] = $action;
-    }
+    public function getName();
+
+    /**
+     * Returns action icon name
+     *
+     * @return string
+     */
+    public function getIcon();
+
+    /**
+     * Returns grid action type
+     *
+     * @return string
+     */
+    public function getType();
 }

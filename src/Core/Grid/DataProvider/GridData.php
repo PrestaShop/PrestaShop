@@ -46,7 +46,7 @@ final class GridData implements GridDataInterface
     /**
      * @var string
      */
-    private $query = '';
+    private $query;
 
     /**
      * @param RowCollectionInterface  $rows      Filtered & paginated rows data
