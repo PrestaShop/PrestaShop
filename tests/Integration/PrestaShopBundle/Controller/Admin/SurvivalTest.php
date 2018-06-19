@@ -49,10 +49,12 @@ class SurvivalTest extends WebTestCase
 
         $response = $this->client->getResponse();
 
-        if ($response->isServerError()) {
-            file_put_contents($route. '.html', $response->getContent());
-        }
-
+        /**
+         * If you need to debug these HTTP calls, you can use:
+         * if ($response->isServerError()) {
+         *    $content = $response->getContent();
+         * }
+         */
         self::assertTrue($response->isSuccessful(),
             sprintf(
                 '%s page should be available, but status code is %s',
