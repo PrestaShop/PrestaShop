@@ -5,3 +5,7 @@ _translations:
 _localization:
     resource: "localization.yml"
     prefix: /localization/
+
+_geolocation:
+    resource: "geolocation.yml"
+    prefix: /geolocation/
