@@ -34,6 +34,11 @@ use Symfony\Component\Form\FormTypeInterface;
 final class Column implements ColumnInterface
 {
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @var string Translated column name
      */
     private $name;
@@ -76,11 +81,13 @@ final class Column implements ColumnInterface
     /**
      * @param string $identifier Unique column identifier
      * @param string $name Translated column name
+     * @param string $type
      */
-    public function __construct($identifier, $name)
+    public function __construct($identifier, $name, $type = 'simple')
     {
         $this->name = $name;
         $this->identifier = $identifier;
+        $this->type = $type;
     }
 
     /**
@@ -92,7 +99,9 @@ final class Column implements ColumnInterface
      */
     public static function fromArray(array $data)
     {
-        $column = new Column($data['id'], $data['name']);
+        $type = isset($data['type']) ? $data['type'] : 'simple';
+
+        $column = new self($data['id'], $data['name'], $type);
 
         if (isset($data['position'])) {
             $column->setPosition($data['position']);
@@ -106,10 +115,6 @@ final class Column implements ColumnInterface
             $options = isset($data['filter_form_type_options']) ? $data['filter_form_type_options'] : [];
 
             $column->setFilterFormType($data['filter_form_type'], $options);
-        }
-
-        if (isset($data['raw_content'])) {
-            $column->setRawContent($data['raw_content']);
         }
 
         return $column;
@@ -257,5 +262,15 @@ final class Column implements ColumnInterface
         $this->position = (int) $position;
 
         return $this;
+    }
+
+    /**
+     * Get column type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

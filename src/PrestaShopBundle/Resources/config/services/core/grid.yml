@@ -21,7 +21,6 @@ services:
         public: true
         arguments:
             - '@templating.engine.twig'
-            - '@=service("prestashop.core.grid.column.factory.employee_name_with_avatar_column").create()'
 
     # Grid factories
     prestashop.core.grid.log_factory:
@@ -35,10 +34,3 @@ services:
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
-
-    # Grid column factories
-    prestashop.core.grid.column.factory.employee_name_with_avatar_column:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Column\Factory\EmployeeNameWithAvatarColumnFactory'
-        arguments:
-            - '@translator'
-            - '@templating.engine.twig'

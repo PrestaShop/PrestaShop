@@ -134,57 +134,53 @@
 
           {# Render row columns here #}
           {% for column in grid.columns %}
-            {% set content = row.data[column.id] %}
-
-            {% if column.is_raw %}
-              <td>{{ content|raw }}</td>
-            {% else %}
-              <td>{{ content }}</td>
-            {% endif %}
+            <td>
+              {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'column': column, 'row': row}) }}
+            </td>
           {% endfor %}
 
           {# If row has any actions then render those here #}
-          {% set rowActions = row.actions %}
-          {% if rowActions is not empty %}
-            <td class="text-right">
-              <div class="btn-group-action">
-                <div class="btn-group">
-                  <a href="{{ rowActions|first.url }}"
-                     title="{{ rowActions|first.name }}"
-                     class="btn tooltip-link"
-                     id="{{ '%s_grid_row_action_%s'|format(grid.id, rowActions|first.id) }}"
-                  >
-                    <i class="material-icons">{{ rowActions|first.icon }}</i>
-                  </a>
+          {#{% set rowActions = row.actions %}#}
+          {#{% if rowActions is not empty %}#}
+            {#<td class="text-right">#}
+              {#<div class="btn-group-action">#}
+                {#<div class="btn-group">#}
+                  {#<a href="{{ rowActions|first.url }}"#}
+                     {#title="{{ rowActions|first.name }}"#}
+                     {#class="btn tooltip-link"#}
+                     {#id="{{ '%s_grid_row_action_%s'|format(grid.id, rowActions|first.id) }}"#}
+                  {#>#}
+                    {#<i class="material-icons">{{ rowActions|first.icon }}</i>#}
+                  {#</a>#}
 
                   {# If there's more than one action, then render remaining actions here #}
-                  {% if rowActions|length > 1 %}
-                    <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
-                       data-toggle="dropdown"
-                       aria-haspopup="true"
-                       aria-expanded="false"
-                    >
-                    </a>
+                  {#{% if rowActions|length > 1 %}#}
+                    {#<a class="btn btn-link dropdown-toggle dropdown-toggle-split"#}
+                       {#data-toggle="dropdown"#}
+                       {#aria-haspopup="true"#}
+                       {#aria-expanded="false"#}
+                    {#>#}
+                    {#</a>#}
 
-                    <div class="dropdown-menu dropdown-menu-right">
-                      {% for rowAction in rowActions|slice(1) %}
-                        <a class="dropdown-item"
-                           href="{{ rowAction.url }}"
-                           id="{{ '%s_grid_row_action_%s'|format(grid.id, rowAction.id) }}"
-                        >
-                          <i class="material-icons">{{ rowAction.icon }}</i>
-                          {{ rowAction.name }}
-                        </a>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </td>
+                    {#<div class="dropdown-menu dropdown-menu-right">#}
+                      {#{% for rowAction in rowActions|slice(1) %}#}
+                        {#<a class="dropdown-item"#}
+                           {#href="{{ rowAction.url }}"#}
+                           {#id="{{ '%s_grid_row_action_%s'|format(grid.id, rowAction.id) }}"#}
+                        {#>#}
+                          {#<i class="material-icons">{{ rowAction.icon }}</i>#}
+                          {#{{ rowAction.name }}#}
+                        {#</a>#}
+                      {#{% endfor %}#}
+                    {#</div>#}
+                  {#{% endif %}#}
+                {#</div>#}
+              {#</div>#}
+            {#</td>#}
           {# If filters are available, it means we have "Search" button, then add empty column to fill the row #}
-          {% elseif filterForm|length > 1 %}
-            <td>&nbsp;</td>
-          {% endif %}
+          {#{% elseif filterForm|length > 1 %}#}
+            {#<td>&nbsp;</td>#}
+          {#{% endif %}#}
         </tr>
       {% endfor %}
     {% else %}

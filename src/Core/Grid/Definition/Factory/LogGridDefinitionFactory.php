@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Templating\EngineInterface;
@@ -44,18 +43,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $templating;
 
     /**
-     * @var ColumnInterface
-     */
-    private $employeeNameWithAvatarColumn;
-
-    /**
      * @param EngineInterface $templating
-     * @param ColumnInterface $employeeNameWithAvatarColumn
      */
-    public function __construct(EngineInterface $templating, ColumnInterface $employeeNameWithAvatarColumn)
+    public function __construct(EngineInterface $templating)
     {
         $this->templating = $templating;
-        $this->employeeNameWithAvatarColumn = $employeeNameWithAvatarColumn;
     }
 
     /**
@@ -84,6 +76,12 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'id' => 'id_log',
                 'name' => $this->trans('ID', [], 'Admin.Global'),
                 'filter_form_type' => TextType::class,
+            ],
+            [
+                'id' => 'employee',
+                'name' => $this->translator->trans('Employee', [], 'Admin.Global'),
+                'filter_form_type' => TextType::class,
+                'type' => 'employee_name_with_avatar',
             ],
             [
                 'id' => 'severity',
@@ -116,8 +114,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'filter_form_type' => DateRangeType::class,
             ],
         ]);
-
-        $columns->addAfter('id_log', $this->employeeNameWithAvatarColumn);
 
         return $columns;
     }
