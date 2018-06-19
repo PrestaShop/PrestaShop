@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 8;
+/******/ 			var chunkId = 9;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,17 +706,17 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(448)(__webpack_require__.s = 448);
+/******/ 	return hotCreateRequire(446)(__webpack_require__.s = 446);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 224:
+/***/ 222:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(263);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_choice_table__ = __webpack_require__(255);
 /**
  * 2007-2018 PrestaShop
  *
@@ -747,12 +747,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var $ = window.$;
 
 $(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__["a" /* default */]();
+  new __WEBPACK_IMPORTED_MODULE_0__components_choice_table__["a" /* default */]().init();
 });
 
 /***/ }),
 
-/***/ 263:
+/***/ 255:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -787,53 +787,56 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var $ = window.$;
 
-var TermsAndConditionsOptionHandler = function () {
-  function TermsAndConditionsOptionHandler() {
-    var _this = this;
+/**
+ * ChoiceTable is responsible for managing common actions in choice table form type
+ */
 
-    _classCallCheck(this, TermsAndConditionsOptionHandler);
-
-    this.handle();
-
-    $('input[name="form[general][enable_tos]"]').on('change', function () {
-      return _this.handle();
-    });
+var ChoiceTable = function () {
+  function ChoiceTable() {
+    _classCallCheck(this, ChoiceTable);
   }
 
-  _createClass(TermsAndConditionsOptionHandler, [{
-    key: 'handle',
-    value: function handle() {
-      var tosEnabledVal = $('input[name="form[general][enable_tos]"]:checked').val();
-      var isTosEnabled = parseInt(tosEnabledVal);
+  _createClass(ChoiceTable, [{
+    key: 'init',
 
-      this.handleTermsAndConditionsCmsSelect(isTosEnabled);
+    /**
+     * Initialize component
+     */
+    value: function init() {
+      var _this = this;
+
+      $(document).on('change', '.js-choice-table-select-all', function (e) {
+        _this.handleSelectAll(e);
+      });
     }
 
     /**
-     * If terms and conditions option is disabled, then terms and conditions
-     * cms select must be disabled.
+     * Check/uncheck all boxes in table
      *
-     * @param {int} isTosEnabled
+     * @param {Event} event
      */
 
   }, {
-    key: 'handleTermsAndConditionsCmsSelect',
-    value: function handleTermsAndConditionsCmsSelect(isTosEnabled) {
-      $('#form_general_tos_cms_id').prop('disabled', !isTosEnabled);
+    key: 'handleSelectAll',
+    value: function handleSelectAll(event) {
+      var $selectAllCheckboxes = $(event.target);
+      var isSelectAllChecked = $selectAllCheckboxes.is(':checked');
+
+      $selectAllCheckboxes.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
     }
   }]);
 
-  return TermsAndConditionsOptionHandler;
+  return ChoiceTable;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (TermsAndConditionsOptionHandler);
+/* harmony default export */ __webpack_exports__["a"] = (ChoiceTable);
 
 /***/ }),
 
-/***/ 448:
+/***/ 446:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(224);
+module.exports = __webpack_require__(222);
 
 
 /***/ })
