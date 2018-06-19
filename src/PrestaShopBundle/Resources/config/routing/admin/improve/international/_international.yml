@@ -1,0 +1,3 @@
+_translations:
+    resource: "translations.yml"
+    prefix: /translations/
