@@ -127,7 +127,7 @@ services:
               'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
             - 'OrderDeliverySlipPage'
 
-    prestashop.admin.localization.form_handler:
+    prestashop.admin.geolocation.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
@@ -139,7 +139,7 @@ services:
               'geolocation_options': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
             - 'GeolocationPage'
 
-    prestashop.admin.geolocation.form_handler:
+    prestashop.admin.localization.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
