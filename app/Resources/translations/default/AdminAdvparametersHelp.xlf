@@ -410,8 +410,8 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:283</note>
       </trans-unit>
       <trans-unit id="423347880e13d3bf4a0e37ef28ace1b8">
-        <source>If you enable this option, your imported items' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</source>
-        <target>If you enable this option, your imported items' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</target>
+        <source>If you enable this option, your imported items' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</source>
+        <target>If you enable this option, your imported items' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:266</note>
       </trans-unit>
@@ -424,12 +424,6 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
         <target>Read more about the CSV format at:</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig:42</note>
-      </trans-unit>
-      <trans-unit id="404943b27a337c2bf69271e61d9dc66a">
-        <source>If you enable this option, your imported items ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</source>
-        <target>If you enable this option, your imported items ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig:154</note>
       </trans-unit>
     </body>
   </file>
