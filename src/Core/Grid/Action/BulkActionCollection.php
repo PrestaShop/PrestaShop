@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
  * Class BulkActionCollection holds bulk action collection available for grid
+ *
+ * @property BulkActionInterface[] $items
  */
 final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
 {
@@ -59,5 +61,23 @@ final class BulkActionCollection extends AbstractCollection implements BulkActio
     public function add(BulkActionInterface $bulkAction)
     {
         $this->items[$bulkAction->getId()] = $bulkAction;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $bulkActionsArray = [];
+
+        foreach ($this->items as $bulkAction) {
+            $bulkActionsArray[] = [
+                'id' => $bulkAction->getId(),
+                'name' => $bulkAction->getName(),
+                'icon' => $bulkAction->getIcon(),
+            ];
+        }
+
+        return $bulkActionsArray;
     }
 }
