@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Exception;
 
-use LogicException;
+use Exception;
 
-/**
- * Class MissingColumnInRowException
- */
-class MissingColumnInRowException extends LogicException implements ExceptionInterface
+class InvalidColumnDataException extends Exception implements ExceptionInterface
 {
 }

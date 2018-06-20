@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
+use InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidColumnDataException;
 use Symfony\Component\Form\FormTypeInterface;
 
 /**
@@ -46,7 +48,7 @@ final class Column implements ColumnInterface
     /**
      * @var string  Unique column identifier
      */
-    private $identifier;
+    private $id;
 
     /**
      * @var callable|null Column's content modifier if needed
@@ -74,14 +76,14 @@ final class Column implements ColumnInterface
     private $position = 0;
 
     /**
-     * @param string $identifier Unique column identifier
+     * @param string $id   Unique column identifier
      * @param string $name Translated column name
      * @param string $type
      */
-    public function __construct($identifier, $name, $type = 'simple')
+    public function __construct($id, $name, $type)
     {
         $this->name = $name;
-        $this->identifier = $identifier;
+        $this->id = $id;
         $this->type = $type;
     }
 
@@ -91,13 +93,21 @@ final class Column implements ColumnInterface
      * @param array $data
      *
      * @return Column
+     *
+     * @throws InvalidColumnDataException
      */
     public static function fromArray(array $data)
     {
+        if (false === isset($data['id'], $data['name'], $data['type'])) {
+            throw new InvalidColumnDataException(
+                'Invalid column data given. Check that column data has required attributes: "id", "name", "type".'
+            );
+        }
+
         $column = new self(
             $data['id'],
             $data['name'],
-            isset($data['type']) ? $data['type'] : 'simple'
+            $data['type']
         );
 
         if (isset($data['position'])) {
@@ -126,7 +136,7 @@ final class Column implements ColumnInterface
     public function setFilterFormType($formType, array $options = [])
     {
         if (!in_array(FormTypeInterface::class, class_implements($formType))) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Could not load type "%s": class does not implement %s',
                 $formType,
                 FormTypeInterface::class
@@ -168,7 +178,7 @@ final class Column implements ColumnInterface
      */
     public function getId()
     {
-        return $this->identifier;
+        return $this->id;
     }
 
     /**
