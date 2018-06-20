@@ -56,7 +56,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     protected function getIv()
     {
         if ($this->iv === null) {
-            $this->iv = substr(sha1(_COOKIE_IV_), 0, $this->getIvSize());
+            $this->iv = substr(sha1(_COOKIE_KEY_), 0, $this->getIvSize());
         }
 
         return $this->iv;
