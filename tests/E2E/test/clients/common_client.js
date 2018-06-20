@@ -493,6 +493,16 @@ class CommonClient {
       .refresh();
   }
 
+  dragAndDrop(sourceElement, destinationElement) {
+    return this.client
+      .pause(2000)
+      .moveToObject(sourceElement)
+      .buttonDown()
+      .moveToObject(destinationElement)
+      .buttonUp()
+      .pause(2000);
+  }
+
 }
 
 module.exports = CommonClient;
