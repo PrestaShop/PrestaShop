@@ -163,6 +163,27 @@ class VersionTest extends TestCase
     }
 
     /**
+     * @dataProvider getCompareNotEqual
+     *
+     * @param $version string  Version
+     * @param $result  boolean Result
+     */
+    public function testCompareNotEqualVersion($version, $result)
+    {
+        $this->assertEquals($result, $this->version->isNotEqualTo($version));
+    }
+
+    public function getCompareNotEqual()
+    {
+        return [
+            ['1.2.3.4', false],
+            ['1.2.3.1', true],
+            ['2.0', true],
+            ['1.2.3.5', true],
+        ];
+    }
+
+    /**
      * @dataProvider getInvalidVersions
      *
      * @param $version string  Version
