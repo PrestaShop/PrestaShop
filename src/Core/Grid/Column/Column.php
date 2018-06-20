@@ -76,15 +76,22 @@ final class Column implements ColumnInterface
     private $position = 0;
 
     /**
-     * @param string $id   Unique column identifier
-     * @param string $name Translated column name
-     * @param string $type
+     * @var array
      */
-    public function __construct($id, $name, $type)
+    private $options;
+
+    /**
+     * @param string $id     Unique column identifier
+     * @param string $name   Translated column name
+     * @param string $type   Column type
+     * @param array $options Column related options
+     */
+    public function __construct($id, $name, $type, array $options = [])
     {
         $this->name = $name;
         $this->id = $id;
         $this->type = $type;
+        $this->options = $options;
     }
 
     /**
@@ -107,7 +114,8 @@ final class Column implements ColumnInterface
         $column = new self(
             $data['id'],
             $data['name'],
-            $data['type']
+            $data['type'],
+            isset($data['options']) ? $data['options'] : []
         );
 
         if (isset($data['position'])) {
@@ -232,7 +240,7 @@ final class Column implements ColumnInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getPosition()
     {
@@ -240,9 +248,7 @@ final class Column implements ColumnInterface
     }
 
     /**
-     * @param int $position
-     *
-     * @return Column
+     * {@inheritdoc}
      */
     public function setPosition($position)
     {
@@ -252,12 +258,18 @@ final class Column implements ColumnInterface
     }
 
     /**
-     * Get column type
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

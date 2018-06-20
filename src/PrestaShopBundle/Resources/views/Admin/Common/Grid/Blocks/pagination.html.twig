@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,42 +21,19 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
-
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
-
-/**
- * Class BulkActionCollection holds bulk action collection available for grid
- */
-final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
-{
-    /**
-     * Create bulk collection from metho
-     *
-     * @param array $data
-     *
-     * @return BulkActionCollection
-     */
-    public static function fromArray(array $data)
-    {
-        $collection = new self();
-
-        foreach ($data as $actionArray) {
-            $action = BulkAction::fromArray($actionArray);
-
-            $collection->add($action);
-        }
-
-        return $collection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function add(BulkActionInterface $bulkAction)
-    {
-        $this->items[$bulkAction->getId()] = $bulkAction;
-    }
-}
+{% block grid_pagination %}
+  {% if grid.data.rows_total > 10 %}
+    <div class="row">
+      <div class="col-md-12">
+        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+          'limit': grid.pagination.limit,
+          'offset': grid.pagination.offset,
+          'total': grid.data.rows_total,
+          'caller_route': app.request.attributes.get('_route')
+        })) }}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

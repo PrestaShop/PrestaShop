@@ -23,191 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set filterForm = grid.filter_form %}
-{% set bulkActionsAvailable = grid.actions.bulk %}
-
-<div class="js-grid" id="{{ grid.id }}_grid">
-  {{ form_start(filterForm) }}
-
-  {% if bulkActionsAvailable %}
-    <div>
-      <div class="btn-group dropup bulk-catalog">
-        <button id="product_bulk_menu" class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
-                data-toggle="dropdown"
-                disabled
-        >
-          {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
-          <i class="icon-caret-up"></i>
-        </button>
-
-        <div class="dropdown-menu">
-          {% for bulkAction in grid.bulkActions %}
-            <button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, bulkAction.id) }}"
-                    class="dropdown-item"
-                    type="button"
-            >
-              {% if bulkAction.icon is not empty %}
-                <i class="material-icons">{{ bulkAction.icon }}</i>
-              {% endif %}
-              {{ bulkAction.name }}
-            </button>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
-  <table class="js-grid-table table"
-         id="{{ grid.id }}_grid_table"
-         data-query="{{ grid.data.query }}"
-  >
-    <thead class="thead-default">
-      <tr class="column-headers">
-        {% if bulkActionsAvailable %}
-          <th scope="col">&nbsp;</th>
-        {% endif %}
-
-        {% set orderBy, orderWay = grid.sorting.order_by, grid.sorting.order_way %}
-
-        {% for column in grid.columns %}
-          <th scope="col">
-            {% if column.is_sortable %}
-              {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay) }}
-            {% else %}
-              {{ column.name }}
-            {% endif %}
-          </th>
-        {% endfor %}
-
-        <th scope="col">&nbsp;</th>
-      </tr>
-      {% if filterForm|length > 1 %}
-        <tr class="column-filters">
-          {% if bulkActionsAvailable %}
-            <th>
-              <input type="checkbox"
-                     title="{{ 'Select all'|trans({}, 'Admin.Actions') }}"
-                     class="js-select-all-bulk-actions-checkbox"
-              >
-            </th>
-          {% endif %}
-
-          {% for column in grid.columns %}
-            <th>
-              {% if column.is_filterable %}
-                {{ form_widget(filterForm[column.id]) }}
-              {% else %}
-                -
-              {% endif %}
-            </th>
-          {% endfor %}
-
-          <th class="text-right">
-            <button type="submit" class="btn btn-primary">
-              <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}
-            </button>
-
-            {#{% if %}#}
-              {#<button class="btn btn-warning">#}
-                {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
-              {#</button>#}
-            {#{% endif %}#}
-          </th>
-        </tr>
-      {% endif %}
-    </thead>
-    <tbody>
-    {# If table has any rows then render those here #}
-    {% if grid.data.rows is not empty %}
-      {% for row in grid.data.rows %}
-        <tr>
-          {% if bulkActionsAvailable %}
-            <th>
-              <input class="js-bulk-action-checkbox"
-                     name="{{ grid.id }}_bulk[]"
-                     type="checkbox"
-                     title=""
-                     value=""
-              >
-            </th>
-          {% endif %}
-
-          {# Render row columns here #}
-          {% for column in grid.columns %}
-            <td>
-              {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'column': column, 'row': row}) }}
-            </td>
-          {% endfor %}
-
-          {# If row has any actions then render those here #}
-          {#{% set rowActions = row.actions %}#}
-          {#{% if rowActions is not empty %}#}
-            {#<td class="text-right">#}
-              {#<div class="btn-group-action">#}
-                {#<div class="btn-group">#}
-                  {#<a href="{{ rowActions|first.url }}"#}
-                     {#title="{{ rowActions|first.name }}"#}
-                     {#class="btn tooltip-link"#}
-                     {#id="{{ '%s_grid_row_action_%s'|format(grid.id, rowActions|first.id) }}"#}
-                  {#>#}
-                    {#<i class="material-icons">{{ rowActions|first.icon }}</i>#}
-                  {#</a>#}
-
-                  {# If there's more than one action, then render remaining actions here #}
-                  {#{% if rowActions|length > 1 %}#}
-                    {#<a class="btn btn-link dropdown-toggle dropdown-toggle-split"#}
-                       {#data-toggle="dropdown"#}
-                       {#aria-haspopup="true"#}
-                       {#aria-expanded="false"#}
-                    {#>#}
-                    {#</a>#}
-
-                    {#<div class="dropdown-menu dropdown-menu-right">#}
-                      {#{% for rowAction in rowActions|slice(1) %}#}
-                        {#<a class="dropdown-item"#}
-                           {#href="{{ rowAction.url }}"#}
-                           {#id="{{ '%s_grid_row_action_%s'|format(grid.id, rowAction.id) }}"#}
-                        {#>#}
-                          {#<i class="material-icons">{{ rowAction.icon }}</i>#}
-                          {#{{ rowAction.name }}#}
-                        {#</a>#}
-                      {#{% endfor %}#}
-                    {#</div>#}
-                  {#{% endif %}#}
-                {#</div>#}
-              {#</div>#}
-            {#</td>#}
-          {# If filters are available, it means we have "Search" button, then add empty column to fill the row #}
-          {#{% elseif filterForm|length > 1 %}#}
-            {#<td>&nbsp;</td>#}
-          {#{% endif %}#}
-        </tr>
-      {% endfor %}
-    {% else %}
-      <tr>
-        <td colspan="{{ grid.columns|length }}">
-          <div class="text-center">
-            <p><i class="material-icons">warning</i></p>
-            <p>{{ 'No records found'|trans }}</p>
-          </div>
-        </td>
-      </tr>
-    {% endif %}
-    </tbody>
-  </table>
-
-  {% if grid.data.rows_total > 10 %}
+<div class="row js-grid" id="{{ grid.id }}_grid">
+  <div class="col">
     <div class="row">
-      <div class="col-md-12">
-        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
-          'limit': grid.pagination.limit,
-          'offset': grid.pagination.offset,
-          'total': grid.data.rows_total,
-          'caller_route': app.request.attributes.get('_route')
-        })) }}
+      <div class="col">
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_block.html.twig', {'grid': grid}) }}
       </div>
     </div>
-  {% endif %}
 
-  {{ form_end(filterForm) }}
+    <div class="row">
+      <div class="col">
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': grid}) }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/pagination.html.twig', {'grid': grid}) }}
+      </div>
+    </div>
+  </div>
 </div>

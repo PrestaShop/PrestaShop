@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
@@ -58,6 +59,15 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return ColumnCollection::fromArray([
+            [
+                'id' => 'log_bulk',
+                'name' => '',
+                'type' => 'bulk_action',
+                'options' => [
+                    'bulk_value' => 'id_log',
+                    'sortable' => false,
+                ],
+            ],
             [
                 'id' => 'id_log',
                 'name' => $this->trans('ID', [], 'Admin.Global'),
@@ -112,7 +122,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getGridActions()
+    protected function getPanelActions()
     {
         return PanelActionCollection::fromArray([
             [
@@ -138,6 +148,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'name' => $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'icon' => 'storage',
                 'type' => 'export_to_sql_manager',
+            ],
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return BulkActionCollection::fromArray([
+            [
+                'id' => 'edit',
+                'name' => $this->trans('Edit', [], 'Admin.Actions'),
+                'icon' => 'edit',
             ],
         ]);
     }

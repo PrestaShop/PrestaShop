@@ -95,6 +95,7 @@ final class GridPresenter implements GridPresenterInterface
                 'is_sortable' => $column->isSortable(),
                 'is_filterable' => $column->isFilterable(),
                 'type' => $column->getType(),
+                'options' => $column->getOptions(),
             ];
 
             $positions[$key] = $column->getPosition();
@@ -118,7 +119,7 @@ final class GridPresenter implements GridPresenterInterface
 
         foreach ($grid->getDefinition()->getBulkActions() as $bulkAction) {
             $bulkActionsArray[] = [
-                'identifier' => $bulkAction->getIdentifier(),
+                'id' => $bulkAction->getId(),
                 'name' => $bulkAction->getName(),
                 'icon' => $bulkAction->getIcon(),
             ];
@@ -188,17 +189,6 @@ final class GridPresenter implements GridPresenterInterface
     {
         /** @var ColumnInterface $column */
         foreach ($columns as $column) {
-            // if for some reason column does not exist in a row
-            // and it doesn't have modifier
-            // then let developer know that something is wrong
-            if (!isset($row[$column->getId()]) && !is_callable($column->getModifier())) {
-                throw new MissingColumnInRowException(
-                    sprintf('Column "%s" does not exist in row "%s"', $column->getId(), json_encode($row))
-                );
-            }
-
-            // if column does not modify data
-            // then we keep original column data and skip modification
             if (!is_callable($column->getModifier())) {
                 continue;
             }

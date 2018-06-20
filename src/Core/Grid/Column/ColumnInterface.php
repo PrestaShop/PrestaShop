@@ -74,6 +74,13 @@ interface ColumnInterface
     public function getPosition();
 
     /**
+     * Get column related options
+     *
+     * @return array
+     */
+    public function getOptions();
+
+    /**
      * Get column type
      *
      * @return string
