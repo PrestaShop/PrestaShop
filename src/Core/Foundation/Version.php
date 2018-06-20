@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Version;
+namespace PrestaShop\PrestaShop\Core\Foundation;
 
-use PrestaShop\PrestaShop\Core\Foundation\Version\Exception\InvalidVersionException;
+use PrestaShopBundle\Exception\InvalidVersionException;
 
 /**
  * Class responsible of managing the right version of Shop
@@ -96,7 +96,7 @@ class Version
      *
      * @return string For example "1.7"
      */
-    public function getStringMajorVersion()
+    public function getMajorVersionString()
     {
         return $this->majorVersionString;
     }
@@ -242,12 +242,14 @@ class Version
      */
     private function checkVersion($version)
     {
-        if (!is_string($version)) {
-            throw InvalidVersionException::mustBeAString();
-        }
-
-        if (!preg_match('/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/', $version)) {
-            throw InvalidVersionException::mustBeValidName();
+        if (!preg_match('~^\d+(\.\d+){0,}$~', $version)) {
+            throw new InvalidVersionException(
+                sprintf(
+                    'You provided an invalid version string ("%s"). A valid version string '.
+                    'must contain numeric characters separated by "." characters, for example "1.7.4.0".',
+                    $version
+                )
+            );
         }
 
         return true;
