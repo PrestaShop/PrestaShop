@@ -31,6 +31,10 @@ module.exports = {
     product_description: '//*[@id="description"]',
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
+    widget_after_product_thumbs: '//*[@id="content"]//p[contains(text(),"%NAME")]',
+    second_widget_after_product_thumbs:'//*[@id="content"]//div[2]/p',
+    product_footer_linkwidget:'//*[@id="main"]/div[2]//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
+    second_product_footer_linkwidget:'//*[@id="main"]/div[2]/div/div[2]/p',
     filename_link: '(//*[@id="attachments"]//a)[1]'
   }
 };
