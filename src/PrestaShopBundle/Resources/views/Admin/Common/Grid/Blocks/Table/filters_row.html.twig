@@ -29,8 +29,6 @@
       <th>
         {% if column.is_filterable %}
           {{ form_widget(grid.filter_form[column.id]) }}
-        {% else %}
-          -
         {% endif %}
       </th>
     {% endfor %}

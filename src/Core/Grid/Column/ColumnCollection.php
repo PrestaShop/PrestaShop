@@ -72,12 +72,41 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     public function addAfter($id, ColumnInterface $newColumn)
     {
         if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf('Column with id "%s" was not founds', $id));
+            throw new ColumnNotFoundException(sprintf(
+                'Column with id "%s" was not found.', $id
+            ));
         }
 
         $newColumnPosition = $this->items[$id]->getPosition() + 1;
         $newColumn->setPosition($newColumnPosition);
 
         $this->add($newColumn);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $columnsArray = [];
+        $positions = [];
+
+        /** @var ColumnInterface $column */
+        foreach ($this->items as $key => $column) {
+            $columnsArray[] = [
+                'id' => $column->getId(),
+                'name' => $column->getName(),
+                'is_sortable' => $column->isSortable(),
+                'is_filterable' => $column->isFilterable(),
+                'type' => $column->getType(),
+                'options' => $column->getOptions(),
+            ];
+
+            $positions[$key] = $column->getPosition();
+        }
+
+        array_multisort($positions, SORT_ASC, $columnsArray);
+
+        return $columnsArray;
     }
 }

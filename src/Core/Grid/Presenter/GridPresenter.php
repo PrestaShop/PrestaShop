@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Exception\MissingColumnInRowException;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
@@ -42,116 +40,33 @@ final class GridPresenter implements GridPresenterInterface
      */
     public function present(GridInterface $grid)
     {
-        $gridArray = [
-            'id' => $grid->getDefinition()->getId(),
-            'name' => $grid->getDefinition()->getName(),
+        $definition = $grid->getDefinition();
+        $searchCriteria = $grid->getSearchCriteria();
+        $data = $grid->getData();
+
+        return [
+            'id' => $definition->getId(),
+            'name' => $definition->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
+            'columns' => $definition->getColumns()->toArray(),
+            'actions' => [
+                'panel' => $definition->getPanelActions()->toArray(),
+                'bulk' => $definition->getBulkActions()->toArray(),
+            ],
+            'data' => [
+                'rows' => $this->presentRows($grid),
+                'rows_total' => $data->getRowsTotal(),
+                'query' => $data->getQuery(),
+            ],
+            'pagination' => [
+                'offset' => $searchCriteria->getOffset(),
+                'limit' => $searchCriteria->getLimit(),
+            ],
+            'sorting' => [
+                'order_by' => $searchCriteria->getOrderBy(),
+                'order_way' => $searchCriteria->getOrderWay(),
+            ],
         ];
-        $gridArray['columns'] = $this->presentColumns($grid);
-
-        $gridArray['actions'] = [
-            'panel' => $this->presentPanelAction($grid),
-            'bulk' => $this->presentBulkActions($grid),
-        ];
-
-        $gridArray['data'] = [
-            'rows' => $this->presentRows($grid),
-            'rows_total' => $grid->getData()->getRowsTotal(),
-            'query' => $grid->getData()->getQuery(),
-        ];
-
-        $gridArray['pagination'] = [
-            'offset' => $grid->getSearchCriteria()->getOffset(),
-            'limit' => $grid->getSearchCriteria()->getLimit(),
-        ];
-
-        $gridArray['sorting'] = [
-            'order_by' => $grid->getSearchCriteria()->getOrderBy(),
-            'order_way' => $grid->getSearchCriteria()->getOrderWay(),
-        ];
-
-        return $gridArray;
-    }
-
-    /**
-     * Present grid columns
-     *
-     * @param GridInterface $grid
-     *
-     * @return array Presented columns
-     */
-    private function presentColumns(GridInterface $grid)
-    {
-        $columnsArray = [];
-
-        $columns = $grid->getDefinition()->getColumns();
-        $positions = [];
-
-        /** @var ColumnInterface $column */
-        foreach ($columns as $key => $column) {
-            $columnsArray[] = [
-                'id' => $column->getId(),
-                'name' => $column->getName(),
-                'is_sortable' => $column->isSortable(),
-                'is_filterable' => $column->isFilterable(),
-                'type' => $column->getType(),
-                'options' => $column->getOptions(),
-            ];
-
-            $positions[$key] = $column->getPosition();
-        }
-
-        array_multisort($positions, SORT_ASC, $columnsArray);
-
-        return $columnsArray;
-    }
-
-    /**
-     * Present bulk actions available for grid
-     *
-     * @param GridInterface $grid
-     *
-     * @return array
-     */
-    private function presentBulkActions(GridInterface $grid)
-    {
-        $bulkActionsArray = [];
-
-        foreach ($grid->getDefinition()->getBulkActions() as $bulkAction) {
-            $bulkActionsArray[] = [
-                'id' => $bulkAction->getId(),
-                'name' => $bulkAction->getName(),
-                'icon' => $bulkAction->getIcon(),
-            ];
-        }
-
-        return $bulkActionsArray;
-    }
-
-    /**
-     * Present available grid actions
-     *
-     * @param GridInterface $grid
-     *
-     * @return array
-     */
-    private function presentPanelAction(GridInterface $grid)
-    {
-        $panelActions = [];
-
-        /** @var PanelActionInterface $panelAction */
-        foreach ($grid->getDefinition()->getPanelActions() as $panelAction) {
-            $actionView = [
-                'id' => $panelAction->getId(),
-                'name' => $panelAction->getName(),
-                'icon' => $panelAction->getIcon(),
-                'type' => $panelAction->getType(),
-            ];
-
-            $panelActions[] = $actionView;
-        }
-
-        return $panelActions;
     }
 
     /**

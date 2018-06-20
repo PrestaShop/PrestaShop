@@ -48,4 +48,11 @@ interface ColumnCollectionInterface extends Iterator, Countable
      * @param ColumnInterface $column
      */
     public function addAfter($id, ColumnInterface $column);
+
+    /**
+     * Get column collection as array
+     *
+     * @return array
+     */
+    public function toArray();
 }

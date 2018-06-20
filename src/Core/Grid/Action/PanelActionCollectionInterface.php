@@ -39,4 +39,11 @@ interface PanelActionCollectionInterface extends Iterator
      * @param PanelActionInterface $action
      */
     public function add(PanelActionInterface $action);
+
+    /**
+     * Get grid panel actions as array
+     *
+     * @return array
+     */
+    public function toArray();
 }

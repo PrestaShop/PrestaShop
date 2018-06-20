@@ -39,4 +39,11 @@ interface BulkActionCollectionInterface extends Iterator
      * @param BulkActionInterface $bulkAction
      */
     public function add(BulkActionInterface $bulkAction);
+
+    /**
+     * Get bulk actions as array
+     *
+     * @return array
+     */
+    public function toArray();
 }
