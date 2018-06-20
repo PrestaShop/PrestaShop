@@ -60,6 +60,11 @@
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
       </div>
     </div>
+
+    {% block geolocation_form_reset %}
+      {{ form_end(geolocationForm) }}
+    {% endblock %}
+
     {{ form_end(geolocationForm) }}
   </div>
 {% endblock %}

@@ -28,5 +28,5 @@ import ChoiceTable from '../../components/choice-table';
 const $ = window.$;
 
 $(() => {
-  new ChoiceTable().init();
+  new ChoiceTable();
 });

@@ -30,9 +30,9 @@ const $ = window.$;
  */
 export default class ChoiceTable {
   /**
-   * Initialize component
+   * Init constructor
    */
-  init() {
+  constructor() {
     $(document).on('change', '.js-choice-table-select-all', (e) => {
       this.handleSelectAll(e);
     });
