@@ -34,6 +34,7 @@
 class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
 {
     protected $key;
+    protected $hmacIv;
     protected $iv;
     protected $ivSize;
 
@@ -56,10 +57,24 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     protected function getIv()
     {
         if ($this->iv === null) {
-            $this->iv = substr(sha1(_COOKIE_KEY_), 0, $this->getIvSize());
+            $this->iv = mcrypt_create_iv($this->getIvSize(), MCRYPT_RAND);
         }
 
         return $this->iv;
+    }
+
+    /**
+     * Get Iv
+     *
+     * @return string
+     */
+    protected function getHmacIv()
+    {
+        if ($this->hmacIv === null) {
+            $this->hmacIv = substr(sha1(_COOKIE_KEY_), 0, $this->getIvSize());
+        }
+
+        return $this->hmacIv;
     }
 
     /**
@@ -139,10 +154,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      */
     protected function generateHmac($encrypted)
     {
-        $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->getIv(), 32);
+        $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->getHmacIv(), 32);
         return hash_hmac(
             'sha256',
-            $this->getIv() . MCRYPT_RIJNDAEL_128 . $encrypted,
+            $this->getHmacIv() . MCRYPT_RIJNDAEL_128 . $encrypted,
             $macKey
         );
     }
