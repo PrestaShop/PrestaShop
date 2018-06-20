@@ -134,15 +134,18 @@ module.exports = {
 
   sortProduct: function (selector, sortBy) {
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
-      test('should click on "Sort by ASC" icon', () => {
-        let sortSelector = sortBy === 'name' || sortBy === 'reference' ? ProductList.sort_button.replace("%B", sortBy) : sortBy === 'id_product' ? ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc") : ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc");
-        for (let j = 0; j < global.productsPageNumber; j++) {
-          promise = client.getProductsInformation(selector, j);
-        }
-        return promise
-          .then(() => client.moveToObject(sortSelector))
-          .then(() => client.waitForExistAndClick(sortSelector));
-      });
+      if (sortBy !== 'id_product') {
+        test('should click on "Sort by ASC" icon', () => {
+          let sortSelector = sortBy === 'name' || sortBy === 'reference' || sortBy === 'name_category' || sortBy === 'price' || sortBy === 'sav_quantity' || sortBy === 'active' ? ProductList.sort_button.replace("%B", sortBy) : sortBy === 'id_product' ? ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc") : ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc");
+          for (let j = 0; j < global.productsPageNumber; j++) {
+            promise = client.getProductsInformation(selector, j);
+          }
+          return promise
+            .then(() => client.moveToObject(sortSelector))
+            .then(() => client.waitForExistAndClick(sortSelector));
+        });
+      }
+
       test('should check that the products is well sorted by ASC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
@@ -167,6 +170,23 @@ module.exports = {
     }, 'product/product');
   },
 
+  productList: function (AddProductPage, selector, searchBy, min = 0, max = 0) {
+    scenario('Check the list of products', client => {
+      test('should check the list of products', () => {
+        for (let j = 0; j < global.productsPageNumber; j++) {
+          promise = client.getSearchProducts(selector, j);
+        }
+        return promise
+          .then(() => client.checkSearchProduct(searchBy, min, max))
+          .then(() => global.productsInformations = [])
+      });
+      test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+      if (searchBy === 'inactive_status') {
+        test('should enable the first product', () => client.waitForExistAndClick(ProductList.change_product_status.replace("%ID", 1)));
+      }
+    }, 'product/product');
+  },
+
   checkPaginationFO(client, productPage, buttonName, pageNumber) {
     let selectorButton = buttonName === 'Next' ? productPage.pagination_next : productPage.pagination_previous;
     test('should click on "' + buttonName + '" button', () => {
@@ -177,7 +197,6 @@ module.exports = {
     test('should check that the current page number is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
     test('should check that the page value in the URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
   },
-
 
   checkPaginationBO(nextOrPrevious, pageNumber, itemPerPage, close = false, paginateBetweenPages = false) {
     scenario('Navigate between catalog pages and set the paginate limit equal to "' + itemPerPage + '"', client => {
