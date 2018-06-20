@@ -36,7 +36,7 @@ interface BulkActionInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getId();
 
     /**
      * Get translated bulk action name

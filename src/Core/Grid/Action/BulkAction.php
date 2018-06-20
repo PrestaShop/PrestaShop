@@ -39,23 +39,41 @@ final class BulkAction implements BulkActionInterface
     /**
      * @var string
      */
-    private $icon = '';
+    private $icon;
 
     /**
      * @var string
      */
-    private $identifier;
+    private $id;
 
     /**
-     * @param string   $identifier Action identifier should be unique between all grid row actions
-     * @param string   $name       Translated action name
-     * @param string   $icon       Action icon name
+     * @param string $id   Action identifier should be unique between all grid row actions
+     * @param string $name Translated action name
+     * @param string $icon Action icon name
      */
-    public function __construct($identifier, $name, $icon = '')
+    public function __construct($id, $name, $icon = '')
     {
         $this->name = $name;
-        $this->identifier = $identifier;
+        $this->id = $id;
         $this->icon = $icon;
+    }
+
+    /**
+     * Create bulk action from array data
+     *
+     * @param array $data
+     *
+     * @return BulkAction
+     */
+    public static function fromArray(array $data)
+    {
+        $action = new self(
+            $data['id'],
+            $data['name'],
+            $data['icon']
+        );
+
+        return $action;
     }
 
     /**
@@ -77,8 +95,8 @@ final class BulkAction implements BulkActionInterface
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getId()
     {
-        return $this->identifier;
+        return $this->id;
     }
 }

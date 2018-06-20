@@ -55,8 +55,8 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $definition->setBulkActions($this->getBulkActions());
         }
 
-        if (null !== $this->getGridActions()) {
-            $definition->setGridActions($this->getGridActions());
+        if (null !== $this->getPanelActions()) {
+            $definition->setGridActions($this->getPanelActions());
         }
 
         return $definition;
@@ -107,9 +107,12 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     }
 
     /**
+     * Get panel actions for grid.
+     * Override this method to add panel actions for grid.
+     *
      * @return PanelActionCollectionInterface|null
      */
-    protected function getGridActions()
+    protected function getPanelActions()
     {
         return null;
     }
