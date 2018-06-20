@@ -61,6 +61,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             [
                 'id' => 'id_log',
                 'name' => $this->trans('ID', [], 'Admin.Global'),
+                'type' => 'simple',
                 'filter_form_type' => TextType::class,
             ],
             [
@@ -72,31 +73,37 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             [
                 'id' => 'severity',
                 'name' => $this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'),
+                'type' => 'simple',
                 'filter_form_type' => TextType::class,
             ],
             [
                 'id' => 'message',
                 'name' => $this->trans('Message', [], 'Admin.Global'),
+                'type' => 'simple',
                 'filter_form_type' => TextType::class,
             ],
             [
                 'id' => 'object_type',
                 'name' => $this->trans('Object type', [], 'Admin.Advparameters.Feature'),
+                'type' => 'simple',
                 'filter_form_type' => TextType::class,
             ],
             [
                 'id' => 'object_id',
                 'name' => $this->trans('Object ID', [], 'Admin.Advparameters.Feature'),
+                'type' => 'simple',
                 'filter_form_type' => TextType::class,
             ],
             [
                 'id' => 'error_code',
                 'name' => $this->trans('Error code', [], 'Admin.Advparameters.Feature'),
+                'type' => 'simple',
                 'filter_form_type' => TextType::class,
             ],
             [
                 'id' => 'date_add',
                 'name' => $this->trans('Date', [], 'Admin.Global'),
+                'type' => 'simple',
                 'filter_form_type' => DateRangeType::class,
             ],
         ]);
@@ -118,11 +125,13 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'id' => 'ps_refresh_list',
                 'name' => $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
                 'icon' => 'refresh',
+                'type' => 'simple',
             ],
             [
                 'id' => 'ps_show_query',
                 'name' => $this->trans('Show SQL query', [], 'Admin.Actions'),
                 'icon' => 'code',
+                'type' => 'simple',
             ],
             [
                 'id' => 'ps_export_sql_manager',
