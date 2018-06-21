@@ -50,8 +50,8 @@ class InvoicesController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $byDateForm = $this->get('prestashop.admin.orders.invoices.by_date.form_handler')->getForm();
-        $byStatusForm = $this->get('prestashop.admin.orders_invoices_by_status.form_handler')->getForm();
+        $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
+        $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
 
         return [
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
@@ -90,7 +90,7 @@ class InvoicesController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_order_invoices');
         }
 
-        $formHandler = $this->get('prestashop.admin.orders.invoices.by_date.form_handler');
+        $formHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
@@ -152,7 +152,7 @@ class InvoicesController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_order_invoices');
         }
 
-        $formHandler = $this->get('prestashop.admin.orders_invoices_by_status.form_handler');
+        $formHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
