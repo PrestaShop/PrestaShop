@@ -28,11 +28,12 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class CountryChoiceProvider is responsible for providing country choices for ChoiceType form field
  */
-class CountryChoiceProvider
+class CountryChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var LegacyContext

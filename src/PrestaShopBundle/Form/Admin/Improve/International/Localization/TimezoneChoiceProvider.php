@@ -26,12 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 
 /**
  * Class TimezoneChoiceProvider is responsible for providing timezone choices for ChoiceType form field
  */
-class TimezoneChoiceProvider
+class TimezoneChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var TimezoneRepository

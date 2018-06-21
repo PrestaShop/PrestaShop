@@ -3,11 +3,12 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class LanguageChoiceProvider is responsible for providing language choices for ChoiceType form field
  */
-class LanguageChoiceProvider
+class LanguageChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var LanguageDataProvider

@@ -27,11 +27,12 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class CurrencyChoiceProvider is responsible for providing currency choices for ChoiceType form field
  */
-class CurrencyChoiceProvider
+class CurrencyChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var CurrencyDataProvider

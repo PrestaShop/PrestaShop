@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -34,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class LocalizationPackChoiceProvider is responsible for providing localization pack choices for ChoiceType form field
  */
-class LocalizationPackChoiceProvider
+class LocalizationPackChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var LocalizationPackLoaderInterface
