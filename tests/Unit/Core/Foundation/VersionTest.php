@@ -36,11 +36,22 @@ class VersionTest extends TestCase
      */
     protected $version;
 
+    /**
+     * @var Version
+     */
+    protected $anotherVersion;
+
     const VERSION = '1.2.3.4';
     const MAJOR_VERSION_STRING = '1.2';
     const MAJOR_VERSION = 12;
     const MINOR_VERSION = 3;
     const RELEASE_VERSION = 4;
+
+    const ANOTHER_VERSION = '1.2.0.0';
+    const ANOTHER_MAJOR_VERSION_STRING = '1.2';
+    const ANOTHER_MAJOR_VERSION = 12;
+    const ANOTHER_MINOR_VERSION = 3;
+    const ANOTHER_RELEASE_VERSION = 4;
 
     public function setUp()
     {
@@ -50,6 +61,14 @@ class VersionTest extends TestCase
             self::MAJOR_VERSION,
             self::MINOR_VERSION,
             self::RELEASE_VERSION
+        );
+
+        $this->anotherVersion = new Version(
+            self::ANOTHER_VERSION,
+            self::ANOTHER_MAJOR_VERSION_STRING,
+            self::ANOTHER_MAJOR_VERSION,
+            self::ANOTHER_MINOR_VERSION,
+            self::ANOTHER_RELEASE_VERSION
         );
     }
 
@@ -92,10 +111,18 @@ class VersionTest extends TestCase
     public function getCompareGreater()
     {
         return [
+            ['1.2.3.4', false],
+            ['1', true],
             ['1.2', true],
-            ['1.2.3.1', true],
+            ['1.2.3', true],
+            ['2', false],
             ['2.0', false],
+            ['1.3', false],
+            ['1.2.4', false],
             ['1.2.3.5', false],
+            ['1.1', true],
+            ['1.2.2', true],
+            ['1.2.3.3', true],
         ];
     }
 
@@ -114,9 +141,17 @@ class VersionTest extends TestCase
     {
         return [
             ['1.2.3.4', true],
-            ['1.2.3.1', true],
+            ['1', true],
+            ['1.2', true],
+            ['1.2.3', true],
+            ['2', false],
             ['2.0', false],
+            ['1.3', false],
+            ['1.2.4', false],
             ['1.2.3.5', false],
+            ['1.1', true],
+            ['1.2.2', true],
+            ['1.2.3.3', true],
         ];
     }
 
@@ -135,9 +170,35 @@ class VersionTest extends TestCase
     {
         return [
             ['1.2.3.4', false],
-            ['1.2.3.1', false],
+            ['1', false],
+            ['1.2', false],
+            ['1.2.3', false],
+            ['2', true],
             ['2.0', true],
+            ['1.3', true],
+            ['1.2.4', true],
             ['1.2.3.5', true],
+            ['1.1', false],
+            ['1.2.2', false],
+            ['1.2.3.3', false],
+        ];
+    }
+
+    /**
+     * @dataProvider getAnotherCompareGreater
+     *
+     * @param $version string  Version
+     * @param $result  boolean Result
+     */
+    public function testCompareGreaterAnotherVersion($version, $result)
+    {
+        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version));
+    }
+
+    public function getAnotherCompareGreater()
+    {
+        return [
+            ['1.0', false],
         ];
     }
 
@@ -156,9 +217,46 @@ class VersionTest extends TestCase
     {
         return [
             ['1.2.3.4', true],
-            ['1.2.3.1', false],
+            ['1', false],
+            ['1.2', false],
+            ['1.2.3', false],
+            ['2', true],
             ['2.0', true],
+            ['1.3', true],
+            ['1.2.4', true],
             ['1.2.3.5', true],
+            ['1.1', false],
+            ['1.2.2', false],
+            ['1.2.3.3', false],
+        ];
+    }
+
+    /**
+     * @dataProvider getCompareEqual
+     *
+     * @param $version string  Version
+     * @param $result  boolean Result
+     */
+    public function testCompareEqualVersion($version, $result)
+    {
+        $this->assertEquals($result, $this->version->isEqualTo($version));
+    }
+
+    public function getCompareEqual()
+    {
+        return [
+            ['1.2.3.4', true],
+            ['1', false],
+            ['1.2', false],
+            ['1.2.3', false],
+            ['2', false],
+            ['2.0', false],
+            ['1.3', false],
+            ['1.2.4', false],
+            ['1.2.3.5', false],
+            ['1.1', false],
+            ['1.2.2', false],
+            ['1.2.3.3', false],
         ];
     }
 
@@ -177,9 +275,17 @@ class VersionTest extends TestCase
     {
         return [
             ['1.2.3.4', false],
-            ['1.2.3.1', true],
+            ['1', true],
+            ['1.2', true],
+            ['1.2.3', true],
+            ['2', true],
             ['2.0', true],
+            ['1.3', true],
+            ['1.2.4', true],
             ['1.2.3.5', true],
+            ['1.1', true],
+            ['1.2.2', true],
+            ['1.2.3.3', true],
         ];
     }
 
