@@ -382,7 +382,7 @@ class MailCore extends ObjectModel
                 $moduleName = $res[1];
             }
             
-            //It template path is passed it is not overridden with standard template path 
+            // If $templatePath parameter is used, it is not overridden with standard template path
             
             $overrideTemplatePath = false;
 
