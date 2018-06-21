@@ -24,41 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 
 /**
- * Class CurrencyChoiceProvider is responsible for providing currency choices for ChoiceType form field
+ * Class TimezoneByNameChoiceProvider provides timezone choices with name values
  */
-class CurrencyChoiceProvider implements FormChoiceProviderInterface
+final class TimezoneByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var CurrencyDataProvider
+     * @var TimezoneRepository
      */
-    private $currencyDataProvider;
+    private $timezoneRepository;
 
     /**
-     * @param CurrencyDataProvider $currencyDataProvider
+     * @param TimezoneRepository $timezoneRepository
      */
-    public function __construct(CurrencyDataProvider $currencyDataProvider)
+    public function __construct(TimezoneRepository $timezoneRepository)
     {
-        $this->currencyDataProvider = $currencyDataProvider;
+        $this->timezoneRepository = $timezoneRepository;
     }
 
     /**
-     * Get currency choices
+     * Get timezone choices
      *
      * @return array
      */
     public function getChoices()
     {
-        $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
+        $timezones = $this->timezoneRepository->findAll();
         $choices = [];
 
-        foreach ($currencies as $currency) {
-            $choices[$currency['name']] = $currency['id_currency'];
+        foreach ($timezones as $timezone) {
+            $choices[$timezone['name']] = $timezone['name'];
         }
 
         return $choices;

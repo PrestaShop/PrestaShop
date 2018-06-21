@@ -371,10 +371,10 @@ services:
     form.type.localization_configuration:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
         arguments:
-            - '@=service("prestashop.form.choice_provider.language").getChoices()'
-            - '@=service("prestashop.form.choice_provider.country").getChoices()'
-            - '@=service("prestashop.form.choice_provider.currency").getChoices()'
-            - '@=service("prestashop.form.choice_provider.timezone").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
         tags:
             - { name: form.type }
 
@@ -383,7 +383,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@=service("prestashop.form.choice_provider.localization_pack").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.localization_pack_by_iso_code").getChoices()'
         tags:
             - { name: form.type }
 

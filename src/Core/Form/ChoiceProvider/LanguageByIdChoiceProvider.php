@@ -24,41 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 
 /**
- * Class TimezoneChoiceProvider is responsible for providing timezone choices for ChoiceType form field
+ * Class LanguageByIdChoiceProvider provides language choices with ID values
  */
-class TimezoneChoiceProvider implements FormChoiceProviderInterface
+final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var TimezoneRepository
+     * @var LanguageDataProvider
      */
-    private $timezoneRepository;
+    private $languageDataProvider;
 
     /**
-     * @param TimezoneRepository $timezoneRepository
+     * @param LanguageDataProvider $languageDataProvider
      */
-    public function __construct(TimezoneRepository $timezoneRepository)
+    public function __construct(LanguageDataProvider $languageDataProvider)
     {
-        $this->timezoneRepository = $timezoneRepository;
+        $this->languageDataProvider = $languageDataProvider;
     }
 
     /**
-     * Get timezone choices
+     * Get language choices for form
      *
      * @return array
      */
     public function getChoices()
     {
-        $timezones = $this->timezoneRepository->findAll();
+        $languages = $this->languageDataProvider->getLanguages();
         $choices = [];
 
-        foreach ($timezones as $timezone) {
-            $choices[$timezone['name']] = $timezone['name'];
+        foreach ($languages as $language) {
+            $choices[$language['name']] = $language['id_lang'];
         }
 
         return $choices;

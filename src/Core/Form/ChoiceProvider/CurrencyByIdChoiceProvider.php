@@ -24,37 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CountryChoiceProvider is responsible for providing country choices for ChoiceType form field
+ * Class CurrencyByIdChoiceProvider provides currency choices with ID values
  */
-class CountryChoiceProvider implements FormChoiceProviderInterface
+final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var LegacyContext
+     * @var CurrencyDataProvider
      */
-    private $legacyContext;
+    private $currencyDataProvider;
 
     /**
-     * @var CountryDataProvider
+     * @param CurrencyDataProvider $currencyDataProvider
      */
-    private $countryDataProvider;
-
-    /**
-     * @param LegacyContext $legacyContext
-     * @param CountryDataProvider $countryDataProvider
-     */
-    public function __construct(
-        LegacyContext $legacyContext,
-        CountryDataProvider $countryDataProvider
-    ) {
-        $this->legacyContext = $legacyContext;
-        $this->countryDataProvider = $countryDataProvider;
+    public function __construct(CurrencyDataProvider $currencyDataProvider)
+    {
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -64,12 +54,11 @@ class CountryChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $contextLanguage = $this->legacyContext->getLanguage();
-        $countries = $this->countryDataProvider->getCountries($contextLanguage->id);
+        $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
         $choices = [];
 
-        foreach ($countries as $country) {
-            $choices[$country['name']] = $country['id_country'];
+        foreach ($currencies as $currency) {
+            $choices[$currency['name']] = $currency['id_currency'];
         }
 
         return $choices;
