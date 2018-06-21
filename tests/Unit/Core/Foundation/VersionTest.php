@@ -192,13 +192,13 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterAnotherVersion($version, $result)
     {
-        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version));
+        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version . ' must be ' . ($result ? 'true' : 'false'));
     }
 
     public function getAnotherCompareGreater()
     {
         return [
-            ['1.0', false],
+            ['1.2.0', false],
         ];
     }
 
