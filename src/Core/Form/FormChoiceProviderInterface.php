@@ -23,37 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShop\PrestaShop\Core\Form;
 
-class Validate
+/**
+ * Interface FormChoiceProviderInterface defines contract for choice providers
+ */
+interface FormChoiceProviderInterface
 {
-    public static function isOrderWay($way)
-    {
-        return ValidateLegacy::isOrderWay($way);
-    }
-
-    public static function isOrderBy($order)
-    {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
-    }
-
     /**
-     * Check if HTML content is clean
+     * Get choices
      *
-     * @param string $html
-     * @param bool $allowIframe
-     *
-     * @return bool
+     * @return array
      */
-    public function isCleanHtml($html, $allowIframe = false)
-    {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
-    }
+    public function getChoices();
 }

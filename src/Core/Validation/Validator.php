@@ -24,12 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Validation;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Adapter\Validate;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Class Validator is responsible for validating data
+ */
+final class Validator implements ValidatorInterface
+{
+    /**
+     * @var Validate
+     */
+    private $validate;
+
+    /**
+     * @param Validate $validate
+     */
+    public function __construct(Validate $validate)
+    {
+        $this->validate = $validate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isCleanHtml($html, array $options = [])
+    {
+        $defaultOptions = [
+            'allow_iframe' => false,
+        ];
+        $options = array_merge($defaultOptions, $options);
+
+        return $this->validate->isCleanHtml($html, $options['allow_iframe']);
+    }
+}

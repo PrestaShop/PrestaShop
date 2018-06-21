@@ -23,37 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
-class Validate
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+/**
+ * Class GeolocationByIpAddressType is responsible for handling "Improve > International > Localization > Geolocation"
+ * IP addresses whitelist form
+ */
+class GeolocationByIpAddressType extends AbstractType
 {
-    public static function isOrderWay($way)
-    {
-        return ValidateLegacy::isOrderWay($way);
-    }
-
-    public static function isOrderBy($order)
-    {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
-    }
-
     /**
-     * Check if HTML content is clean
-     *
-     * @param string $html
-     * @param bool $allowIframe
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isCleanHtml($html, $allowIframe = false)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
+        $builder
+            ->add('geolocation_enabled', SwitchType::class)
+        ;
     }
 }

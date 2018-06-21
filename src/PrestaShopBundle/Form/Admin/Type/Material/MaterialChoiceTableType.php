@@ -23,37 +23,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShopBundle\Form\Admin\Type\Material;
 
-class Validate
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+/**
+ * Class MaterialChoiceTableType renders checkbox choices using table layout
+ */
+class MaterialChoiceTableType extends AbstractType
 {
-    public static function isOrderWay($way)
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return ValidateLegacy::isOrderWay($way);
-    }
-
-    public static function isOrderBy($order)
-    {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
+        $resolver->setDefaults([
+            'expanded' => true,
+            'multiple' => true,
+        ]);
     }
 
     /**
-     * Check if HTML content is clean
-     *
-     * @param string $html
-     * @param bool $allowIframe
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isCleanHtml($html, $allowIframe = false)
+    public function getParent()
     {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
+        return ChoiceType::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'material_choice_table';
     }
 }

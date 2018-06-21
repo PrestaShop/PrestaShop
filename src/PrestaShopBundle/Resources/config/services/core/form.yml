@@ -30,3 +30,15 @@ services:
             - '@prestashop.core.localization.pack.loader.local'
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+
+    prestashop.bundle.form.choice_provider.country:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CountryChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.adapter.data_provider.country'
+
+    prestashop.core.form.choice_provider.country_by_iso_code:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+            - '@prestashop.adapter.data_provider.country'

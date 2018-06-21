@@ -753,6 +753,7 @@ class LinkCore
                     'AdminTranslationSf' => 'admin_international_translation_overview',
                     'AdminPayment' => 'admin_payment_methods',
                     'AdminLocalization' => 'admin_localization_show_settings',
+                    'AdminGeolocation' => 'admin_geolocation',
                 );
 
                 if (isset($routes[$controller])) {

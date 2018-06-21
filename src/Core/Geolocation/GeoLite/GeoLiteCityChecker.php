@@ -23,37 +23,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShop\PrestaShop\Core\Geolocation\GeoLite;
 
-class Validate
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+
+/**
+ * Class GeoLiteCityChecker is responsible for checking if GeoLiteCity data is available
+ */
+final class GeoLiteCityChecker implements GeoLiteCityCheckerInterface
 {
-    public static function isOrderWay($way)
-    {
-        return ValidateLegacy::isOrderWay($way);
-    }
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
 
-    public static function isOrderBy($order)
+    /**
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(ConfigurationInterface $configuration)
     {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
+        $this->configuration = $configuration;
     }
 
     /**
-     * Check if HTML content is clean
-     *
-     * @param string $html
-     * @param bool $allowIframe
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isCleanHtml($html, $allowIframe = false)
+    public function isAvailable()
     {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
+        $geoIpDir = $this->configuration->get('_PS_GEOIP_DIR_');
+        $geoLiteCityFile = $this->configuration->get('_PS_GEOIP_CITY_FILE_');
+
+        return file_exists($geoIpDir.$geoLiteCityFile);
     }
 }

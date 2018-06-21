@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,12 +23,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+const $ = window.$;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * ChoiceTable is responsible for managing common actions in choice table form type
+ */
+export default class ChoiceTable {
+  /**
+   * Init constructor
+   */
+  constructor() {
+    $(document).on('change', '.js-choice-table-select-all', (e) => {
+      this.handleSelectAll(e);
+    });
+  }
 
-header('Location: ../../../../../../../');
-exit;
+  /**
+   * Check/uncheck all boxes in table
+   *
+   * @param {Event} event
+   */
+  handleSelectAll(event) {
+    const $selectAllCheckboxes = $(event.target);
+    const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
+
+    $selectAllCheckboxes.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
+  }
+}

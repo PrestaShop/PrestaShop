@@ -24,12 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve\International;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
 
-header('Location: ../../../../../../../../');
-exit;
+/**
+ * @group demo
+ */
+class GeolocationControllerTest extends WebTestCase
+{
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->enableDemoMode();
+    }
+
+    public function testIndexAction()
+    {
+        $this->client->request('GET', $this->router->generate('admin_geolocation'));
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    }
+}

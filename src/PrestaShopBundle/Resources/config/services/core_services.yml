@@ -5,3 +5,6 @@ imports:
     - { resource: core/addon.yml }
     - { resource: core/foundation.yml }
     - { resource: core/localization.yml }
+    - { resource: core/geolocation.yml }
+    - { resource: core/validation.yml }
+    - { resource: core/form.yml }
