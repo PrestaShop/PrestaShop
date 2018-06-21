@@ -5651,10 +5651,10 @@ class ProductCore extends ObjectModel
         $positions_lookup = array();
         $max_position_lookup = array();
 
-        foreach($positions as $row) {
+        foreach ($positions as $row) {
             $positions_lookup[(int)$row['id_category']] = (int)$row['position'];
         }
-        foreach($max_positions as $row) {
+        foreach ($max_positions as $row) {
             $max_position_lookup[(int)$row['id_category']] = (int)$row['maximum'];
         }
 
@@ -5663,9 +5663,9 @@ class ProductCore extends ObjectModel
             $sql_values = array();
             foreach ($ids as $id) {
                 $pos = 0;
-                if(array_key_exists((int)$id, $positions_lookup)) {
+                if (array_key_exists((int)$id, $positions_lookup)) {
                     $pos = (int)$positions_lookup[(int) $id] + 1;
-                } elseif(array_key_exists((int)$id, $max_position_lookup)) {
+                } elseif (array_key_exists((int)$id, $max_position_lookup)) {
                     $pos = (int)$max_position_lookup[(int) $id] + 1;
                 }
 				
