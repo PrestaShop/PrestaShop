@@ -237,14 +237,14 @@ services:
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
-    form.type.orders_invoices.generate_by_date:
+    form.type.order.invoices.generate_by_date:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
         parent: 'form.type.common_type'
         public: true
         tags:
             - { name: form.type }
 
-    form.type.orders_invoices.generate_by_status:
+    form.type.order.invoices.generate_by_status:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
         parent: 'form.type.common_type'
         public: true
