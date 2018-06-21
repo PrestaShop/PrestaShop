@@ -367,3 +367,22 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.localization_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+        arguments:
+            - '@=service("prestashop.form.choice_provider.language").getChoices()'
+            - '@=service("prestashop.form.choice_provider.country").getChoices()'
+            - '@=service("prestashop.form.choice_provider.currency").getChoices()'
+            - '@=service("prestashop.form.choice_provider.timezone").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.import_pack:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.form.choice_provider.localization_pack").getChoices()'
+        tags:
+            - { name: form.type }

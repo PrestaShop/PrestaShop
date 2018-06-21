@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Admin;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
+use AppKernel;
 use Db;
 
 /**
@@ -96,7 +97,7 @@ class PagePreference implements AdminPagePreferenceInterface
             return false;
         }
         $installVersion = explode('.', $version);
-        $currentVersion = explode('.', _PS_VERSION_);
+        $currentVersion = explode('.', AppKernel::VERSION);
 
         // Prod mode, depends on the page
         switch ($page) {

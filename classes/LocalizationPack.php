@@ -36,11 +36,24 @@ class LocalizationPackCore
     protected $iso_currency;
     protected $_errors = array();
 
-    public function loadLocalisationPack($file, $selection, $install_mode = false, $iso_localization_pack = null)
+    /**
+     * Loads localization pack
+     *
+     * @param SimpleXMLElement|string $pack                  Localization pack as SimpleXMLElement or plain XML string
+     * @param array                   $selection             Content to import selection
+     * @param bool                    $install_mode          Whether mode is installation or not
+     * @param string|null             $iso_localization_pack Country Alpha-2 ISO code
+     *
+     * @return bool
+     */
+    public function loadLocalisationPack($pack, $selection, $install_mode = false, $iso_localization_pack = null)
     {
-        if (!$xml = @simplexml_load_string($file)) {
+        if ($pack instanceof SimpleXMLElement) {
+            $xml = $pack;
+        } elseif (!$xml = @simplexml_load_string($pack)) {
             return false;
         }
+
         libxml_clear_errors();
         $main_attributes = $xml->attributes();
         $this->name = (string)$main_attributes['name'];

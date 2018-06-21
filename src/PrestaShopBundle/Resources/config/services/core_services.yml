@@ -3,3 +3,5 @@ imports:
     - { resource: core/configuration.yml }
     - { resource: core/search.yml }
     - { resource: core/addon.yml }
+    - { resource: core/foundation.yml }
+    - { resource: core/localization.yml }
