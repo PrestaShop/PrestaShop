@@ -751,6 +751,7 @@ class LinkCore
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminPayment' => 'admin_payment_methods',
                     'AdminLocalization' => 'admin_localization_show_settings',
                 );
 
