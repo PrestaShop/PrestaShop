@@ -42,7 +42,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @Template("@PrestaShop/Admin/Sell/Orders/Invoices/invoices.html.twig")
+     * @Template("@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig")
      *
      * @return array Template parameters
      */
