@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation;
 
-use PrestaShopBundle\Exception\InvalidVersionException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
 
 /**
  * Class responsible of managing the right version of Shop
@@ -243,13 +243,7 @@ class Version
     private function checkVersion($version)
     {
         if (!preg_match('~^\d+(\.\d+){0,}$~', $version)) {
-            throw new InvalidVersionException(
-                sprintf(
-                    'You provided an invalid version string ("%s"). A valid version string '.
-                    'must contain numeric characters separated by "." characters, for example "1.7.4.0".',
-                    $version
-                )
-            );
+            throw new InvalidVersionException($version);
         }
 
         return true;

@@ -26,7 +26,7 @@
 namespace Tests\Unit\Core\Foundation;
 
 use PrestaShop\PrestaShop\Core\Foundation\Version;
-use PrestaShopBundle\Exception\InvalidVersionException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
 use PHPUnit\Framework\TestCase;
 
 class VersionTest extends TestCase
