@@ -21,3 +21,7 @@ _system_information:
 _email:
     resource: "email.yml"
     prefix: /emails
+
+_sql_manager:
+    resource: "sql_manager.yml"
+    prefix: /sql-manager/
