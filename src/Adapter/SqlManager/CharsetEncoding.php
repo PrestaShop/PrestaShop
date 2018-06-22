@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
 /**
- * Class CharsetEncoding defnies file chartset encoding constatns used in SQL Manager
+ * Class CharsetEncoding defines file chartset encoding constatns used in SQL Manager
  */
 class CharsetEncoding
 {
