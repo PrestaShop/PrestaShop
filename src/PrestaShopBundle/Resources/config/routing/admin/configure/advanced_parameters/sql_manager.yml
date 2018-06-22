@@ -1,0 +1,63 @@
+admin_sql_manager:
+    path: /
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:list'
+        _legacy_controller: AdminRequestSql
+
+admin_sql_manager_settings:
+    path: /settings
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:settings'
+        _legacy_controller: AdminRequestSql
+
+admin_sql_manager_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:create'
+        _legacy_controller: AdminRequestSql
+
+admin_sql_manager_edit:
+    path: /edit/{requestSqlId}
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:edit'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
+
+admin_sql_manager_delete:
+    path: /delete/{requestSqlId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:delete'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
+
+admin_sql_manager_table_columns:
+    path: /tables/{mySqlTableName}/columns
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:tableColumns'
+        _legacy_controller: AdminRequestSql
+
+admin_sql_manager_view:
+    path: /view/{requestSqlId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:view'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
+
+admin_sql_manager_export:
+    path: /export/{requestSqlId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:export'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
