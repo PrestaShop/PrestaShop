@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
+use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -55,7 +56,7 @@ class RequestSqlValidator
     {
         $errors = [];
 
-        $requestSql = new \RequestSql();
+        $requestSql = new RequestSql();
         $parser = $requestSql->parsingSql($sql);
         $validate = $requestSql->validateParser($parser, false, $sql);
 
@@ -91,10 +92,10 @@ class RequestSqlValidator
                     } elseif (isset($sqlError['attribut'])) {
                         $errors = $this->translator->trans(
                             'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            array(
+                            [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
-                            ),
+                            ],
                             'Admin.Advparameters.Notification'
                         );
                     } else {
