@@ -51,6 +51,11 @@ class RequestSqlExporter
      */
     private $configuration;
 
+    /**
+     * @param RequestSqlDataProvider $dataProvider
+     * @param ExportDirectory $exportDirectory
+     * @param ConfigurationInterface $configuration
+     */
     public function __construct(
         RequestSqlDataProvider $dataProvider,
         ExportDirectory $exportDirectory,
@@ -99,6 +104,6 @@ class RequestSqlExporter
             }
         }
 
-        //@todo: maybe exception here would be nice
+        return null;
     }
 }
