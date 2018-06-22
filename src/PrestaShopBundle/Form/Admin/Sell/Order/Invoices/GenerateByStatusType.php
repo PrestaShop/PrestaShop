@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -67,17 +69,23 @@ class GenerateByStatusType extends CommonAbstractType
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->orderStateChoices,
-                'choice_label' => function ($orderStateId, $name) {
-                    $orderCount = array_key_exists($orderStateId, $this->orderCountsByState) ?
-                        $this->orderCountsByState[$orderStateId] :
-                        0
-                    ;
-
-                    //@todo improve presentation
-                    return $orderCount.' '.$name;
-                }
             ])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        /** @var FormView $child */
+        foreach ($view->children['order_states'] as $child) {
+            $child->vars['orders_count'] = 0;
+
+            if (array_key_exists($child->vars['value'], $this->orderCountsByState)) {
+                $child->vars['orders_count'] = $this->orderCountsByState[$child->vars['value']];
+            }
+        }
     }
 
     /**
