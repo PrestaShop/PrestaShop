@@ -88,7 +88,7 @@ scenario('Create, edit, delete and check "Languages" in the Back Office', () => 
     scenario('Go to the Front Office', client => {
       test('should go to the Front Office', () => client.accessToFO(AccessPageFO));
     }, 'common_client');
-    common_scenarios.checkLanguageFO(languageEditedData[1], true);
+    common_scenarios.checkLanguageFO(languageEditedData[1]);
   }, 'common_client');
 
   scenario('Test 4: Delete the created languages in the Back Office and check it in the Front Office', () => {
