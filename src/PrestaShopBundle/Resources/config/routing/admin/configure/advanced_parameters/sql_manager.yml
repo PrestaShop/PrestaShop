@@ -9,7 +9,7 @@ admin_sql_manager_settings:
     path: /settings
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:settings'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:processFormAction'
         _legacy_controller: AdminRequestSql
 
 admin_sql_manager_create:
