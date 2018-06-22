@@ -1,0 +1,6 @@
+admin_payment_preferences:
+    path: /preferences
+    methods: [GET]
+    defaults:
+        _legacy_controller: AdminPaymentPreferences
+        _controller: PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:index

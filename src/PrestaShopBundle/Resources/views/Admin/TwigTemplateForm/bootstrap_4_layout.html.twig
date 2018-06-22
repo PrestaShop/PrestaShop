@@ -517,4 +517,38 @@
       </table>
     </div>
   {% endspaceless %}
-{% endblock %}
+{% endblock material_choice_table_widget %}
+
+{% block material_multiple_choice_table_widget %}
+  {% spaceless %}
+    {{ dump(form) }}
+    <div class="choice-tablez">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ label }}</th>
+            {% for choice_for_name in choice_for_names %}
+              <th>{{ choice_for_name }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for choice_name in choice_names %}
+          <tr>
+            <td>
+              {{ choice_name }}
+            </td>
+            {% for child in form %}
+              {% for checkbox in child %}
+                <td>
+                  {{ form_widget(checkbox, {'material_design': true}) }}
+                </td>
+              {% endfor %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endspaceless %}
+{% endblock material_multiple_choice_table_widget %}
