@@ -8,3 +8,4 @@ imports:
     - { resource: adapter/prestatrust.yml }
     - { resource: adapter/product.yml }
     - { resource: adapter/services.yml }
+    - { resource: adapter/sql_manager.yml }

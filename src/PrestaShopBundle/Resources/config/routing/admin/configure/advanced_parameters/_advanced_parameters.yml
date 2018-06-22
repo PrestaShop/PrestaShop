@@ -17,3 +17,7 @@ _performance:
 _system_information:
     resource: "system_information.yml"
     prefix: /system-information/
+
+_slq_manager:
+    resource: "sql_manager.yml"
+    prefix: /sql-manager/
