@@ -29,7 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,6 +45,11 @@ class SqlManagerController extends FrameworkBundleAdminController
 {
     /**
      * Show list of saved SQL's
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')",
+     *      message="Access denied."
+     * )
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/list.html.twig")
      *
@@ -74,7 +80,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
-        $data = [
+        $templateParams = [
             'request_sqls' => $requestSqls,
             'request_sqls_count' => $requestSqlsCount,
             'order_by' => $filters['orderBy'],
@@ -84,17 +90,26 @@ class SqlManagerController extends FrameworkBundleAdminController
             'settings_form' => $settingsForm->createView(),
         ];
 
-        return $this->getTemplateParams($request) + $data;
+        return array_merge(
+            $this->getTemplateParams($request),
+            $templateParams
+        );
     }
 
     /**
      * Process Request SQL settings save
      *
+     * @DemoRestricted(redirectRoute="admin_sql_manager")
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create','delete'], request.get('_legacy_controller')~'_')",
+     *      message="You do not have permission to edit this."
+     * )
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function settingsAction(Request $request)
+    public function processFormAction(Request $request)
     {
         $handler = $this->getSettingsFormHandler();
         $settingForm = $handler->getForm();
@@ -117,6 +132,11 @@ class SqlManagerController extends FrameworkBundleAdminController
 
     /**
      * Show Request SQL create page
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller')~'_')",
+     *      message="You do not have permission to create this."
+     * )
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
      *
@@ -141,9 +161,15 @@ class SqlManagerController extends FrameworkBundleAdminController
         $requestSqlForm->handleRequest($request);
 
         if ($requestSqlForm->isSubmitted()) {
-            $data = $requestSqlForm->getData();
+            if ($this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-            if (!$errors = $formHandler->save($data)) {
+                return $this->redirectToRoute('admin_sql_manager');
+            }
+
+            $requestSqlData = $requestSqlForm->getData();
+
+            if (!$errors = $formHandler->save($requestSqlData)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_manager');
@@ -154,16 +180,24 @@ class SqlManagerController extends FrameworkBundleAdminController
             }
         }
 
-        $params = [
+        $templateParams = [
             'requestSqlForm' => $requestSqlForm->createView(),
             'dbTableNames' => $dataProvider->getTables(),
         ];
 
-        return $this->getTemplateParams($request, false) + $params;
+        return array_merge(
+            $this->getTemplateParams($request, false),
+            $templateParams
+        );
     }
 
     /**
      * Show Request SQL edit page
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
      *
@@ -189,6 +223,12 @@ class SqlManagerController extends FrameworkBundleAdminController
         $requestSqlForm->handleRequest($request);
 
         if ($requestSqlForm->isSubmitted()) {
+            if ($this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+                return $this->redirectToRoute('admin_sql_manager');
+            }
+
             $data = $requestSqlForm->getData();
 
             if (!$errors = $formHandler->save($data)) {
@@ -202,38 +242,32 @@ class SqlManagerController extends FrameworkBundleAdminController
             }
         }
 
-        $params = [
+        $templateParams = [
             'requestSqlForm' => $requestSqlForm->createView(),
             'dbTableNames' => $dataProvider->getTables(),
         ];
 
-        return $this->getTemplateParams($request) + $params;
+        return array_merge(
+            $this->getTemplateParams($request),
+            $templateParams
+        );
     }
 
     /**
      * Delete selected Request SQL
      *
-     * @param int     $requestSqlId ID of selected Request SQL
-     * @param Request $request
+     * @AdminSecurity(
+     *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_sql_manager")
+     *
+     * @param int $requestSqlId ID of selected Request SQL
      *
      * @return RedirectResponse
      */
-    public function deleteAction($requestSqlId, Request $request)
+    public function deleteAction($requestSqlId)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_sql_manager');
-        }
-
-        if ($this->authorizationLevel($legacyController) != PageVoter::LEVEL_DELETE) {
-            $this->addFlash('error', $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_sql_manager');
-        }
-
         $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
         if (!$requestSql = $requestSqlDataProvider->getRequestSql($requestSqlId)) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
@@ -256,6 +290,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * View Request SQL query data
      *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to view this."
+     * )
+     *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/view.html.twig")
      *
      * @param Request $request
@@ -274,24 +313,33 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_manager');
         }
 
-        $params = [
+        $templateParams = [
             'requestSqlResult' => $requestSqlResult,
         ];
 
-        return $this->getTemplateParams($request, false) + $params;
+        return array_merge(
+            $this->getTemplateParams($request, false),
+            $templateParams
+        );
     }
 
     /**
      * Export Request SQL data
      *
-     * @param int $id Request SQL id
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
+     *     message="Access denied."
+     * )
+     * @DemoRestricted(redirectRoute="admin_sql_manager")
+     *
+     * @param int $requestSqlId Request SQL id
      *
      * @return RedirectResponse|BinaryFileResponse
      */
-    public function exportAction($id)
+    public function exportAction($requestSqlId)
     {
         $requestSqlExporter = $this->get('prestashop.adapter.sql_manager.request_sql_exporter');
-        $response = $requestSqlExporter->export($id);
+        $response = $requestSqlExporter->export($requestSqlId);
 
         if (null === $response) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
