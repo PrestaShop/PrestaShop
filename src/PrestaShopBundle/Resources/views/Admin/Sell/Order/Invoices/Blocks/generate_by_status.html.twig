@@ -25,6 +25,8 @@
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
+{% form_theme generateByStatusForm _self %}
+
 {% block invoices_generate_by_status %}
     {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
     <div class="col">
@@ -47,4 +49,31 @@
         </div>
     </div>
     {{ form_end(generateByStatusForm) }}
+{% endblock %}
+
+{% block _form_generate_by_status_order_states_entry_label %}
+    {# Do not display the label if widget is not defined in order to prevent double label rendering #}
+    {% if widget is defined %}
+        {% if parent_label_class is defined %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+        {% endif %}
+        {% if label is not same as(false) and label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        <div class="md-checkbox">
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                {{- widget|raw -}}
+                <i class="md-checkbox-control"></i>
+                {% if orders_count > 0 %}
+                    {% set badgeClass = 'badge-success' %}
+                {% else %}
+                    {% set badgeClass = 'badge-danger' %}
+                {% endif %}
+                <span class="badge {{ badgeClass }}">{{ orders_count }}</span>
+                <span>
+                    {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+                </span>
+            </label>
+        </div>
+    {% endif %}
 {% endblock %}
