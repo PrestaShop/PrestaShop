@@ -31,6 +31,9 @@ module.exports = {
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
     alert: '//*[@id="notifications"]//article[contains(@class, "alert-danger")]',
     cart_product_discount:'//*[@id="main"]//span[contains(@class,"discount-percentage")]',
-    product_current_price: '//*[@class="current-price"]/span[@itemprop="price"]'
+    product_current_price: '//*[@class="current-price"]/span[@itemprop="price"]',
+    modal_content: '//*[@id="blockcart-modal"]//div[@class="modal-content"]',
+    cart_page: '//*[@id="cart"]',
+    cart_body: '(//*[@id="main"]//div[contains(@class, "body")])[1]'
   }
 };

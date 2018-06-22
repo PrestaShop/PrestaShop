@@ -242,6 +242,23 @@ class CommonClient {
     }
   }
 
+  checkCssPropertyValue(selector, property, value, parameter = 'equal', pause = 0) {
+    switch (parameter) {
+      case "contain":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getCssProperty(selector, property))
+          .then((property) => expect(property.value).to.be.contain(value));
+      case "equal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getCssProperty(selector, property))
+          .then((property) => expect(property.value).to.be.equal(value));
+    }
+  }
+
   uploadPicture(picture, selector, className = "dz-hidden-input") {
     return this.client
       .execute(function (className) {

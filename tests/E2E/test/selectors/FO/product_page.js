@@ -8,12 +8,13 @@ module.exports = {
     product_name: '(//*[@id="main"]//h1[@itemprop="name"])[1]',
     product_price: '(//*[@id="main"]//span[@itemprop="price"])[1]',
     product_reference: '(//*[@id="main"]//span[@itemprop="sku"])[1]',
+    product_manufacturer: '//*[@id="product-details"]//div[@class="product-manufacturer"]/a',
     product_quantity: '//*[@id="product-details"]/div[@class="product-quantities"]/span',
     pack_product_name: '//*[@id="add-to-cart-or-refresh"]//article[%P]//div[@class="pack-product-name"]/a',
     pack_product_price: '//*[@id="add-to-cart-or-refresh"]//article[%P]//div[@class="pack-product-price"]',
     pack_product_quantity: '//*[@id="add-to-cart-or-refresh"]//article[%P]//div[@class="pack-product-quantity"]',
     product_size: '//*[@id="group_1"]',
-    product_color: '(//*[@id="group_3"]//span)[2]',
+    product_color: '(//*[@id="group_3"]//span)[2] | (//*[@id="group_2"]//span)[2]',
     see_all_products: '//*[@id="content"]//a[contains(@class, "all-product-link")]',
     first_product_all: '(//*[@id="js-product-list"]//article//a)[1]',
     pagination_next: '//*[@id="js-product-list"]//a[contains(@class, "next")]',
@@ -29,6 +30,12 @@ module.exports = {
     product_description: '//*[@id="description"]',
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
-    filename_link: '(//*[@id="attachments"]//a)[1]'
+    filename_link: '(//*[@id="attachments"]//a)[1]',
+    product_page: '//*[@id="product"]',
+    breadcrumb_nav: '//*[contains(@class, "breadcrumb")]',
+    product_section: '//*[@id="main"]/div[1]/div[%I]',
+    category_page: '//*[@id="category"]',
+    left_column_block: '//*[@id="left-column"]',
+    pagination_block: '//*[@id="js-product-list"]/nav'
   }
 };

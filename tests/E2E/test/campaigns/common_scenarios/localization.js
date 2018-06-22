@@ -1,3 +1,6 @@
+const {HomePage} = require('../../selectors/FO/home_page');
+const {productPage} = require('../../selectors/FO/product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {Localization} = require('../../selectors/BO/international/localization');
 const {InternationalPage} = require('../../selectors/BO/international/index');
 const {Menu} = require('../../selectors/BO/menu.js');
@@ -70,6 +73,47 @@ module.exports = {
       } else {
         test('should set the shop language to "' + languageData.name + '"', () => client.changeLanguage(languageData.iso_code.toLowerCase()));
         test('should check that the "' + languageData.name + '" language is well selected', () => client.checkTextValue(languageFO.selected_language_button, languageData.name + date_time, 'equal', 2000));
+        if(languageData.hasOwnProperty('is_rtl') && languageData.is_rtl === 'on') {
+          test('should check that the "Home" page is well displayed in RTL mode', () => client.checkCssPropertyValue(HomePage.home_page, 'direction', 'rtl', 'equal', 2000));
+          test('should check that the "Contact us" is well reversed', () => client.checkCssPropertyValue(HomePage.contact_us_link, 'float', 'right'));
+          test('should check that the "Logo" is well reversed', () => client.checkCssPropertyValue(HomePage.logo_home_page, 'float', 'right'));
+          test('should check that the "Top menu" is well reversed', () => client.checkCssPropertyValue(HomePage.top_menu_page, 'float', 'right'));
+          test('should check that the "Search element" is well reversed', () => client.checkCssPropertyValue(HomePage.search_widget, 'float', 'left'));
+          test('should check that the "All products" is well reversed', () => client.checkCssPropertyValue(HomePage.all_product_link, 'float', 'left', 'contain'));
+          test('should check that the "Products block" is well reversed', () => client.checkCssPropertyValue(HomePage.products_block, 'float', 'right'));
+          test('should check that the "Newsletter block" is well reversed', () => client.checkCssPropertyValue(HomePage.newsletter_block, 'float', 'right'));
+          test('should check that the "Our campany block" is well reversed', () => client.checkCssPropertyValue(HomePage.our_campany_block, 'float', 'right'));
+          test('should check that the "Your account block" is well reversed', () => client.checkCssPropertyValue(HomePage.your_account_block, 'float', 'right'));
+          test('should check that the "Store information block" is well reversed', () => client.checkCssPropertyValue(HomePage.store_information_block, 'float', 'right'));
+          test('should go to the product page', () => client.waitForExistAndClick(productPage.first_product));
+          test('should check that the "Product" page is well displayed in RTL mode', () => client.checkCssPropertyValue(productPage.product_page, 'direction', 'rtl', 'equal', 2000));
+          test('should check that the "Breadcrumb list" is well reversed', () => client.checkCssPropertyValue(productPage.breadcrumb_nav, 'direction', 'rtl'));
+          test('should check that the "Product pictures" is well reversed', () => client.checkCssPropertyValue(productPage.product_section.replace('%I', 1), 'float', 'right'));
+          test('should check that the "Product name" is well reversed', () => client.checkCssPropertyValue(productPage.product_name, 'direction', 'rtl'));
+          test('should check that the "Product price" is well reversed', () => client.checkCssPropertyValue(productPage.product_price, 'direction', 'rtl'));
+          test('should check that the "Product discount" is well reversed', () => client.checkCssPropertyValue(productPage.product_discount_details, 'direction', 'rtl'));
+          test('should check that the "Product size" select is well reversed', () => client.checkCssPropertyValue(productPage.product_size, 'direction', 'rtl'));
+          test('should check that the "Product color" radio button is well reversed', () => client.checkCssPropertyValue(productPage.product_color, 'direction', 'rtl'));
+          test('should check that the "Product quantity" input is well reversed', () => client.checkCssPropertyValue(productPage.first_product_quantity, 'direction', 'rtl'));
+          test('should check that the "ADD TO CART" button is well reversed', () => client.checkCssPropertyValue(CheckoutOrderPage.add_to_cart_button, 'direction', 'rtl'));
+          test('should check that the "Description" is well reversed', () => client.checkCssPropertyValue(productPage.product_description, 'direction', 'rtl'));
+          test('should click on "Product details" tab', () => client.waitForExistAndClick(productPage.product_detail_tab));
+          test('should check that the "Product manufacturer" is well reversed', () => client.checkCssPropertyValue(productPage.product_manufacturer, 'direction', 'rtl'));
+          test('should check that the "Product reference" is well reversed', () => client.checkCssPropertyValue(productPage.product_reference, 'direction', 'rtl'));
+          test('should check that the "Product quantities in stock" is well reversed', () => client.checkCssPropertyValue(productPage.product_quantity, 'direction', 'rtl'));
+          test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
+          test('should check that the "Modal content" is well reversed', () => client.checkCssPropertyValue(CheckoutOrderPage.modal_content, 'direction', 'rtl'));
+          test('should click on "PROCEED TO CHECKOUT" modal button', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
+          test('should check that the "Cart" page is well displayed in RTL mode', () => client.checkCssPropertyValue(CheckoutOrderPage.cart_page, 'direction', 'rtl', 'equal', 2000));
+          test('should check that the "Cart body" is well displayed in RTL mode', () => client.checkCssPropertyValue(CheckoutOrderPage.cart_body, 'direction', 'rtl'));
+          test('should check that the "Cart total" is well reversed', () => client.checkCssPropertyValue(CheckoutOrderPage.cart_total, 'direction', 'rtl'));
+          test('should check that the "Cart subtotal" is well reversed', () => client.checkCssPropertyValue(CheckoutOrderPage.cart_subtotal_products, 'direction', 'rtl'));
+          test('should go to the "Home" page', () => client.waitForExistAndClick(HomePage.logo_home_page));
+          test('should click on "All product" page', () => client.scrollWaitForExistAndClick(HomePage.all_product_link));
+          test('should check that the "Category" page is well displayed in RTL mode', () => client.checkCssPropertyValue(productPage.category_page, 'direction', 'rtl'));
+          test('should check that the "Left column" is well reversed', () => client.checkCssPropertyValue(productPage.left_column_block, 'direction', 'rtl'));
+          test('should check that the "Pagination" block is well reversed', () => client.checkCssPropertyValue(productPage.pagination_block, 'direction', 'rtl'));
+        }
       }
     }, 'common_client');
   },
