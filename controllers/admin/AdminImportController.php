@@ -3749,7 +3749,7 @@ class AdminImportControllerCore extends AdminController
         if (isset($store->hours) && is_array($store->hours)) {
             $newHours = array();
             foreach ($store->hours as $hour) {
-                array_push($newHours, array($hour));
+                $newHours[] = array($hour);
             }
             $store->hours = json_encode($newHours);
         }

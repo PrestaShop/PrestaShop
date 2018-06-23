@@ -2842,7 +2842,7 @@ class AdminTranslationsControllerCore extends AdminController
                     $stack = array();
                     $folder = dirname($file['to']);
                     while (!is_dir($folder)) {
-                        array_push($stack, $folder);
+                        $stack[] = $folder;
                         $folder = dirname($folder);
                     }
                     while ($folder = array_pop($stack)) {
