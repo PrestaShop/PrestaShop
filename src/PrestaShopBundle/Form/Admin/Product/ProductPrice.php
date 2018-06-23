@@ -198,7 +198,7 @@ class ProductPrice extends CommonAbstractType
              $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',
         ];
 
-        for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
+        for ($i=0, $iMax = count($specificPricePriorityChoices); $i < $iMax; $i++) {
             $builder->add(
                 'specificPricePriority_'.$i,
                 FormType\ChoiceType::class,
