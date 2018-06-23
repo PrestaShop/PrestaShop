@@ -528,7 +528,7 @@ class ImageCore extends ObjectModel
      */
     public static function clearTmpDir()
     {
-        foreach (scandir(_PS_TMP_IMG_DIR_) as $d) {
+        foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
             if (preg_match('/(.*)\.jpg$/', $d)) {
                 unlink(_PS_TMP_IMG_DIR_.$d);
             }
@@ -591,7 +591,7 @@ class ImageCore extends ObjectModel
         // Can we delete the image folder?
         if (is_dir($this->image_dir.$this->getImgFolder())) {
             $deleteFolder = true;
-            foreach (scandir($this->image_dir.$this->getImgFolder()) as $file) {
+            foreach (scandir($this->image_dir . $this->getImgFolder(), SCANDIR_SORT_NONE) as $file) {
                 if (($file != '.' && $file != '..')) {
                     $deleteFolder = false;
                     break;
@@ -618,7 +618,7 @@ class ImageCore extends ObjectModel
         if (!$path || !$format || !is_dir($path)) {
             return false;
         }
-        foreach (scandir($path) as $file) {
+        foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
             if (preg_match('/^[0-9]+(\-(.*))?\.'.$format.'$/', $file)) {
                 unlink($path.$file);
             } elseif (is_dir($path.$file) && (preg_match('/^[0-9]$/', $file))) {
@@ -629,7 +629,7 @@ class ImageCore extends ObjectModel
         // Can we remove the image folder?
         if (is_numeric(basename($path))) {
             $removeFolder = true;
-            foreach (scandir($path) as $file) {
+            foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
                 if (($file != '.' && $file != '..' && $file != 'index.php')) {
                     $removeFolder = false;
                     break;
@@ -762,7 +762,7 @@ class ImageCore extends ObjectModel
         $startTime = time();
         $image = null;
         $tmpFolder = 'duplicates/';
-        foreach (scandir(_PS_PROD_IMG_DIR_) as $file) {
+        foreach (scandir(_PS_PROD_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
             // matches the base product image or the thumbnails
             if (preg_match('/^([0-9]+\-)([0-9]+)(\-(.*))?\.jpg$/', $file, $matches)) {
                 // don't recreate an image object for each image type

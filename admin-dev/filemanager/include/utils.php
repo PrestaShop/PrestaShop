@@ -12,7 +12,7 @@ function deleteDir($dir)
     if (!is_dir($dir)) {
         return unlink($dir);
     }
-    foreach (scandir($dir) as $item) {
+    foreach (scandir($dir, SCANDIR_SORT_NONE) as $item) {
         if ($item == '.' || $item == '..') {
             continue;
         }
@@ -99,7 +99,7 @@ function makeSize($size)
 function foldersize($path)
 {
     $total_size = 0;
-    $files = scandir($path);
+    $files = scandir($path, SCANDIR_SORT_NONE);
     $cleanPath = rtrim($path, '/'). '/';
 
     foreach ($files as $t) {
@@ -142,7 +142,7 @@ function check_files_extensions_on_path($path, $ext)
             }
         }
     } else {
-        $files = scandir($path);
+        $files = scandir($path, SCANDIR_SORT_NONE);
         foreach ($files as $file) {
             check_files_extensions_on_path(trim($path, '/')."/".$file, $ext);
         }

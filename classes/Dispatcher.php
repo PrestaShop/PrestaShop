@@ -270,7 +270,7 @@ class DispatcherCore
     {
         return $this->request;
     }
-    
+
     /**
      * Sets and returns the default controller.
      *
@@ -333,7 +333,7 @@ class DispatcherCore
 
         return $this->getDefaultController($this->front_controller, $employee);
     }
-    
+
     /**
      * Find the controller and instantiate it
      */
@@ -1146,7 +1146,7 @@ class DispatcherCore
         }
 
         $controllers = array();
-        $controller_files = scandir($dir);
+        $controller_files = scandir($dir, SCANDIR_SORT_NONE);
         foreach ($controller_files as $controller_filename) {
             if ($controller_filename[0] != '.') {
                 if (!strpos($controller_filename, '.php') && is_dir($dir.$controller_filename)) {

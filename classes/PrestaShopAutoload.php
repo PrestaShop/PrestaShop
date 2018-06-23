@@ -270,7 +270,7 @@ class PrestaShopAutoload
         $classes = array();
         $rootDir = $hostMode ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
-        foreach (scandir($rootDir.$path) as $file) {
+        foreach (scandir($rootDir . $path, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.') {
                 if (is_dir($rootDir.$path.$file)) {
                     $classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $hostMode));

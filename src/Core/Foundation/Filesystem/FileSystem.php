@@ -102,7 +102,7 @@ class FileSystem
 
         $entries = array();
 
-        foreach (scandir($path) as $entry) {
+        foreach (scandir($path, SCANDIR_SORT_NONE) as $entry) {
             if ($entry === '.' || $entry === '..') {
                 continue;
             }

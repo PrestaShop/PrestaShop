@@ -622,7 +622,7 @@ namespace PrestaShopBundle\Install {
 
             foreach ($arrayToClean as $dir) {
                 if (file_exists($dir)) {
-                    foreach (scandir($dir) as $file) {
+                    foreach (scandir($dir, SCANDIR_SORT_NONE) as $file) {
                         if ($file[0] != '.' and $file != 'index.php' and $file != '.htaccess') {
                             if (is_file($dir.$file)) {
                                 unlink($dir . $file);
@@ -677,7 +677,7 @@ namespace PrestaShopBundle\Install {
             $separator = addslashes(DIRECTORY_SEPARATOR);
             $file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
             if (file_exists($file)) {
-                foreach (scandir($file) as $cache) {
+                foreach (scandir($file, SCANDIR_SORT_NONE) as $cache) {
                     if ($cache[0] != '.' && $cache != 'index.php' && $cache != '.htaccess' && file_exists($file.$cache) && !is_dir($file.$cache)) {
                         if (file_exists($file.$cache)) {
                             unlink($file.$cache);

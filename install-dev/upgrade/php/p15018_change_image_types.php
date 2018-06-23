@@ -117,7 +117,7 @@ function p15018_change_image_types()
         // Then the other entities (if there is less than 500 products, that should not be a problem)
         $directories = array('p', 'c', 'm', 's', 'su', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
         foreach ($directories as $directory) {
-            foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory) as $file) {
+            foreach (scandir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $directory, SCANDIR_SORT_NONE) as $file) {
                 if (!preg_match('/^([0-9]+|[a-z]{2}-default)\-[a-z_-]+\.jpg$/i', $file)) {
                     continue;
                 }

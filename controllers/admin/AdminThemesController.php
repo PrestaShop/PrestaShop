@@ -597,7 +597,7 @@ class AdminThemesControllerCore extends AdminController
                 );
 
             $theme_archive_server = array();
-            $files = scandir(_PS_ALL_THEMES_DIR_);
+            $files = scandir(_PS_ALL_THEMES_DIR_, SCANDIR_SORT_NONE);
             $theme_archive_server[] = '-';
 
             foreach ($files as $file) {
