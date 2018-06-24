@@ -28,9 +28,6 @@
     <h3>
       <i class="material-icons">list</i>
       {{ grid.name }} ({{ grid.data.rows_total }})
-      {% block grid_actions_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/Actions/panel_actions_block.html.twig', {'grid': grid }) }}
-      {% endblock %}
     </h3>
   </div>
   <div class="card-block">

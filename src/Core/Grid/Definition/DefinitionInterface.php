@@ -24,40 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column;
+namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 
 /**
- * Interface ColumnInterface exposes contract for single column
+ * Interface GridDefinitionInterface defines contract for grid definition
  */
-interface ColumnInterface
+interface DefinitionInterface
 {
     /**
-     * Get unique column id
+     * Get unique grid identifier
      *
      * @return string
-     *
-     * @return self
      */
     public function getId();
 
     /**
-     * Get column type
+     * Get grid type
      *
      * @return string
      */
     public function getType();
 
     /**
-     * Get translated column name
+     * Get grid name
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Translated column name
+     * Set grid name
      *
      * @param string $name
      *
@@ -66,25 +64,18 @@ interface ColumnInterface
     public function setName($name);
 
     /**
-     * Get column related options
+     * Get grid columns
      *
-     * @return array
+     * @return ColumnCollectionInterface
      */
-    public function getOptions();
+    public function getColumns();
 
     /**
-     * Set column options
+     * Set grid columns
      *
-     * @param array $options
+     * @param ColumnCollectionInterface $columns
      *
      * @return self
      */
-    public function setOptions(array $options);
-
-    /**
-     * Configure column options
-     *
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver);
+    public function setColumns(ColumnCollectionInterface $columns);
 }

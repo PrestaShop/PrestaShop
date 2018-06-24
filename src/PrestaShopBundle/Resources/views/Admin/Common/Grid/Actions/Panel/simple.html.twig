@@ -25,7 +25,7 @@
 
 <button type="button"
         id="{{ grid.id }}_grid_action_{{ action.id }}"
-        class="btn btn-link list-toolbar-btn js-{{ action.id }}-grid-action"
+        class="dropdown-item js-{{ action.id }}-grid-action"
 >
-  {{ ps.tooltip(action.name, action.icon) }}
+  {{ action.name }}
 </button>

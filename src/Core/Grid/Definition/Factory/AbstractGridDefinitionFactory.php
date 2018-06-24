@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\RowActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -45,19 +44,10 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      */
     final public function create()
     {
-        $definition = new Definition(
-            $this->getId(),
-            $this->getName()
-        );
-        $definition->setColumns($this->getColumns());
-
-        if (null !== $this->getBulkActions()) {
-            $definition->setBulkActions($this->getBulkActions());
-        }
-
-        if (null !== $this->getPanelActions()) {
-            $definition->setGridActions($this->getPanelActions());
-        }
+        $definition = (new Definition($this->getId()))
+            ->setName($this->getName())
+            ->setColumns($this->getColumns())
+        ;
 
         return $definition;
     }

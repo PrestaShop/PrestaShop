@@ -28,42 +28,23 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ColumnCollection holds collection of columns for grid
  *
- * @property Column[] $items
+ * @property ColumnInterface[] $items
  */
 final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
 {
-    /**
-     * Create new columns collection from array data
-     *
-     * @param array $data
-     *
-     * @return ColumnCollectionInterface
-     */
-    public static function fromArray(array $data)
-    {
-        $columns = new self();
-        $position = 0;
-
-        foreach ($data as $columnData) {
-            $columnData['position'] = $position++;
-
-            $column = Column::fromArray($columnData);
-            $columns->add($column);
-        }
-
-        return $columns;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function add(ColumnInterface $column)
     {
         $this->items[$column->getId()] = $column;
+
+        return $this;
     }
 
     /**
@@ -77,10 +58,23 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
             ));
         }
 
-        $newColumnPosition = $this->items[$id]->getPosition() + 1;
-        $newColumn->setPosition($newColumnPosition);
+        //@todo: implement add after
 
         $this->add($newColumn);
+    }
+
+    /**
+     * @todo: interface method
+     */
+    public function remove($id)
+    {
+        if (isset($this->items[$id])) {
+            unset($this->items[$id]);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -89,23 +83,18 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     public function toArray()
     {
         $columnsArray = [];
-        $positions = [];
 
-        /** @var ColumnInterface $column */
         foreach ($this->items as $key => $column) {
+            $resolver = new OptionsResolver();
+            $column->configureOptions($resolver);
+
             $columnsArray[] = [
                 'id' => $column->getId(),
                 'name' => $column->getName(),
-                'is_sortable' => $column->isSortable(),
-                'is_filterable' => $column->isFilterable(),
                 'type' => $column->getType(),
-                'options' => $column->getOptions(),
+                'options' => $resolver->resolve($column->getOptions()),
             ];
-
-            $positions[$key] = $column->getPosition();
         }
-
-        array_multisort($positions, SORT_ASC, $columnsArray);
 
         return $columnsArray;
     }

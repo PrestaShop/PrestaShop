@@ -50,8 +50,10 @@ final class GridPresenter implements GridPresenterInterface
             'filter_form' => $grid->getFilterForm()->createView(),
             'columns' => $definition->getColumns()->toArray(),
             'actions' => [
-                'panel' => $definition->getPanelActions()->toArray(),
-                'bulk' => $definition->getBulkActions()->toArray(),
+//                'panel' => $definition->getPanelActions()->toArray(),
+//                'bulk' => $definition->getBulkActions()->toArray(),
+                'panel' => [],
+                'bulk' => [],
             ],
             'data' => [
                 'rows' => $this->presentRows($grid),
@@ -102,14 +104,14 @@ final class GridPresenter implements GridPresenterInterface
      */
     private function applyColumnModifications(array $row, ColumnCollectionInterface $columns)
     {
-        /** @var ColumnInterface $column */
-        foreach ($columns as $column) {
-            if (!is_callable($column->getModifier())) {
-                continue;
-            }
-
-            $row[$column->getId()] = call_user_func($column->getModifier(), $row);
-        }
+//        /** @var ColumnInterface $column */
+//        foreach ($columns as $column) {
+//            if (!is_callable($column->getModifier())) {
+//                continue;
+//            }
+//
+//            $row[$column->getId()] = call_user_func($column->getModifier(), $row);
+//        }
 
         return $row;
     }

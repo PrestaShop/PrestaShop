@@ -23,27 +23,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="row js-grid" id="{{ grid.id }}_grid">
-  <div class="col">
-    <div class="row">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
-      </div>
-      <div class="col-2">
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/grid_actions.html.twig', {'grid': grid}) }}
-      </div>
-    </div>
+{% set severity = row.severity %}
+{% set withMessage = column.options.with_message %}
 
-    <div class="row">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': grid}) }}
-      </div>
-    </div>
+{% if severity == 1 %}
+  {% set severityClass = 'success' %}
+  {% set severityMessage = withMessage ? 'Informative only'|trans({}, 'Admin.Advparameters.Help') : '' %}
+{% elseif severity == 2 %}
+  {% set severityClass = 'warning' %}
+  {% set severityMessage = withMessage ? 'Warning'|trans({}, 'Admin.Advparameters.Help') : '' %}
+{% elseif severity == 3 %}
+  {% set severityClass = 'danger' %}
+  {% set severityMessage = withMessage ? 'Error'|trans({}, 'Admin.Advparameters.Help') : '' %}
+{% elseif severity == 4 %}
+  {% set severityClass = 'dark' %}
+  {% set severityMessage = withMessage ? 'Major issue (crash)!'|trans({}, 'Admin.Advparameters.Help') : '' %}
+{% else %}
+  {% set severityClass = '' %}
+{% endif %}
 
-    <div class="row">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/pagination.html.twig', {'grid': grid}) }}
-      </div>
-    </div>
-  </div>
-</div>
+<span class="badge badge-pill badge-{{ severityClass }}">
+  {% if withMessage %}
+    {{ severityMessage }} ({{ severity }})
+  {% else %}
+    {{ severity }}
+  {% endif %}
+</span>
