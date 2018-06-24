@@ -38,6 +38,8 @@ interface ColumnCollectionInterface extends Iterator, Countable
      * Add column to collection
      *
      * @param ColumnInterface $column
+     *
+     * @return self
      */
     public function add(ColumnInterface $column);
 
@@ -46,8 +48,19 @@ interface ColumnCollectionInterface extends Iterator, Countable
      *
      * @param string          $id Column id
      * @param ColumnInterface $column
+     *
+     * @return self
      */
     public function addAfter($id, ColumnInterface $column);
+
+    /**
+     * Remove column from collection
+     *
+     * @param string $id
+     *
+     * @return self
+     */
+    public function remove($id);
 
     /**
      * Get column collection as array

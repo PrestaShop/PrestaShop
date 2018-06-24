@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -107,29 +107,29 @@ final class GridFactory implements GridFactoryInterface
     /**
      * Create filter form from grid definition columns
      *
-     * @param GridDefinitionInterface $definition
+     * @param DefinitionInterface $definition
      *
      * @return FormInterface
      */
-    private function createFilterFormFromDefinition(GridDefinitionInterface $definition)
+    private function createFilterFormFromDefinition(DefinitionInterface $definition)
     {
         $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
 
-        foreach ($definition->getColumns() as $column) {
-            if ($formType = $column->getFilterFormType()) {
-                $options = $column->getFilterFormTypeOptions();
-
-                if (!isset($options['required'])) {
-                    $options['required'] = false;
-                }
-
-                $formBuilder->add(
-                    $column->getId(),
-                    $formType,
-                    $options
-                );
-            }
-        }
+//        foreach ($definition->getColumns() as $column) {
+//            if ($formType = $column->getFilterFormType()) {
+//                $options = $column->getFilterFormTypeOptions();
+//
+//                if (!isset($options['required'])) {
+//                    $options['required'] = false;
+//                }
+//
+//                $formBuilder->add(
+//                    $column->getId(),
+//                    $formType,
+//                    $options
+//                );
+//            }
+//        }
 
         return $formBuilder->getForm();
     }

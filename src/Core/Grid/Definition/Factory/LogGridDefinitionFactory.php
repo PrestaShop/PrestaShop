@@ -26,11 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
@@ -58,111 +59,53 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return ColumnCollection::fromArray([
-            [
-                'id' => 'log_bulk',
-                'name' => '',
-                'type' => 'bulk_action',
-                'options' => [
+        return (new ColumnCollection())
+            ->add((new BulkActionColumn('bulk_action'))
+                ->setOptions([
                     'bulk_value' => 'id_log',
-                    'sortable' => false,
-                ],
-            ],
-            [
-                'id' => 'id_log',
-                'name' => $this->trans('ID', [], 'Admin.Global'),
-                'type' => 'simple',
-                'filter_form_type' => TextType::class,
-            ],
-            [
-                'id' => 'employee',
-                'name' => $this->translator->trans('Employee', [], 'Admin.Global'),
-                'filter_form_type' => TextType::class,
-                'type' => 'employee_name_with_avatar',
-            ],
-            [
-                'id' => 'severity',
-                'name' => $this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'),
-                'type' => 'simple',
-                'filter_form_type' => TextType::class,
-            ],
-            [
-                'id' => 'message',
-                'name' => $this->trans('Message', [], 'Admin.Global'),
-                'type' => 'simple',
-                'filter_form_type' => TextType::class,
-            ],
-            [
-                'id' => 'object_type',
-                'name' => $this->trans('Object type', [], 'Admin.Advparameters.Feature'),
-                'type' => 'simple',
-                'filter_form_type' => TextType::class,
-            ],
-            [
-                'id' => 'object_id',
-                'name' => $this->trans('Object ID', [], 'Admin.Advparameters.Feature'),
-                'type' => 'simple',
-                'filter_form_type' => TextType::class,
-            ],
-            [
-                'id' => 'error_code',
-                'name' => $this->trans('Error code', [], 'Admin.Advparameters.Feature'),
-                'type' => 'simple',
-                'filter_form_type' => TextType::class,
-            ],
-            [
-                'id' => 'date_add',
-                'name' => $this->trans('Date', [], 'Admin.Global'),
-                'type' => 'simple',
-                'filter_form_type' => DateRangeType::class,
-            ],
-        ]);
+                ])
+            )
+            ->add((new SimpleColumn('id_log'))
+                ->setName($this->trans('ID', [], 'Global.Actions'))
+            )
+            ->add((new EmployeeNameWithAvatarColumn('employee'))
+                ->setName($this->trans('Employee', [], ''))
+            )
+            ->add((new SeverityLevelColumn('severity'))
+                ->setName($this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'with_message' => true,
+                ])
+            )
+            ->add((new SimpleColumn('message'))
+                ->setName($this->trans('Message', [], 'Global.Actions'))
+            )
+            ->add((new SimpleColumn('object_type'))
+                ->setName($this->trans('Object type', [], 'Admin.Advparameters.Feature'))
+            )
+            ->add((new SimpleColumn('object_id'))
+                ->setName($this->trans('Object ID', [], 'Admin.Advparameters.Feature'))
+            )
+            ->add((new SimpleColumn('error_code'))
+                ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
+            )
+            ->add((new DateTimeColumn('date_add'))
+                ->setName($this->trans('Date', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'format' => 'Y-m-d H:i',
+                ])
+            )
+        ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getPanelActions()
+    protected function getOptions()
     {
-        return PanelActionCollection::fromArray([
-            [
-                'id' => 'delete',
-                'name' => $this->trans('Erase all', [], 'Admin.Advparameters.Feature'),
-                'icon' => 'delete_forever',
-                'type'=> 'delete_all_logs',
+        return [
+            'actions' => [
+                'bulk' => $this->getBulkActions(),
+                'grid' => $this->getPanelActions(),
+                'row' => [],
             ],
-            [
-                'id' => 'ps_refresh_list',
-                'name' => $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
-                'icon' => 'refresh',
-                'type' => 'simple',
-            ],
-            [
-                'id' => 'ps_show_query',
-                'name' => $this->trans('Show SQL query', [], 'Admin.Actions'),
-                'icon' => 'code',
-                'type' => 'simple',
-            ],
-            [
-                'id' => 'ps_export_sql_manager',
-                'name' => $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
-                'icon' => 'storage',
-                'type' => 'export_to_sql_manager',
-            ],
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getBulkActions()
-    {
-        return BulkActionCollection::fromArray([
-            [
-                'id' => 'edit',
-                'name' => $this->trans('Edit', [], 'Admin.Actions'),
-                'icon' => 'edit',
-            ],
-        ]);
+        ];
     }
 }

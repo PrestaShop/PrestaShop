@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid;
 
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -37,7 +37,7 @@ use Symfony\Component\Form\FormInterface;
 final class Grid implements GridInterface
 {
     /**
-     * @var GridDefinitionInterface
+     * @var DefinitionInterface
      */
     private $definition;
 
@@ -57,13 +57,13 @@ final class Grid implements GridInterface
     private $filterForm;
 
     /**
-     * @param GridDefinitionInterface $definition
+     * @param DefinitionInterface $definition
      * @param GridDataInterface       $data
      * @param SearchCriteriaInterface $searchCriteria
      * @param FormInterface           $filterForm
      */
     public function __construct(
-        GridDefinitionInterface $definition,
+        DefinitionInterface $definition,
         GridDataInterface $data,
         SearchCriteriaInterface $searchCriteria,
         FormInterface $filterForm

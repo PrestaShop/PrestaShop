@@ -1,0 +1,10 @@
+<div class="dropdown text-right">
+  <button class="btn btn-text dropdown-toggle tool-button" id="catalog-tools-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Settings">
+    <span class="sr-only">{{ 'Settings'|trans({}, 'Admin.Global') }}</span>
+  </button>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="catalog-tools-button">
+    {% for action in grid.actions.panel %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Actions/Panel/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
+    {% endfor %}
+  </div>
+</div>

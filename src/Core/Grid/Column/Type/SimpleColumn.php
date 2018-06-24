@@ -24,45 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Definition;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 
 /**
- * Interface GridDefinitionInterface defines contract for grid definition
+ * Class Column defines most simple column in the grid that renders raw data
  */
-interface GridDefinitionInterface
+final class SimpleColumn extends AbstractColumn
 {
     /**
-     * Get grid name
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName();
-
-    /**
-     * Get unique grid identifier
-     *
-     * @return string
-     */
-    public function getId();
-
-    /**
-     * Get grid columns
-     *
-     * @return ColumnCollectionInterface
-     */
-    public function getColumns();
-
-    /**
-     * @return BulkActionCollectionInterface
-     */
-    public function getBulkActions();
-
-    /**
-     * @return PanelActionCollectionInterface
-     */
-    public function getPanelActions();
+    public function getType()
+    {
+        return 'simple';
+    }
 }
