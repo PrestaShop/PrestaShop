@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Routing;
 
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
+use RuntimeException;
 
 /**
  * This class is responsible of loading routes of enabled modules.
@@ -54,7 +55,7 @@ class YamlModuleLoader extends Loader
     public function load($resource, $type = null)
     {
         if (true === $this->isLoaded) {
-            throw new \RuntimeException('Do not add the "module" loader twice.');
+            throw new RuntimeException('Do not add the "module" loader twice.');
         }
 
         $routes = new RouteCollection();
