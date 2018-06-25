@@ -3,6 +3,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Status;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class SeverityLevelColumn extends AbstractColumn
@@ -20,6 +21,8 @@ final class SeverityLevelColumn extends AbstractColumn
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'with_message' => false,
         ]);

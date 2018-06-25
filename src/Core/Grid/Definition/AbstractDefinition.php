@@ -4,6 +4,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractDefinition implements DefinitionInterface
 {
@@ -38,6 +39,14 @@ abstract class AbstractDefinition implements DefinitionInterface
     /**
      * {@inheritdoc}
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return $this->name;
@@ -56,14 +65,6 @@ abstract class AbstractDefinition implements DefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getColumns()
     {
         return $this->columns;
@@ -77,5 +78,17 @@ abstract class AbstractDefinition implements DefinitionInterface
         $this->columns = $columns;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
     }
 }

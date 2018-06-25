@@ -5,14 +5,14 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class DateTimeColumn extends AbstractColumn
+class ActionColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'date_time';
+        return 'action';
     }
 
     /**
@@ -23,9 +23,9 @@ final class DateTimeColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'format' => 'Y-m-d H:i:s',
+            'actions' => [],
         ]);
 
-        $resolver->setAllowedTypes('format', 'string');
+        $resolver->setAllowedTypes('actions', 'array');
     }
 }
