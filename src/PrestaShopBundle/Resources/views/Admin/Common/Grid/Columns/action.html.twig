@@ -23,14 +23,4 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.filter_form|length > 1 %}
-  <tr class="column-filters">
-    {% for column in grid.columns %}
-      <th>
-        {% if grid.filter_form[column.id] is defined %}
-          {{ form_widget(grid.filter_form[column.id]) }}
-        {% endif %}
-      </th>
-    {% endfor %}
-  </tr>
-{% endif %}
+{# @todo: implement actions rendering if column has any defined actions #}

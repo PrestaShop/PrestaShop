@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\PanelActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -83,27 +81,5 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected function trans($id, array $options, $domain)
     {
         return $this->translator->trans($id, $options, $domain);
-    }
-
-    /**
-     * Get bulk actions for grid.
-     * Override this methods to add bulk actions for grid.
-     *
-     * @return BulkActionCollectionInterface|null
-     */
-    protected function getBulkActions()
-    {
-        return null;
-    }
-
-    /**
-     * Get panel actions for grid.
-     * Override this method to add panel actions for grid.
-     *
-     * @return PanelActionCollectionInterface|null
-     */
-    protected function getPanelActions()
-    {
-        return null;
     }
 }

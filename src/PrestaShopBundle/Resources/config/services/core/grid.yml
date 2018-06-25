@@ -28,9 +28,10 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.log_definition'
             - '@prestashop.core.grid.data_provider.log'
-            - '@form.factory'
             - '@prestashop.hook.dispatcher'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+        arguments:
+            - '@form.factory'

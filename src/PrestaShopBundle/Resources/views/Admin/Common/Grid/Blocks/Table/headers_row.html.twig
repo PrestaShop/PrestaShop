@@ -28,7 +28,11 @@
 
   {% for column in grid.columns %}
     <th scope="col">
-      {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay) }}
+      {% if column.options.sortable is defined and column.options.sortable %}
+        {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay) }}
+      {% else %}
+        {{ column.name }}
+      {% endif %}
     </th>
   {% endfor %}
 </tr>

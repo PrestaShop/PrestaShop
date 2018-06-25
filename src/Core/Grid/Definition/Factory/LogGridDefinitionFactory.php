@@ -27,11 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
@@ -93,19 +96,21 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Date', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
+                    'filter_type' => DateRangeType::class,
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Global.Actions'))
+                ->setOptions([
+                    'filter_type' => SubmitType::class,
+                    'filter_type_options' => [
+                        'label' => $this->trans('Search', [], 'Global.Actions'),
+                        'attr' => [
+                            'class' => 'btn btn-primary',
+                        ],
+                    ],
                 ])
             )
         ;
-    }
-
-    protected function getOptions()
-    {
-        return [
-            'actions' => [
-                'bulk' => $this->getBulkActions(),
-                'grid' => $this->getPanelActions(),
-                'row' => [],
-            ],
-        ];
     }
 }

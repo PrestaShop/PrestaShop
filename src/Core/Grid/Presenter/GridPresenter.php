@@ -27,14 +27,29 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class GridPresenter is responsible for presenting grid
  */
 final class GridPresenter implements GridPresenterInterface
 {
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @param FormFactoryInterface $formFactory
+     */
+    public function __construct(FormFactoryInterface $formFactory)
+    {
+        $this->formFactory = $formFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,14 +59,14 @@ final class GridPresenter implements GridPresenterInterface
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
 
+        $columns = $definition->getColumns()->toArray();
+
         return [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $grid->getFilterForm()->createView(),
-            'columns' => $definition->getColumns()->toArray(),
+            'filter_form' => $this->buildFilterForm($columns, $definition)->createView(),
+            'columns' => $columns,
             'actions' => [
-//                'panel' => $definition->getPanelActions()->toArray(),
-//                'bulk' => $definition->getBulkActions()->toArray(),
                 'panel' => [],
                 'bulk' => [],
             ],
@@ -114,5 +129,28 @@ final class GridPresenter implements GridPresenterInterface
 //        }
 
         return $row;
+    }
+
+    /**
+     * @param array $columns
+     * @param DefinitionInterface $definition
+     *
+     * @return FormInterface
+     */
+    private function buildFilterForm(array $columns, DefinitionInterface $definition)
+    {
+        $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
+
+        foreach ($columns as $column) {
+            if (isset($column['options']['filter_type'], $column['options']['filter_type_options'])) {
+                $formBuilder->add(
+                    $column['id'],
+                    $column['options']['filter_type'],
+                    $column['options']['filter_type_options']
+                );
+            }
+        }
+
+        return $formBuilder->getForm();
     }
 }
