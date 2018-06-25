@@ -24,38 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-class PaymentPreferencesController extends FrameworkBundleAdminController
+final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * Show payment preferences page
-     *
-     * @param Request $request
-     *
-     * @return Response
+     * @var GroupDataProvider
      */
-    public function indexAction(Request $request)
-    {
-        dump(\Currency::getCurrencies());
+    private $groupDataProvider;
 
-        $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm();
+    /**
+     * @var int
+     */
+    private $langId;
 
-        return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
-            'paymentPreferencesForm' => $paymentPreferencesForm->createView(),
-        ]);
+    /**
+     * @param GroupDataProvider $groupDataProvider
+     * @param int $langId
+     */
+    public function __construct(
+        GroupDataProvider $groupDataProvider,
+        $langId
+    ) {
+        $this->groupDataProvider = $groupDataProvider;
+        $this->langId = $langId;
     }
 
     /**
-     * @return FormHandlerInterface
+     * {@inheritdoc}
      */
-    private function getPaymentPreferencesFormHandler()
+    public function getChoices()
     {
-        return $this->get('prestashop.admin.payment_preferences.form_handler');
+        $choices = [];
+        $groups = $this->groupDataProvider->getGroups($this->langId);
+
+        foreach ($groups as $group) {
+            $choices[$group['name']] = $group['id_group'];
+        }
+
+        return $choices;
     }
 }

@@ -24,44 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Payment;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
 
-class PaymentModuleCurrencyRestrictionType extends AbstractType
+final class PaymentModuleByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var array
+     * @var PaymentModuleProviderInterface
      */
-    private $countryChoices;
-    /**
-     * @var array
-     */
-    private $paymentModuleChoices;
+    private $paymentModuleProvider;
 
     /**
-     * @param array $countryChoices
-     * @param array $paymentModuleChoices
+     * @param PaymentModuleProviderInterface $paymentModuleProvider\
      */
-    public function __construct(array $countryChoices, array $paymentModuleChoices)
+    public function __construct(PaymentModuleProviderInterface $paymentModuleProvider)
     {
-        $this->countryChoices = $countryChoices;
-        $this->paymentModuleChoices = $paymentModuleChoices;
+        $this->paymentModuleProvider = $paymentModuleProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getChoices()
     {
-        $builder
-            ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
-                'label' => 'Currency restrictions',
-                'choices' => $this->countryChoices,
-                'choices_for' => $this->paymentModuleChoices,
-            ])
-        ;
+        $choices = [];
+        $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
+
+        foreach ($paymentModules as $paymentModule) {
+            $choices[$paymentModule->get('displayName')] = $paymentModule->get('name');
+        }
+
+        return $choices;
     }
 }

@@ -26,39 +26,50 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider;
+use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-/**
- * Class CurrencyByIdChoiceProvider provides currency choices with ID values
- */
-final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
+final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var CurrencyDataProvider
+     * @var CarrierDataProvider
      */
-    private $currencyDataProvider;
+    private $carrierDataProvider;
 
     /**
-     * @param CurrencyDataProvider $currencyDataProvider
+     * @var int
      */
-    public function __construct(CurrencyDataProvider $currencyDataProvider)
+    private $langId;
+
+    /**
+     * @param CarrierDataProvider $carrierDataProvider
+     * @param int $langId
+     */
+    public function __construct(CarrierDataProvider $carrierDataProvider, $langId)
     {
-        $this->currencyDataProvider = $currencyDataProvider;
+        $this->carrierDataProvider = $carrierDataProvider;
+        $this->langId = $langId;
     }
 
     /**
-     * Get currency choices
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getChoices()
     {
-        $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
         $choices = [];
 
-        foreach ($currencies as $currency) {
-            $choices[sprintf('%s (%s)', $currency['name'], $currency['iso_code'])] = $currency['id_currency'];
+        $carriers = $this->carrierDataProvider->getCarriers(
+            $this->langId,
+            false,
+            false,
+            false,
+            null,
+            Carrier::ALL_CARRIERS
+        );
+
+        foreach ($carriers as $carrier) {
+            $choices[$carrier['name']] = $carrier['id_reference'];
         }
 
         return $choices;

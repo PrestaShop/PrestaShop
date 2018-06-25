@@ -50,7 +50,7 @@ class CarrierDataProvider
      *
      * @return array Carriers
      */
-    public function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
+    public function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = Carrier::PS_CARRIERS_ONLY)
     {
         return Carrier::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
     }

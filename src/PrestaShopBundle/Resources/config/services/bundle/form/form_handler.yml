@@ -150,3 +150,13 @@ services:
               'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
               'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
             - 'LocalizationPage'
+
+    prestashop.admin.payment_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.payment_preferences.form_data_provider'
+            -
+              'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+            - 'PaymentPreferences'

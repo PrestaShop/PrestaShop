@@ -150,3 +150,8 @@ services:
     prestashop.adapter.geolocation_options.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.payment_module_preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Payment\PaymentModulePreferencesConfiguration'
+        arguments:
+            - '@prestashop.adapter.module.payment_module_provider'

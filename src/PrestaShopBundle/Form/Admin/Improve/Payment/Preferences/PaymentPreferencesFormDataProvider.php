@@ -24,38 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
+namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class PaymentPreferencesController extends FrameworkBundleAdminController
+class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * Show payment preferences page
-     *
-     * @param Request $request
-     *
-     * @return Response
+     * @var DataConfigurationInterface
      */
-    public function indexAction(Request $request)
+    private $paymentModulePreferencesConfiguration;
+
+    /**
+     * @param DataConfigurationInterface $paymentModulePreferencesConfiguration
+     */
+    public function __construct(DataConfigurationInterface $paymentModulePreferencesConfiguration)
     {
-        dump(\Currency::getCurrencies());
-
-        $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm();
-
-        return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
-            'paymentPreferencesForm' => $paymentPreferencesForm->createView(),
-        ]);
+        $this->paymentModulePreferencesConfiguration = $paymentModulePreferencesConfiguration;
     }
 
     /**
-     * @return FormHandlerInterface
+     * {@inheritdoc}
      */
-    private function getPaymentPreferencesFormHandler()
+    public function getData()
     {
-        return $this->get('prestashop.admin.payment_preferences.form_handler');
+        return [
+            'payment_module_preferences' => $this->paymentModulePreferencesConfiguration->getConfiguration(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        // TODO: Implement setData() method.
     }
 }

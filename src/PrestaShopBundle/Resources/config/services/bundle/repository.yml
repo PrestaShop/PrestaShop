@@ -84,3 +84,9 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+
+    prestashop.bundle.repository.module:
+        class: PrestaShopBundle\Entity\Repository\ModuleRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
