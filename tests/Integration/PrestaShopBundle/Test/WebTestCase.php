@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Test;
 
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Context;
 use Currency;
@@ -74,18 +75,23 @@ class WebTestCase extends TestCase
         $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder(Context::class)
-            ->setMethods(array('getTranslator', 'getBaseURL'))
+            ->setMethods(array('getTranslator', 'getContext'))
             ->disableOriginalConstructor()
             ->getMock();
 
         $contextMock->method('getTranslator')
-            ->will($this->returnValue($this->translator));
+            ->will(self::returnValue($this->translator));
+
+        $contextMock->method('getContext')
+            ->will(self::returnValue($contextMock));
 
         $contextMock->employee = $employeeMock;
 
         $shopMock = $this->getMockBuilder(Shop::class)
             ->setMethods(array('getBaseURL'))
+            ->disableOriginalConstructor()
             ->getMock();
+
         $shopMock->id = 1;
         $shopMock->method('getBaseURL')
             ->willReturn('my-awesome-url.com');
@@ -114,6 +120,16 @@ class WebTestCase extends TestCase
 
         $contextMock->currency = $currencyMock;
 
+        $currencyDataProviderMock = $this->getMockBuilder(CurrencyDataProvider::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getDefaultCurrencyIsoCode'])
+            ->getMock()
+        ;
+
+        $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
+            ->will(self::returnValue('en'))
+        ;
+
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([
                 'getContext',
@@ -127,11 +143,11 @@ class WebTestCase extends TestCase
             ->getMock();
 
         $legacyContextMock->method('getContext')
-            ->will($this->returnValue($contextMock));
+            ->willReturn($contextMock);
 
         $legacyContextMock->method('getLanguages')
             ->will(
-                $this->returnValue(
+                self::returnValue(
                     [
                         [
                             'id_lang' => '1',
@@ -151,11 +167,14 @@ class WebTestCase extends TestCase
                 )
             );
 
+
         $legacyContextMock->method('getLanguage')
             ->will(
-                $this->returnValue($languageMock)
+                self::returnValue($languageMock)
             );
 
+
+        self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
     }
@@ -174,7 +193,7 @@ class WebTestCase extends TestCase
         );
 
         $configurationMock->method('get')
-            ->will($this->returnValueMap($values));
+            ->will(self::returnValueMap($values));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }
