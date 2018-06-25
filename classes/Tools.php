@@ -688,7 +688,7 @@ class ToolsCore
     public static function getCldr(Context $context = null, $language_code = null)
     {
         static $cldr_cache;
-        if ($context) {
+        if ($context && $context->language instanceof Language) {
             $language_code = $context->language->locale;
         }
 
