@@ -176,7 +176,7 @@ var AdminModuleController = function() {
 
   this.ajaxLoadPage = function() {
     var token = window.location.search;
-    var urlToCall = this.baseAdminDir+'module/catalog/refresh' + token;
+    var urlToCall = this.baseAdminDir+'improve/modules/catalog/refresh' + token;
     var self = this;
 
     $.ajax({
@@ -668,7 +668,7 @@ var AdminModuleController = function() {
         return;
     }
     var token = window.location.search;
-    var urlToCall = this.baseAdminDir+'module/notifications/count' + token;
+    var urlToCall = this.baseAdminDir+'improve/modules/notifications/count' + token;
 
     $.getJSON(urlToCall, function(badge) {
         // TODO: This HTML code comes from an already specific template.
