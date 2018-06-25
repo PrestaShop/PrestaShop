@@ -514,8 +514,7 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    {{ dump(form) }}
-    <div class="choice-tablez">
+    <div class="choice-table">
       <table class="table">
         <thead>
           <tr>
@@ -526,17 +525,15 @@
           </tr>
         </thead>
         <tbody>
-        {% for choice_name in choice_names %}
+        {% for key, choice_name in choice_names %}
           <tr>
             <td>
               {{ choice_name }}
             </td>
-            {% for child in form %}
-              {% for checkbox in child %}
-                <td>
-                  {{ form_widget(checkbox, {'material_design': true}) }}
-                </td>
-              {% endfor %}
+            {% for choices in form %}
+              <td>
+                {{ form_widget(choices[key], {'material_design': true}) }}
+              </td>
             {% endfor %}
           </tr>
         {% endfor %}
