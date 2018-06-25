@@ -1746,8 +1746,6 @@ class FrontControllerCore extends Controller
             }
         }
 
-        ksort($params);
-
         if (null !== $extraParams) {
             foreach ($params as $key => $param) {
                 if (null === $param || '' === $param) {
