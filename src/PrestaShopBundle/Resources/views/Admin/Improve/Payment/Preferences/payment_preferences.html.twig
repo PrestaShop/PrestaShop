@@ -29,12 +29,114 @@
   <div class="container">
     <div class="row">
       <div class="col">
+        {{ form_start(paymentPreferencesForm) }}
+        {% block payment_modules_currency_restriction %}
+          <div class="card">
+            <h3 class="card-header">
+              <i class="material-icons">euro_symbol</i>
+              {{ 'Currency restrictions'|trans({}, 'Admin.Payment.Feature') }}
+            </h3>
+            <div class="card-body">
+              <p>
+                <small class="form-text">
+                  {{ 'Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+                </small>
+              </p>
+
+              <div class="form-group">
+                {{ form_widget(paymentPreferencesForm.payment_module_preferences.currency_restriction) }}
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">
+                  <i class="material-icons">save</i>
+                  <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endblock %}
+
+        {% block payment_modules_country_restriction %}
         <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">public</i>
+            {{ 'Country restrictions'|trans({}, 'Admin.Payment.Feature') }}
+          </h3>
           <div class="card-body">
-            {{ form_start(paymentPreferencesForm) }}
-            {{ form_end(paymentPreferencesForm) }}
+            <p>
+              <small class="form-text">
+                {{ 'Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+              </small>
+            </p>
+
+            <div class="form-group">
+              {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restriction) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">
+                <i class="material-icons">save</i>
+                <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+              </button>
+            </div>
           </div>
         </div>
+        {% endblock %}
+
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">group</i>
+            {{ 'Group restrictions'|trans({}, 'Admin.Payment.Feature') }}
+          </h3>
+          <div class="card-body">
+            <p>
+              <small class="form-text">
+                {{ 'Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+              </small>
+            </p>
+
+            <div class="form-group">
+              {{ form_widget(paymentPreferencesForm.payment_module_preferences.group_restriction) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">
+                <i class="material-icons">save</i>
+                <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">local_shipping</i>
+            {{ 'Carrier restrictions'|trans({}, 'Admin.Payment.Feature') }}
+          </h3>
+          <div class="card-body">
+            <p>
+              <small class="form-text">
+                {{ 'Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+              </small>
+            </p>
+            <div class="form-group">
+              {{ form_widget(paymentPreferencesForm.payment_module_preferences.carrier_restriction) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">
+                <i class="material-icons">save</i>
+                <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        {{ form_end(paymentPreferencesForm) }}
       </div>
     </div>
   </div>

@@ -88,3 +88,8 @@ services:
             - '@prestashop.adapter.geolocation_options.configuration'
             - '@prestashop.core.geolocation.geo_lite_city.checker'
             - '@prestashop.core.validation.validator'
+
+    prestashop.admin.payment_preferences.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.payment_module_preferences.configuration'
