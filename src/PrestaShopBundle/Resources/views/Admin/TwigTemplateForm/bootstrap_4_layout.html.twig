@@ -541,7 +541,15 @@
             </td>
             {% for choices in form %}
               <td>
-                {{ form_widget(choices[key], {'material_design': true}) }}
+                {% if choices[key] is defined %}
+                  {% if choices.vars.multiple %}
+                    {{ form_widget(choices[key], {'material_design': true}) }}
+                  {% else %}
+                    {{ form_widget(choices[key]) }}
+                  {% endif %}
+                {% else %}
+                  --
+                {% endif %}
               </td>
             {% endfor %}
           </tr>

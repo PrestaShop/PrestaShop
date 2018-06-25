@@ -42,8 +42,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        dump(\Currency::getCurrencies());
-
         $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [

@@ -37,12 +37,14 @@ class MaterialMultipleChoiceTableType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($options['choices_for'] as $choiceName => $id) {
-            $builder->add($id, ChoiceType::class, [
-                'label' => $choiceName,
+        foreach ($options['choices_for'] as $choiceFor) {
+            $allowMultiple = isset($choiceFor['allow_multiple']) ? $choiceFor['allow_multiple'] : false;
+
+            $builder->add($choiceFor['id'], ChoiceType::class, [
+                'label' => $choiceFor['name'],
                 'choices' => $options['choices'],
                 'expanded' => true,
-                'multiple' => true,
+                'multiple' => $allowMultiple,
             ]);
         }
     }
@@ -50,7 +52,10 @@ class MaterialMultipleChoiceTableType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choice_names'] = array_keys($options['choices']);
-        $view->vars['choice_for_names'] = array_keys($options['choices_for']);
+
+        foreach ($options['choices_for'] as $choiceFor) {
+            $view->vars['choice_for_names'][] = $choiceFor['name'];
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

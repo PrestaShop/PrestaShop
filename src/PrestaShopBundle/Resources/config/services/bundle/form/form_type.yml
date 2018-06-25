@@ -404,10 +404,10 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
+            - '@prestashop.adapter.module.payment_module_provider'
             - '@=service("prestashop.bundle.form.choice_provider.country").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.payment_module_by_name").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
         tags:
             - { name: form.type }
