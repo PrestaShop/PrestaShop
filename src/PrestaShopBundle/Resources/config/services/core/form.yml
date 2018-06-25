@@ -2,40 +2,34 @@ services:
     _defaults:
         public: true
 
-    prestashop.form.choice_provider.language:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LanguageChoiceProvider'
+    prestashop.core.form.choice_provider.language_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
         arguments:
             - '@prestashop.adapter.data_provider.language'
 
-    prestashop.form.choice_provider.country:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CountryChoiceProvider'
+    prestashop.core.form.choice_provider.country_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider'
         arguments:
-            - '@prestashop.adapter.legacy.context'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
             - '@prestashop.adapter.data_provider.country'
 
-    prestashop.form.choice_provider.currency:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CurrencyChoiceProvider'
+    prestashop.core.form.choice_provider.currency_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
         arguments:
             - '@prestashop.adapter.data_provider.currency'
 
-    prestashop.form.choice_provider.timezone:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\TimezoneChoiceProvider'
+    prestashop.core.form.choice_provider.timezone_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
         arguments:
             - '@prestashop.core.admin.timezone.repository'
 
-    prestashop.form.choice_provider.localization_pack:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationPackChoiceProvider'
+    prestashop.core.form.choice_provider.localization_pack_by_iso_code:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LocalizationPackByIsoCodeChoiceProvider'
         arguments:
             - '@prestashop.core.localization.pack.loader.remote'
             - '@prestashop.core.localization.pack.loader.local'
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
-
-    prestashop.bundle.form.choice_provider.country:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\CountryChoiceProvider'
-        arguments:
-            - '@prestashop.adapter.legacy.context'
-            - '@prestashop.adapter.data_provider.country'
 
     prestashop.core.form.choice_provider.country_by_iso_code:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'

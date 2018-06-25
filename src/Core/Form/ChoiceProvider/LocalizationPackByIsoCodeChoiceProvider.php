@@ -24,17 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class LocalizationPackChoiceProvider is responsible for providing localization pack choices for ChoiceType form field
+ * Class LocalizationPackByIsoCodeChoiceProvider provides localization pack choices with iso code values
  */
-class LocalizationPackChoiceProvider
+final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var LocalizationPackLoaderInterface

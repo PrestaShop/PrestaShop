@@ -24,40 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CurrencyChoiceProvider is responsible for providing currency choices for ChoiceType form field
+ * Class LanguageByIdChoiceProvider provides language choices with ID values
  */
-class CurrencyChoiceProvider
+final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var CurrencyDataProvider
+     * @var LanguageDataProvider
      */
-    private $currencyDataProvider;
+    private $languageDataProvider;
 
     /**
-     * @param CurrencyDataProvider $currencyDataProvider
+     * @param LanguageDataProvider $languageDataProvider
      */
-    public function __construct(CurrencyDataProvider $currencyDataProvider)
+    public function __construct(LanguageDataProvider $languageDataProvider)
     {
-        $this->currencyDataProvider = $currencyDataProvider;
+        $this->languageDataProvider = $languageDataProvider;
     }
 
     /**
-     * Get currency choices
+     * Get language choices for form
      *
      * @return array
      */
     public function getChoices()
     {
-        $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
+        $languages = $this->languageDataProvider->getLanguages();
         $choices = [];
 
-        foreach ($currencies as $currency) {
-            $choices[$currency['name']] = $currency['id_currency'];
+        foreach ($languages as $language) {
+            $choices[$language['name']] = $language['id_lang'];
         }
 
         return $choices;

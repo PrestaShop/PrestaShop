@@ -24,14 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 
 /**
- * Class TimezoneChoiceProvider is responsible for providing timezone choices for ChoiceType form field
+ * Class TimezoneByNameChoiceProvider provides timezone choices with name values
  */
-class TimezoneChoiceProvider
+final class TimezoneByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var TimezoneRepository
