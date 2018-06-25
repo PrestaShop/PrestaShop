@@ -9,6 +9,7 @@ ENV PS_FOLDER_INSTALL install-dev
 ENV DB_SERVER localhost
 ENV TRAVIS_BUILD_DIR /var/www/html
 ENV DB_USER macfly
+ENV TEST_CAMPAIGN full-test
 
 # MySQL installation
 ENV DEBIAN_FRONTEND noninteractive
