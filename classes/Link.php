@@ -1083,7 +1083,7 @@ class LinkCore
         $vars = array();
         $varsNb = array('n');
         $varsSort = array('orderby', 'orderway');
-        $varsPagination = array('p');
+        $varsPagination = array('page');
 
         foreach ($_GET as $k => $value) {
             if ($k != 'id_'.$type && $k != 'controller') {
