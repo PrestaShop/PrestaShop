@@ -30,8 +30,27 @@ use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class PaymentPreferencesType extends AbstractType
+class PaymentModuleCurrencyRestrictionType extends AbstractType
 {
+    /**
+     * @var array
+     */
+    private $countryChoices;
+    /**
+     * @var array
+     */
+    private $paymentModuleChoices;
+
+    /**
+     * @param array $countryChoices
+     * @param array $paymentModuleChoices
+     */
+    public function __construct(array $countryChoices, array $paymentModuleChoices)
+    {
+        $this->countryChoices = $countryChoices;
+        $this->paymentModuleChoices = $paymentModuleChoices;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,14 +59,8 @@ class PaymentPreferencesType extends AbstractType
         $builder
             ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => 'Currency restrictions',
-                'choices' => [
-                    'Lithuania' => 1,
-                    'Latvia' => 2,
-                ],
-                'choices_for' => [
-                    'Bank transfer' => 'bank_transfer',
-                    'Payments by check' => 'payment_by_check',
-                ],
+                'choices' => $this->countryChoices,
+                'choices_for' => $this->paymentModuleChoices,
             ])
         ;
     }
