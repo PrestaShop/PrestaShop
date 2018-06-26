@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
+final class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var DataConfigurationInterface
@@ -39,8 +39,9 @@ class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
     /**
      * @param DataConfigurationInterface $paymentModulePreferencesConfiguration
      */
-    public function __construct(DataConfigurationInterface $paymentModulePreferencesConfiguration)
-    {
+    public function __construct(
+        DataConfigurationInterface $paymentModulePreferencesConfiguration
+    ) {
         $this->paymentModulePreferencesConfiguration = $paymentModulePreferencesConfiguration;
     }
 
@@ -59,6 +60,6 @@ class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        // TODO: Implement setData() method.
+        return $this->paymentModulePreferencesConfiguration->updateConfiguration($data['payment_module_preferences']);
     }
 }

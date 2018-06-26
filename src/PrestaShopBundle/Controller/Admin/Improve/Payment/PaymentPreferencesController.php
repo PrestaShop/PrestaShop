@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,6 +48,36 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'paymentPreferencesForm' => $paymentPreferencesForm->createView(),
         ]);
+    }
+
+    /**
+     * Process payment modules preferences form
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processFormAction(Request $request)
+    {
+        $paymentPreferencesFormHandler = $this->getPaymentPreferencesFormHandler();
+
+        $paymentPreferencesForm = $paymentPreferencesFormHandler->getForm();
+        $paymentPreferencesForm->handleRequest($request);
+
+        if ($paymentPreferencesForm->isSubmitted()) {
+            $paymentPreferences = $paymentPreferencesForm->getData();
+
+            $errors = $paymentPreferencesFormHandler->save($paymentPreferences);
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_payment_preferences');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_payment_preferences');
     }
 
     /**
