@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2017 PrestaShop
+* 2007-2018 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2017 PrestaShop SA
+*  @copyright  2007-2018 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,9 +43,7 @@ class RijndaelCore
      */
     public function encrypt($plaintext)
     {
-        $length = (ini_get('mbstring.func_overload') & 2) ? mb_strlen($plaintext, ini_get('default_charset')) : strlen($plaintext);
-
-        if ($length >= 1048576) {
+        if (strlen($plaintext) >= 1048576) {
             return false;
         }
 
@@ -55,7 +53,16 @@ class RijndaelCore
         } elseif (function_exists('mcrypt_encrypt')) {
             $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
             $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
-            $cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->_key, $plaintext, MCRYPT_MODE_CBC, $iv);
+            $blockSize = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+            $pad = $blockSize - (strlen($plaintext) % $blockSize);
+
+            $cipherText = mcrypt_encrypt(
+                MCRYPT_RIJNDAEL_128,
+                $this->_key,
+                $plaintext . str_repeat(chr($pad), $pad),
+                MCRYPT_MODE_CBC,
+                $iv
+            );
             $cipherText = $iv.$cipherText;
         } else {
             throw new RuntimeException('Either Mcrypt or OpenSSL extension is required to run Prestashop');
@@ -86,12 +93,20 @@ class RijndaelCore
             $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
             $ivDec = substr($encrypted, 0, $ivSize);
             $encrypted = substr($encrypted, $ivSize);
-            $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->_key, $encrypted, MCRYPT_MODE_CBC, $ivDec);
+            $output = mcrypt_decrypt(
+                MCRYPT_RIJNDAEL_128,
+                $this->_key,
+                $encrypted,
+                MCRYPT_MODE_CBC,
+                $ivDec
+            );
+            $pad = ord($output[strlen($output) - 1]);
+            $output = substr($output, 0, -$pad);
         } else {
             throw new RuntimeException('Either Mcrypt or OpenSSL extension is required to run Prestashop');
         }
 
-        return rtrim($output, "\0");
+        return $output;
     }
 
     /**
