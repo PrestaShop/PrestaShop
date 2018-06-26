@@ -653,23 +653,33 @@ var AdminModuleController = function() {
    * @return void
    */
   this.getNotificationsCount = function () {
-    var destinationTab = $("#subtab-AdminModulesNotifications");
-    if (destinationTab.length === 0) {
-        return;
-    }
-    var token = window.location.search;
     var urlToCall = moduleURLs.notificationsCount;
 
-    $.getJSON(urlToCall, function(badge) {
-        // TODO: This HTML code comes from an already specific template.
-        // To be moved in a template, with generic classes for badges
-        destinationTab.append('<span class="notification-container">\
-            <span class="notification-counter">'+badge.count+'</span>\
-          </span>\
-        ');
-    }).fail(function() {
+    $.getJSON(
+        urlToCall,
+        this.updateNotificationsCount
+    ).fail(function() {
         console.error('Could not retrieve module notifications count.');
     });
+  };
+  
+  this.updateNotificationsCount = function(badge) {
+    var destinationTabs = {
+        'to_configure': $("#subtab-AdminModulesNotifications"),
+        'to_update': $("#subtab-AdminModulesUpdates"),
+    };
+    
+    for (var key in destinationTabs) {
+        if (destinationTabs[key].length === 0) {
+            return;
+        }
+        // TODO: This HTML code comes from an already specific template.
+        // To be moved in a template, with generic classes for badges
+        destinationTabs[key].append('<span class="notification-container">\
+            <span class="notification-counter">'+badge[key]+'</span>\
+          </span>\
+        ');
+    };
   };
 
   this.initAddonsSearch = function () {
