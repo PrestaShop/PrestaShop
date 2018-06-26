@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 
@@ -65,6 +66,22 @@ class ModulePresenter implements PresenterInterface
             'disk' => $module->disk->all(),
             'database' => $module->database->all(),
         );
+    }
+
+    /**
+     * Transform a collection of addons as a simple array of data.
+     *
+     * @param array $modules
+     * @return array
+     */
+    public function presentCollection(array $modules)
+    {
+        $presentedProducts = array();
+        foreach ($modules as $name => $product) {
+            $presentedProducts[$name] = $this->present($product);
+        }
+
+        return $presentedProducts;
     }
 
     private function getModulePrice($prices)
