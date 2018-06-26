@@ -53,11 +53,17 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
+        $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+
+        $isSingleShopContext = $shopContext->isSingleShopContext();
 
         $paymentPreferencesForm = null;
+        $paymentModulesCount = 0;
 
         if ($isSingleShopContext) {
+            $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
             $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
@@ -66,6 +72,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'paymentPreferencesForm' => $paymentPreferencesForm,
             'isSingleShopContext' => $isSingleShopContext,
+            'paymentModulesCount' => $paymentModulesCount,
         ]);
     }
 
