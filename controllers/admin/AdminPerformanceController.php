@@ -485,7 +485,6 @@ class AdminPerformanceControllerCore extends AdminController
                         'type' => 'radio',
                         'label' => $this->l('Algorithm'),
                         'name' => 'PS_CIPHER_ALGORITHM',
-                        'hint' => $this->l('If you change this configuration, all cookies will be reset.'),
                         'values' => array(
                             array(
                                 'id' => 'PS_CIPHER_ALGORITHM_1',
