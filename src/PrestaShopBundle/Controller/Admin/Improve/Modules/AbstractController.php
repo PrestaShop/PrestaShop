@@ -32,6 +32,33 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 abstract class AbstractController extends FrameworkBundleAdminController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
+    
+    protected function getNotificationPageData($type)
+    {
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $modulesPresenterCallback = function (array &$modules) use ($modulePresenter) {
+            return $modulePresenter->presentCollection($modules);
+        };
+
+        $moduleManager = $this->get('prestashop.module.manager');
+        $modules = $moduleManager->getModulesWithNotifications($modulesPresenterCallback);
+        $layoutTitle = $this->trans('Module notifications', 'Admin.Modules.Feature');
+
+        $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
+
+        return array(
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $layoutTitle,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'modules' => $modules->{$type},
+            'requireAddonsSearch' => false,
+            'requireBulkActions' => false,
+            'requireFilterStatus' => false,
+            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
+            'errorMessage' => $errorMessage,
+        );
+    }
 
     protected function getToolbarButtons()
     {

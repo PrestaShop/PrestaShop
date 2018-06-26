@@ -27,9 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ModuleAlertsController extends AbstractController
+class ModuleUpdatesController extends AbstractController
 {
     /**
      * @return Response
@@ -37,23 +36,8 @@ class ModuleAlertsController extends AbstractController
     public function indexAction()
     {
         return $this->render(
-            'PrestaShopBundle:Admin/Module:alerts.html.twig',
-            $this->getNotificationPageData('to_configure')
+            'PrestaShopBundle:Admin/Module:updates.html.twig',
+            $this->getNotificationPageData('to_update')
         );
-    }
-
-    /**
-     * @return JsonResponse with number of modules having at least one notification
-     */
-    public function notificationsCountAction()
-    {
-        $moduleManager = $this->container->get('prestashop.module.manager');
-
-        $modulesWithNotif = $moduleManager->groupModulesByInstallationProgress();
-        return new JsonResponse(array(
-            'count' => $moduleManager->countModulesWithNotifications(),
-            'alerts' => count($modulesWithNotif->to_configure),
-            'updates' => count($modulesWithNotif->to_update),
-        ));
     }
 }
