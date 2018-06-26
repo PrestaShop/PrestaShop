@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,6 +38,9 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     protected $iv;
     protected $ivSize;
 
+    protected $mode = MCRYPT_MODE_CBC;
+    protected $cipher = MCRYPT_RIJNDAEL_128;
+
     /**
      * PhpEncryptionCore constructor.
      *
@@ -47,48 +50,9 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     public function __construct($hexString)
     {
         $this->key = substr($hexString, 0, 32);
-    }
-
-    /**
-     * Get Iv
-     *
-     * @return string
-     */
-    protected function getIv()
-    {
-        if ($this->iv === null) {
-            $this->iv = mcrypt_create_iv($this->getIvSize(), MCRYPT_RAND);
-        }
-
-        return $this->iv;
-    }
-
-    /**
-     * Get Iv
-     *
-     * @return string
-     */
-    protected function getHmacIv()
-    {
-        if ($this->hmacIv === null) {
-            $this->hmacIv = substr(sha1(_COOKIE_KEY_), 0, $this->getIvSize());
-        }
-
-        return $this->hmacIv;
-    }
-
-    /**
-     * Get Iv Size
-     *
-     * @return string
-     */
-    protected function getIvSize()
-    {
-        if ($this->ivSize === null) {
-            $this->ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-        }
-
-        return $this->ivSize;
+        $this->ivSize = mcrypt_get_iv_size($this->cipher, $this->mode);
+        $this->iv = mcrypt_create_iv($this->ivSize, MCRYPT_RAND);
+        $this->hmacIv = substr(sha1(_COOKIE_KEY_), 0, $this->ivSize);
     }
 
     /**
@@ -100,8 +64,17 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      */
     public function encrypt($plaintext)
     {
-        $cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->key, $plaintext, MCRYPT_MODE_CBC, $this->getIv());
-        $cipherText = $this->getIv().$cipherText;
+        $blockSize = mcrypt_get_block_size($this->cipher, $this->mode);
+        $pad = $blockSize - (strlen($plaintext) % $blockSize);
+
+        $cipherText = mcrypt_encrypt(
+            $this->cipher,
+            $this->key,
+            $plaintext . str_repeat(chr($pad), $pad),
+            $this->mode,
+            $this->iv
+        );
+        $cipherText = $this->iv.$cipherText;
 
         return $this->generateHmac($cipherText) . ':' . base64_encode($cipherText);
     }
@@ -130,19 +103,19 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
             return false;
         }
 
-        $ivDec = substr($encrypted, 0, $this->getIvSize());
-        $cipherText = substr($encrypted, $this->getIvSize());
+        $ivDec = substr($encrypted, 0, $this->ivSize);
+        $cipherText = substr($encrypted, $this->ivSize);
 
-        return rtrim(
-            mcrypt_decrypt(
-                MCRYPT_RIJNDAEL_128,
-                $this->key,
-                $cipherText,
-                MCRYPT_MODE_CBC,
-                $ivDec
-            ),
-            "\0"
+        $data = mcrypt_decrypt(
+            $this->cipher,
+            $this->key,
+            $cipherText,
+            $this->mode,
+            $ivDec
         );
+
+        $pad = ord($data[strlen($data) - 1]);
+        return substr($data, 0, -$pad);
     }
 
     /**
@@ -154,10 +127,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      */
     protected function generateHmac($encrypted)
     {
-        $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->getHmacIv(), 32);
+        $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->hmacIv, 32);
         return hash_hmac(
             'sha256',
-            $this->getHmacIv() . MCRYPT_RIJNDAEL_128 . $encrypted,
+            $this->hmacIv . $this->cipher . $encrypted,
             $macKey
         );
     }
