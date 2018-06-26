@@ -83,6 +83,22 @@ class ModulePresenter implements PresenterInterface
     }
 
     /**
+     * Transform a collection of addons as a simple array of data.
+     *
+     * @param array $modules
+     * @return array
+     */
+    public function presentCollection(array $modules)
+    {
+        $presentedProducts = array();
+        foreach ($modules as $name => $product) {
+            $presentedProducts[$name] = $this->present($product);
+        }
+
+        return $presentedProducts;
+    }
+
+    /**
      * Generate the list of small icons to be displayed near the module name
      * 
      * @param array $attributes Attributes of presented module
