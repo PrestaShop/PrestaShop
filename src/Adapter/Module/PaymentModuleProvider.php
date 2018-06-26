@@ -79,7 +79,7 @@ final class PaymentModuleProvider implements PaymentModuleProviderInterface
 
         /** @var Module $module */
         foreach ($modules as $module) {
-            if ($module->attributes->get('is_paymentModule')) {
+            if ($module->attributes->get('is_paymentModule') && $module->database->get('active')) {
                 $restrictedModuleCountries = $this->moduleRepository->findCountryIdsByModuleAndShopId(
                     $module->database->get('id'),
                     $this->shopId
@@ -105,7 +105,7 @@ final class PaymentModuleProvider implements PaymentModuleProviderInterface
                 $module->attributes->set('groups', $restrictedModuleGroups);
                 $module->attributes->set('carriers', $restrictedModuleCarriers);
 
-                $paymentModules[] = $module;
+                $paymentModules[$module->attributes->get('name')] = $module;
             }
         }
 

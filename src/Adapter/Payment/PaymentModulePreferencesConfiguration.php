@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Payment;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
 
 final class PaymentModulePreferencesConfiguration implements DataConfigurationInterface
@@ -37,11 +38,20 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
     private $paymentModuleProvider;
 
     /**
-     * @param PaymentModuleProviderInterface $paymentModuleProvider
+     * @var PaymentRestrictionsConfiguratorInterface
      */
-    public function __construct(PaymentModuleProviderInterface $paymentModuleProvider)
-    {
+    private $paymentRestrictionsConfigurator;
+
+    /**
+     * @param PaymentModuleProviderInterface $paymentModuleProvider
+     * @param PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
+     */
+    public function __construct(
+        PaymentModuleProviderInterface $paymentModuleProvider,
+        PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
+    ) {
         $this->paymentModuleProvider = $paymentModuleProvider;
+        $this->paymentRestrictionsConfigurator = $paymentRestrictionsConfigurator;
     }
 
     /**
@@ -67,7 +77,16 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      */
     public function updateConfiguration(array $config)
     {
-        // TODO: Implement updateConfiguration() method.
+        $errors = [];
+
+        if ($this->validateConfiguration($config)) {
+            $this->paymentRestrictionsConfigurator->configureCurrencyRestrictions($config['currency_restriction']);
+            $this->paymentRestrictionsConfigurator->configureCountryRestrictions($config['country_restriction']);
+            $this->paymentRestrictionsConfigurator->configureGroupRestrictions($config['group_restriction']);
+            $this->paymentRestrictionsConfigurator->configureCarrierRestrictions($config['carrier_restriction']);
+        }
+
+        return $errors;
     }
 
     /**
@@ -75,6 +94,11 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      */
     public function validateConfiguration(array $config)
     {
-        // TODO: Implement validateConfiguration() method.
+        return isset(
+            $config['currency_restriction'],
+            $config['country_restriction'],
+            $config['group_restriction'],
+            $config['carrier_restriction']
+        );
     }
 }

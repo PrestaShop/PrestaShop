@@ -155,3 +155,4 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Payment\PaymentModulePreferencesConfiguration'
         arguments:
             - '@prestashop.adapter.module.payment_module_provider'
+            - '@prestashop.core.module.configuration.payment_restrictions_configurator'

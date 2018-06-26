@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Type\Material;
 
-use function foo\func;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
