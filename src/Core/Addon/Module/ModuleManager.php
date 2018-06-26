@@ -156,6 +156,13 @@ class ModuleManager implements AddonManagerInterface
         return $modules;
     }
 
+    /**
+     * Returns the total of module notifications
+     * Not used anymore, but kept for backward compatibility
+     * 
+     * @return int
+     * @deprecated since 1.7.4.0
+     */
     public function countModulesWithNotifications()
     {
         $modules = (array) $this->groupModulesByInstallationProgress();
@@ -163,6 +170,25 @@ class ModuleManager implements AddonManagerInterface
         return array_reduce($modules, function ($carry, $item) {
             return $carry + count($item);
         }, 0);
+    }
+
+    /**
+     * Detailed array of number of modules per notification type
+     * 
+     * @return array
+     */
+    public function countModulesWithNotificationsDetailed()
+    {
+        $notificationCounts = array(
+            'count' => 0,
+        );
+
+        foreach ((array) $this->groupModulesByInstallationProgress() as $key => $modules) {
+            $count = count($modules);
+            $notificationCounts[$key] = $count;
+            $notificationCounts['count'] += $count;
+        }
+        return $notificationCounts;
     }
 
     /**
