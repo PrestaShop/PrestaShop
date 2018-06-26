@@ -132,7 +132,7 @@ class ToolsCore
      * Replace text within a portion of a string
      *
      * Replaces a string matching a search, (optionally) string from a certain position
-     *  
+     *
      * @param  string  $search  The string to search in the input string
      * @param  string  $replace The replacement string
      * @param  string  $subject The input string
@@ -2840,7 +2840,7 @@ exit;
     protected static function throwDeprecated($error, $message, $class)
     {
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
-            trigger_error($error, E_USER_WARNING);
+            @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
         }
     }
