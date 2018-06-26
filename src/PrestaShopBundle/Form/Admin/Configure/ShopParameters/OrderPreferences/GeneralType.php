@@ -82,8 +82,7 @@ class GeneralType extends TranslatorAwareType
                 'currency' => $defaultCurrency->iso_code,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
             ])
-            ->add('recalculate_shipping_cost', SwitchType::class)
-        ;
+            ->add('recalculate_shipping_cost', SwitchType::class);
 
         if ($isMultishippingEnabled) {
             $builder->add('allow_multishipping', SwitchType::class);
@@ -94,9 +93,8 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_tos', SwitchType::class)
             ->add('tos_cms_id', ChoiceType::class, [
                 'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices'  => $this->tosCmsChoices,
-            ])
-        ;
+                'choices' => $this->tosCmsChoices,
+            ]);
     }
 
     /**

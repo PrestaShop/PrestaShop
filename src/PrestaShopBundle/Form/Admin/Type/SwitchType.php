@@ -38,21 +38,22 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SwitchType extends AbstractType
 {
     const TRANS_DOMAIN = 'Admin.Global';
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'choices' => array(
+        $resolver->setDefaults([
+            'choices' => [
                 'No' => false,
                 'Yes' => true,
-            ),
+            ],
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
             'choice_translation_domain' => self::TRANS_DOMAIN,
-        ));
+        ]);
         $resolver->setAllowedTypes('disabled', 'bool');
     }
 
@@ -66,7 +67,7 @@ class SwitchType extends AbstractType
         }
         $view->vars['attr']['class'] = 'ps-switch';
         if (isset($options['attr']['class'])) {
-            $view->vars['attr']['class'] .= ' '.$options['attr']['class'];
+            $view->vars['attr']['class'] .= ' ' . $options['attr']['class'];
         }
     }
 

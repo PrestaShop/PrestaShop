@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -33,17 +34,17 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $replaceArray = array(
+        $replaceArray = [
             "\n",
             "\r",
             "\n\r",
-        );
-        $str = str_replace($replaceArray, array(''), strip_tags($value));
+        ];
+        $str = str_replace($replaceArray, [''], strip_tags($value));
 
         if (iconv_strlen($str) > $constraint->max) {
             $this->context->addViolation(
                 (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
-                array('%limit%' => $constraint->max)
+                ['%limit%' => $constraint->max]
             );
         }
     }
