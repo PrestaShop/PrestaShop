@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfiguratorInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
 
+/**
+ * Class PaymentModulePreferencesConfiguration is responsible for configuring payment module restrictions
+ */
 final class PaymentModulePreferencesConfiguration implements DataConfigurationInterface
 {
     /**
@@ -63,10 +66,10 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
         foreach ($paymentModules as $paymentModule) {
-            $config['currency_restriction'][$paymentModule->get('name')] = $paymentModule->get('currencies');
-            $config['country_restriction'][$paymentModule->get('name')] = $paymentModule->get('countries');
-            $config['group_restriction'][$paymentModule->get('name')] = $paymentModule->get('groups');
-            $config['carrier_restriction'][$paymentModule->get('name')] = $paymentModule->get('carriers');
+            $config['currency_restrictions'][$paymentModule->get('name')] = $paymentModule->get('currencies');
+            $config['country_restrictions'][$paymentModule->get('name')] = $paymentModule->get('countries');
+            $config['group_restrictions'][$paymentModule->get('name')] = $paymentModule->get('groups');
+            $config['carrier_restrictions'][$paymentModule->get('name')] = $paymentModule->get('carriers');
         }
 
         return $config;
@@ -80,10 +83,10 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->paymentRestrictionsConfigurator->configureCurrencyRestrictions($config['currency_restriction']);
-            $this->paymentRestrictionsConfigurator->configureCountryRestrictions($config['country_restriction']);
-            $this->paymentRestrictionsConfigurator->configureGroupRestrictions($config['group_restriction']);
-            $this->paymentRestrictionsConfigurator->configureCarrierRestrictions($config['carrier_restriction']);
+            $this->paymentRestrictionsConfigurator->configureCurrencyRestrictions($config['currency_restrictions']);
+            $this->paymentRestrictionsConfigurator->configureCountryRestrictions($config['country_restrictions']);
+            $this->paymentRestrictionsConfigurator->configureGroupRestrictions($config['group_restrictions']);
+            $this->paymentRestrictionsConfigurator->configureCarrierRestrictions($config['carrier_restrictions']);
         }
 
         return $errors;
