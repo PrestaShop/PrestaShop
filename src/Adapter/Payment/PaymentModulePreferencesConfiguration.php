@@ -53,10 +53,10 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
         foreach ($paymentModules as $paymentModule) {
-//            $config['currency_restriction'][$paymentModule->get('name')] = $paymentModule->get('currencies');
-//            $config['country_restriction'][$paymentModule->get('name')] = $paymentModule->get('countries');
-//            $config['group_restriction'][$paymentModule->get('name')] = $paymentModule->get('groups');
-//            $config['carrier_restriction'][$paymentModule->get('name')] = $paymentModule->get('carriers');
+            $config['currency_restriction'][$paymentModule->get('name')] = $paymentModule->get('currencies');
+            $config['country_restriction'][$paymentModule->get('name')] = $paymentModule->get('countries');
+            $config['group_restriction'][$paymentModule->get('name')] = $paymentModule->get('groups');
+            $config['carrier_restriction'][$paymentModule->get('name')] = $paymentModule->get('carriers');
         }
 
         return $config;

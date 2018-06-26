@@ -94,23 +94,19 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         $builder
             ->add('currency_restriction', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
-                'choices' => $this->getCurrencyChoices(),
-                'choices_for' => $this->getChoicesForPaymentModule(true),
+                'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
             ])
             ->add('country_restriction', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
-                'choices' => $this->countryChoices,
-                'choices_for' => $this->getChoicesForPaymentModule(),
+                'multiple_choices' => $this->getCountryChoicesForPaymentModules(),
             ])
             ->add('group_restriction', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
-                'choices' => $this->groupChoices,
-                'choices_for' => $this->getChoicesForPaymentModule(),
+                'multiple_choices' => $this->getGroupChoicesForPaymentModules(),
             ])
             ->add('carrier_restriction', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
-                'choices' => $this->carrierChoices,
-                'choices_for' => $this->getChoicesForPaymentModule(),
+                'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
             ])
         ;
     }
@@ -120,34 +116,81 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      *
      * @return array
      */
-    private function getCurrencyChoices()
+    private function getCurrencyChoicesForPaymentModules()
     {
-        $currencyChoices = $this->currencyChoices;
-
-        $currencyChoices[$this->trans('Customer currency', 'Admin.Payment.Feature')] = -1;
-        $currencyChoices[$this->trans('Shop default currency', 'Admin.Payment.Feature')] = -2;
-
-        return $currencyChoices;
-    }
-
-    public function getChoicesForPaymentModule($forCurrencies = false)
-    {
-        $choicesFor = [];
+        $multipleChoices = [];
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
         foreach ($paymentModules as $paymentModule) {
             $allowMultiple = true;
-            if ($forCurrencies && 'radio' === $paymentModule->getInstance()->currencies_mode) {
+            $currencyChoices = $this->currencyChoices;
+
+            if ('radio' === $paymentModule->getInstance()->currencies_mode) {
                 $allowMultiple = false;
+
+                $currencyChoices[$this->trans('Customer currency', 'Admin.Payment.Feature')] = -1;
+                $currencyChoices[$this->trans('Shop default currency', 'Admin.Payment.Feature')] = -2;
             }
 
-            $choicesFor[] = [
+            $multipleChoices[] = [
                 'id' => $paymentModule->get('name'),
                 'name' => $paymentModule->get('displayName'),
                 'allow_multiple' => $allowMultiple,
+                'choices' => $currencyChoices,
             ];
         }
 
-        return $choicesFor;
+        return $multipleChoices;
+    }
+
+    private function getCountryChoicesForPaymentModules()
+    {
+        $multipleChoices = [];
+        $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
+
+        foreach ($paymentModules as $paymentModule) {
+            $multipleChoices[] = [
+                'id' => $paymentModule->get('name'),
+                'name' => $paymentModule->get('displayName'),
+                'allow_multiple' => true,
+                'choices' => $this->countryChoices,
+            ];
+        }
+
+        return $multipleChoices;
+    }
+
+    private function getGroupChoicesForPaymentModules()
+    {
+        $multipleChoices = [];
+        $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
+
+        foreach ($paymentModules as $paymentModule) {
+            $multipleChoices[] = [
+                'id' => $paymentModule->get('name'),
+                'name' => $paymentModule->get('displayName'),
+                'allow_multiple' => true,
+                'choices' => $this->groupChoices,
+            ];
+        }
+
+        return $multipleChoices;
+    }
+
+    private function getCarrierChoicesForPaymentModules()
+    {
+        $multipleChoices = [];
+        $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
+
+        foreach ($paymentModules as $paymentModule) {
+            $multipleChoices[] = [
+                'id' => $paymentModule->get('name'),
+                'name' => $paymentModule->get('displayName'),
+                'allow_multiple' => true,
+                'choices' => $this->carrierChoices,
+            ];
+        }
+
+        return $multipleChoices;
     }
 }
