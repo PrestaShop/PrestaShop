@@ -3945,7 +3945,7 @@ exit;
                 $adjustment_factor += $sign * 1 / $unit;
             }
 
-            $row[$column] += $adjustment_factor;
+            $row[$column] = (float)$row[$column] + $adjustment_factor;
 
             ++$position;
         }
