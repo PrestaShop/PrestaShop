@@ -30,10 +30,10 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 use PrestaShopBundle\Entity\Repository\ModuleRepository;
 
-final class PaymentModuleProvider implements PaymentModuleProviderInterface
+final class PaymentModuleListProvider implements PaymentModuleListProviderInterface
 {
     /**
      * @var AddonRepositoryInterface
@@ -79,7 +79,7 @@ final class PaymentModuleProvider implements PaymentModuleProviderInterface
 
         /** @var Module $module */
         foreach ($modules as $module) {
-            if ($module->attributes->get('is_paymentModule') && $module->database->get('active')) {
+            if ($module->attributes->get('is_paymentModule')) {
                 $restrictedModuleCountries = $this->moduleRepository->findCountryIdsByModuleAndShopId(
                     $module->database->get('id'),
                     $this->shopId

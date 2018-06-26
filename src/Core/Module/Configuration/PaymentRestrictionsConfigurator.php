@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 
 /**
  * Class PaymentRestrictionsConfigurator is responsible for configuring restrictions for payment modules
@@ -50,7 +50,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
     private $shopId;
 
     /**
-     * @var PaymentModuleProviderInterface
+     * @var PaymentModuleListProviderInterface
      */
     private $paymentModuleProvider;
 
@@ -58,13 +58,13 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
      * @param Connection $connection
      * @param string $databasePrefix
      * @param int $shopId
-     * @param PaymentModuleProviderInterface $paymentModuleProvider
+     * @param PaymentModuleListProviderInterface $paymentModuleProvider
      */
     public function __construct(
         Connection $connection,
         $databasePrefix,
         $shopId,
-        PaymentModuleProviderInterface $paymentModuleProvider
+        PaymentModuleListProviderInterface $paymentModuleProvider
     ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;

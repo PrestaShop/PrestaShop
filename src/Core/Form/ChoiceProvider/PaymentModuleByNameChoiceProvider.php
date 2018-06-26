@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 
 final class PaymentModuleByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var PaymentModuleProviderInterface
+     * @var PaymentModuleListProviderInterface
      */
     private $paymentModuleProvider;
 
     /**
-     * @param PaymentModuleProviderInterface $paymentModuleProvider\
+     * @param PaymentModuleListProviderInterface $paymentModuleProvider\
      */
-    public function __construct(PaymentModuleProviderInterface $paymentModuleProvider)
+    public function __construct(PaymentModuleListProviderInterface $paymentModuleProvider)
     {
         $this->paymentModuleProvider = $paymentModuleProvider;
     }
