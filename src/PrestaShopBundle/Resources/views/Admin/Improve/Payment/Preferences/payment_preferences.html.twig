@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col">
         {{ form_start(paymentPreferencesForm) }}
-        {% block payment_modules_currency_restriction %}
+        {% block payment_modules_currency_restrictions %}
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">euro_symbol</i>
@@ -44,7 +44,7 @@
               </p>
 
               <div class="form-group">
-                {{ form_widget(paymentPreferencesForm.payment_module_preferences.currency_restriction) }}
+                {{ form_widget(paymentPreferencesForm.payment_module_preferences.currency_restrictions) }}
               </div>
             </div>
             <div class="card-footer">
@@ -58,7 +58,7 @@
           </div>
         {% endblock %}
 
-        {% block payment_modules_country_restriction %}
+        {% block payment_modules_country_restrictions %}
         <div class="card">
           <h3 class="card-header">
             <i class="material-icons">public</i>
@@ -72,7 +72,7 @@
             </p>
 
             <div class="form-group">
-              {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restriction) }}
+              {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restrictions) }}
             </div>
           </div>
           <div class="card-footer">
@@ -86,6 +86,7 @@
         </div>
         {% endblock %}
 
+        {% block payment_modules_group_restrictions %}
         <div class="card">
           <h3 class="card-header">
             <i class="material-icons">group</i>
@@ -99,7 +100,7 @@
             </p>
 
             <div class="form-group">
-              {{ form_widget(paymentPreferencesForm.payment_module_preferences.group_restriction) }}
+              {{ form_widget(paymentPreferencesForm.payment_module_preferences.group_restrictions) }}
             </div>
           </div>
           <div class="card-footer">
@@ -111,7 +112,9 @@
             </div>
           </div>
         </div>
+        {% endblock %}
 
+        {% block payment_modules_carrier_restrictions %}
         <div class="card">
           <h3 class="card-header">
             <i class="material-icons">local_shipping</i>
@@ -124,7 +127,7 @@
               </small>
             </p>
             <div class="form-group">
-              {{ form_widget(paymentPreferencesForm.payment_module_preferences.carrier_restriction) }}
+              {{ form_widget(paymentPreferencesForm.payment_module_preferences.carrier_restrictions) }}
             </div>
           </div>
           <div class="card-footer">
@@ -136,6 +139,12 @@
             </div>
           </div>
         </div>
+        {% endblock %}
+
+        {% block payment_preferences_block_rest %}
+          {{ form_rest(paymentPreferencesForm) }}
+        {% endblock %}
+
         {{ form_end(paymentPreferencesForm) }}
       </div>
     </div>

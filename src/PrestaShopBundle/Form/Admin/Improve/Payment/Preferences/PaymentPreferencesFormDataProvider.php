@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
+/**
+ * Class PaymentPreferencesFormDataProvider is responsible for handling "Improve > Payment > Preferences" form data
+ */
 final class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
 {
     /**
