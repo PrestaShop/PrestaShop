@@ -58,3 +58,9 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/payment_preferences.bundle.js') }}"></script>
+{% endblock %}
