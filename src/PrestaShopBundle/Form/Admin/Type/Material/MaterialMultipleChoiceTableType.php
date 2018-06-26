@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Type\Material;
 
+use function foo\func;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -37,36 +39,50 @@ class MaterialMultipleChoiceTableType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($options['choices_for'] as $choiceFor) {
-            $allowMultiple = isset($choiceFor['allow_multiple']) ? $choiceFor['allow_multiple'] : false;
-
-            $builder->add($choiceFor['id'], ChoiceType::class, [
-                'label' => $choiceFor['name'],
-                'choices' => $options['choices'],
+        foreach ($options['multiple_choices'] as $choices) {
+            $builder->add($choices['id'], ChoiceType::class, [
+                'label' => $choices['name'],
+                'choices' => $choices['choices'],
                 'expanded' => true,
-                'multiple' => $allowMultiple,
+                'multiple' => $choices['allow_multiple'],
+                'choice_label' => false,
             ]);
+
+            $builder->get($choices['id'])->addModelTransformer(new CallbackTransformer(
+                function ($value) use ($choices) {
+                    if (is_array($value) && false === $choices['allow_multiple']) {
+                        return reset($value);
+                    }
+
+                    return $value;
+                },
+                function ($value) {
+                    return $value;
+                }
+            ));
         }
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['choice_names'] = array_keys($options['choices']);
+        $mergedChoices = [];
 
-        foreach ($options['choices_for'] as $choiceFor) {
-            $view->vars['choice_for_names'][] = $choiceFor['name'];
+        foreach ($options['multiple_choices'] as $choices) {
+            $mergedChoices = array_merge($mergedChoices, $choices['choices']);
+
+            $view->vars['choices_for'][$choices['id']] = $choices['name'];
         }
+
+        $view->vars['choice_names'] = array_keys($mergedChoices);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([
-            'choices_for',
-            'choices',
+            'multiple_choices',
         ]);
 
-        $resolver->setAllowedTypes('choices_for', 'array');
-        $resolver->setAllowedTypes('choices', 'array');
+        $resolver->setAllowedTypes('multiple_choices', 'array');
     }
 
     public function getBlockPrefix()

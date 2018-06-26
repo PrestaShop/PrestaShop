@@ -519,9 +519,13 @@
         <thead>
           <tr>
             <th>{{ label }}</th>
-            {% for choice_for_name in choice_for_names %}
-              <th>
-                <a href="#">{{ choice_for_name }}</a>
+            {% for key, choice_for_name in choices_for %}
+              <th class="text-center">
+                {% if form[key].vars.multiple %}
+                  <a href="#">{{ choice_for_name }}</a>
+                {% else %}
+                  {{ choice_for_name }}
+                {% endif %}
               </th>
             {% endfor %}
           </tr>
@@ -533,7 +537,7 @@
               {{ choice_name }}
             </td>
             {% for choices in form %}
-              <td>
+              <td class="text-center">
                 {% if choices[key] is defined %}
                   {% if choices.vars.multiple %}
                     {{ form_widget(choices[key], {'material_design': true}) }}
