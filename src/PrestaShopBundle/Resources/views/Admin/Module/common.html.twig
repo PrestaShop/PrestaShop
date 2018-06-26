@@ -28,10 +28,10 @@
     {{ parent() }}
     <script>
         var moduleURLs = {
-            'catalogRefresh': '{{ url('admin_module_catalog_refresh')|e('js') }}',
-            'configurationPage': '{{ url('admin_module_configure_action', {'module_name': '1'})|e('js') }}',
-            'moduleImport': '{{ url('admin_module_import')|e('js') }}',
-            'notificationsCount': '{{ url('admin_module_notification_count')|e('js') }}',
+            'catalogRefresh': '{{ path('admin_module_catalog_refresh')|e('js') }}',
+            'configurationPage': '{{ path('admin_module_configure_action', {'module_name': '1'})|e('js') }}',
+            'moduleImport': '{{ path('admin_module_import')|e('js') }}',
+            'notificationsCount': '{{ path('admin_module_notification_count')|e('js') }}',
         };
     </script>
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
