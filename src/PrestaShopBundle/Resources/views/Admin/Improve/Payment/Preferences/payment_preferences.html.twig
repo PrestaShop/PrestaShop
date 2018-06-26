@@ -29,7 +29,19 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        {% if isSingleShopContext %}
+        {% if not isSingleShopContext %}
+          <div class="alert alert-warning" role="alert">
+            <p class="alert-text">
+              {{ 'You have more than one shop and must select one to configure payment.'|trans({}, 'Admin.Payment.Notification') }}
+            </p>
+          </div>
+        {% elseif paymentModulesCount == 0 %}
+          <div class="alert alert-warning" role="alert">
+            <p class="alert-text">
+              {{ 'No payment module installed'|trans({}, 'Admin.Payment.Notification') }}
+            </p>
+          </div>
+        {% else %}
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
               {{ 'This is where you decide what payment modules are available for different variations like your customers\' currency, group, and country.'|trans({}, 'Admin.Payment.Help') }}
@@ -41,12 +53,6 @@
           </div>
 
           {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig' %}
-        {% else %}
-          <div class="alert alert-warning" role="alert">
-            <p class="alert-text">
-              {{ 'You have more than one shop and must select one to configure payment.'|trans({}, 'Admin.Payment.Notification') }}
-            </p>
-          </div>
         {% endif %}
       </div>
     </div>
