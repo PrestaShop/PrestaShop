@@ -65,8 +65,9 @@ class CommonClient {
               element.scrollIntoView();
             }, selector)
             .waitForVisibleAndClick(selector);
-        }})
-      .then(()=> this.client.pause(4000));
+        }
+      })
+      .then(() => this.client.pause(4000));
   }
 
   closeBoarding(selector) {
@@ -326,6 +327,15 @@ class CommonClient {
       .then((isExisting) => expect(isExisting).to.be.false);
   }
 
+  clickOnResumeButton(selector) {
+    if (!global.isVisible) {
+      return this.client
+        .click(selector);
+    } else {
+      return this.client.pause(1000);
+    }
+  }
+
   pause(timeout) {
     return this.client.pause(timeout);
   }
@@ -362,39 +372,6 @@ class CommonClient {
         global.param = current_url.split(param + '=')[1].split("&")[0];
         expect(global.param).to.equal(value);
       });
-  }
-
-  /**
-   * This function searches the data in the table in case a filter input exists
-   * @param selector
-   * @param data
-   * @returns {*}
-   */
-  search(selector, data) {
-    if (global.isVisible) {
-      return this.client
-        .waitAndSetValue(selector, data)
-        .keys('Enter');
-    }
-  }
-
-  /**
-   * This function checks the search result
-   * @param selector
-   * @param data
-   * @param pos
-   * @returns {*}
-   */
-  checkExistence(selector, data, pos) {
-    if (global.isVisible) {
-      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    } else {
-      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    }
   }
 
   /**
@@ -439,6 +416,47 @@ class CommonClient {
     if (number < 20) return special[number];
     if (number%10 === 0) return deca[Math.floor(number/10)-2] + 'ieth';
     return deca[Math.floor(number/10)-2] + 'y-' + special[number%10];
+  }
+
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
+  }
+
+
+  /**
+   * This function searches the data in the table in case a filter input exists
+   * @param selector
+   * @param data
+   * @returns {*}
+   */
+  search(selector, data) {
+    if (global.isVisible) {
+      return this.client
+        .waitAndSetValue(selector, data)
+        .keys('Enter');
+    }
+  }
+
+  /**
+   * This function checks the search result
+   * @param selector
+   * @param data
+   * @param pos
+   * @returns {*}
+   */
+  checkExistence(selector, data, pos) {
+    if (global.isVisible) {
+      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    } else {
+      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    }
   }
 
 }

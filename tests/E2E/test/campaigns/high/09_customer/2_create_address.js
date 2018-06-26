@@ -1,37 +1,33 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {Addresses} = require('../../../selectors/BO/customers/addresses');
-const {BO} = require('../../../selectors/BO/customers/index');
-const {Menu} = require('../../../selectors/BO/menu.js');
+
+const common_scenarios = require('../../common_scenarios/addresses');
+
+let addressData = {
+  email: 'pub@prestashop.com',
+  id_number: '123456789',
+  address_alias: 'Ma super address',
+  first_name: 'John',
+  last_name: 'DOE',
+  company: 'prestashop',
+  vat_number: '0123456789',
+  address: '12 rue d\'amsterdam',
+  second_address: 'RDC',
+  ZIP: '75009',
+  city: 'Paris',
+  country: 'France',
+  home_phone: '0123456789',
+  other: 'azerty'
+};
 
 scenario('Create "Address"', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'customer');
-  scenario('Create a new "Address"', client => {
-    test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.addresses_submenu));
-    test('should click on add new address', () => client.waitForExistAndClick(Addresses.new_address_button));
-    test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, date_time + 'demo' + '@prestashop.com'));
-    test('should set "Identification number" input', () => client.waitAndSetValue(Addresses.id_number_input, '0123456789'));
-    test('should set "Address alias" input', () => client.waitAndSetValue(Addresses.address_alias_input, 'Ma super addresse'));
-    test('should check that the "First name" is "demo"', () => client.checkAttributeValue(Addresses.first_name_input, 'value', 'demo'));
-    test('should check that the "Last name" is "demo"', () => client.checkAttributeValue(Addresses.last_name_input, 'value', 'demo'));
-    test('should set "Company" input', () => client.waitAndSetValue(Addresses.company, 'Presta'));
-    test('should set "VAT number" input', () => client.waitAndSetValue(Addresses.VAT_number_input, '0123456789'));
-    test('should set "Address" input', () => client.waitAndSetValue(Addresses.address_input, "12 rue d'amsterdam" + date_time));
-    test('should set "Second address" input', () => client.waitAndSetValue(Addresses.address_second_input, "RDC"));
-    test('should set "Postal code" input', () => client.waitAndSetValue(Addresses.zip_code_input, "75009"));
-    test('should set "City" input', () => client.waitAndSetValue(Addresses.city_input, "Paris"));
-    test('should set "Pays" input', () => client.waitAndSelectByValue(Addresses.country_input, "8"));
-    test('should set "Home phone" input', () => client.waitAndSetValue(Addresses.phone_input, "0123456789"));
-    test('should set "Other information" input', () => client.waitAndSetValue(Addresses.other_input, "azerty"));
-    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
-  }, 'customer');
-  scenario('Check the address creation', client => {
-    test('should check the existence of the filter address input', () => client.isVisible(Addresses.filter_by_address_input));
-    test('should search the customer by address', () => client.searchByAddress(Addresses, date_time));
-  }, 'customer');
+
+  common_scenarios.createAddress(addressData);
+  common_scenarios.checkAddressBO(addressData);
+
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'customer');

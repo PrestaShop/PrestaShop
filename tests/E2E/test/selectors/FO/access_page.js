@@ -13,6 +13,9 @@ module.exports = {
     new_products_block: '//h1[contains(text(), "New products")]',
     sitemap: '//*[@id="link-static-page-sitemap-2"]',
     page_link: '//*[@id="main"]//a[@title="%pageName"]',
-    page_content: '//*[@id="content"]/p'
+    page_content: '//*[@id="content"]/p',
+    address_information_link: '//*[@id="addresses-link"]',
+    address_information:'//*[@id="address-%ID"]//address',
+    addresses_warning: '//*[@id="notifications"]//li'
   }
 };
