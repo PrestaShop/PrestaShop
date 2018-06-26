@@ -521,8 +521,11 @@
             <th>{{ label }}</th>
             {% for key, choice_for_name in choices_for %}
               <th class="text-center">
+
                 {% if form[key].vars.multiple %}
-                  <a href="#">{{ choice_for_name }}</a>
+                  <a href="#" class="js-multiple-choice-table-select-column" data-column-num="{{ loop.index + 1 }}">
+                    {{ choice_for_name }}
+                  </a>
                 {% else %}
                   {{ choice_for_name }}
                 {% endif %}
