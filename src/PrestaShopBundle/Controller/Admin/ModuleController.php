@@ -27,13 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\AbstractController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +46,7 @@ use Profile;
 use stdClass;
 use DateTime;
 
-class ModuleController extends FrameworkBundleAdminController
+class ModuleController extends AbstractController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
 
@@ -710,29 +710,6 @@ class ModuleController extends FrameworkBundleAdminController
         );
     }
 
-    protected function getToolbarButtons()
-    {
-        // toolbarButtons
-        $toolbarButtons = array();
-
-        if (!in_array(
-            $this->authorizationLevel($this::controller_name),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-            )
-        )) {
-            $toolbarButtons['add_module'] = array(
-                'href' => '#',
-                'desc' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
-                'icon' => 'cloud_upload',
-                'help' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
-            );
-        }
-
-        return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
-    }
-
     private function getPresentedProducts(array &$modules)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
@@ -755,31 +732,6 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         return (array) $topMenuData;
-    }
-
-    private function getAddonsConnectToolbar()
-    {
-        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
-        $addonsConnect = array();
-
-        if ($addonsProvider->isAddonsAuthenticated()) {
-            $addonsEmail = $addonsProvider->getAddonsEmail();
-            $addonsConnect['addons_logout'] = array(
-                'href' => '#',
-                'desc' => $addonsEmail['username_addons'],
-                'icon' => 'exit_to_app',
-                'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
-            );
-        } else {
-            $addonsConnect['addons_connect'] = array(
-                'href' => '#',
-                'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-                'icon' => 'vpn_key',
-                'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-            );
-        }
-
-        return $addonsConnect;
     }
 
     public function getModuleCartAction($moduleId)
