@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Payment;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfiguratorInterface;
-use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 
 /**
  * Class PaymentModulePreferencesConfiguration is responsible for configuring payment module restrictions
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleProviderInterfac
 final class PaymentModulePreferencesConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var PaymentModuleProviderInterface
+     * @var PaymentModuleListProviderInterface
      */
     private $paymentModuleProvider;
 
@@ -46,11 +46,11 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
     private $paymentRestrictionsConfigurator;
 
     /**
-     * @param PaymentModuleProviderInterface $paymentModuleProvider
+     * @param PaymentModuleListProviderInterface $paymentModuleProvider
      * @param PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
      */
     public function __construct(
-        PaymentModuleProviderInterface $paymentModuleProvider,
+        PaymentModuleListProviderInterface $paymentModuleProvider,
         PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
     ) {
         $this->paymentModuleProvider = $paymentModuleProvider;

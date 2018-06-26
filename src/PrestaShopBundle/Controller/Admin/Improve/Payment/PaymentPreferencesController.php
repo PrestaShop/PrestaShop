@@ -43,10 +43,21 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm();
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
+        $paymentPreferencesForm = null;
+
+        if ($isSingleShopContext) {
+            $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
+        }
 
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
-            'paymentPreferencesForm' => $paymentPreferencesForm->createView(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'paymentPreferencesForm' => $paymentPreferencesForm,
+            'isSingleShopContext' => $isSingleShopContext,
         ]);
     }
 

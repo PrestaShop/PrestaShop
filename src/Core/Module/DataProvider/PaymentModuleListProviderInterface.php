@@ -26,14 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Module\DataProvider;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-
-interface PaymentModuleProviderInterface
+/**
+ * Interface PaymentModuleProviderInterface defines contract for payment module list provider
+ */
+interface PaymentModuleListProviderInterface
 {
     /**
      * Get payment module data
      *
-     * @return Module[]
+     * @return array
      */
     public function getPaymentModuleList();
 }

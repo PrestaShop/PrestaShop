@@ -72,7 +72,7 @@ services:
             - '@prestashop.core.admin.module.repository'
 
     prestashop.adapter.module.payment_module_provider:
-        class: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleProvider
+        class: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider
         arguments:
             - '@prestashop.core.admin.module.repository'
             - '@prestashop.bundle.repository.module'
