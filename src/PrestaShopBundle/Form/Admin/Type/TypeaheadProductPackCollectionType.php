@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
@@ -74,14 +75,14 @@ class TypeaheadProductPackCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
+            'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
             'required' => false,
             'prototype' => true,
-        ));
+        ]);
     }
 
     /**
@@ -89,13 +90,13 @@ class TypeaheadProductPackCollectionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'remote_url' => '',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => '',
             'template_collection' => '',
-        ));
+        ]);
     }
 
     /**

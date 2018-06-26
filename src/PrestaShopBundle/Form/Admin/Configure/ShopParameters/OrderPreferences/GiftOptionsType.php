@@ -57,7 +57,8 @@ class GiftOptionsType extends TranslatorAwareType
         array $locales,
         CurrencyDataProvider $currencyDataProvider,
         array $taxChoices
-    ) {
+    )
+    {
         parent::__construct($translator, $locales);
 
         $this->currencyDataProvider = $currencyDataProvider;
@@ -81,14 +82,13 @@ class GiftOptionsType extends TranslatorAwareType
                 'required' => false,
                 'currency' => $defaultCurrency->iso_code,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
-            ])
-        ;
+            ]);
 
         if (!$atcpShipWrap) {
             $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices'  => $this->taxChoices,
+                'choices' => $this->taxChoices,
             ]);
         }
 

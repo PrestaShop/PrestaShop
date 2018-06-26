@@ -49,7 +49,8 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
     public function __construct(
         DataConfigurationInterface $generalDataConfiguration,
         TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->generalDataConfiguration = $generalDataConfiguration;
         $this->translator = $translator;
     }

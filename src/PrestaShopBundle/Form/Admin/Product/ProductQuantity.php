@@ -75,32 +75,33 @@ class ProductQuantity extends CommonAbstractType
             ->add(
                 'attributes',
                 FormType\TextType::class,
-                array(
-                    'attr'  => array(
-                        'class'          => 'tokenfield',
+                [
+                    'attr' => [
+                        'class' => 'tokenfield',
                         'data-minLength' => 1,
-                        'placeholder'    => $this->translator->trans(
+                        'placeholder' => $this->translator->trans(
                             'Combine several attributes, e.g.: "Size: all", "Color: red".',
                             [],
                             'Admin.Catalog.Help'
                         ),
-                        'data-prefetch'  => $this->router->generate('admin_attribute_get_all'),
-                        'data-action'    => $this->router->generate('admin_attribute_generator'),
-                    ),
+                        'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
+                        'data-action' => $this->router->generate('admin_attribute_generator'),
+                    ],
                     'label' => $this->translator->trans('Create combinations', [], 'Admin.Catalog.Feature'),
-                )
+                    'empty_data' => '',
+                ]
             )
             ->add(
                 'advanced_stock_management',
                 FormType\CheckboxType::class,
-                array(
+                [
                     'required' => false,
-                    'label'    => $this->translator->trans(
+                    'label' => $this->translator->trans(
                         'I want to use the advanced stock management system for this product.',
                         [],
                         'Admin.Catalog.Feature'
                     ),
-                )
+                ]
             )
             ->add(
                 'pack_stock_type',
@@ -109,8 +110,8 @@ class ProductQuantity extends CommonAbstractType
             ->add(
                 'depends_on_stock',
                 FormType\ChoiceType::class,
-                array(
-                    'choices' => array(
+                [
+                    'choices' => [
                         $this->translator->trans(
                             'The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ',
                             [],
@@ -121,25 +122,25 @@ class ProductQuantity extends CommonAbstractType
                             [],
                             'Admin.Catalog.Feature'
                         ) => 0,
-                    ),
+                    ],
                     'expanded' => true,
                     'required' => true,
                     'multiple' => false,
-                )
+                ]
             );
 
         if ($is_stock_management) {
             $builder->add(
                 'qty_0',
                 FormType\NumberType::class,
-                array(
+                [
                     'required' => true,
                     'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
-                    'constraints' => array(
+                    'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(array('type' => 'numeric')),
-                    ),
-                )
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             );
         }
         $builder
@@ -150,57 +151,57 @@ class ProductQuantity extends CommonAbstractType
             ->add(
                 'minimal_quantity',
                 FormType\NumberType::class,
-                array(
+                [
                     'required' => true,
                     'label' => $this->translator->trans('Minimum quantity for sale', [], 'Admin.Catalog.Feature'),
-                    'constraints' => array(
+                    'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(array('type' => 'numeric')),
-                    ),
-                )
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
             ->add(
                 'low_stock_threshold',
                 FormType\NumberType::class,
-                array(
+                [
                     'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
-                    'attr' => array(
+                    'attr' => [
                         'placeholder' => $this->translator->trans('Leave empty to disable', [], 'Admin.Catalog.Help'),
-                    ),
-                    'constraints' => array(
-                        new Assert\Type(array('type' => 'numeric')),
-                    ),
-                )
+                    ],
+                    'constraints' => [
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
             ->add(
                 'low_stock_alert',
                 FormType\CheckboxType::class,
-                array(
+                [
                     'label' => $this->translator->trans(
                         'Send me an email when the quantity is below or equals this level',
                         [],
                         'Admin.Catalog.Feature'
                     ),
-                    'constraints' => array(
-                        new Assert\Type(array('type' => 'bool')),
-                    ),
-                )
+                    'constraints' => [
+                        new Assert\Type(['type' => 'bool']),
+                    ],
+                ]
             )
             ->add(
                 'available_now',
                 TranslateType::class,
-                array(
+                [
                     'type' => FormType\TextType::class,
                     'options' => [],
                     'locales' => $this->locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans('Label when in stock', [], 'Admin.Catalog.Feature'),
-                )
+                ]
             )
             ->add(
                 'available_later',
                 TranslateType::class,
-                array(
+                [
                     'type' => FormType\TextType::class,
                     'options' => [],
                     'locales' => $this->locales,
@@ -210,28 +211,28 @@ class ProductQuantity extends CommonAbstractType
                         [],
                         'Admin.Catalog.Feature'
                     ),
-                )
+                ]
             )
             ->add(
                 'available_date',
                 DatePickerType::class,
-                array(
+                [
                     'required' => false,
                     'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
-                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
-                )
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                ]
             )
             ->add(
                 'virtual_product',
                 ProductVirtual::class,
-                array(
+                [
                     'required' => false,
                     'label' => $this->translator->trans(
                         'Does this product have an associated file?',
                         [],
                         'Admin.Catalog.Feature'
                     ),
-                )
+                ]
             );
 
         $builder->addEventListener(
@@ -241,10 +242,10 @@ class ProductQuantity extends CommonAbstractType
 
                 //Manage out_of_stock field with contextual values/label
                 $defaultChoiceLabel = $this->translator->trans(
-                    'Use default behavior',
-                    [],
-                    'Admin.Catalog.Feature'
-                ) . ' (';
+                        'Use default behavior',
+                        [],
+                        'Admin.Catalog.Feature'
+                    ) . ' (';
                 $defaultChoiceLabel .= $this->configuration->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
                     $this->translator->trans('Allow orders', [], 'Admin.Catalog.Feature') :
                     $this->translator->trans('Deny orders', [], 'Admin.Catalog.Feature');
@@ -253,22 +254,22 @@ class ProductQuantity extends CommonAbstractType
                 $form->add(
                     'out_of_stock',
                     FormType\ChoiceType::class,
-                    array(
-                        'choices' => array(
-                            $this->translator->trans('Deny orders', [], 'Admin.Catalog.Feature')  => '0',
+                    [
+                        'choices' => [
+                            $this->translator->trans('Deny orders', [], 'Admin.Catalog.Feature') => '0',
                             $this->translator->trans('Allow orders', [], 'Admin.Catalog.Feature') => '1',
                             $defaultChoiceLabel => '2',
-                        ),
+                        ],
                         'expanded' => true,
                         'required' => false,
-                        'placeholder'=> false,
+                        'placeholder' => false,
                         'label' => $this->translator->trans('When out of stock', [], 'Admin.Catalog.Feature'),
-                    )
+                    ]
                 );
 
                 //Manage out_of_stock field with contextual values/label
                 $pack_stock_type = $this->configuration->get('PS_PACK_STOCK_TYPE');
-                $defaultChoiceLabel = $this->translator->trans('Default', [], 'Admin.Global').': ';
+                $defaultChoiceLabel = $this->translator->trans('Default', [], 'Admin.Global') . ': ';
                 if ($pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY) {
                     $defaultChoiceLabel .= $this->translator->trans(
                         'Decrement pack only.',
@@ -288,18 +289,18 @@ class ProductQuantity extends CommonAbstractType
                 $form->add(
                     'pack_stock_type',
                     FormType\ChoiceType::class,
-                    array(
-                        'choices' => array(
+                    [
+                        'choices' => [
                             $this->translator->trans('Decrement pack only.', [], 'Admin.Catalog.Feature') => 0,
                             $this->translator->trans('Decrement products in pack only.', [], 'Admin.Catalog.Feature') => 1,
-                            $this->translator->trans('Decrement both.', [], 'Admin.Catalog.Feature')  => 2,
+                            $this->translator->trans('Decrement both.', [], 'Admin.Catalog.Feature') => 2,
                             $defaultChoiceLabel => 3,
-                        ),
+                        ],
                         'expanded' => false,
                         'required' => true,
                         'placeholder' => false,
                         'label' => $this->translator->trans('Pack quantities', [], 'Admin.Catalog.Feature'),
-                    )
+                    ]
                 );
             }
         );
@@ -313,9 +314,9 @@ class ProductQuantity extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'allow_extra_fields' => true,
-            )
+            ]
         );
     }
 

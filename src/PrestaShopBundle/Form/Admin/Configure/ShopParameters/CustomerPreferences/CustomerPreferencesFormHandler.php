@@ -70,7 +70,7 @@ final class CustomerPreferencesFormHandler extends FormHandler
     {
         $b2bTabs = ['AdminOutstanding'];
         foreach ($b2bTabs as $tabName) {
-            $this->tabRepository->changeStatusByClassName($tabName, (bool) $b2bMode);
+            $this->tabRepository->changeStatusByClassName($tabName, (bool)$b2bMode);
         }
     }
 }

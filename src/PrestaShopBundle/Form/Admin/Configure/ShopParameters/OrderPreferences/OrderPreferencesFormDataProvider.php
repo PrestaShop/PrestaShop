@@ -63,7 +63,8 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
         GiftOptionsConfiguration $giftOptionsConfiguration,
         TranslatorInterface $translator,
         CMSDataProvider $cmsDataProvider
-    ) {
+    )
+    {
         $this->generalConfiguration = $generalConfiguration;
         $this->giftOptionsConfiguration = $giftOptionsConfiguration;
         $this->translator = $translator;

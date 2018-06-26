@@ -70,7 +70,8 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
         PageConfiguration $pageConfiguration,
         StockConfiguration $stockConfiguration,
         TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->generalConfiguration = $generalConfiguration;
         $this->paginationConfiguration = $paginationConfiguration;
         $this->pageConfiguration = $pageConfiguration;
@@ -103,8 +104,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
         return $this->generalConfiguration->updateConfiguration($data['general']) +
             $this->paginationConfiguration->updateConfiguration($data['pagination']) +
             $this->pageConfiguration->updateConfiguration($data['page']) +
-            $this->stockConfiguration->updateConfiguration($data['stock'])
-        ;
+            $this->stockConfiguration->updateConfiguration($data['stock']);
     }
 
     /**
@@ -146,7 +146,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
         }
 
         $productsPerPage = $data['pagination']['products_per_page'];
-        if (!is_numeric($productsPerPage) || 0 >  $productsPerPage) {
+        if (!is_numeric($productsPerPage) || 0 > $productsPerPage) {
             $invalidFields[] = $this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature');
         }
 

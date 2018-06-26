@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -30,7 +31,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 
 /**
  * This form class is responsible to generate the product attachments
@@ -61,34 +64,35 @@ class ProductAttachement extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
+        $builder->add('file', FileType::class, [
             'required' => false,
             'label' => $this->translator->trans('File', [], 'Admin.Global'),
-            'constraints' => array(
-                new Assert\NotNull(array('message' => $this->translator->trans('Please select a file', [], 'Admin.Catalog.Feature'))),
-                new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
-            )
-        ))
-        ->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label' =>  $this->translator->trans('Filename', [], 'Admin.Global'),
-            'attr' =>  ['placeholder' => $this->translator->trans('Title', [], 'Admin.Global')],
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Length(array('min' => 2))
-            )
-        ))
-        ->add('description', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'label' =>  $this->translator->trans('Description', [], 'Admin.Global'),
-            'attr' =>  ['placeholder' => $this->translator->trans('Description', [], 'Admin.Global')],
-        ))
-        ->add('add', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' =>  $this->translator->trans('Add', [], 'Admin.Actions'),
-            'attr' =>  ['class' => 'btn-outline-primary pull-right']
-        ))
-        ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
-            'label' =>  $this->translator->trans('Cancel', [], 'Admin.Actions'),
-            'attr' =>  ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
-        ));
+            'constraints' => [
+                new Assert\NotNull(['message' => $this->translator->trans('Please select a file', [], 'Admin.Catalog.Feature')]),
+                new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
+            ]
+        ])
+            ->add('name', TextType::class, [
+                'label' => $this->translator->trans('Filename', [], 'Admin.Global'),
+                'attr' => ['placeholder' => $this->translator->trans('Title', [], 'Admin.Global')],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 2])
+                ]
+            ])
+            ->add('description', TextType::class, [
+                'label' => $this->translator->trans('Description', [], 'Admin.Global'),
+                'attr' => ['placeholder' => $this->translator->trans('Description', [], 'Admin.Global')],
+                'empty_data' => '',
+            ])
+            ->add('add', ButtonType::class, [
+                'label' => $this->translator->trans('Add', [], 'Admin.Actions'),
+                'attr' => ['class' => 'btn-outline-primary pull-right']
+            ])
+            ->add('cancel', ButtonType::class, [
+                'label' => $this->translator->trans('Cancel', [], 'Admin.Actions'),
+                'attr' => ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
@@ -96,8 +100,8 @@ class ProductAttachement extends CommonAbstractType
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
                 $event->setData([]);
-                $form->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array('mapped' => false));
-                $form->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array('mapped' => false));
+                $form->add('file', FileType::class, ['mapped' => false]);
+                $form->add('name', FileType::class, ['mapped' => false]);
             }
         });
     }

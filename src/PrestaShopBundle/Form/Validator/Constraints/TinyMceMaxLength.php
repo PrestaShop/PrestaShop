@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
@@ -35,15 +36,15 @@ class TinyMceMaxLength extends Constraint
     public function __construct($options = null)
     {
         if (null !== $options && !is_array($options)) {
-            $options = array(
+            $options = [
                 'max' => $options,
-            );
+            ];
         }
 
-         parent::__construct($options);
+        parent::__construct($options);
 
         if (null === $this->max) {
-            throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', __CLASS__), array('max'));
+            throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', __CLASS__), ['max']);
         }
     }
 }

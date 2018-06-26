@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -60,14 +61,14 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tree', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+        $builder->add('tree', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
             'label' => false,
             'choices' => $options['valid_list'],
             'required' => false,
-            'multiple'  => true,
-            'expanded'  => true,
-            'error_bubbling'  => true
-        ));
+            'multiple' => true,
+            'expanded' => true,
+            'error_bubbling' => true
+        ]);
     }
 
     /**
@@ -75,12 +76,12 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'label' => '',
             'list' => [],
             'valid_list' => [],
             'multiple' => true,
-        ));
+        ]);
     }
 
     /**

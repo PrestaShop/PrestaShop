@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration;
@@ -49,9 +50,9 @@ final class MaintenanceFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return array(
+        return [
             'general' => $this->maintenanceConfiguration->getConfiguration(),
-        );
+        ];
     }
 
     /**
