@@ -2,13 +2,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
+use PrestaShop\PrestaShop\Core\Grid\Column\Extension\FilterableColumnInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class AbtractColumn implements reusable column methods
  */
-abstract class AbstractColumn implements ColumnInterface
+abstract class AbstractColumn implements ColumnInterface, FilterableColumnInterface
 {
     /**
      * @var string
@@ -93,5 +94,21 @@ abstract class AbstractColumn implements ColumnInterface
         $resolver->setAllowedTypes('filter_type', ['string', 'null']);
         $resolver->setAllowedTypes('filter_type_options', 'array');
         $resolver->setAllowedTypes('sortable', 'bool');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilterTypeOptionName()
+    {
+        return 'filter_type';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilterTypeOptionsOptionName()
+    {
+        return 'filter_type_options';
     }
 }

@@ -26,11 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Extension\FilterableColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class GridPresenter is responsible for presenting grid
@@ -59,19 +61,22 @@ final class GridPresenter implements GridPresenterInterface
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
 
-        $columns = $definition->getColumns()->toArray();
+        list(
+            $columns,
+            $filterForm
+        ) = $this->presentColumns($definition);
 
         return [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $this->buildFilterForm($columns, $definition)->createView(),
+            'filter_form' => $filterForm->createView(),
             'columns' => $columns,
             'actions' => [
                 'panel' => [],
                 'bulk' => [],
             ],
             'data' => [
-                'rows' => $this->presentRows($grid),
+                'rows' => $data->getRows(),
                 'rows_total' => $data->getRowsTotal(),
                 'query' => $data->getQuery(),
             ],
@@ -87,48 +92,49 @@ final class GridPresenter implements GridPresenterInterface
     }
 
     /**
-     * Present grid data
+     * Get presented columns
      *
-     * @param GridInterface $grid
+     * @param DefinitionInterface $definition
      *
      * @return array
      */
-    private function presentRows(GridInterface $grid)
+    private function presentColumns(DefinitionInterface $definition)
     {
-        $presentedRows = [];
+        $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
 
-        $rows = $grid->getData()->getRows();
-        $columns = $grid->getDefinition()->getColumns();
+        $columnsArray = [];
 
-        foreach ($rows as $row) {
-            $rowData = $this->applyColumnModifications($row, $columns);
+        /** @var ColumnInterface $column */
+        foreach ($definition->getColumns() as $column) {
+            $resolver = new OptionsResolver();
+            $column->configureOptions($resolver);
+            $options = $resolver->resolve($column->getOptions());
 
-            $presentedRows[] = $rowData;
+            $columnsArray[] = [
+                'id' => $column->getId(),
+                'name' => $column->getName(),
+                'type' => $column->getType(),
+                'options' => $options,
+            ];
+
+            if ($column instanceof FilterableColumnInterface) {
+                if (isset(
+                    $options[$column->getFilterTypeOptionName()],
+                    $options[$column->getFilterTypeOptionsOptionName()]
+                )) {
+                    $formBuilder->add(
+                        $column->getId(),
+                        $options[$column->getFilterTypeOptionName()],
+                        $options[$column->getFilterTypeOptionsOptionName()]
+                    );
+                }
+            }
         }
 
-        return $presentedRows;
-    }
-
-    /**
-     * Some columns may modify row data
-     *
-     * @param array                     $row
-     * @param ColumnCollectionInterface $columns
-     *
-     * @return array
-     */
-    private function applyColumnModifications(array $row, ColumnCollectionInterface $columns)
-    {
-//        /** @var ColumnInterface $column */
-//        foreach ($columns as $column) {
-//            if (!is_callable($column->getModifier())) {
-//                continue;
-//            }
-//
-//            $row[$column->getId()] = call_user_func($column->getModifier(), $row);
-//        }
-
-        return $row;
+        return [
+            $columnsArray,
+            $formBuilder->getForm(),
+        ];
     }
 
     /**
