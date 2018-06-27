@@ -37,11 +37,6 @@ services:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
             - '@prestashop.adapter.data_provider.country'
 
-    prestashop.core.form.choice_provider.payment_module_by_name:
-        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PaymentModuleByNameChoiceProvider'
-        arguments:
-            - '@prestashop.adapter.module.payment_module_provider'
-
     prestashop.core.form.choice_provider.group_by_id:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider'
         arguments:

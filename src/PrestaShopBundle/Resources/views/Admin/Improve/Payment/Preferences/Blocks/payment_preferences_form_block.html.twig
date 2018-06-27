@@ -53,33 +53,6 @@
     </div>
   {% endblock %}
 
-  {% block payment_modules_country_restrictions %}
-    <div class="card">
-      <h3 class="card-header">
-        <i class="material-icons">public</i>
-        {{ 'Country restrictions'|trans({}, 'Admin.Payment.Feature') }}
-      </h3>
-      <div class="card-body">
-        <p>
-          <small class="form-text">
-            {{ 'Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
-          </small>
-        </p>
-
-        <div class="form-group">
-          {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restrictions) }}
-        </div>
-      </div>
-      <div class="card-footer">
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">
-            {{ 'Save'|trans({}, 'Admin.Actions') }}
-          </button>
-        </div>
-      </div>
-    </div>
-  {% endblock %}
-
   {% block payment_modules_group_restrictions %}
     <div class="card">
       <h3 class="card-header">
@@ -95,6 +68,33 @@
 
         <div class="form-group">
           {{ form_widget(paymentPreferencesForm.payment_module_preferences.group_restrictions) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">
+            {{ 'Save'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block payment_modules_country_restrictions %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">public</i>
+        {{ 'Country restrictions'|trans({}, 'Admin.Payment.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p>
+          <small class="form-text">
+            {{ 'Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'|trans({}, 'Admin.Payment.Help') }}
+          </small>
+        </p>
+
+        <div class="form-group">
+          {{ form_widget(paymentPreferencesForm.payment_module_preferences.country_restrictions) }}
         </div>
       </div>
       <div class="card-footer">
