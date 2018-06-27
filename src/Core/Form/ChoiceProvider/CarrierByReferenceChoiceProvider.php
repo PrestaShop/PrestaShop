@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider;
 use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
+/**
+ * Class CarrierByReferenceChoiceProvider is responsible for providing carrier choices with value reference
+ */
 final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterface
 {
     /**

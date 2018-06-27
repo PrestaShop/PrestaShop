@@ -26,20 +26,18 @@
 const $ = window.$;
 
 /**
- * ChoiceTable is responsible for managing common actions in choice table form type
+ * MultipleChoiceTable is responsible for managing common actions in multiple choice table form type
  */
 export default class MultipleChoiceTable {
   /**
    * Init constructor
    */
   constructor() {
-    $(document).on('click', '.js-multiple-choice-table-select-column', (e) => {
-      this.handleSelectColumn(e);
-    });
+    $(document).on('click', '.js-multiple-choice-table-select-column', (e) => this.handleSelectColumn(e));
   }
 
   /**
-   * Check/uncheck all boxes in table
+   * Check/uncheck all boxes in column
    *
    * @param {Event} event
    */
