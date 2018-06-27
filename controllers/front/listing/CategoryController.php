@@ -79,8 +79,6 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
-            $this->errors[] = $this->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error');
-            $this->setTemplate('errors/forbidden');
 
             return;
         }
@@ -114,13 +112,31 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch(
-            'catalog/listing/category',
-            array(
-                'entity' => 'category',
-                'id' => $this->category->id
-            )
+        $templateName = 'catalog/listing/category';
+        $templateParams = array(
+            'entity' => 'category',
+            'id' => $this->category->id
         );
+        if ($this->category->checkAccess($this->context->customer->id)) {
+            $this->doProductSearch(
+                $templateName,
+                $templateParams
+            );
+        } else {
+            $this->setTemplate($templateName, $templateParams);
+            $this->context->smarty->assign(['listing' => ['products'=>[]]]);
+            $this->context->smarty->assign('categoryErrorMessage', $this->trans('You do not have access to this category.', array(), 'Shop.Notifications.Error'));
+        }
+    }
+
+    public function getLayout()
+    {
+
+        if (!$this->category->checkAccess($this->context->customer->id)) {
+            return 'layouts/layout-full-width.tpl';
+        }
+
+        return parent::getLayout();
     }
 
     protected function getProductSearchQuery()
