@@ -71,9 +71,22 @@ class Version
      */
     private $releaseVersion;
 
-
-    public function __construct($version, $majorVersionString, $majorVersion, $minorVersion, $releaseVersion)
-    {
+    /**
+     * Initialize version data
+     *
+     * @param string  $version            Version
+     * @param string  $majorVersionString Major version in string format
+     * @param integer $majorVersion       Major version
+     * @param integer $minorVersion       Minor version
+     * @param integer $releaseVersion     Release version
+     */
+    public function __construct(
+        $version,
+        $majorVersionString,
+        $majorVersion,
+        $minorVersion = 0,
+        $releaseVersion = 0
+    ) {
         $this->version = $version;
         $this->majorVersionString = $majorVersionString;
         $this->majorVersion = $majorVersion;
@@ -82,7 +95,7 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop version which is hardcoded in \AppKernel::VERSION.
+     * Returns the current version.
      *
      * @return string For example "1.7.4.0"
      */
@@ -92,7 +105,7 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop major version as a string.
+     * Returns the current major version as a string.
      *
      * @return string For example "1.7"
      */
@@ -102,7 +115,7 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop major version as an integer.
+     * Returns the current major version as an integer.
      *
      * @return int For example 17
      */
@@ -112,7 +125,7 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop minor version.
+     * Returns the current minor version.
      *
      * @return int
      */
@@ -122,7 +135,7 @@ class Version
     }
 
     /**
-     * Returns the current PrestaShop release version
+     * Returns the current release version
      *
      * @return int
      */
@@ -132,9 +145,9 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is greater than the provided version.
+     * Returns if the current version is greater than the provided version.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $version Must be a valid version string, for example "1.7.4.0"
      *
      * @return bool
      *
@@ -146,9 +159,9 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is greater than or equal to the provided version.
+     * Returns if the current version is greater than or equal to the provided version.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $version Must be a valid version string, for example "1.7.4.0"
      *
      * @return bool
      *
@@ -160,9 +173,9 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is less than the provided version.
+     * Returns if the current version is less than the provided version.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $version Must be a valid version string, for example "1.7.4.0"
      *
      * @return bool
      *
@@ -174,9 +187,9 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is less than or equal to the provided version.
+     * Returns if the current version is less than or equal to the provided version.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $version Must be a valid version string, for example "1.7.4.0"
      *
      * @return bool
      *
@@ -188,9 +201,9 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is equal to the provided version.
+     * Returns if the current version is equal to the provided version.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $version Must be a valid version string, for example "1.7.4.0"
      *
      * @return bool
      *
@@ -202,9 +215,9 @@ class Version
     }
 
     /**
-     * Returns if the current PrestaShop version is not equal to the provided version.
+     * Returns if the current version is not equal to the provided version.
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
+     * @param $version Must be a valid version string, for example "1.7.4.0"
      *
      * @return bool
      *
@@ -216,10 +229,12 @@ class Version
     }
 
     /**
-     * Compares the current PrestaShop version with the provided version depending on the provided operator.
+     * Compares the current version with the provided version depending on the provided operator.
+     * It sanitized both version to have a
      *
-     * @param $version Must be a valid PrestaShop version string, for example "1.7.4.0"
-     * @param $operator Operator for version_compare(), allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
+     * @param $version  Must be a valid version string, for example "1.7.4.0"
+     * @param $operator Operator for version_compare(),
+     *                  allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
      *
      * @return boolean Result of the comparison.
      *
@@ -228,7 +243,17 @@ class Version
     private function versionCompare($version, $operator)
     {
         if ($this->checkVersion($version)) {
-            return version_compare($this->version, $version, $operator);
+            $first = intval(trim(str_replace('.', '', $this->version)));
+            $second = intval(trim(str_replace('.', '', $version)));
+            $firstLen = strlen($first);
+            $secondLen = strlen($second);
+            if ($firstLen > $secondLen) {
+                $second = str_pad($second, $firstLen, 0);
+            } elseif ($firstLen < $secondLen) {
+                $first = str_pad($first, $secondLen, 0);
+            }
+
+            return version_compare((string) $first, (string) $second, $operator);
         }
     }
 
