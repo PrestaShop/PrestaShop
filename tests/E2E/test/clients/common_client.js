@@ -541,6 +541,11 @@ class CommonClient {
     }
   }
 
+  refresh() {
+    return this.client
+      .refresh();
+  }
+
   deleteCookie() {
     return this.client
       .deleteCookie()
@@ -590,6 +595,14 @@ class CommonClient {
       return this.client
         .middleClick(selector)
     }
+  }
+
+  checkList(selector) {
+    this.client
+      .element(selector)
+      .then(function (elements) {
+        expect(elements).to.have.lengthOf.above(0);
+      })
   }
 
 }
