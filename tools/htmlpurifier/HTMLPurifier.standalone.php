@@ -8119,7 +8119,7 @@ class HTMLPurifier_Queue {
      * Pushes an element onto the front of the queue.
      */
     public function push($x) {
-        array_push($this->input, $x);
+        $this->input[] = $x;
     }
 
     /**
@@ -9940,7 +9940,7 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function next($t) {
-        if ($t !== null) array_push($this->front, $t);
+        if ($t !== null) $this->front[] = $t;
         return empty($this->back) ? null : array_pop($this->back);
     }
 
@@ -9963,7 +9963,7 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function prev($t) {
-        if ($t !== null) array_push($this->back, $t);
+        if ($t !== null) $this->back[] = $t;
         return empty($this->front) ? null : array_pop($this->front);
     }
 
@@ -9989,7 +9989,7 @@ class HTMLPurifier_Zipper
      * @param Element to insert
      */
     public function insertBefore($t) {
-        if ($t !== null) array_push($this->front, $t);
+        if ($t !== null) $this->front[] = $t;
     }
 
     /**
@@ -9997,7 +9997,7 @@ class HTMLPurifier_Zipper
      * @param Element to insert
      */
     public function insertAfter($t) {
-        if ($t !== null) array_push($this->back, $t);
+        if ($t !== null) $this->back[] = $t;
     }
 
     /**
@@ -13178,7 +13178,7 @@ class HTMLPurifier_AttrDef_URI_IPv6 extends HTMLPurifier_AttrDef_URI_IPv4
             }
 
             while (count($first) < 8) {
-                array_push($first, '0');
+                $first[] = '0';
             }
 
             array_splice($first, 8 - count($second), 8, $second);

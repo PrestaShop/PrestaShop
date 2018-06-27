@@ -405,7 +405,7 @@ class ConfigurationTestCore
         foreach (ConfigurationTest::$test_files as $file) {
             if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file))) {
                 if ($full) {
-                    array_push($return, $file);
+                    $return[] = $file;
                 } else {
                     return false;
                 }
