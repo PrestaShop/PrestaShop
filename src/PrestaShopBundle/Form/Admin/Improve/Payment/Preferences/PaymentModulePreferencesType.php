@@ -135,7 +135,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     {
         $choices = [];
 
-        foreach ($this->paymentModules as $key => $paymentModule) {
+        foreach ($this->paymentModules as $paymentModule) {
             $moduleInstance = $paymentModule->getInstance();
 
             if ('radio' === $moduleInstance->currencies_mode) {
