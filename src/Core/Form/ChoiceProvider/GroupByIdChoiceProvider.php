@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
+/**
+ * Class GroupByIdChoiceProvider is responsible for providing customer group choices with Id values
+ */
 final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**

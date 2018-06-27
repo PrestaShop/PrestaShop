@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 use PrestaShopBundle\Entity\Repository\ModuleRepository;
 
+/**
+ * Class PaymentModuleListProvider is responsible for providing payment module list
+ */
 final class PaymentModuleListProvider implements PaymentModuleListProviderInterface
 {
     /**
@@ -80,30 +83,27 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
         /** @var Module $module */
         foreach ($modules as $module) {
             if ($module->attributes->get('is_paymentModule')) {
-                $restrictedModuleCountries = $this->moduleRepository->findCountryIdsByModuleAndShopId(
+                $restrictedCountries = $this->moduleRepository->findRestrictedCountryIds(
+                    $module->database->get('id'),
+                    $this->shopId
+                );
+                $restrictedCurrencies = $this->moduleRepository->findRestrictedCurrencyIds(
+                    $module->database->get('id'),
+                    $this->shopId
+                );
+                $restrictedGroups = $this->moduleRepository->findRestrictedGroupIds(
+                    $module->database->get('id'),
+                    $this->shopId
+                );
+                $restrictedCarriers = $this->moduleRepository->findRestrictedCarrierReferenceIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
 
-                $restrictedModuleCurrencies = $this->moduleRepository->findCurrencyIdsByModuleAndShopId(
-                    $module->database->get('id'),
-                    $this->shopId
-                );
-
-                $restrictedModuleGroups = $this->moduleRepository->findGroupIdsByModuleAndShopId(
-                    $module->database->get('id'),
-                    $this->shopId
-                );
-
-                $restrictedModuleCarriers = $this->moduleRepository->findCarrierReferenceIdsByModuleAndShopId(
-                    $module->database->get('id'),
-                    $this->shopId
-                );
-
-                $module->attributes->set('countries', $restrictedModuleCountries);
-                $module->attributes->set('currencies', $restrictedModuleCurrencies);
-                $module->attributes->set('groups', $restrictedModuleGroups);
-                $module->attributes->set('carriers', $restrictedModuleCarriers);
+                $module->attributes->set('countries', $restrictedCountries);
+                $module->attributes->set('currencies', $restrictedCurrencies);
+                $module->attributes->set('groups', $restrictedGroups);
+                $module->attributes->set('carriers', $restrictedCarriers);
 
                 $paymentModules[$module->attributes->get('name')] = $module;
             }

@@ -170,10 +170,10 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         $multipleChoices = [];
 
         foreach ($this->paymentModules as $paymentModule) {
-            $moduleInstance = $paymentModule->getInstance();
+            $limitedCountries = $paymentModule->get('limited_countries');
 
-            if (is_array($moduleInstance->limited_countries) && !empty($moduleInstance->limited_countries)) {
-                $countryChoices = $this->getLimitedCountryChoices($moduleInstance->limited_countries);
+            if (is_array($limitedCountries) && !empty($limitedCountries)) {
+                $countryChoices = $this->getLimitedCountryChoices($limitedCountries);
             } else {
                 $countryChoices = $this->countryChoices;
             }

@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 use PDO;
 
+/**
+ * Class ModuleRepository is responsible for retrieving module data from database
+ */
 class ModuleRepository
 {
     /**
@@ -65,7 +68,7 @@ class ModuleRepository
      *
      * @return int[] Array of country IDs
      */
-    public function findCountryIdsByModuleAndShopId($moduleId, $shopId)
+    public function findRestrictedCountryIds($moduleId, $shopId)
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_country')
@@ -87,7 +90,7 @@ class ModuleRepository
      *
      * @return int[] Array of currency IDs
      */
-    public function findCurrencyIdsByModuleAndShopId($moduleId, $shopId)
+    public function findRestrictedCurrencyIds($moduleId, $shopId)
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_currency')
@@ -109,7 +112,7 @@ class ModuleRepository
      *
      * @return int[] Array of group IDs
      */
-    public function findGroupIdsByModuleAndShopId($moduleId, $shopId)
+    public function findRestrictedGroupIds($moduleId, $shopId)
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mg.id_group')
@@ -131,7 +134,7 @@ class ModuleRepository
      *
      * @return int[] Array of carrier references
      */
-    public function findCarrierReferenceIdsByModuleAndShopId($moduleId, $shopId)
+    public function findRestrictedCarrierReferenceIds($moduleId, $shopId)
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_reference')
