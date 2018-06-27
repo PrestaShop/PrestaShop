@@ -530,7 +530,11 @@
               <th class="text-center">
 
                 {% if form[key].vars.multiple %}
-                  <a href="#" class="js-multiple-choice-table-select-column" data-column-num="{{ loop.index + 1 }}">
+                  <a href="#"
+                     class="js-multiple-choice-table-select-column"
+                     data-column-num="{{ loop.index + 1 }}"
+                     data-column-checked="false"
+                  >
                     {{ choice_for_name }}
                   </a>
                 {% else %}
