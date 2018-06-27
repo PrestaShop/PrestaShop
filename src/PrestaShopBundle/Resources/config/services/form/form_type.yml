@@ -279,6 +279,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
         parent: 'form.type.translatable.aware'
         public: true
+        calls:
+            - ['setIsSecure', ["@=service('request_stack').getCurrentRequest().isSecure()"]]
         tags:
             - { name: form.type }
 

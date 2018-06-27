@@ -41,6 +41,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class PreferencesType extends TranslatorAwareType
 {
     /**
+     * @var bool
+     */
+    private $isSecure;
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,8 +53,11 @@ class PreferencesType extends TranslatorAwareType
         $configuration = $this->getConfiguration();
         $isSslEnabled = $configuration->getBoolean('PS_SSL_ENABLED');
 
+        if ($this->isSecure) {
+            $builder->add('enable_ssl', SwitchType::class);
+        }
+
         $builder
-            ->add('enable_ssl', SwitchType::class)
             ->add('enable_ssl_everywhere', SwitchType::class, array(
                 'disabled' => !$isSslEnabled,
             ))
@@ -118,6 +126,15 @@ class PreferencesType extends TranslatorAwareType
                 'choice_translation_domain' => 'Install',
             ))
         ;
+    }
+
+    /**
+     * Enabled only if the form is accessed using HTTPS protocol.
+     * @var bool
+     */
+    public function setIsSecure($isSecure)
+    {
+        $this->isSecure = $isSecure;
     }
 
     /**
