@@ -32,6 +32,7 @@ Release Notes for PrestaShop 1.6
 
     BO: Improve cookie encryption
     BO: PHP 7.2 compat - Fix fatal error
+    BO: Fix undefined property key on Rijndael
 
     FO: Control if customer is the owner of the selected order in contact form
 
