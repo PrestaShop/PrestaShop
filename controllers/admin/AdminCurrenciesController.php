@@ -151,7 +151,8 @@ class AdminCurrenciesControllerCore extends AdminController
                             array('key' => 2, 'name' => '0 000,00X ('.$this->l('Such as with Euros').')'),
                             array('key' => 3, 'name' => 'X0.000,00'),
                             array('key' => 4, 'name' => '0,000.00X'),
-                            array('key' => 5, 'name' => '0\'000.00X') // Added for the switzerland currency
+                            array('key' => 5, 'name' => '0\'000.00X'), // Added for the switzerland currency
+                            array('key' => 6, 'name' => '0.000,00X')
                         ),
                         'name' => 'name',
                         'id' => 'key'
