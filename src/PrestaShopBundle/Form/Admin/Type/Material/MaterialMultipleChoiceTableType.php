@@ -48,6 +48,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
                 'expanded' => true,
                 'multiple' => $choices['multiple'],
                 'choice_label' => false,
+                'choice_translation_domain' => false,
             ]);
 
             $builder->get($choices['name'])->addModelTransformer(new CallbackTransformer(
