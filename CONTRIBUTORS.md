@@ -430,6 +430,7 @@ GitHub contributors:
 - PhpMadman
 - Pierre
 - Pierre Avizou
+- Pierre RAMBAUD
 - Pierrick
 - pilothuy
 - Piotr Kaczor
