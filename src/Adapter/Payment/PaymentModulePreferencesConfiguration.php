@@ -98,10 +98,10 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
     public function validateConfiguration(array $config)
     {
         return isset(
-            $config['currency_restriction'],
-            $config['country_restriction'],
-            $config['group_restriction'],
-            $config['carrier_restriction']
+            $config['currency_restrictions'],
+            $config['country_restrictions'],
+            $config['group_restrictions'],
+            $config['carrier_restrictions']
         );
     }
 }
