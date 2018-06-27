@@ -14,5 +14,9 @@ module.exports = {
     update_feature_button: '//*[@id="table-feature"]/tbody/tr/td[6]/div/div/ul/li[1]/a',
     update_feature_value_button: '//*[@id="table-feature_value"]//tr/td[3]/div/div/a',
     delete_feature: '//*[@id="table-feature"]/tbody/tr/td[6]/div/div/ul/li[3]/a',
+    reset_button: '//*[@id="table-feature"]//button[@name="submitResetfeature"]',
+    feature_checkbox: '//*[@id="table-feature"]//input[@type="checkbox"]',
+    feature_bulk_actions: '//*[@id="bulk_action_menu_feature"]',
+    feature_delete_bulk_action: '//*[@id="form-feature"]//div[contains(@class,"bulk-actions")]//li[4]/a'
   }
 };

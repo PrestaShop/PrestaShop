@@ -40,7 +40,11 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
     test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product online', () => {
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
+    });
   }, 'product/product');
 
   scenario('Edit product shipping', client => {
@@ -195,7 +199,7 @@ scenario('Create product with combination in the Back Office', client => {
       test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
       test('should logout successfully from the Back Office', () => client.signOutBO());
     }, 'product/product');
-}, 'product/product');
+}, 'product/product', true);
 
 scenario('Check the product creation in the Back Office', client => {
   test('should open browser', () => client.open());
@@ -210,6 +214,11 @@ scenario('Check the product creation in the Back Office', client => {
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
+
+/**
+ * This scenario is based on the bug described in this ticket
+ * http://forge.prestashop.com/browse/BOOM-4600
+ **/
 
 scenario('Check the product with combination in the Front Office', () => {
   scenario('Login in the Front Office', client => {

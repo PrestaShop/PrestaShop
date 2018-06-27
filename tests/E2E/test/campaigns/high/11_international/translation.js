@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {Translations} = require('../../../selectors/BO/international/translations');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+let promise = Promise.resolve();
 
 scenario('Edit a translation', () => {
   scenario('Open the browser and connect to the BO', client => {
@@ -14,7 +15,11 @@ scenario('Edit a translation', () => {
     test('should select "themes translations" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_type, "themes"));
     test('should select the language "English (English)" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_language, "en"));
     test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
-    test('should click on "Shop" button', () => client.waitForVisibleAndClick(Translations.shop_button));
+    test('should click on "Shop" button', () =>  {
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForVisibleAndClick(Translations.shop_button));
+    });
     test('should click on "Theme" button', () => client.waitForVisibleAndClick(Translations.theme_button));
     test('should click on "Action" button', () => client.waitForVisibleAndClick(Translations.action_button));
     test('should change "Sign Out" translation from "Sign Out" to "Sign Out English"', () => client.waitAndSetValue(Translations.Sign_out_textarea_button, "Sign out English"));
@@ -29,7 +34,7 @@ scenario('Edit a translation', () => {
   }, 'common_client');
   scenario('Check the change of "Sign in" to "Sign in English" ', client => {
     test('should set the shop language to "English"', () => client.changeLanguage('english'));
-    test('should check the "Sign in" button text ', () => client.checkTextValue(Translations.sign_out_FO_text, 'Sign out English', "contain"));
+    test('should check the "Sign in" button text is equal to "Sign out English"', () => client.checkTextValue(Translations.sign_out_FO_text, 'Sign out English', "contain"));
   }, 'common_client');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

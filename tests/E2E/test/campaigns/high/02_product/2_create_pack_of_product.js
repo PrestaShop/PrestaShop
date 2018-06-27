@@ -42,7 +42,11 @@ scenario('Create a pack of products in the Back Office', client => {
     test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('pack'));
     test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product online', () => {
+      if (global.ps_mode_dev)
+        promise = client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+      return promise.then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000));
+    });
   }, 'product/product');
 
   scenario('Edit product quantities', client => {
