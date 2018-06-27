@@ -3185,7 +3185,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isSymfonyContext()
     {
-        return !defined('ADMIN_LEGACY_CONTEXT') && defined('_PS_ADMIN_DIR_');
+        return !$this->isAdminLegacyContext() && defined('_PS_ADMIN_DIR_');
     }
 
     /**
