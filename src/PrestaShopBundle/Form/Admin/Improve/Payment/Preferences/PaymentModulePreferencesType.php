@@ -103,18 +103,22 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         $builder
             ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
+                'choices' => $this->getCurrencyChoices(),
                 'multiple_choices' => $multipleCurrencyChoices,
             ])
             ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
+                'choices' => $this->countryChoices,
                 'multiple_choices' => $multipleCountryChoices,
             ])
             ->add('group_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
+                'choices' => $this->groupChoices,
                 'multiple_choices' => $multipleGroupChoices,
             ])
             ->add('carrier_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
+                'choices' => $this->carrierChoices,
                 'multiple_choices' => $multipleCarrierChoices,
             ])
         ;
@@ -133,41 +137,59 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         $multipleCarrierChoices = [];
 
         foreach ($this->paymentModules as $paymentModule) {
-            $allowMultiple = true;
+            $moduleInstance = $paymentModule->getInstance();
+
+            $allowMultipleCurrencies = true;
             $currencyChoices = $this->currencyChoices;
 
-            if ('radio' === $paymentModule->getInstance()->currencies_mode) {
-                $allowMultiple = false;
+            if ('radio' === $moduleInstance->currencies_mode) {
+                $allowMultipleCurrencies = false;
 
-                $currencyChoices[$this->trans('Customer currency', 'Admin.Payment.Feature')] = -1;
-                $currencyChoices[$this->trans('Shop default currency', 'Admin.Payment.Feature')] = -2;
+                $currencyChoices = array_merge(
+                    $currencyChoices,
+                    $this->getAdditionalCurrencyChoices()
+                );
             }
 
             $multipleCurrencyChoices[] = [
-                'id' => $paymentModule->get('name'),
-                'name' => $paymentModule->get('displayName'),
-                'allow_multiple' => $allowMultiple,
+                'name' => $paymentModule->get('name'),
+                'label' => $paymentModule->get('displayName'),
+                'multiple' => $allowMultipleCurrencies,
                 'choices' => $currencyChoices,
             ];
 
+            if (is_array($moduleInstance->limited_countries) &&
+                !empty($moduleInstance->limited_countries)
+            ) {
+                $countryChoices = [
+                    'Albania' => '230',
+                    'Angola' => '41',
+                    'Lithuania' => '131',
+                    'Latvia' => '125',
+                    'Poland' => '14',
+                ];
+            } else {
+                $countryChoices = $this->countryChoices;
+            }
+
             $multipleCountryChoices[] = [
-                'id' => $paymentModule->get('name'),
-                'name' => $paymentModule->get('displayName'),
-                'allow_multiple' => true,
-                'choices' => $this->countryChoices,
+                'name' => $paymentModule->get('name'),
+                'label' => $paymentModule->get('displayName'),
+                'multiple' => true,
+                'choices' => $countryChoices,
             ];
 
             $multipleGroupChoices[] = [
-                'id' => $paymentModule->get('name'),
-                'name' => $paymentModule->get('displayName'),
-                'allow_multiple' => true,
+                'name' => $paymentModule->get('name'),
+                'label' => $paymentModule->get('displayName'),
+                'multiple' => true,
                 'choices' => $this->groupChoices,
             ];
 
             $multipleCarrierChoices[] = [
-                'id' => $paymentModule->get('name'),
-                'name' => $paymentModule->get('displayName'),
-                'allow_multiple' => true,
+                'name' => $paymentModule->get('name'),
+                'label' => $paymentModule->get('displayName'),
+                'multiple' => true,
                 'choices' => $this->carrierChoices,
             ];
         }
@@ -177,6 +199,22 @@ class PaymentModulePreferencesType extends TranslatorAwareType
             $multipleCountryChoices,
             $multipleGroupChoices,
             $multipleCarrierChoices,
+        ];
+    }
+
+    private function getCurrencyChoices()
+    {
+        return array_merge(
+            $this->currencyChoices,
+            $this->getAdditionalCurrencyChoices()
+        );
+    }
+
+    private function getAdditionalCurrencyChoices()
+    {
+        return [
+            $this->trans('Customer currency', 'Admin.Payment.Feature') => -1,
+            $this->trans('Shop default currency', 'Admin.Payment.Feature') => -2,
         ];
     }
 }

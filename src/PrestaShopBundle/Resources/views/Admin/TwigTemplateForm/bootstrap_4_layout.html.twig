@@ -519,37 +519,38 @@
         <thead>
           <tr>
             <th>{{ label }}</th>
-            {% for key, choice_for_name in choices_for %}
+            {% for child_choice in form %}
               <th class="text-center">
-
-                {% if form[key].vars.multiple %}
+                {% if child_choice.vars.multiple %}
                   <a href="#"
                      class="js-multiple-choice-table-select-column"
                      data-column-num="{{ loop.index + 1 }}"
                      data-column-checked="false"
                   >
-                    {{ choice_for_name }}
+                    {{ child_choice.vars.label }}
                   </a>
                 {% else %}
-                  {{ choice_for_name }}
+                  {{ child_choice.vars.label }}
                 {% endif %}
               </th>
             {% endfor %}
           </tr>
         </thead>
         <tbody>
-        {% for key, choice_name in choice_names %}
+        {% for choice_name, choice_value in choices %}
           <tr>
             <td>
               {{ choice_name }}
             </td>
-            {% for choices in form %}
+            {% for child_choice_name, child_choice in form %}
               <td class="text-center">
-                {% if choices[key] is defined %}
-                  {% if choices.vars.multiple %}
-                    {{ form_widget(choices[key], {'material_design': true}) }}
+                {% if child_choice_entry_index_mapping[choice_value][child_choice_name] is defined %}
+                  {% set entry_index = child_choice_entry_index_mapping[choice_value][child_choice_name] %}
+
+                  {% if child_choice.vars.multiple %}
+                    {{ form_widget(child_choice[entry_index], {'material_design': true}) }}
                   {% else %}
-                    {{ form_widget(choices[key]) }}
+                    {{ form_widget(child_choice[entry_index]) }}
                   {% endif %}
                 {% else %}
                   --

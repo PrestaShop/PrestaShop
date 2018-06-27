@@ -36,20 +36,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MaterialMultipleChoiceTableType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($options['multiple_choices'] as $choices) {
-            $builder->add($choices['id'], ChoiceType::class, [
-                'label' => $choices['name'],
+            $builder->add($choices['name'], ChoiceType::class, [
+                'label' => $choices['label'],
                 'choices' => $choices['choices'],
                 'expanded' => true,
-                'multiple' => $choices['allow_multiple'],
+                'multiple' => $choices['multiple'],
                 'choice_label' => false,
             ]);
 
-            $builder->get($choices['id'])->addModelTransformer(new CallbackTransformer(
+            $builder->get($choices['name'])->addModelTransformer(new CallbackTransformer(
                 function ($value) use ($choices) {
-                    if (is_array($value) && false === $choices['allow_multiple']) {
+                    if (is_array($value) && false === $choices['multiple']) {
                         return reset($value);
                     }
 
@@ -62,28 +65,47 @@ class MaterialMultipleChoiceTableType extends AbstractType
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $mergedChoices = [];
-
-        foreach ($options['multiple_choices'] as $choices) {
-            $mergedChoices = array_merge($mergedChoices, $choices['choices']);
-
-            $view->vars['choices_for'][$choices['id']] = $choices['name'];
-        }
-
-        $view->vars['choice_names'] = array_keys($mergedChoices);
+        $view->vars['choices'] = $options['choices'];
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $entryIndexMapping = [];
+
+        foreach ($view->children as $childChoiceName => $childChoiceView) {
+            foreach ($childChoiceView->children as $index => $childChoiceEntryView) {
+                $entryIndexMapping[$childChoiceEntryView->vars['value']][$childChoiceName] = $index;
+            }
+        }
+
+        $view->vars['child_choice_entry_index_mapping'] = $entryIndexMapping;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([
             'multiple_choices',
+            'choices',
         ]);
 
+        $resolver->setAllowedTypes('choices', 'array');
         $resolver->setAllowedTypes('multiple_choices', 'array');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockPrefix()
     {
         return 'material_multiple_choice_table';
