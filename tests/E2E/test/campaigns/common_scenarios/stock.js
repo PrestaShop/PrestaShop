@@ -1,7 +1,7 @@
+let promise = Promise.resolve();
 module.exports = {
   changeStockProductQuantity: function (client, Stock, orderProduct, itemNumber, option = "add") {
-    let promise = Promise.resolve();
-    test('should change the third product quantity', () => {
+    test('should change the product quantity', () => {
       promise
         .then(() => client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"))
         .then(() => client.moveToObject(Stock.product_quantity_input.replace('%O', orderProduct)));
@@ -21,8 +21,12 @@ module.exports = {
     test('should click on "Check" button of the third product quantity', () => client.waitForExistAndClick(Stock.save_product_quantity_button));
   },
 
-  checkMovementHistory: function (client, Movement, movementIndex, itemNumber, option, type) {
-    test('should go to "Movements" tab', () => client.goToStockMovements(Movement));
+  checkMovementHistory: function (client, Menu, Movement, movementIndex, itemNumber, option, type) {
+    test('should go to "Movements" tab', () => {
+      return promise
+        .then(() => client.goToStockMovements(Menu, Movement))
+        .then(() => client.pause(5000));
+    });
     test('should check movement history', () => client.checkMovement(Movement, movementIndex, itemNumber, option, type));
   }
 

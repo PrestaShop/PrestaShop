@@ -58,6 +58,7 @@ namespace PrestaShopBundle\Install {
     use Symfony\Component\Yaml\Yaml;
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Filesystem\Exception\IOException;
+    use AppKernel;
     use Context;
     use Cache;
     use Shop;
@@ -319,18 +320,14 @@ namespace PrestaShopBundle\Install {
             require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
             Context::getContext()->smarty = $smarty;
-            if(version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
-                Language::loadLanguagesLegacy();
-            } else {
-                Language::loadLanguages();
-            }
+            Language::loadLanguages();
 
             $this->translator = Context::getContext()->getTranslator();
         }
 
         private function getConfValue($name)
         {
-            $full = version_compare('1.5.0.10', _PS_VERSION_) < 0;
+            $full = version_compare('1.5.0.10', AppKernel::VERSION) < 0;
 
             $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
 			FROM `'._DB_PREFIX_.'configuration` c
@@ -702,37 +699,6 @@ namespace PrestaShopBundle\Install {
 
         private function cleanupOldDirectories()
         {
-            if (version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
-                $dir = _PS_ROOT_DIR_ . '/controllers/';
-                if (file_exists($dir)) {
-                    foreach (scandir($dir) as $file) {
-                        if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
-                            if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
-                                unlink($dir . basename($file));
-                            }
-                        }
-                    }
-                }
-
-                $dir = _PS_ROOT_DIR_ . '/classes/';
-                foreach (self::$classes14 as $class) {
-                    if (file_exists($dir . basename($class) . '.php')) {
-                        unlink($dir . basename($class) . '.php');
-                    }
-                }
-
-                $dir = _PS_ADMIN_DIR_ . '/tabs/';
-                if (file_exists($dir)) {
-                    foreach (scandir($dir) as $file) {
-                        if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
-                            if (file_exists($dir . basename(str_replace('.php', '', $file) . '.php'))) {
-                                unlink($dir . basename($file));
-                            }
-                        }
-                    }
-                }
-            }
-
             if ($this->adminDir) {
                 $path = $this->adminDir . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR
                     . 'template' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'modules'
@@ -754,18 +720,14 @@ namespace PrestaShopBundle\Install {
                     if (Validate::isLangIsoCode($isoCode)) {
                         $errorsLanguage = array();
 
-                        Language::downloadLanguagePack($isoCode, _PS_VERSION_, $errorsLanguage);
+                        Language::downloadLanguagePack($isoCode, AppKernel::VERSION, $errorsLanguage);
 
                         $lang_pack = Language::getLangDetails($isoCode);
                         Language::installSfLanguagePack($lang_pack['locale'], $errorsLanguage);
                         Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
 
                         if (empty($errorsLanguage)) {
-                            if(version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
-                                Language::loadLanguagesLegacy();
-                            } else {
-                                Language::loadLanguages();
-                            }
+                            Language::loadLanguages();
 
                             $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                             $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
@@ -786,7 +748,7 @@ namespace PrestaShopBundle\Install {
             }
 
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
-                $url_rewrite = (bool)$this->db->getvalue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
+                $url_rewrite = (bool)$this->db->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 
                 \Tools2::generateHtaccess(null, $url_rewrite);
             }

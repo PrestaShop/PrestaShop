@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.form.choice_provider.language_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
+
+    prestashop.core.form.choice_provider.country_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+            - '@prestashop.adapter.data_provider.country'
+
+    prestashop.core.form.choice_provider.currency_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+
+    prestashop.core.form.choice_provider.timezone_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
+        arguments:
+            - '@prestashop.core.admin.timezone.repository'
+
+    prestashop.core.form.choice_provider.localization_pack_by_iso_code:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LocalizationPackByIsoCodeChoiceProvider'
+        arguments:
+            - '@prestashop.core.localization.pack.loader.remote'
+            - '@prestashop.core.localization.pack.loader.local'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
+
+    prestashop.core.form.choice_provider.country_by_iso_code:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+            - '@prestashop.adapter.data_provider.country'

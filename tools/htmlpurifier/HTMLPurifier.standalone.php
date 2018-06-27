@@ -2732,7 +2732,7 @@ class HTMLPurifier_ConfigSchema
      */
     public function add($key, $default, $type, $allow_null)
     {
-        $obj = new stdclass();
+        $obj = new stdClass();
         $obj->type = is_int($type) ? $type : HTMLPurifier_VarParser::$types[$type];
         if ($allow_null) {
             $obj->allow_null = true;
@@ -2779,7 +2779,7 @@ class HTMLPurifier_ConfigSchema
      */
     public function addAlias($key, $new_key)
     {
-        $obj = new stdclass;
+        $obj = new stdClass;
         $obj->key = $new_key;
         $obj->isAlias = true;
         $this->info[$key] = $obj;
@@ -5093,7 +5093,7 @@ class HTMLPurifier_Generator
             $attr = $this->generateAttributes($token->attr, $token->name);
             if ($this->_flashCompat) {
                 if ($token->name == "object") {
-                    $flash = new stdclass();
+                    $flash = new stdClass();
                     $flash->attr = $token->attr;
                     $flash->param = array();
                     $this->_flashStack[] = $flash;
@@ -8119,7 +8119,7 @@ class HTMLPurifier_Queue {
      * Pushes an element onto the front of the queue.
      */
     public function push($x) {
-        array_push($this->input, $x);
+        $this->input[] = $x;
     }
 
     /**
@@ -9940,7 +9940,7 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function next($t) {
-        if ($t !== null) array_push($this->front, $t);
+        if ($t !== null) $this->front[] = $t;
         return empty($this->back) ? null : array_pop($this->back);
     }
 
@@ -9963,7 +9963,7 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function prev($t) {
-        if ($t !== null) array_push($this->back, $t);
+        if ($t !== null) $this->back[] = $t;
         return empty($this->front) ? null : array_pop($this->front);
     }
 
@@ -9989,7 +9989,7 @@ class HTMLPurifier_Zipper
      * @param Element to insert
      */
     public function insertBefore($t) {
-        if ($t !== null) array_push($this->front, $t);
+        if ($t !== null) $this->front[] = $t;
     }
 
     /**
@@ -9997,7 +9997,7 @@ class HTMLPurifier_Zipper
      * @param Element to insert
      */
     public function insertAfter($t) {
-        if ($t !== null) array_push($this->back, $t);
+        if ($t !== null) $this->back[] = $t;
     }
 
     /**
@@ -13178,7 +13178,7 @@ class HTMLPurifier_AttrDef_URI_IPv6 extends HTMLPurifier_AttrDef_URI_IPv4
             }
 
             while (count($first) < 8) {
-                array_push($first, '0');
+                $first[] = '0';
             }
 
             array_splice($first, 8 - count($second), 8, $second);

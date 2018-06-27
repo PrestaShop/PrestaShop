@@ -62,3 +62,29 @@ services:
         arguments:
             - '@session'
             - '@prestashop.core.import.file_finder'
+
+    prestashop.adapter.order.delivery.slip.options.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.delivery.slip.options.configuration'
+
+    prestashop.adapter.order.delivery.slip.pdf.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.delivery.slip.pdf.configuration'
+
+    prestashop.admin.localization.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.localization.configuration'
+            - '@prestashop.adapter.local_units.configuration'
+            - '@prestashop.adapter.localization_advanced.configuration'
+
+    prestashop.admin.geolocation.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.geolocation_by_ip_address.configuration'
+            - '@prestashop.adapter.geolocation_ip_address_whitelist.configuration'
+            - '@prestashop.adapter.geolocation_options.configuration'
+            - '@prestashop.core.geolocation.geo_lite_city.checker'
+            - '@prestashop.core.validation.validator'

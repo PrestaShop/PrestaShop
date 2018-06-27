@@ -1,6 +1,5 @@
 module.exports = {
   ModulePage: {
-    modules_subtab: '#subtab-AdminParentModulesSf',
     upload_button: '//*[@id="page-header-desc-configuration-add_module"]',
     zip_file_input: '//*[@id="importDropzone"]/input',
     installed_message: '//*[@id="importDropzone"]/div[3]/p[1]',
@@ -8,8 +7,6 @@ module.exports = {
     search_input: 'div.pstaggerAddTagWrapper > input',
     search_button: '.btn.btn-primary.pull-right.search-button',
     page_loaded: '.module-search-result-wording',
-    installed_modules_tabs: '#subtab-AdminModulesManage',
-    selection_modules_tabs: '#subtab-AdminModulesCatalog',
     modules_search_input: '.pstaggerAddTagInput',
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
@@ -19,6 +16,7 @@ module.exports = {
     uninstall_button: '//form[contains(@action, "action/uninstall/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-uninstall"]',
     uninstall_confirmation: '//*[@id="module-modal-confirm-prestafraud-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]',
     built_in_module_span: '//*[@id="built-in_modules"]',
+    installed_module_span: '//*[@id="installed_modules"]',
     selection_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
     install_button: '//*[@id="modules-list-container-all"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-install"]',
     config_legend_adwords: '//*[@id="content"]//h4[contains(@class,"page-subtitle")]',

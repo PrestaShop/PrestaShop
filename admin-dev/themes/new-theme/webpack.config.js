@@ -61,8 +61,17 @@ let config = {
     product_preferences: [
       './js/pages/product-preferences',
     ],
+    order_delivery: [
+      './js/pages/order/delivery',
+    ],
     imports: [
-        './js/pages/import'
+      './js/pages/import'
+    ],
+    localization: [
+      './js/pages/localization'
+    ],
+    geolocation: [
+      './js/pages/geolocation'
     ]
   },
   output: {

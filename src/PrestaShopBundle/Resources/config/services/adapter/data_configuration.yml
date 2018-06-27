@@ -101,3 +101,52 @@ services:
     prestashop.adapter.logs.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.order.delivery.slip.options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order.delivery.slip.pdf.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.data_provider.language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
+
+    prestashop.adapter.language.activator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
+
+    prestashop.adapter.manager.currency:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
+
+    prestashop.adapter.localization.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.language.activator'
+            - '@prestashop.adapter.manager.currency'
+            - '@prestashop.adapter.admin.data_provider.module'
+
+    prestashop.adapter.local_units.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.localization_advanced.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.geolocation_by_ip_address.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.geolocation_ip_address_whitelist.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.geolocation_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']

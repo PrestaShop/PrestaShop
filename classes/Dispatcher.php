@@ -270,30 +270,70 @@ class DispatcherCore
     {
         return $this->request;
     }
+    
+    /**
+     * Sets and returns the default controller.
+     *
+     * @param int $frontControllerType The front controller type
+     * @param Employee|null $employee The current employee
+     *
+     * @return string
+     */
+    private function getDefaultController($frontControllerType, Employee $employee = null)
+    {
+        switch ($frontControllerType) {
+            case self::FC_ADMIN:
+                // Default
+                $defaultController = 'AdminDashboard';
+                // If there is an employee with a default tab set
+                if (null !== $employee) {
+                    $tabClassName = $employee->getDefaultTabClassName();
+                    if (null !== $tabClassName) {
+                        $defaultController = $tabClassName;
+                    }
+                }
+                break;
+            case self::FC_MODULE:
+                $defaultController = 'default';
+                break;
+            default:
+                $defaultController = 'index';
+        }
 
+        $this->setDefaultController($defaultController);
+
+        return $defaultController;
+    }
+
+    /**
+     * Sets the default controller.
+     *
+     * @param string $defaultController
+     */
+    private function setDefaultController($defaultController)
+    {
+        $this->default_controller = $defaultController;
+    }
+
+    /**
+     * Sets use_default_controller to true, sets and returns the default controller.
+     *
+     * @return string
+     */
     public function useDefaultController()
     {
         $this->use_default_controller = true;
-        if ($this->default_controller === null) {
-            if (defined('_PS_ADMIN_DIR_')) {
-                if (isset(Context::getContext()->employee)
-                    && Validate::isLoadedObject(Context::getContext()->employee)
-                    && isset(Context::getContext()->employee->default_tab)) {
-                    $this->default_controller =
-                        Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
-                }
-                if (empty($this->default_controller)) {
-                    $this->default_controller = 'AdminDashboard';
-                }
-            } elseif (Tools::getValue('fc') == 'module') {
-                $this->default_controller = 'default';
-            } else {
-                $this->default_controller = 'index';
-            }
-        }
-        return $this->default_controller;
-    }
 
+        // If it was already set just return it
+        if (null !== $this->default_controller) {
+            return $this->default_controller;
+        }
+
+        $employee = Context::getContext()->employee;
+
+        return $this->getDefaultController($this->front_controller, $employee);
+    }
+    
     /**
      * Find the controller and instantiate it
      */
@@ -933,7 +973,7 @@ class DispatcherCore
     public function getController($id_shop = null)
     {
         if (defined('_PS_ADMIN_DIR_')) {
-            $_GET['controllerUri'] = Tools::getvalue('controller');
+            $_GET['controllerUri'] = Tools::getValue('controller');
         }
         if ($this->controller) {
             $_GET['controller'] = $this->controller;

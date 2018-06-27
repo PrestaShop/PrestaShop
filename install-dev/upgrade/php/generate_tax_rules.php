@@ -42,7 +42,7 @@ function generate_tax_rules()
             'name' => 'Rule '.$tax['rate'].'%',
         );
         $res &= Db::getInstance()->insert('tax_rules_group', $row);
-        $id_tax_rules_group = Db::getInstance()->insert_id();
+        $id_tax_rules_group = Db::getInstance()->Insert_ID();
 
 
         $countries = Db::getInstance()->executeS('

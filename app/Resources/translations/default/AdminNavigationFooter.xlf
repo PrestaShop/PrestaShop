@@ -20,23 +20,35 @@ File: admin-dev/themes/default/template/footer.tpl:57</note>
         <note>Context:
 File: admin-dev/themes/default/template/footer.tpl:62</note>
       </trans-unit>
+      <trans-unit id="74baec1f24fb00ec864d0344e73347d6">
+        <source>User Club</source>
+        <target>User Club</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:67</note>
+      </trans-unit>
+      <trans-unit id="a1a53ee7ff379c1df8dd0d299ee67bc6">
+        <source>Feature Requests</source>
+        <target>Feature Requests</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:72</note>
+      </trans-unit>
       <trans-unit id="e6a7f8a2f42cc35979973da8dfb10720">
         <source>Forum</source>
         <target>Forum</target>
         <note>Context:
-File: admin-dev/themes/default/template/footer.tpl:67</note>
+File: admin-dev/themes/default/template/footer.tpl:77</note>
       </trans-unit>
       <trans-unit id="b3f252777a69b110667756babe83a98f">
         <source>Addons</source>
         <target>Addons</target>
         <note>Context:
-File: admin-dev/themes/default/template/footer.tpl:72</note>
+File: admin-dev/themes/default/template/footer.tpl:82</note>
       </trans-unit>
       <trans-unit id="cf270e40d273f9e7fd7c3061729060c3">
         <source>Training</source>
         <target>Training</target>
         <note>Context:
-File: admin-dev/themes/default/template/footer.tpl:77</note>
+File: admin-dev/themes/default/template/footer.tpl:87</note>
       </trans-unit>
     </body>
   </file>

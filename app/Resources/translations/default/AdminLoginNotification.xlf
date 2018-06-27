@@ -109,7 +109,7 @@ File: controllers/admin/AdminLoginController.php:381</note>
         <source>For security reasons, you must also delete the /install folder.</source>
         <target>For security reasons, you must also delete the /install folder.</target>
         <note>Context:
-File: admin-dev/themes/default/template/header.tpl:374</note>
+File: admin-dev/themes/default/template/header.tpl:388</note>
       </trans-unit>
     </body>
   </file>

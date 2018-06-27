@@ -339,7 +339,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.adapter.data_provider.currency'
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
             - '@=service("prestashop.adapter.data_provider.cms").getCmsChoices()'
         tags:
             - { name: form.type }
@@ -349,7 +349,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.adapter.data_provider.currency'
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
             - '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
         tags:
             - { name: form.type }
@@ -358,5 +358,41 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
         parent: 'form.type.translatable.aware'
         public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.delivery.slip.options:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.localization_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.import_pack:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.localization_pack_by_iso_code").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.geolocation.options:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.country_by_iso_code").getChoices()'
+            - '@prestashop.adapter.legacy.configuration'
         tags:
             - { name: form.type }

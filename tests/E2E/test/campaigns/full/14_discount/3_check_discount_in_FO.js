@@ -1,11 +1,12 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const {AddProductPage, ProductList} = require('../../../selectors/BO/add_product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 const common = require('../../common_scenarios/product');
-const {productPage} = require('../../../selectors/FO/product_page');
 const commonScenarios = require('../../common_scenarios/discount');
+let promise = Promise.resolve();
 
 let productData = {
   name: 'SP',
@@ -52,12 +53,12 @@ scenario('Check "Specific price"', () => {
   scenario('Check the created "Specific price" in the Front Office', client => {
     test('should change front office language to english', () => client.changeLanguage('english'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData["name"] + date_time));
-    test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(SearchProductPage.product_result_discount, '-19.67%'));
+    test('should verify that the discount is equal to "-19.6%"', () => client.checkTextValue(SearchProductPage.product_result_discount, '-19.6%'));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
-    test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(CheckoutOrderPage.product_discount_details, 'SAVE 19.67%'));
+    test('should verify that the discount is equal to "-19.6%"', () => client.checkTextValue(CheckoutOrderPage.product_discount_details, 'SAVE 19.6%'));
     test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
     test('should click on "Proceed to checkout" button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-    test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(CheckoutOrderPage.product_discount_details, '-19.67%'));
+    test('should verify that the discount is equal to "-19.6%"', () => client.checkTextValue(CheckoutOrderPage.product_discount_details, '-19.6%'));
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));
@@ -69,6 +70,26 @@ scenario('Create "Catalog price rule"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  scenario('Delete the created specific price', client => {
+    test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+    test('should close the "Symphony" toolbar', () => {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+          }
+        })
+        .then(() => client.pause(1000));
+    });
+    test('should search for the created product', () => client.searchProductByName(productData["name"] + date_time));
+    test('should click on "Edit" button', () => client.waitForExistAndClick(ProductList.edit_button));
+    test('should click on "Pricing" tab', () => client.waitForExistAndClick(AddProductPage.product_pricing_tab));
+    test('should click on "Delete" button of specific price', () => client.scrollWaitForExistAndClick(AddProductPage.specific_price_delete_button, 150, 3000));
+    test('should click on "Yes" of modal button', () => client.waitForVisibleAndClick(AddProductPage.continue_confirmation));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Successful deletion'));
+    test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 3000));
+  }, 'product/check_product');
   commonScenarios.createCatalogPriceRules(catalogPriceRule["name"] + date_time, catalogPriceRule["type"], catalogPriceRule["reduction"]);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
@@ -82,8 +103,9 @@ scenario('Check "Catalog price rule"', () => {
   }, 'common_client');
   scenario('Check the created "Catalog price rule" in the Front Office', client => {
     test('should change front office language to english', () => client.changeLanguage('english'));
-    test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(productPage.first_product_discount, '-19.67%'));
-    test('should choose product ', () => client.waitForExistAndClick(productPage.first_product));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData["name"] + date_time));
+    test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(SearchProductPage.product_result_discount, '-19.67%'));
+    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should verify that the discount is equal to "-19.67%"', () => client.checkTextValue(CheckoutOrderPage.product_discount_details, 'SAVE 19.67%'));
     test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
     test('should click on "Proceed to checkout" button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));

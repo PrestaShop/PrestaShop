@@ -732,23 +732,28 @@ class LinkCore
 
             default:
                 $routes = array(
-                    'AdminModulesSf' => 'admin_module_manage',
+                    'AdminAddonsCatalog' => 'admin_module_addons_store',
+                    'AdminAdminPreferences' => 'admin_administration',
+                    'AdminCustomerPreferences' => 'admin_customer_preferences',
+                    'AdminDeliverySlip' => 'admin_order_delivery_slip',
+                    'AdminImport' => 'admin_import',
+                    'AdminInformation' => 'admin_system_information',
+                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
+                    'AdminMaintenance' => 'admin_maintenance',
                     'AdminModulesCatalog' => 'admin_module_catalog',
                     'AdminModulesManage' => 'admin_module_manage',
                     'AdminModulesNotifications' => 'admin_module_notification',
-                    'AdminStockManagement' => 'admin_stock_overview',
-                    'AdminTranslationSf' => 'admin_international_translation_overview',
-                    'AdminInformation' => 'admin_system_information',
-                    'AdminAddonsCatalog' => 'admin_module_addons_store',
-                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
+                    'AdminModulesSf' => 'admin_module_manage',
+                    'AdminOrderPreferences' => 'admin_order_preferences',
                     'AdminPerformance' => 'admin_performance',
-                    'AdminAdminPreferences' => 'admin_administration',
-                    'AdminMaintenance' => 'admin_maintenance',
                     'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
-                    'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminCustomerPreferences' => 'admin_customer_preferences',
-                    'AdminImport' => 'admin_import',
+                    'AdminStockManagement' => 'admin_stock_overview',
+                    'AdminThemesCatalog' => 'admin_theme_catalog',
+                    'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminPayment' => 'admin_payment_methods',
+                    'AdminLocalization' => 'admin_localization_show_settings',
+                    'AdminGeolocation' => 'admin_geolocation',
                 );
 
                 if (isset($routes[$controller])) {
@@ -1077,8 +1082,8 @@ class LinkCore
 
         $vars = array();
         $varsNb = array('n');
-        $varsSort = array('orderby', 'orderway');
-        $varsPagination = array('p');
+        $varsSort = array('order');
+        $varsPagination = array('page');
 
         foreach ($_GET as $k => $value) {
             if ($k != 'id_'.$type && $k != 'controller') {

@@ -8,6 +8,18 @@
         <note>Context:
 File: controllers/admin/AdminCarriersController.php:701</note>
       </trans-unit>
+      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
+        <source>Delete selected</source>
+        <target>Delete selected</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:55</note>
+      </trans-unit>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:56</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -30,39 +42,13 @@ File: modules/statsbestmanufacturers/statsbestmanufacturers.php:53</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
-        <source>Forbidden characters:</source>
-        <target>Forbidden characters:</target>
-        <note>Context:
-File: controllers/admin/AdminGroupsController.php:280</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
-        <source>Delete selected</source>
-        <target>Delete selected</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:52</note>
-      </trans-unit>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:53</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
         <note>Context:
-File: controllers/admin/AdminManufacturersController.php:597</note>
+File: controllers/admin/AdminAttributesGroupsController.php:277</note>
       </trans-unit>
     </body>
   </file>
@@ -73,6 +59,16 @@ File: controllers/admin/AdminManufacturersController.php:597</note>
         <target>Delete the selected item?</target>
         <note>Context:
 File: controllers/admin/AdminCustomersController.php:1038</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
+        <source>Forbidden characters:</source>
+        <target>Forbidden characters:</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:90</note>
       </trans-unit>
     </body>
   </file>

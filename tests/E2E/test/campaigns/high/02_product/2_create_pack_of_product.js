@@ -19,9 +19,22 @@ scenario('Create a pack of products in the Back Office', client => {
     test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
     test('should set the "Description" text', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "Pack of products"', () => client.waitAndSelectByValue(AddProductPage.product_type, 1));
-    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack1.search, data.pack.pack.pack1.quantity));
-    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack2.search, data.pack.pack.pack2.quantity));
-    test('set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
+    test('should set the "Add products to your pack"', () => {
+      return promise
+        .then(() => client.waitAndSetValue(AddProductPage.search_product_pack, data.pack.pack.pack1.search))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_item_pack))
+        .then(() => client.waitAndSetValue(AddProductPage.product_pack_item_quantity, data.pack.pack.pack1.quantity))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_pack_add_button));
+    });
+    test('should set the "Add products to your pack"', () => {
+      return promise
+        .then(() => client.scrollTo(AddProductPage.description_tab))
+        .then(() => client.waitAndSetValue(AddProductPage.search_product_pack, data.pack.pack.pack2.search))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_item_pack))
+        .then(() => client.waitAndSetValue(AddProductPage.product_pack_item_quantity, data.pack.pack.pack2.quantity))
+        .then(() => client.scrollWaitForExistAndClick(AddProductPage.product_pack_add_button));
+    });
+    test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
     test('should upload the product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.pack.new_category_name + date_time));
@@ -53,7 +66,7 @@ scenario('Create a pack of products in the Back Office', client => {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })
-        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 3000))
     });
   }, 'product/product');
 
@@ -133,7 +146,7 @@ scenario('Check the product creation in the Back Office', client => {
   test('should check the existence of product price TE', () => client.checkProductPriceTE(data.common.priceTE));
   test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, data.common.quantity));
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
-  test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+  test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
 scenario('Check the pack product in the Front Office', () => {

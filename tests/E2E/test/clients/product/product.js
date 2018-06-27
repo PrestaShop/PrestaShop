@@ -12,12 +12,12 @@ class Product extends CommonClient {
 
   getElementID() {
     return this.client
-      .waitForExist(ProductList.first_product_id, 90000)
-      .then(() => this.client.getText(ProductList.first_product_id))
+      .waitForExist(ProductList.product_id.replace('%ID', 1), 90000)
+      .then(() => this.client.getText(ProductList.product_id.replace('%ID', 1)))
       .then((text) => global.productIdElement[0] = text)
-      .then(() => this.client.getText(ProductList.second_product_id))
+      .then(() => this.client.getText(ProductList.product_id.replace('%ID', 2)))
       .then((text) => global.productIdElement[1] = text)
-      .then(() => this.client.getText(ProductList.third_product_id))
+      .then(() => this.client.getText(ProductList.product_id.replace('%ID', 3)))
       .then((text) => global.productIdElement[2] = text)
       .then(() => expect(Number(global.productIdElement[1])).to.be.below(Number(global.productIdElement[0])))
       .then(() => expect(Number(global.productIdElement[2])).to.be.below(Number(global.productIdElement[1])));
@@ -91,6 +91,7 @@ class Product extends CommonClient {
   searchAndAddRelatedProduct() {
     let search_products = data.common.search_related_products.split('//');
     return this.client
+      .scrollTo(AddProductPage.search_add_related_product_input)
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[0])
       .waitForVisibleAndClick(AddProductPage.related_product_item)
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[1])
@@ -133,7 +134,7 @@ class Product extends CommonClient {
       .selectByVisibleText(addProductPage.feature_value_select, value);
   }
 
-  clickPageNextOrPrevious(selector) {
+  clickNextOrPrevious(selector) {
     if (global.isVisible) {
       return this.client
         .click(selector)

@@ -1,24 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/Meta.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/ImageManager.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="36757394a699878de6f0e51f203d1ee7">
-        <source>Cannot scan root directory</source>
-        <target>Cannot scan root directory</target>
+      <trans-unit id="30fb35f3cf2b6e6e599b30dacc6c19c8">
+        <source>Image is too large (%1$d kB). Maximum allowed: %2$d kB</source>
+        <target>Image is too large (%1$d kB). Maximum allowed: %2$d kB</target>
         <note>Context:
-File: classes/Meta.php:71</note>
+File: classes/ImageManager.php:468</note>
       </trans-unit>
-      <trans-unit id="c0c29d8902aa2cb256ea9eaefe307bf5">
-        <source>Cannot scan "override" directory</source>
-        <target>Cannot scan "override" directory</target>
+      <trans-unit id="c4ae3afc5d4c01919142f8b39cc5c1c5">
+        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png</source>
+        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png</target>
         <note>Context:
-File: classes/Meta.php:75</note>
+File: classes/ImageManager.php:448</note>
       </trans-unit>
-      <trans-unit id="b1ea648f9b7634752699f28ec9897b1a">
-        <source>File %2$s (in directory %1$s)</source>
-        <target>File %2$s (in directory %1$s)</target>
+      <trans-unit id="198dabd328b3e93b2eec2f6d76ab3eb1">
+        <source>Error while uploading image; please change your server's settings. (Error code: %s)</source>
+        <target>Error while uploading image; please change your server's settings. (Error code: %s)</target>
         <note>Context:
-File: classes/Meta.php:103</note>
+File: classes/ImageManager.php:451</note>
+      </trans-unit>
+      <trans-unit id="2ab146a83f61d2896a472f52f353b321">
+        <source>Image format not recognized, allowed formats are: .ico</source>
+        <target>Image format not recognized, allowed formats are: .ico</target>
+        <note>Context:
+File: classes/ImageManager.php:471</note>
+      </trans-unit>
+      <trans-unit id="da819cb8d5fcace59e5ec77b43b12b0a">
+        <source>Error while uploading image; please change your server's settings.</source>
+        <target>Error while uploading image; please change your server's settings.</target>
+        <note>Context:
+File: classes/ImageManager.php:474</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Customization.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="95013b94140e1438329efc8a39352f4b">
+        <source>Could not load cart id=%s</source>
+        <target>Could not load cart id=%s</target>
+        <note>Context:
+File: classes/Customization.php:376</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/AddressFormat.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="47be00818e1acd46db0092d6586204cf">
+        <source>This class name does not exist.</source>
+        <target>This class name does not exist.</target>
+        <note>Context:
+File: classes/AddressFormat.php:132</note>
+      </trans-unit>
+      <trans-unit id="388ed04607290133b78adf251a3e17ed">
+        <source>This property does not exist in the class or is forbidden.</source>
+        <target>This property does not exist in the class or is forbidden.</target>
+        <note>Context:
+File: classes/AddressFormat.php:149</note>
+      </trans-unit>
+      <trans-unit id="48524477f4f52618e4ab9f1f6fb1d1a8">
+        <source>This association has too many elements.</source>
+        <target>This association has too many elements.</target>
+        <note>Context:
+File: classes/AddressFormat.php:176</note>
+      </trans-unit>
+      <trans-unit id="46e6c4977ebd38ff176e68481ab04275">
+        <source>This name is not allowed.</source>
+        <target>This name is not allowed.</target>
+        <note>Context:
+File: classes/AddressFormat.php:192</note>
+      </trans-unit>
+      <trans-unit id="6b6a27e705469286cb83d20ec8e1b885">
+        <source>Syntax error with this pattern.</source>
+        <target>Syntax error with this pattern.</target>
+        <note>Context:
+File: classes/AddressFormat.php:186</note>
+      </trans-unit>
+      <trans-unit id="a3084b5f93d22e573824af3ca8f58b73">
+        <source>This key has already been used.</source>
+        <target>This key has already been used.</target>
+        <note>Context:
+File: classes/AddressFormat.php:228</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/module/Module.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fdc746e5693df31cf4f6ef789a8846c5">
+        <source>file (%s) not writable</source>
+        <target>file (%s) not writable</target>
+        <note>Context:
+File: classes/module/Module.php:2806</note>
+      </trans-unit>
+      <trans-unit id="a9de928286071f457fcbc45656353761">
+        <source>directory (%s) not writable</source>
+        <target>directory (%s) not writable</target>
+        <note>Context:
+File: classes/module/Module.php:2883</note>
       </trans-unit>
     </body>
   </file>
@@ -54,12 +132,6 @@ File: controllers/admin/AdminProductsController.php:1688</note>
         <note>Context:
 File: controllers/admin/AdminProductsController.php:2894</note>
       </trans-unit>
-      <trans-unit id="5cd8dc8a58702a63e79af3ad9de16d7a">
-        <source>The %s field is invalid.</source>
-        <target>The %s field is invalid.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:2100</note>
-      </trans-unit>
       <trans-unit id="be694d5db9d32c43014995441a5939c4">
         <source>Invalid file name</source>
         <target>Invalid file name</target>
@@ -77,60 +149,6 @@ File: controllers/admin/AdminProductsController.php:650</note>
         <target>You cannot delete all of the items.</target>
         <note>Context:
 File: controllers/admin/AdminProductsController.php:650</note>
-      </trans-unit>
-      <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
-        <source>An error occurred during deletion.</source>
-        <target>An error occurred during deletion.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:597</note>
-      </trans-unit>
-      <trans-unit id="7f290594963a303db17a5e21dc4cf0b7">
-        <source>An error occurred while deleting the object.</source>
-        <target>An error occurred while deleting the object.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:602</note>
-      </trans-unit>
-      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
-        <source>(cannot load object)</source>
-        <target>(cannot load object)</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1104</note>
-      </trans-unit>
-      <trans-unit id="d9b5b2302d57f3d13d5387ba9c99daae">
-        <source>An error occurred while creating an object.</source>
-        <target>An error occurred while creating an object.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1785</note>
-      </trans-unit>
-      <trans-unit id="954b49d26a3a0986aca720a7095f2aa9">
-        <source>An error occurred while updating an object.</source>
-        <target>An error occurred while updating an object.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1980</note>
-      </trans-unit>
-      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
-        <source>An error occurred while updating the status for an object.</source>
-        <target>An error occurred while updating the status for an object.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1103</note>
-      </trans-unit>
-      <trans-unit id="45ebc64529137a007889ee445d64611c">
-        <source>Failed to update the position.</source>
-        <target>Failed to update the position.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:1106</note>
-      </trans-unit>
-      <trans-unit id="1d5dfad5ac415b412c20a05a89d43db6">
-        <source>An error occurred while deleting this selection.</source>
-        <target>An error occurred while deleting this selection.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:696</note>
-      </trans-unit>
-      <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
-        <source>You must select at least one element to delete.</source>
-        <target>You must select at least one element to delete.</target>
-        <note>Context:
-File: controllers/admin/AdminProductsController.php:700</note>
       </trans-unit>
       <trans-unit id="527d23f49ced7a14e50546e1b90672e7">
         <source>Cannot retrieve file.</source>
@@ -242,246 +260,6 @@ File: controllers/admin/AdminProductsController.php:2881</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/module/Module.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fdc746e5693df31cf4f6ef789a8846c5">
-        <source>file (%s) not writable</source>
-        <target>file (%s) not writable</target>
-        <note>Context:
-File: classes/module/Module.php:2806</note>
-      </trans-unit>
-      <trans-unit id="a9de928286071f457fcbc45656353761">
-        <source>directory (%s) not writable</source>
-        <target>directory (%s) not writable</target>
-        <note>Context:
-File: classes/module/Module.php:2883</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="20c6125376d8de28149d655c7cc25e32">
-        <source>No files were uploaded.</source>
-        <target>No files were uploaded.</target>
-        <note>Context:
-File: classes/FileUploader.php:74</note>
-      </trans-unit>
-      <trans-unit id="e1a0a773bd7a52245c9a25d45dc6d807">
-        <source>Source file does not exist or is empty.</source>
-        <target>Source file does not exist or is empty.</target>
-        <note>Context:
-File: classes/FileUploader.php:80</note>
-      </trans-unit>
-      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
-        <source>The uploaded file is too large.</source>
-        <target>The uploaded file is too large.</target>
-        <note>Context:
-File: classes/FileUploader.php:83</note>
-      </trans-unit>
-      <trans-unit id="9269d66af1c332a48a9e3f5b2284be09">
-        <source>File has an invalid extension, it should be one of these: %s.</source>
-        <target>File has an invalid extension, it should be one of these: %s.</target>
-        <note>Context:
-File: classes/FileUploader.php:93</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Customization.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="95013b94140e1438329efc8a39352f4b">
-        <source>Could not load cart id=%s</source>
-        <target>Could not load cart id=%s</target>
-        <note>Context:
-File: classes/Customization.php:376</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/ObjectModel.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="02af8c16ef4efa9fa9e2142372b0b90d">
-        <source>The %s field is required.</source>
-        <target>The %s field is required.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1048</note>
-      </trans-unit>
-      <trans-unit id="fed3c8d832129d27b64c34fe410e7346">
-        <source>Property %s is empty.</source>
-        <target>Property %s is empty.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1050</note>
-      </trans-unit>
-      <trans-unit id="872d428c40b36bba9fc5fafaa76c6f22">
-        <source>Property %1$s has a bad value (allowed values are: %2$s).</source>
-        <target>Property %1$s has a bad value (allowed values are: %2$s).</target>
-        <note>Context:
-File: classes/ObjectModel.php:1064</note>
-      </trans-unit>
-      <trans-unit id="9599d22695068a773c0f10ea1fd26a74">
-        <source>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</source>
-        <target>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</target>
-        <note>Context:
-File: classes/ObjectModel.php:1079</note>
-      </trans-unit>
-      <trans-unit id="2674ff1d6f5ff826dae13cd4db1ca9b0">
-        <source>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</source>
-        <target>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1084</note>
-      </trans-unit>
-      <trans-unit id="1448270fc6dbabe70584c87fa27cc96f">
-        <source>Validation function not found: %s.</source>
-        <target>Validation function not found: %s.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1102</note>
-      </trans-unit>
-      <trans-unit id="6938fc7c0e5b0b07a6ba370bcb84bbd3">
-        <source>Property %s is not valid</source>
-        <target>Property %s is not valid</target>
-        <note>Context:
-File: classes/ObjectModel.php:1124</note>
-      </trans-unit>
-      <trans-unit id="ee66f9c9930cb33d2a5dde9b240d3f7e">
-        <source>is required.</source>
-        <target>is required.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1181</note>
-      </trans-unit>
-      <trans-unit id="0fec856489067e4d21aa315324c441dc">
-        <source>%1$s is too long. Maximum length: %2$d</source>
-        <target>%1$s is too long. Maximum length: %2$d</target>
-        <note>Context:
-File: classes/ObjectModel.php:1188</note>
-      </trans-unit>
-      <trans-unit id="87ecb83d305a6af0e0438a0587e31de8">
-        <source>%s is invalid.</source>
-        <target>%s is invalid.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1199</note>
-      </trans-unit>
-      <trans-unit id="2deae2efe4b65df80c188a31fed3cc17">
-        <source>The field %s is required.</source>
-        <target>The field %s is required.</target>
-        <note>Context:
-File: classes/ObjectModel.php:1396</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
-        <source>The %1$s field is too long (%2$d chars max).</source>
-        <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:585</note>
-      </trans-unit>
-      <trans-unit id="055cca15dfe5fb74bde56d7331fff449">
-        <source>An error occurred while saving the message.</source>
-        <target>An error occurred while saving the message.</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:627</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Validate.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f9c7939a8397ee022fefee2bdb3407af">
-        <source>Invalid URL</source>
-        <target>Invalid URL</target>
-        <note>Context:
-File: classes/Validate.php:71</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Currency.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e07269088946aa33a280b8c05529b46c">
-        <source>Cannot parse feed.</source>
-        <target>Cannot parse feed.</target>
-        <note>Context:
-File: classes/Currency.php:526</note>
-      </trans-unit>
-      <trans-unit id="6f775dff2aa88bce2301e5d5309c5f7e">
-        <source>No default currency</source>
-        <target>No default currency</target>
-        <note>Context:
-File: classes/Currency.php:533</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/AddressFormat.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="47be00818e1acd46db0092d6586204cf">
-        <source>This class name does not exist.</source>
-        <target>This class name does not exist.</target>
-        <note>Context:
-File: classes/AddressFormat.php:132</note>
-      </trans-unit>
-      <trans-unit id="388ed04607290133b78adf251a3e17ed">
-        <source>This property does not exist in the class or is forbidden.</source>
-        <target>This property does not exist in the class or is forbidden.</target>
-        <note>Context:
-File: classes/AddressFormat.php:149</note>
-      </trans-unit>
-      <trans-unit id="48524477f4f52618e4ab9f1f6fb1d1a8">
-        <source>This association has too many elements.</source>
-        <target>This association has too many elements.</target>
-        <note>Context:
-File: classes/AddressFormat.php:176</note>
-      </trans-unit>
-      <trans-unit id="46e6c4977ebd38ff176e68481ab04275">
-        <source>This name is not allowed.</source>
-        <target>This name is not allowed.</target>
-        <note>Context:
-File: classes/AddressFormat.php:192</note>
-      </trans-unit>
-      <trans-unit id="6b6a27e705469286cb83d20ec8e1b885">
-        <source>Syntax error with this pattern.</source>
-        <target>Syntax error with this pattern.</target>
-        <note>Context:
-File: classes/AddressFormat.php:186</note>
-      </trans-unit>
-      <trans-unit id="a3084b5f93d22e573824af3ca8f58b73">
-        <source>This key has already been used.</source>
-        <target>This key has already been used.</target>
-        <note>Context:
-File: classes/AddressFormat.php:228</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/ImageManager.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="30fb35f3cf2b6e6e599b30dacc6c19c8">
-        <source>Image is too large (%1$d kB). Maximum allowed: %2$d kB</source>
-        <target>Image is too large (%1$d kB). Maximum allowed: %2$d kB</target>
-        <note>Context:
-File: classes/ImageManager.php:468</note>
-      </trans-unit>
-      <trans-unit id="c4ae3afc5d4c01919142f8b39cc5c1c5">
-        <source>Image format not recognized, allowed formats are: .gif, .jpg, .png</source>
-        <target>Image format not recognized, allowed formats are: .gif, .jpg, .png</target>
-        <note>Context:
-File: classes/ImageManager.php:448</note>
-      </trans-unit>
-      <trans-unit id="198dabd328b3e93b2eec2f6d76ab3eb1">
-        <source>Error while uploading image; please change your server's settings. (Error code: %s)</source>
-        <target>Error while uploading image; please change your server's settings. (Error code: %s)</target>
-        <note>Context:
-File: classes/ImageManager.php:451</note>
-      </trans-unit>
-      <trans-unit id="2ab146a83f61d2896a472f52f353b321">
-        <source>Image format not recognized, allowed formats are: .ico</source>
-        <target>Image format not recognized, allowed formats are: .ico</target>
-        <note>Context:
-File: classes/ImageManager.php:471</note>
-      </trans-unit>
-      <trans-unit id="da819cb8d5fcace59e5ec77b43b12b0a">
-        <source>Error while uploading image; please change your server's settings.</source>
-        <target>Error while uploading image; please change your server's settings.</target>
-        <note>Context:
-File: classes/ImageManager.php:474</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/Uploader.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fb0e0badcf5ac5c98f791447646f5ac8">
@@ -556,13 +334,45 @@ File: classes/helper/HelperImageUploader.php:59</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/controller/Controller.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/Meta.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="652122103181aa2752efaecab300edf0">
-        <source>Access denied.</source>
-        <target>Access denied.</target>
+      <trans-unit id="36757394a699878de6f0e51f203d1ee7">
+        <source>Cannot scan root directory</source>
+        <target>Cannot scan root directory</target>
         <note>Context:
-File: classes/controller/Controller.php:207</note>
+File: classes/Meta.php:73</note>
+      </trans-unit>
+      <trans-unit id="c0c29d8902aa2cb256ea9eaefe307bf5">
+        <source>Cannot scan "override" directory</source>
+        <target>Cannot scan "override" directory</target>
+        <note>Context:
+File: classes/Meta.php:77</note>
+      </trans-unit>
+      <trans-unit id="b1ea648f9b7634752699f28ec9897b1a">
+        <source>File %2$s (in directory %1$s)</source>
+        <target>File %2$s (in directory %1$s)</target>
+        <note>Context:
+File: classes/Meta.php:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Configuration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="05c210d25ce1e9ad49a27d570f82b090">
+        <source>[%s] is not a valid configuration key</source>
+        <target>[%s] is not a valid configuration key</target>
+        <note>Context:
+File: classes/Configuration.php:425</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Tools.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="355f26b47eff3302c93a1c49676f078e">
+        <source>Fatal error</source>
+        <target>Fatal error</target>
+        <note>Context:
+File: classes/Tools.php:1040</note>
       </trans-unit>
     </body>
   </file>
@@ -594,107 +404,211 @@ File: modules/autoupgrade/AdminSelfTab.php:641</note>
         <source>An error occurred while attempting to delete the image. (cannot load object).</source>
         <target>An error occurred while attempting to delete the image. (cannot load object).</target>
         <note>Context:
-File: classes/controller/AdminController.php:993</note>
+File: classes/controller/AdminController.php:998</note>
       </trans-unit>
       <trans-unit id="2a0c56d5a5183a9b65b8e2817f75ded2">
         <source>You cannot delete this item.</source>
         <target>You cannot delete this item.</target>
         <note>Context:
-File: classes/controller/AdminController.php:1077
+File: classes/controller/AdminController.php:1082
  Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       </trans-unit>
       <trans-unit id="10f97f4fea6d1ff9ffd1ed3260d6220d">
         <source>Unable to delete associated images.</source>
         <target>Unable to delete associated images.</target>
         <note>Context:
-File: classes/controller/AdminController.php:1085</note>
+File: classes/controller/AdminController.php:1090</note>
       </trans-unit>
       <trans-unit id="efb49241363bce74c7d7899333cdebb5">
         <source>An error occurred when attempting to update the required fields.</source>
         <target>An error occurred when attempting to update the required fields.</target>
         <note>Context:
-File: classes/controller/AdminController.php:1278</note>
+File: classes/controller/AdminController.php:1283</note>
       </trans-unit>
       <trans-unit id="204c3558e41366f3d558ce8e01426a22">
         <source>field %s is required.</source>
         <target>field %s is required.</target>
         <note>Context:
-File: classes/controller/AdminController.php:1429</note>
+File: classes/controller/AdminController.php:1434</note>
       </trans-unit>
       <trans-unit id="c2c0e06097c62422199e29a5574e9fc4">
         <source>Cannot add configuration %s</source>
         <target>Cannot add configuration %s</target>
         <note>Context:
-File: classes/controller/AdminController.php:1491</note>
+File: classes/controller/AdminController.php:1496</note>
       </trans-unit>
       <trans-unit id="fa4611fb85bb8f118f562d107ab790d4">
         <source>The object cannot be loaded (or found)</source>
         <target>The object cannot be loaded (or found)</target>
         <note>Context:
-File: classes/controller/AdminController.php:1655
+File: classes/controller/AdminController.php:1660
  Comment: throw exception</note>
       </trans-unit>
       <trans-unit id="a62d7ffa591311c930a2017b07e55394">
         <source>The object cannot be loaded (the identifier is missing or invalid)</source>
         <target>The object cannot be loaded (the identifier is missing or invalid)</target>
         <note>Context:
-File: classes/controller/AdminController.php:1663</note>
+File: classes/controller/AdminController.php:1668</note>
       </trans-unit>
       <trans-unit id="2782e6f430c2658c79aecfcecdc0d0e8">
         <source>The field %field_name% is required at least in %lang%.</source>
         <target>The field %field_name% is required at least in %lang%.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3681</note>
+File: classes/controller/AdminController.php:3623</note>
       </trans-unit>
       <trans-unit id="114eadc70de249729e9287a6b450c6e0">
         <source>The %field_name% field (%lang%) is invalid.</source>
         <target>The %field_name% field (%lang%) is invalid.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3714</note>
+File: classes/controller/AdminController.php:3656</note>
       </trans-unit>
       <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
         <source>%s: Incorrect value</source>
         <target>%s: Incorrect value</target>
         <note>Context:
-File: classes/controller/AdminController.php:3909</note>
+File: classes/controller/AdminController.php:3851</note>
       </trans-unit>
       <trans-unit id="7c422404cb037e6781b5a553060670a6">
         <source>Can't delete #%id%</source>
         <target>Can't delete #%id%</target>
         <note>Context:
-File: classes/controller/AdminController.php:4040</note>
+File: classes/controller/AdminController.php:3982</note>
       </trans-unit>
       <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
         <source>An error occurred while assigning a zone to the selection.</source>
         <target>An error occurred while assigning a zone to the selection.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4143</note>
+File: classes/controller/AdminController.php:4085</note>
       </trans-unit>
       <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
         <source>You must select at least one element to assign a new zone.</source>
         <target>You must select at least one element to assign a new zone.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4145</note>
+File: classes/controller/AdminController.php:4087</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
+        <source>An error occurred during deletion.</source>
+        <target>An error occurred during deletion.</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:242</note>
+      </trans-unit>
+      <trans-unit id="7f290594963a303db17a5e21dc4cf0b7">
+        <source>An error occurred while deleting the object.</source>
+        <target>An error occurred while deleting the object.</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:247</note>
+      </trans-unit>
+      <trans-unit id="77ae44aa6c998166fcf1a87496278ad5">
+        <source>(cannot load object)</source>
+        <target>(cannot load object)</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d9b5b2302d57f3d13d5387ba9c99daae">
+        <source>An error occurred while creating an object.</source>
+        <target>An error occurred while creating an object.</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:485</note>
+      </trans-unit>
+      <trans-unit id="954b49d26a3a0986aca720a7095f2aa9">
+        <source>An error occurred while updating an object.</source>
+        <target>An error occurred while updating an object.</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:461</note>
+      </trans-unit>
+      <trans-unit id="574af21ff5cd555457e49205287f7e9b">
+        <source>The object cannot be loaded.</source>
+        <target>The object cannot be loaded.</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:609</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1b0cc7183377b461e298d0ebcf5f8548">
         <source>An error occurred while updating the status.</source>
         <target>An error occurred while updating the status.</target>
         <note>Context:
-File: controllers/admin/AdminCmsController.php:372</note>
+File: controllers/admin/AdminStatusesController.php:688</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminPdfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCurrenciesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="815e471ea2970db0b63b9b09feacc70f">
+        <source>An error occurred while updating the status for an object.</source>
+        <target>An error occurred while updating the status for an object.</target>
+        <note>Context:
+File: controllers/admin/AdminCurrenciesController.php:200</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="45ebc64529137a007889ee445d64611c">
+        <source>Failed to update the position.</source>
+        <target>Failed to update the position.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:751</note>
+      </trans-unit>
+      <trans-unit id="1d5dfad5ac415b412c20a05a89d43db6">
+        <source>An error occurred while deleting this selection.</source>
+        <target>An error occurred while deleting this selection.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:793</note>
+      </trans-unit>
+      <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
+        <source>You must select at least one element to delete.</source>
+        <target>You must select at least one element to delete.</target>
+        <note>Context:
+File: controllers/admin/AdminAttributesGroupsController.php:795</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5cd8dc8a58702a63e79af3ad9de16d7a">
+        <source>The %s field is invalid.</source>
+        <target>The %s field is invalid.</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:597</note>
+      </trans-unit>
+      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
+        <source>The %1$s field is too long (%2$d chars max).</source>
+        <target>The %1$s field is too long (%2$d chars max).</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:585</note>
+      </trans-unit>
+      <trans-unit id="055cca15dfe5fb74bde56d7331fff449">
+        <source>An error occurred while saving the message.</source>
+        <target>An error occurred while saving the message.</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:627</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b42cd3af71fc00ef268910709255320a">
         <source>You do not have permission to view this.</source>
         <target>You do not have permission to view this.</target>
         <note>Context:
-File: controllers/admin/AdminPdfController.php:45</note>
+File: controllers/admin/AdminThemesController.php:902</note>
+      </trans-unit>
+      <trans-unit id="9f4c1b4b9bcf088c9d32e74b7f542a77">
+        <source>You do not have permission to upload this.</source>
+        <target>You do not have permission to upload this.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:316</note>
       </trans-unit>
     </body>
   </file>
@@ -704,29 +618,19 @@ File: controllers/admin/AdminPdfController.php:45</note>
         <source>You do not have permission to delete this.</source>
         <target>You do not have permission to delete this.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1051</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1223</note>
       </trans-unit>
       <trans-unit id="1bdd228669c9dd995eb664737e60786e">
         <source>You do not have permission to edit this.</source>
         <target>You do not have permission to edit this.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1059</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1231</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="d8d4c3b79181fdcca8cb5159208fa56a">
         <source>You do not have permission to add this.</source>
         <target>You do not have permission to add this.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:572</note>
-      </trans-unit>
-      <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
-        <source>Invalid action</source>
-        <target>Invalid action</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:303</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1239</note>
       </trans-unit>
     </body>
   </file>
@@ -736,25 +640,181 @@ File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:303</note>
         <source>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings. </source>
         <target>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</target>
         <note>Context:
-File: controllers/admin/AdminCategoriesController.php:1057</note>
+File: controllers/admin/AdminCategoriesController.php:1058</note>
       </trans-unit>
       <trans-unit id="3fe46a677aa76978d058880999b3fffb">
         <source>Error while delete</source>
         <target>Error while delete</target>
         <note>Context:
-File: controllers/admin/AdminCategoriesController.php:735</note>
+File: controllers/admin/AdminCategoriesController.php:736</note>
       </trans-unit>
       <trans-unit id="f86f7b91afe27e79305a6b07bdb0d3c0">
         <source>Failed to update the status</source>
         <target>Failed to update the status</target>
         <note>Context:
-File: controllers/admin/AdminCategoriesController.php:1011</note>
+File: controllers/admin/AdminCategoriesController.php:1012</note>
       </trans-unit>
       <trans-unit id="2b4de48b49648d3323f20b6371f7e3c1">
         <source>You cannot upload more files</source>
         <target>You cannot upload more files</target>
         <note>Context:
-File: controllers/admin/AdminCategoriesController.php:1048</note>
+File: controllers/admin/AdminCategoriesController.php:1049</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/Controller.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="652122103181aa2752efaecab300edf0">
+        <source>Access denied.</source>
+        <target>Access denied.</target>
+        <note>Context:
+File: classes/controller/Controller.php:257</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/FileUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20c6125376d8de28149d655c7cc25e32">
+        <source>No files were uploaded.</source>
+        <target>No files were uploaded.</target>
+        <note>Context:
+File: classes/FileUploader.php:74</note>
+      </trans-unit>
+      <trans-unit id="e1a0a773bd7a52245c9a25d45dc6d807">
+        <source>Source file does not exist or is empty.</source>
+        <target>Source file does not exist or is empty.</target>
+        <note>Context:
+File: classes/FileUploader.php:80</note>
+      </trans-unit>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
+        <note>Context:
+File: classes/FileUploader.php:83</note>
+      </trans-unit>
+      <trans-unit id="9269d66af1c332a48a9e3f5b2284be09">
+        <source>File has an invalid extension, it should be one of these: %s.</source>
+        <target>File has an invalid extension, it should be one of these: %s.</target>
+        <note>Context:
+File: classes/FileUploader.php:93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Currency.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e07269088946aa33a280b8c05529b46c">
+        <source>Cannot parse feed.</source>
+        <target>Cannot parse feed.</target>
+        <note>Context:
+File: classes/Currency.php:580</note>
+      </trans-unit>
+      <trans-unit id="6f775dff2aa88bce2301e5d5309c5f7e">
+        <source>No default currency</source>
+        <target>No default currency</target>
+        <note>Context:
+File: classes/Currency.php:587</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/Validate.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f9c7939a8397ee022fefee2bdb3407af">
+        <source>Invalid URL</source>
+        <target>Invalid URL</target>
+        <note>Context:
+File: classes/Validate.php:71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ee77ea46b0c548ed60eadf31bdd68613">
+        <source>Bad SQL query</source>
+        <target>Bad SQL query</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:900</note>
+      </trans-unit>
+      <trans-unit id="959c96ec640d353311dd9763d57daad6">
+        <source>Please fill in all the required fields.</source>
+        <target>Please fill in all the required fields.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:470</note>
+      </trans-unit>
+      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
+        <source>Invalid message</source>
+        <target>Invalid message</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:407</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/ObjectModel.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02af8c16ef4efa9fa9e2142372b0b90d">
+        <source>The %s field is required.</source>
+        <target>The %s field is required.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1048</note>
+      </trans-unit>
+      <trans-unit id="fed3c8d832129d27b64c34fe410e7346">
+        <source>Property %s is empty.</source>
+        <target>Property %s is empty.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1050</note>
+      </trans-unit>
+      <trans-unit id="872d428c40b36bba9fc5fafaa76c6f22">
+        <source>Property %1$s has a bad value (allowed values are: %2$s).</source>
+        <target>Property %1$s has a bad value (allowed values are: %2$s).</target>
+        <note>Context:
+File: classes/ObjectModel.php:1064</note>
+      </trans-unit>
+      <trans-unit id="9599d22695068a773c0f10ea1fd26a74">
+        <source>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</source>
+        <target>Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).</target>
+        <note>Context:
+File: classes/ObjectModel.php:1079</note>
+      </trans-unit>
+      <trans-unit id="2674ff1d6f5ff826dae13cd4db1ca9b0">
+        <source>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</source>
+        <target>The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1084</note>
+      </trans-unit>
+      <trans-unit id="1448270fc6dbabe70584c87fa27cc96f">
+        <source>Validation function not found: %s.</source>
+        <target>Validation function not found: %s.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1102</note>
+      </trans-unit>
+      <trans-unit id="6938fc7c0e5b0b07a6ba370bcb84bbd3">
+        <source>Property %s is not valid</source>
+        <target>Property %s is not valid</target>
+        <note>Context:
+File: classes/ObjectModel.php:1124</note>
+      </trans-unit>
+      <trans-unit id="ee66f9c9930cb33d2a5dde9b240d3f7e">
+        <source>is required.</source>
+        <target>is required.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1181</note>
+      </trans-unit>
+      <trans-unit id="0fec856489067e4d21aa315324c441dc">
+        <source>%1$s is too long. Maximum length: %2$d</source>
+        <target>%1$s is too long. Maximum length: %2$d</target>
+        <note>Context:
+File: classes/ObjectModel.php:1188</note>
+      </trans-unit>
+      <trans-unit id="87ecb83d305a6af0e0438a0587e31de8">
+        <source>%s is invalid.</source>
+        <target>%s is invalid.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1199</note>
+      </trans-unit>
+      <trans-unit id="2deae2efe4b65df80c188a31fed3cc17">
+        <source>The field %s is required.</source>
+        <target>The field %s is required.</target>
+        <note>Context:
+File: classes/ObjectModel.php:1396</note>
       </trans-unit>
     </body>
   </file>
@@ -768,61 +828,13 @@ File: classes/QqUploadedFileXhr.php:67</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/Configuration.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="05c210d25ce1e9ad49a27d570f82b090">
-        <source>[%s] is not a valid configuration key</source>
-        <target>[%s] is not a valid configuration key</target>
+      <trans-unit id="109715467b74bd66639faa5673f707c1">
+        <source>Unknown error.</source>
+        <target>Unknown error.</target>
         <note>Context:
-File: classes/Configuration.php:425</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/Tools.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="355f26b47eff3302c93a1c49676f078e">
-        <source>Fatal error</source>
-        <target>Fatal error</target>
-        <note>Context:
-File: classes/Tools.php:977</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ee77ea46b0c548ed60eadf31bdd68613">
-        <source>Bad SQL query</source>
-        <target>Bad SQL query</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:893</note>
-      </trans-unit>
-      <trans-unit id="959c96ec640d353311dd9763d57daad6">
-        <source>Please fill in all the required fields.</source>
-        <target>Please fill in all the required fields.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:464</note>
-      </trans-unit>
-      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
-        <source>Invalid message</source>
-        <target>Invalid message</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:401</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_customtext/ps_customtext.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="abb1f006957d2d4002cc1d49c63a0fad">
-        <source>Please fill out all fields.</source>
-        <target>Please fill out all fields.</target>
-        <note>Context:
-File: modules/ps_customtext/ps_customtext.php:110</note>
-      </trans-unit>
-      <trans-unit id="3fa720301fb9c9badc23c00c1e88b4f7">
-        <source>An error occurred on saving.</source>
-        <target>An error occurred on saving.</target>
-        <note>Context:
-File: modules/ps_customtext/ps_customtext.php:116</note>
+File: controllers/admin/AdminImagesController.php:368</note>
       </trans-unit>
     </body>
   </file>
@@ -836,26 +848,6 @@ File: modules/blockreassurance/blockreassurance.php:226</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
-        <source>The voucher code is invalid.</source>
-        <target>The voucher code is invalid.</target>
-        <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:155</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_categorytree/ps_categorytree.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="23e0d4ecc25de9b2777fdaca3e2f3193">
-        <source>Maximum depth: Invalid number.</source>
-        <target>Maximum depth: Invalid number.</target>
-        <note>Context:
-File: modules/ps_categorytree/ps_categorytree.php:75</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_banner/ps_banner.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="df7859ac16e724c9b1fba0a364503d72">
@@ -863,6 +855,32 @@ File: modules/ps_categorytree/ps_categorytree.php:75</note>
         <target>An error occurred while attempting to upload the file.</target>
         <note>Context:
 File: modules/ps_banner/ps_banner.php:118</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
+        <source>The voucher code is invalid.</source>
+        <target>The voucher code is invalid.</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:158</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_customtext/ps_customtext.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="abb1f006957d2d4002cc1d49c63a0fad">
+        <source>Please fill out all fields.</source>
+        <target>Please fill out all fields.</target>
+        <note>Context:
+File: modules/ps_customtext/ps_customtext.php:123</note>
+      </trans-unit>
+      <trans-unit id="3fa720301fb9c9badc23c00c1e88b4f7">
+        <source>An error occurred on saving.</source>
+        <target>An error occurred on saving.</target>
+        <note>Context:
+File: modules/ps_customtext/ps_customtext.php:129</note>
       </trans-unit>
     </body>
   </file>
@@ -876,23 +894,13 @@ File: modules/ps_imageslider/ps_imageslider.php:484</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminProfilesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_categorytree/ps_categorytree.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
-        <source>This functionality has been disabled.</source>
-        <target>This functionality has been disabled.</target>
+      <trans-unit id="23e0d4ecc25de9b2777fdaca3e2f3193">
+        <source>Maximum depth: Invalid number.</source>
+        <target>Maximum depth: Invalid number.</target>
         <note>Context:
-File: controllers/admin/AdminProfilesController.php:94</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0bd212ed072143f56147f2f119892d03">
-        <source>Invalid selection</source>
-        <target>Invalid selection</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:198</note>
+File: modules/ps_categorytree/ps_categorytree.php:75</note>
       </trans-unit>
     </body>
   </file>
@@ -936,13 +944,13 @@ File: controllers/admin/AdminLoginController.php:194</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="574af21ff5cd555457e49205287f7e9b">
-        <source>The object cannot be loaded.</source>
-        <target>The object cannot be loaded.</target>
+      <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
+        <source>This functionality has been disabled.</source>
+        <target>This functionality has been disabled.</target>
         <note>Context:
-File: controllers/admin/AdminCarrierWizardController.php:893</note>
+File: src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php:205</note>
       </trans-unit>
     </body>
   </file>
@@ -974,81 +982,63 @@ File: controllers/admin/AdminMetaController.php:589</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e96814b3d9ff9ae65c8f2be2ee3e0555">
+        <source>Invalid tag(s) (%s)</source>
+        <target>Invalid tag(s) (%s)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2098</note>
+      </trans-unit>
+      <trans-unit id="3d52f8b2b1a67aa8740b72b3752d54f3">
+        <source>Incorrect value for "Depends on stock" for product %name% </source>
+        <target>Incorrect value for "Depends on stock" for product %name%</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2770</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminModulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5dcea1234ac01d22f40ffc81d0bc4c2f">
         <source>File too large (limit of %s bytes).</source>
         <target>File too large (limit of %s bytes).</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:587</note>
+File: controllers/admin/AdminModulesController.php:586</note>
       </trans-unit>
       <trans-unit id="c9b70823c0ee73b2ce964dfd16a10ddc">
         <source>File upload was not completed.</source>
         <target>File upload was not completed.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:590</note>
+File: controllers/admin/AdminModulesController.php:589</note>
       </trans-unit>
       <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
         <source>No file was uploaded.</source>
         <target>No file was uploaded.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:593</note>
+File: controllers/admin/AdminModulesController.php:592</note>
       </trans-unit>
       <trans-unit id="acdcc688155bd653f51eaf710cac8af5">
         <source>Internal error #%s</source>
         <target>Internal error #%s</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:596</note>
+File: controllers/admin/AdminModulesController.php:595</note>
       </trans-unit>
       <trans-unit id="5569135c321c16866b524ec82dcd2b2a">
         <source>No file has been selected</source>
         <target>No file has been selected</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:600</note>
+File: controllers/admin/AdminModulesController.php:599</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f9f47dee59a41f69369745b42136b14e">
-        <source>Your Zip/postal code is incorrect.</source>
-        <target>Your Zip/postal code is incorrect.</target>
+      <trans-unit id="0bd212ed072143f56147f2f119892d03">
+        <source>Invalid selection</source>
+        <target>Invalid selection</target>
         <note>Context:
-File: controllers/admin/AdminAddressesController.php:382</note>
-      </trans-unit>
-      <trans-unit id="6660b316abc0970476a09df63028d553">
-        <source>It must be entered as follows:</source>
-        <target>It must be entered as follows:</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:382</note>
-      </trans-unit>
-      <trans-unit id="d57c64abf56d22df05f34e473b3879ad">
-        <source>A Zip/postal code is required.</source>
-        <target>A Zip/postal code is required.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:384</note>
-      </trans-unit>
-      <trans-unit id="5b0e7a50bbe35d2e59dc92c7ba9b369a">
-        <source>The Zip/postal code is invalid.</source>
-        <target>The Zip/postal code is invalid.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:386</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1534de7e6636fdfedf7aea238841b24">
-        <source>You cannot delete or disable the last shop group.</source>
-        <target>You cannot delete or disable the last shop group.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:322</note>
-      </trans-unit>
-      <trans-unit id="e91077be3c46fd0d3fd8e972e8ca1e48">
-        <source>You cannot delete or disable a shop group in use.</source>
-        <target>You cannot delete or disable a shop group in use.</target>
-        <note>Context:
-File: controllers/admin/AdminShopGroupController.php:324</note>
+File: controllers/admin/AdminLocalizationController.php:198</note>
       </trans-unit>
     </body>
   </file>
@@ -1090,33 +1080,13 @@ File: controllers/admin/AdminShopUrlController.php:458</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminNotFoundController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d0fbda9855d118740f1105334305c126">
-        <source>Page not found</source>
-        <target>Page not found</target>
+      <trans-unit id="01e93e9457d86c646965decd586dc5ea">
+        <source>Address format invalid</source>
+        <target>Address format invalid</target>
         <note>Context:
-File: controllers/admin/AdminNotFoundController.php:47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9f4c1b4b9bcf088c9d32e74b7f542a77">
-        <source>You do not have permission to upload this.</source>
-        <target>You do not have permission to upload this.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:400</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="109715467b74bd66639faa5673f707c1">
-        <source>Unknown error.</source>
-        <target>Unknown error.</target>
-        <note>Context:
-File: controllers/admin/AdminImagesController.php:368</note>
+File: controllers/admin/AdminCountriesController.php:433</note>
       </trans-unit>
     </body>
   </file>
@@ -1127,78 +1097,6 @@ File: controllers/admin/AdminImagesController.php:368</note>
         <target>The selected date range is not valid.</target>
         <note>Context:
 File: controllers/admin/AdminDashboardController.php:347</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f0e23c8f9563f28107b313ca812f3c3">
-        <source>No profile.</source>
-        <target>No profile.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:79</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminAttachmentsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f66f9472666b18b19c22fd0f1a6a07b">
-        <source>The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.</source>
-        <target>The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.</target>
-        <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:218</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e96814b3d9ff9ae65c8f2be2ee3e0555">
-        <source>Invalid tag(s) (%s)</source>
-        <target>Invalid tag(s) (%s)</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2093</note>
-      </trans-unit>
-      <trans-unit id="3d52f8b2b1a67aa8740b72b3752d54f3">
-        <source>Incorrect value for "Depends on stock" for product %name% </source>
-        <target>Incorrect value for "Depends on stock" for product %name%</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2765</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="84e4970c5c35731ac7084f09ca0a77cd">
-        <source>The email address is invalid.</source>
-        <target>The email address is invalid.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerThreadsController.php:414</note>
-      </trans-unit>
-      <trans-unit id="62867691cceb8f8a7e7683b924cc20c5">
-        <source>An error occurred during the file upload process.</source>
-        <target>An error occurred during the file upload process.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomerThreadsController.php:430</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b624fe284c163c46bc68eadf90e27248">
-        <source>The object could not be loaded.</source>
-        <target>The object could not be loaded.</target>
-        <note>Context:
-File: controllers/admin/AdminBackupController.php:94</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="01e93e9457d86c646965decd586dc5ea">
-        <source>Address format invalid</source>
-        <target>Address format invalid</target>
-        <note>Context:
-File: controllers/admin/AdminCountriesController.php:433</note>
       </trans-unit>
     </body>
   </file>
@@ -1266,6 +1164,50 @@ File: controllers/admin/AdminTranslationsController.php:2152</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f1534de7e6636fdfedf7aea238841b24">
+        <source>You cannot delete or disable the last shop group.</source>
+        <target>You cannot delete or disable the last shop group.</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:322</note>
+      </trans-unit>
+      <trans-unit id="e91077be3c46fd0d3fd8e972e8ca1e48">
+        <source>You cannot delete or disable a shop group in use.</source>
+        <target>You cannot delete or disable a shop group in use.</target>
+        <note>Context:
+File: controllers/admin/AdminShopGroupController.php:324</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f9f47dee59a41f69369745b42136b14e">
+        <source>Your Zip/postal code is incorrect.</source>
+        <target>Your Zip/postal code is incorrect.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:368</note>
+      </trans-unit>
+      <trans-unit id="6660b316abc0970476a09df63028d553">
+        <source>It must be entered as follows:</source>
+        <target>It must be entered as follows:</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:368</note>
+      </trans-unit>
+      <trans-unit id="d57c64abf56d22df05f34e473b3879ad">
+        <source>A Zip/postal code is required.</source>
+        <target>A Zip/postal code is required.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:370</note>
+      </trans-unit>
+      <trans-unit id="5b0e7a50bbe35d2e59dc92c7ba9b369a">
+        <source>The Zip/postal code is invalid.</source>
+        <target>The Zip/postal code is invalid.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:372</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="aeca1e74dd7d86d85886996651937da9">
@@ -1282,13 +1224,109 @@ File: controllers/admin/AdminModulesPositionsController.php:104</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminNotFoundController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0fbda9855d118740f1105334305c126">
+        <source>Page not found</source>
+        <target>Page not found</target>
+        <note>Context:
+File: controllers/admin/AdminNotFoundController.php:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="84e4970c5c35731ac7084f09ca0a77cd">
+        <source>The email address is invalid.</source>
+        <target>The email address is invalid.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:414</note>
+      </trans-unit>
+      <trans-unit id="62867691cceb8f8a7e7683b924cc20c5">
+        <source>An error occurred during the file upload process.</source>
+        <target>An error occurred during the file upload process.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerThreadsController.php:430</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b624fe284c163c46bc68eadf90e27248">
+        <source>The object could not be loaded.</source>
+        <target>The object could not be loaded.</target>
+        <note>Context:
+File: controllers/admin/AdminBackupController.php:94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttachmentsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f66f9472666b18b19c22fd0f1a6a07b">
+        <source>The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.</source>
+        <target>The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.</target>
+        <note>Context:
+File: controllers/admin/AdminAttachmentsController.php:218</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f0e23c8f9563f28107b313ca812f3c3">
+        <source>No profile.</source>
+        <target>No profile.</target>
+        <note>Context:
+File: controllers/admin/AdminEmployeesController.php:76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
+        <source>Invalid action</source>
+        <target>Invalid action</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:290</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/AddonsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
         <target>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AddonsController.php:81</note>
+File: src/PrestaShopBundle/Controller/Admin/AddonsController.php:80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
+        <source>You do not have permission to update this.</source>
+        <target>You do not have permission to update this.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php:109</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b07242082d4a24b63951185a1bae15bb">
+        <source>You do not have permission to create this.</source>
+        <target>You do not have permission to create this.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5a6013a735465600cb2b695361009999">
+        <source>You do not have permission to edit this</source>
+        <target>You do not have permission to edit this</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php:100</note>
       </trans-unit>
     </body>
   </file>
@@ -1302,13 +1340,13 @@ File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a9e0d1b71fb7197367e0518bb6b34fdd">
         <source>The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2].</source>
         <target>The file is too large. Maximum size allowed is: [1]. The file you are trying to upload is [2].</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1261</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig:333</note>
       </trans-unit>
     </body>
   </file>

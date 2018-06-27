@@ -50,14 +50,24 @@ class CommonClient {
       .isOpen(menuSelector)
       .then(() => {
         if (global.isOpen) {
-          this.client.waitForVisibleAndClick(selector, 2000);
+          this.client
+            .execute(function (selector) {
+              let element = document.querySelector(selector);
+              element.scrollIntoView();
+            }, selector)
+            .waitForVisibleAndClick(selector, 2000);
         } else {
           this.client
             .waitForExistAndClick(menuSelector, 2000)
             .pause(2000)
+            .execute(function (selector) {
+              let element = document.querySelector(selector);
+              element.scrollIntoView();
+            }, selector)
             .waitForVisibleAndClick(selector);
-        }})
-      .then(()=> this.client.pause(4000));
+        }
+      })
+      .then(() => this.client.pause(4000));
   }
 
   closeBoarding(selector) {
@@ -129,8 +139,10 @@ class CommonClient {
     return this.client.scrollTo(selector, margin);
   }
 
-  scrollWaitForExistAndClick(selector, margin, timeout = 90000) {
-    return this.client.scrollWaitForExistAndClick(selector, margin, timeout);
+  scrollWaitForExistAndClick(selector, margin, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .scrollWaitForExistAndClick(selector, margin, timeout);
   }
 
   waitForVisibleAndClick(selector, timeout = 90000) {
@@ -318,7 +330,7 @@ class CommonClient {
   clickOnResumeButton(selector) {
     if (!global.isVisible) {
       return this.client
-        .click(selector)
+        .click(selector);
     } else {
       return this.client.pause(1000);
     }
@@ -350,24 +362,6 @@ class CommonClient {
       .then((isVisible) => expect(isVisible).to.be.false);
   }
 
-  editObjectData(object) {
-    for (let key in object) {
-      if (object.hasOwnProperty(key) && key !== 'type') {
-        if (typeof object[key] === 'string') {
-          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
-        } else if (typeof object[key] === 'number') {
-          object[key] += 10;
-        } else if (typeof object[key] === 'object') {
-          this.editObjectData(object[key]);
-        }
-      }
-    }
-  }
-
-  deleteObjectElement(object, pos) {
-    delete object[pos];
-  }
-
   checkParamFromURL(param, value, pause = 0) {
     return this.client
       .pause(pause)
@@ -378,39 +372,6 @@ class CommonClient {
         global.param = current_url.split(param + '=')[1].split("&")[0];
         expect(global.param).to.equal(value);
       });
-  }
-
-  /**
-   * This function searches the data in the table in case a filter input exists
-   * @param selector
-   * @param data
-   * @returns {*}
-   */
-  search(selector, data) {
-    if (global.isVisible) {
-      return this.client
-        .waitAndSetValue(selector, data)
-        .keys('Enter');
-    }
-  }
-
-  /**
-   * This function checks the search result
-   * @param selector
-   * @param data
-   * @param pos
-   * @returns {*}
-   */
-  checkExistence(selector, data, pos) {
-    if (global.isVisible) {
-      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    } else {
-      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    }
   }
 
   /**
@@ -449,11 +410,53 @@ class CommonClient {
     delete object[pos];
   }
 
+  stringifyNumber(number) {
+    let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
+    let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
+    if (number < 20) return special[number];
+    if (number%10 === 0) return deca[Math.floor(number/10)-2] + 'ieth';
+    return deca[Math.floor(number/10)-2] + 'y-' + special[number%10];
+  }
+
   setAttributeById(selector) {
     return this.client
       .execute(function (selector) {
         document.getElementById(selector).style.display = 'none';
       }, selector);
+  }
+
+
+  /**
+   * This function searches the data in the table in case a filter input exists
+   * @param selector
+   * @param data
+   * @returns {*}
+   */
+  search(selector, data) {
+    if (global.isVisible) {
+      return this.client
+        .waitAndSetValue(selector, data)
+        .keys('Enter');
+    }
+  }
+
+  /**
+   * This function checks the search result
+   * @param selector
+   * @param data
+   * @param pos
+   * @returns {*}
+   */
+  checkExistence(selector, data, pos) {
+    if (global.isVisible) {
+      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    } else {
+      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    }
   }
 
 }
