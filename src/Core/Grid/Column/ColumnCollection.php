@@ -64,17 +64,15 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     }
 
     /**
-     * @todo: interface method
+     * {@inheritdoc}
      */
     public function remove($id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
-
-            return true;
         }
 
-        return false;
+        return $this;
     }
 
     /**
