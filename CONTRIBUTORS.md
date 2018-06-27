@@ -191,6 +191,7 @@ GitHub contributors:
 - Ivan
 - ivancasasempere
 - J. Danse
+- Jáchym Toušek
 - janisVincent
 - Jaume
 - Javsmile
@@ -330,6 +331,7 @@ GitHub contributors:
 - Petyuska
 - PhpMadman
 - Pierre
+- Pierre RAMBAUD
 - Pierre-Olivier Vares
 - Piotr Kaczor
 - Piotr Moćko
