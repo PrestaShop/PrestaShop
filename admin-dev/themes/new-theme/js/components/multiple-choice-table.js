@@ -47,12 +47,13 @@ export default class MultipleChoiceTable {
     event.preventDefault();
 
     const $selectColumnBtn = $(event.target);
+    const checked = $selectColumnBtn.data('column-checked');
+    $selectColumnBtn.data('column-checked', !checked);
+
     const $table = $selectColumnBtn.closest('table');
 
-    let $checkboxes = $table.find('tbody tr td:nth-child(' + $selectColumnBtn.data('column-num') + ') input[type=checkbox]');
-
-    checkboxes.forEach(($checkbox) => {
-      
-    });
+    $table
+      .find('tbody tr td:nth-child(' + $selectColumnBtn.data('column-num') + ') input[type=checkbox]')
+      .prop('checked', !checked);
   }
 }
