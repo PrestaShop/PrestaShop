@@ -32,7 +32,7 @@
       {/if}
       {if $category.image.large.url}
         <div class="category-cover">
-          <img src="{$category.image.large.url}" alt="{$category.name}">
+          <img src="{$category.image.large.url}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
         </div>
       {/if}
     </div>
