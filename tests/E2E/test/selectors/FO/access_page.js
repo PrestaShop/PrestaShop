@@ -20,15 +20,30 @@ module.exports = {
     review_page_link: '//*[@id="content"]//a[contains(text(),"%PAGENAME")]',
     not_found_erreur_message: '//*[@id="main"]//h1',
     page_content: '//*[@id="content"]/p',
-    footer_block: '//*[@id="footer"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
-    second_footer_block: '//*[@id="footer"]//div[@class="col-md-6 wrapper"][2]/p',
+    //displayFooter HOOK
+    footer_block_link_widget: '//*[@class="footer-container"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
+    footer_block_second_link_widget: '//*[@class="footer-container"]//div[@class="col-md-6 wrapper"][2]/p',
+    //DISPLAYFOOTERBEFORE
+    display_before_footer_linkwidget:'//*[@id="footer"]/div[1]/div/div[3]/div//p[contains(text(),"%NAME")]',
+    display_before_footer_second_linkwidget:'//*[@id="footer"]/div[1]/div/div[3]/div/div[2]/p',
+    //displayHome
     home_link_widget: '//*[@id="content"]/div[3]/div//p[contains(text(),"%HOMELINKWIDGET")]',
     second_home_link_widget: '//*[@id="content"]/div[3]//div[2]//p',
-    nav_link_widget: '//*[@id="header"]//div[@class="col-md-4 links"]//div[@class="col-md-6 wrapper"]//p[contains(text(),"%NAVLINKWIDGET")]',
-    second_nav_link_widget: '//*[@id="header"]//div[@class="col-md-4 links"]//div[3]//p',
+    //displayNav1
+    display_nav1_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[1]/div[2]/div//p[contains(text(),"%NAVLINKWIDGET")]',
+    second_display_nav1_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[1]/div[2]/div/div[2]/p',
+    //displayNav2
+    display_nav2_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[2]/div[4]/div//p[contains(text(),"%NAVLINKWIDGET")]',
+    second_display_nav2_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[2]/div[4]/div/div[2]/p',
     nav_full_width_link_widget: '//*[@id="header"]/div[3]/div//p[contains(text(),"%NAVFULLWIDTHLINKWIDGET")]',
-    nav_left_column_link_widget: '//*[@id="left-column"]/div[3]/div//p[contains(text(),"%NAVLEFTCOLUMNLINKWIDGET")]',
-    nav_shopping_cart_link_widget: '//*[@id="main"]//div[@class="card cart-summary"]//p[contains(text(),"%NAVSHOPPINGCARTLINKWIDGET")]',
-    nav_shopping_cart_footer_link_widget: '//*[@id="main"]//div[@class="cart-grid row"]//p[contains(text(),"%NAVSHOPPINGCARTFOOTERLINKWIDGET")]'
+    second_nav_full_width_link_widget: '//*[@id="header"]/div[3]/div/div[2]/p',
+    nav_left_column_link_widget: '//*[@id="left-column"]//div[contains(@class,"links")]//p[contains(text(),"%NAVLEFTCOLUMNLINKWIDGET")]',
+    second_nav_left_column_link_widget: '(//*[@id="left-column"]//div[contains(@class,"links")]//p)[2]',
+    nav_shopping_cart_link_widget: '//*[@class="card cart-summary"]//div[contains(@class,"links")]//p[contains(text(),"%NAVSHOPPINGCARTLINKWIDGET")]',
+    second_shopping_cart_link_widget: '(//*[@class="card cart-summary"]//div[contains(@class,"links")]//p)[2]',
+    nav_shopping_cart_footer_link_widget: '//div[contains(@class,"cart-grid-body")]//p[contains(text(),"%NAVSHOPPINGCARTFOOTERLINKWIDGET")]',
+    second_nav_shopping_cart_footer_link_widget: '//div[contains(@class,"cart-grid-body")]//div[2]/p',
+    display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div//p[contains(text(),"%DISPLAYTOP")]',
+    second_display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div/div[2]/p'
   }
 };

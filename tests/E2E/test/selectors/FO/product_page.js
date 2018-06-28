@@ -31,9 +31,11 @@ module.exports = {
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
     filename_link: '(//*[@id="attachments"]//a)[1]',
-    widget_after_product_thumbs: '//*[@id="content"]//p[contains(text(),"%NAME")]',
-    second_widget_after_product_thumbs:'//*[@id="content"]//div[2]/p',
     product_footer_linkwidget:'//*[@id="main"]/div[2]//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
-    second_product_footer_linkwidget:'//*[@id="main"]/div[2]/div/div[2]/p'
+    second_product_footer_linkwidget:'//*[@id="main"]/div[2]/div/div[2]/p',
+    widget_after_product_thumbs: '//*[@id="content"]//div[contains(@class,"links")]//p[contains(text(),"%NAME")]',
+    second_widget_after_product_thumbs:'//*[@id="content"]//div[contains(@class,"links")]//div[2]/p',
+    display_footer_product_linkwidget:'//*[@id="main"]/div[2]/div//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
+    display_second_footer_product_linkwidget:'//*[@id="main"]/div[2]/div/div[2]/p'
   }
 };

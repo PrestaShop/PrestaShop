@@ -123,6 +123,10 @@ class CommonClient {
     return this.client.end();
   }
 
+  closeWindow(id){
+    return this.client.closeWindow(id);
+  }
+
   waitForExistAndClick(selector, pause = 0, timeout = 90000) {
     return this.client
       .pause(pause)
