@@ -60,11 +60,11 @@ scenario('Create order in the Back Office', () => {
     test('should check that the "shipping cost" is equal to €8.40', () => client.checkTextValue(OrderPage.shipping_cost, '€8.40'));
     test('should check that the "order message" is equal to "Order message test"', () => client.checkTextValue(OrderPage.message_order, 'Order message test'));
     test('should check "the product information"', () => client.checkTextValue(OrderPage.product_Url, ('Beige', productData.name, productData.reference, 'M'), 'contain'));
-    test('should check that the "quantity" is  equal to "4"', () => client.checkTextValue(OrderPage.order_quantity, '4'));
+    test('should check that the "quantity" is  equal to "4"', () => client.checkTextValue(OrderPage.order_quantity.replace("%NUMBER", 1), '4'));
     test('should check "basic price" ', () => {
       return promise
         .then(() => client.scrollWaitForExistAndClick(OrderPage.edit_product_button, 50))
-        .then(() => client.checkTextValue(OrderPage.product_basic_price, global.basic_price));
+        .then(() => client.checkTextValue(OrderPage.product_basic_price.replace("%NUMBER", 1), global.basic_price));
     });
     test('should check that the "customer" is equal to "John DOE"', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', "contain"));
     test('should set order status to Payment accepted ', () => client.updateStatus('Delivered'));
