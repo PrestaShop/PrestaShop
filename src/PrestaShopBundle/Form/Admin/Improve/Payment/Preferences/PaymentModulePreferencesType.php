@@ -288,6 +288,8 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function sortPaymentModules(array $paymentModules)
     {
+        $sortingBy = [];
+
         foreach ($paymentModules as $key => $paymentModule) {
             $sortingBy[$key] = $paymentModule->get('displayName');
         }
