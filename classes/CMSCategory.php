@@ -246,48 +246,50 @@ class CMSCategoryCore extends ObjectModel
         }
     }
 
+    /**
+     * Directly call the parent of delete, in order to avoid recursion
+     *
+     * @return bool Deletion result
+     */
+    public function deleteLite()
+    {
+        return parent::delete();
+    }
+
     public function delete()
     {
-        if ($this->id == 1) {
+        if ((int)$this->id === 1) {
             return false;
         }
 
         $this->clearCache();
 
-        // Get children categories
-        $to_delete = array((int)$this->id);
-        $this->recursiveDelete($to_delete, (int)$this->id);
-        $to_delete = array_unique($to_delete);
-
-        // Delete CMS Category and its child from database
-        $list = count($to_delete) > 1 ? implode(',', $to_delete) : (int)$this->id;
-        $id_shop_list = Shop::getContextListShopID();
-        if (count($this->id_shop_list)) {
-            $id_shop_list = $this->id_shop_list;
+        $objects = $this->getAllChildren();
+        $objects[] = $this;
+        foreach ($objects as $object) {
+            $object->deleteCMS();
+            $object->deleteLite();
+            CMSCategory::cleanPositions($object->id_parent);
         }
 
-        Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', array_map('intval', $id_shop_list)).')');
-
-        $has_multishop_entries = $this->hasMultishopEntries();
-        if (!$has_multishop_entries) {
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category` WHERE `id_cms_category` IN ('.$list.')');
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category_lang` WHERE `id_cms_category` IN ('.$list.')');
-        }
-
-        CMSCategory::cleanPositions($this->id_parent);
-
-        // Delete pages which are in categories to delete
-        $result = Db::getInstance()->executeS('
-		SELECT `id_cms`
-		FROM `'._DB_PREFIX_.'cms`
-		WHERE `id_cms_category` IN ('.$list.')');
-        foreach ($result as $c) {
-            $cms = new CMS((int)$c['id_cms']);
-            if (Validate::isLoadedObject($cms)) {
-                $cms->delete();
-            }
-        }
         return true;
+    }
+
+    /**
+     * Delete pages which are in CMSCategories to delete
+     *
+     * @return bool Deletion result
+     */
+    public function deleteCMS()
+    {
+        $result = true;
+        $cms = new PrestaShopCollection('CMS');
+        $cms->where('id_cms_category', '=', $this->id);
+        foreach ($cms as $c) {
+            $result &= $c->delete();
+        }
+
+        return $result;
     }
 
     /**
@@ -435,6 +437,28 @@ class CMSCategoryCore extends ObjectModel
             $results_array[] = $row;
         }
         return $results_array;
+    }
+
+    /**
+     * Return an array of all children of the current CMSCategory
+     *
+     * @return PrestaShopCollection Collection of CMSCategory
+     */
+    public function getAllChildren()
+    {
+        // Get children
+        $toDelete = array((int)$this->id);
+        $this->recursiveDelete($toDelete, (int)$this->id);
+        $toDelete = array_unique($toDelete);
+        // remove id of current CMSCategory because we want only ids of children
+        unset($toDelete[0]);
+
+        if (count($toDelete)) {
+            $children = new PrestaShopCollection('CMSCategory');
+            $children->where('id_cms_category', 'in', $toDelete);
+            return $children;
+        }
+        return $toDelete;
     }
 
     /**
