@@ -57,7 +57,7 @@ final class RowAction implements RowActionInterface
      * @param callable $callback   Action callback
      * @param string   $icon       Action icon name
      */
-    public function __construct($identifier, $name, callable $callback, $icon = '')
+    public function __construct($identifier, $name, callable $callback, $icon)
     {
         $this->name = $name;
         $this->callback = $callback;

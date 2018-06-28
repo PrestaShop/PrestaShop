@@ -51,7 +51,7 @@ final class BulkAction implements BulkActionInterface
      * @param string $name Translated action name
      * @param string $icon Action icon name
      */
-    public function __construct($id, $name, $icon = '')
+    public function __construct($id, $name, $icon)
     {
         $this->name = $name;
         $this->id = $id;
