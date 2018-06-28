@@ -286,24 +286,40 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->cartRules[$cartRuleFixtureId] = $cartRule;
     }
 
+    /**
+     * Silently add the cart rules from data
+     * if a cart rule does not exist or if it is already in cart, do nothing
+     *
+     * @param array $cartRuleFixtureIds
+     *
+     * @return bool
+     */
     protected function addCartRulesToCart(array $cartRuleFixtureIds)
     {
+        $allAdded = true;
         foreach ($cartRuleFixtureIds as $cartRuleFixtureId) {
             $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-            if ($cartRule !== null) {
+            if ($cartRule === null) {
+                $allAdded = false;
+            } else {
                 $this->cartRulesInCart[] = $cartRule;
-                $this->cart->addCartRule($cartRule->id);
+                if (!$this->cart->addCartRule($cartRule->id)) {
+                    $allAdded = false;
+                }
             }
         }
+
+        return $allAdded;
     }
 
     protected function addCartRuleToCart($cartRuleFixtureId)
     {
         $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-        if ($cartRule !== null) {
-            $this->cartRulesInCart[] = $cartRule;
-            $this->cart->addCartRule($cartRule->id);
+        if ($cartRule === null) {
+            return false;
         }
-    }
+        $this->cartRulesInCart[] = $cartRule;
 
+        return $this->cart->addCartRule($cartRule->id);
+    }
 }

@@ -29,7 +29,9 @@ namespace Tests\Unit\Core\Cart\Calculation\Carrier;
 use Address;
 use Cache;
 use Carrier;
+use CartRule;
 use Configuration;
+use Context;
 use Country;
 use Db;
 use RangePrice;
@@ -222,6 +224,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $carrier->name            = $carrierFixture['name'];
             $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
             $carrier->delay           = '28 days later';
+            $carrier->active          = 1;
             $carrier->add();
             $carrierPrices = [];
             foreach ($carrierFixture['ranges'] as $rangeFixture) {
@@ -258,7 +261,8 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
      *
      * @return Carrier|null
      */
-    protected function getCarrierFromFixtureId($id) {
+    protected function getCarrierFromFixtureId($id)
+    {
         if (isset($this->carriers[$id])) {
             return $this->carriers[$id];
         }
@@ -283,6 +287,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
                 throw new \Exception('Zone not found with fixture id = ' . $countryFixture['zoneId']);
             }
             $country->id_zone = $zone->id;
+            $country->active  = 1;
             $country->save();
         }
         foreach (static::STATE_FIXTURES as $k => $stateFixture) {
@@ -383,19 +388,24 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
         return null;
     }
 
-    protected function setCartCarrier($carrierId)
+    protected function setCartCarrierFromFixtureId($carrierFixtureId)
     {
-        if ($carrierId == 0) {
+        if ($carrierFixtureId == 0) {
             $this->cart->id_carrier = 0;
 
             return;
         }
 
-        $carrier = $this->getCarrierFromFixtureId($carrierId);
+        $carrier = $this->getCarrierFromFixtureId($carrierFixtureId);
         if ($carrier === null) {
-            throw new \Exception('Carrier not found with fixture id = ' . $carrierId);
+            throw new \Exception('Carrier not found with fixture id = ' . $carrierFixtureId);
         }
         $this->cart->id_carrier = $carrier->id;
+
+        $this->cart->update();
+
+        CartRule::autoRemoveFromCart();
+        CartRule::autoAddToCart();
     }
 
     protected function setCartAddress($addressId)
