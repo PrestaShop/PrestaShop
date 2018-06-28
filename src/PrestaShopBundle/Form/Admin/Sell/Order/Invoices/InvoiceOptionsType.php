@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
@@ -34,6 +35,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class InvoiceOptionsType generates "Invoice options" form
@@ -41,6 +44,20 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class InvoiceOptionsType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $invoiceModelChoiceProvider;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $invoiceModelChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->invoiceModelChoiceProvider = $invoiceModelChoiceProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,7 +74,8 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('reset_number_annually', SwitchType::class)
             ->add('year_position', ChoiceType::class, [
                 'choices'  => [
-                    //@todo choices
+                    'After the sequential number' => 0,
+                    'Before the sequential number' => 1,
                 ],
                 'expanded' => true,
             ])
@@ -75,11 +93,19 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'locales' => $this->locales,
             ])
             ->add('invoice_model', ChoiceType::class, [
-                'choices'  => [
-                    //@todo choices
-                ],
+                'choices'  => $this->invoiceModelChoiceProvider->getChoices(),
             ])
             ->add('use_disk_cache', SwitchType::class)
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'Admin.Orderscustomers.Feature',
+        ]);
     }
 }

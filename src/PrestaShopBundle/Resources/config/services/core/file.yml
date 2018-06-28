@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.file.finder.invoice_model:
+        class: 'PrestaShop\PrestaShop\Core\File\InvoiceModelFinder'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
