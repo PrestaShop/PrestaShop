@@ -151,7 +151,7 @@
             </div>
 
             <div class="form-group js-force-ids-form-group">
-                {{ ps.label_with_help(('Force all ID numbers'|trans), ('If you enable this option, your imported items ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                {{ ps.label_with_help(('Force all ID numbers'|trans), ("If you enable this option, your imported items' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items."|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.forceIDs) }}
                 {{ form_widget(importForm.forceIDs) }}
             </div>

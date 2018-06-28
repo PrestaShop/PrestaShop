@@ -45,11 +45,13 @@ final class CustomerPreferencesFormHandler extends FormHandler
      */
     public function save(array $data)
     {
-        if (empty($this->dataProvider->setData($data))) {
+        $errors = parent::save($data);
+
+        if (empty($errors)) {
             $this->handleB2bUpdate($data['general']['enable_b2b_mode']);
         }
 
-        return parent::save($data);
+        return $errors;
     }
 
     /**

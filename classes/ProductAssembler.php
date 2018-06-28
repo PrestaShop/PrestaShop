@@ -83,10 +83,10 @@ class ProductAssemblerCore
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
-                    AND p.id_product = $idProduct
                 LEFT JOIN {$prefix}stock_available sa
 			        ON sa.id_product = p.id_product 
-			        AND sa.id_shop = $idShop";
+			        AND sa.id_shop = $idShop
+			    WHERE p.id_product = $idProduct";
 
         $rows = Db::getInstance()->executeS($sql);
         if ($rows === false) {

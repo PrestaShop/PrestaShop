@@ -2853,7 +2853,7 @@ exit;
     protected static function throwDeprecated($error, $message, $class)
     {
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
-            trigger_error($error, E_USER_WARNING);
+            @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
         }
     }
