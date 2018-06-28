@@ -25,19 +25,131 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.)
  */
-final class Definition extends AbstractDefinition
+final class Definition implements DefinitionInterface
 {
     /**
-     * Get grid type
-     *
-     * @return string
+     * @var string  Unique grid identifier
      */
-    public function getType()
+    private $id;
+
+    /**
+     * @var string  Grid name
+     */
+    private $name;
+
+    /**
+     * @var ColumnInterface[]
+     */
+    private $columns;
+
+    /**
+     * @var GridActionCollectionInterface
+     */
+    private $gridActions;
+
+    /**
+     * @var BulkActionCollectionInterface
+     */
+    private $bulkActions;
+
+    /**
+     * @param string $id   Unique grid identifier (used as table ID when rendering table)
+     */
+    public function __construct($id)
     {
-        return 'standard';
+        $this->id = $id;
+
+        $this->gridActions = new GridActionCollection();
+        $this->bulkActions = new BulkActionCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setColumns(ColumnCollectionInterface $columns)
+    {
+        $this->columns = $columns;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBulkActions()
+    {
+        return $this->bulkActions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBulkActions(BulkActionCollectionInterface $bulkActions)
+    {
+        $this->bulkActions = $bulkActions;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGridActions()
+    {
+        return $this->gridActions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setGridActions(GridActionCollectionInterface $gridActions)
+    {
+        $this->gridActions = $gridActions;
+
+        return $this;
     }
 }

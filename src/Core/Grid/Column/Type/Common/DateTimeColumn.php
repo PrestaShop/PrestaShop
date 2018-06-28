@@ -3,6 +3,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DateTimeColumn extends AbstractColumn
@@ -22,10 +23,12 @@ final class DateTimeColumn extends AbstractColumn
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults([
-            'format' => 'Y-m-d H:i:s',
-        ]);
-
-        $resolver->setAllowedTypes('format', 'string');
+        $resolver
+            ->setDefaults([
+                'format' => 'Y-m-d H:i:s',
+                'filter_type' => DateRangeType::class,
+            ])
+            ->setAllowedTypes('format', 'string')
+        ;
     }
 }

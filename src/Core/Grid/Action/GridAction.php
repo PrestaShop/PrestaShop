@@ -25,12 +25,11 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
-use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidActionDataException;
 
 /**
  * Class PanelAction is responsible for holding single grid action data
  */
-final class PanelAction implements PanelActionInterface
+final class GridAction implements GridActionInterface
 {
     /**
      * @var string
@@ -64,31 +63,6 @@ final class PanelAction implements PanelActionInterface
         $this->name = $name;
         $this->icon = $icon;
         $this->type = $type;
-    }
-
-    /**
-     * Create grid action from array data
-     *
-     * @param array $data
-     *
-     * @return PanelAction
-     *
-     * @throws InvalidActionDataException
-     */
-    public static function fromArray(array $data)
-    {
-        if (false === isset($data['id'], $data['name'], $data['icon'], $data['type'])) {
-            throw new InvalidActionDataException(
-                'Invalid action data given. Check that action data has required attributes: "id", "name", "type" "icon".'
-            );
-        }
-
-        return new self(
-            $data['id'],
-            $data['name'],
-            $data['icon'],
-            $data['type']
-        );
     }
 
     /**

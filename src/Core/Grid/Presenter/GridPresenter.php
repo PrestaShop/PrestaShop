@@ -27,11 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Extension\FilterableColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -72,8 +70,8 @@ final class GridPresenter implements GridPresenterInterface
             'filter_form' => $filterForm->createView(),
             'columns' => $columns,
             'actions' => [
-                'panel' => [],
-                'bulk' => [],
+                'grid' => $definition->getGridActions()->toArray(),
+                'bulk' => $definition->getBulkActions()->toArray(),
             ],
             'data' => [
                 'rows' => $data->getRows(),
@@ -92,7 +90,7 @@ final class GridPresenter implements GridPresenterInterface
     }
 
     /**
-     * Get presented columns
+     * Get presented columns with filter form
      *
      * @param DefinitionInterface $definition
      *
@@ -101,33 +99,30 @@ final class GridPresenter implements GridPresenterInterface
     private function presentColumns(DefinitionInterface $definition)
     {
         $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
-
         $columnsArray = [];
 
         /** @var ColumnInterface $column */
         foreach ($definition->getColumns() as $column) {
             $resolver = new OptionsResolver();
             $column->configureOptions($resolver);
-            $options = $resolver->resolve($column->getOptions());
+            $columnOptions = $resolver->resolve($column->getOptions());
 
             $columnsArray[] = [
                 'id' => $column->getId(),
                 'name' => $column->getName(),
                 'type' => $column->getType(),
-                'options' => $options,
+                'options' => $columnOptions,
             ];
 
-            if ($column instanceof FilterableColumnInterface) {
-                if (isset(
-                    $options[$column->getFilterTypeOptionName()],
-                    $options[$column->getFilterTypeOptionsOptionName()]
-                )) {
-                    $formBuilder->add(
-                        $column->getId(),
-                        $options[$column->getFilterTypeOptionName()],
-                        $options[$column->getFilterTypeOptionsOptionName()]
-                    );
-                }
+            if (isset(
+                $columnOptions['filter_type'],
+                $columnOptions['filter_type_options']
+            )) {
+                $formBuilder->add(
+                    $column->getId(),
+                    $columnOptions['filter_type'],
+                    $columnOptions['filter_type_options']
+                );
             }
         }
 
@@ -135,28 +130,5 @@ final class GridPresenter implements GridPresenterInterface
             $columnsArray,
             $formBuilder->getForm(),
         ];
-    }
-
-    /**
-     * @param array $columns
-     * @param DefinitionInterface $definition
-     *
-     * @return FormInterface
-     */
-    private function buildFilterForm(array $columns, DefinitionInterface $definition)
-    {
-        $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
-
-        foreach ($columns as $column) {
-            if (isset($column['options']['filter_type'], $column['options']['filter_type_options'])) {
-                $formBuilder->add(
-                    $column['id'],
-                    $column['options']['filter_type'],
-                    $column['options']['filter_type_options']
-                );
-            }
-        }
-
-        return $formBuilder->getForm();
     }
 }

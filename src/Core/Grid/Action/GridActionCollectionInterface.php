@@ -26,36 +26,26 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
+use Iterator;
+
 /**
- * Interface PanelActionInterface
+ * Interface PanelActionCollectionInterface defines contract for grid action collection
  */
-interface PanelActionInterface
+interface GridActionCollectionInterface extends Iterator
 {
     /**
-     * Return unique action identifier
+     * Add grid action to collection
      *
-     * @return string
+     * @param GridActionInterface $action
+     *
+     * @return self
      */
-    public function getId();
+    public function add(GridActionInterface $action);
 
     /**
-     * Returns translated action name
+     * Get grid panel actions as array
      *
-     * @return string
+     * @return array
      */
-    public function getName();
-
-    /**
-     * Returns action icon name
-     *
-     * @return string
-     */
-    public function getIcon();
-
-    /**
-     * Returns grid action type
-     *
-     * @return string
-     */
-    public function getType();
+    public function toArray();
 }

@@ -46,12 +46,20 @@ interface ColumnCollectionInterface extends Iterator, Countable
     /**
      * Add column after given column
      *
-     * @param string          $id Column id
+     * @param string          $id     Column id
      * @param ColumnInterface $column
      *
      * @return self
      */
     public function addAfter($id, ColumnInterface $column);
+
+    /**
+     * @param string          $id     Column id
+     * @param ColumnInterface $column
+     *
+     * @return self
+     */
+    public function addBefore($id, ColumnInterface $column);
 
     /**
      * Remove column from collection
@@ -61,11 +69,4 @@ interface ColumnCollectionInterface extends Iterator, Countable
      * @return self
      */
     public function remove($id);
-
-    /**
-     * Get column collection as array
-     *
-     * @return array
-     */
-    public function toArray();
 }

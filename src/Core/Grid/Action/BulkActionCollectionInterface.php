@@ -37,6 +37,8 @@ interface BulkActionCollectionInterface extends Iterator
      * Add bulk action to collection
      *
      * @param BulkActionInterface $bulkAction
+     *
+     * @return self
      */
     public function add(BulkActionInterface $bulkAction);
 

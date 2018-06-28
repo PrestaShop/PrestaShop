@@ -59,24 +59,6 @@ final class BulkAction implements BulkActionInterface
     }
 
     /**
-     * Create bulk action from array data
-     *
-     * @param array $data
-     *
-     * @return BulkAction
-     */
-    public static function fromArray(array $data)
-    {
-        $action = new self(
-            $data['id'],
-            $data['name'],
-            $data['icon']
-        );
-
-        return $action;
-    }
-
-    /**
      * @return string
      */
     public function getName()
