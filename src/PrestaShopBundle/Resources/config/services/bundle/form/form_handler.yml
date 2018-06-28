@@ -71,6 +71,16 @@ services:
               'generate_by_status': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
             - 'OrdersInvoicesByStatus'
 
+    prestashop.admin.order.invoices.options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.orders_invoices_by_status.data_provider'
+            -
+              'invoice_options': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
+            - 'OrdersInvoicesOptions'
+
     prestashop.admin.customer_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
