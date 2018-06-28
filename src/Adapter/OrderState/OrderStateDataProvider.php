@@ -34,20 +34,14 @@ use OrderState;
 class OrderStateDataProvider
 {
     /**
-     * Get order states choices in given language
+     * Get order states in given language
      *
      * @param int $languageId
      *
      * @return array
      */
-    public function getOrderStateChoices($languageId)
+    public function getOrderStates($languageId)
     {
-        $choices = [];
-
-        foreach (OrderState::getOrderStates($languageId) as $orderState) {
-            $choices[$orderState['name']] = $orderState['id_order_state'];
-        }
-
-        return $choices;
+        return OrderState::getOrderStates($languageId);
     }
 }
