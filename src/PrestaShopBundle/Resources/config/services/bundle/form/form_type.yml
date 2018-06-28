@@ -249,7 +249,7 @@ services:
         parent: 'form.type.common_type'
         public: true
         arguments:
-            - '@=service("prestashop.adapter.data_provider.order_state").getOrderStateChoices(service("prestashop.adapter.legacy.context").getLanguage().id)'
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
             - '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
         tags:
             - { name: form.type }
