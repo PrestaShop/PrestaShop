@@ -279,6 +279,22 @@ class CommonClient {
       .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1));
   }
 
+  /**
+   * This function allows to check the existence of file after downloading
+   * @param folderPath
+   * @param fileName
+   * @returns {*}
+   */
+  checkFile(folderPath, fileName, pause = 0) {
+    fs.stat(folderPath + fileName, function(err, stats) {
+      err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
+    });
+
+    return this.client
+      .pause(pause)
+      .then(() => expect(global.existingFile).to.be.true)
+  }
+
   waitForVisible(selector, timeout = 90000) {
     return this.client
       .waitForVisible(selector, timeout);
