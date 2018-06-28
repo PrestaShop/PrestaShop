@@ -856,7 +856,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_la
         <source>There is no result for this search. Update your filters to view other products.</source>
         <target>There is no result for this search. Update your filters to view other products.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig:136</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig:138</note>
       </trans-unit>
     </body>
   </file>

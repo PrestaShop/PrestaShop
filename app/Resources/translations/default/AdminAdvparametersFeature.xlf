@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/KeysReference/ProfileLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0b28a5799a32c687dad2c5183718ceac">
+        <source>SuperAdmin</source>
+        <target>SuperAdmin</target>
+        <note>Context:
+File: classes/lang/KeysReference/ProfileLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="f5130b14aee3fd950fae10a832e4aefe">
+        <source>Logistician</source>
+        <target>Logistician</target>
+        <note>Context:
+File: classes/lang/KeysReference/ProfileLang.php:28</note>
+      </trans-unit>
+      <trans-unit id="8d4f90eeea46d604a6410c9bd877f582">
+        <source>Translator</source>
+        <target>Translator</target>
+        <note>Context:
+File: classes/lang/KeysReference/ProfileLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="5ae0061f57027b2344a537eab86c1de2">
+        <source>Salesman</source>
+        <target>Salesman</target>
+        <note>Context:
+File: classes/lang/KeysReference/ProfileLang.php:30</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">

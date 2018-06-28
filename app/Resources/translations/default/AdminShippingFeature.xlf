@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/KeysReference/CarrierLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a8bbb000124c9697aa5d63e7e758b64d">
+        <source>Pick up in-store</source>
+        <target>Pick up in-store</target>
+        <note>Context:
+File: classes/lang/KeysReference/CarrierLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="5d671531babe55fff4ae63b94c80ea38">
+        <source>Delivery next day!</source>
+        <target>Delivery next day!</target>
+        <note>Context:
+File: classes/lang/KeysReference/CarrierLang.php:28</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="de62775a71fc2bf7a13d7530ae24a7ed">
