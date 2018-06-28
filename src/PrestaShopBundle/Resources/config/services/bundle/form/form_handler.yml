@@ -66,7 +66,7 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
-            - '@prestashop.admin.orders_invoices_by_status.data_provider'
+            - '@prestashop.admin.order.invoices.by_status.data_provider'
             -
               'generate_by_status': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
             - 'OrdersInvoicesByStatus'
@@ -76,7 +76,7 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
-            - '@prestashop.admin.orders_invoices_by_status.data_provider'
+            - '@prestashop.admin.order.invoices.by_status.data_provider'
             -
               'invoice_options': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
             - 'OrdersInvoicesOptions'

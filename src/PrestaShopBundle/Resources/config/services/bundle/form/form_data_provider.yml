@@ -15,7 +15,7 @@ services:
             - '@prestashop.adapter.validate'
             - '@prestashop.adapter.data_provider.order_invoice'
 
-    prestashop.admin.orders_invoices_by_status.data_provider:
+    prestashop.admin.order.invoices.by_status.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider'
         arguments:
             - '@prestashop.adapter.data_provider.order_invoice'
