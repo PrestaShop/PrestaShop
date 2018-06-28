@@ -18,9 +18,6 @@ services:
     prestashop.core.grid.definition.factory.log_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        public: true
-        arguments:
-            - '@templating.engine.twig'
 
     # Grid factories
     prestashop.core.grid.log_factory:
