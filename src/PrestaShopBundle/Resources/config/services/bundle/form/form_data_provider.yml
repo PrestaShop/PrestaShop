@@ -10,8 +10,6 @@ services:
 
     prestashop.admin.order.invoices.by_status.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider'
-        arguments:
-            - '@prestashop.adapter.data_provider.order_invoice'
 
     prestashop.admin.order.invoices.options.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider'
