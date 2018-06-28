@@ -52,6 +52,7 @@ class InvoicesController extends FrameworkBundleAdminController
 
         $byDateForm = $this->get('prestashop.admin.order.invoices.by_date.form_handler')->getForm();
         $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
+        $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
 
         return [
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
@@ -60,6 +61,7 @@ class InvoicesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'byDateForm' => $byDateForm->createView(),
             'byStatusForm' => $byStatusForm->createView(),
+            'optionsForm' => $optionsForm->createView(),
         ];
     }
 
@@ -185,6 +187,35 @@ class InvoicesController extends FrameworkBundleAdminController
                     $invoiceGenerator->generateInvoicesPDF($invoiceCollection);
                 }
             }
+        }
+
+        return $this->redirectToRoute('admin_order_invoices');
+    }
+
+    /**
+     * Process the Invoice Options configuration form.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processAction(Request $request)
+    {
+        $formHandler = $this->get('prestashop.admin.order.invoices.options.form_handler');
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if ($errors = $formHandler->save($data)) {
+                $this->flashErrors($errors);
+
+                return $this->redirectToRoute('admin_order_invoices');
+            }
+
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_order_invoices');

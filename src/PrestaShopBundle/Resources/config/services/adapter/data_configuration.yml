@@ -112,6 +112,11 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
+    prestashop.adapter.order.invoice_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
     prestashop.adapter.data_provider.language:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
 
