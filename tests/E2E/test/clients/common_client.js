@@ -475,6 +475,11 @@ class CommonClient {
     }
   }
 
+  refresh() {
+    return this.client
+      .refresh();
+  }
+
 }
 
 module.exports = CommonClient;
