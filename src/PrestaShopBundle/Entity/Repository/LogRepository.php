@@ -27,12 +27,15 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  */
-class LogRepository implements RepositoryInterface
+class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
     private $connection;
     private $databasePrefix;
@@ -92,7 +95,7 @@ class LogRepository implements RepositoryInterface
      * @param array $filters
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
-    private function getAllWithEmployeeInformationQuery($filters)
+    public function getAllWithEmployeeInformationQuery($filters)
     {
         $employeeTable = $this->databasePrefix.'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
@@ -104,7 +107,7 @@ class LogRepository implements RepositoryInterface
         },ARRAY_FILTER_USE_KEY);
 
         $qb = $queryBuilder
-            ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
+            ->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
             ->from($this->logTable, 'l')
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
             ->orderBy($filters['orderBy'], $filters['sortOrder'])
@@ -147,5 +150,93 @@ class LogRepository implements RepositoryInterface
         $platform   = $this->connection->getDatabasePlatform();
 
         return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
+    }
+
+    /**
+     * Get query that searches grid rows
+     *
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $qb = $this->buildGridQuery($searchCriteria);
+        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
+            ->orderBy(
+                $searchCriteria->getOrderBy(),
+                $searchCriteria->getOrderWay()
+            )
+            ->setFirstResult($searchCriteria->getOffset())
+            ->setMaxResults($searchCriteria->getLimit());
+
+        return $qb;
+    }
+
+    /**
+     * Get query that counts grid rows
+     *
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $qb = $this->buildGridQuery($searchCriteria);
+        $qb->select('COUNT(*)');
+
+        return $qb;
+    }
+
+    /**
+     * Build query body without select, sorting & limiting
+     *
+     * @param SearchCriteriaInterface|null $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    private function buildGridQuery(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $employeeTable = $this->databasePrefix.'employee';
+
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->logTable, 'l')
+            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
+
+        if (null === $searchCriteria) {
+            return $qb;
+        }
+
+        $filters = $searchCriteria->getFilters();
+        foreach ($filters as $filterName => $filterValue) {
+            if (empty($filterValue)) {
+                continue;
+            }
+
+            if ('employee' == $filterName) {
+                $qb->andWhere("e.lastname LIKE :employee OR e.firstname LIKE :employee");
+                $qb->setParameter('employee', '%'.$filterValue.'%');
+                continue;
+            }
+
+            if ('date_add' == $filterName) {
+                if (!empty($filterValue['from']) &&
+                    !empty($filterValue['to'])
+                ) {
+                    $qb->andWhere("l.date_add BETWEEN :date_from AND :date_to");
+                    $qb->setParameters(array(
+                        'date_from' => $filterValue['from'],
+                        'date_to' => $filterValue['to'],
+                    ));
+                }
+                continue;
+            }
+
+            $qb->andWhere("$filterName LIKE :$filterName");
+            $qb->setParameter($filterName, '%'.$filterValue.'%');
+        }
+
+        return $qb;
     }
 }
