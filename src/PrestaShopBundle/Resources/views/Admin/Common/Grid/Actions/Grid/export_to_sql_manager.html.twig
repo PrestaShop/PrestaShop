@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,28 +21,30 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+{{ include('@PrestaShop/Admin/Common/Grid/Actions/Grid/simple.html.twig', {'action': action, 'grid': grid}) }}
 
-use Iterator;
-
-/**
- * Interface PanelActionCollectionInterface defines contract for grid action collection
- */
-interface PanelActionCollectionInterface extends Iterator
-{
-    /**
-     * Add grid action to collection
-     *
-     * @param PanelActionInterface $action
-     */
-    public function add(PanelActionInterface $action);
-
-    /**
-     * Get grid panel actions as array
-     *
-     * @return array
-     */
-    public function toArray();
-}
+{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': grid.id ~ '_grid_ps_show_query_modal',
+  'title': action.name,
+  'closable': true,
+  'actions': [{
+    'type': 'button',
+    'label': 'Export to SQL Manager'|trans({}, 'Admin.Actions'),
+    'value': 'sql_manager',
+    'class': 'dropdown-item',
+  }],
+} %}
+  {% block content %}
+    <form method="post"
+          action="{{ getAdminLink('AdminRequestSql', true, {'addrequest_sql': 1}) }}"
+          id="{{ grid.id ~ '_grid_ps_show_query_modal_form' }}"
+    >
+      <div class="modal-body">
+        <textarea name="sql" rows="20" cols="65" title=""></textarea>
+        <input type="hidden" name="name" value="" />
+      </div>
+    </form>
+  {% endblock %}
+{% endembed %}

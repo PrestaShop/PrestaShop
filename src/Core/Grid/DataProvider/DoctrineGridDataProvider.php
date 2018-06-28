@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineGridDataProvider is responsible for returing grid data using Doctrine query builders
+ * Class DoctrineGridDataProvider is responsible for returning grid data using Doctrine query builders
  */
 final class DoctrineGridDataProvider implements GridDataProviderInterface
 {

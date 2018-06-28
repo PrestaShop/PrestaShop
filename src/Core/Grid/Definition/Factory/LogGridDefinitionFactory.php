@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -111,6 +115,46 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
             )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add(new GridAction(
+                'delete',
+                $this->trans('Erase all', [], 'Admin.Advparameters.Feature'),
+                'delete_forever',
+                'delete_all_logs'
+            ))
+            ->add(new GridAction(
+                'ps_refresh_list',
+                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
+                'refresh',
+                'simple'
+            ))
+            ->add(new GridAction(
+                'ps_show_query',
+                $this->trans('Show SQL query', [], 'Admin.Actions'),
+                'code',
+                'simple'
+            ))
+            ->add(new GridAction(
+                'ps_export_sql_manager',
+                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
+                'storage',
+                'export_to_sql_manager'
+            ))
+        ;
+    }
+
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(new BulkAction('id', $this->trans('Edit', [], 'Admin.Actions'), 'edit'))
         ;
     }
 }

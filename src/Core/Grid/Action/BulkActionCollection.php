@@ -36,31 +36,13 @@ use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
 {
     /**
-     * Create bulk collection from metho
-     *
-     * @param array $data
-     *
-     * @return BulkActionCollection
-     */
-    public static function fromArray(array $data)
-    {
-        $collection = new self();
-
-        foreach ($data as $actionArray) {
-            $action = BulkAction::fromArray($actionArray);
-
-            $collection->add($action);
-        }
-
-        return $collection;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function add(BulkActionInterface $bulkAction)
     {
         $this->items[$bulkAction->getId()] = $bulkAction;
+
+        return $this;
     }
 
     /**

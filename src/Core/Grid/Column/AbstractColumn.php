@@ -2,14 +2,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\Extension\FilterableColumnInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class AbtractColumn implements reusable column methods
  */
-abstract class AbstractColumn implements ColumnInterface, FilterableColumnInterface
+abstract class AbstractColumn implements ColumnInterface
 {
     /**
      * @var string
@@ -83,32 +82,17 @@ abstract class AbstractColumn implements ColumnInterface, FilterableColumnInterf
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'filter_type' => TextType::class,
-            'filter_type_options' => [
-                'required' => false,
-            ],
-            'sortable' => true,
-        ]);
-
-        $resolver->setAllowedTypes('filter_type', ['string', 'null']);
-        $resolver->setAllowedTypes('filter_type_options', 'array');
-        $resolver->setAllowedTypes('sortable', 'bool');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilterTypeOptionName()
-    {
-        return 'filter_type';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilterTypeOptionsOptionName()
-    {
-        return 'filter_type_options';
+        $resolver
+            ->setDefaults([
+                'filter_type' => TextType::class,
+                'filter_type_options' => [
+                    'required' => false,
+                ],
+                'sortable' => true,
+            ])
+            ->setAllowedTypes('filter_type', ['string', 'null'])
+            ->setAllowedTypes('filter_type_options', 'array')
+            ->setAllowedTypes('sortable', 'bool')
+        ;
     }
 }

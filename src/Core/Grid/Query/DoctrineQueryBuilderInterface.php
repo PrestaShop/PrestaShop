@@ -30,7 +30,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineQueryBuilderInterface defines contract to retrieve Doctrine query buildrers needed to get grid data.
+ * Class DoctrineQueryBuilderInterface defines contract to retrieve Doctrine query builders needed to get grid data.
  */
 interface DoctrineQueryBuilderInterface
 {

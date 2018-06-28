@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 
 /**
@@ -39,13 +41,6 @@ interface DefinitionInterface
      * @return string
      */
     public function getId();
-
-    /**
-     * Get grid type
-     *
-     * @return string
-     */
-    public function getType();
 
     /**
      * Get grid name
@@ -78,4 +73,32 @@ interface DefinitionInterface
      * @return self
      */
     public function setColumns(ColumnCollectionInterface $columns);
+
+    /**
+     * @return BulkActionCollectionInterface
+     */
+    public function getBulkActions();
+
+    /**
+     * @param BulkActionCollectionInterface $bulkActions
+     *
+     * @return self
+     */
+    public function setBulkActions(BulkActionCollectionInterface $bulkActions);
+
+    /**
+     * Get grid actions
+     *
+     * @return GridActionCollectionInterface
+     */
+    public function getGridActions();
+
+    /**
+     * Set grid actions
+     *
+     * @param GridActionCollectionInterface $gridActions
+     *
+     * @return self
+     */
+    public function setGridActions(GridActionCollectionInterface $gridActions);
 }

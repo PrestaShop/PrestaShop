@@ -20,10 +20,11 @@ final class BulkActionColumn extends AbstractColumn
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([
-            'bulk_value',
-        ]);
-
-        $resolver->setAllowedTypes('bulk_value', 'string');
+        $resolver
+            ->setRequired([
+                'bulk_value',
+            ])
+            ->setAllowedTypes('bulk_value', 'string')
+        ;
     }
 }

@@ -31,35 +31,18 @@ use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 /**
  * Class PanelActionCollection is responsible for holding single grid actions
  *
- * @property PanelActionInterface[] $items
+ * @property GridActionInterface[] $items
  */
-final class PanelActionCollection extends AbstractCollection implements PanelActionCollectionInterface
+final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
 {
-    /**
-     * Create grid action collection from array data
-     *
-     * @param array $data
-     *
-     * @return PanelActionCollection
-     */
-    public static function fromArray(array $data)
-    {
-        $actions = new self();
-
-        foreach ($data as $actionArray) {
-            $action = PanelAction::fromArray($actionArray);
-            $actions->add($action);
-        }
-
-        return $actions;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function add(PanelActionInterface $action)
+    public function add(GridActionInterface $action)
     {
         $this->items[$action->getId()] = $action;
+
+        return $this;
     }
 
     /**

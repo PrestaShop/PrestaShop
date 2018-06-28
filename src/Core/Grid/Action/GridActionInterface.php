@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,40 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if grid.actions is not empty %}
-  <div class="btn-toolbar float-right" role="toolbar">
-    {{ renderhook('displayDashboardToolbarIcons') }}
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-    {% for action in grid.actions.panel %}
-      {{ include('@PrestaShop/Admin/Common/Grid/Actions/Panel/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
-    {% endfor %}
-  </div>
-{% endif %}
+/**
+ * Interface PanelActionInterface
+ */
+interface GridActionInterface
+{
+    /**
+     * Return unique action identifier
+     *
+     * @return string
+     */
+    public function getId();
+
+    /**
+     * Returns translated action name
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Returns action icon name
+     *
+     * @return string
+     */
+    public function getIcon();
+
+    /**
+     * Returns grid action type
+     *
+     * @return string
+     */
+    public function getType();
+}

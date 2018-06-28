@@ -58,7 +58,23 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
             ));
         }
 
-        //@todo: implement add after
+        //@todo: implement actual inserting after column
+
+        $this->add($newColumn);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addBefore($id, ColumnInterface $newColumn)
+    {
+        if (!isset($this->items[$id])) {
+            throw new ColumnNotFoundException(sprintf(
+                'Column with id "%s" was not found.', $id
+            ));
+        }
+
+        //@todo: implement actual inserting before column
 
         $this->add($newColumn);
     }
@@ -73,27 +89,5 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
         }
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        $columnsArray = [];
-
-        foreach ($this->items as $key => $column) {
-            $resolver = new OptionsResolver();
-            $column->configureOptions($resolver);
-
-            $columnsArray[] = [
-                'id' => $column->getId(),
-                'name' => $column->getName(),
-                'type' => $column->getType(),
-                'options' => $resolver->resolve($column->getOptions()),
-            ];
-        }
-
-        return $columnsArray;
     }
 }

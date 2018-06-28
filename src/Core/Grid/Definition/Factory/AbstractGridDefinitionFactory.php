@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -46,6 +48,14 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             ->setName($this->getName())
             ->setColumns($this->getColumns())
         ;
+
+        if (null !== $bulkActions = $this->getBulkActions()) {
+            $definition->setBulkActions($bulkActions);
+        }
+
+        if (null !== $gridActions = $this->getGridActions()) {
+            $definition->setGridActions($gridActions);
+        }
 
         return $definition;
     }
@@ -70,6 +80,26 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      * @return ColumnCollectionInterface
      */
     abstract protected function getColumns();
+
+    /**
+     * Get defined grid actions
+     *
+     * @return GridActionCollectionInterface|null
+     */
+    protected function getGridActions()
+    {
+        return null;
+    }
+
+    /**
+     * Get defined bulk actions
+     *
+     * @return BulkActionCollectionInterface|null
+     */
+    protected function getBulkActions()
+    {
+        return null;
+    }
 
     /**
      * @param string $id
