@@ -36,17 +36,6 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class InvoicesByStatusDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var OrderInvoiceDataProvider
-     */
-    private $orderInvoiceDataProvider;
-
-    public function __construct(
-        OrderInvoiceDataProvider $orderInvoiceDataProvider
-    ) {
-        $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getData()
