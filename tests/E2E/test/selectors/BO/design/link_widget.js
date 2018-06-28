@@ -14,18 +14,14 @@ module.exports = {
     save_button: '//*[@id="configuration_form_submit_btn"]',
     link_widget_table: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]',
     link_widget_configuration_bloc: '//*[@id="configuration_form"]//h3',
-
-    second_element_hook_in_table:'//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]',
-
-    last_widget_name_in_displayFooter_block: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[last()]//td[3]',
+    hook_in_table:'//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]',
+    last_widget_name_block: '//div[normalize-space(text())="%HOOK"]/following-sibling::table/tbody/tr[last()]//td[3]',
     last_widget_drag_in_displayFooter_block: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[last()]//td[2]/div',
     first_widget_drag_in_displayFooter_block: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[1]',
-
-
-
-
-
-    second_widget_in_displayFooter_block: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]//td[3]'
+    second_widget_in_displayFooter_block: '//div[contains(text(),"%HOOK")]/following-sibling::table/tbody/tr[2]//td[3]',
+    edit_display_footer_created_hook: '//div[contains(text(),"displayFooter")]/following-sibling::table/tbody/tr[last()]/td[4]//a',
+    delete_display_footer_created_hook: '//div[contains(text(),"displayLeftColumn")]/following-sibling::table/tbody/tr[last()]/td[4]//button',
+    delete_button: '//div[contains(text(),"displayLeftColumn")]/following-sibling::table/tbody/tr[last()]/td[4]//ul/li/a'
   }
 };
 
