@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,21 +43,20 @@ class GenerateByStatusType extends CommonAbstractType
     /**
      * @var array
      */
-    private $orderStateChoices;
-
-    /**
-     * @var array
-     */
     private $orderCountsByState;
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $orderStateChoiceProvider;
 
     /**
-     * @param array $orderStateChoices
+     * @param FormChoiceProviderInterface $orderStateChoiceProvider
      * @param array $orderCountsByState
      */
-    public function __construct(array $orderStateChoices, array $orderCountsByState)
+    public function __construct(FormChoiceProviderInterface $orderStateChoiceProvider, array $orderCountsByState)
     {
-        $this->orderStateChoices = $orderStateChoices;
         $this->orderCountsByState = $orderCountsByState;
+        $this->orderStateChoiceProvider = $orderStateChoiceProvider;
     }
 
     /**
@@ -68,7 +68,7 @@ class GenerateByStatusType extends CommonAbstractType
             ->add('order_states', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => true,
-                'choices' => $this->orderStateChoices,
+                'choices' => $this->orderStateChoiceProvider->getChoices(),
             ])
         ;
     }
