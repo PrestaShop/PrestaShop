@@ -2736,6 +2736,7 @@ class AdminControllerCore extends Controller
                 $this->context->cookie->last_activity = time();
             }
         }
+
         if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack())) {
             if (isset($this->context->employee)) {
                 $this->context->employee->logout();
@@ -2744,7 +2745,16 @@ class AdminControllerCore extends Controller
             if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email'))) {
                 $email = Tools::getValue('email');
             }
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : '').($email ? '&email='.$email : ''));
+
+            Tools::redirectAdmin(
+                $this->context->link->getAdminLink('AdminLogin') .
+                (
+                    !isset($_GET['logout']) &&
+                    $this->controller_name != 'AdminNotFound' &&
+                    Tools::getValue('controller') ? '&redirect='.$this->controller_name : ''
+                ) .
+                ($email ? '&email='.$email : '')
+            );
         }
         // Set current index
         $current_index = 'index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
