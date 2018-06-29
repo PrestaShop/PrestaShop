@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Version\Exception;
+namespace PrestaShop\PrestaShop\Core\Foundation\Exception;
 
 use Exception;
 
@@ -34,27 +34,17 @@ use Exception;
 class InvalidVersionException extends Exception
 {
     /**
-     * Creates an exception for the invalid type.
+     * Construct
      *
-     * @return static The created exception.
+     * @param string $version The provided PrestaShop version.
      */
-    public static function mustBeAString()
+    public function __construct($version)
     {
-        return new static('A valid version must be a string.');
-    }
-
-    /**
-     * Creates an exception for the invalid version name.
-     *
-     * @param string  $versionName  The version name.
-     *
-     * @return static The created exception.
-     */
-    public static function mustBeValidName($versionName)
-    {
-        return new static(sprintf(
-            'You provided an invalid version string ("%s"). A valid version string must contain four numeric characters divided by three "." characters, for example "1.7.4.0".',
-            $versionName
-        ));
+        $message = sprintf(
+            'You provided an invalid version string ("%s"). A valid version string '.
+            'must contain numeric characters separated by "." characters, for example "1.7.4.0".',
+            $version
+        );
+        parent::__construct($message, 0, null);
     }
 }

@@ -3,7 +3,7 @@ services:
         public: true
 
     prestashop.core.foundation.version:
-        class: PrestaShop\PrestaShop\Core\Foundation\Version\Version
+        class: PrestaShop\PrestaShop\Core\Foundation\Version
         arguments:
             - !php/const AppKernel::VERSION
             - !php/const AppKernel::MAJOR_VERSION_STRING

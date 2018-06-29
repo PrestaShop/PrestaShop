@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
-use PrestaShop\PrestaShop\Core\Foundation\Version\Version;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -50,7 +49,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
         $pageContent = file_get_contents(
             'https://addons.prestashop.com/iframe/search-' . $versionHelper->getMajorVersion() . '.php?'
             . http_build_query([
-                'psVersion' => $versionHelper->getFullVersion(),
+                'psVersion' => $versionHelper->getVersion(),
                 'isoLang' => $this->getContext()->language->iso_code,
                 'isoCurrency' => $this->getContext()->currency->iso_code,
                 'isoCountry' => $this->getContext()->country->iso_code,
