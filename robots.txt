@@ -12,6 +12,9 @@ Allow: */modules/*.css
 Allow: */modules/*.js
 Allow: */modules/*.png
 Allow: */modules/*.jpg
+Allow: */themes/*/assets/cache/*.js
+Allow: */themes/*/assets/cache/*.css
+Allow: */themes/*/assets/css/*
 # Private pages
 Disallow: /*?order=
 Disallow: /*?tag=
@@ -75,19 +78,3 @@ Disallow: */upload/
 Disallow: */vendor/
 Disallow: */web/
 Disallow: */webservice/
-# Files
-Disallow: /password-recovery
-Disallow: /address
-Disallow: /addresses
-Disallow: /login
-Disallow: /cart
-Disallow: /discount
-Disallow: /order-history
-Disallow: /identity
-Disallow: /my-account
-Disallow: /order-follow
-Disallow: /credit-slip
-Disallow: /order
-Disallow: /search
-Disallow: /guest-tracking
-Disallow: /order-confirmation

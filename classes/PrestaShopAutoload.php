@@ -166,7 +166,7 @@ class PrestaShopAutoload
      */
     public function generateIndex()
     {
-        if (defined('_PS_CREATION_DATE_')) {
+        if (class_exists('Configuration') && defined('_PS_CREATION_DATE_')) {
             $creationDate = _PS_CREATION_DATE_;
             if (!empty($creationDate) && Configuration::get('PS_DISABLE_OVERRIDES')) {
                 $this->_include_override_path = false;
