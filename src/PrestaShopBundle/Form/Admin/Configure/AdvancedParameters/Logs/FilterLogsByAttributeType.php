@@ -77,6 +77,6 @@ final class FilterLogsByAttributeType extends CommonAbstractType
      */
     public function getBlockPrefix()
     {
-        return 'logs_filters_block';
+        return 'logs';
     }
 }

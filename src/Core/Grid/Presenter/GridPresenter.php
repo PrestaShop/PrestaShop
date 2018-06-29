@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 /**
  * Class GridPresenter is responsible for presenting grid
@@ -61,7 +63,7 @@ final class GridPresenter implements GridPresenterInterface
         list(
             $columns,
             $filterForm
-        ) = $this->presentColumns($definition);
+        ) = $this->presentColumns($definition, $grid->getSearchCriteria());
 
         return [
             'id' => $definition->getId(),
@@ -92,12 +94,20 @@ final class GridPresenter implements GridPresenterInterface
      * Get presented columns with filter form
      *
      * @param DefinitionInterface $definition
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return array
      */
-    private function presentColumns(DefinitionInterface $definition)
+    private function presentColumns(
+        DefinitionInterface $definition,
+        SearchCriteriaInterface $searchCriteria
+    )
     {
-        $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
+        $formBuilder = $this->formFactory->createNamedBuilder(
+            $definition->getId(),
+            FormType::class,
+            $searchCriteria->getFilters()
+        );
         $columnsArray = [];
 
         /** @var ColumnInterface $column */
