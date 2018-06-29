@@ -625,7 +625,7 @@ class AdminImportControllerCore extends AdminController
             $this->displayWarning($this->trans('The import directory must be writable (CHMOD 755 / 777).', array(), 'Admin.Advparameters.Notification'));
         }
 
-        $files_to_import = scandir(AdminImportController::getPath());
+        $files_to_import = scandir(AdminImportController::getPath(), SCANDIR_SORT_NONE);
         uasort($files_to_import, array('AdminImportController', 'usortFiles'));
         foreach ($files_to_import as $k => &$filename) {
             //exclude .  ..  .svn and index.php and all hidden files
@@ -4257,7 +4257,7 @@ class AdminImportControllerCore extends AdminController
 					WHERE `id_category` NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
                     ', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
                 Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 3');
-                foreach (scandir(_PS_CAT_IMG_DIR_) as $d) {
+                foreach (scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_CAT_IMG_DIR_.$d);
                     }
@@ -4328,7 +4328,7 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop`');
-                foreach (scandir(_PS_MANU_IMG_DIR_) as $d) {
+                foreach (scandir(_PS_MANU_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_MANU_IMG_DIR_.$d);
                     }
@@ -4338,7 +4338,7 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop`');
-                foreach (scandir(_PS_SUPP_IMG_DIR_) as $d) {
+                foreach (scandir(_PS_SUPP_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_SUPP_IMG_DIR_.$d);
                     }

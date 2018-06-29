@@ -685,7 +685,7 @@ class Install extends AbstractInstall
     {
         //clear image cache in tmp folder
         if (file_exists(_PS_TMP_IMG_DIR_)) {
-            foreach (scandir(_PS_TMP_IMG_DIR_) as $file) {
+            foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
                 if ($file[0] != '.' && $file != 'index.php') {
                     Tools::deleteFile(_PS_TMP_IMG_DIR_.$file);
                 }
@@ -845,7 +845,7 @@ class Install extends AbstractInstall
     {
         $modules = array();
         if (false) {
-            foreach (scandir(_PS_MODULE_DIR_) as $module) {
+            foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
                 if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_.$module) && file_exists(_PS_MODULE_DIR_.$module.'/'.$module.'.php')) {
                     $modules[] = $module;
                 }

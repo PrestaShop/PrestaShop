@@ -317,7 +317,7 @@ class AdminInvoicesControllerCore extends AdminController
         $templates = false;
 
         if (is_dir($directory)) {
-            $templates = glob($directory.'invoice-*.tpl');
+            $templates = glob($directory.'invoice-*.tpl', GLOB_NOSORT);
         }
 
         if (!$templates) {

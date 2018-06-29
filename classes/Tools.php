@@ -982,7 +982,7 @@ class ToolsCore
     {
         $dirname = rtrim($dirname, '/').'/';
         if (file_exists($dirname)) {
-            if ($files = scandir($dirname)) {
+            if ($files = scandir($dirname, SCANDIR_SORT_NONE)) {
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..' && $file != '.svn') {
                         if (is_dir($dirname.$file)) {
@@ -1028,7 +1028,7 @@ class ToolsCore
     */
     public static function clearXMLCache()
     {
-        foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
+        foreach (scandir(_PS_ROOT_DIR_ . '/config/xml', SCANDIR_SORT_NONE) as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
             if (($path_info == 'xml') && ($file != 'default.xml')) {
                 self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
@@ -3426,7 +3426,7 @@ exit;
     {
         $path = rtrim(rtrim($path, '\\'), '/').'/';
         $real_path = rtrim(rtrim($path.$dir, '\\'), '/').'/';
-        $files = scandir($real_path);
+        $files = scandir($real_path, SCANDIR_SORT_NONE);
         if (!$files) {
             return array();
         }
