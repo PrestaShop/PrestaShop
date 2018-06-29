@@ -1,0 +1,13 @@
+admin_payment_preferences:
+    path: /preferences
+    methods: [GET]
+    defaults:
+        _legacy_controller: AdminPaymentPreferences
+        _controller: PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:index
+
+admin_payment_preferences_process:
+    path: /preferences
+    methods: [POST]
+    defaults:
+        _legacy_controller: AdminPaymentPreferences
+        _controller: PrestaShopBundle:Admin\Improve\Payment\PaymentPreferences:processForm

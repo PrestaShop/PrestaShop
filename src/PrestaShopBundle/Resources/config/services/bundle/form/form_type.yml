@@ -398,3 +398,17 @@ services:
             - '@prestashop.adapter.legacy.configuration'
         tags:
             - { name: form.type }
+
+    form.type.payment.module_currency_restriction:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@prestashop.adapter.data_provider.country'
+        tags:
+            - { name: form.type }

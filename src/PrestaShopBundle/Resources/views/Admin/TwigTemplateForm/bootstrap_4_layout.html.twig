@@ -517,4 +517,57 @@
       </table>
     </div>
   {% endspaceless %}
-{% endblock %}
+{% endblock material_choice_table_widget %}
+
+{% block material_multiple_choice_table_widget %}
+  {% spaceless %}
+    <div class="choice-table table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ label }}</th>
+            {% for child_choice in form %}
+              <th class="text-center">
+                {% if child_choice.vars.multiple %}
+                  <a href="#"
+                     class="js-multiple-choice-table-select-column"
+                     data-column-num="{{ loop.index + 1 }}"
+                     data-column-checked="false"
+                  >
+                    {{ child_choice.vars.label }}
+                  </a>
+                {% else %}
+                  {{ child_choice.vars.label }}
+                {% endif %}
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for choice_name, choice_value in choices %}
+          <tr>
+            <td>
+              {{ choice_name }}
+            </td>
+            {% for child_choice_name, child_choice in form %}
+              <td class="text-center">
+                {% if child_choice_entry_index_mapping[choice_value][child_choice_name] is defined %}
+                  {% set entry_index = child_choice_entry_index_mapping[choice_value][child_choice_name] %}
+
+                  {% if child_choice.vars.multiple %}
+                    {{ form_widget(child_choice[entry_index], {'material_design': true}) }}
+                  {% else %}
+                    {{ form_widget(child_choice[entry_index]) }}
+                  {% endif %}
+                {% else %}
+                  --
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endspaceless %}
+{% endblock material_multiple_choice_table_widget %}

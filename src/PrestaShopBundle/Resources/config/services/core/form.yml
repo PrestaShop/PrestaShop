@@ -36,3 +36,15 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
             - '@prestashop.adapter.data_provider.country'
+
+    prestashop.core.form.choice_provider.group_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.group'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+    prestashop.core.form.choice_provider.carrier_by_reference_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.carrier'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

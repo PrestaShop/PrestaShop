@@ -72,6 +72,9 @@ let config = {
     ],
     geolocation: [
       './js/pages/geolocation'
+    ],
+    payment_preferences: [
+      './js/pages/payment-preferences'
     ]
   },
   output: {

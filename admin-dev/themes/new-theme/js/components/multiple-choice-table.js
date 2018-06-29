@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,12 +23,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+const $ = window.$;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * MultipleChoiceTable is responsible for managing common actions in multiple choice table form type
+ */
+export default class MultipleChoiceTable {
+  /**
+   * Init constructor
+   */
+  constructor() {
+    $(document).on('click', '.js-multiple-choice-table-select-column', (e) => this.handleSelectColumn(e));
+  }
 
-header('Location: ../../../../../../../');
-exit;
+  /**
+   * Check/uncheck all boxes in column
+   *
+   * @param {Event} event
+   */
+  handleSelectColumn(event) {
+    event.preventDefault();
+
+    const $selectColumnBtn = $(event.target);
+    const checked = $selectColumnBtn.data('column-checked');
+    $selectColumnBtn.data('column-checked', !checked);
+
+    const $table = $selectColumnBtn.closest('table');
+
+    $table
+      .find('tbody tr td:nth-child(' + $selectColumnBtn.data('column-num') + ') input[type=checkbox]')
+      .prop('checked', !checked);
+  }
+}

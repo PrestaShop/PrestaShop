@@ -26,39 +26,46 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CurrencyByIdChoiceProvider provides currency choices with ID values
+ * Class GroupByIdChoiceProvider is responsible for providing customer group choices with Id values
  */
-final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
+final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var CurrencyDataProvider
+     * @var GroupDataProvider
      */
-    private $currencyDataProvider;
+    private $groupDataProvider;
 
     /**
-     * @param CurrencyDataProvider $currencyDataProvider
+     * @var int
      */
-    public function __construct(CurrencyDataProvider $currencyDataProvider)
-    {
-        $this->currencyDataProvider = $currencyDataProvider;
+    private $langId;
+
+    /**
+     * @param GroupDataProvider $groupDataProvider
+     * @param int $langId
+     */
+    public function __construct(
+        GroupDataProvider $groupDataProvider,
+        $langId
+    ) {
+        $this->groupDataProvider = $groupDataProvider;
+        $this->langId = $langId;
     }
 
     /**
-     * Get currency choices
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getChoices()
     {
-        $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
         $choices = [];
+        $groups = $this->groupDataProvider->getGroups($this->langId);
 
-        foreach ($currencies as $currency) {
-            $choices[sprintf('%s (%s)', $currency['name'], $currency['iso_code'])] = $currency['id_currency'];
+        foreach ($groups as $group) {
+            $choices[$group['name']] = $group['id_group'];
         }
 
         return $choices;
