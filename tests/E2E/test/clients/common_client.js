@@ -321,6 +321,12 @@ class CommonClient {
     return this.client.switchWindow(id);
   }
 
+  switchTab(id) {
+    return this.client
+      .then(() => this.client.getTabIds())
+      .then((ids) => this.client.switchTab(ids[id]));
+  }
+
   isExisting(selector, pause = 0) {
     return this.client
       .pause(pause)
@@ -424,6 +430,13 @@ class CommonClient {
 
   deleteObjectElement(object, pos) {
     delete object[pos];
+  }
+
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
   }
 
   stringifyNumber(number) {
