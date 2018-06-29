@@ -55,7 +55,7 @@ function toolsConvertPrice($params, &$smarty)
     return Tools::convertPrice($params['price'], Context::getContext()->currency);
 }
 
-function smartyTranslate($params, &$smarty)
+function smartyTranslate($params, $smarty)
 {
     $translator = Context::getContext()->getTranslator();
 

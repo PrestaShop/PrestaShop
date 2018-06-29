@@ -94,7 +94,7 @@ function smartyRender($params, &$smarty)
     return $ui->render($params);
 }
 
-function smartyFormField($params, &$smarty)
+function smartyFormField($params, $smarty)
 {
     $scope = $smarty->createData(
         $smarty
@@ -113,7 +113,7 @@ function smartyFormField($params, &$smarty)
     return $tpl->fetch();
 }
 
-function smartyWidgetBlock($params, $content, &$smarty)
+function smartyWidgetBlock($params, $content, $smarty)
 {
     static $backedUpVariablesStack = array();
 
@@ -151,7 +151,7 @@ function smartyWidgetBlock($params, $content, &$smarty)
     }
 }
 
-function smartyTranslate($params, &$smarty)
+function smartyTranslate($params, $smarty)
 {
     global $_LANG;
 
