@@ -88,7 +88,9 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ],
                 'expanded' => true,
             ])
-            ->add('invoice_number', NumberType::class)
+            ->add('invoice_number', NumberType::class, [
+                'required' => false,
+            ])
             ->add('legal_free_text', TranslateType::class,
                 [
                     'type' => TextareaType::class,
