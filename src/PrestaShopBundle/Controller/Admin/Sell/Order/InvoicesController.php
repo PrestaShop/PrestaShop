@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use DateTime;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
