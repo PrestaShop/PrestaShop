@@ -26,29 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Invoice;
 
-use PrestaShop\PrestaShop\Adapter\PDF\PDFDataProvider;
-use PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator;
+use PrestaShop\PrestaShop\Core\DataProvider\PDFDataProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\InvoicePDFGeneratorInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 
 final class InvoicePDFGenerator implements InvoicePDFGeneratorInterface
 {
     /**
-     * @var PDFGenerator
+     * @var PDFGeneratorInterface
      */
-    private $pdfManager;
+    private $pdfGenerator;
 
     /**
-     * @var PDFDataProvider
+     * @var PDFDataProviderInterface
      */
     private $pdfDataProvider;
 
     /**
-     * @param PDFGenerator $pdfManager
-     * @param PDFDataProvider $pdfDataProvider
+     * @param PDFGeneratorInterface $pdfGenerator
+     * @param PDFDataProviderInterface $pdfDataProvider
      */
-    public function __construct(PDFGenerator $pdfManager, PDFDataProvider $pdfDataProvider)
-    {
-        $this->pdfManager = $pdfManager;
+    public function __construct(
+        PDFGeneratorInterface $pdfGenerator,
+        PDFDataProviderInterface $pdfDataProvider
+    ) {
+        $this->pdfGenerator = $pdfGenerator;
         $this->pdfDataProvider = $pdfDataProvider;
     }
 
@@ -57,7 +59,7 @@ final class InvoicePDFGenerator implements InvoicePDFGeneratorInterface
      */
     public function generateInvoicesPDF(array $orderInvoiceCollection)
     {
-        $this->pdfManager->generatePDF(
+        $this->pdfGenerator->generatePDF(
             $orderInvoiceCollection,
             $this->pdfDataProvider->getInvoiceTemplateType()
         );
