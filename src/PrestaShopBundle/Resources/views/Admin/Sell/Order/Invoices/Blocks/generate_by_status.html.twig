@@ -28,7 +28,7 @@
 {% form_theme generateByStatusForm _self %}
 
 {% block invoices_generate_by_status %}
-    <div class="col">
+    <div id="by-status-block" class="col">
         {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
         <div class="card">
             <h3 class="card-header">
@@ -57,21 +57,18 @@
         {% if parent_label_class is defined %}
             {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
         {% endif %}
-        {% if label is not same as(false) and label is empty %}
-            {% set label = name|humanize %}
-        {% endif %}
         <div class="md-checkbox">
             <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
                 {{- widget|raw -}}
                 <i class="md-checkbox-control"></i>
                 {% if orders_count > 0 %}
-                    {% set badgeClass = 'badge-success' %}
+                    {% set badgeType = 'success' %}
                 {% else %}
-                    {% set badgeClass = 'badge-danger' %}
+                    {% set badgeType = 'danger' %}
                 {% endif %}
-                <span class="badge {{ badgeClass }}">{{ orders_count }}</span>
+                <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
                 <span>
-                    {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+                    {{- label is not same as(false) ? label|raw -}}
                 </span>
             </label>
         </div>
