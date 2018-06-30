@@ -27,12 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use PDF;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Smarty;
 
 /**
  * Class PDFManager responsible for PDF generation using legacy code
  */
-class PDFManager
+final class PDFGenerator implements PDFGeneratorInterface
 {
     /**
      * @var Smarty
@@ -48,14 +49,11 @@ class PDFManager
     }
 
     /**
-     * Generates PDF out of given object and template using legacy generator
-     *
-     * @param array|\ObjectModel $object one object or collection of objects
-     * @param string $template name of the PDF template
+     * {@inheritdoc}
      */
-    public function generatePDF($object, $template)
+    public function generatePDF(array $objectCollection, $template)
     {
-        $pdf = new PDF($object, $template, $this->smarty);
+        $pdf = new PDF($objectCollection, $template, $this->smarty);
         $pdf->render();
     }
 }

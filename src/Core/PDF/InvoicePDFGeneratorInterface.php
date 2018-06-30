@@ -24,42 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Invoice;
+namespace PrestaShop\PrestaShop\Core\PDF;
 
-use PrestaShop\PrestaShop\Adapter\PDF\PDFDataProvider;
-use PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator;
-use PrestaShop\PrestaShop\Core\PDF\InvoicePDFGeneratorInterface;
-
-final class InvoicePDFGenerator implements InvoicePDFGeneratorInterface
+/**
+ * Interface InvoicePDFGeneratorInterface defines invoice PDF generator
+ */
+interface InvoicePDFGeneratorInterface
 {
     /**
-     * @var PDFGenerator
+     * Generates invoices PDF out of given order invoice collection
+     *
+     * @param array $orderInvoiceCollection
      */
-    private $pdfManager;
-
-    /**
-     * @var PDFDataProvider
-     */
-    private $pdfDataProvider;
-
-    /**
-     * @param PDFGenerator $pdfManager
-     * @param PDFDataProvider $pdfDataProvider
-     */
-    public function __construct(PDFGenerator $pdfManager, PDFDataProvider $pdfDataProvider)
-    {
-        $this->pdfManager = $pdfManager;
-        $this->pdfDataProvider = $pdfDataProvider;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function generateInvoicesPDF(array $orderInvoiceCollection)
-    {
-        $this->pdfManager->generatePDF(
-            $orderInvoiceCollection,
-            $this->pdfDataProvider->getInvoiceTemplateType()
-        );
-    }
+    public function generateInvoicesPDF(array $orderInvoiceCollection);
 }
