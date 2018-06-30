@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 /**
  * Class InvoiceOptionsConfiguration is responsible for saving & loading invoice configuration
  */
-class InvoiceOptionsConfiguration implements DataConfigurationInterface
+final class InvoiceOptionsConfiguration implements DataConfigurationInterface
 {
     /**
      * @var Configuration
