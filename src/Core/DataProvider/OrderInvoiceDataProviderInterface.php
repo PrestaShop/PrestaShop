@@ -23,37 +23,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter;
 
-use Validate as ValidateLegacy;
+namespace PrestaShop\PrestaShop\Core\DataProvider;
 
-class Validate
+use DateTimeInterface;
+
+/**
+ * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider
+ */
+interface OrderInvoiceDataProviderInterface
 {
-    public static function isOrderWay($way)
-    {
-        return ValidateLegacy::isOrderWay($way);
-    }
-
-    public static function isOrderBy($order)
-    {
-        return ValidateLegacy::isOrderBy($order);
-    }
-
-    public static function isDate($date)
-    {
-        return ValidateLegacy::isDate($date);
-    }
+    /**
+     * Returns all the order invoices that match the date interval
+     *
+     * @param DateTimeInterface $dateFrom
+     * @param DateTimeInterface $dateTo
+     *
+     * @return array collection of OrderInvoice objects
+     */
+    public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
 
     /**
-     * Check if HTML content is clean
+     * Returns all the order invoices by given status
      *
-     * @param string $html
-     * @param bool $allowIframe
+     * @param int $orderStateId
      *
-     * @return bool
+     * @return array collection of OrderInvoice objects
      */
-    public function isCleanHtml($html, $allowIframe = false)
-    {
-        return ValidateLegacy::isCleanHtml($html, $allowIframe);
-    }
+    public function getByStatus($orderStateId);
 }

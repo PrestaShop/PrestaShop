@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use DateTime;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -107,8 +108,8 @@ class InvoicesController extends FrameworkBundleAdminController
 
                 // Get invoices by submitted date interval
                 $invoiceCollection = $invoiceDataProvider->getByDateInterval(
-                    $data['generate_by_date']['date_from'],
-                    $data['generate_by_date']['date_to']
+                    new DateTime($data['generate_by_date']['date_from']),
+                    new DateTime($data['generate_by_date']['date_to'])
                 );
 
                 if (empty($invoiceCollection)) {
