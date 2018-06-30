@@ -76,8 +76,7 @@
                         {{ form_widget(invoiceOptionsForm.year_position) }}
                     </div>
                     <div class="form-group">
-                        {#@todo translation sprintf#}
-                        {{ ps.label_with_help('Invoice number'|trans, 'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ ps.label_with_help('Invoice number'|trans, 'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).'|trans({'%number%': invoiceOptionsForm.vars.next_invoice_number}, 'Admin.Orderscustomers.Help')) }}
                         {{ form_errors(invoiceOptionsForm.invoice_number) }}
                         {{ form_widget(invoiceOptionsForm.invoice_number) }}
                     </div>
