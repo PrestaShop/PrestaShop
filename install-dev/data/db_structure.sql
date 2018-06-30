@@ -1835,7 +1835,7 @@ CREATE TABLE `PREFIX_search_engine` (
 /* Index constructed by the search engine */
 CREATE TABLE `PREFIX_search_index` (
   `id_product` int(11) unsigned NOT NULL,
-  `id_word` int(11) unsigned NOT NULL,
+  `id_word` bigint(20) unsigned NOT NULL,
   `weight` smallint(4) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_word`, `id_product`),
   KEY `id_product` (`id_product`,`weight`)
@@ -1843,7 +1843,7 @@ CREATE TABLE `PREFIX_search_index` (
 
 /* List of words available for a given shop & lang */
 CREATE TABLE `PREFIX_search_word` (
-  `id_word` int(10) unsigned NOT NULL auto_increment,
+  `id_word` bigint(20) unsigned NOT NULL auto_increment,
   `id_shop` int(11) unsigned NOT NULL DEFAULT 1,
   `id_lang` int(10) unsigned NOT NULL,
   `word` varchar(15) NOT NULL,
