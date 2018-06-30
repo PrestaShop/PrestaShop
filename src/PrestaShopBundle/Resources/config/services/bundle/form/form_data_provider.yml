@@ -12,7 +12,6 @@ services:
     prestashop.admin.order.invoices.by_date.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
         arguments:
-            - '@prestashop.adapter.validate'
             - '@prestashop.adapter.data_provider.order_invoice'
 
     prestashop.admin.order.invoices.by_status.data_provider:

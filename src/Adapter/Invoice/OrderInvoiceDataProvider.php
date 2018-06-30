@@ -2,32 +2,28 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Invoice;
 
+use DateTimeInterface;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
 
 /**
  * Class OrderInvoiceDataProvider provides OrderInvoice data using legacy code
  */
-class OrderInvoiceDataProvider
+final class OrderInvoiceDataProvider implements OrderInvoiceDataProviderInterface
 {
     /**
-     * Returns all the order invoices that match the date interval
-     *
-     * @param string $dateFrom
-     * @param string $dateTo
-     *
-     * @return array collection of OrderInvoice objects
+     * {@inheritdoc}
      */
-    public function getByDateInterval($dateFrom, $dateTo)
+    public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo)
     {
-        return OrderInvoice::getByDateInterval($dateFrom, $dateTo);
+        return OrderInvoice::getByDateInterval(
+            $dateFrom->format('Y-m-d'),
+            $dateTo->format('Y-m-d')
+        );
     }
 
     /**
-     * Returns all the order invoices by given status
-     *
-     * @param int $orderStateId
-     *
-     * @return array collection of OrderInvoice objects
+     * {@inheritdoc}
      */
     public function getByStatus($orderStateId)
     {
