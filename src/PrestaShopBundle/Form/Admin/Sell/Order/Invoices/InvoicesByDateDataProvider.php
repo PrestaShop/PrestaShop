@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -37,20 +36,12 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class InvoicesByDateDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var Validate
-     */
-    private $validate;
-
-    /**
      * @var OrderInvoiceDataProvider
      */
     private $orderInvoiceDataProvider;
 
-    public function __construct(
-        Validate $validate,
-        OrderInvoiceDataProvider $orderInvoiceDataProvider
-    ) {
-        $this->validate = $validate;
+    public function __construct(OrderInvoiceDataProvider $orderInvoiceDataProvider)
+    {
         $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
     }
 
@@ -86,10 +77,11 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
     private function validate(array $data)
     {
         $errors = [];
-        $dateFrom = $data['generate_by_date']['date_from'];
-        $dateTo = $data['generate_by_date']['date_to'];
 
-        if (!$this->validate->isValidDate($dateFrom)) {
+        $dateFrom = date_create($data['generate_by_date']['date_from']);
+        $dateTo = date_create($data['generate_by_date']['date_to']);
+
+        if (false === $dateFrom) {
             $errors[] = [
                 'key' => 'Invalid "From" date',
                 'domain' => 'Admin.Orderscustomers.Notification',
@@ -97,7 +89,7 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
             ];
         }
 
-        if (!$this->validate->isValidDate($dateTo)) {
+        if (false === $dateTo) {
             $errors[] = [
                 'key' => 'Invalid "To" date',
                 'domain' => 'Admin.Orderscustomers.Notification',
