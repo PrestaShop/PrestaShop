@@ -83,8 +83,8 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('reset_number_annually', SwitchType::class)
             ->add('year_position', ChoiceType::class, [
                 'choices'  => [
-                    'After the sequential number' => 0,
-                    'Before the sequential number' => 1,
+                    $this->trans('After the sequential number', 'Admin.Orderscustomers.Feature') => 0,
+                    $this->trans('Before the sequential number', 'Admin.Orderscustomers.Feature') => 1,
                 ],
                 'expanded' => true,
             ])
