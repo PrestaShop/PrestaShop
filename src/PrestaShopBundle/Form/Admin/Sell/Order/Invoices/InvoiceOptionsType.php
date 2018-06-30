@@ -35,6 +35,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -49,13 +51,20 @@ class InvoiceOptionsType extends TranslatorAwareType
      */
     private $invoiceModelChoiceProvider;
 
+    /**
+     * @var int the next available invoice number
+     */
+    private $nextInvoiceNumber;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $invoiceModelChoiceProvider
+        FormChoiceProviderInterface $invoiceModelChoiceProvider,
+        $nextInvoiceNumber
     ) {
         parent::__construct($translator, $locales);
         $this->invoiceModelChoiceProvider = $invoiceModelChoiceProvider;
+        $this->nextInvoiceNumber = $nextInvoiceNumber;
     }
 
     /**
@@ -97,6 +106,11 @@ class InvoiceOptionsType extends TranslatorAwareType
             ])
             ->add('use_disk_cache', SwitchType::class)
         ;
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['next_invoice_number'] = $this->nextInvoiceNumber;
     }
 
     /**

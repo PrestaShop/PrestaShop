@@ -51,4 +51,11 @@ interface OrderInvoiceDataProviderInterface
      * @return array collection of OrderInvoice objects
      */
     public function getByStatus($orderStateId);
+
+    /**
+     * Returns the next available invoice number
+     *
+     * @return int
+     */
+    public function getNextInvoiceNumber();
 }

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Invoice;
 
 use DateTimeInterface;
+use Order;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
 
@@ -52,5 +53,13 @@ final class OrderInvoiceDataProvider implements OrderInvoiceDataProviderInterfac
     public function getByStatus($orderStateId)
     {
         return OrderInvoice::getByStatus($orderStateId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNextInvoiceNumber()
+    {
+        return Order::getLastInvoiceNumber() + 1;
     }
 }
