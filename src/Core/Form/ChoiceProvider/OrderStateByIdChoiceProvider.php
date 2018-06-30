@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider;
+use PrestaShop\PrestaShop\Core\DataProvider\OrderStateDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -35,13 +34,21 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
  */
 final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
 {
-    private $languageId;
     /**
-     * @var OrderStateDataProvider
+     * @var int language ID
+     */
+    private $languageId;
+
+    /**
+     * @var OrderStateDataProviderInterface
      */
     private $orderStateDataProvider;
 
-    public function __construct($languageId, OrderStateDataProvider $orderStateDataProvider) {
+    /**
+     * @param int $languageId language ID
+     * @param OrderStateDataProviderInterface $orderStateDataProvider
+     */
+    public function __construct($languageId, OrderStateDataProviderInterface $orderStateDataProvider) {
         $this->languageId = $languageId;
         $this->orderStateDataProvider = $orderStateDataProvider;
     }
