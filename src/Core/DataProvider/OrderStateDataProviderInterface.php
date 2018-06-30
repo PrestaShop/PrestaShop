@@ -24,21 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\OrderState;
-
-use OrderState;
-use PrestaShop\PrestaShop\Core\DataProvider\OrderStateDataProviderInterface;
+namespace PrestaShop\PrestaShop\Core\DataProvider;
 
 /**
- * Class OrderStateDataProvider provides OrderState data using legacy code
+ * Interface OrderStateDataProviderInterface defines OrderState data provider
  */
-final class OrderStateDataProvider implements OrderStateDataProviderInterface
+interface OrderStateDataProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * Get order states in given language
+     *
+     * @param int $languageId
+     *
+     * @return array
      */
-    public function getOrderStates($languageId)
-    {
-        return OrderState::getOrderStates($languageId);
-    }
+    public function getOrderStates($languageId);
 }
