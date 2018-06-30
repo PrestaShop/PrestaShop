@@ -28,8 +28,8 @@
 {% form_theme generateByStatusForm _self %}
 
 {% block invoices_generate_by_status %}
-    {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
     <div class="col">
+        {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
         <div class="card">
             <h3 class="card-header">
                 <i class="material-icons">schedule</i> {{ 'By order status'|trans }}
@@ -47,8 +47,8 @@
                 </div>
             </div>
         </div>
+        {{ form_end(generateByStatusForm) }}
     </div>
-    {{ form_end(generateByStatusForm) }}
 {% endblock %}
 
 {% block _form_generate_by_status_order_states_entry_label %}
