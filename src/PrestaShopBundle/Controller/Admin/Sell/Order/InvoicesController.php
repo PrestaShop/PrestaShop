@@ -88,25 +88,6 @@ class InvoicesController extends FrameworkBundleAdminController
 
             if ($errors = $formHandler->save($data)) {
                 $this->flashErrors($errors);
-            } else {
-                $invoiceDataProvider = $this->get('prestashop.adapter.data_provider.order_invoice');
-
-                // Get invoices by submitted date interval
-                $invoiceCollection = $invoiceDataProvider->getByDateInterval(
-                    new DateTime($data['generate_by_date']['date_from']),
-                    new DateTime($data['generate_by_date']['date_to'])
-                );
-
-                if (empty($invoiceCollection)) {
-                    $this->addFlash(
-                        'error',
-                        $this->trans('No invoice was found.', 'Admin.Orderscustomers.Notification')
-                    );
-                } else {
-                    // Generate PDF out of found invoices
-                    $invoiceGenerator = $this->get('prestashop.adapter.pdf_generator.invoice');
-                    $invoiceGenerator->generateInvoicesPDF($invoiceCollection);
-                }
             }
         }
 
@@ -134,28 +115,6 @@ class InvoicesController extends FrameworkBundleAdminController
 
             if ($errors = $formHandler->save($data)) {
                 $this->flashErrors($errors);
-            } else {
-                $invoiceDataProvider = $this->get('prestashop.adapter.data_provider.order_invoice');
-                $invoiceCollection = [];
-
-                foreach ($data['generate_by_status']['order_states'] as $orderStateId) {
-                    // Put invoices for each selected status into one collection
-                    $invoiceCollection = array_merge(
-                        $invoiceCollection,
-                        $invoiceDataProvider->getByStatus($orderStateId)
-                    );
-                }
-
-                if (empty($invoiceCollection)) {
-                    $this->addFlash(
-                        'error',
-                        $this->trans('No invoice was found.', 'Admin.Orderscustomers.Notification')
-                    );
-                } else {
-                    // Generate PDF out of found invoices
-                    $invoiceGenerator = $this->get('prestashop.adapter.pdf_generator.invoice');
-                    $invoiceGenerator->generateInvoicesPDF($invoiceCollection);
-                }
             }
         }
 
@@ -179,15 +138,11 @@ class InvoicesController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            if ($errors = $formHandler->save($data)) {
+            if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
-
-                return $this->redirectToRoute('admin_order_invoices');
+            } else {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             }
-
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_order_invoices');
