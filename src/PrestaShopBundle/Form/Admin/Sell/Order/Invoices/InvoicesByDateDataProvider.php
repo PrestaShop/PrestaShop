@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider;
+use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -36,11 +36,11 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class InvoicesByDateDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var OrderInvoiceDataProvider
+     * @var OrderInvoiceDataProviderInterface
      */
     private $orderInvoiceDataProvider;
 
-    public function __construct(OrderInvoiceDataProvider $orderInvoiceDataProvider)
+    public function __construct(OrderInvoiceDataProviderInterface $orderInvoiceDataProvider)
     {
         $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
     }
