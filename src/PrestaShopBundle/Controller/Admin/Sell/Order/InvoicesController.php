@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use DateTime;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +44,7 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @Template("@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @return array Template parameters
      */
@@ -70,29 +71,13 @@ class InvoicesController extends FrameworkBundleAdminController
      * Action that generates invoices PDF by date interval
      *
      * @param Request $request
-
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
      * @return RedirectResponse
      */
     public function generatePdfByDateAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error')
-            );
-
-            return $this->redirectToRoute('admin_order_invoices');
-        }
-
         $formHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
 
         $form = $formHandler->getForm();
@@ -132,29 +117,13 @@ class InvoicesController extends FrameworkBundleAdminController
      * Action that generates invoices PDF by order status
      *
      * @param Request $request
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
 
      * @return RedirectResponse
      */
     public function generatePdfByStatusAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error')
-            );
-
-            return $this->redirectToRoute('admin_order_invoices');
-        }
-
         $formHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
 
         $form = $formHandler->getForm();
@@ -197,6 +166,8 @@ class InvoicesController extends FrameworkBundleAdminController
      * Process the Invoice Options configuration form.
      *
      * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @return RedirectResponse
      */
