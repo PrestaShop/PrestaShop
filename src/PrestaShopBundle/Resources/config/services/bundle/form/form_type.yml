@@ -260,6 +260,7 @@ services:
         public: true
         arguments:
             - '@prestashop.core.form.choice_provider.invoice_model_by_name'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
         tags:
             - { name: form.type }
 
