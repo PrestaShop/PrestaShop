@@ -64,7 +64,7 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
             'legal_free_text' => $this->configuration->get('PS_INVOICE_LEGAL_FREE_TEXT'),
             'footer_text' => $this->configuration->get('PS_INVOICE_FREE_TEXT'),
             'invoice_model' => $this->configuration->get('PS_INVOICE_MODEL'),
-            'use_disk_cache' => $this->configuration->get('PS_PDF_USE_CACHE'),
+            'use_disk_cache' => $this->configuration->getBoolean('PS_PDF_USE_CACHE'),
         ];
     }
 

@@ -14,6 +14,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider'
         arguments:
             - '@prestashop.adapter.order.invoice_options.configuration'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
 
     prestashop.admin.customer_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'

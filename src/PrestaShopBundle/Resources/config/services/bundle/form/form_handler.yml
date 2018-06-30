@@ -69,7 +69,7 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
-            - '@prestashop.admin.order.invoices.by_status.data_provider'
+            - '@prestashop.admin.order.invoices.options.data_provider'
             -
               'invoice_options': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
             - 'OrdersInvoicesOptions'
