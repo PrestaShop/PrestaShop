@@ -26,8 +26,8 @@
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
 {% block invoices_generate_by_date %}
-    {{ form_start(generateByDateForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_date')}) }}
     <div class="col">
+        {{ form_start(generateByDateForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_date')}) }}
         <div class="card">
             <h3 class="card-header">
                 <i class="material-icons">date_range</i> {{ 'By date'|trans }}
@@ -52,6 +52,6 @@
                 </div>
             </div>
         </div>
+        {{ form_end(generateByDateForm) }}
     </div>
-    {{ form_end(generateByDateForm) }}
 {% endblock %}

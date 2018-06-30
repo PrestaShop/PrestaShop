@@ -26,8 +26,8 @@
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
 
 {% block invoice_options %}
-    {{ form_start(invoiceOptionsForm, {'method': 'POST', 'action': path('admin_order_invoices_process')}) }}
     <div class="col">
+        {{ form_start(invoiceOptionsForm, {'method': 'POST', 'action': path('admin_order_invoices_process')}) }}
         <div class="card">
             <h3 class="card-header">
                 <i class="material-icons">settings</i> {{ 'Invoice options'|trans }}
@@ -108,6 +108,6 @@
                 </div>
             </div>
         </div>
+        {{ form_end(invoiceOptionsForm) }}
     </div>
-    {{ form_end(invoiceOptionsForm) }}
 {% endblock %}
