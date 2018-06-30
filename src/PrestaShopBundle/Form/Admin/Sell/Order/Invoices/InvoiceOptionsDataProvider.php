@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -40,9 +41,21 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     private $invoiceOptionsConfiguration;
 
-    public function __construct(DataConfigurationInterface $invoiceOptionsConfiguration)
-    {
+    /**
+     * @var int
+     */
+    private $nextInvoiceNumber;
+
+    /**
+     * @param DataConfigurationInterface $invoiceOptionsConfiguration
+     * @param int $nextInvoiceNumber next available invoice number
+     */
+    public function __construct(
+        DataConfigurationInterface $invoiceOptionsConfiguration,
+        $nextInvoiceNumber
+    ) {
         $this->invoiceOptionsConfiguration = $invoiceOptionsConfiguration;
+        $this->nextInvoiceNumber = $nextInvoiceNumber;
     }
 
     /**
@@ -64,7 +77,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
             return $errors;
         }
 
-        return $this->invoiceOptionsConfiguration->updateConfiguration($data);
+        return $this->invoiceOptionsConfiguration->updateConfiguration($data['invoice_options']);
     }
 
     /**
@@ -77,6 +90,15 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     private function validate(array $data)
     {
         $errors = [];
+        $invoiceNumber = $data['invoice_options']['invoice_number'];
+
+        if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
+            $errors[] =  [
+                'key' => 'Invalid invoice number.',
+                'domain' => 'Admin.Orderscustomers.Notification',
+                'parameters' => [],
+            ];
+        }
 
         return $errors;
     }
