@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\DataProvider;
+namespace PrestaShop\PrestaShop\Core\PDF;
 
 /**
  * Interface PDFDataProviderInterface describes a PDF template type provider

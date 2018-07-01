@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\OrderState;
 
 use OrderState;
-use PrestaShop\PrestaShop\Core\DataProvider\OrderStateDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 
 /**
  * Class OrderStateDataProvider provides OrderState data using legacy code
