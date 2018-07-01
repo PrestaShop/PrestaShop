@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Invoice;
 
 use PDF;
-use PrestaShop\PrestaShop\Core\DataProvider\PDFTemplateTypeProviderInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFTemplateTypeProviderInterface;
 
 /**
  * Class InvoiceTemplateTypeProvider provides invoice PDF template type

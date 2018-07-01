@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Invoice;
 use DateTimeInterface;
 use Order;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 
 /**
  * Class OrderInvoiceDataProvider provides OrderInvoice data using legacy code

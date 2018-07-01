@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
