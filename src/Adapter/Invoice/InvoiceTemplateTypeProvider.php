@@ -24,17 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\DataProvider;
+namespace PrestaShop\PrestaShop\Adapter\Invoice;
+
+use PDF;
+use PrestaShop\PrestaShop\Core\DataProvider\PDFTemplateTypeProviderInterface;
 
 /**
- * Interface PDFDataProviderInterface provides data regarding PDF
+ * Class InvoiceTemplateTypeProvider provides invoice PDF template type
  */
-interface PDFDataProviderInterface
+final class InvoiceTemplateTypeProvider implements PDFTemplateTypeProviderInterface
 {
     /**
-     * Gets invoice template type
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getInvoiceTemplateType();
+    public function getPDFTemplateType()
+    {
+        return PDF::TEMPLATE_INVOICE;
+    }
 }

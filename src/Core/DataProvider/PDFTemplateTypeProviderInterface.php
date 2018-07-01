@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\PDF;
+namespace PrestaShop\PrestaShop\Core\DataProvider;
 
 /**
- * Interface InvoicePDFGeneratorInterface defines invoice PDF generator
+ * Interface PDFDataProviderInterface describes a PDF template type provider
  */
-interface InvoicePDFGeneratorInterface
+interface PDFTemplateTypeProviderInterface
 {
     /**
-     * Generates invoices PDF out of given order invoice collection
+     * Gets PDF template type
      *
-     * @param array $orderInvoiceCollection
+     * @return string
      */
-    public function generateInvoicesPDF(array $orderInvoiceCollection);
+    public function getPDFTemplateType();
 }

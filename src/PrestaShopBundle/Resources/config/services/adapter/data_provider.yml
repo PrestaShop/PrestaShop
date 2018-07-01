@@ -73,9 +73,6 @@ services:
     prestashop.adapter.data_provider.order_state:
         class: PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider
 
-    prestashop.adapter.data_provider.pdf:
-        class: PrestaShop\PrestaShop\Adapter\PDF\PDFDataProvider
-
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 

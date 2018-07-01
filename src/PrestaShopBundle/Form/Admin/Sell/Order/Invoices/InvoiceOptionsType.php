@@ -56,6 +56,12 @@ class InvoiceOptionsType extends TranslatorAwareType
      */
     private $nextInvoiceNumber;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $invoiceModelChoiceProvider
+     * @param int $nextInvoiceNumber the next available invoice number
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -110,6 +116,9 @@ class InvoiceOptionsType extends TranslatorAwareType
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['next_invoice_number'] = $this->nextInvoiceNumber;
