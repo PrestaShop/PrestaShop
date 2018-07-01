@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Invoice;
 
 use DateTimeInterface;
-use Order;
-use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\Entity\Order;
+use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 
 /**

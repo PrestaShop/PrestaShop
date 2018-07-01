@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Invoice;
 
-use PDF;
+use PrestaShop\PrestaShop\Adapter\Entity\PDF;
 use PrestaShop\PrestaShop\Core\PDF\PDFTemplateTypeProviderInterface;
 
 /**
