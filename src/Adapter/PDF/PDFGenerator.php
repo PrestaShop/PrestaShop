@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use PDF;
+use PrestaShop\PrestaShop\Adapter\Entity\PDF;
 use PrestaShop\PrestaShop\Core\PDF\PDFTemplateTypeProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Smarty;
