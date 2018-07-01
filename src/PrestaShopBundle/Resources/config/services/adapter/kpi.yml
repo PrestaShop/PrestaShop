@@ -9,7 +9,6 @@ services:
             - '@prestashop.adapter.legacy.context'
             - '@translator'
             - '@prestashop.adapter.legacy.kpi_configuration'
-            - '@prestashop.smarty'
 
     prestashop.adapter.kpi.main_country:
         class: PrestaShop\PrestaShop\Adapter\Kpi\MainCountryKpi
