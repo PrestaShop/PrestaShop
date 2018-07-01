@@ -75,6 +75,7 @@ final class TranslationsKpi implements KpiInterface
         $frontOfficeTranslations = $this->configuration->get('FRONTOFFICE_TRANSLATIONS');
 
         $kpi = new HelperKpi();
+        $kpi->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.'new-theme/template/');
         $kpi->id = 'box-translations';
         $kpi->icon = 'list';
         $kpi->color = 'color3';

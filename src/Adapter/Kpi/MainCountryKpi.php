@@ -75,6 +75,7 @@ final class MainCountryKpi implements KpiInterface
         $mainCountry = $this->configuration->get('MAIN_COUNTRY');
 
         $kpi = new HelperKpi();
+        $kpi->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.'new-theme/template/');
         $kpi->id = 'box-country';
         $kpi->icon = 'home';
         $kpi->color = 'color2';
