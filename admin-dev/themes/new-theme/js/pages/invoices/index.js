@@ -1,5 +1,3 @@
-import TermsAndConditionsOptionHandler from "../order-preferences/terms-and-conditions-option-handler";
-
 /**
  * 2007-2017 PrestaShop
  *
