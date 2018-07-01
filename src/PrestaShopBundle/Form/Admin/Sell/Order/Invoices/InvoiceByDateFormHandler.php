@@ -30,7 +30,7 @@ use DateTime;
 use PrestaShop\PrestaShop\Core\DataProvider\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
-use PrestaShop\PrestaShop\Core\PDF\InvoicePDFGeneratorInterface;
+use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  * Class InvoiceByDateFormHandler manages the data manipulated using "By date" form
  * in "Sell > Orders > Invoices" page
  */
-class InvoiceByDateFormHandler extends FormHandler
+final class InvoiceByDateFormHandler extends FormHandler
 {
     /**
      * @var OrderInvoiceDataProviderInterface
@@ -46,10 +46,19 @@ class InvoiceByDateFormHandler extends FormHandler
     private $orderInvoiceDataProvider;
 
     /**
-     * @var InvoicePDFGeneratorInterface
+     * @var PDFGeneratorInterface
      */
-    private $invoicePDFGenerator;
+    private $pdfGenerator;
 
+    /**
+     * @param FormBuilderInterface $formBuilder
+     * @param HookDispatcher $hookDispatcher
+     * @param FormDataProviderInterface $formDataProvider
+     * @param array $formTypes
+     * @param string $hookName
+     * @param OrderInvoiceDataProviderInterface $orderInvoiceDataProvider
+     * @param PDFGeneratorInterface $pdfGenerator
+     */
     public function __construct(
         FormBuilderInterface $formBuilder,
         HookDispatcher $hookDispatcher,
@@ -57,11 +66,11 @@ class InvoiceByDateFormHandler extends FormHandler
         array $formTypes,
         $hookName,
         OrderInvoiceDataProviderInterface $orderInvoiceDataProvider,
-        InvoicePDFGeneratorInterface $invoicePDFGenerator
+        PDFGeneratorInterface $pdfGenerator
     ) {
         parent::__construct($formBuilder, $hookDispatcher, $formDataProvider, $formTypes, $hookName);
         $this->orderInvoiceDataProvider = $orderInvoiceDataProvider;
-        $this->invoicePDFGenerator = $invoicePDFGenerator;
+        $this->pdfGenerator = $pdfGenerator;
     }
 
     /**
@@ -80,7 +89,7 @@ class InvoiceByDateFormHandler extends FormHandler
         );
 
         // Generate PDF out of found invoices
-        $this->invoicePDFGenerator->generateInvoicesPDF($invoiceCollection);
+        $this->pdfGenerator->generatePDF($invoiceCollection);
 
         return [];
     }

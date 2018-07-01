@@ -91,12 +91,3 @@ services:
         arguments:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
-
-    prestashop.adapter.pdf_generator.invoice:
-        class: PrestaShop\PrestaShop\Adapter\Invoice\InvoicePDFGenerator
-        arguments: ['@prestashop.adapter.generator.pdf', '@prestashop.adapter.data_provider.pdf']
-
-    # Data managers
-    prestashop.adapter.generator.pdf:
-        class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
-        arguments: ["@=service('prestashop.adapter.legacy.context').getSmarty()"]

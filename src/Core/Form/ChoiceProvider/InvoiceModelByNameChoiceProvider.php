@@ -41,6 +41,9 @@ final class InvoiceModelByNameChoiceProvider implements FormChoiceProviderInterf
      */
     private $invoiceModelFinder;
 
+    /**
+     * @param InvoiceModelFinder $invoiceModelFinder
+     */
     public function __construct(InvoiceModelFinder $invoiceModelFinder)
     {
         $this->invoiceModelFinder = $invoiceModelFinder;
