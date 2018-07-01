@@ -26,9 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider;
-use PrestaShop\PrestaShop\Core\File\InvoiceModelFinder;
+use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -37,14 +35,14 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class InvoiceModelByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var InvoiceModelFinder
+     * @var FileFinderInterface
      */
     private $invoiceModelFinder;
 
     /**
-     * @param InvoiceModelFinder $invoiceModelFinder
+     * @param FileFinderInterface $invoiceModelFinder
      */
-    public function __construct(InvoiceModelFinder $invoiceModelFinder)
+    public function __construct(FileFinderInterface $invoiceModelFinder)
     {
         $this->invoiceModelFinder = $invoiceModelFinder;
     }
