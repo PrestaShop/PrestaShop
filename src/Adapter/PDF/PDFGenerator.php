@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use PDF;
+use PrestaShop\PrestaShop\Core\DataProvider\PDFTemplateTypeProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Smarty;
 
@@ -41,19 +42,28 @@ final class PDFGenerator implements PDFGeneratorInterface
     private $smarty;
 
     /**
-     * @param Smarty $smarty
+     * @var PDFTemplateTypeProviderInterface
      */
-    public function __construct(Smarty $smarty)
-    {
+    private $templateTypeProvider;
+
+    /**
+     * @param Smarty $smarty
+     * @param PDFTemplateTypeProviderInterface $templateTypeProvider
+     */
+    public function __construct(
+        Smarty $smarty,
+        PDFTemplateTypeProviderInterface $templateTypeProvider
+    ) {
         $this->smarty = $smarty;
+        $this->templateTypeProvider = $templateTypeProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generatePDF(array $objectCollection, $template)
+    public function generatePDF(array $objectCollection)
     {
-        $pdf = new PDF($objectCollection, $template, $this->smarty);
+        $pdf = new PDF($objectCollection, $this->templateTypeProvider->getPDFTemplateType(), $this->smarty);
         $pdf->render();
     }
 }

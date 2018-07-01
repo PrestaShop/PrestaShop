@@ -35,7 +35,6 @@ interface PDFGeneratorInterface
      * Generates PDF out of given object and template using legacy generator
      *
      * @param array $objectCollection collection of objects
-     * @param string $template name of the PDF template
      */
-    public function generatePDF(array $objectCollection, $template);
+    public function generatePDF(array $objectCollection);
 }
