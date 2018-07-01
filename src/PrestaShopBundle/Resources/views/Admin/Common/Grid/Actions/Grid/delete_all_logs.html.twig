@@ -29,7 +29,7 @@
   <input name="_method" type="hidden" value="DELETE" />
   <input name="_token" type="hidden" value="{{ csrf_token('logs') }}" />
   {% set message = 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') %}
-  <button type="button" id="logs-deleteAll" class="btn" data-confirm-message="{{ message }}">
-    {{ 'Erase all'|trans }}
+  <button type="button" id="logs-deleteAll" class="btn btn-block btn-sm" data-confirm-message="{{ message }}">
+    {{ action.name }}
   </button>
 </form>
