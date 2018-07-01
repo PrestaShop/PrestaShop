@@ -26,35 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Core\File;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Class InvoiceModelFinder finds invoice model files
  */
-class InvoiceModelFinder
+final class InvoiceModelFinder implements FileFinderInterface
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
     /**
      * @var array
      */
     private $invoiceModelDirectories;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param array $invoiceModelDirectories
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(array $invoiceModelDirectories)
     {
-        $this->configuration = $configuration;
-        $this->invoiceModelDirectories = [
-            $this->configuration->get('_PS_THEME_DIR_').'pdf/',
-            $this->configuration->get('_PS_PDF_DIR_'),
-        ];
+        $this->invoiceModelDirectories = $invoiceModelDirectories;
     }
 
     /**
