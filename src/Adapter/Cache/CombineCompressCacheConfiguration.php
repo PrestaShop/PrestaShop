@@ -194,7 +194,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         // feature activation
         if (false === $isCurrentlyEnabled && true === $enabled) {
-            if ($this->tools->generateHtaccess()) {
+            if ($this->tools->generateHtaccess(null, null, 1)) {
                 $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
             } else {
                 $errors = array(
@@ -214,6 +214,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         if (true === $isCurrentlyEnabled && false === $enabled) {
             $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', false);
+            $this->tools->generateHtaccess();
         }
 
         return $errors;

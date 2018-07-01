@@ -95,9 +95,9 @@ class Tools
         LegacyTools::refreshCaCertFile();
     }
 
-    public function generateHtaccess()
+    public function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
-        return LegacyTools::generateHtaccess();
+        return LegacyTools::generateHtaccess($path, $rewrite_settings, $cache_control, $specific, $disable_multiviews, $medias, $disable_modsec);
     }
 
     /**
