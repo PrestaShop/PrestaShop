@@ -24,19 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Order;
+
+use DateTimeInterface;
 
 /**
- * Interface OrderStateDataProviderInterface defines OrderState data provider
+ * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider
  */
-interface OrderStateDataProviderInterface
+interface OrderInvoiceDataProviderInterface
 {
     /**
-     * Get order states in given language
+     * Returns all the order invoices that match the date interval
      *
-     * @param int $languageId
+     * @param DateTimeInterface $dateFrom
+     * @param DateTimeInterface $dateTo
      *
-     * @return array
+     * @return array collection of OrderInvoice objects
      */
-    public function getOrderStates($languageId);
+    public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
+
+    /**
+     * Returns all the order invoices by given status
+     *
+     * @param int $orderStateId
+     *
+     * @return array collection of OrderInvoice objects
+     */
+    public function getByStatus($orderStateId);
+
+    /**
+     * Returns the next available invoice number
+     *
+     * @return int
+     */
+    public function getNextInvoiceNumber();
 }
