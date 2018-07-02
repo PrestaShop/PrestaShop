@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -213,18 +214,18 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * Renders a KPI row, built by provided factory
+     * Renders a KPI row
      *
-     * @param KpiRowFactoryInterface $factory
+     * @param KpiRowInterface $kpiRow
      *
      * @return Response
      */
-    public function renderKpiRowAction(KpiRowFactoryInterface $factory)
+    public function renderKpiRowAction(KpiRowInterface $kpiRow)
     {
         $presenter = $this->get('prestashop.core.kpi_row.presenter');
 
         return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', [
-            'kpiRow' => $presenter->present($factory->build()),
+            'kpiRow' => $presenter->present($kpiRow),
         ]);
     }
 }

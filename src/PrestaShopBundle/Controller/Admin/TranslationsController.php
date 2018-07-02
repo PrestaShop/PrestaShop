@@ -161,7 +161,7 @@ class TranslationsController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'kpiRowFactory' => $kpiRowFactory,
+            'kpiRow' => $kpiRowFactory->build(),
         ];
     }
 }
