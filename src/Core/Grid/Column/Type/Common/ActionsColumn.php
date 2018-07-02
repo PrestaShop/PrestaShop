@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ActionColumn extends AbstractColumn
+class ActionsColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
