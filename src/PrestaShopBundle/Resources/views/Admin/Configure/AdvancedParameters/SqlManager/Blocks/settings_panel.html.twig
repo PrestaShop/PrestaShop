@@ -25,7 +25,7 @@
 
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
-{{ form_start(settings_form, {'action': path('admin_sql_manager_settings') }) }}
+{{ form_start(sqlManagerSettingsForm, {'action': path('admin_sql_manager_settings') }) }}
 <div class="row">
     <div class="col">
         <div class="card">
@@ -40,8 +40,8 @@
                             {{ 'Select your default file encoding'|trans }}
                         </label>
                         <div class="col-sm-8">
-                            {{ form_errors(settings_form.settings.default_file_encoding) }}
-                            {{ form_widget(settings_form.settings.default_file_encoding) }}
+                            {{ form_errors(sqlManagerSettingsForm.settings.default_file_encoding) }}
+                            {{ form_widget(sqlManagerSettingsForm.settings.default_file_encoding) }}
                         </div>
                     </div>
                 </div>
@@ -54,4 +54,4 @@
         </div>
     </div>
 </div>
-{{ form_end(settings_form) }}
+{{ form_end(sqlManagerSettingsForm) }}
