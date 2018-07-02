@@ -48,7 +48,10 @@ app/config/config.php
 
 modules/*
 override/*
-/themes/StarterTheme
+themes/*/
+!themes/classic
+!themes/_core
+!themes/_libraries
 
 # Vendors and dependencies
 
