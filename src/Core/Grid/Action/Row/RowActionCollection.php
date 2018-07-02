@@ -24,35 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
-class ActionColumn extends AbstractColumn
+/**
+ * Class RowActionCollection defines contract for grid row action collection
+ */
+final class RowActionCollection extends AbstractCollection implements RowActionCollectionInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function add(RowActionInterface $action)
     {
-        return 'action';
-    }
+        $this->items[$action->getId()] = $action;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'actions' => [],
-                'filter' => new ColumnFilterOption(SubmitType::class, []),
-            ])
-            ->setAllowedTypes('filter', ColumnFilterOption::class)
-            ->setAllowedTypes('actions', 'array')
-        ;
+        return $this;
     }
 }

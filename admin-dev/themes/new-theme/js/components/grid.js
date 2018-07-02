@@ -98,7 +98,7 @@ export default class Grid {
    * @private
    */
   _handleBulkActionSelectAllCheckbox() {
-    $(document).on('change', '.js-select-all-bulk-actions-checkbox', (e) => {
+    $(document).on('change', '.js-bulk-action-select-all', (e) => {
       const $checkbox = $(e.target);
 
       const isChecked = $checkbox.is(':checked');
