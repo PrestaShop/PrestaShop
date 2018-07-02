@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
@@ -103,7 +103,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'filter_type' => DateRangeType::class,
                 ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add((new ActionsColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
                 ->setOptions([
                     'filter_type' => SubmitType::class,

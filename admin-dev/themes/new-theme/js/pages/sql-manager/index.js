@@ -25,13 +25,15 @@
 
 import TableSorting from '../../app/utils/table-sorting';
 import ConfirmationAlert from '../../components/confirmation-alert';
+import Grid from '../../components/grid';
 
 const $ = window.$;
 
 class SqlManagerPage {
-  init() {
+  constructor() {
     const $sortableTables = $('table.table');
 
+    new Grid('#request_sql_grid_panel').init();
     new TableSorting($sortableTables).attach();
     new ConfirmationAlert().init();
 
@@ -113,5 +115,5 @@ class SqlManagerPage {
 }
 
 $(document).ready(() => {
-  new SqlManagerPage().init();
+  new SqlManagerPage();
 });
