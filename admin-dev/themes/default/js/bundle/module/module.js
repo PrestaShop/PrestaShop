@@ -675,10 +675,7 @@ var AdminModuleController = function() {
         }
         // TODO: This HTML code comes from an already specific template.
         // To be moved in a template, with generic classes for badges
-        destinationTabs[key].append('<span class="notification-container">\
-            <span class="notification-counter">'+badge[key]+'</span>\
-          </span>\
-        ');
+        destinationTabs[key].find('.notification-counter').text(badge[key]);
     };
   };
 
