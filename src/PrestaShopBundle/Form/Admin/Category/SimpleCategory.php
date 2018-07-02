@@ -23,12 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Category;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -75,27 +77,27 @@ class SimpleCategory extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+        $builder->add('name', TextType::class, [
             'label' => $this->translator->trans('Name', [], 'Admin.Global'),
             'required' => false,
             'attr' => [
                 'placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'),
                 'class' => 'ajax'
             ],
-            'constraints' => $options['ajax'] ? [] : array(
+            'constraints' => $options['ajax'] ? [] : [
                 new Assert\NotBlank(),
-                new Assert\Length(array('min' => 1, 'max' => 128))
-            )
-        ))
-        ->add('id_parent', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' => $this->categories,
-            'required' => true,
-            'attr' => array(
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => '7',
-            ),
-            'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature')
-        ));
+                new Assert\Length(['min' => 1, 'max' => 128])
+            ]
+        ])
+            ->add('id_parent', ChoiceType::class, [
+                'choices' => $this->categories,
+                'required' => true,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+                'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature')
+            ]);
     }
 
     /**
@@ -103,9 +105,9 @@ class SimpleCategory extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'ajax' => false,
-        ));
+        ]);
     }
 
     /**
