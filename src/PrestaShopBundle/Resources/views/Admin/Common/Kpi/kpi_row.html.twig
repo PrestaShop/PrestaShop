@@ -26,6 +26,14 @@
 {% block kpi_row %}
     <div class="container-fluid">
         <div class="kpi-container">
+            {% if kpiRow.allowRefresh %}
+                <div class="kpi-refresh">
+                    <button class="refresh-kpis btn btn-primary" type="button">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                </div>
+            {% endif %}
+
             <div class="row">
                 {% for kpi in kpiRow.kpis %}
                     <div class="col">

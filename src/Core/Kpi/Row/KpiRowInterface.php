@@ -44,4 +44,14 @@ interface KpiRowInterface
      * @return array[KpiInterface]
      */
     public function getKpis();
+
+    /**
+     * @param bool $allowRefresh
+     */
+    public function setAllowRefresh($allowRefresh);
+
+    /**
+     * @return bool
+     */
+    public function getAllowRefresh();
 }

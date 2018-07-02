@@ -935,6 +935,10 @@ $(document).ready(function()
     if ($('.kpi-container').length) {
         refresh_kpis();
     }
+
+    $('.kpi-refresh').on('click', '.refresh-kpis', function () {
+        refresh_kpis(true);
+    });
 });
 
 function bindSwapSave(context)

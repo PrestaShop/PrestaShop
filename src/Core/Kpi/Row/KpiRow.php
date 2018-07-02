@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 final class KpiRow implements KpiRowInterface
 {
     /**
+     * @var bool
+     */
+    private $allowRefresh = true;
+
+    /**
      * @var array[KpiInterface]
      */
     private $kpis = [];
@@ -52,5 +57,21 @@ final class KpiRow implements KpiRowInterface
     public function getKpis()
     {
         return $this->kpis;
+    }
+
+    /**
+     * @param bool $allowRefresh
+     */
+    public function setAllowRefresh($allowRefresh)
+    {
+        $this->allowRefresh = $allowRefresh;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAllowRefresh()
+    {
+        return $this->allowRefresh;
     }
 }
