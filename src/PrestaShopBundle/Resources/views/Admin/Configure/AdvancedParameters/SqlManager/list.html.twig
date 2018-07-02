@@ -54,7 +54,7 @@
     {% endblock %}
 
     {% block sql_manager_list_panel %}
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/Blocks/list_panel.html.twig' %}
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': requestSqlGrid} %}
     {% endblock %}
 
     {% block sql_manager_settings_panel %}
