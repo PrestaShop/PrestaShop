@@ -8,6 +8,11 @@ services:
         arguments:
             - '@prestashop.core.admin.log.repository'
 
+    prestashop.core.grid.data_provider.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        arguments:
+            - '@prestashop.core.admin.request_sql.repository'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -20,12 +25,24 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
+    prestashop.core.grid.definition.factory.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.log_definition'
             - '@prestashop.core.grid.data_provider.log'
+            - '@prestashop.hook.dispatcher'
+
+    prestashop.core.grid.factory.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.request_sql'
+            - '@prestashop.core.grid.data_provider.request_sql'
             - '@prestashop.hook.dispatcher'
 
     # Grid presenter

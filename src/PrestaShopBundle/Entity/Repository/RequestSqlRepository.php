@@ -27,12 +27,16 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use PDO;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Class RequestSqlRepository is responsible for retrieving RequestSql data from database
  */
-class RequestSqlRepository implements RepositoryInterface
+class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
     /**
      * @var Connection
@@ -116,6 +120,63 @@ class RequestSqlRepository implements RepositoryInterface
 
         $statement = $qb->execute();
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $searchQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
+
+        $searchQueryBuilder
+            ->select('rs.*')
+            ->orderBy($searchCriteria->getOrderBy(), $searchCriteria->getOrderWay())
+            ->setFirstResult($searchCriteria->getOffset())
+            ->setMaxResults($searchCriteria->getLimit());
+
+        return $searchQueryBuilder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $countQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
+        $countQueryBuilder->select('COUNT(rs.id_request_sql)');
+
+        return $countQueryBuilder;
+    }
+
+    /**
+     * Build partial query by search criteria
+     *
+     * @param SearchCriteriaInterface $criteria
+     *
+     * @return QueryBuilder
+     */
+    private function buildQueryBySearchCriteria(SearchCriteriaInterface $criteria)
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->from($this->requestSqlTable, 'rs');
+
+        foreach ($criteria->getFilters() as $filterName => $value) {
+            if (empty($value)) {
+                continue;
+            }
+
+            if ('id_request_sql' === $filterName) {
+                $qb->andWhere('rs.id_request_sql = :id_request_sql');
+                $qb->setParameter('id_request_sql', $value);
+                continue;
+            }
+
+            $qb->andWhere("`$filterName` LIKE %:$filterName%");
+            $qb->setParameter($filterName, $value);
+        }
+
+        return $qb;
     }
 }
