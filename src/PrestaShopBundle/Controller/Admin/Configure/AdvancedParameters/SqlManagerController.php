@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -51,49 +51,45 @@ class SqlManagerController extends FrameworkBundleAdminController
      *      message="Access denied."
      * )
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/list.html.twig")
-     *
      * @param Request $request
      *
      * @return array|Response
      */
     public function listAction(Request $request)
     {
+        // handle "Export to SQL manager" action from legacy pagees
         if ($request->query->has('addrequest_sql')) {
            return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:create');
         }
 
-        $searchForm = $this->createForm(FilterRequestSqlType::class, []);
-        $searchForm->handleRequest($request);
+        $legacyController = $request->attributes->get('_legacy_controller');
 
-        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, [
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_request_sql',
-            'sortOrder' => 'desc',
-            'filters' => $searchForm->getData(),
-        ]);
+        // temporary search criteria class, to be removed
+        $searchCriteria = new TemporarySearchCriteria($request);
 
-        $repository = $this->getRepository();
-        $requestSqls = $repository->findByFilters($filters);
-        $requestSqlsCount = $repository->getCount();
+        $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
+        $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
 
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
-        $templateParams = [
-            'request_sqls' => $requestSqls,
-            'request_sqls_count' => $requestSqlsCount,
-            'order_by' => $filters['orderBy'],
-            'order_way' => $filters['sortOrder'],
-            'filters' => $filters,
-            'search_form' => $searchForm->createView(),
-            'settings_form' => $settingsForm->createView(),
-        ];
-
-        return array_merge(
-            $this->getTemplateParams($request),
-            $templateParams
-        );
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/list.html.twig', [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_sql_manager_create'),
+                    'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
+            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'sqlManagerSettingsForm' => $settingsForm->createView(),
+            'requestSqlGrid' => $presentedGrid,
+        ]);
     }
 
     /**
