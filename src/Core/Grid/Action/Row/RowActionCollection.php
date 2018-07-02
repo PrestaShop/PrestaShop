@@ -24,38 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
+
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Interface RowActionInterface defines contract for grid's row action
+ * Class RowActionCollection defines contract for grid row action collection
  */
-interface RowActionInterface
+final class RowActionCollection extends AbstractCollection implements RowActionCollectionInterface
 {
     /**
-     * Get unique row identifier for grid row's action
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getIdentifier();
+    public function add(RowActionInterface $action)
+    {
+        $this->items[$action->getId()] = $action;
 
-    /**
-     * Get translated row action name
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * Get row action callback
-     *
-     * @return callable
-     */
-    public function getCallback();
-
-    /**
-     * Get row action icon
-     *
-     * @return string
-     */
-    public function getIcon();
+        return $this;
+    }
 }
