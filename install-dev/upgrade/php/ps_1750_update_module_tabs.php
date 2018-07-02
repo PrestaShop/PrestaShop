@@ -29,7 +29,7 @@
  */
 function ps_1750_update_module_tabs()
 {
-    // Add new sub menus for modules
+    // STEP 1: Add new sub menus for modules
     $moduleTabsToBeAdded = array(
         'AdminModulesUpdates' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',
     );
@@ -37,7 +37,26 @@ function ps_1750_update_module_tabs()
     include_once('add_new_tab.php');
     foreach ($moduleTabsToBeAdded as $className => $translations) {
         add_new_tab_17($className, $translations, 0, false, 'AdminModulesSf');
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "' . $className . '"');
     }
 
-    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'tab` SET `active`=1 WHERE `class_name` = "AdminModulesUpdates"');
+    
+    // STEP 2: Rename Notifications as Alerts
+    $adminModulesNotificationsTabId = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminModulesNotifications"');
+    if (empty($adminModulesNotificationsTabId)) {
+        return;
+    }
+    
+    include_once('clean_tabs_15.php');
+    renameTab(
+        $adminModulesNotificationsTabId,
+        [
+            'fr' => 'Alertes',
+            'es' => 'Alertas',
+            'en' => 'Alerts',
+            'gb' => 'Alerts',
+            'de' => 'Benachrichtigungen',
+            'it' => 'Avvisi',
+        ]
+    );
 }
