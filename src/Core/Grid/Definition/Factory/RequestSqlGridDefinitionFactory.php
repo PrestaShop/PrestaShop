@@ -89,6 +89,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setOptions([
                                 'icon' => 'cloud_download',
                                 'route' => 'admin_sql_manager_export',
+                                'route_param_key' => 'requestSqlId',
+                                'route_param_value' => 'id_request_sql',
                             ])
                         )
                         ->add((new SimpleRowAction('view'))
@@ -96,11 +98,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setOptions([
                                 'icon' => 'remove_red_eye',
                                 'route' => 'admin_sql_manager_view',
-                                'route_params' => [
-                                    'dynamic' => [
-                                        'requestSqlId' => 'id_request_sql',
-                                    ],
-                                ],
+                                'route_param_key' => 'requestSqlId',
+                                'route_param_value' => 'id_request_sql',
                             ])
                         )
                         ->add((new SimpleRowAction('edit'))
@@ -108,6 +107,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setOptions([
                                 'icon' => 'edit',
                                 'route' => 'admin_sql_manager_edit',
+                                'route_param_key' => 'requestSqlId',
+                                'route_param_value' => 'id_request_sql',
                             ])
                         )
                         ->add((new SimpleRowAction('delete'))
@@ -115,6 +116,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setOptions([
                                 'icon' => 'delete',
                                 'route' => 'admin_sql_manager_delete',
+                                'route_param_key' => 'requestSqlId',
+                                'route_param_value' => 'id_request_sql',
                             ])
                         ),
                 ])

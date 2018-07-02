@@ -24,7 +24,7 @@
  *#}
 
 <a class="dropdown-item"
-   href="{{ path(action.options.route, {'requestSqlId': row['id_request_sql']}) }}"
+   href="{{ path(action.options.route, { (action.options.route_param_key) : row[action.options.route_param_value]}) }}"
 >
   {% if action.options.icon is not empty %}
     <i class="material-icons">{{ action.options.icon }}</i>
