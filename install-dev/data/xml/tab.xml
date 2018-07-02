@@ -181,6 +181,9 @@
                     <tab id="Module_Page_Notifications" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminModulesNotifications</class_name>
                     </tab>
+                    <tab id="Module_Page_Updates" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesUpdates</class_name>
+                    </tab>
                 <tab id="Module_Page_old" id_parent="Modules" active="0" hide_host_mode="0" icon="">
                     <class_name>AdminModules</class_name>
                 </tab>
