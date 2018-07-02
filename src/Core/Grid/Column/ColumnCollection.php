@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ColumnCollection holds collection of columns for grid
@@ -52,16 +51,9 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
      */
     public function addAfter($id, ColumnInterface $newColumn)
     {
-        if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf(
-                'Column with id "%s" was not found.',
-                $id
-            ));
-        }
+        $this->insertByPosition($id, $newColumn, 'after');
 
-        //@todo: implement actual inserting after column
-
-        $this->add($newColumn);
+        return $this;
     }
 
     /**
@@ -69,16 +61,9 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
      */
     public function addBefore($id, ColumnInterface $newColumn)
     {
-        if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf(
-                'Column with id "%s" was not found.',
-                $id
-            ));
-        }
+        $this->insertByPosition($id, $newColumn, 'before');
 
-        //@todo: implement actual inserting before column
-
-        $this->add($newColumn);
+        return $this;
     }
 
     /**
@@ -91,5 +76,35 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
         }
 
         return $this;
+    }
+
+    /**
+     * Insert new column into collection at given position
+     *
+     * @param string          $id        Existing column id
+     * @param ColumnInterface $newColumn Column to insert
+     * @param string          $position  Position: "before" or "after"
+     *
+     * @throws ColumnNotFoundException When column with gieven $id does not exist
+     */
+    private function insertByPosition($id, ColumnInterface $newColumn, $position)
+    {
+        if (!isset($this->items[$id])) {
+            throw new ColumnNotFoundException(sprintf(
+                'Cannot insert new column into collection. Column with id "%s" was not found.', $id
+            ));
+        }
+
+        $existingColumnKeyPosition = array_search($id, array_keys($this->items));
+
+        if ('after' === $position) {
+            $existingColumnKeyPosition++;
+        }
+
+        $columns = array_slice($this->items, 0, $existingColumnKeyPosition);
+        $columns = array_merge($columns, [$newColumn->getId() => $newColumn]);
+        $columns = array_merge($columns, array_slice($this->items, $existingColumnKeyPosition));
+
+        $this->items = $columns;
     }
 }
