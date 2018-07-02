@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Foundation\Version\Version;
+use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 /**
  * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com

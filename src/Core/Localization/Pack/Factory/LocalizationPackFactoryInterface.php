@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 interface LocalizationPackFactoryInterface
 {
     /**
-     * Creates new localizatio pack
+     * Creates new localization pack
      *
      * @return LocalizationPack
      */
