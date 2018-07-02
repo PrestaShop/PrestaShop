@@ -24,76 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type;
+
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class RowAction holds information related to row action for each row element in grid
  */
-final class RowAction implements RowActionInterface
+final class SimpleRowAction extends AbstractRowAction
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
-    private $name;
-
-    /**
-     * @var callable
-     */
-    private $callback;
-
-    /**
-     * @var string
-     */
-    private $icon;
-
-    /**
-     * @var string
-     */
-    private $identifier;
-
-    /**
-     * @param string   $identifier Action identifier should be unique between all grid row actions
-     * @param string   $name       Translated action name
-     * @param callable $callback   Action callback
-     * @param string   $icon       Action icon name
-     */
-    public function __construct($identifier, $name, callable $callback, $icon)
+    public function getType()
     {
-        $this->name = $name;
-        $this->callback = $callback;
-        $this->icon = $icon;
-        $this->identifier = $identifier;
+        return 'simple';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCallback()
-    {
-        return $this->callback;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
+        $resolver
+            ->setRequired([
+                'route',
+            ])
+            ->setDefaults([
+                'icon' => '',
+            ])
+            ->setAllowedTypes('icon', 'string')
+            ->setAllowedTypes('route', 'string')
+        ;
     }
 }

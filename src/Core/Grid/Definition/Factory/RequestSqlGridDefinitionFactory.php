@@ -26,11 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SimpleRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -70,18 +75,91 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add((new SimpleColumn('sql'))
                 ->setName($this->trans('SQL query', [], 'Admin.Advparameters.Feature'))
             )
-            ->add((new ActionColumn('actions'))
+            ->add((new ActionsColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
                 ->setOptions([
-                    'filter_type' => SubmitType::class,
                     'filter_type_options' => [
                         'label' => $this->trans('Search', [], 'Global.Actions'),
                         'attr' => [
                             'class' => 'btn btn-primary',
                         ],
                     ],
+                    'actions' => (new RowActionCollection())
+                        ->add((new SimpleRowAction('export'))
+                            ->setOptions([
+                                'icon' => 'cloud_download',
+                                'route' => 'admin_sql_manager_export',
+                            ])
+                        )
+                        ->add((new SimpleRowAction('view'))
+                            ->setName($this->trans('View', [], 'Admin.Global'))
+                            ->setOptions([
+                                'icon' => 'remove_red_eye',
+                                'route' => 'admin_sql_manager_view',
+                                'route_params' => [
+                                    'dynamic' => [
+                                        'requestSqlId' => 'id_request_sql',
+                                    ],
+                                ],
+                            ])
+                        )
+                        ->add((new SimpleRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Global'))
+                            ->setOptions([
+                                'icon' => 'edit',
+                                'route' => 'admin_sql_manager_edit',
+                            ])
+                        )
+                        ->add((new SimpleRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setOptions([
+                                'icon' => 'delete',
+                                'route' => 'admin_sql_manager_delete',
+                            ])
+                        ),
                 ])
             )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(new BulkAction(
+                'delete_all',
+                $this->trans('Delete selected', [], ''),
+                'delete'
+            ))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add(new GridAction(
+                'ps_refresh_list',
+                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
+                'refresh',
+                'simple'
+            ))
+            ->add(new GridAction(
+                'ps_show_query',
+                $this->trans('Show SQL query', [], 'Admin.Actions'),
+                'code',
+                'simple'
+            ))
+            ->add(new GridAction(
+                'ps_export_sql_manager',
+                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
+                'storage',
+                'export_to_sql_manager'
+            ))
         ;
     }
 }
