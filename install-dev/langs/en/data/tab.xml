@@ -10,6 +10,7 @@
     <tab id="Module_Page_Catalog" name="Selection" />
     <tab id="Module_Page_Manage" name="Installed modules" />
     <tab id="Module_Page_Notifications" name="Alerts" />
+    <tab id="Module_Page_Updates" name="Updates" />
     <tab id="Advanced_Parameters" name="Advanced Parameters" />
     <tab id="Attachments" name="Files" />
     <tab id="Attributes_and_features" name="Attributes &amp; Features" />
