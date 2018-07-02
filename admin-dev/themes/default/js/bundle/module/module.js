@@ -671,7 +671,7 @@ var AdminModuleController = function() {
     
     for (var key in destinationTabs) {
         if (destinationTabs[key].length === 0) {
-            return;
+            continue;
         }
         // TODO: This HTML code comes from an already specific template.
         // To be moved in a template, with generic classes for badges
