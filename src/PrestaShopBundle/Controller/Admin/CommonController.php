@@ -28,9 +28,12 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -60,7 +63,8 @@ class CommonController extends FrameworkBundleAdminController
      * @param integer $offset
      * @param integer $total
      * @param string $view full|quicknav To change default template used to render the content
-     * @return array|\Symfony\Component\HttpFoundation\Response
+     *
+     * @return array|Response
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
@@ -195,7 +199,7 @@ class CommonController extends FrameworkBundleAdminController
      * @param $url
      * @param string $title
      * @param string $footer
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {
@@ -205,6 +209,22 @@ class CommonController extends FrameworkBundleAdminController
             'footer' => $tools->purifyHTML($footer),
             'title' => $title,
             'url' => urldecode($url),
+        ]);
+    }
+
+    /**
+     * Renders a KPI row, built by provided factory
+     *
+     * @param KpiRowFactoryInterface $factory
+     *
+     * @return Response
+     */
+    public function renderKpiRowAction(KpiRowFactoryInterface $factory)
+    {
+        $presenter = $this->get('prestashop.core.kpi_row.presenter');
+
+        return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', [
+            'kpiRow' => $presenter->present($factory->build()),
         ]);
     }
 }

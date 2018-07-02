@@ -156,15 +156,12 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
-        $presenter = $this->get('prestashop.core.kpi_row.presenter');
-
-        $presentedKpiRow = $presenter->present($kpiRowFactory->build());
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'kpiRow' => $presentedKpiRow,
+            'kpiRowFactory' => $kpiRowFactory,
         ];
     }
 }

@@ -30,7 +30,10 @@
 
     {% block translations_kpis_row %}
         <div class="row">
-            {{ include('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', {'kpiRow': kpiRow }) }}
+            {{ render(controller(
+                'PrestaShopBundle:Admin\\Common:renderKpiRow',
+                { 'factory': kpiRowFactory }
+            )) }}
         </div>
     {% endblock %}
 
