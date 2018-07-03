@@ -49,7 +49,7 @@ class LogsController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
-     * @param \Symfony\Component\HttpFoundation\Request
+     * @param LogsFilters $filters the list of filters from the request.
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(LogsFilters $filters)

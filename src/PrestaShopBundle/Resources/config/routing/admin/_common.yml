@@ -33,7 +33,7 @@ admin_common_sidebar:
         footer: ''
 
 admin_common_reset_search:
-    path: /common/reset_search/{route}/{controller}/{action}
+    path: /reset_search/{controller}/{action}
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
