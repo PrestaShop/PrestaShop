@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import resetSearch from '../app/utils/reset_search';
+
 const $ = window.$;
 
 /**
@@ -63,6 +65,11 @@ export default class Grid {
     this.$grid.on('click', refreshListActionId, () => this._onRefreshClick());
     this.$grid.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
     this.$grid.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
+
+    // arrow function is incompatible with availability of $(this).
+    $('.reset-search').on('click', function () {
+        resetSearch($(this).data('url'));
+    });
   }
 
   /**

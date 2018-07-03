@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
+/**
+ * Utility class to extract information from modern controller FQCN.
+ */
 final class ControllerAction
 {
     /**
