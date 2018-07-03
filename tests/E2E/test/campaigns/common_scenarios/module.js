@@ -3,7 +3,12 @@ let promise = Promise.resolve();
 
 module.exports = {
   checkConfigPage: function (client, ModulePage, moduleTechName) {
-    test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join(moduleTechName)));
+    test('should click on "Configure" button', () => {
+      return promise
+        .then(() => client.getInstalledModulesNumber(ModulePage))
+        .then(() => client.getModuleButtonName(ModulePage))
+        .then(() => client.clickOnConfigureModuleButton(ModulePage, moduleTechName));
+    });
     test('should check the configuration page', () => client.checkTextValue(ModulePage.config_legend.replace("%moduleTechName", moduleTechName), moduleTechName));
   },
   installModule: function (client, ModulePage, AddProductPage, moduleTechName) {
@@ -35,8 +40,12 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(Menu.Improve.Modules.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName)));
-    test('should click on "Disable" button', () => client.waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName)));
+    test('should click on "Disable" button', () => {
+      return promise
+        .then(() => client.getInstalledModulesNumber(ModulePage))
+        .then(() => client.getModuleButtonName(ModulePage))
+        .then(() => client.clickOnDisableModuleButton(ModulePage, moduleTechName));
+    });
     test('should click on "Yes, disable it" button', () => client.waitForVisibleAndClick(ModulePage.confirmation_disable_module));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
   },
@@ -45,7 +54,12 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(Menu.Improve.Modules.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should click on "Enable" button', () => client.waitForExistAndClick(ModulePage.enable_module.split('%moduleTechName').join(moduleTechName)));
+    test('should click on "Enable" button', () => {
+      return promise
+        .then(() => client.getInstalledModulesNumber(ModulePage))
+        .then(() => client.getModuleButtonName(ModulePage))
+        .then(() => client.clickOnEnableModuleButton(ModulePage, moduleTechName));
+    });
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
   },
   resetModule: function (client, ModulePage, AddProductPage, moduleName, moduleTechName) {

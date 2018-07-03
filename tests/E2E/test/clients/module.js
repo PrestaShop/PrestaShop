@@ -1,5 +1,5 @@
 var CommonClient = require('./common_client');
-
+let buttonText;
 global.moduleObject = {
   "data-name": '',
   "data-tech-name": '',
@@ -84,6 +84,70 @@ class Module extends CommonClient {
           }, 1000 * length)
       });
   }
+
+  getInstalledModulesNumber(ModulePage) {
+    return this.client
+      .getText(ModulePage.installed_module_span).then(function (text) {
+        global.nbrModule = parseInt(text[0]);
+      })
+      .getText(ModulePage.built_in_module_span).then(function (text) {
+        global.nbrBuilt = parseInt(text[0]);
+      })
+      .getText(ModulePage.theme_module_span).then(function (text) {
+        global.nbrTheme = parseInt(text[0]);
+      })
+  }
+
+  getModuleButtonName(ModulePage) {
+    if (nbrModule === 1)
+      return this.client.getText(ModulePage.action_module_installed_button).then(function (text) {
+        buttonText = text.toUpperCase();
+      });
+    else if (nbrBuilt === 1)
+      return this.client.getText(ModulePage.action_module_built_in_button).then(function (text) {
+        buttonText = text.toUpperCase();
+      });
+    else return this.client.getText(ModulePage.action_module_theme_button).then(function (text) {
+        buttonText = text.toUpperCase();
+      })
+  }
+
+  clickOnConfigureModuleButton(ModulePage, moduleTechName) {
+    if (buttonText === "CONFIGURE")
+      return this.client
+        .waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join(moduleTechName));
+    else return this.client
+      .waitForExistAndClick(ModulePage.actions_module_dropdown)
+      .waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join(moduleTechName))
+  }
+
+  clickOnEnableModuleButton(ModulePage, moduleTechName) {
+    if (buttonText === "ENABLE") {
+      return this.client
+        .waitForExistAndClick(ModulePage.enable_module.split('%moduleTechName').join(moduleTechName))
+    } else if (buttonText === "DISABLE" || buttonText === "CONFIGURE")
+      return this.client.pause(1000);
+    else {
+      return this.client
+        .waitForExistAndClick(ModulePage.actions_module_dropdown)
+        .waitForExistAndClick(ModulePage.enable_module.split('%moduleTechName').join(moduleTechName), 3000)
+    }
+  }
+
+  clickOnDisableModuleButton(ModulePage, moduleTechName) {
+    if (buttonText === "DISABLE") {
+      return this.client
+        .waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName))
+    }
+    else if (buttonText === "ENABLE")
+      return this.client.pause(1000);
+    else {
+      return this.client
+        .waitForExistAndClick(ModulePage.actions_module_dropdown)
+        .waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName), 3000)
+    }
+  }
+
 }
 
 module.exports = Module;

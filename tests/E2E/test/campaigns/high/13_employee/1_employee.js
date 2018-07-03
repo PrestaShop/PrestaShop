@@ -1,10 +1,11 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Employee} = require('../../../selectors/BO/employee_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 
 scenario('Create employee', client => {
   test('should open the browser', () => client.open());
   test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-  test('should go to "Team" menu', () => client.goToSubtabMenuPage(Employee.advanced_menu, Employee.employee_menu));
+  test('should go to "Team" menu', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
   test('should click on "Add new employee" button', () => client.waitForExistAndClick(Employee.new_employee_button));
   test('should set "First name" input', () => client.waitAndSetValue(Employee.first_name_input, 'Demo'));
   test('should set "Last name" input', () => client.waitAndSetValue(Employee.last_name_input, 'Prestashop'));
@@ -38,7 +39,7 @@ scenario('Login with the new employee account', client => {
 
 scenario('Delete an employee', client => {
   test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-  test('should go to "Team" menu', () => client.goToSubtabMenuPage(Employee.advanced_menu, Employee.employee_menu));
+  test('should go to "Team" menu', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
   test('should search the created employee', () => client.waitAndSetValue(Employee.email_search_input, 'demo' + date_time + '@prestashop.com'));
   test('should click on "Search" button', () => client.waitForExistAndClick(Employee.search_button_team));
   test('should check the result', () => client.checkTextValue(Employee.search_result,"1"));
