@@ -755,6 +755,7 @@ class LinkCore
                     'AdminLocalization' => 'admin_localization_show_settings',
                     'AdminGeolocation' => 'admin_geolocation',
                     'AdminPaymentPreferences' => 'admin_payment_preferences',
+                    'AdminWebservice' => 'admin_webservice',
                 );
 
                 if (isset($routes[$controller])) {

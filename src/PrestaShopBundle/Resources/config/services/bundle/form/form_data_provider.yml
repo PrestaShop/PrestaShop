@@ -93,3 +93,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.payment_module_preferences.configuration'
+
+    prestashop.admin.webservice.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.webservice.configuration'

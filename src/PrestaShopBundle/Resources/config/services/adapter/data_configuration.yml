@@ -156,3 +156,7 @@ services:
         arguments:
             - '@prestashop.adapter.module.payment_module_provider'
             - '@prestashop.core.module.configuration.payment_restrictions_configurator'
+
+    prestashop.adapter.webservice.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
