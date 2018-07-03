@@ -28,7 +28,10 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class ModuleUpdatesController extends AbstractController
+/**
+ * Responsible of "Improve > Modules > Modules & Services > Updates" page display
+ */
+class ModuleUpdatesController extends ModuleAbstractController
 {
     /**
      * @return Response

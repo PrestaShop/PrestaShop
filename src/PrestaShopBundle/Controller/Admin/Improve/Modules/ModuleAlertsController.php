@@ -29,7 +29,10 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ModuleAlertsController extends AbstractController
+/**
+ * Responsible of "Improve > Modules > Modules & Services > Alerts" page display
+ */
+class ModuleAlertsController extends ModuleAbstractController
 {
     /**
      * @return Response
