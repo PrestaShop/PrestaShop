@@ -52,7 +52,7 @@ class SearchAndResetFormType extends AbstractType
             ->add('reset', ResetType::class, [
                 'label' => 'Reset',
                 'attr' => [
-                    'class' => 'btn btn-secondary',
+                    'class' => 'btn btn-link reset-search',
                 ],
             ])
         ;

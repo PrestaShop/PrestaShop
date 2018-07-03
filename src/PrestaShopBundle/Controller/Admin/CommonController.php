@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Symfony\Component\HttpFoundation\Response;
@@ -236,13 +237,13 @@ class CommonController extends FrameworkBundleAdminController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \LogicException
      */
-    public function resetSearchAction($route, $controller, $action)
+    public function resetSearchAction($controller, $action)
     {
         $employeeId = $this->getUser()->getId();
         $shopId = $this->getContext()->shop->id;
 
         $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
-        return $this->redirectToRoute($route);
+        return new Response();
     }
 }

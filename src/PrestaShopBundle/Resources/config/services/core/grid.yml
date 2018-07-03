@@ -18,6 +18,9 @@ services:
     prestashop.core.grid.definition.factory.log_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
+          - "@=service('router').generate('admin_logs')"
         public: true
 
     # Grid factories
