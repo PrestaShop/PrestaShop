@@ -88,7 +88,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         ->add((new SimpleRowAction('export'))
                             ->setOptions([
                                 'icon' => 'cloud_download',
-                                'route' => 'admin_sql_manager_export',
+                                'route' => 'admin_request_sql_export',
                                 'route_param_key' => 'requestSqlId',
                                 'route_param_value' => 'id_request_sql',
                             ])
@@ -97,7 +97,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setName($this->trans('View', [], 'Admin.Global'))
                             ->setOptions([
                                 'icon' => 'remove_red_eye',
-                                'route' => 'admin_sql_manager_view',
+                                'route' => 'admin_request_sql_view',
                                 'route_param_key' => 'requestSqlId',
                                 'route_param_value' => 'id_request_sql',
                             ])
@@ -106,7 +106,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setName($this->trans('Edit', [], 'Admin.Global'))
                             ->setOptions([
                                 'icon' => 'edit',
-                                'route' => 'admin_sql_manager_edit',
+                                'route' => 'admin_request_sql_edit',
                                 'route_param_key' => 'requestSqlId',
                                 'route_param_value' => 'id_request_sql',
                             ])
@@ -115,7 +115,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setOptions([
                                 'icon' => 'delete',
-                                'route' => 'admin_sql_manager_delete',
+                                'route' => 'admin_request_sql_delete',
                                 'route_param_key' => 'requestSqlId',
                                 'route_param_value' => 'id_request_sql',
                             ])
@@ -133,7 +133,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
         return (new BulkActionCollection())
             ->add(new BulkAction(
                 'delete_all',
-                $this->trans('Delete selected', [], ''),
+                $this->trans('Delete selected', [], 'Admin.Actions'),
                 'delete'
             ))
         ;

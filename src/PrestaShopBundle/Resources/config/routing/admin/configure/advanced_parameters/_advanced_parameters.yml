@@ -19,5 +19,5 @@ _system_information:
     prefix: /system-information/
 
 _slq_manager:
-    resource: "sql_manager.yml"
-    prefix: /sql-manager/
+    resource: "request_sql.yml"
+    prefix: /request-sql/
