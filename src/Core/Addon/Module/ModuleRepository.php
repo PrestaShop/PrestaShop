@@ -518,9 +518,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModuleById($moduleId)
     {
-        var_dump($moduleId);
         $moduleAttributes = $this->adminModuleProvider->getModuleAttributesById($moduleId);
-        var_dump($moduleAttributes);
 
         $module = $this->getModule($moduleAttributes['name']);
 

@@ -58,7 +58,12 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
         $this->databaseAdapter = $databaseAdapter;
     }
 
-
+    /**
+     * Load data
+     *
+     * @param $moduleId Module id
+     * @param $hookId   Hook id
+     */
     public function load($moduleId, $hookId)
     {
         $sql = sprintf(
@@ -75,9 +80,16 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
 
         $module = Module::getInstanceById($moduleId);
         $exceptionsList = $module->getExceptions($hookId, true);
+        $exceptionsString = '';
         if (!empty($exceptionsList)) {
-            $excepts = implode(', ', current($exceptionsList));
+            $exceptionsString = implode(', ', current($exceptionsList));
         }
+
+        $this->data = [
+            'exceptions_text' => $exceptionsString,
+            'exceptions_list' => $exceptionsList,
+
+        ];
     }
 
     /**
@@ -85,7 +97,7 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [];
+        return $this->data;
     }
 
     /**

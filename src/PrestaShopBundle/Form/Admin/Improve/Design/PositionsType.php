@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
+use Dispatcher;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -74,7 +75,10 @@ class PositionsType extends TranslatorAwareType
                     'multiple' => true,
                     'required' => true,
                     'placeholder' => false,
-                    'empty_data' => '',
+                    'choices' => $this->formatExceptionsData([]),
+                    'choice_attr' => function ($value, $key, $index) {
+                        return $value === null ? ['disabled' => 'disabled'] : [];
+                    },
                 ]
             );
     }
@@ -87,51 +91,41 @@ class PositionsType extends TranslatorAwareType
         return 'improve_design_positions';
     }
 
-    protected function formatExceptionsData($fileList, $shopId)
+    protected function formatExceptionsData(array $fileList)
     {
-        if (!is_array($fileList)) {
-            $fileList = ($fileList) ? array($fileList) : [];
-        }
-
-        if ($shopId) {
-            $shop = new Shop($shopId);
-            $content .= ' ('.$shop->name.')';
-        }
-
         $data = [
-            $this->trans('___________ CUSTOM ___________', [], 'Admin.Design.Feature') => 0
+            $this->trans('___________ CUSTOM ___________', 'Admin.Design.Feature') => null
         ];
 
-        // @todo do something better with controllers
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
         ksort($controllers);
 
         foreach ($fileList as $k => $v) {
-            if (! array_key_exists($v, $controllers)) {
-                $content .= '<option value="'.$v.'">'.$v.'</option>';
+            if (!isset($controllers[$v])) {
+                $data[$v] = false;
             }
         }
 
-        $content .= '<option disabled="disabled">'.$this->trans('____________ CORE ____________', [], 'Admin.Design.Feature').'</option>';
-
+        $data[$this->trans('____________ CORE ____________', 'Admin.Design.Feature')] = null;
         foreach ($controllers as $k => $v) {
-            $content .= '<option value="'.$k.'">'.$k.'</option>';
+            $data[$k] = false;
         }
 
-        $modules_controllers_type = array(
-            'admin' => $this->trans('Admin modules controller', [], 'Admin.Design.Feature'),
-            'front' => $this->trans('Front modules controller', [], 'Admin.Design.Feature')
-        );
-        foreach ($modules_controllers_type as $type => $label) {
-            $content .= '<option disabled="disabled">____________ '.$label.' ____________</option>';
-            $all_modules_controllers = Dispatcher::getModuleControllers($type);
-            foreach ($all_modules_controllers as $module => $modules_controllers) {
-                foreach ($modules_controllers as $cont) {
-                    $content .= '<option value="module-'.$module.'-'.$cont.'">module-'.$module.'-'.$cont.'</option>';
+        $modulesControllersType = [
+            'admin' => $this->trans('Admin modules controller', 'Admin.Design.Feature'),
+            'front' => $this->trans('Front modules controller', 'Admin.Design.Feature')
+        ];
+
+        foreach ($modulesControllersType as $type => $label) {
+            $data[$label] = null;
+            $allModulesControllers = Dispatcher::getModuleControllers($type);
+            foreach ($allModulesControllers as $module => $modulesControllers) {
+                foreach ($modulesControllers as $controller) {
+                    $data[sprintf('module-%s-%s', $module, $controller)] = false;
                 }
             }
         }
 
-        return $content;
+        return $data;
     }
 }
