@@ -24,48 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Search;
-
-use Symfony\Component\HttpFoundation\Request;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
 /**
- * Class TemporarySearchCriteria is temporary search criteria class. Should be removed.
+ * Define a Column filter option.
  */
-class TemporarySearchCriteria implements SearchCriteriaInterface
+final class ColumnFilterOption
 {
-    private $request;
+    /**
+     * @var string class name that must implements FormTypeInterface
+     */
+    private $filterType;
 
-    public function __construct(Request $request)
+    /**
+     * @var array
+     */
+    private $filterTypeOptions;
+
+    /**
+     * @param string $filterType
+     * @param array $filterTypeOptions
+     */
+    public function __construct($filterType, array $filterTypeOptions = [])
     {
-        $this->request = $request;
+        $this->filterType = $filterType;
+        $this->filterTypeOptions = $filterTypeOptions;
     }
 
-    public function getOrderBy()
+    /**
+     * @return string the class name of Form Type.
+     */
+    public function getFilterType()
     {
-        return $this->request->get('orderBy', 'id_log');
+        return $this->filterType;
     }
 
-    public function getOrderWay()
+    /**
+     * @return array the form type options if any.
+     */
+    public function getFilterTypeOptions()
     {
-        return $this->request->get('sortOrder', 'asc');
-    }
-
-    public function getOffset()
-    {
-        return $this->request->get('offset', 0);
-    }
-
-    public function getLimit()
-    {
-        return $this->request->get('limit', 10);
-    }
-
-    public function getFilters()
-    {
-        $filters = $this->request->get('logs', []);
-
-        unset($filters['_token']);
-
-        return $filters;
+        return $this->filterTypeOptions;
     }
 }
