@@ -121,8 +121,9 @@ class ModuleController extends ModuleAbstractController
 
         try {
             $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));
-            $modules = $modulesProvider->generateAddonsUrls($modulesFromRepository);
+            $modulesProvider->generateAddonsUrls($modulesFromRepository);
 
+            $modules = $modulesFromRepository->toArray();
             $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
             $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu);
@@ -235,8 +236,8 @@ class ModuleController extends ModuleAbstractController
 
         foreach ($modules as $moduleLabel => $modulesPart) {
             $collection = AddonsCollection::createFrom($modulesPart);
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection);
-            $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
+            $modulesProvider->generateAddonsUrls($collection);
+            $modules->{$moduleLabel} = $this->getPresentedProducts($collection);
         }
 
         $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts);
@@ -390,46 +391,6 @@ class ModuleController extends ModuleAbstractController
         );
 
         return new JsonResponse($content);
-    }
-
-    /**
-     * @return Response
-     */
-    public function notificationAction()
-    {
-        $modulesPresenter = function (array &$modules) {
-            return $this->getPresentedProducts($modules);
-        };
-
-        $moduleManager = $this->get('prestashop.module.manager');
-        $modules = $moduleManager->getModulesWithNotifications($modulesPresenter);
-        $layoutTitle = $this->trans('Module notifications', 'Admin.Modules.Feature');
-
-        $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
-
-        return $this->render('PrestaShopBundle:Admin/Module:notifications.html.twig', array(
-            'enableSidebar' => true,
-            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'layoutTitle' => $layoutTitle,
-            'help_link' => $this->generateSidebarLink('AdminModules'),
-            'modules' => $modules,
-            'requireAddonsSearch' => false,
-            'requireBulkActions' => false,
-            'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
-            'errorMessage' => $errorMessage,
-        ));
-    }
-
-    /**
-     * @return JsonResponse with number of modules having at least one notification
-     */
-    public function notificationsCountAction()
-    {
-        $moduleManager = $this->container->get('prestashop.module.manager');
-        return new JsonResponse(array(
-            'count' => $moduleManager->countModulesWithNotifications(),
-        ));
     }
 
     /**
@@ -713,15 +674,10 @@ class ModuleController extends ModuleAbstractController
         );
     }
 
-    private function getPresentedProducts(array &$modules)
+    private function getPresentedProducts(AddonsCollection $modules)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $presentedProducts = array();
-        foreach ($modules as $name => $product) {
-            $presentedProducts[$name] = $modulePresenter->present($product);
-        }
-
-        return $presentedProducts;
+        return $modulePresenter->presentCollection($modules);
     }
 
     private function getTopMenuData(array $topMenuData, $activeMenu = null)

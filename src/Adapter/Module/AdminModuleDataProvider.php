@@ -186,8 +186,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
-        $addons = $addons->toArray();
-        foreach ($addons as &$addon) {
+        foreach ($addons as $addon) {
             $urls = array();
             foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(

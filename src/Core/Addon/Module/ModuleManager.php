@@ -149,8 +149,8 @@ class ModuleManager implements AddonManagerInterface
         $modulesProvider = $this->adminModuleProvider;
         foreach ($modules as $moduleLabel => $modulesPart) {
             $collection = AddonsCollection::createFrom($modulesPart);
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection, str_replace("to_", "", $moduleLabel));
-            $modules->{$moduleLabel} = $modulesPresenter($modulesPart);
+            $modulesProvider->generateAddonsUrls($collection, str_replace("to_", "", $moduleLabel));
+            $modules->{$moduleLabel} = $modulesPresenter($collection);
         }
 
         return $modules;

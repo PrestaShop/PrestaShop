@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
@@ -42,7 +43,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     protected function getNotificationPageData($type)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $modulesPresenterCallback = function (array &$modules) use ($modulePresenter) {
+        $modulesPresenterCallback = function (AddonsCollection &$modules) use ($modulePresenter) {
             return $modulePresenter->presentCollection($modules);
         };
 
