@@ -47,6 +47,16 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
+     * @var string the URL to reset Grid filters.
+     */
+    private $resetActionUrl;
+
+    public function __construct($resetActionUrl)
+    {
+        $this->resetActionUrl = $resetActionUrl;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -118,9 +128,8 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
                 ->setOptions([
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
-                        'label' => $this->trans('Search', [], 'Global.Actions'),
                         'attr' => [
-                            'class' => 'btn btn-primary',
+                            'url' => $this->resetActionUrl,
                         ],
                     ]),
                 ])
@@ -158,13 +167,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'storage',
                 'export_to_sql_manager'
             ))
-        ;
-    }
-
-    protected function getBulkActions()
-    {
-        return (new BulkActionCollection())
-            ->add(new BulkAction('id', $this->trans('Edit', [], 'Admin.Actions'), 'edit'))
         ;
     }
 }
