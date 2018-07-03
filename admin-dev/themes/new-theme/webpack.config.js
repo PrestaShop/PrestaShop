@@ -69,6 +69,15 @@ let config = {
     ],
     imports: [
       './js/pages/import'
+    ],
+    localization: [
+      './js/pages/localization'
+    ],
+    geolocation: [
+      './js/pages/geolocation'
+    ],
+    payment_preferences: [
+      './js/pages/payment-preferences'
     ]
   },
   output: {

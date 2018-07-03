@@ -26,6 +26,9 @@ const {AddProductPage} = require('../../selectors/BO/add_product_page');
  *      type: 'percentage',
  *      discount: 'product_discount'
  *  }
+ *  options: {
+ *      filename: "attached_filename"
+ *  }
  * };
  */
 module.exports = {
@@ -96,6 +99,17 @@ module.exports = {
           });
           test('should set the "Discount" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, productData['pricing']['discount']));
           test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
+        }, 'product/product');
+      }
+
+      if (productData.hasOwnProperty('options')) {
+        scenario('Edit product options', client => {
+          test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
+          test('should select the attached file to the product', () => {
+            return promise
+              .then(() => client.scrollTo(AddProductPage.options_add_new_file_button))
+              .then(() => client.waitForExistAndClick(AddProductPage.attached_file_checkbox.replace('%FileName', productData.options.filename)))
+          });
         }, 'product/product');
       }
 

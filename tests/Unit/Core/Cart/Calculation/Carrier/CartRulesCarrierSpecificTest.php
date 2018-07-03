@@ -56,9 +56,10 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
     ) {
         // specific setUp
         $this->addProductsToCart($productData);
-        $this->addCartRulesToCart($cartRuleData);
-        $this->setCartCarrier($carrierId);
+        $this->setCartCarrierFromFixtureId($carrierId);
         $this->setCartAddress($addressId);
+        $result = $this->addCartRulesToCart($cartRuleData);
+        $this->assertTrue($result);
 
         // assertions
         $this->compareCartTotalTaxIncl($expectedTotal);
@@ -99,8 +100,7 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
                 'addressId'            => 1,
                 'carrierId'            => 2,
             ],
-            /*
-            // following is testing te bug http://forge.prestashop.com/browse/BOOM-3307
+            // following is testing the bug http://forge.prestashop.com/browse/BOOM-3307
             ' carrier #2 (voucher specific): one product in cart, quantity 1'        => [
                 'products'             => [1 => 1,],
                 'expectedTotal'        => (1 - static::CART_RULES_FIXTURES[1]['percent'] / 100)
@@ -114,7 +114,6 @@ class CartRulesCarrierSpecificTest extends AbstractCarrierTest
                 'addressId'            => 1,
                 'carrierId'            => 2,
             ],
-            */
         ];
     }
 }

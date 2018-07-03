@@ -10,6 +10,216 @@ File: controllers/front/OrderConfirmationController.php:154</note>
       </trans-unit>
     </body>
   </file>
+  <file original="classes/lang/KeysReference/RiskLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Context:
+File: classes/lang/KeysReference/RiskLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="28d0edd045e05cf5af64e35ae0c4c6ef">
+        <source>Low</source>
+        <target>Low</target>
+        <note>Context:
+File: classes/lang/KeysReference/RiskLang.php:28</note>
+      </trans-unit>
+      <trans-unit id="87f8a6ab85c9ced3702b4ea641ad4bb5">
+        <source>Medium</source>
+        <target>Medium</target>
+        <note>Context:
+File: classes/lang/KeysReference/RiskLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="655d20c1ca69519ca647684edbb2db35">
+        <source>High</source>
+        <target>High</target>
+        <note>Context:
+File: classes/lang/KeysReference/RiskLang.php:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/OrderStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d698e777b19f6f487ae0490950174fde">
+        <source>Awaiting check payment</source>
+        <target>Awaiting check payment</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="016e1f278eccd700eaf33f74a501d050">
+        <source>Payment accepted</source>
+        <target>Payment accepted</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="294e143a57d178715a55e8575f8037e6">
+        <source>Processing in progress</source>
+        <target>Processing in progress</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:31</note>
+      </trans-unit>
+      <trans-unit id="747cf5c8587184b9e489ff897d97c20d">
+        <source>Shipped</source>
+        <target>Shipped</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:33</note>
+      </trans-unit>
+      <trans-unit id="67edd3b99247c9eb5884a02802a20fa7">
+        <source>Delivered</source>
+        <target>Delivered</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:35</note>
+      </trans-unit>
+      <trans-unit id="0e22fe7d45f8e5632a4abf369b24e29c">
+        <source>Canceled</source>
+        <target>Canceled</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:37</note>
+      </trans-unit>
+      <trans-unit id="cc61945cbbf46721a053467c395c666f">
+        <source>Refunded</source>
+        <target>Refunded</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:39</note>
+      </trans-unit>
+      <trans-unit id="1e97d97a923eaddd810e056c828e99ea">
+        <source>Payment error</source>
+        <target>Payment error</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="48eac0bd985bc909fb58ccc1e1f669ed">
+        <source>On backorder (paid)</source>
+        <target>On backorder (paid)</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:43</note>
+      </trans-unit>
+      <trans-unit id="6d59fd4089482ca1a4017ca4852f8d1d">
+        <source>On backorder (not paid)</source>
+        <target>On backorder (not paid)</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:45</note>
+      </trans-unit>
+      <trans-unit id="688a337ab9864a53b41cd6ccd7f8880d">
+        <source>Awaiting bank wire payment</source>
+        <target>Awaiting bank wire payment</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:47</note>
+      </trans-unit>
+      <trans-unit id="9517f3495b0036d25cbc455c592ea868">
+        <source>Remote payment accepted</source>
+        <target>Remote payment accepted</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:49</note>
+      </trans-unit>
+      <trans-unit id="51ebf726bac579d61910a5425e3128c5">
+        <source>Awaiting Cash On Delivery validation</source>
+        <target>Awaiting Cash On Delivery validation</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderStateLang.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/SupplyOrderStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="78e25fccba5eb87a2fe929e6cfa27b26">
+        <source>1 - Creation in progress</source>
+        <target>1 - Creation in progress</target>
+        <note>Context:
+File: classes/lang/KeysReference/SupplyOrderStateLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="aa92ea2c14150feacd8a38cabaf59c4b">
+        <source>2 - Order validated</source>
+        <target>2 - Order validated</target>
+        <note>Context:
+File: classes/lang/KeysReference/SupplyOrderStateLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="efca1ad6911feea6ec4f5172f28ff135">
+        <source>3 - Pending receipt</source>
+        <target>3 - Pending receipt</target>
+        <note>Context:
+File: classes/lang/KeysReference/SupplyOrderStateLang.php:31</note>
+      </trans-unit>
+      <trans-unit id="0e547a2250b0531cf58a26995ba31801">
+        <source>4 - Order received in part</source>
+        <target>4 - Order received in part</target>
+        <note>Context:
+File: classes/lang/KeysReference/SupplyOrderStateLang.php:33</note>
+      </trans-unit>
+      <trans-unit id="589760755f6f33549fb31e5ab03f2676">
+        <source>5 - Order received completely</source>
+        <target>5 - Order received completely</target>
+        <note>Context:
+File: classes/lang/KeysReference/SupplyOrderStateLang.php:35</note>
+      </trans-unit>
+      <trans-unit id="817bedb8bd68b944c3fa6e231b53147d">
+        <source>6 - Order canceled</source>
+        <target>6 - Order canceled</target>
+        <note>Context:
+File: classes/lang/KeysReference/SupplyOrderStateLang.php:37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/OrderMessageLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
+        <source>Delay</source>
+        <target>Delay</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderMessageLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="2a442c1a811c488f4aad5d970f1047c5">
+        <source>Hi,
+
+Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
+Please accept our apologies and rest assured that we are working hard to rectify this.
+
+Best regards,</source>
+        <target>Hi,
+
+Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
+Please accept our apologies and rest assured that we are working hard to rectify this.
+
+Best regards,</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderMessageLang.php:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/OrderReturnStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="015c603172846437ee7a569dc2c36273">
+        <source>Waiting for confirmation</source>
+        <target>Waiting for confirmation</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderReturnStateLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="7d42f56ce1d82d68f6545242ef4384a4">
+        <source>Waiting for package</source>
+        <target>Waiting for package</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderReturnStateLang.php:28</note>
+      </trans-unit>
+      <trans-unit id="b383cc6d0e4ab5bfab94b4452a916ee5">
+        <source>Package received</source>
+        <target>Package received</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderReturnStateLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="03bd13f6762c099741f4934beb32b95d">
+        <source>Return denied</source>
+        <target>Return denied</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderReturnStateLang.php:30</note>
+      </trans-unit>
+      <trans-unit id="4bb0dcdb92397d6b646711d623504058">
+        <source>Return completed</source>
+        <target>Return completed</target>
+        <note>Context:
+File: classes/lang/KeysReference/OrderReturnStateLang.php:31</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">

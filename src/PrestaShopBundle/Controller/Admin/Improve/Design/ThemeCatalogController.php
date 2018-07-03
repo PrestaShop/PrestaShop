@@ -43,14 +43,15 @@ class ThemeCatalogController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $context = $this->getContext();
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $versionHelper = $this->get('prestashop.core.foundation.version');
 
-        $pageContent = file_get_contents('https://addons.prestashop.com/iframe/search-' . $this->getMajorVersion($configuration->get('_PS_VERSION_')) . '.php?'
+        $pageContent = file_get_contents(
+            'https://addons.prestashop.com/iframe/search-' . $versionHelper->getMajorVersion() . '.php?'
             . http_build_query([
-                'psVersion' => $configuration->get('_PS_VERSION_'),
-                'isoLang' => $context->language->iso_code,
-                'isoCurrency' => $context->currency->iso_code,
+                'psVersion' => $versionHelper->getVersion(),
+                'isoLang' => $this->getContext()->language->iso_code,
+                'isoCurrency' => $this->getContext()->currency->iso_code,
                 'isoCountry' => $this->getContext()->country->iso_code,
                 'activity' => $configuration->getInt('PS_SHOP_ACTIVITY'),
                 'parentUrl' => $request->getSchemeAndHttpHost(),
@@ -69,23 +70,5 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminThemesCatalog'),
             'requireFilterStatus' => false,
         ]);
-    }
-
-    /**
-     * Extracts the major version part of a PrestaShop version string
-     *
-     * For "1.7.4.0" the method returns "1.7", etc.
-     *
-     * @param string $version
-     *
-     * @return bool|string
-     */
-    private function getMajorVersion($version)
-    {
-        return substr(
-            $version,
-            0,
-            strpos($version, '.', strpos($version, '.') + 1)
-        );
     }
 }

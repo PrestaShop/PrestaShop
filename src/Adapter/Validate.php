@@ -43,4 +43,17 @@ class Validate
     {
         return ValidateLegacy::isDate($date);
     }
+
+    /**
+     * Check if HTML content is clean
+     *
+     * @param string $html
+     * @param bool $allowIframe
+     *
+     * @return bool
+     */
+    public function isCleanHtml($html, $allowIframe = false)
+    {
+        return ValidateLegacy::isCleanHtml($html, $allowIframe);
+    }
 }

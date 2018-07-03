@@ -1,0 +1,74 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.International.Feature' %}
+
+{% block import_localization_pack %}
+  {{ form_start(localizationPackImportForm, {'action': path('admin_localization_import_pack')}) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">language</i> {{ 'Import a localization pack'|trans }}
+    </h3>
+
+    <div class="card-block">
+      <div class="card-text">
+        <div class="form-group">
+          <label class="form-control-label">
+            {{ 'Localization pack you want to import'|trans }}
+          </label>
+          {{ form_errors(localizationPackImportForm.iso_localization_pack) }}
+          {{ form_widget(localizationPackImportForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label">
+            {{ 'Content to import'|trans }}
+          </label>
+          {{ form_errors(localizationPackImportForm.content_to_import) }}
+          {{ form_widget(localizationPackImportForm.content_to_import) }}
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label">
+            {{ 'Download pack data'|trans }}
+          </label>
+          {{ form_errors(localizationPackImportForm.download_pack_data) }}
+          {{ form_widget(localizationPackImportForm.download_pack_data) }}
+          <small class="form-text">{{ 'If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.'|trans({}, 'Admin.International.Help') }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          <i class="material-icons">cloud_download</i>
+          <span>{{ 'Import'|trans({}, 'Admin.Actions') }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(localizationPackImportForm) }}
+{% endblock %}

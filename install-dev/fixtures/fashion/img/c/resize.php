@@ -30,7 +30,7 @@ ini_set('max_execution_time', 7200);
 ini_set('memory_limit', '512M');
 
 $types = ImageType::getImagesTypes('categories');
-$files = scandir(dirname(__FILE__));
+$files = scandir(dirname(__FILE__), SCANDIR_SORT_NONE);
 foreach ($files as $file) {
     if (preg_match('/^([a-z0-9-_]+)\.jpg$/i', $file, $match) && !preg_match('/default\.jpg$/i', $file)) {
         foreach ($types as $type) {

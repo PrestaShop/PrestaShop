@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/KeysReference/ThemeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="24e61dc70866cb84d375a6270035c7cf">
+        <source>Full width</source>
+        <target>Full width</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="63bd7d20cb7d515fe705bcda029ea776">
+        <source>Three columns</source>
+        <target>Three columns</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:28</note>
+      </trans-unit>
+      <trans-unit id="710c71f05157207e5c47015fc032564d">
+        <source>Two columns, small left column</source>
+        <target>Two columns, small left column</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="4c318832b92e5f7b818aba037e1ed5ac">
+        <source>Two columns, small right column</source>
+        <target>Two columns, small right column</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:30</note>
+      </trans-unit>
+      <trans-unit id="05559f48f0ea41ebb03f6d08b95e1e25">
+        <source>No side columns, ideal for distraction-free pages such as product pages.</source>
+        <target>No side columns, ideal for distraction-free pages such as product pages.</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:32</note>
+      </trans-unit>
+      <trans-unit id="387bf9bbb8c3c3fd021aa85970554839">
+        <source>One large central column and 2 side columns.</source>
+        <target>One large central column and 2 side columns.</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:34</note>
+      </trans-unit>
+      <trans-unit id="74266ad9cb6f32c9da66592ca748ef8d">
+        <source>Two columns with a small left column.</source>
+        <target>Two columns with a small left column.</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:36</note>
+      </trans-unit>
+      <trans-unit id="fefe6a1aca554473c855e076d0376b52">
+        <source>Two columns with a small right column.</source>
+        <target>Two columns with a small right column.</target>
+        <note>Context:
+File: classes/lang/KeysReference/ThemeLang.php:38</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">

@@ -766,6 +766,10 @@ class LinkCore
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminPayment' => 'admin_payment_methods',
+                    'AdminLocalization' => 'admin_localization_show_settings',
+                    'AdminGeolocation' => 'admin_geolocation',
+                    'AdminPaymentPreferences' => 'admin_payment_preferences',
                 );
 
                 if (isset($routes[$controller])) {
@@ -1094,8 +1098,8 @@ class LinkCore
 
         $vars = array();
         $varsNb = array('n');
-        $varsSort = array('orderby', 'orderway');
-        $varsPagination = array('p');
+        $varsSort = array('order');
+        $varsPagination = array('page');
 
         foreach ($_GET as $k => $value) {
             if ($k != 'id_'.$type && $k != 'controller') {

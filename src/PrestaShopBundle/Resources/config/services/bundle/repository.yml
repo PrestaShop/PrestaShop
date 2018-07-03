@@ -78,3 +78,15 @@ services:
             - "@doctrine.dbal.default_connection"
             - "@prestashop.adapter.legacy.context"
             - "%database_prefix%"
+
+    prestashop.core.admin.timezone.repository:
+        class: PrestaShopBundle\Entity\Repository\TimezoneRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.bundle.repository.module:
+        class: PrestaShopBundle\Entity\Repository\ModuleRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'

@@ -1,0 +1,13 @@
+admin_modules_positions:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:index'
+        _legacy_controller: AdminModulesPositions
+
+admin_modules_positions_edit:
+    path: /edit/{moduleId}/{hookId}
+    methods: [GET,POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:edit'
+        _legacy_controller: AdminModulesPositions

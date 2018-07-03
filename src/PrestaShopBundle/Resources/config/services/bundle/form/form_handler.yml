@@ -41,7 +41,7 @@ services:
             - 'AdministrationPage'
 
     prestashop.admin.customer_preferences.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
@@ -49,6 +49,10 @@ services:
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
             - 'CustomerPreferencesPage'
+        calls:
+            - method: setTabRepository
+              arguments:
+                  - '@prestashop.core.admin.tab.repository'
 
     prestashop.admin.order_preferences.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -136,3 +140,37 @@ services:
             -
               'positions': 'PrestaShopBundle\Form\Admin\Improve\Design\PositionsType'
             - 'ImproveDesignPositionsPage'
+
+    prestashop.admin.geolocation.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.geolocation.form_data_provider'
+            -
+              'geolocation_by_id_address': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
+              'geolocation_ip_address_whitelist': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
+              'geolocation_options': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+            - 'GeolocationPage'
+
+    prestashop.admin.localization.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.localization.form_data_provider'
+            -
+              'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+              'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
+              'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
+            - 'LocalizationPage'
+
+    prestashop.admin.payment_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.payment_preferences.form_data_provider'
+            -
+              'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+            - 'PaymentPreferences'

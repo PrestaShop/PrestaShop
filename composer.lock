@@ -3703,16 +3703,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.1",
+            "version": "v1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "73576b54d40077442bae9249e00e5ca05929b513"
+                "reference": "e198abbd17b3aaa5a4c09e34bb65f8552b9ee832"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/73576b54d40077442bae9249e00e5ca05929b513",
-                "reference": "73576b54d40077442bae9249e00e5ca05929b513",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/e198abbd17b3aaa5a4c09e34bb65f8552b9ee832",
+                "reference": "e198abbd17b3aaa5a4c09e34bb65f8552b9ee832",
                 "shasum": ""
             },
             "require": {
@@ -3731,7 +3731,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-05-23T16:07:31+00:00"
+            "time": "2018-06-25T13:27:25+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -4519,7 +4519,7 @@
                 "nikic/php-parser": "^2.1",
                 "php": "^5.4 || ^7.1",
                 "smarty/smarty": "^3.1",
-                "symfony/twig-bridge": "^2.8 || ^3.0",
+              "symfony/twig-bridge": "^2.8 || ^3.0",
                 "twig/twig": "^1.34 || ^2.0"
             },
             "require-dev": {
@@ -4562,16 +4562,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "e95133dc19353024fd16aa00f4e9d60c4c292741"
+                "reference": "25ff6c075d2975d794363df90edb326806f66c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/e95133dc19353024fd16aa00f4e9d60c4c292741",
-                "reference": "e95133dc19353024fd16aa00f4e9d60c4c292741",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/25ff6c075d2975d794363df90edb326806f66c4d",
+                "reference": "25ff6c075d2975d794363df90edb326806f66c4d",
                 "shasum": ""
             },
             "require": {
@@ -4586,7 +4586,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4596,7 +4596,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2018-05-15T15:34:58+00:00"
+            "time": "2018-06-08T13:29:51+00:00"
         },
         {
             "name": "psr/cache",

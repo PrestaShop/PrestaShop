@@ -6,7 +6,7 @@
        url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir.ttf') format('truetype');
   font-weight: normal;
 }
-      
+
 @font-face {
   font-family: Vazir;
   src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot');
@@ -98,4 +98,8 @@ svg {
 
 .process-icon-rtl:before {
   content : "\f1dd\f0d9";
+}
+
+#header_infos #header_logo {
+  background-position: right;
 }

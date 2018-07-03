@@ -70,7 +70,7 @@ if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-$themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml');
+$themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml', GLOB_NOSORT);
 usort($themes, function ($a, $b) {
     return strcmp($b, $a);
 });

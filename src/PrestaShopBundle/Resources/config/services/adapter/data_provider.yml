@@ -42,6 +42,9 @@ services:
 
     prestashop.adapter.data_provider.currency:
         class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
+        arguments:
+          - "@prestashop.adapter.legacy.configuration"
+          - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
 
     prestashop.adapter.data_provider.group:
         class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider

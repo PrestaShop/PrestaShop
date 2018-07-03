@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -43,9 +42,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class GiftOptionsType extends TranslatorAwareType
 {
     /**
-     * @var CurrencyDataProvider
+     * @var string
      */
-    private $currencyDataProvider;
+    private $defaultCurrencyIsoCode;
 
     /**
      * @var array
@@ -55,12 +54,12 @@ class GiftOptionsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        CurrencyDataProvider $currencyDataProvider,
+        $defaultCurrencyIsoCode,
         array $taxChoices
     ) {
         parent::__construct($translator, $locales);
 
-        $this->currencyDataProvider = $currencyDataProvider;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->taxChoices = $taxChoices;
     }
 
@@ -72,23 +71,21 @@ class GiftOptionsType extends TranslatorAwareType
         /** @var Configuration $configuration */
         $configuration = $this->getConfiguration();
         $atcpShipWrap = $configuration->getBoolean('PS_ATCP_SHIPWRAP');
-        $defaultCurrencyId = $configuration->getInt('PS_CURRENCY_DEFAULT');
-        $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
+        $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder
             ->add('enable_gift_wrapping', SwitchType::class)
             ->add('gift_wrapping_price', MoneyWithSuffixType::class, [
                 'required' => false,
-                'currency' => $defaultCurrency->iso_code,
+                'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
-            ])
-        ;
+            ]);
 
         if (!$atcpShipWrap) {
             $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices'  => $this->taxChoices,
+                'choices' => $this->taxChoices,
             ]);
         }
 

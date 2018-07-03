@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
@@ -90,14 +91,14 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return array(
+        return [
             'smarty' => $this->smartyCacheConfiguration->getConfiguration(),
             'debug_mode' => $this->debugModeConfiguration->getConfiguration(),
             'optional_features' => $this->optionalFeaturesConfiguration->getConfiguration(),
             'ccc' => $this->combineCompressCacheConfiguration->getConfiguration(),
             'media_servers' => $this->mediaServerConfiguration->getConfiguration(),
             'caching' => $this->cachingConfiguration->getConfiguration(),
-        );
+        ];
     }
 
     /**
@@ -110,7 +111,6 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
             $this->optionalFeaturesConfiguration->updateConfiguration($data['optional_features']) +
             $this->combineCompressCacheConfiguration->updateConfiguration($data['ccc']) +
             $this->mediaServerConfiguration->updateConfiguration($data['media_servers']) +
-            $this->cachingConfiguration->updateConfiguration($data['caching'])
-        ;
+            $this->cachingConfiguration->updateConfiguration($data['caching']);
     }
 }

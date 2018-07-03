@@ -132,7 +132,7 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
-        $this->assertContains('/order/delivery/slip?_token', $response->getTargetUrl());
+        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 
     public function testPdfActionWithEmptyData()
@@ -160,6 +160,6 @@ class DeliveryControllerTest extends WebTestCase
             'error',
             self::$kernel->getContainer()->get('session')->getFlashBag()->all()
         );
-        $this->assertContains('/order/delivery/slip?_token', $response->getTargetUrl());
+        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 }

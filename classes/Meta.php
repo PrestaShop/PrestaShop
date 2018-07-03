@@ -373,7 +373,7 @@ class MetaCore extends ObjectModel
         if (!empty($title)) {
             $title = ' - '.$title;
         }
-        $pageNumber = (int)Tools::getValue('p');
+        $pageNumber = (int)Tools::getValue('page');
         $category = new Category($idCategory, $idLang);
 
         $cacheId = 'Meta::getCategoryMetas'.(int) $idCategory.'-'.(int) $idLang;
@@ -421,7 +421,7 @@ class MetaCore extends ObjectModel
      */
     public static function getManufacturerMetas($idManufacturer, $idLang, $pageName)
     {
-        $pageNumber = (int)Tools::getValue('p');
+        $pageNumber = (int)Tools::getValue('page');
         $manufacturer = new Manufacturer($idManufacturer, $idLang);
         if (Validate::isLoadedObject($manufacturer)) {
             $row = Meta::getPresentedObject($manufacturer);

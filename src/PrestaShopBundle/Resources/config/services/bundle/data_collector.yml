@@ -15,7 +15,7 @@ services:
     # Web Profiler Bundle
     data_collector.config:
         class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
-        arguments: ["PrestaShop", "@=service('prestashop.adapter.legacy.configuration').get('_PS_VERSION_')"]
+        arguments: ["PrestaShop", "@=service('prestashop.core.foundation.version').getVersion()"]
         public: false
         calls:
           - ["setKernel", ["@kernel"]]

@@ -65,8 +65,9 @@ class CommonClient {
               element.scrollIntoView();
             }, selector)
             .waitForVisibleAndClick(selector);
-        }})
-      .then(()=> this.client.pause(4000));
+        }
+      })
+      .then(() => this.client.pause(4000));
   }
 
   closeBoarding(selector) {
@@ -278,6 +279,22 @@ class CommonClient {
       .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1));
   }
 
+  /**
+   * This function allows to check the existence of file after downloading
+   * @param folderPath
+   * @param fileName
+   * @returns {*}
+   */
+  checkFile(folderPath, fileName, pause = 0) {
+    fs.stat(folderPath + fileName, function(err, stats) {
+      err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
+    });
+
+    return this.client
+      .pause(pause)
+      .then(() => expect(global.existingFile).to.be.true)
+  }
+
   waitForVisible(selector, timeout = 90000) {
     return this.client
       .waitForVisible(selector, timeout);
@@ -304,6 +321,12 @@ class CommonClient {
     return this.client.switchWindow(id);
   }
 
+  switchTab(id) {
+    return this.client
+      .then(() => this.client.getTabIds())
+      .then((ids) => this.client.switchTab(ids[id]));
+  }
+
   isExisting(selector, pause = 0) {
     return this.client
       .pause(pause)
@@ -324,6 +347,15 @@ class CommonClient {
       .pause(pause)
       .isExisting(selector)
       .then((isExisting) => expect(isExisting).to.be.false);
+  }
+
+  clickOnResumeButton(selector) {
+    if (!global.isVisible) {
+      return this.client
+        .click(selector);
+    } else {
+      return this.client.pause(1000);
+    }
   }
 
   pause(timeout) {
@@ -365,39 +397,6 @@ class CommonClient {
   }
 
   /**
-   * This function searches the data in the table in case a filter input exists
-   * @param selector
-   * @param data
-   * @returns {*}
-   */
-  search(selector, data) {
-    if (global.isVisible) {
-      return this.client
-        .waitAndSetValue(selector, data)
-        .keys('Enter');
-    }
-  }
-
-  /**
-   * This function checks the search result
-   * @param selector
-   * @param data
-   * @param pos
-   * @returns {*}
-   */
-  checkExistence(selector, data, pos) {
-    if (global.isVisible) {
-      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    } else {
-      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    }
-  }
-
-  /**
    * This function checks the search result
    * @param selector editor body selector
    * @param content
@@ -431,6 +430,67 @@ class CommonClient {
 
   deleteObjectElement(object, pos) {
     delete object[pos];
+  }
+
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
+  }
+
+  stringifyNumber(number) {
+    let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
+    let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
+    if (number < 20) return special[number];
+    if (number%10 === 0) return deca[Math.floor(number/10)-2] + 'ieth';
+    return deca[Math.floor(number/10)-2] + 'y-' + special[number%10];
+  }
+
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
+  }
+
+
+  /**
+   * This function searches the data in the table in case a filter input exists
+   * @param selector
+   * @param data
+   * @returns {*}
+   */
+  search(selector, data) {
+    if (global.isVisible) {
+      return this.client
+        .waitAndSetValue(selector, data)
+        .keys('Enter');
+    }
+  }
+
+  /**
+   * This function checks the search result
+   * @param selector
+   * @param data
+   * @param pos
+   * @returns {*}
+   */
+  checkExistence(selector, data, pos) {
+    if (global.isVisible) {
+      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    } else {
+      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
+        expect(text).to.be.equal(data);
+      });
+    }
+  }
+
+  refresh() {
+    return this.client
+      .refresh();
   }
 
 }

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -52,39 +53,27 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
+        // temporary search criteria class, to be removed
+        $searchCriteria = new TemporarySearchCriteria($request);
+
+        $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
+        $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
         $logsByEmailForm = $this->getFormHandler()->getForm();
-
-        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_log',
-            'sortOrder' => 'desc',
-            'filters' => array()
-        ));
-
-        $twigValues = array(
+        $twigValues = [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'orderBy' => $filters['orderBy'],
-            'sortOrder' => $filters['sortOrder'],
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'searchParametersForm' => $searchParametersForm->createView(),
-            'logsSum' => count($this->getLogRepository()->findAll()),
-            'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
-            'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
-            'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
-                'AdminRequestSql',
-                true,
-                array(
-                'addrequest_sql' => 1
-            )),
-        );
+            'grid' => $presentedGrid,
+        ];
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
     }
@@ -151,6 +140,8 @@ class LogsController extends FrameworkBundleAdminController
     public function deleteAllAction()
     {
         $this->getLogRepository()->deleteAll();
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_logs');
     }

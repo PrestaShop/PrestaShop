@@ -102,6 +102,18 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
+     * Clears module list cache
+     *
+     * @return void
+     */
+    public function clearModuleListCache()
+    {
+        if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
+            @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+        }
+    }
+
+    /**
      * @deprecated since version 1.7.3.0
      * @return array
      */

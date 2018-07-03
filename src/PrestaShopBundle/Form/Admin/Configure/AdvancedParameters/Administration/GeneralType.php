@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -39,19 +40,18 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', SwitchType::class, array(
+            ->add('check_modules_update', SwitchType::class, [
                 'required' => true,
-            ))
-            ->add('check_ip_address', SwitchType::class, array(
+            ])
+            ->add('check_ip_address', SwitchType::class, [
                 'required' => true,
-            ))
-            ->add('front_cookie_lifetime', TextType::class, array(
+            ])
+            ->add('front_cookie_lifetime', TextType::class, [
                 'required' => true,
-            ))
-            ->add('back_cookie_lifetime', TextType::class, array(
+            ])
+            ->add('back_cookie_lifetime', TextType::class, [
                 'required' => true,
-            ))
-        ;
+            ]);
     }
 
     /**
@@ -59,9 +59,9 @@ class GeneralType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ));
+        ]);
     }
 
     /**

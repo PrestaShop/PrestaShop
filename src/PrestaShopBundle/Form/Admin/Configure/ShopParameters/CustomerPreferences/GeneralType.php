@@ -48,8 +48,7 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('enable_b2b_mode', SwitchType::class)
             ->add('ask_for_birthday', SwitchType::class)
-            ->add('enable_offers', SwitchType::class)
-        ;
+            ->add('enable_offers', SwitchType::class);
     }
 
     /**

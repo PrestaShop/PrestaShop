@@ -279,6 +279,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
         parent: 'form.type.translatable.aware'
         public: true
+        calls:
+            - ['setIsSecure', ["@=service('request_stack').getCurrentRequest().isSecure()"]]
         tags:
             - { name: form.type }
 
@@ -339,7 +341,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.adapter.data_provider.currency'
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
             - '@=service("prestashop.adapter.data_provider.cms").getCmsChoices()'
         tags:
             - { name: form.type }
@@ -349,7 +351,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.adapter.data_provider.currency'
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
             - '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
         tags:
             - { name: form.type }
@@ -372,5 +374,48 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\PositionsType'
         parent: 'form.type.translatable.aware'
         public: true
+        tags:
+            - { name: form.type }
+
+    form.type.localization_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.localization.import_pack:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.localization_pack_by_iso_code").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.geolocation.options:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.country_by_iso_code").getChoices()'
+            - '@prestashop.adapter.legacy.configuration'
+        tags:
+            - { name: form.type }
+
+    form.type.payment.module_currency_restriction:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@prestashop.adapter.data_provider.country'
         tags:
             - { name: form.type }

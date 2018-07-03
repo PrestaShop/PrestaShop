@@ -51,6 +51,9 @@ services:
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
+    prestashop.adapter.validate:
+        class: PrestaShop\PrestaShop\Adapter\Validate
+
     # SSL middleware
     prestashop.adapter.middleware.ssl:
         class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
