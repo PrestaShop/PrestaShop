@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use PrestaShop\PrestaShop\Adapter\SqlManager\CharsetEncoding;
+use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,6 +41,7 @@ class RequestSqlSettingsType extends AbstractType
                     CharsetEncoding::UTF_8 => 1,
                     CharsetEncoding::ISO_8859_1 => 2,
                 ],
+                'translation_domain' => false,
             ])
         ;
     }
