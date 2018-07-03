@@ -24,18 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
 use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager;
 use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlValidator;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
- * Class RequestSqlFormDataProvider is responsible for saving RequestSQL model in "Configure > Advanced Parameters >
- * Database > SQL Manager"
+ * Class RequestSqlFormHandler is responsible for creating RequestSql form
  */
-final class RequestSqlFormDataProvider implements FormDataProviderInterface
+class RequestSqlFormHandler
 {
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
     /**
      * @var RequestSqlManager
      */
@@ -47,11 +51,16 @@ final class RequestSqlFormDataProvider implements FormDataProviderInterface
     private $requestSqlValidator;
 
     /**
-     * @param RequestSqlManager   $requestSqlManager
+     * @param FormFactoryInterface $formFactory
+     * @param RequestSqlManager $requestSqlManager
      * @param RequestSqlValidator $requestSqlValidator
      */
-    public function __construct(RequestSqlManager $requestSqlManager, RequestSqlValidator $requestSqlValidator)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        RequestSqlManager $requestSqlManager,
+        RequestSqlValidator $requestSqlValidator
+    ) {
+        $this->formFactory = $formFactory;
         $this->requestSqlManager = $requestSqlManager;
         $this->requestSqlValidator = $requestSqlValidator;
     }
@@ -59,19 +68,27 @@ final class RequestSqlFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getForm(array $data = [])
     {
+        $builder = $this->formFactory->createBuilder()
+            ->add('request_sql', RequestSqlType::class)
+            ->setData($data)
+        ;
+
+        return $builder->getForm();
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $data
+     *
+     * @return array
      */
-    public function setData(array $data)
+    public function save(array $data)
     {
-        if ($errors = $this->requestSqlValidator->validateSql($data['sql'])) {
+        if ($errors = $this->requestSqlValidator->validateSql($data['request_sql']['sql'])) {
             return $errors;
         }
 
-        return $this->requestSqlManager->createOrUpdateFromData($data);
+        return $this->requestSqlManager->createOrUpdateFromData($data['request_sql']);
     }
 }
