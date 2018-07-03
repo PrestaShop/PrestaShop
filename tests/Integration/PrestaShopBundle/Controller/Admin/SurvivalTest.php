@@ -81,6 +81,8 @@ class SurvivalTest extends WebTestCase
             'admin_maintenance' => ['Maintenance', 'admin_maintenance'],
             'admin_product_preferences' => ['Product Preferences', 'admin_product_preferences'],
             'admin_customer_preferences' => ['Customer preferences', 'admin_customer_preferences'],
+            'admin_module_notification' => ['Alerts', 'admin_module_notification'],
+            'admin_module_updates' => ['Alerts', 'admin_module_updates'],
         ];
     }
 }
