@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -48,23 +47,31 @@ final class EnabledLanguagesKpi implements KpiInterface
     private $configuration;
 
     /**
-     * @var LegacyContext
+     * @var string
      */
-    private $legacyContext;
+    private $clickLink;
 
     /**
-     * @param LegacyContext $legacyContext
+     * @var string
+     */
+    private $sourceLink;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
+     * @param string $clickLink a link for clicking on the KPI
+     * @param string $sourceLink a link to refresh KPI
      */
     public function __construct(
-        LegacyContext $legacyContext,
         TranslatorInterface $translator,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        $clickLink,
+        $sourceLink
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
-        $this->legacyContext = $legacyContext;
+        $this->clickLink = $clickLink;
+        $this->sourceLink = $sourceLink;
     }
 
     /**
@@ -79,19 +86,14 @@ final class EnabledLanguagesKpi implements KpiInterface
         $kpi->id = 'box-languages';
         $kpi->icon = 'mic';
         $kpi->color = 'color1';
-        $kpi->href = $this->legacyContext->getAdminLink('AdminLanguages');
+        $kpi->href = $this->clickLink;
         $kpi->title = $this->translator->trans('Enabled Languages', [], 'Admin.International.Feature');
 
         if (false !== $enabledLanguages) {
             $kpi->value = $enabledLanguages;
         }
 
-        $params = [
-            'ajax' => 1,
-            'action' => 'getKpi',
-            'kpi' => 'enabled_languages',
-        ];
-        $kpi->source = $this->legacyContext->getAdminLink('AdminStats', true, $params);
+        $kpi->source = $this->sourceLink;
         $kpi->refresh = $this->configuration->get('ENABLED_LANGUAGES_EXPIRE') < time();
 
         return $kpi->generate();

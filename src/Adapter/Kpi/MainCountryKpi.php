@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -48,23 +47,23 @@ final class MainCountryKpi implements KpiInterface
     private $configuration;
 
     /**
-     * @var LegacyContext
+     * @var string
      */
-    private $legacyContext;
+    private $sourceLink;
 
     /**
-     * @param LegacyContext $legacyContext
      * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
+     * @param string $sourceLink a link to refresh KPI
      */
     public function __construct(
-        LegacyContext $legacyContext,
         TranslatorInterface $translator,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        $sourceLink
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
-        $this->legacyContext = $legacyContext;
+        $this->sourceLink = $sourceLink;
     }
 
     /**
@@ -86,12 +85,7 @@ final class MainCountryKpi implements KpiInterface
             $kpi->value = $mainCountry;
         }
 
-        $params = [
-            'ajax' => 1,
-            'action' => 'getKpi',
-            'kpi' => 'main_country',
-        ];
-        $kpi->source = $this->legacyContext->getAdminLink('AdminStats', true, $params);
+        $kpi->source = $this->sourceLink;
         $kpi->refresh = $this->configuration->get('MAIN_COUNTRY_EXPIRE') < time();
 
         return $kpi->generate();
