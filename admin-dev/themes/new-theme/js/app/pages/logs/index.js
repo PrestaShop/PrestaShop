@@ -93,12 +93,9 @@ class LogsPage {
 
 $(() => {
   // arrow function is incompatible with availability of $(this).
-  $('.reset-search').on('click', function () {
-      let url = $(this).data('url');
-      let redirectUrl = $(this).data('redirect');
-      resetSearch(url, redirectUrl);
-
-      $(this).closest('form').trigger("reset");
+  $('.reset-search').on('click', function (event) {
+      const url = $(this).data('url');
+      resetSearch(url);
   });
   new LogsPage().init();
 });
