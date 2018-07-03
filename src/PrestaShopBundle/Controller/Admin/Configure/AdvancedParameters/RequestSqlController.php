@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -54,11 +53,11 @@ class RequestSqlController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return array|Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
-        // handle "Export to SQL manager" action from legacy pagees
+        // handle "Export to SQL manager" action from legacy pages
         if ($request->query->has('addrequest_sql')) {
            return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create');
         }

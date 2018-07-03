@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -131,11 +131,15 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add(new BulkAction(
-                'delete_all',
-                $this->trans('Delete selected', [], 'Admin.Actions'),
-                'delete'
-            ))
+            ->add((new SubmitBulkAction('delete_all'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'icon' => 'delete',
+                    'submit_route' => 'admin_request_sql',
+                    'submit_method' => 'POST',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
+                ])
+            )
         ;
     }
 

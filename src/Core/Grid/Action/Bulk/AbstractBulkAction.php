@@ -24,23 +24,60 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class BulkActionCollection holds bulk action collection available for grid
- *
- * @property BulkActionInterface[] $items
+ * Class BulkAction holds data about single bulk action available in grid
  */
-final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
+abstract class AbstractBulkAction implements BulkActionInterface
 {
+    /**
+     * @var string
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var array
+     */
+    private $options = [];
+
+    /**
+     * @param string $id   Action identifier should be unique between all grid row actions
+     */
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function add(BulkActionInterface $bulkAction)
+    public function getName()
     {
-        $this->items[$bulkAction->getId()] = $bulkAction;
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -48,18 +85,18 @@ final class BulkActionCollection extends AbstractCollection implements BulkActio
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function setOptions(array $options)
     {
-        $bulkActionsArray = [];
+        $this->options = $options;
 
-        foreach ($this->items as $bulkAction) {
-            $bulkActionsArray[] = [
-                'id' => $bulkAction->getId(),
-                'name' => $bulkAction->getName(),
-                'icon' => $bulkAction->getIcon(),
-            ];
-        }
+        return $this;
+    }
 
-        return $bulkActionsArray;
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }
