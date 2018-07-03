@@ -34,10 +34,10 @@
     <span class="product-price float-xs-right">{$product.price}</span>
     {hook h='displayProductPriceBlock' product=$product type="unit_price"}
     {foreach from=$product.attributes key="attribute" item="value"}
-	<div class="product-line-info product-line-info-secondary text-muted">
-	<span class="label">{$attribute}:</span>
-	<span class="value">{$value}</span>
-	</div>
+		<div class="product-line-info product-line-info-secondary text-muted">
+		<span class="label">{$attribute}:</span>
+		<span class="value">{$value}</span>
+		</div>
 	{/foreach}
 	<br/>
   </div>
