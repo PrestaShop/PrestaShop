@@ -70,7 +70,7 @@ final class KpiRow implements KpiRowInterface
     /**
      * @return bool
      */
-    public function getAllowRefresh()
+    public function isRefreshAllowed()
     {
         return $this->allowRefresh;
     }

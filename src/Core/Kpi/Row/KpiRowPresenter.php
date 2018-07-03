@@ -47,7 +47,7 @@ final class KpiRowPresenter implements KpiRowPresenterInterface
 
         return [
             'kpis' => $renderedKpis,
-            'allowRefresh' => $kpiRow->getAllowRefresh(),
+            'allowRefresh' => $kpiRow->isRefreshAllowed(),
         ];
     }
 }

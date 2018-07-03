@@ -53,5 +53,5 @@ interface KpiRowInterface
     /**
      * @return bool
      */
-    public function getAllowRefresh();
+    public function isRefreshAllowed();
 }
