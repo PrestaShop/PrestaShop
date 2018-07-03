@@ -24,61 +24,65 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
+
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid
+ * Interface BulkActionInterface defines contract for single grid bulk action
  */
-final class BulkAction implements BulkActionInterface
+interface BulkActionInterface
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $icon;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @param string $id   Action identifier should be unique between all grid row actions
-     * @param string $name Translated action name
-     * @param string $icon Action icon name
-     */
-    public function __construct($id, $name, $icon)
-    {
-        $this->name = $name;
-        $this->id = $id;
-        $this->icon = $icon;
-    }
-
-    /**
+     * Get unique bulk action identifier for grid
+     *
      * @return string
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    public function getId();
 
     /**
+     * Get translated bulk action name
+     *
      * @return string
      */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
+    public function getName();
 
     /**
+     * Set trasnlated bulk action name
+     *
+     * @param string $name
+     *
+     * @return self
+     */
+    public function setName($name);
+
+    /**
+     * Get bulk action type
+     *
      * @return string
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    public function getType();
+
+    /**
+     * Set options for bulk action
+     *
+     * @param array $options
+     *
+     * @return self
+     */
+    public function setOptions(array $options);
+
+    /**
+     * Configure options for bulk action
+     *
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver);
+
+    /**
+     * Get bulk action options
+     *
+     * @return array
+     */
+    public function getOptions();
 }

@@ -32,10 +32,12 @@ export default class Grid {
   /**
    * Grid's selector
    *
-   * @param gridSelector
+   * @param {string} gridPanelSelector
    */
-  constructor(gridSelector) {
-    this.$grid = $(gridSelector);
+  constructor(gridPanelSelector) {
+    this.$gridPanel = $(gridPanelSelector);
+    this.gridId = this.$gridPanel.data('grid-id');
+    this.$grid = this.$gridPanel.find('#' + this.gridId + '_grid');
   }
 
   /**
@@ -45,6 +47,7 @@ export default class Grid {
     this._handleBulkActionSelectAllCheckbox();
     this._handleBulkActionCheckboxSelect();
     this._handleCommonGridActions();
+    this._handleBulkActionsSubmit();
   }
 
   /**
@@ -53,16 +56,15 @@ export default class Grid {
    * @private
    */
   _handleCommonGridActions() {
-    let identifier = this.$grid.find('.js-grid').attr('id');
-    let commonActionSuffix = '#' + identifier + '_action_';
+    let commonActionSuffix = '#' + this.gridId + '_action_';
 
     let refreshListActionId = commonActionSuffix + 'ps_refresh_list';
     let showSqlActionId = commonActionSuffix + 'ps_show_query';
     let exportSqlManagerActionId = commonActionSuffix + 'ps_export_sql_manager';
 
-    this.$grid.on('click', refreshListActionId, () => this._onRefreshClick());
-    this.$grid.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
-    this.$grid.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
+    this.$gridPanel.on('click', refreshListActionId, () => this._onRefreshClick());
+    this.$gridPanel.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
+    this.$gridPanel.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
   }
 
   /**
@@ -81,7 +83,7 @@ export default class Grid {
         this._disableBulkActionsBtn();
       }
 
-      this.$grid.find('.js-bulk-action-checkbox').prop('checked', isChecked);
+      this.$gridPanel.find('.js-bulk-action-checkbox').prop('checked', isChecked);
     });
   }
 
@@ -91,8 +93,8 @@ export default class Grid {
    * @private
    */
   _handleBulkActionCheckboxSelect() {
-    this.$grid.on('change', '.js-bulk-action-checkbox', () => {
-      const checkedRowsCount = this.$grid.find('.js-bulk-action-checkbox:checked').length;
+    this.$gridPanel.on('change', '.js-bulk-action-checkbox', () => {
+      const checkedRowsCount = this.$gridPanel.find('.js-bulk-action-checkbox:checked').length;
 
       if (checkedRowsCount > 0) {
         this._enableBulkActionsBtn();
@@ -103,12 +105,41 @@ export default class Grid {
   }
 
   /**
+   * Handles bulk action submit
+   *
+   * @private
+   */
+  _handleBulkActionsSubmit() {
+    this.$gridPanel.on('click', '.js-bulk-action-btn', (e) => {
+      const $button = $(e.target);
+
+      const confirmationMessage = $button.data('confirm-message').toString();
+
+      if (confirmationMessage) {
+        const confirmed = confirm(confirmationMessage);
+        if (!confirmed) {
+          return;
+        }
+      }
+
+      const formUrl = $button.data('form-url');
+      const formMethod = $button.data('form-method');
+
+      const $form = this.$gridPanel.find('#' + this.gridId + '_grid_form');
+      $form.attr('action', formUrl);
+      $form.attr('method', formMethod);
+
+      $form.submit();
+    });
+  }
+
+  /**
    * Enable bulk actions button
    *
    * @private
    */
   _enableBulkActionsBtn() {
-    this.$grid.find('.js-bulk-actions-btn').prop('disabled', false);
+    this.$gridPanel.find('.js-bulk-actions-btn').prop('disabled', false);
   }
 
   /**
@@ -117,7 +148,7 @@ export default class Grid {
    * @private
    */
   _disableBulkActionsBtn() {
-    this.$grid.find('.js-bulk-actions-btn').prop('disabled', true);
+    this.$gridPanel.find('.js-bulk-actions-btn').prop('disabled', true);
   }
 
   /**
@@ -135,8 +166,8 @@ export default class Grid {
    * @private
    */
   _onShowSqlQueryClick() {
-    let identifier = this.$grid.find('.js-grid').attr('id');
-    let query = this.$grid.find('.js-grid-table').data('query');
+    let identifier = this.$gridPanel.find('.js-grid').attr('id');
+    let query = this.$gridPanel.find('.js-grid-table').data('query');
 
     const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
@@ -155,8 +186,8 @@ export default class Grid {
    * @private
    */
   _onExportSqlManagerClick() {
-    let identifier = this.$grid.find('.js-grid').attr('id');
-    let query = this.$grid.find('.js-grid-table').data('query');
+    let identifier = this.$gridPanel.find('.js-grid').attr('id');
+    let query = this.$gridPanel.find('.js-grid-table').data('query');
 
     const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);

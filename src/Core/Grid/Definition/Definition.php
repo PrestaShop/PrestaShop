@@ -25,8 +25,9 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
+
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
