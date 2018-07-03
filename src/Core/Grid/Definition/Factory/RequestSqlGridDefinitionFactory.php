@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SimpleRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -85,39 +85,40 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         ],
                     ],
                     'actions' => (new RowActionCollection())
-                        ->add((new SimpleRowAction('export'))
+                        ->add((new LinkRowAction('export'))
                             ->setOptions([
                                 'icon' => 'cloud_download',
                                 'route' => 'admin_request_sql_export',
-                                'route_param_key' => 'requestSqlId',
-                                'route_param_value' => 'id_request_sql',
+                                'route_param_name' => 'requestSqlId',
+                                'route_param_row_key' => 'id_request_sql',
                             ])
                         )
-                        ->add((new SimpleRowAction('view'))
+                        ->add((new LinkRowAction('view'))
                             ->setName($this->trans('View', [], 'Admin.Global'))
                             ->setOptions([
                                 'icon' => 'remove_red_eye',
                                 'route' => 'admin_request_sql_view',
-                                'route_param_key' => 'requestSqlId',
-                                'route_param_value' => 'id_request_sql',
+                                'route_param_name' => 'requestSqlId',
+                                'route_param_row_key' => 'id_request_sql',
                             ])
                         )
-                        ->add((new SimpleRowAction('edit'))
+                        ->add((new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Global'))
                             ->setOptions([
                                 'icon' => 'edit',
                                 'route' => 'admin_request_sql_edit',
-                                'route_param_key' => 'requestSqlId',
-                                'route_param_value' => 'id_request_sql',
+                                'route_param_name' => 'requestSqlId',
+                                'route_param_row_key' => 'id_request_sql',
                             ])
                         )
-                        ->add((new SimpleRowAction('delete'))
+                        ->add((new LinkRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setOptions([
                                 'icon' => 'delete',
+                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                                 'route' => 'admin_request_sql_delete',
-                                'route_param_key' => 'requestSqlId',
-                                'route_param_value' => 'id_request_sql',
+                                'route_param_name' => 'requestSqlId',
+                                'route_param_row_key' => 'id_request_sql',
                             ])
                         ),
                 ])
@@ -137,7 +138,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'icon' => 'delete',
                     'submit_route' => 'admin_request_sql_delete_bulk',
                     'submit_method' => 'POST',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;

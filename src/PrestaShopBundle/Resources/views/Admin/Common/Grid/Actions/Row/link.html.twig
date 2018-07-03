@@ -23,8 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<a class="dropdown-item"
-   href="{{ path(action.options.route, { (action.options.route_param_key) : row[action.options.route_param_value]}) }}"
+<a class="dropdown-item js-confirm-btn"
+   href="{{ path(action.options.route, { (action.options.route_param_name) : row[action.options.route_param_row_key]}) }}"
+   data-confirm-message="{{ action.options.confirm_message|default('') }}"
 >
   {% if action.options.icon is not empty %}
     <i class="material-icons">{{ action.options.icon }}</i>
