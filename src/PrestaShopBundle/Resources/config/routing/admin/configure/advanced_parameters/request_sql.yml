@@ -41,7 +41,7 @@ admin_request_sql_table_columns:
     path: /tables/{mySqlTableName}/columns
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:tableColumns'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:ajaxTableColumns'
         _legacy_controller: AdminRequestSql
 
 admin_request_sql_view:
