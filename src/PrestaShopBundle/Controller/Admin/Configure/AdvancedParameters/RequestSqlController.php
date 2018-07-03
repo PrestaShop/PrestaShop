@@ -163,11 +163,11 @@ class RequestSqlController extends FrameworkBundleAdminController
 
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($errors);
+
+                return $this->redirectToRoute('admin_request_sql');
             }
 
-            return $this->redirectToRoute('admin_request_sql');
+            $this->flashErrors($errors);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig', [
@@ -218,11 +218,11 @@ class RequestSqlController extends FrameworkBundleAdminController
             }
             if (!$errors = $formHandler->save($requestSqlForm->getData())) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($errors);
+
+                return $this->redirectToRoute('admin_request_sql');
             }
 
-            return $this->redirectToRoute('admin_request_sql');
+            $this->flashErrors($errors);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig', [
@@ -258,13 +258,56 @@ class RequestSqlController extends FrameworkBundleAdminController
         }
 
         $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        if (!$requestSqlManager->delete($requestSqlId)) {
+        if (!$requestSqlManager->delete([$requestSqlId])) {
             $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_request_sql');
         }
 
         $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_request_sql');
+    }
+
+    /**
+     * Process bulk action delete of RequestSql's
+     *
+     * @AdminSecurity(
+     *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_request_sql")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request)
+    {
+        $requestSqlIds = $request->request->get('request_sql_bulk');
+        if (empty($requestSqlIds)) {
+            $this->addFlash(
+                'error',
+                $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_request_sql');
+        }
+
+        $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
+        $errors = $requestSqlManager->delete($requestSqlIds);
+
+        if (empty($errors)) {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } else {
+            $this->addFlash(
+                'error',
+                $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error')
+            );
+        }
 
         return $this->redirectToRoute('admin_request_sql');
     }
