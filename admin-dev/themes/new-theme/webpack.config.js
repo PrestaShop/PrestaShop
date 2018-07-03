@@ -46,6 +46,9 @@ let config = {
     catalog: [
       './js/app/pages/catalog',
     ],
+    dashboard: [
+      './js/pages/dashboard',
+    ],
     stock: [
       './js/app/pages/stock',
     ],

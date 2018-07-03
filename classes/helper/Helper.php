@@ -109,6 +109,7 @@ class HelperCore
      */
     public function generate()
     {
+        dump($this->tpl);
         $this->tpl->assign($this->tpl_vars);
         return $this->tpl->fetch();
     }

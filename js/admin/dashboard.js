@@ -30,7 +30,7 @@
 // dashboard_use_push
 // read_more
 
-function refreshDashboard(module_name, use_push, extra) {
+/*function refreshDashboard(module_name, use_push, extra) {
 	var module_list = [];
 	this.getWidget = function(module_id) {
 		$.ajax({
@@ -322,4 +322,4 @@ $(document).ready( function () {
 			}
 		});
 	});
-});
+});*/

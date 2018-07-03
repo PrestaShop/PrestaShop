@@ -1,0 +1,102 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Dashboard.Feature" %}
+
+{% block content %}
+    <script>
+        var dashboard_ajax_url = {{ path('admin_dashboard') }};
+        var adminstats_ajax_url = {{ getAdminLink('AdminStats') }};
+        var no_results_translation = {{ "No result"|trans }};
+        var dashboard_use_push = 5;
+        var read_more = {{ "Read more"|trans }};
+    </script>
+
+    <div id="dashboard">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if warning %}
+                    <div class="alert alert-warning">{{ warning }}</div>
+                {% endif %}
+                <div id="calendar" class="panel">
+                    {# CALENDAR FORM #}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
+                {{ renderhook('dashboardZoneOne', {'params': params}) }}
+            </div>
+            <div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
+                {{ renderhook('dashboardZoneTwo', {'params': params}) }}
+                <div id="dashaddons" class="row-margin-bottom">
+                    <a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
+                        <i class="icon-plus"></i> {{ 'Add more dashboard modules'|trans }}
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-2">
+                <section class="dash_news panel">
+                    <h3><i class="icon-rss"></i> {{ 'PrestaShop News'|trans }}</h3>
+                    <div class="dash_news_content"></div>
+                    <div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{{ 'Find more news'|trans }}</a></h4></div>
+                </section>
+                <section id="dash_version" class="visible-lg">
+                    <iframe style="overflow:hidden;border:none" src="http://api.prestashop.com/version/check_version.php?v=1.7.4.0&lang=en&autoupgrade=0&hosted_mode=0"></iframe>
+                </section>
+                <section class="dash_links panel">
+                    <h3><i class="icon-link"></i> {{ 'Useful links'|trans }}</h3>
+                    <dl>
+                        <dt><a href="http://doc.prestashop.com/display/PS17?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{{ langIso|upper }}&amp;utm_content=download" class="_blank">{{ 'Official Documentation'|trans }}</a></dt>
+                        <dd>{{ 'User, Developer and Designer Guides'|trans }} }}</dd>
+                    </dl>
+                    <dl>
+                        <dt><a href="http://www.prestashop.com/forums?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{{ langIso|upper }}&amp;utm_content=download" class="_blank">{{ 'PrestaShop Forum'|trans }}</a></dt>
+                        <dd>{{ 'Connect with the PrestaShop community'|trans }}</dd>
+                    </dl>
+                    <dl>
+                        <dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{{ langIso|upper }}&amp;utm_content=download" class="_blank">{{ 'PrestaShop Addons'|trans }}</a></dt>
+                        <dd>{{ 'Enhance your store with templates & modules'|trans }}</dd>
+                    </dl>
+                    <dl>
+                        <dt><a href="http://forge.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{{ langIso|upper }}&amp;utm_content=download" class="_blank">{{ 'The Forge'|trans }}</a></dt>
+                        <dd>{{ 'Report issues in the Bug Tracker'|trans }}</dd>
+                    </dl>
+                    <dl>
+                        <dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{{ langIso|upper }}&amp;utm_content=download" class="_blank">{{ 'Contact Us!'|trans }}</a></dt>
+                        <dd></dd>
+                    </dl>
+                </section>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('themes/new-theme/public/dashboard.bundle.js') }}"></script>
+{% endblock %}

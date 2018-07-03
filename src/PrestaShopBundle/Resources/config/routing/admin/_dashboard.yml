@@ -1,0 +1,23 @@
+admin_dashboard:
+    path:     /dash/
+    methods:  [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:index'
+        _legacy_controller: AdminDashboard
+
+admin_dashboard_configuration:
+    path: /dash/config
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:configuration'
+        _legacy_controller: AdminDashboard
+
+#
+# @todo: Allow buttons from header to dispatch POST actions.
+#
+admin_dashboard_demo_mode:
+    path: /dash/demo
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:processDemoModeButton'
+        _legacy_controller: AdminDashboard

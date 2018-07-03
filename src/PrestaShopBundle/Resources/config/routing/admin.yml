@@ -2,6 +2,9 @@ _admin_common_routing:
     resource: "admin/_common.yml"
     prefix: /common
 
+_admin_dashboard_routing:
+    resource: "admin/_dashboard.yml"
+
 _admin_security_routing:
     resource: "admin/_security.yml"
     prefix: /security

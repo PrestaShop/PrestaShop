@@ -158,6 +158,7 @@ class AdminDashboardControllerCore extends AdminController
             }
         }
 
+
         foreach ($carriers as $carrier) {
             $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
                 'title' => $carrier['name'],

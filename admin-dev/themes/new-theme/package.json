@@ -25,6 +25,8 @@
     "chai-jquery": "^2.0.0",
     "compass": "^0.1.1",
     "css-loader": "^0.27.3",
+    "d3": "^3.5.3",
+    "nvd3": "^1.8.6",
     "dropzone": "^5.0.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "eslint": "^3.19.0",
