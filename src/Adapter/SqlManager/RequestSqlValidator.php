@@ -35,16 +35,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class RequestSqlValidator
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
      * Check if SQL is valid for Reqest SQL model.
      * Only "Select" sqls should be valid.
      *
@@ -82,150 +72,206 @@ class RequestSqlValidator
             switch ($key) {
                 case 'checkedFrom':
                     if (isset($sqlError['table'])) {
-                        $errors = $this->translator->trans(
-                            'The "%tablename%" table does not exist.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%tablename%" table does not exist.',
+                            'parameters' => [
                                 '%tablename%' => $sqlError['table'],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } elseif (isset($sqlError['attribut'])) {
-                        $errors = $this->translator->trans(
-                            'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('Undefined "%s" error', ['checkedForm'], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'Undefined "%s" error',
+                            'parameters' => [
+                                'checkedForm',
+                            ],
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     }
                     break;
                 case 'checkedSelect':
                     if (isset($sqlError['table'])) {
-                        $errors = $this->translator->trans(
-                            'The "%tablename%" table does not exist.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%tablename%" table does not exist.',
+                            'parameters' => [
                                 '%tablename%' => $sqlError['table'],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } elseif (isset($sqlError['attribut'])) {
-                        $errors = $this->translator->trans(
-                            'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' =>'Admin.Advparameters.Notification'
+                        ];
                     } elseif (isset($sqlError['*'])) {
-                        $errors = $this->translator->trans('The "*" operator cannot be used in a nested query.', [], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'The "*" operator cannot be used in a nested query.',
+                            'parameters' => [],
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('Undefined "%s" error', ['checkedSelect'], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'Undefined "%s" error',
+                            'parameters' => [
+                                'checkedSelect',
+                            ],
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     }
                     break;
                 case 'checkedWhere':
                     if (isset($sqlError['operator'])) {
-                        $errors = $this->translator->trans(
-                            'The operator "%s" is incorrect.',
-                            [
+                        $errors[] = [
+                            'key' => 'The operator "%s" is incorrect.',
+                            'parameters' => [
                                 '%operator%' => $sqlError['operator'],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } elseif (isset($sqlError['attribut'])) {
-                        $errors = $this->translator->trans(
-                            'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('Undefined "%s" error', array('checkedWhere'), 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'Undefined "%s" error',
+                            'parameters' => [
+                                'checkedWhere',
+                            ],
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     }
                     break;
                 case 'checkedHaving':
                     if (isset($sqlError['operator'])) {
-                        $errors = $this->translator->trans(
-                            'The "%operator%" operator is incorrect.',
-                            [
-                                '%operator%' => $sqlError['operator']
+                        $errors[] = [
+                            'key' => 'The "%operator%" operator is incorrect.',
+                            'parameters' => [
+                                '%operator%' => $sqlError['operator'],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification'
+                        ];
                     } elseif (isset($sqlError['attribut'])) {
-                        $errors = $this->translator->trans(
-                            'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('Undefined "%s" error', ['checkedHaving'], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'Undefined "%s" error',
+                            'parameters' => [
+                                'checkedHaving',
+                            ],
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     }
                     break;
                 case 'checkedOrder':
                     if (isset($sqlError['attribut'])) {
-                        $errors = $this->translator->trans(
-                            'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('Undefined "%s" error', ['checkedOrder'], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'Undefined "%s" error',
+                            'parameters' => [
+                                'checkedOrder',
+                            ],
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     }
                     break;
                 case 'checkedGroupBy':
                     if (isset($sqlError['attribut'])) {
-                        $errors = $this->translator->trans(
-                            'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('Undefined "%s" error', ['checkedGroupBy'], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'Undefined "%s" error',
+                            'parameters' => [
+                                'checkedGroupBy',
+                            ],
+                            'domain' => 'Admin.Advparameters.Notification'
+                        ];
                     }
                     break;
                 case 'checkedLimit':
-                    $errors = $this->translator->trans('The LIMIT clause must contain numeric arguments.', [], 'Admin.Advparameters.Notification');
+                    $errors[] = [
+                        'key' => 'The LIMIT clause must contain numeric arguments.',
+                        'parameters' => [],
+                        'domain' => 'Admin.Advparameters.Notification',
+                    ];
                     break;
                 case 'returnNameTable':
                     if (isset($sqlError['reference'])) {
-                        $errors = $this->translator->trans(
-                            'The "%reference%" reference does not exist in the "%table%" table.',
-                            [
+                        $errors[] = [
+                            'key' => 'The "%reference%" reference does not exist in the "%table%" table.',
+                            'parameters' => [
                                 '%reference%' => $sqlError['reference'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'Admin.Advparameters.Notification'
-                        );
+                            'domain' => 'Admin.Advparameters.Notification',
+                        ];
                     } else {
-                        $errors = $this->translator->trans('When multiple tables are used, each attribute must refer back to a table.', [], 'Admin.Advparameters.Notification');
+                        $errors[] = [
+                            'key' => 'When multiple tables are used, each attribute must refer back to a table.',
+                            'parameters' => [],
+                            'domain' => 'Admin.Advparameters.Notification'
+                        ];
                     }
                     break;
                 case 'testedRequired':
-                    $errors = $this->translator->trans('"%key%" does not exist.', ['%key%' => $sqlError], 'Admin.Notifications.Error');
+                    $errors[] = [
+                        'key' => '"%key%" does not exist.',
+                        'parameters' => [
+                            '%key%' => $sqlError,
+                        ],
+                        'domain' => 'Admin.Notifications.Error',
+                    ];
                     break;
                 case 'testedUnauthorized':
-                    $errors = $this->translator->trans('"%key%" is an unauthorized keyword.', ['%key%' => $sqlError], 'Admin.Advparameters.Notification');
+                    $errors[] = [
+                        'key' => '"%key%" is an unauthorized keyword.',
+                        'parameters' => [
+                            '%key%' => $sqlError,
+                        ],
+                        'domain' => 'Admin.Advparameters.Notification',
+                    ];
                     break;
             }
-        }
-
-        if (!is_array($errors)) {
-            $errors = [$errors];
         }
 
         return $errors;
