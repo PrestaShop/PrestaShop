@@ -251,7 +251,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteLite()
+    private function deleteLite()
     {
         return parent::delete();
     }
@@ -264,12 +264,13 @@ class CMSCategoryCore extends ObjectModel
 
         $this->clearCache();
 
-        $objects = $this->getAllChildren();
-        $objects[] = $this;
-        foreach ($objects as $object) {
-            $object->deleteCMS();
-            $object->deleteLite();
-            CMSCategory::cleanPositions($object->id_parent);
+        $cmsCategories = $this->getAllChildren();
+        $cmsCategories[] = $this;
+        foreach ($cmsCategories as $cmsCategory) {
+            /** @var CMSCategory */
+            $cmsCategory->deleteCMS();
+            $cmsCategory->deleteLite();
+            CMSCategory::cleanPositions($cmsCategory->id_parent);
         }
 
         return true;
@@ -280,7 +281,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return bool Deletion result
      */
-    public function deleteCMS()
+    private function deleteCMS()
     {
         $result = true;
         $cms = new PrestaShopCollection('CMS');
@@ -444,7 +445,7 @@ class CMSCategoryCore extends ObjectModel
      *
      * @return PrestaShopCollection Collection of CMSCategory
      */
-    public function getAllChildren()
+    private function getAllChildren()
     {
         // Get children
         $toDelete = array((int)$this->id);
