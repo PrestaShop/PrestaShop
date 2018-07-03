@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SqlManager;
+namespace PrestaShop\PrestaShop\Core\Encoding;
 
 /**
- * Class CharsetEncoding defines file chartset encoding constatns used in SQL Manager
+ * Class CharsetEncoding defines file chartset encoding constants
  */
 class CharsetEncoding
 {
