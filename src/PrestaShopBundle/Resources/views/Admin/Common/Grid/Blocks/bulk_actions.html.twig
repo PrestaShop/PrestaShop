@@ -37,7 +37,7 @@
       <div class="dropdown-menu">
         {% for action in grid.actions.bulk %}
           <button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, action.id) }}"
-                  class="dropdown-item"
+                  class="dropdown-item js-bulk-action-submit"
                   type="button"
           >
             {% if action.icon is not empty %}
