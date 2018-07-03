@@ -24,29 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use PrestaShop\PrestaShop\Adapter\SqlManager\CharsetEncoding;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SqlManagerSettingsType extends AbstractType
+class RequestSqlType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('default_file_encoding', ChoiceType::class, [
-                'choices' => [
-                    CharsetEncoding::UTF_8 => 1,
-                    CharsetEncoding::ISO_8859_1 => 2,
-                ],
-            ])
+            ->add('name', TextType::class)
+            ->add('sql', TextareaType::class)
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => '',
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockPrefix()
     {
-        return 'request_sql_settings_block';
+        return 'request_sql_block';
     }
 }
