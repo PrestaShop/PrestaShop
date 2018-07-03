@@ -17,3 +17,7 @@ _performance:
 _system_information:
     resource: "system_information.yml"
     prefix: /system-information/
+
+_webservice:
+    resource: "webservice.yml"
+    prefix: /webservice/

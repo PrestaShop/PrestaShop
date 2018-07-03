@@ -171,3 +171,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.webservice.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
