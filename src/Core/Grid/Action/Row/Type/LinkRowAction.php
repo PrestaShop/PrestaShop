@@ -32,14 +32,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class RowAction holds information related to row action for each row element in grid
  */
-final class SimpleRowAction extends AbstractRowAction
+final class LinkRowAction extends AbstractRowAction
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'simple';
+        return 'link';
     }
 
     /**
@@ -50,12 +50,18 @@ final class SimpleRowAction extends AbstractRowAction
         $resolver
             ->setRequired([
                 'route',
+                'route_param_name',
+                'route_param_row_key',
             ])
             ->setDefaults([
                 'icon' => '',
+                'confirm_message' => '',
             ])
             ->setAllowedTypes('icon', 'string')
+            ->setAllowedTypes('confirm_message', 'string')
             ->setAllowedTypes('route', 'string')
+            ->setAllowedTypes('route_param_name', 'string')
+            ->setAllowedTypes('route_param_row_key', 'string')
         ;
     }
 }
