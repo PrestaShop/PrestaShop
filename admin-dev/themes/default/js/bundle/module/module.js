@@ -673,8 +673,6 @@ var AdminModuleController = function() {
         if (destinationTabs[key].length === 0) {
             continue;
         }
-        // TODO: This HTML code comes from an already specific template.
-        // To be moved in a template, with generic classes for badges
         destinationTabs[key].find('.notification-counter').text(badge[key]);
     };
   };
