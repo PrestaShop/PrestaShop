@@ -59,7 +59,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     {
         // handle "Export to SQL manager" action from legacy pages
         if ($request->query->has('addrequest_sql')) {
-           return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create');
+            return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create');
         }
 
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -251,14 +251,15 @@ class RequestSqlController extends FrameworkBundleAdminController
     public function deleteAction($requestSqlId)
     {
         $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        if (!$requestSql = $requestSqlDataProvider->getRequestSql($requestSqlId)) {
+        if (null === $requestSqlDataProvider->getRequestSql($requestSqlId)) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_request_sql');
         }
 
         $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        if (!$requestSqlManager->delete([$requestSqlId])) {
+        $errors = $requestSqlManager->delete([$requestSqlId]);
+        if (!$errors) {
             $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_request_sql');

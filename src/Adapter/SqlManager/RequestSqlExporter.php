@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
