@@ -61,7 +61,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk_action'))
+            ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_value' => 'id_request_sql',
                 ])
@@ -135,7 +135,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'icon' => 'delete',
-                    'submit_route' => 'admin_request_sql',
+                    'submit_route' => 'admin_request_sql_delete_bulk',
                     'submit_method' => 'POST',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
                 ])
