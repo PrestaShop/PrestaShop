@@ -165,15 +165,20 @@ services:
               'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
             - 'PaymentPreferences'
 
-
-    prestashop.admin.sql_manager_settings.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\SqlManagerSettingsFormHandler'
+    prestashop.admin.request_sql_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
-            - '@prestashop.admin.sql_manager_settings.form_data_provider'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.request_sql_settings.form_data_provider'
+            -
+              'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
+            - 'RequestSql'
 
+    # Entity form handler
     prestashop.admin.request_sql.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\RequestSqlFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
         arguments:
             - '@form.factory'
-            - '@prestashop.admin.request_sql.form_data_provider'
+            - '@prestashop.adapter.sql_manager.request_sql_manager'
+            - '@prestashop.adapter.sql_manager.request_sql_validator'

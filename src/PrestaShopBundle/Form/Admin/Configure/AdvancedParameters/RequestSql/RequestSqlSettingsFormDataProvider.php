@@ -24,48 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 
-class SqlManagerSettingsFormHandler implements FormHandlerInterface
+final class RequestSqlSettingsFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var FormFactoryInterface
+     * @var DataConfigurationInterface
      */
-    private $formFactory;
+    private $dataConfiguration;
 
     /**
-     * @var FormDataProviderInterface
+     * @param DataConfigurationInterface $dataConfiguration
      */
-    private $dataProvider;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        FormDataProviderInterface $dataProvider
-    ) {
-        $this->formFactory = $formFactory;
-        $this->dataProvider = $dataProvider;
+    public function __construct(DataConfigurationInterface $dataConfiguration)
+    {
+        $this->dataConfiguration = $dataConfiguration;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getForm()
+    public function getData()
     {
-        return $this->formFactory->createBuilder()
-            ->add('settings', SqlManagerSettingsType::class)
-            ->setData($this->dataProvider->getData())
-            ->getForm();
+        return [
+            'settings' => $this->dataConfiguration->getConfiguration(),
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function setData(array $data)
     {
-        return $this->dataProvider->setData($data);
+        return $this->dataConfiguration->updateConfiguration($data['settings']);
     }
 }
