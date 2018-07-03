@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page
  */
-class SqlManagerController extends FrameworkBundleAdminController
+class RequestSqlController extends FrameworkBundleAdminController
 {
     /**
      * Show list of saved SQL's
@@ -55,7 +55,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return array|Response
      */
-    public function listAction(Request $request)
+    public function indexAction(Request $request)
     {
         // handle "Export to SQL manager" action from legacy pagees
         if ($request->query->has('addrequest_sql')) {
@@ -75,10 +75,10 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/list.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/list.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_sql_manager_create'),
+                    'href' => $this->generateUrl('admin_request_sql_create'),
                     'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -87,7 +87,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'sqlManagerSettingsForm' => $settingsForm->createView(),
+            'requestSqlSettingsForm' => $settingsForm->createView(),
             'requestSqlGrid' => $presentedGrid,
         ]);
     }
@@ -95,7 +95,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Process Request SQL settings save
      *
-     * @DemoRestricted(redirectRoute="admin_sql_manager")
+     * @DemoRestricted(redirectRoute="admin_request_sql")
      * @AdminSecurity(
      *     "is_granted(['update', 'create','delete'], request.get('_legacy_controller')~'_')",
      *      message="You do not have permission to edit this."
@@ -117,13 +117,13 @@ class SqlManagerController extends FrameworkBundleAdminController
             if (!$errors = $handler->save($data)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_sql_manager');
+                return $this->redirectToRoute('admin_request_sql');
             }
 
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_sql_manager');
+        return $this->redirectToRoute('admin_request_sql');
     }
 
     /**
@@ -134,7 +134,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *      message="You do not have permission to create this."
      * )
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig")
      *
      * @param Request $request
      *
@@ -195,7 +195,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig")
      *
      * @param int     $requestSqlId
      * @param Request $request
@@ -222,7 +222,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-                return $this->redirectToRoute('admin_sql_manager');
+                return $this->redirectToRoute('admin_request_sql');
             }
 
             $data = $requestSqlForm->getData();
@@ -230,7 +230,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             if (!$errors = $formHandler->save($data)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_sql_manager');
+                return $this->redirectToRoute('admin_request_sql');
             }
 
             foreach ($errors as $error) {
@@ -256,7 +256,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_manager")
+     * @DemoRestricted(redirectRoute="admin_request_sql")
      *
      * @param int $requestSqlId ID of selected Request SQL
      *
@@ -268,19 +268,19 @@ class SqlManagerController extends FrameworkBundleAdminController
         if (!$requestSql = $requestSqlDataProvider->getRequestSql($requestSqlId)) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
-            return $this->redirectToRoute('admin_sql_manager');
+            return $this->redirectToRoute('admin_request_sql');
         }
 
         $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
         if (!$requestSqlManager->delete($requestSqlId)) {
             $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
 
-            return $this->redirectToRoute('admin_sql_manager');
+            return $this->redirectToRoute('admin_request_sql');
         }
 
         $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
-        return $this->redirectToRoute('admin_sql_manager');
+        return $this->redirectToRoute('admin_request_sql');
     }
 
     /**
@@ -291,7 +291,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to view this."
      * )
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/view.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig")
      *
      * @param Request $request
      * @param int     $requestSqlId
@@ -306,7 +306,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         if (null === $requestSqlResult) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
-            return $this->redirectToRoute('admin_sql_manager');
+            return $this->redirectToRoute('admin_request_sql');
         }
 
         $templateParams = [
@@ -326,7 +326,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
      *     message="Access denied."
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_manager")
+     * @DemoRestricted(redirectRoute="admin_request_sql")
      *
      * @param int $requestSqlId Request SQL id
      *
@@ -340,7 +340,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         if (null === $response) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
-            return $this->redirectToRoute('admin_sql_manager');
+            return $this->redirectToRoute('admin_request_sql');
         }
 
         return $response;
@@ -412,7 +412,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         if ($withHeaderBtn) {
             $params['layoutHeaderToolbarBtn']['add'] = [
-                'href' => $this->generateUrl('admin_sql_manager_create'),
+                'href' => $this->generateUrl('admin_request_sql_create'),
                 'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                 'icon' => 'add_circle_outline',
             ];
