@@ -58,10 +58,3 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
         tags:
             - { name: twig.extension }
-
-
-    prestashop.twig.extension.search_filters:
-        class: PrestaShopBundle\Twig\SearchFiltersExtension
-        arguments: ['@request_stack']
-        tags:
-            - { name: twig.extension }
