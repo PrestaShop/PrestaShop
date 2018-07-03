@@ -27,5 +27,8 @@
         id="{{ grid.id }}_grid_action_{{ action.id }}"
         class="dropdown-item js-{{ action.id }}-grid-action"
 >
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>

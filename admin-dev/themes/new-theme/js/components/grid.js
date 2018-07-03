@@ -56,9 +56,9 @@ export default class Grid {
     let identifier = this.$grid.find('.js-grid').attr('id');
     let commonActionSuffix = '#' + identifier + '_action_';
 
-    let refreshListActionId = commonActionSuffix + 'ps_refresh_list';
-    let showSqlActionId = commonActionSuffix + 'ps_show_query';
-    let exportSqlManagerActionId = commonActionSuffix + 'ps_export_sql_manager';
+    let refreshListActionId = commonActionSuffix + 'common_refresh_list';
+    let showSqlActionId = commonActionSuffix + 'common_show_query';
+    let exportSqlManagerActionId = commonActionSuffix + 'common_export_sql_manager';
 
     this.$grid.on('click', refreshListActionId, () => this._onRefreshClick());
     this.$grid.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
@@ -138,15 +138,13 @@ export default class Grid {
     let identifier = this.$grid.find('.js-grid').attr('id');
     let query = this.$grid.find('.js-grid-table').data('query');
 
-    const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
+    const $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
 
-    const $modal = $('#' + identifier + '_ps_show_query_modal');
+    const $modal = $('#' + identifier + '_common_show_query_modal');
     $modal.modal('show');
 
-    $modal.on('click', '.btn-sql-submit', () => {
-      $sqlManagerForm.submit();
-    });
+    $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
   }
 
   /**
@@ -158,7 +156,7 @@ export default class Grid {
     let identifier = this.$grid.find('.js-grid').attr('id');
     let query = this.$grid.find('.js-grid-table').data('query');
 
-    const $sqlManagerForm = $('#' + identifier + '_ps_show_query_modal_form');
+    const $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
     $sqlManagerForm.submit();
   }

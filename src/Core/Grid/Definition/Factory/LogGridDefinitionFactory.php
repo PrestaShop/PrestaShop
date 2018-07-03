@@ -76,7 +76,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('ID', [], 'Global.Actions'))
             )
             ->add((new EmployeeNameWithAvatarColumn('employee'))
-                ->setName($this->trans('Employee', [], ''))
+                ->setName($this->trans('Employee', [], 'Admin.Global'))
             )
             ->add((new SeverityLevelColumn('severity'))
                 ->setName($this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'))
@@ -85,7 +85,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new SimpleColumn('message'))
-                ->setName($this->trans('Message', [], 'Global.Actions'))
+                ->setName($this->trans('Message', [], 'Admin.Global'))
             )
             ->add((new SimpleColumn('object_type'))
                 ->setName($this->trans('Object type', [], 'Admin.Advparameters.Feature'))
@@ -97,18 +97,18 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
             )
             ->add((new DateTimeColumn('date_add'))
-                ->setName($this->trans('Date', [], 'Admin.Advparameters.Feature'))
+                ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
                     'filter_type' => DateRangeType::class,
                 ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Global.Actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'filter_type' => SubmitType::class,
                     'filter_type_options' => [
-                        'label' => $this->trans('Search', [], 'Global.Actions'),
+                        'label' => $this->trans('Search', [], 'Admin.Actions'),
                         'attr' => [
                             'class' => 'btn btn-primary',
                         ],
@@ -131,22 +131,22 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'delete_all_logs'
             ))
             ->add(new GridAction(
-                'ps_refresh_list',
+                'common_refresh_list',
                 $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
                 'refresh',
                 'simple'
             ))
             ->add(new GridAction(
-                'ps_show_query',
+                'common_show_query',
                 $this->trans('Show SQL query', [], 'Admin.Actions'),
                 'code',
                 'simple'
             ))
             ->add(new GridAction(
-                'ps_export_sql_manager',
+                'common_export_sql_manager',
                 $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'storage',
-                'export_to_sql_manager'
+                'simple'
             ))
         ;
     }
