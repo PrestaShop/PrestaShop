@@ -42,7 +42,7 @@ class TemporarySearchCriteria implements SearchCriteriaInterface
 
     public function getOrderBy()
     {
-        return $this->request->get('orderBy', 'id_log');
+        return $this->request->get('orderBy', 'id_request_sql');
     }
 
     public function getOrderWay()
