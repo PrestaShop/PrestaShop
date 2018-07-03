@@ -37,6 +37,13 @@ admin_request_sql_delete:
     requirements:
         requestSqlId: \d+
 
+admin_request_sql_delete_bulk:
+    path: /delete/bulk
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:deleteBulk'
+        _legacy_controller: AdminRequestSql
+
 admin_request_sql_table_columns:
     path: /tables/{mySqlTableName}/columns
     methods: [GET]

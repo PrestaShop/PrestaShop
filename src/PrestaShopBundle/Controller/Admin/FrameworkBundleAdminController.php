@@ -251,7 +251,8 @@ class FrameworkBundleAdminController extends Controller
     protected function flashErrors(array $errorMessages)
     {
         foreach ($errorMessages as $error) {
-            $this->addFlash('error', $this->trans($error['key'], $error['domain'], $error['parameters']));
+            $message = is_array($error) ? $this->trans($error['key'], $error['domain'], $error['parameters']) : $error;
+            $this->addFlash('error', $message);
         }
     }
 
