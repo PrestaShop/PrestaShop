@@ -1,33 +1,34 @@
 GitHub contributors:
 --------------------------------
-- (d)oekia
 - 0kph
 - 123monsite-regis
 - 1RV34
 - Abdelaziz JRIBI
+- Adam
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
 - Agence CINS
 - Agnes
+- Alban
 - Alban DEFLANDRE
 - Alban L
 - Aleksander Palyan
 - Alessandro Corbelli
-- Alex Even
-- Alex Sampaio
 - Alexander Galaydyuk
 - Alexander Grosul
 - Alexander Otchenashev
 - Alexander Simonchik
-- Alexandr Simonchik
 - Alexandra Even
 - Alexandre Alouit
 - Alexandre Segura
+- Alexandr Simonchik
 - alexdee2007
 - AlexEven
+- Alex Even
 - Alexey Svistunov
 - alexey-svistunov
+- Alex Sampaio
 - alexsimple
 - Alfakom-MK
 - Alfonso Jimenez
@@ -40,16 +41,18 @@ GitHub contributors:
 - Andrew
 - Angel Guzman Maeso
 - Anthony Girard
-- antoin_m
 - Antoine LA
 - Antoine Mille
+- Antoine THOMAS
+- antoin_m
 - Antonino Di Bella
-- Antonio Intagliata
 - antoniofr
+- Antonio Intagliata
 - AntonLejon
 - Armando Salvador Perez
 - Arnaud Lemercier
 - Atchworks
+- Atef Ben Ali
 - Aurélien Pelletier
 - axi
 - Axome
@@ -79,17 +82,18 @@ GitHub contributors:
 - Casper Olsen
 - cava89
 - ccauw
-- Cedric Mouleyre
 - cedricfontaine
 - cedricgeffroy
+- Cedric Mouleyre
 - cgordenne
 - cgordenne_wepika
+- Chafik
 - Chen.Zhidong
 - Chris
 - Chris Gurk
 - Christian Kubitza
-- Christian Verardi
 - christianverardi
+- Christian Verardi
 - ChristopheBoucaut
 - CINS
 - cippest
@@ -102,14 +106,15 @@ GitHub contributors:
 - comxd
 - Conner
 - Conner Burnett
+- Connie
 - Corentin Delcourt
 - Cosmin Hutanu
 - Cristiano Verardi
 - Cyril Dussert
 - damien
+- DamienMetzger
 - Damien Metzger
 - Damien PIQUET
-- DamienMetzger
 - Damon Skelhorn
 - Dan Hlavenka
 - danidomen
@@ -120,18 +125,19 @@ GitHub contributors:
 - Dany Maillard
 - dariusakafest
 - David
+- Davide
 - David Eschmeyer
 - David Gasperoni
-- David Sivocha
 - David-Julian BUCH
-- Davide
+- David Sivocha
 - Davy Rolink
-- de saint leger
 - Debusschere Alexandre
 - Denis Yurevich
 - Denver Prophit Jr.
+- de saint leger
 - Desbouche Christophe
 - DevNet
+- devyk
 - Dh42
 - Dheeraj
 - Dheeraj Sharma
@@ -143,42 +149,43 @@ GitHub contributors:
 - dks295
 - dlage
 - doekia
+- (d)oekia
 - DOEO
 - DogSports
 - Dragan Skrbic
 - DRC
-- Dream me up
 - dreammeup
+- Dream me up
 - DrySs
 - DrySs'
 - dSevere
 - Dustin
 - Dvir Julius
 - Dvir-Julius
-- e-gaulue
 - ecomm360
 - edamart
 - Edouard Gaulue
-- el-tenkova
+- e-gaulue
 - elationbase
 - eleazar
 - Elitius
+- el-tenkova
 - Emiliano 'AlberT' Gabrielli
 - Emilien Puget
 - emilien-puget
 - emily-d
 - Eolia
+- erickturcios
 - Eric Le Lay
 - Eric Rouvier
-- erickturcios
 - Erwan
 - Etienne Samson
 - Fabien Serny
 - Fabio Chelly
 - Fatma BOUCHEKOI
+- fatmaBouchekoua
 - Fatma Bouchekoua
 - fatma.bouchekoua
-- fatmaBouchekoua
 - fchellypresta
 - Felipe Uribe
 - fetis
@@ -192,8 +199,10 @@ GitHub contributors:
 - Florian Nolte
 - Flowster
 - fojtcz
+- fouratachour
 - Fourat ACHOUR
 - fram
+- Francisco Jiménez Cabrera
 - FrancMunoz
 - Francois Gaillard
 - Francois-Marie de Jouvencel
@@ -212,6 +221,7 @@ GitHub contributors:
 - Ginkosama
 - ginodev
 - Gordon Coubrough
+- GoT
 - gr4devel
 - Granger Kevin
 - Gregoire Belorgey
@@ -222,22 +232,25 @@ GitHub contributors:
 - gskema
 - Guilhem Fanton
 - Guillaume DELOINCE
+- Guillaume Germain
+- GuillaumeKadolis
 - Guillaume Lafarge
 - Guillaume Leseur
 - Guillaume Marsille
 - Guillaume P
-- GuillaumeKadolis
 - Guisardo
 - Gustavo
 - Gytis
 - Gytis Skėma
-- Ha!*!*y
 - ha99y
 - hadjedjvincent
 - hadrich-hatem
 - harelguy
+- Ha!*!*y
+- hhennes
 - hibatallahAouadni
 - hiousi
+- Horia Rudan
 - Howard Noz
 - htrex
 - hubiktomas
@@ -251,33 +264,33 @@ GitHub contributors:
 - Ish Gupta
 - ITBpro.com
 - Ivan
-- Ivan Shcherbakov
 - ivancasasempere
-- J. Danse
+- Ivan Shcherbakov
 - Jachym Tousek
 - janisVincent
 - Jaume
 - Javsmile
+- J. Danse
 - JEAN
 - jeanbe
 - jeckyl
 - Jeremie Tabet
 - Jeroen Dewaele
 - Jerome Herry
-- Jerome Nadaud
 - jeromenadaud
+- Jérôme Nadaud
+- Jerome Nadaud
 - jessylenne
 - jestemradek
-- Jérôme Nadaud
 - jGissinger
 - Joan
 - Joan Juvanteny
 - joce
 - jocelyn fournier
-- Joe Siwiak
 - Joel Sanchez
 - joemartin247
 - Joep Hendrix
+- Joe Siwiak
 - Jonadabe
 - Jonatan Nunez
 - Jonathan Danse
@@ -289,10 +302,10 @@ GitHub contributors:
 - Juha Remes
 - Julien
 - Julien Bouchez
+- julienbourdeau
 - Julien Bourdeau
 - Julien Deniau
 - Julien Martin
-- julienbourdeau
 - julvernois
 - Kamil Szymański
 - Karel Faille
@@ -300,27 +313,31 @@ GitHub contributors:
 - kermes
 - Kevin Dunglas
 - Kevin Granger
+- khouloud.belguith
 - Kijam Lopez
 - kiropowered
+- Kjeld Borch Egevang
 - kompilorb
 - kpodemski
 - Krystian Podemski
 - Ladel
+- Lathanao
 - ldecoker
 - Lea Mendes Da Silva
 - Leo
 - Lesley Paone
+- LittleBigDev
 - LOIC ROSSET ltd
 - Loïc Sapone
+- Louise Bonnard
 - lozal2244
 - Luc
-- Luc Vandesype
-- Luca T.
-- Lucas CERDAN
 - LucasC
-- Lyo Nick
+- Lucas CERDAN
+- Luca T.
+- Luc Vandesype
 - LyoNick
-- M-Mommsen
+- Lyo Nick
 - M03G
 - MacRoy
 - Madef
@@ -331,6 +348,7 @@ GitHub contributors:
 - makoso
 - Manfredi Petruso
 - manuelbcd
+- Marc González Majoral
 - Marcin Sągol
 - marcinsz101
 - Marco Cervellin
@@ -338,10 +356,12 @@ GitHub contributors:
 - Marek Hanuš
 - Marion François
 - Marius
-- Mark Wienk
 - MarkC
-- Martin Fojtik
+- Mark Wienk
 - martinfojtik
+- Martin Fojtik
+- Mateusz Nastalski
+- Mathieu Ferment
 - matiasiglesias
 - Mats Rynge
 - Matteo
@@ -353,28 +373,31 @@ GitHub contributors:
 - Maxence
 - Maxence de Flotte
 - Maxime
-- Maxime - Vaisonet
 - maxime aknin
 - Maxime Biloé
+- Maxime Morel-Bailly
+- Maxime - Vaisonet
 - Maxime Vasse
 - Mbechezi Mlanawo
 - mchelh
 - mchojnacki
 - mdomenjoud
 - MDWeb
+- Mehdi
 - Mehdi Badrani
-- mehrshadz
 - Mehrshad
+- mehrshadz
 - melvin
 - Michael Dekker
 - Michael Hjulskov
+- Michael Käfer
 - Michael Salihi
 - Michal Spaček
 - Michel ANTOINE
 - Michel Courtade
 - Mickael ANDRIEU
-- Mickael Desgranges
 - Mickaël Andrieu
+- Mickael Desgranges
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
@@ -382,6 +405,7 @@ GitHub contributors:
 - minic studio
 - Mirko Esposito
 - misthero
+- M-Mommsen
 - Molka DJEMAL
 - moncef102
 - montes
@@ -392,6 +416,7 @@ GitHub contributors:
 - neemzy
 - neoteknic
 - nezenmoins
+- Nicklas
 - Nicolas Giacconi
 - Nicolas Lœuillet
 - Nicolas Martin
@@ -407,16 +432,17 @@ GitHub contributors:
 - Nino Uzelac
 - nodexpl
 - nturato
+- okom3pom
 - oleacorner
 - Olivier Bonvalet
 - Otto Nascarella
 - Pablo Borowicz
 - paeddl
+- Panagiotis Tigas
+- panesarsandeep
 - Pan P
 - Pan P.
 - Pan Ploenes
-- Panagiotis Tigas
-- panesarsandeep
 - Patanock
 - Patrick Mettraux
 - Patrick Weinstein
@@ -424,12 +450,13 @@ GitHub contributors:
 - pbirnzain
 - Pedro J. Parra
 - Per Lejontand
-- Peter Schaeffer
 - peterept
+- Peter Schaeffer
 - Petyuska
 - PhpMadman
 - Pierre
 - Pierre Avizou
+- Pierre Joube
 - Pierre RAMBAUD
 - Pierrick
 - pilothuy
@@ -437,10 +464,11 @@ GitHub contributors:
 - Piotr Moćko
 - Pliciweb - Nicolas
 - Praneeth Nidarshan
-- Presta Module
 - PrestaEdit
 - PrestaLab
+- PrestaMagician
 - prestamodule
+- Presta Module
 - PrestanceDesign
 - Prestanesia
 - prestarocket
@@ -460,19 +488,23 @@ GitHub contributors:
 - Rafael Cunha
 - Raphael
 - Raphael Droz
-- Raphael Malie
 - raphael-homann
+- Raphael Malie
 - raulgundin
 - rav88
+- rdy4ever
 - Remi Gaillard
 - Remigiusz Jackowski
 - Renaud Sanchez - ChouetteWeb.fr
+- rGaillard
 - Rhys
 - Richard LT
 - Ricki Hirner
 - Rimas Kudelis
 - Riviere Serge
+- Robbie Thompson
 - robert
+- Rokas
 - Roland Schütz
 - romainberger
 - Roman Gusev
@@ -480,24 +512,30 @@ GitHub contributors:
 - RS
 - Ruben Martins
 - runningz
-- s-duval
 - Sacha
 - Sacha FROMENT
 - sadlyblue
 - sagaradonis
-- Sam Sanchez
 - Samir Shah
+- Sam Sanchez
 - Samy Rabih
+- sandu
+- sandu velea
 - Sarah Lorenzini
 - Šarūnas Jonušas
 - Saycile
+- sbordun
+- s-duval
 - Seb
 - Sebastien
 - Sébastien Bareyre
 - Sebastien Bocahu
 - Sebastien Monterisi
+- Sébastien Rufer
 - SebSept
 - Sergio Quinonez
+- Serhat Durum
+- Serhii Polishchuk
 - seynaeve
 - sfroment42
 - shaffe-fr
@@ -513,17 +551,20 @@ GitHub contributors:
 - soufyan
 - soware
 - Staging
+- Stanislav Popov
 - Stanislav Yordanov
 - Stefano Kowalke
 - Stephan Obadia
 - Steven "SDF" Sulley
 - Steven Sulley
+- stickyrst
 - Studio Kiwik
 - Sullivan SENECHAL
 - Sumh
 - svensson_david
 - Sylvain Gougouzian
 - Sylvain WITMEYER
+- Symeon
 - Tanguy JACQUET
 - tchauviere
 - TechhDan
@@ -536,22 +577,23 @@ GitHub contributors:
 - Thoma
 - thoma202
 - Thomas
+- thomas-aw
 - Thomas Blanc
 - Thomas Ferney
 - Thomas LEVIANDIER
 - Thomas N
 - Thomas Nabord
-- thomas-aw
 - Threef
 - tiledcode
+- timactive
 - timsit
 - tmackay
 - TMMeilleur
-- Tom Panier
 - Tomas Liska
 - Tomas Votruba
 - Tomasz Slominski
 - tomek
+- Tom Panier
 - Tony BOTALLA
 - Travis-CI
 - tucoinfo
@@ -566,18 +608,20 @@ GitHub contributors:
 - venditdevs
 - Vincent Augagneur
 - Vincent Beudez
+- vincentbz
 - Vincent HADJEDJ
 - Vincent Schoener
 - Vincent Terenti
-- vincentbz
+- Vincent Van den Brink
 - vinvin27
 - vinzter
+- Vitaly Kondratiev
 - vitekj
 - vmamykin
 - Wayann
-- web-plus
 - webbax
 - webmake
+- web-plus
 - Wojciech Grzebieniowski
 - Xavier
 - Xavier Borderie
@@ -587,6 +631,7 @@ GitHub contributors:
 - xKnut
 - yanngarras
 - Yannick A
+- Yannick Armand
 - Yolandavdvegt
 - Yoozio
 - Yuri Blanc
