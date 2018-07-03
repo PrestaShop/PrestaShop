@@ -23,5 +23,5 @@ _email:
     prefix: /emails
 
 _sql_manager:
-    resource: "sql_manager.yml"
-    prefix: /sql-manager/
+    resource: "request_sql.yml"
+    prefix: /request-sql/
