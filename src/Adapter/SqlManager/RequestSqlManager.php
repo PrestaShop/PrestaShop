@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
+use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
+
 /**
  * Class RequestSqlManager for managing legacy RequestSqlCore model
  */
@@ -42,7 +44,7 @@ class RequestSqlManager
     {
         $id = isset($data['id']) ? (int) $data['id'] : null;
 
-        $requestSql = new \RequestSql($id);
+        $requestSql = new RequestSql($id);
         $requestSql->name = $data['name'];
         $requestSql->sql = $data['sql'];
 
@@ -58,14 +60,28 @@ class RequestSqlManager
     /**
      * Delete Request SQL
      *
-     * @param int $id ID of Request SQL
+     * @param int[] $requestSqlIds ID of Request SQL
      *
-     * @return bool True on success or False otherwise
+     * @return array Errors if any
      */
-    public function delete($id)
+    public function delete(array $requestSqlIds)
     {
-        $requestSql = new \RequestSql($id);
+        $errors = [];
 
-        return $requestSql->delete();
+        foreach ($requestSqlIds as $id) {
+            $requestSql = new RequestSql($id);
+
+            if (!$requestSql->delete()) {
+                $errors[] = [
+                    'key' => 'Can\'t delete #%id%',
+                    'parameters' => [
+                        '%id%' => $id
+                    ],
+                    'domain' => 'Admin.Notifications.Error',
+                ];
+            }
+        }
+
+        return $errors;
     }
 }
