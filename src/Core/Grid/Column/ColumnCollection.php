@@ -54,7 +54,8 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     {
         if (!isset($this->items[$id])) {
             throw new ColumnNotFoundException(sprintf(
-                'Column with id "%s" was not found.', $id
+                'Column with id "%s" was not found.',
+                $id
             ));
         }
 
@@ -70,7 +71,8 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     {
         if (!isset($this->items[$id])) {
             throw new ColumnNotFoundException(sprintf(
-                'Column with id "%s" was not found.', $id
+                'Column with id "%s" was not found.',
+                $id
             ));
         }
 

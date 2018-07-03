@@ -28,6 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Search;
 
 final class ControllerAction
 {
+    /**
+     * Retrieve the Controller's action and name from a FQCN.
+     *
+     * @param string $controller
+     * @return array
+     */
     public static function fromString($controller)
     {
         return [

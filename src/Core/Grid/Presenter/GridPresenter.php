@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -101,8 +102,7 @@ final class GridPresenter implements GridPresenterInterface
     private function presentColumns(
         DefinitionInterface $definition,
         SearchCriteriaInterface $searchCriteria
-    )
-    {
+    ) {
         $formBuilder = $this->formFactory->createNamedBuilder(
             $definition->getId(),
             FormType::class,
@@ -121,14 +121,13 @@ final class GridPresenter implements GridPresenterInterface
                 'options' => $columnOptions,
             ];
 
-            if (isset(
-                $columnOptions['filter_type'],
-                $columnOptions['filter_type_options']
-            )) {
+            if (isset($columnOptions['filter'])) {
+                /** @var ColumnFilterOption $columnOption */
+                $columnOption = $columnOptions['filter'];
                 $formBuilder->add(
                     $column->getId(),
-                    $columnOptions['filter_type'],
-                    $columnOptions['filter_type_options']
+                    $columnOption->getFilterType(),
+                    $columnOption->getFilterTypeOptions()
                 );
             }
         }

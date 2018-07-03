@@ -309,6 +309,15 @@
   {% endspaceless %}
 {% endblock date_range_widget %}
 
+{% block search_and_reset_widget %}
+    {% spaceless %}
+        <div class="input-group">
+            {{ form_widget(form.search) }}
+            {{ form_widget(form.reset) }}
+        </div>
+    {% endspaceless %}
+{% endblock search_and_reset_widget %}
+
 {% block switch_widget %}
     {% spaceless %}
     <span class="ps-switch">

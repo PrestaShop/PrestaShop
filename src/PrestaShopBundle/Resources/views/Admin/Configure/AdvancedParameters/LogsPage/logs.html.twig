@@ -68,12 +68,6 @@
   {% endblock %}
 {% endblock %}
 {% block javascripts %}
-    {% if webpack_server %}
-      <script src="http://localhost:8080/sql-manager-helper.bundle.js"></script>
-      <script src="http://localhost:8080/table-filters-helper.bundle.js"></script>
-      <script src="http://localhost:8080/logs.bundle.js"></script>
-    {% else %}
-      <script src="{{ asset('themes/new-theme/public/logs.bundle.js') }}"></script>
-    {% endif %}
+  <script src="{{ asset('themes/new-theme/public/logs.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
