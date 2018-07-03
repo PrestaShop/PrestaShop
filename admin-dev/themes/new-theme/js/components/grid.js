@@ -66,9 +66,8 @@ export default class Grid {
     this.$grid.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
     this.$grid.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
 
-    // arrow function is incompatible with availability of $(this).
-    $('.reset-search').on('click', function () {
-        resetSearch($(this).data('url'));
+    $('.reset-search').on('click', (event) => {
+      resetSearch($(event.target).data('url'));
     });
   }
 
