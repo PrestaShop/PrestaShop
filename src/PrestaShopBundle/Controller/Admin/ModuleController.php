@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
-use PrestaShopBundle\Controller\Admin\Improve\Modules\AbstractController;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +46,10 @@ use Profile;
 use stdClass;
 use DateTime;
 
-class ModuleController extends AbstractController
+/**
+ * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display
+ */
+class ModuleController extends ModuleAbstractController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
 

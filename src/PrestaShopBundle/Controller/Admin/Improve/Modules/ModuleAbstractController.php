@@ -29,10 +29,16 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
-abstract class AbstractController extends FrameworkBundleAdminController
+abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
-    
+
+    /**
+     * Common method of alerts & updates routes for getting template variables
+     *
+     * @param string $type Type of alert to display (to_configure / to_update ...)
+     * @return array
+     */
     protected function getNotificationPageData($type)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
@@ -60,6 +66,11 @@ abstract class AbstractController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * Common method for all module related controller for getting the header buttons
+     * 
+     * @return array
+     */
     protected function getToolbarButtons()
     {
         // toolbarButtons
@@ -83,6 +94,11 @@ abstract class AbstractController extends FrameworkBundleAdminController
         return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
     }
 
+    /**
+     * Create a button in the header for the marketplace account (login or logout)
+     *
+     * @return array
+     */
     private function getAddonsConnectToolbar()
     {
         $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
