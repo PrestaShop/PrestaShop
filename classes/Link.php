@@ -764,8 +764,12 @@ class LinkCore
                     'AdminGeolocation' => 'admin_geolocation',
                     'AdminPaymentPreferences' => 'admin_payment_preferences',
                     'AdminInvoices' => 'admin_order_invoices',
+<<<<<<< HEAD
                     'AdminEmails' => 'admin_email',
                     'AdminRequestSql' => 'admin_request_sql',
+=======
+                    'AdminWebservice' => 'admin_webservice',
+>>>>>>> Migrate BO Advanced > Webservice page part 1: 'enable configuration' form
                 );
 
                 if (isset($routes[$controller])) {
