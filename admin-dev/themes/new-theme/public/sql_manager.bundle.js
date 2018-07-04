@@ -1,9 +1,61 @@
-/******/!function(e){// webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	function hotDisposeChunk(chunkId) {
+/******/ 		delete installedChunks[chunkId];
+/******/ 	}
+/******/ 	var parentHotUpdateCallback = this["webpackHotUpdate"];
+/******/ 	this["webpackHotUpdate"] = 
+/******/ 	function webpackHotUpdateCallback(chunkId, moreModules) { // eslint-disable-line no-unused-vars
+/******/ 		hotAddUpdateChunk(chunkId, moreModules);
+/******/ 		if(parentHotUpdateCallback) parentHotUpdateCallback(chunkId, moreModules);
+/******/ 	} ;
+/******/ 	
+/******/ 	function hotDownloadUpdateChunk(chunkId) { // eslint-disable-line no-unused-vars
+/******/ 		var head = document.getElementsByTagName("head")[0];
+/******/ 		var script = document.createElement("script");
+/******/ 		script.type = "text/javascript";
+/******/ 		script.charset = "utf-8";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + "." + hotCurrentHash + ".hot-update.js";
+/******/ 		head.appendChild(script);
+/******/ 	}
+/******/ 	
+/******/ 	function hotDownloadManifest() { // eslint-disable-line no-unused-vars
+/******/ 		return new Promise(function(resolve, reject) {
+/******/ 			if(typeof XMLHttpRequest === "undefined")
+/******/ 				return reject(new Error("No browser support"));
+/******/ 			try {
+/******/ 				var request = new XMLHttpRequest();
+/******/ 				var requestPath = __webpack_require__.p + "" + hotCurrentHash + ".hot-update.json";
+/******/ 				request.open("GET", requestPath, true);
+/******/ 				request.timeout = 10000;
+/******/ 				request.send(null);
+/******/ 			} catch(err) {
+/******/ 				return reject(err);
+/******/ 			}
+/******/ 			request.onreadystatechange = function() {
+/******/ 				if(request.readyState !== 4) return;
+/******/ 				if(request.status === 0) {
+/******/ 					// timeout
+/******/ 					reject(new Error("Manifest request to " + requestPath + " timed out."));
+/******/ 				} else if(request.status === 404) {
+/******/ 					// no update available
+/******/ 					resolve();
+/******/ 				} else if(request.status !== 200 && request.status !== 304) {
+/******/ 					// other failure
+/******/ 					reject(new Error("Manifest request to " + requestPath + " failed."));
+/******/ 				} else {
+/******/ 					// success
+/******/ 					try {
+/******/ 						var update = JSON.parse(request.responseText);
+/******/ 					} catch(e) {
+/******/ 						reject(e);
+/******/ 						return;
+/******/ 					}
+/******/ 					resolve(update);
+/******/ 				}
+/******/ 			};
+/******/ 		});
+/******/ 	}
 /******/
-<<<<<<< HEAD
-function n(e){/******/
-delete installedChunks[e]}function r(e){var n=document.getElementsByTagName("head")[0],r=document.createElement("script");r.type="text/javascript",r.charset="utf-8",r.src=f.p+""+e+"."+g+".hot-update.js",n.appendChild(r)}function t(){return new Promise(function(e,n){if("undefined"==typeof XMLHttpRequest)return n(new Error("No browser support"));try{var r=new XMLHttpRequest,t=f.p+""+g+".hot-update.json";r.open("GET",t,!0),r.timeout=1e4,r.send(null)}catch(e){return n(e)}r.onreadystatechange=function(){if(4===r.readyState)if(0===r.status)n(new Error("Manifest request to "+t+" timed out."));else if(404===r.status)e();else if(200!==r.status&&304!==r.status)n(new Error("Manifest request to "+t+" failed."));else{try{var o=JSON.parse(r.responseText)}catch(e){return void n(e)}e(o)}}})}function o(e){var n=A[e];if(!n)return f;var r=function(r){return n.hot.active?(A[r]?A[r].parents.indexOf(e)<0&&A[r].parents.push(e):(_=[e],y=r),n.children.indexOf(r)<0&&n.children.push(r)):_=[],f(r)};for(var t in f)Object.prototype.hasOwnProperty.call(f,t)&&"e"!==t&&Object.defineProperty(r,t,function(e){return{configurable:!0,enumerable:!0,get:function(){return f[e]},set:function(n){f[e]=n}}}(t));return r.e=function(e){function n(){H--,"prepare"===j&&(P[e]||p(e),0===H&&0===x&&l())}return"ready"===j&&i("prepare"),H++,f.e(e).then(n,function(e){throw n(),e})},r}function c(e){var n={_acceptedDependencies:{},_declinedDependencies:{},_selfAccepted:!1,_selfDeclined:!1,_disposeHandlers:[],_main:y!==e,active:!0,accept:function(e,r){if(void 0===e)n._selfAccepted=!0;else if("function"==typeof e)n._selfAccepted=e;else if("object"==typeof e)for(var t=0;t<e.length;t++)n._acceptedDependencies[e[t]]=r||function(){};else n._acceptedDependencies[e]=r||function(){}},decline:function(e){if(void 0===e)n._selfDeclined=!0;else if("object"==typeof e)for(var r=0;r<e.length;r++)n._declinedDependencies[e[r]]=!0;else n._declinedDependencies[e]=!0},dispose:function(e){n._disposeHandlers.push(e)},addDisposeHandler:function(e){n._disposeHandlers.push(e)},removeDisposeHandler:function(e){var r=n._disposeHandlers.indexOf(e);r>=0&&n._disposeHandlers.splice(r,1)},check:a,apply:u,status:function(e){if(!e)return j;E.push(e)},addStatusHandler:function(e){E.push(e)},removeStatusHandler:function(e){var n=E.indexOf(e);n>=0&&E.splice(n,1)},data:O[e]};return y=void 0,n}function i(e){j=e;for(var n=0;n<E.length;n++)E[n].call(null,e)}function d(e){return+e+""===e?+e:e}function a(e){if("idle"!==j)throw new Error("check() is only allowed in idle status");return b=e,i("check"),t().then(function(e){if(!e)return i("idle"),null;I={},P={},k=e.c,w=e.h,i("prepare");var n=new Promise(function(e,n){v={resolve:e,reject:n}});m={};return p(11),"prepare"===j&&0===H&&0===x&&l(),n})}function s(e,n){if(k[e]&&I[e]){I[e]=!1;for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(m[r]=n[r]);0==--x&&0===H&&l()}}function p(e){k[e]?(I[e]=!0,x++,r(e)):P[e]=!0}function l(){i("ready");var e=v;if(v=null,e)if(b)u(b).then(function(n){e.resolve(n)},function(n){e.reject(n)});else{var n=[];for(var r in m)Object.prototype.hasOwnProperty.call(m,r)&&n.push(d(r));e.resolve(n)}}function u(r){function t(e,n){for(var r=0;r<n.length;r++){var t=n[r];e.indexOf(t)<0&&e.push(t)}}if("ready"!==j)throw new Error("apply() is only allowed in ready status");r=r||{};var o,c,a,s,p,l={},u=[],h={},y=function(){};for(var v in m)if(Object.prototype.hasOwnProperty.call(m,v)){p=d(v);var b;b=m[v]?function(e){for(var n=[e],r={},o=n.slice().map(function(e){return{chain:[e],id:e}});o.length>0;){var c=o.pop(),i=c.id,d=c.chain;if((s=A[i])&&!s.hot._selfAccepted){if(s.hot._selfDeclined)return{type:"self-declined",chain:d,moduleId:i};if(s.hot._main)return{type:"unaccepted",chain:d,moduleId:i};for(var a=0;a<s.parents.length;a++){var p=s.parents[a],l=A[p];if(l){if(l.hot._declinedDependencies[i])return{type:"declined",chain:d.concat([p]),moduleId:i,parentId:p};n.indexOf(p)>=0||(l.hot._acceptedDependencies[i]?(r[p]||(r[p]=[]),t(r[p],[i])):(delete r[p],n.push(p),o.push({chain:d.concat([p]),id:p})))}}}}return{type:"accepted",moduleId:e,outdatedModules:n,outdatedDependencies:r}}(p):{type:"disposed",moduleId:v};var D=!1,E=!1,x=!1,H="";switch(b.chain&&(H="\nUpdate propagation: "+b.chain.join(" -> ")),b.type){case"self-declined":r.onDeclined&&r.onDeclined(b),r.ignoreDeclined||(D=new Error("Aborted because of self decline: "+b.moduleId+H));break;case"declined":r.onDeclined&&r.onDeclined(b),r.ignoreDeclined||(D=new Error("Aborted because of declined dependency: "+b.moduleId+" in "+b.parentId+H));break;case"unaccepted":r.onUnaccepted&&r.onUnaccepted(b),r.ignoreUnaccepted||(D=new Error("Aborted because "+p+" is not accepted"+H));break;case"accepted":r.onAccepted&&r.onAccepted(b),E=!0;break;case"disposed":r.onDisposed&&r.onDisposed(b),x=!0;break;default:throw new Error("Unexception type "+b.type)}if(D)return i("abort"),Promise.reject(D);if(E){h[p]=m[p],t(u,b.outdatedModules);for(p in b.outdatedDependencies)Object.prototype.hasOwnProperty.call(b.outdatedDependencies,p)&&(l[p]||(l[p]=[]),t(l[p],b.outdatedDependencies[p]))}x&&(t(u,[b.moduleId]),h[p]=y)}var P=[];for(c=0;c<u.length;c++)p=u[c],A[p]&&A[p].hot._selfAccepted&&P.push({module:p,errorHandler:A[p].hot._selfAccepted});i("dispose"),Object.keys(k).forEach(function(e){!1===k[e]&&n(e)});for(var I,M=u.slice();M.length>0;)if(p=M.pop(),s=A[p]){var U={},q=s.hot._disposeHandlers;for(a=0;a<q.length;a++)(o=q[a])(U);for(O[p]=U,s.hot.active=!1,delete A[p],a=0;a<s.children.length;a++){var S=A[s.children[a]];S&&((I=S.parents.indexOf(p))>=0&&S.parents.splice(I,1))}}var N,T;for(p in l)if(Object.prototype.hasOwnProperty.call(l,p)&&(s=A[p]))for(T=l[p],a=0;a<T.length;a++)N=T[a],(I=s.children.indexOf(N))>=0&&s.children.splice(I,1);i("apply"),g=w;for(p in h)Object.prototype.hasOwnProperty.call(h,p)&&(e[p]=h[p]);var C=null;for(p in l)if(Object.prototype.hasOwnProperty.call(l,p)){s=A[p],T=l[p];var L=[];for(c=0;c<T.length;c++)N=T[c],o=s.hot._acceptedDependencies[N],L.indexOf(o)>=0||L.push(o);for(c=0;c<L.length;c++){o=L[c];try{o(T)}catch(e){r.onErrored&&r.onErrored({type:"accept-errored",moduleId:p,dependencyId:T[c],error:e}),r.ignoreErrored||C||(C=e)}}}for(c=0;c<P.length;c++){var R=P[c];p=R.module,_=[p];try{f(p)}catch(e){if("function"==typeof R.errorHandler)try{R.errorHandler(e)}catch(n){r.onErrored&&r.onErrored({type:"self-accept-error-handler-errored",moduleId:p,error:n,orginalError:e}),r.ignoreErrored||C||(C=n),C||(C=e)}else r.onErrored&&r.onErrored({type:"self-accept-errored",moduleId:p,error:e}),r.ignoreErrored||C||(C=e)}}return C?(i("fail"),Promise.reject(C)):(i("idle"),new Promise(function(e){e(u)}))}function f(n){if(A[n])return A[n].exports;var r=A[n]={i:n,l:!1,exports:{},hot:c(n),parents:(D=_,_=[],D),children:[]};return e[n].call(r.exports,r,r.exports,o(n)),r.l=!0,r.exports}var h=this.webpackHotUpdate;this.webpackHotUpdate=function(e,n){s(e,n),h&&h(e,n)};var y,v,m,w,b=!0,g="84677860fd7781d2a9ae",O={},_=[],D=[],E=[],j="idle",x=0,H=0,P={},I={},k={},A={};f.m=e,f.c=A,f.i=function(e){return e},f.d=function(e,n,r){f.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},f.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return f.d(n,"a",n),n},f.o=function(e,n){return Object.prototype.hasOwnProperty.call(e,n)},f.p="",f.h=function(){return g},o(367)(f.s=367)}({181:function(e,n){/**
-=======
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
@@ -186,7 +238,7 @@ delete installedChunks[e]}function r(e){var n=document.getElementsByTagName("hea
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 12;
+/******/ 			var chunkId = 3;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -654,16 +706,310 @@ delete installedChunks[e]}function r(e){var n=document.getElementsByTagName("hea
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(454)(__webpack_require__.s = 454);
+/******/ 	return hotCreateRequire(459)(__webpack_require__.s = 459);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 225:
-/***/ (function(module, exports) {
+/***/ 22:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
->>>>>>> 0c9e0a681f... rebuild assets
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = global.$;
+
+/**
+ * Makes a table sortable by columns.
+ * This forces a page reload with more query parameters.
+ */
+
+var TableSorting = function () {
+
+  /**
+   * @param {jQuery} table
+   */
+  function TableSorting(table) {
+    _classCallCheck(this, TableSorting);
+
+    this.selector = '.ps-sortable-column';
+    this.columns = $(table).find(this.selector);
+  }
+
+  /**
+   * Attaches the listeners
+   */
+
+
+  _createClass(TableSorting, [{
+    key: 'attach',
+    value: function attach() {
+      var _this = this;
+
+      this.columns.on('click', function (e) {
+        var $column = $(e.delegateTarget);
+        _this._sortByColumn($column, _this._getToggledSortDirection($column));
+      });
+    }
+
+    /**
+     * Sort using a column name
+     * @param {string} columnName
+     * @param {string} direction "asc" or "desc"
+     */
+
+  }, {
+    key: 'sortBy',
+    value: function sortBy(columnName, direction) {
+      var $column = this.columns.is('[data-sort-col-name="' + columnName + '"]');
+      if (!$column) {
+        throw new Error('Cannot sort by "' + columnName + '": invalid column');
+      }
+
+      this._sortByColumn($column, direction);
+    }
+
+    /**
+     * Sort using a column element
+     * @param {jQuery} column
+     * @param {string} direction "asc" or "desc"
+     * @private
+     */
+
+  }, {
+    key: '_sortByColumn',
+    value: function _sortByColumn(column, direction) {
+      window.location = this._getUrl(column.data('sortColName'), direction === 'desc' ? 'desc' : 'asc');
+    }
+
+    /**
+     * Returns the inverted direction to sort according to the column's current one
+     * @param {jQuery} column
+     * @return {string}
+     * @private
+     */
+
+  }, {
+    key: '_getToggledSortDirection',
+    value: function _getToggledSortDirection(column) {
+      return column.data('sortDirection') === 'asc' ? 'desc' : 'asc';
+    }
+
+    /**
+     * Returns the url for the sorted table
+     * @param {string} colName
+     * @param {string} direction
+     * @return {string}
+     * @private
+     */
+
+  }, {
+    key: '_getUrl',
+    value: function _getUrl(colName, direction) {
+      var url = new URL(window.location.href);
+      var params = url.searchParams;
+
+      params.set('orderBy', colName);
+      params.set('sortOrder', direction);
+
+      return url.toString();
+    }
+  }]);
+
+  return TableSorting;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (TableSorting);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+
+/***/ }),
+
+/***/ 230:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_confirmation_alert__ = __webpack_require__(260);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid__ = __webpack_require__(32);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+
+
+var $ = window.$;
+
+var SqlManagerPage = function () {
+  function SqlManagerPage() {
+    var _this = this;
+
+    _classCallCheck(this, SqlManagerPage);
+
+    var $sortableTables = $('table.table');
+
+    new __WEBPACK_IMPORTED_MODULE_2__components_grid__["a" /* default */]('#request_sql_grid_panel').init();
+    new __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__["a" /* default */]($sortableTables).attach();
+    new __WEBPACK_IMPORTED_MODULE_1__components_confirmation_alert__["a" /* default */]().init();
+
+    $(document).on('change', '.js-db-tables-select', function () {
+      return _this.reloadDbTableColumns();
+    });
+    $(document).on('click', '.js-add-db-table-to-query-btn', function (event) {
+      return _this.addDbTableToQuery(event);
+    });
+    $(document).on('click', '.js-add-db-table-column-to-query-btn', function (event) {
+      return _this.addDbTableColumnToQuery(event);
+    });
+  }
+
+  /**
+   * Reload database table columns
+   */
+
+
+  _createClass(SqlManagerPage, [{
+    key: 'reloadDbTableColumns',
+    value: function reloadDbTableColumns() {
+      var $selectedOption = $('.js-db-tables-select').find('option:selected');
+
+      $.ajax($selectedOption.data('table-columns-url')).then(function (response) {
+        $('.js-table-alert').addClass('d-none');
+
+        var columns = response.columns;
+
+        var $table = $('.js-table-columns');
+        $table.removeClass('d-none');
+        $table.find('tbody').empty();
+
+        columns.forEach(function (column) {
+          var $row = $('<tr>').append($('<td>').html(column.name)).append($('<td>').html(column.type)).append($('<td>').addClass('text-right').append($('<button>').addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn').attr('data-column', column.name).html($table.data('action-btn'))));
+
+          $table.find('tbody').append($row);
+        });
+      });
+    }
+
+    /**
+     * Add selected database table name to SQL query input
+     *
+     * @param event
+     */
+
+  }, {
+    key: 'addDbTableToQuery',
+    value: function addDbTableToQuery(event) {
+      var $selectedOption = $('.js-db-tables-select').find('option:selected');
+
+      if ($selectedOption.length === 0) {
+        alert($(event.target).data('choose-table-message'));
+
+        return;
+      }
+
+      this.addToQuery($selectedOption.val());
+    }
+
+    /**
+     * Add table column to SQL query input
+     *
+     * @param event
+     */
+
+  }, {
+    key: 'addDbTableColumnToQuery',
+    value: function addDbTableColumnToQuery(event) {
+      var column = $(event.target).data('column');
+
+      this.addToQuery(column);
+    }
+
+    /**
+     * Add data to SQL query input
+     *
+     * @param {String} data
+     */
+
+  }, {
+    key: 'addToQuery',
+    value: function addToQuery(data) {
+      var $queryInput = $('#form_request_sql_sql');
+      $queryInput.val($queryInput.val() + ' ' + data);
+    }
+  }]);
+
+  return SqlManagerPage;
+}();
+
+$(document).ready(function () {
+  new SqlManagerPage();
+});
+
+/***/ }),
+
+/***/ 260:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -687,28 +1033,336 @@ delete installedChunks[e]}function r(e){var n=document.getElementsByTagName("hea
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-<<<<<<< HEAD
-var r=window.$;r(function(){r("#form_configuration_default_currency").on("change",function(){alert(r(this).data("warning-message"))})})},367:function(e,n,r){e.exports=r(181)}});
-=======
 
 var $ = window.$;
 
-$(function () {
-  // show warning message when currency is changed
-  $('#form_configuration_default_currency').on('change', function () {
-    alert($(this).data('warning-message'));
-  });
-});
+/**
+ * Display confirmation alert with provided message.
+ */
+
+var ConfirmationAlert = function () {
+  function ConfirmationAlert() {
+    _classCallCheck(this, ConfirmationAlert);
+  }
+
+  _createClass(ConfirmationAlert, [{
+    key: 'init',
+    value: function init() {
+      $(document).on('click', '.js-confirm-btn', function (event) {
+        var $btn = $(event.currentTarget);
+        var message = $btn.data('confirm-message');
+
+        var confirmed = confirm(message);
+        if (confirmed) {
+          return true;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+      });
+    }
+  }]);
+
+  return ConfirmationAlert;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (ConfirmationAlert);
 
 /***/ }),
 
-/***/ 454:
+/***/ 3:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 32:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class is responsible for handling Grid events
+ */
+
+var Grid = function () {
+  /**
+   * Grid's selector
+   *
+   * @param {string} gridPanelSelector
+   */
+  function Grid(gridPanelSelector) {
+    _classCallCheck(this, Grid);
+
+    this.$gridPanel = $(gridPanelSelector);
+    this.gridId = this.$gridPanel.data('grid-id');
+    this.$grid = this.$gridPanel.find('#' + this.gridId + '_grid');
+  }
+
+  /**
+   * Initialize grid events
+   */
+
+
+  _createClass(Grid, [{
+    key: 'init',
+    value: function init() {
+      this._handleBulkActionSelectAllCheckbox();
+      this._handleBulkActionCheckboxSelect();
+      this._handleCommonGridActions();
+      this._handleBulkActionsSubmit();
+    }
+
+    /**
+     * Handles most common grid actions (show sql, refresh list & etc.)
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleCommonGridActions',
+    value: function _handleCommonGridActions() {
+      var _this = this;
+
+      var commonActionSuffix = '#' + this.gridId + '_grid_action_';
+
+      var refreshListActionId = commonActionSuffix + 'common_refresh_list';
+      var showSqlActionId = commonActionSuffix + 'common_show_query';
+      var exportSqlManagerActionId = commonActionSuffix + 'common_export_sql_manager';
+
+      this.$gridPanel.on('click', refreshListActionId, function () {
+        return _this._onRefreshClick();
+      });
+      this.$gridPanel.on('click', showSqlActionId, function () {
+        return _this._onShowSqlQueryClick();
+      });
+      this.$gridPanel.on('click', exportSqlManagerActionId, function () {
+        return _this._onExportSqlManagerClick();
+      });
+    }
+
+    /**
+     * Handles "Select all" button in the grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionSelectAllCheckbox',
+    value: function _handleBulkActionSelectAllCheckbox() {
+      var _this2 = this;
+
+      $(document).on('change', '.js-bulk-action-select-all', function (e) {
+        var $checkbox = $(e.target);
+
+        var isChecked = $checkbox.is(':checked');
+        if (isChecked) {
+          _this2._enableBulkActionsBtn();
+        } else {
+          _this2._disableBulkActionsBtn();
+        }
+
+        _this2.$gridPanel.find('.js-bulk-action-checkbox').prop('checked', isChecked);
+      });
+    }
+
+    /**
+     * Handles each bulk action checkbox select in the grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionCheckboxSelect',
+    value: function _handleBulkActionCheckboxSelect() {
+      var _this3 = this;
+
+      this.$gridPanel.on('change', '.js-bulk-action-checkbox', function () {
+        var checkedRowsCount = _this3.$gridPanel.find('.js-bulk-action-checkbox:checked').length;
+
+        if (checkedRowsCount > 0) {
+          _this3._enableBulkActionsBtn();
+        } else {
+          _this3._disableBulkActionsBtn();
+        }
+      });
+    }
+
+    /**
+     * Handles bulk action submit
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionsSubmit',
+    value: function _handleBulkActionsSubmit() {
+      var _this4 = this;
+
+      this.$gridPanel.on('click', '.js-bulk-action-btn', function (e) {
+        var $button = $(e.target);
+
+        var confirmationMessage = $button.data('confirm-message').toString();
+
+        if (confirmationMessage) {
+          var confirmed = confirm(confirmationMessage);
+          if (!confirmed) {
+            return;
+          }
+        }
+
+        var formUrl = $button.data('form-url');
+        var formMethod = $button.data('form-method');
+
+        var $form = _this4.$gridPanel.find('#' + _this4.gridId + '_grid_form');
+        $form.attr('action', formUrl);
+        $form.attr('method', formMethod);
+
+        $form.submit();
+      });
+    }
+
+    /**
+     * Enable bulk actions button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_enableBulkActionsBtn',
+    value: function _enableBulkActionsBtn() {
+      this.$gridPanel.find('.js-bulk-actions-btn').prop('disabled', false);
+    }
+
+    /**
+     * Disable bulk actions button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_disableBulkActionsBtn',
+    value: function _disableBulkActionsBtn() {
+      this.$gridPanel.find('.js-bulk-actions-btn').prop('disabled', true);
+    }
+
+    /**
+     * Invoked when clicking on the "reload" toolbar button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onRefreshClick',
+    value: function _onRefreshClick() {
+      location.reload();
+    }
+
+    /**
+     * Invoked when clicking on the "show sql query" toolbar button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onShowSqlQueryClick',
+    value: function _onShowSqlQueryClick() {
+      var identifier = this.$gridPanel.find('.js-grid').attr('id');
+      var query = this.$gridPanel.find('.js-grid-table').data('query');
+
+      var $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
+      $sqlManagerForm.find('textarea[name="sql"]').val(query);
+
+      var $modal = $('#' + identifier + '_common_show_query_modal');
+      $modal.modal('show');
+
+      $modal.on('click', '.btn-sql-submit', function () {
+        return $sqlManagerForm.submit();
+      });
+    }
+
+    /**
+     * Invoked when clicking on the "export to the sql query" toolbar button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onExportSqlManagerClick',
+    value: function _onExportSqlManagerClick() {
+      var query = this.$gridPanel.find('.js-grid-table').data('query');
+
+      var $sqlManagerForm = $('#' + this.gridId + '_common_show_query_modal_form');
+      $sqlManagerForm.find('textarea[name="sql"]').val(query);
+      $sqlManagerForm.submit();
+    }
+  }]);
+
+  return Grid;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Grid);
+
+/***/ }),
+
+/***/ 459:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(225);
+module.exports = __webpack_require__(230);
 
 
 /***/ })
 
 /******/ });
->>>>>>> 0c9e0a681f... rebuild assets
