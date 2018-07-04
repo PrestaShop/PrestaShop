@@ -184,10 +184,9 @@ export default class Grid {
    * @private
    */
   _onExportSqlManagerClick() {
-    let identifier = this.$gridPanel.find('.js-grid').attr('id');
     let query = this.$gridPanel.find('.js-grid-table').data('query');
 
-    const $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
+    const $sqlManagerForm = $('#' + this.gridId + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
     $sqlManagerForm.submit();
   }

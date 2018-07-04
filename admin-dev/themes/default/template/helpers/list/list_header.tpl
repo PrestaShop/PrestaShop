@@ -107,7 +107,7 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 {if isset($sql) && $sql}
-	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
+	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{url entity='sf' route='admin_request_sql_create' }" method="post" class="hide">
 		<input type="hidden" id="sql_query_{$list_id|escape:'html':'UTF-8'}" name="sql" value="{$sql|escape}"/>
 		<input type="hidden" id="sql_name_{$list_id|escape:'html':'UTF-8'}" name="name" value=""/>
 	</form>
