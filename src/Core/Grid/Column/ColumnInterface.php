@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
  * Interface ColumnInterface exposes contract for single column
  */
@@ -80,11 +78,4 @@ interface ColumnInterface
      * @return self
      */
     public function setOptions(array $options);
-
-    /**
-     * Configure column options
-     *
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver);
 }
