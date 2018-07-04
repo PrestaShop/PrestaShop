@@ -84,7 +84,6 @@ abstract class AbstractRowAction implements RowActionInterface
         return $this->icon;
     }
 
-
     /**
      * {@inheritdoc}
      */
