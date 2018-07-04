@@ -266,7 +266,7 @@ class ProductController extends FrameworkBundleAdminController
                 'categories' => $categories->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
                 'import_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminImport', true, ['import_type' => 'products']),
-                'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
+                'sql_manager_add_link' => $this->generateUrl('admin_request_sql_create'),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
