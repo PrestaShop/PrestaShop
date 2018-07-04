@@ -24,6 +24,6 @@ services:
     prestashop.cache.refresh:
         class: PrestaShopBundle\Service\Cache\Refresh
         arguments:
-            - "%kernel.environment%"
+            - "@kernel"
         calls:
             - [addCacheClear, []]
