@@ -482,10 +482,10 @@ class AdminImportControllerCore extends AdminController
                 );
                 break;
             case $this->entities[$this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
-                unset(self::$validators['name']);
-                self::$validators = array(
-                    'hours' => array('AdminImportController', 'split')
-                );
+                self::$validators['hours'] = array('AdminImportController', 'split');
+                self::$validators['address1'] = array('AdminImportController', 'createMultiLangField');
+                self::$validators['address2'] = array('AdminImportController', 'createMultiLangField');
+                
                 $this->required_fields = array(
                     'address1',
                     'city',
@@ -3849,7 +3849,8 @@ class AdminImportControllerCore extends AdminController
                 );
             }
         } else {
-            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification').' ('.$store->name.')';
+            $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
+            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification').' ('.$store->name[$id_lang].')';
             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
         }
     }
