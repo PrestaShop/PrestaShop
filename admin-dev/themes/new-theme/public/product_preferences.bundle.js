@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "40137b7550036b93288f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e331c63050094a2ddd7b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 5;
+/******/ 			var chunkId = 6;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,18 +706,18 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(456)(__webpack_require__.s = 456);
+/******/ 	return hotCreateRequire(458)(__webpack_require__.s = 458);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 228:
+/***/ 229:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(268);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(270);
 /**
  * 2007-2018 PrestaShop
  *
@@ -755,7 +755,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 268:
+/***/ 270:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -863,7 +863,7 @@ var StockManagementOptionHandler = function () {
 
 /***/ }),
 
-/***/ 32:
+/***/ 33:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -933,10 +933,10 @@ var TranslatableInput = function () {
 
 /***/ }),
 
-/***/ 456:
+/***/ 458:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(228);
+module.exports = __webpack_require__(229);
 
 
 /***/ })

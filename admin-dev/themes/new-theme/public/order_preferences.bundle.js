@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "40137b7550036b93288f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e331c63050094a2ddd7b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 8;
+/******/ 			var chunkId = 9;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,17 +706,17 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(453)(__webpack_require__.s = 453);
+/******/ 	return hotCreateRequire(455)(__webpack_require__.s = 455);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 225:
+/***/ 226:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(267);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(269);
 /**
  * 2007-2018 PrestaShop
  *
@@ -752,7 +752,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 267:
+/***/ 269:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -830,10 +830,10 @@ var TermsAndConditionsOptionHandler = function () {
 
 /***/ }),
 
-/***/ 453:
+/***/ 455:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(225);
+module.exports = __webpack_require__(226);
 
 
 /***/ })

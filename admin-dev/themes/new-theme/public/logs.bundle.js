@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "40137b7550036b93288f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e331c63050094a2ddd7b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 3;
+/******/ 			var chunkId = 4;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,497 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(447)(__webpack_require__.s = 447);
+/******/ 	return hotCreateRequire(449)(__webpack_require__.s = 449);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 219:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_sql_manager__ = __webpack_require__(255);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid__ = __webpack_require__(258);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2017 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-
-
-
-
-var $ = global.$;
-
-var LogsPage = function () {
-  function LogsPage() {
-    _classCallCheck(this, LogsPage);
-  }
-
-  _createClass(LogsPage, [{
-    key: 'init',
-    value: function init() {
-      new __WEBPACK_IMPORTED_MODULE_2__components_grid__["a" /* default */]('#logs_grid_panel').init();
-
-      var $sortableTables = $('table.table');
-      var $deleteAllLogsButton = $('#logs-deleteAll');
-      var $refreshButton = $('#logs-refresh');
-      var $showSqlQueryButton = $('#logs-showSqlQuery');
-      var $exportSqlManagerButton = $('#logs-exportSqlManager');
-
-      this.sqlManager = new __WEBPACK_IMPORTED_MODULE_1__utils_sql_manager__["a" /* default */]();
-
-      new __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__["a" /* default */]($sortableTables).attach();
-
-      $deleteAllLogsButton.on('click', this._onDeleteAllLogsClick.bind(this));
-      $refreshButton.on('click', this._onRefreshClick.bind(this));
-      $showSqlQueryButton.on('click', this._onShowSqlQueryClick.bind(this));
-      $exportSqlManagerButton.on('click', this._onExportSqlManagerClick.bind(this));
-    }
-
-    /**
-     * Invoked when clicking on the "delete all logs" toolbar button
-     * @param {jQuery.Event} event
-     * @private
-     */
-
-  }, {
-    key: '_onDeleteAllLogsClick',
-    value: function _onDeleteAllLogsClick(event) {
-      var clickedButton = $(event.delegateTarget);
-      var confirmationMessage = clickedButton.data('confirmMessage');
-      var form = clickedButton.closest('form');
-      if (global.confirm(confirmationMessage)) {
-        form.submit();
-      }
-    }
-
-    /**
-     * Invoked when clicking on the "reload" toolbar button
-     * @private
-     */
-
-  }, {
-    key: '_onRefreshClick',
-    value: function _onRefreshClick() {
-      location.reload();
-    }
-
-    /**
-     * Invoked when clicking on the "show sql query" toolbar button
-     * @private
-     */
-
-  }, {
-    key: '_onShowSqlQueryClick',
-    value: function _onShowSqlQueryClick() {
-      this.sqlManager.showLastSqlQuery();
-    }
-
-    /**
-     * Invoked when clicking on the "export to the sql query" toolbar button
-     * @private
-     */
-
-  }, {
-    key: '_onExportSqlManagerClick',
-    value: function _onExportSqlManagerClick() {
-      this.sqlManager.sendLastSqlQuery(this.sqlManager.createSqlQueryName());
-    }
-  }]);
-
-  return LogsPage;
-}();
-
-$(function () {
-  new LogsPage().init();
-});
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
-
-/***/ }),
-
-/***/ 255:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2017 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = global.$;
-
-/**
- * Allow to display the last SQL query in a modal and redirect to SQL Manager.
- */
-
-var SqlManager = function () {
-  function SqlManager() {
-    _classCallCheck(this, SqlManager);
-  }
-
-  _createClass(SqlManager, [{
-    key: 'showLastSqlQuery',
-    value: function showLastSqlQuery() {
-      $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-      $('#catalog_sql_query_modal .btn-sql-submit').click(function () {
-        $('#catalog_sql_query_modal_content').submit();
-      });
-      $('#catalog_sql_query_modal').modal('show');
-    }
-  }, {
-    key: 'sendLastSqlQuery',
-    value: function sendLastSqlQuery(name) {
-      $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-      $('#catalog_sql_query_modal_content input[name="name"]').val(name);
-      $('#catalog_sql_query_modal_content').submit();
-    }
-  }, {
-    key: 'createSqlQueryName',
-    value: function createSqlQueryName() {
-      var container = false;
-      var current = false;
-      if ($('.breadcrumb')) {
-        container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
-        current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
-      }
-      var title = false;
-      if ($('h2.title')) {
-        title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
-      }
-
-      var name = false;
-      if (container && current && container != current) {
-        name = container + ' > ' + current;
-      } else if (container) {
-        name = container;
-      } else if (current) {
-        name = current;
-      }
-
-      if (title && title != current && title != container) {
-        if (name) {
-          name = name + ' > ' + title;
-        } else {
-          name = title;
-        }
-      }
-
-      return name.trim();
-    }
-  }]);
-
-  return SqlManager;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (SqlManager);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
-
-/***/ }),
-
-/***/ 258:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Class is responsible for handling Grid events
- */
-
-var Grid = function () {
-  /**
-   * Grid's selector
-   *
-   * @param gridSelector
-   */
-  function Grid(gridSelector) {
-    _classCallCheck(this, Grid);
-
-    this.$grid = $(gridSelector);
-  }
-
-  /**
-   * Initialize grid events
-   */
-
-
-  _createClass(Grid, [{
-    key: 'init',
-    value: function init() {
-      this._handleBulkActionSelectAllCheckbox();
-      this._handleBulkActionCheckboxSelect();
-      this._handleCommonGridActions();
-    }
-
-    /**
-     * Handles most common grid actions (show sql, refresh list & etc.)
-     *
-     * @private
-     */
-
-  }, {
-    key: '_handleCommonGridActions',
-    value: function _handleCommonGridActions() {
-      var _this = this;
-
-      var identifier = this.$grid.find('.js-grid').attr('id');
-      var commonActionSuffix = '#' + identifier + '_action_';
-
-      var refreshListActionId = commonActionSuffix + 'common_refresh_list';
-      var showSqlActionId = commonActionSuffix + 'common_show_query';
-      var exportSqlManagerActionId = commonActionSuffix + 'common_export_sql_manager';
-
-      this.$grid.on('click', refreshListActionId, function () {
-        return _this._onRefreshClick();
-      });
-      this.$grid.on('click', showSqlActionId, function () {
-        return _this._onShowSqlQueryClick();
-      });
-      this.$grid.on('click', exportSqlManagerActionId, function () {
-        return _this._onExportSqlManagerClick();
-      });
-    }
-
-    /**
-     * Handles "Select all" button in the grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_handleBulkActionSelectAllCheckbox',
-    value: function _handleBulkActionSelectAllCheckbox() {
-      var _this2 = this;
-
-      $(document).on('change', '.js-select-all-bulk-actions-checkbox', function (e) {
-        var $checkbox = $(e.target);
-
-        var isChecked = $checkbox.is(':checked');
-        if (isChecked) {
-          _this2._enableBulkActionsBtn();
-        } else {
-          _this2._disableBulkActionsBtn();
-        }
-
-        _this2.$grid.find('.js-bulk-action-checkbox').prop('checked', isChecked);
-      });
-    }
-
-    /**
-     * Handles each bulk action checkbox select in the grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_handleBulkActionCheckboxSelect',
-    value: function _handleBulkActionCheckboxSelect() {
-      var _this3 = this;
-
-      this.$grid.on('change', '.js-bulk-action-checkbox', function () {
-        var checkedRowsCount = _this3.$grid.find('.js-bulk-action-checkbox:checked').length;
-
-        if (checkedRowsCount > 0) {
-          _this3._enableBulkActionsBtn();
-        } else {
-          _this3._disableBulkActionsBtn();
-        }
-      });
-    }
-
-    /**
-     * Enable bulk actions button
-     *
-     * @private
-     */
-
-  }, {
-    key: '_enableBulkActionsBtn',
-    value: function _enableBulkActionsBtn() {
-      this.$grid.find('.js-bulk-actions-btn').prop('disabled', false);
-    }
-
-    /**
-     * Disable bulk actions button
-     *
-     * @private
-     */
-
-  }, {
-    key: '_disableBulkActionsBtn',
-    value: function _disableBulkActionsBtn() {
-      this.$grid.find('.js-bulk-actions-btn').prop('disabled', true);
-    }
-
-    /**
-     * Invoked when clicking on the "reload" toolbar button
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onRefreshClick',
-    value: function _onRefreshClick() {
-      location.reload();
-    }
-
-    /**
-     * Invoked when clicking on the "show sql query" toolbar button
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onShowSqlQueryClick',
-    value: function _onShowSqlQueryClick() {
-      var identifier = this.$grid.find('.js-grid').attr('id');
-      var query = this.$grid.find('.js-grid-table').data('query');
-
-      var $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
-      $sqlManagerForm.find('textarea[name="sql"]').val(query);
-
-      var $modal = $('#' + identifier + '_common_show_query_modal');
-      $modal.modal('show');
-
-      $modal.on('click', '.btn-sql-submit', function () {
-        return $sqlManagerForm.submit();
-      });
-    }
-
-    /**
-     * Invoked when clicking on the "export to the sql query" toolbar button
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onExportSqlManagerClick',
-    value: function _onExportSqlManagerClick() {
-      var identifier = this.$grid.find('.js-grid').attr('id');
-      var query = this.$grid.find('.js-grid-table').data('query');
-
-      var $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
-      $sqlManagerForm.find('textarea[name="sql"]').val(query);
-      $sqlManagerForm.submit();
-    }
-  }]);
-
-  return Grid;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Grid);
-
-/***/ }),
-
-/***/ 3:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 31:
+/***/ 22:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1336,10 +851,530 @@ var TableSorting = function () {
 
 /***/ }),
 
-/***/ 447:
+/***/ 220:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_sql_manager__ = __webpack_require__(257);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid__ = __webpack_require__(32);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+
+
+var $ = global.$;
+
+var LogsPage = function () {
+  function LogsPage() {
+    _classCallCheck(this, LogsPage);
+  }
+
+  _createClass(LogsPage, [{
+    key: 'init',
+    value: function init() {
+      new __WEBPACK_IMPORTED_MODULE_2__components_grid__["a" /* default */]('#logs_grid_panel').init();
+
+      var $sortableTables = $('table.table');
+      var $deleteAllLogsButton = $('#logs-deleteAll');
+      var $refreshButton = $('#logs-refresh');
+      var $showSqlQueryButton = $('#logs-showSqlQuery');
+      var $exportSqlManagerButton = $('#logs-exportSqlManager');
+
+      this.sqlManager = new __WEBPACK_IMPORTED_MODULE_1__utils_sql_manager__["a" /* default */]();
+
+      new __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__["a" /* default */]($sortableTables).attach();
+
+      $deleteAllLogsButton.on('click', this._onDeleteAllLogsClick.bind(this));
+      $refreshButton.on('click', this._onRefreshClick.bind(this));
+      $showSqlQueryButton.on('click', this._onShowSqlQueryClick.bind(this));
+      $exportSqlManagerButton.on('click', this._onExportSqlManagerClick.bind(this));
+    }
+
+    /**
+     * Invoked when clicking on the "delete all logs" toolbar button
+     * @param {jQuery.Event} event
+     * @private
+     */
+
+  }, {
+    key: '_onDeleteAllLogsClick',
+    value: function _onDeleteAllLogsClick(event) {
+      var clickedButton = $(event.delegateTarget);
+      var confirmationMessage = clickedButton.data('confirmMessage');
+      var form = clickedButton.closest('form');
+      if (global.confirm(confirmationMessage)) {
+        form.submit();
+      }
+    }
+
+    /**
+     * Invoked when clicking on the "reload" toolbar button
+     * @private
+     */
+
+  }, {
+    key: '_onRefreshClick',
+    value: function _onRefreshClick() {
+      location.reload();
+    }
+
+    /**
+     * Invoked when clicking on the "show sql query" toolbar button
+     * @private
+     */
+
+  }, {
+    key: '_onShowSqlQueryClick',
+    value: function _onShowSqlQueryClick() {
+      this.sqlManager.showLastSqlQuery();
+    }
+
+    /**
+     * Invoked when clicking on the "export to the sql query" toolbar button
+     * @private
+     */
+
+  }, {
+    key: '_onExportSqlManagerClick',
+    value: function _onExportSqlManagerClick() {
+      this.sqlManager.sendLastSqlQuery(this.sqlManager.createSqlQueryName());
+    }
+  }]);
+
+  return LogsPage;
+}();
+
+$(function () {
+  new LogsPage().init();
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+
+/***/ }),
+
+/***/ 257:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = global.$;
+
+/**
+ * Allow to display the last SQL query in a modal and redirect to SQL Manager.
+ */
+
+var SqlManager = function () {
+  function SqlManager() {
+    _classCallCheck(this, SqlManager);
+  }
+
+  _createClass(SqlManager, [{
+    key: 'showLastSqlQuery',
+    value: function showLastSqlQuery() {
+      $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+      $('#catalog_sql_query_modal .btn-sql-submit').click(function () {
+        $('#catalog_sql_query_modal_content').submit();
+      });
+      $('#catalog_sql_query_modal').modal('show');
+    }
+  }, {
+    key: 'sendLastSqlQuery',
+    value: function sendLastSqlQuery(name) {
+      $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+      $('#catalog_sql_query_modal_content input[name="name"]').val(name);
+      $('#catalog_sql_query_modal_content').submit();
+    }
+  }, {
+    key: 'createSqlQueryName',
+    value: function createSqlQueryName() {
+      var container = false;
+      var current = false;
+      if ($('.breadcrumb')) {
+        container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
+        current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+      }
+      var title = false;
+      if ($('h2.title')) {
+        title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
+      }
+
+      var name = false;
+      if (container && current && container != current) {
+        name = container + ' > ' + current;
+      } else if (container) {
+        name = container;
+      } else if (current) {
+        name = current;
+      }
+
+      if (title && title != current && title != container) {
+        if (name) {
+          name = name + ' > ' + title;
+        } else {
+          name = title;
+        }
+      }
+
+      return name.trim();
+    }
+  }]);
+
+  return SqlManager;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SqlManager);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+
+/***/ }),
+
+/***/ 3:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 32:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class is responsible for handling Grid events
+ */
+
+var Grid = function () {
+  /**
+   * Grid's selector
+   *
+   * @param {string} gridPanelSelector
+   */
+  function Grid(gridPanelSelector) {
+    _classCallCheck(this, Grid);
+
+    this.$gridPanel = $(gridPanelSelector);
+    this.gridId = this.$gridPanel.data('grid-id');
+    this.$grid = this.$gridPanel.find('#' + this.gridId + '_grid');
+  }
+
+  /**
+   * Initialize grid events
+   */
+
+
+  _createClass(Grid, [{
+    key: 'init',
+    value: function init() {
+      this._handleBulkActionSelectAllCheckbox();
+      this._handleBulkActionCheckboxSelect();
+      this._handleCommonGridActions();
+      this._handleBulkActionsSubmit();
+    }
+
+    /**
+     * Handles most common grid actions (show sql, refresh list & etc.)
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleCommonGridActions',
+    value: function _handleCommonGridActions() {
+      var _this = this;
+
+      var commonActionSuffix = '#' + this.gridId + '_grid_action_';
+
+      var refreshListActionId = commonActionSuffix + 'common_refresh_list';
+      var showSqlActionId = commonActionSuffix + 'common_show_query';
+      var exportSqlManagerActionId = commonActionSuffix + 'common_export_sql_manager';
+
+      this.$gridPanel.on('click', refreshListActionId, function () {
+        return _this._onRefreshClick();
+      });
+      this.$gridPanel.on('click', showSqlActionId, function () {
+        return _this._onShowSqlQueryClick();
+      });
+      this.$gridPanel.on('click', exportSqlManagerActionId, function () {
+        return _this._onExportSqlManagerClick();
+      });
+    }
+
+    /**
+     * Handles "Select all" button in the grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionSelectAllCheckbox',
+    value: function _handleBulkActionSelectAllCheckbox() {
+      var _this2 = this;
+
+      $(document).on('change', '.js-bulk-action-select-all', function (e) {
+        var $checkbox = $(e.target);
+
+        var isChecked = $checkbox.is(':checked');
+        if (isChecked) {
+          _this2._enableBulkActionsBtn();
+        } else {
+          _this2._disableBulkActionsBtn();
+        }
+
+        _this2.$gridPanel.find('.js-bulk-action-checkbox').prop('checked', isChecked);
+      });
+    }
+
+    /**
+     * Handles each bulk action checkbox select in the grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionCheckboxSelect',
+    value: function _handleBulkActionCheckboxSelect() {
+      var _this3 = this;
+
+      this.$gridPanel.on('change', '.js-bulk-action-checkbox', function () {
+        var checkedRowsCount = _this3.$gridPanel.find('.js-bulk-action-checkbox:checked').length;
+
+        if (checkedRowsCount > 0) {
+          _this3._enableBulkActionsBtn();
+        } else {
+          _this3._disableBulkActionsBtn();
+        }
+      });
+    }
+
+    /**
+     * Handles bulk action submit
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionsSubmit',
+    value: function _handleBulkActionsSubmit() {
+      var _this4 = this;
+
+      this.$gridPanel.on('click', '.js-bulk-action-btn', function (e) {
+        var $button = $(e.target);
+
+        var confirmationMessage = $button.data('confirm-message').toString();
+
+        if (confirmationMessage) {
+          var confirmed = confirm(confirmationMessage);
+          if (!confirmed) {
+            return;
+          }
+        }
+
+        var formUrl = $button.data('form-url');
+        var formMethod = $button.data('form-method');
+
+        var $form = _this4.$gridPanel.find('#' + _this4.gridId + '_grid_form');
+        $form.attr('action', formUrl);
+        $form.attr('method', formMethod);
+
+        $form.submit();
+      });
+    }
+
+    /**
+     * Enable bulk actions button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_enableBulkActionsBtn',
+    value: function _enableBulkActionsBtn() {
+      this.$gridPanel.find('.js-bulk-actions-btn').prop('disabled', false);
+    }
+
+    /**
+     * Disable bulk actions button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_disableBulkActionsBtn',
+    value: function _disableBulkActionsBtn() {
+      this.$gridPanel.find('.js-bulk-actions-btn').prop('disabled', true);
+    }
+
+    /**
+     * Invoked when clicking on the "reload" toolbar button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onRefreshClick',
+    value: function _onRefreshClick() {
+      location.reload();
+    }
+
+    /**
+     * Invoked when clicking on the "show sql query" toolbar button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onShowSqlQueryClick',
+    value: function _onShowSqlQueryClick() {
+      var identifier = this.$gridPanel.find('.js-grid').attr('id');
+      var query = this.$gridPanel.find('.js-grid-table').data('query');
+
+      var $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
+      $sqlManagerForm.find('textarea[name="sql"]').val(query);
+
+      var $modal = $('#' + identifier + '_common_show_query_modal');
+      $modal.modal('show');
+
+      $modal.on('click', '.btn-sql-submit', function () {
+        return $sqlManagerForm.submit();
+      });
+    }
+
+    /**
+     * Invoked when clicking on the "export to the sql query" toolbar button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onExportSqlManagerClick',
+    value: function _onExportSqlManagerClick() {
+      var query = this.$gridPanel.find('.js-grid-table').data('query');
+
+      var $sqlManagerForm = $('#' + this.gridId + '_common_show_query_modal_form');
+      $sqlManagerForm.find('textarea[name="sql"]').val(query);
+      $sqlManagerForm.submit();
+    }
+  }]);
+
+  return Grid;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Grid);
+
+/***/ }),
+
+/***/ 449:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(219);
+module.exports = __webpack_require__(220);
 
 
 /***/ })
