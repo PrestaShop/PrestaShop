@@ -151,22 +151,22 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     {
         return (new GridActionCollection())
             ->add(new GridAction(
-                'ps_refresh_list',
+                'common_refresh_list',
                 $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
                 'refresh',
                 'simple'
             ))
             ->add(new GridAction(
-                'ps_show_query',
+                'common_show_query',
                 $this->trans('Show SQL query', [], 'Admin.Actions'),
                 'code',
                 'simple'
             ))
             ->add(new GridAction(
-                'ps_export_sql_manager',
+                'common_export_sql_manager',
                 $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
                 'storage',
-                'export_to_sql_manager'
+                'simple'
             ))
         ;
     }
