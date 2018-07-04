@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\ArgumentResolver;
 
 use PrestaShop\PrestaShop\Core\Search\ControllerAction;
-use PrestaShop\PrestaShop\Core\Search\SearchParameters;
+use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 class SearchParametersResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var SearchParameters
+     * @var SearchParametersInterface
      */
     private $searchParameters;
 
@@ -65,13 +65,13 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     /**
      * SearchParametersResolver constructor.
      *
-     * @param SearchParameters      $searchParameters
+     * @param SearchParametersInterface $searchParameters
      * @param TokenStorageInterface $tokenStorage
      * @param AdminFilterRepository $adminFilterRepository
-     * @param int                   $shopId           The Shop id
+     * @param int $shopId The Shop id
      */
     public function __construct(
-        SearchParameters $searchParameters,
+        SearchParametersInterface $searchParameters,
         TokenStorageInterface $tokenStorage,
         AdminFilterRepository $adminFilterRepository,
         $shopId

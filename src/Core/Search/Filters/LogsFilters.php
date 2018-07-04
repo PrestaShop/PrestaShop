@@ -28,6 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+/**
+ * This class manage the defaults values for user request filters
+ * of page Configure > Advanced Parameters > Logs.
+ */
 final class LogsFilters extends Filters
 {
     /**

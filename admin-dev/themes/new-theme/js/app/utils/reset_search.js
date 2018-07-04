@@ -26,10 +26,10 @@
 /**
  * Send a Post Request.
  */
-const init = function resetSearch(url, redirectUrl) {
+const init = function resetSearch(url) {
     const request = new XMLHttpRequest();
     request.open('POST', url, true);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    request.setRequestHeader('Content-Type', 'application/json');
     request.send([]);
 };
 

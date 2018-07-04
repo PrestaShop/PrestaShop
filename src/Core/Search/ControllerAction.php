@@ -53,7 +53,7 @@ final class ControllerAction
     public static function getControllerName($controller)
     {
         // Set an offset to avoid matching the first occurrence of Controller.
-        preg_match('/([a-zA-Z]*)Controller/', $controller, $matches, 0, 30);
+        preg_match('~([a-zA-Z]*)Controller$~', $controller, $matches, 0, 30);
 
         return !empty($matches) ? strtolower($matches[1]) : 'N/A';
     }
@@ -65,7 +65,7 @@ final class ControllerAction
      */
     public static function getActionName($controller)
     {
-        preg_match('/::([a-zA-Z]*)Action/', $controller, $matches);
+        preg_match('~::(\w+)Action$~', $controller, $matches);
 
         return !empty($matches) ? strtolower($matches[1]) : 'N/A';
     }

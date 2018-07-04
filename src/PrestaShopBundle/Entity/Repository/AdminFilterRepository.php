@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use PrestaShopBundle\Entity\AdminFilter;
 
+/**
+ * This repository is responsible of management of Administration filters.
+ */
 class AdminFilterRepository extends EntityRepository
 {
     /**
@@ -69,14 +72,14 @@ class AdminFilterRepository extends EntityRepository
             'action' => $action,
         ]);
 
-        if (null !== $adminFilter) {
-            $this->getEntityManager()->remove($adminFilter);
-            $this->getEntityManager()->flush();
-
-            return true;
+        if (null === $adminFilter) {
+            return false;
         }
 
-        return false;
+        $this->getEntityManager()->remove($adminFilter);
+        $this->getEntityManager()->flush();
+
+        return true;
     }
 
     /**
