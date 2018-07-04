@@ -2167,7 +2167,7 @@ class AdminControllerCore extends Controller
 
     protected function getAdminModulesUrl()
     {
-        return $this->context->link->getAdminLink('AdminModulesSf');
+        return $this->context->link->getAdminLink('AdminModulesCatalog');
     }
 
     protected function filterTabModuleList()
