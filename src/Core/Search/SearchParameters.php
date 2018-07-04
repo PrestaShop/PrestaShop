@@ -31,10 +31,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Retrieve filters parameters if any from the User request.
- *
- * @param array $defaultValues if a filter is not found, set the default value
  */
-final class SearchParameters
+final class SearchParameters implements SearchParametersInterface
 {
     const FILTER_TYPES = array(
         'limit',
@@ -55,12 +53,7 @@ final class SearchParameters
     }
 
     /**
-     * Retrieve list of filters from User Request.
-     *
-     * @param Request $request
-     * @param string  $filterClass the filter class
-     *
-     * @return Filters A collection of filters
+     * {@inheritdoc}
      */
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
@@ -75,15 +68,7 @@ final class SearchParameters
     }
 
     /**
-     * Retrieve list of filters from User searches.
-     *
-     * @param int     $employeeId
-     * @param int     $shopId
-     * @param string  $filterClass the filter class
-     * @param string  $controller the controller name
-     * @param string  $action the action name
-     *
-     * @return Filters A collection of filters
+     * {@inheritdoc}
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
     {
@@ -91,8 +76,11 @@ final class SearchParameters
             ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
         ;
 
-        $filterFromDb = is_null($adminFilter) ? '{}' : $adminFilter->getFilter();
-        $savedFilters = json_decode($filterFromDb, true);
+        $savedFilters = [];
+
+        if ($adminFilter !== null) {
+            $savedFilters = json_decode($adminFilter->getFilter(), true);
+        }
 
         $filters = [];
 

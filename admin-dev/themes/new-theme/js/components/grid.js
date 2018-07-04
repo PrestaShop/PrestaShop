@@ -89,7 +89,7 @@ export default class Grid {
    * If any, enable Date pickers component on date inputs.
    */
   _enableDatePickers() {
-      datePicker();
+    datePicker();
   }
 
   /**

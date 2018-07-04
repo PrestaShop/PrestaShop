@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
@@ -222,6 +222,6 @@ class CommonController extends FrameworkBundleAdminController
 
         $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
-        return new Response();
+        return new JsonResponse();
     }
 }
