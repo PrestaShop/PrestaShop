@@ -112,8 +112,8 @@
                           <input type="checkbox" id="mod{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" onclick="hookCheckboxes({{ hook['id_hook'] }}, 1, this)" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
                         </div>
 
-                        {% if not selectedModule %}
-                          <div class="btn-toolbar module-column-position{% if canMove and hook['modules_count'] >= 2 %} dragHandle{% endif %}" id="td_{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}">
+                        {% if not selectedModule and hook['modules_count'] > 1 %}
+                          <div class="btn-toolbar text-center module-column-position{% if canMove and hook['modules_count'] >= 2 %} dragHandle{% endif %}" id="td_{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}">
                             <div class="btn-group">
                               <span class="index-position">{{ loop.index }}</span>
                             </div>

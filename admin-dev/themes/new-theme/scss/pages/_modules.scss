@@ -493,14 +493,14 @@ form#importDropzone {
 }
 
 .hook-panel {
-  margin-bottom: 10px!important;
+  margin-bottom: 10px !important;
   border: solid #E6E6E6 1px;
   box-shadow: rgba(black,0.10) 0 -2px 0 inset;
   border-radius: 3px;
   padding: 10px 10px 5px 10px;
 
   .highlight {
-    background-color: #F7E69F;
+    background-color: #F7E69F !important;
   }
 
   .hook-panel-header {

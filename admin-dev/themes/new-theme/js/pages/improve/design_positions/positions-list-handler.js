@@ -63,7 +63,6 @@ class PositionsListHandler {
       );
     });
 
-
     self.$modulesList.on('change', function () {
       const $checkedCount = self.$modulesList.filter(':checked').length;
       if ($checkedCount === 0) {
@@ -167,13 +166,14 @@ class PositionsListHandler {
       let $currentHooks;
       let $start;
 
+      if ($moduleId !== 'all') {
+        $currentHooks = $(`.module-position-${$moduleId}`);
+        $currentHooks.addClass('highlight');
+      }
+
       for (let $id = 0; $id < self.$hooksList.length; $id++) {
-        if ($moduleId !== 'all') {
-          $currentHooks = $(`.module-position-${$moduleId}`);
-          if ($currentHooks.length > 0) {
-            $hooksToShowFromModule = $hooksToShowFromModule.add(self.$hooksList[$id].container);
-            $currentHooks.addClass('highlight');
-          }
+        if ($moduleId !== 'all' && $currentHooks.length > 0) {
+          $hooksToShowFromModule = $hooksToShowFromModule.add(self.$hooksList[$id].container);
         }
 
         if ($hookName !== '') {

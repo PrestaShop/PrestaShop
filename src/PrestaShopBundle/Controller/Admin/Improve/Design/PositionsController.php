@@ -72,9 +72,21 @@ class PositionsController extends FrameworkBundleAdminController
         $hooks = Hook::getHooks();
         foreach ($hooks as $key => $hook) {
             $hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->selectedModule);
-            $hooks[$key]['modules_count'] = count($hooks[$key]['modules']);
+            // No module found, no need to continue
+            if (!is_array($hooks[$key]['modules'])) {
+                unset($hooks[$key]);
+                continue;
+            }
 
-            if (!is_array($hooks[$key]['modules']) || !$hooks[$key]['modules_count']) {
+            foreach ($hooks[$key]['modules'] as $index => $module) {
+                if (empty($modules[(int) $module['id_module']])) {
+                    unset($hooks[$key]['modules'][$index]);
+                }
+            }
+
+            $hooks[$key]['modules_count'] = count($hooks[$key]['modules']);
+            // No module remaining after the check, no need to continue
+            if ($hooks[$key]['modules_count'] === 0) {
                 unset($hooks[$key]);
                 continue;
             }

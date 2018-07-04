@@ -97,10 +97,8 @@ class PositionsType extends TranslatorAwareType
     protected function getTransplantTo()
     {
         $hooks = array();
-        if ($show_modules || (Tools::getValue('id_hook') > 0)) {
-            $module_instance = Module::getInstanceById((int)Tools::getValue('id_module', $show_modules));
-            $hooks = $module_instance->getPossibleHooksList();
-        }
+        $moduleInstance = Module::getInstanceById((int)Tools::getValue('id_module'));
+        $hooks = $moduleInstance->getPossibleHooksList();
     }
 
     protected function formatExceptionsData(array $fileList)
