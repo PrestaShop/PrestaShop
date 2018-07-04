@@ -37,6 +37,16 @@ use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 final class ColumnCollection extends AbstractCollection implements ColumnCollectionInterface
 {
     /**
+     * @internal
+     */
+    const POSITION_AFTER = 'after';
+
+    /**
+     * @internal
+     */
+    const POSITION_BEFORE = 'before';
+
+    /**
      * {@inheritdoc}
      */
     public function add(ColumnInterface $column)
@@ -51,7 +61,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
      */
     public function addAfter($id, ColumnInterface $newColumn)
     {
-        $this->insertByPosition($id, $newColumn, 'after');
+        $this->insertByPosition($id, $newColumn, self::POSITION_AFTER);
 
         return $this;
     }
@@ -61,7 +71,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
      */
     public function addBefore($id, ColumnInterface $newColumn)
     {
-        $this->insertByPosition($id, $newColumn, 'before');
+        $this->insertByPosition($id, $newColumn, self::POSITION_BEFORE);
 
         return $this;
     }
@@ -97,7 +107,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
 
         $existingColumnKeyPosition = array_search($id, array_keys($this->items));
 
-        if ('after' === $position) {
+        if (self::POSITION_AFTER === $position) {
             $existingColumnKeyPosition++;
         }
 
