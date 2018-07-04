@@ -43,21 +43,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-        $versionHelper = $this->get('prestashop.core.foundation.version');
-
-        $pageContent = file_get_contents(
-            'https://addons.prestashop.com/iframe/search-' . $versionHelper->getMajorVersion() . '.php?'
-            . http_build_query([
-                'psVersion' => $versionHelper->getVersion(),
-                'isoLang' => $this->getContext()->language->iso_code,
-                'isoCurrency' => $this->getContext()->currency->iso_code,
-                'isoCountry' => $this->getContext()->country->iso_code,
-                'activity' => $configuration->getInt('PS_SHOP_ACTIVITY'),
-                'parentUrl' => $request->getSchemeAndHttpHost(),
-                'onlyThemes' => 1
-            ])
-        );
+        $pageContent = file_get_contents($this->getAddonsUrl($request));
 
         return $this->render('@PrestaShop/Admin/Improve/Design/ThemesCatalogPage/addons_store.html.twig', [
             'pageContent' => $pageContent,
@@ -70,5 +56,22 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminThemesCatalog'),
             'requireFilterStatus' => false,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    private function getAddonsUrl(Request $request)
+    {
+        $psVersion = $this->get('prestashop.core.foundation.version')->getVersion();
+        $parent_domain = $request->getSchemeAndHttpHost();
+        $context = $this->getContext();
+        $currencyCode = $context->currency->iso_code;
+        $languageCode = $context->language->iso_code;
+        $countryCode = $context->country->iso_code;
+        $activity = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_ACTIVITY');
+
+        return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain&onlyThemes=1";
     }
 }
