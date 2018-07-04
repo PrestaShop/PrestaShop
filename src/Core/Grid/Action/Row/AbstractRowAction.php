@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 abstract class AbstractRowAction implements RowActionInterface
 {
     /**
@@ -90,8 +92,18 @@ abstract class AbstractRowAction implements RowActionInterface
      */
     public function setOptions(array $options)
     {
-        $this->options = $options;
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
 
         return $this;
     }
+
+    /**
+     * Configure options for row action
+     *
+     * @param OptionsResolver $resolver
+     */
+    abstract protected function configureOptions(OptionsResolver $resolver);
 }
