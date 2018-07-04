@@ -2669,12 +2669,6 @@ FileETag none
 
     public static function generateIndex()
     {
-        if (defined('_PS_CREATION_DATE_')) {
-            $creationDate = _PS_CREATION_DATE_;
-            if (!empty($creationDate) && Configuration::get('PS_DISABLE_OVERRIDES')) {
-                PrestaShopAutoload::getInstance()->_include_override_path = false;
-            }
-        }
         PrestaShopAutoload::getInstance()->generateIndex();
     }
 
