@@ -45,7 +45,7 @@ final class LinkRowAction extends AbstractRowAction
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setRequired([

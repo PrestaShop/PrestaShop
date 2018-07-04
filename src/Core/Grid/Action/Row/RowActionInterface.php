@@ -25,7 +25,6 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Interface RowActionInterface defines contract for grid's row action
@@ -77,11 +76,4 @@ interface RowActionInterface
      * @return self
      */
     public function setOptions(array $options);
-
-    /**
-     * Configure row action options
-     *
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver);
 }
