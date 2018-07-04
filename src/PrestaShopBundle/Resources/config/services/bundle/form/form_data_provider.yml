@@ -2,6 +2,13 @@ services:
     _defaults:
         public: true
 
+    prestashop.admin.shipping_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.shipping_preferences.handling_configuration'
+            - '@prestashop.adapter.shipping_preferences.carrier_options_configuration'
+            - '@translator'
+
     prestashop.admin.customer_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
         arguments:
