@@ -23,7 +23,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @var array
      */
-    private $options = [];
+    private $options;
 
     /**
      * @param string $id
@@ -64,7 +64,7 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function setOptions(array $options)
     {
-        $this->options = $options;
+        $this->resolveOptions($options);
 
         return $this;
     }
@@ -74,13 +74,19 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function getOptions()
     {
+        if (null === $this->options) {
+            $this->resolveOptions();
+        }
+
         return $this->options;
     }
 
     /**
-     * {@inheritdoc}
+     * Default column options configuration. You can override or extend it needed options.
+     *
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults([
@@ -94,5 +100,19 @@ abstract class AbstractColumn implements ColumnInterface
             ->setAllowedTypes('filter_type_options', 'array')
             ->setAllowedTypes('sortable', 'bool')
         ;
+    }
+
+
+    /**
+     * Resolve column options
+     *
+     * @param array $options
+     */
+    private function resolveOptions(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
     }
 }

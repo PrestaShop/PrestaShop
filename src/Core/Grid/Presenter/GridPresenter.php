@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class GridPresenter is responsible for presenting grid
@@ -103,9 +102,7 @@ final class GridPresenter implements GridPresenterInterface
 
         /** @var ColumnInterface $column */
         foreach ($definition->getColumns() as $column) {
-            $resolver = new OptionsResolver();
-            $column->configureOptions($resolver);
-            $columnOptions = $resolver->resolve($column->getOptions());
+            $columnOptions = $column->getOptions();
 
             $columnsArray[] = [
                 'id' => $column->getId(),
