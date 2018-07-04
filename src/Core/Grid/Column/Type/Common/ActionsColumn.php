@@ -38,7 +38,7 @@ class ActionsColumn extends AbstractColumn
      */
     public function getType()
     {
-        return 'action';
+        return 'actions';
     }
 
     /**
