@@ -75,6 +75,9 @@ class PositionsType extends TranslatorAwareType
                     'multiple' => true,
                     'required' => true,
                     'placeholder' => false,
+                    'attr' => [
+                        'size' => 25,
+                    ],
                     'choices' => $this->formatExceptionsData([]),
                     'choice_attr' => function ($value, $key, $index) {
                         return $value === null ? ['disabled' => 'disabled'] : [];
@@ -89,6 +92,15 @@ class PositionsType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'improve_design_positions';
+    }
+
+    protected function getTransplantTo()
+    {
+        $hooks = array();
+        if ($show_modules || (Tools::getValue('id_hook') > 0)) {
+            $module_instance = Module::getInstanceById((int)Tools::getValue('id_module', $show_modules));
+            $hooks = $module_instance->getPossibleHooksList();
+        }
     }
 
     protected function formatExceptionsData(array $fileList)
