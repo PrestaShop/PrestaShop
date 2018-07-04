@@ -62,7 +62,7 @@ export default class Grid {
    * @private
    */
   _handleCommonGridActions() {
-    let commonActionSuffix = '#' + this.gridId + '_action_';
+    let commonActionSuffix = '#' + this.gridId + '_grid_action_';
 
     let refreshListActionId = commonActionSuffix + 'common_refresh_list';
     let showSqlActionId = commonActionSuffix + 'common_show_query';
