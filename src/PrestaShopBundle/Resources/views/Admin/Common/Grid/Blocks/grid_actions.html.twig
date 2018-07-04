@@ -57,7 +57,7 @@
       {% block content %}
           <div class="modal-body">
             <form method="post"
-                  action="{{ getAdminLink('AdminRequestSql', true, {'addrequest_sql': 1}) }}"
+                  action="{{ path('admin_request_sql_create') }}"
                   id="{{ grid.id ~ '_grid_common_show_query_modal_form' }}"
             >
               <div class="form-group">
