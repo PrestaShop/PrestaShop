@@ -1359,7 +1359,7 @@ class CartCore extends ObjectModel
                     $updateQuantity = '- ' . $quantity;
                     $newProductQuantity = $productQuantity + $quantity;
 
-                    if ($cartFirstLevelProductQuantity['quantity'] <= 1) {
+                    if ($cartFirstLevelProductQuantity['quantity'] - $quantity <= 0) {
                         return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
                     }
                 } else {
