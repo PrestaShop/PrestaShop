@@ -53,12 +53,15 @@ class GetFileControllerCore extends FrontController
             }
         } else {
             if (!($key = Tools::getValue('key'))) {
-                $this->displayCustomError('Invalid key.');
+                if(!($key = $this->context->cookie->file_key)){
+                    $this->displayCustomError('Invalid key.');
+                }
             }
 
             Tools::setCookieLanguage();
             if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
+                $this->context->cookie->file_key = $key;
+                Tools::redirect('index.php?controller=authentication&back=get-file.php');
             } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
                 $order = new Order((int)Tools::getValue('id_order'));
                 if (!Validate::isLoadedObject($order)) {
@@ -66,6 +69,10 @@ class GetFileControllerCore extends FrontController
                 }
                 if ($order->secure_key != Tools::getValue('secure_key')) {
                     $this->displayCustomError('Invalid key.');
+                }
+                if(!in_array(1, $this->context->customer->getGroups()) || !in_array(2, $this->context->customer->getGroups())){
+                    $this->context->cookie->file_key = $key;
+                    Tools::redirect('index.php?controller=authentication&back=get-file.php');
                 }
             }
 
