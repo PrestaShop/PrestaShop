@@ -111,6 +111,36 @@ class ColumnCollectionTest extends TestCase
         $this->assertCount(7, $columns);
     }
 
+    public function testMixingMethodsProducesCollectionWithCorrectColumnPositions()
+    {
+        $columns = (new ColumnCollection())
+            ->add($this->createColumnMock('first'))
+            ->addAfter('first', $this->createColumnMock('to_be_removed'))
+            ->addBefore('first', $this->createColumnMock('before_first'))
+            ->addBefore('first', $this->createColumnMock('before_first_2'))
+            ->addAfter('first', $this->createColumnMock('after_first'))
+            ->addBefore('first', $this->createColumnMock('before_first_3'))
+            ->remove('non_existing')
+            ->addAfter('after_first', $this->createColumnMock('after_first_2'))
+            ->add($this->createColumnMock('second'))
+            ->remove('to_be_removed')
+            ->add($this->createColumnMock('third'))
+            ->addAfter('second', $this->createColumnMock('after_second'))
+        ;
+
+        $this->assertEquals([
+            'before_first',
+            'before_first_2',
+            'before_first_3',
+            'first',
+            'after_first',
+            'after_first_2',
+            'second',
+            'after_second',
+            'third',
+        ], $this->getColumnPositions($columns));
+    }
+
     public function testItThrowsExceptionWhenAddingColumnAfterNonExistingColumn()
     {
         $this->expectException(ColumnNotFoundException::class);
@@ -148,8 +178,8 @@ class ColumnCollectionTest extends TestCase
     {
         $positions= [];
 
-        foreach ($columns as $id => $column) {
-            $positions[] = $id;
+        foreach ($columns as $column) {
+            $positions[] = $column->getId();
         }
 
         return $positions;
