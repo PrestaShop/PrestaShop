@@ -2526,7 +2526,7 @@ FileETag none
             return false;
         }
 
-        $robots_content = self::getRobotsContent();
+        $robots_content = static::getRobotsContent();
 
         if (true === $executeHook) {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
