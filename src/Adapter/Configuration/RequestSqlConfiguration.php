@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
+/**
+ * Class RequestSqlConfiguration is responsible for RequestSql configuration
+ */
 class RequestSqlConfiguration implements DataConfigurationInterface
 {
     /**
@@ -36,6 +39,9 @@ class RequestSqlConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
+    /**
+     * @param ConfigurationInterface $configuration
+     */
     public function __construct(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;

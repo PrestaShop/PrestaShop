@@ -44,6 +44,10 @@
               {{ form_widget(requestSqlSettingsForm.settings.default_file_encoding) }}
             </div>
           </div>
+
+          {% block request_sql_settings %}
+            {{ form_rest(requestSqlSettingsForm) }}
+          {% endblock %}
         </div>
       </div>
       <div class="card-footer">
