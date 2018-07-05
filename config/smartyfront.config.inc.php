@@ -124,7 +124,7 @@ function smartyWidgetBlock($params, $content, $smarty)
         withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
             // Assign widget variables and backup all the variables they override
             $currentVariables = $smarty->getTemplateVars();
-            $scopedVariables = $widget->getWidgetVariables(null, $params);
+            $scopedVariables = $widget->getWidgetVariables(isset($params['hook']) ? $params['hook'] : null, $params);
             $backedUpVariables = array();
             foreach ($scopedVariables as $key => $value) {
                 if (array_key_exists($key, $currentVariables)) {
