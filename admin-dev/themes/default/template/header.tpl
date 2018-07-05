@@ -76,7 +76,7 @@
 		var employee_token = '{getAdminToken tab='AdminEmployees'}';
 		var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
 		var default_language = '{$default_language|intval}';
-		var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_catalog_post"])|addslashes}';
+		var admin_modules_link = '{$link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"])|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l s='Successful update.' js=1 d='Admin.Notifications.Success'}';
 		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';
