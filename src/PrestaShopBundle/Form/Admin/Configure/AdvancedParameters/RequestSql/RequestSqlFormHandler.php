@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
 use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager;
-use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlValidator;
+use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
@@ -46,19 +46,19 @@ class RequestSqlFormHandler
     private $requestSqlManager;
 
     /**
-     * @var RequestSqlValidator
+     * @var SqlQueryValidator
      */
     private $requestSqlValidator;
 
     /**
      * @param FormFactoryInterface $formFactory
      * @param RequestSqlManager $requestSqlManager
-     * @param RequestSqlValidator $requestSqlValidator
+     * @param SqlQueryValidator $requestSqlValidator
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         RequestSqlManager $requestSqlManager,
-        RequestSqlValidator $requestSqlValidator
+        SqlQueryValidator $requestSqlValidator
     ) {
         $this->formFactory = $formFactory;
         $this->requestSqlManager = $requestSqlManager;
@@ -85,7 +85,7 @@ class RequestSqlFormHandler
      */
     public function save(array $data)
     {
-        if ($errors = $this->requestSqlValidator->validateSql($data['request_sql']['sql'])) {
+        if ($errors = $this->requestSqlValidator->validate($data['request_sql']['sql'])) {
             return $errors;
         }
 
