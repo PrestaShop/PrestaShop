@@ -32,37 +32,35 @@
 %}
 <div class="module-actions">
   {% if url_active == 'buy' %}
-  <div class="form-action-button-container">
-    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
       {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
     </a>
-  </div>
   {% elseif urls|length %}
-    <form class="btn-group form-action-button" method="post" action="{{ urls[url_active] }}">
-      <button type="submit" class="btn btn-primary-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
-          data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
-          {{ url_active|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
-      </button>
-    </form>
+    {% include 'PrestaShopBundle:Admin/Module/Includes:action_button.html.twig' with {
+        'name': name,
+        'classes_form': 'btn-group',
+        'classes' : 'btn btn-primary-reverse btn-outline-primary',
+        'url': urls[url_active],
+        'action': url_active}
+    %}
     {% if (urls|length > 1) %}
-        <div class="btn-group form-action-button-container">
-          <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ 'Other'|trans({}, 'Admin.Modules.Feature') }}
-          </button>
-          <div class="dropdown-menu">
-            {% for module_action, module_url in urls %}
-              {% if module_action != url_active %}
-                  <li>
-                    <form method="post" action="{{ module_url }}">
-                      <button type="submit" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
-                        {{module_action|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions')}}
-                      </button>
-                    </form>
-                  </li>
-              {% endif %}
-            {% endfor %}
-          </div>
+        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ 'Other'|trans({}, 'Admin.Modules.Feature') }}
+        </button>
+        <div class="dropdown-menu">
+          {% for module_action, module_url in urls %}
+            {% if module_action != url_active %}
+                <li>
+                  {% include 'PrestaShopBundle:Admin/Module/Includes:action_button.html.twig' with {
+                      'name': name,
+                      'classes' : 'dropdown-item',
+                      'url': module_url,
+                      'action': module_action}
+                  %}
+                </li>
+            {% endif %}
+          {% endfor %}
+        </div>
     {% endif %}
-  </div>
   {% endif %}
 </div>

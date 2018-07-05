@@ -178,20 +178,18 @@
       left: 50%;
       margin-left: -20px;
     }
-  .form-action-button-container {
+  .module-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    position: relative;
+    bottom: -10px;
+    
     .dropdown-menu {
       right: 10px;
       left: 10px;
     }
-    .form-action-button {
-      width: 100%;
-      margin: 0 auto;
-      + .dropdown-toggle {
-        left: -12px;
-        height: 32px;
-      }
+    .btn-group, .btn {
+        width: 100%;
     }
   }
 }
