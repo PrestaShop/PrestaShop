@@ -71,12 +71,4 @@ final class FilterLogsByAttributeType extends CommonAbstractType
             'translation_domain' => 'Admin.Advparameters.Feature'
         ]);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'logs';
-    }
 }
