@@ -70,18 +70,18 @@ class RequestSqlExporter
     /**
      * Export request sql data
      *
-     * @param int $id
+     * @param int $requestSqlId
      *
      * @return BinaryFileResponse|null
      */
-    public function export($id)
+    public function export($requestSqlId)
     {
-        $data = $this->dataProvider->getRequestSqlResult($id);
+        $data = $this->dataProvider->getRequestSqlResult($requestSqlId);
         if (null === $data) {
             return null;
         }
 
-        $fileName = sprintf('request_sql_%s.csv', $id);
+        $fileName = sprintf('request_sql_%s.csv', $requestSqlId);
         if ($csv = fopen($this->exportDirectory.$fileName, 'w')) {
             $headers = [];
             foreach ($data['columns'] as $headerName) {
