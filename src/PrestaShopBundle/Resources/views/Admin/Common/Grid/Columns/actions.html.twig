@@ -25,7 +25,7 @@
 
 {% set actions = column.options.actions %}
 {% if actions is not empty %}
-  <div class="btn-group-action">
+  <div class="btn-group-action text-right">
     <div class="btn-group">
       {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~actions|first.type~'.html.twig', {
         'grid': grid,

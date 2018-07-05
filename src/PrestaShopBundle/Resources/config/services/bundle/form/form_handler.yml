@@ -181,4 +181,4 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_manager'
-            - '@prestashop.adapter.sql_manager.request_sql_validator'
+            - '@prestashop.adapter.sql_manager.sql_query_validator'
