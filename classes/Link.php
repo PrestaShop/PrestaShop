@@ -1184,23 +1184,27 @@ class LinkCore
         if ($ssl === null) {
             if ($force_ssl === null) {
                 $force_ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+                if (!$force_ssl) {
+                    // Check if user is already under https to prevent useless redirect to http
+                    $force_ssl = Tools::usingSecureMode();
+                }
             }
             $ssl = $force_ssl;
         }
 
-        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $idShop !== null) {
+        if ($idShop !== null && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
             $shop = new Shop($idShop);
         } else {
             $shop = Context::getContext()->shop;
         }
 
         if ($relativeProtocol) {
-            $base = '//'.($ssl && $this->ssl_enable ? $shop->domain_ssl : $shop->domain);
+            $base = '//';
         } else {
-            $base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
+            $base = 'http' . ($ssl ? 's' : '') . '://';
         }
 
-        return $base.$shop->getBaseURI();
+        return $base . ($ssl ? $shop->domain_ssl : $shop->domain) . $shop->getBaseURI();
     }
 
     /**
