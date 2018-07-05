@@ -8,8 +8,8 @@ services:
     prestashop.adapter.sql_manager.request_sql_data_provider:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlDataProvider'
 
-    prestashop.adapter.sql_manager.request_sql_validator:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlValidator'
+    prestashop.adapter.sql_manager.sql_query_validator:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator'
 
     prestashop.adapter.sql_manager.request_sql_exporter:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlExporter'

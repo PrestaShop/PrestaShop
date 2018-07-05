@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
+use ErrorException;
 use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class RequestSqlValidator is responsible for validating Request SQL model data
+ * Class SqlQueryValidator is responsible for validating Request SQL model data
  */
-class RequestSqlValidator
+class SqlQueryValidator
 {
     /**
      * Check if SQL is valid for Reqest SQL model.
@@ -42,16 +42,24 @@ class RequestSqlValidator
      *
      * @return array        Array of errors if any
      */
-    public function validateSql($sql)
+    public function validate($sql)
     {
         $errors = [];
 
-        $requestSql = new RequestSql();
-        $parser = $requestSql->parsingSql($sql);
-        $validate = $requestSql->validateParser($parser, false, $sql);
+        try {
+            $requestSql = new RequestSql();
+            $parser = $requestSql->parsingSql($sql);
+            $validate = $requestSql->validateParser($parser, false, $sql);
 
-        if (!$validate || count($requestSql->error_sql)) {
-            $errors = $this->getErrors($requestSql->error_sql);
+            if (!$validate || count($requestSql->error_sql)) {
+                $errors = $this->getErrors($requestSql->error_sql);
+            }
+        } catch (ErrorException $e) {
+            $errors[] = [
+                'key' => 'Bad SQL query',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Error',
+            ];
         }
 
         return $errors;
@@ -114,7 +122,7 @@ class RequestSqlValidator
                                 '%attribute%' => $sqlError['attribut'][0],
                                 '%table%' => $sqlError['attribut'][1],
                             ],
-                            'domain' =>'Admin.Advparameters.Notification'
+                            'domain' =>'Admin.Advparameters.Notification',
                         ];
                     } elseif (isset($sqlError['*'])) {
                         $errors[] = [
@@ -167,7 +175,7 @@ class RequestSqlValidator
                             'parameters' => [
                                 '%operator%' => $sqlError['operator'],
                             ],
-                            'domain' => 'Admin.Advparameters.Notification'
+                            'domain' => 'Admin.Advparameters.Notification',
                         ];
                     } elseif (isset($sqlError['attribut'])) {
                         $errors[] = [
@@ -224,7 +232,7 @@ class RequestSqlValidator
                             'parameters' => [
                                 'checkedGroupBy',
                             ],
-                            'domain' => 'Admin.Advparameters.Notification'
+                            'domain' => 'Admin.Advparameters.Notification',
                         ];
                     }
                     break;
@@ -249,7 +257,7 @@ class RequestSqlValidator
                         $errors[] = [
                             'key' => 'When multiple tables are used, each attribute must refer back to a table.',
                             'parameters' => [],
-                            'domain' => 'Admin.Advparameters.Notification'
+                            'domain' => 'Admin.Advparameters.Notification',
                         ];
                     }
                     break;
