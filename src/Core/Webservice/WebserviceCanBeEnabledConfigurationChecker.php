@@ -32,8 +32,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Looks at server configuration in order to check PrestaShop Webservice can be enabled
- *
- * @todo: add unit tests
  */
 class WebserviceCanBeEnabledConfigurationChecker
 {
