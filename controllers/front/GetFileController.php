@@ -53,7 +53,7 @@ class GetFileControllerCore extends FrontController
             }
         } else {
             if (!($key = Tools::getValue('key'))) {
-                if(!($key = $this->context->cookie->file_key)){
+                if (!($key = $this->context->cookie->file_key)){
                     $this->displayCustomError('Invalid key.');
                 }
             }
@@ -70,7 +70,7 @@ class GetFileControllerCore extends FrontController
                 if ($order->secure_key != Tools::getValue('secure_key')) {
                     $this->displayCustomError('Invalid key.');
                 }
-                if(!in_array(1, $this->context->customer->getGroups()) || !in_array(2, $this->context->customer->getGroups())){
+                if (!in_array(1, $this->context->customer->getGroups()) || !in_array(2, $this->context->customer->getGroups())){
                     $this->context->cookie->file_key = $key;
                     Tools::redirect('index.php?controller=authentication&back=get-file.php');
                 }
