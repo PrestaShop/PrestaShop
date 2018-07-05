@@ -67,18 +67,18 @@ class WebserviceController extends FrameworkBundleAdminController
          * - foreach item: edit/delete
          */
 
+        if('POST' === $request->getMethod()) {
+            if ($request->request->has('form')) {
+                $submittedForm =$request->request->get('form');
+                if (array_key_exists('webservice_configuration', $submittedForm)) {
+                    return $this->processFormAction($request);
+                }
+            }
+        }
 
         $form = is_null($form) ? $this->getFormHandler()->getForm() : $form;
 
-        // Search
-        // temporary search criteria class, to be removed
-        $searchCriteria = new WebserviceKeyGridSearchCriteria($request);
-
-        $gridWebserviceKeyFactory = $this->get('prestashop.core.grid.webservice_key_factory');
-        $grid = $gridWebserviceKeyFactory->createUsingSearchCriteria($searchCriteria);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
+        $presentedGrid = $this->handleListingSearch($request);
 
         $configurationWarnings = $this->lookForWarnings($request);
 
@@ -106,14 +106,13 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the Webservice configuration form.
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_webservice")
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * Handles the webservice configuration form
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    private function processFormAction(Request $request)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
 
@@ -138,14 +137,6 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return FormHandlerInterface
-     */
-    private function getFormHandler()
-    {
-        return $this->get('prestashop.adapter.webservice.form_handler');
-    }
-
-    /**
      * @param Request $request
      *
      * @return string[]
@@ -161,10 +152,29 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return WebserviceKeyRepository
+     * @param Request $request
+     *
+     * @return array
      */
-    private function getWebserviceKeyRepository()
+    private function handleListingSearch(Request $request)
     {
-        return $this->get('prestashop.core.admin.webservice_key.repository');
+        // temporary search criteria class, to be removed ? see TemporarySearchCriteria
+        $searchCriteria = new WebserviceKeyGridSearchCriteria($request);
+
+        $gridWebserviceKeyFactory = $this->get('prestashop.core.grid.webservice_key_factory');
+        $grid = $gridWebserviceKeyFactory->createUsingSearchCriteria($searchCriteria);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        return $presentedGrid;
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.adapter.webservice.form_handler');
     }
 }
