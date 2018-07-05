@@ -478,39 +478,46 @@ class Install extends AbstractInstall
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
-        if ($entity) {
-            $xml_loader->populateEntity($entity);
-        } else {
-            $xml_loader->populateFromXmlFiles();
-        }
-        if ($errors = $xml_loader->getErrors()) {
-            $this->setError($errors);
-            return false;
-        }
-
-        // IDS from xmlLoader are stored in order to use them for fixtures
-        $this->xml_loader_ids = $xml_loader->getIds();
-        unset($xml_loader);
-
-        // Install custom SQL data (db_data.sql file)
-        if (file_exists(_PS_INSTALL_DATA_PATH_.'db_data.sql')) {
-            $sql_loader = new SqlLoader();
-            $sql_loader->setMetaData(array(
-                'PREFIX_' => _DB_PREFIX_,
-                'ENGINE_TYPE' => _MYSQL_ENGINE_,
-            ));
-
-            $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_data.sql', false);
-            if ($errors = $sql_loader->getErrors()) {
+        try {
+            if ($entity) {
+                $xml_loader->populateEntity($entity);
+            } else {
+                $xml_loader->populateFromXmlFiles();
+            }
+            if ($errors = $xml_loader->getErrors()) {
                 $this->setError($errors);
                 return false;
             }
+
+            // IDS from xmlLoader are stored in order to use them for fixtures
+            $this->xml_loader_ids = $xml_loader->getIds();
+            unset($xml_loader);
+
+            // Install custom SQL data (db_data.sql file)
+            if (file_exists(_PS_INSTALL_DATA_PATH_.'db_data.sql')) {
+                $sql_loader = new SqlLoader();
+                $sql_loader->setMetaData(array(
+                    'PREFIX_' => _DB_PREFIX_,
+                    'ENGINE_TYPE' => _MYSQL_ENGINE_,
+                ));
+
+                $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_data.sql', false);
+                if ($errors = $sql_loader->getErrors()) {
+                    $this->setError($errors);
+                    return false;
+                }
+            }
+
+            // Copy language default images (we do this action after database in populated because we need image types information)
+            foreach ($languages as $iso) {
+                $this->copyLanguageImages($iso);
+            }
+
+        } catch (PrestashopInstallerException $e) {
+            $this->setError($e->getMessage());
+            return false;
         }
 
-        // Copy language default images (we do this action after database in populated because we need image types information)
-        foreach ($languages as $iso) {
-            $this->copyLanguageImages($iso);
-        }
 
         return true;
     }
@@ -577,6 +584,7 @@ class Install extends AbstractInstall
                 EntityLanguage::downloadAndInstallLanguagePack($iso);
                 continue;
             }
+
             if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml')) {
                 throw new PrestashopInstallerException($this->translator->trans('File "language.xml" not found for language iso "%iso%"', array('%iso%' => $iso), 'Install'));
             }
