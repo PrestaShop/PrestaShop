@@ -70,3 +70,10 @@ services:
             - '@prestashop.adapter.data_provider.module'
             - '@prestashop.adapter.presenter.module'
             - '@prestashop.core.admin.module.repository'
+
+    prestashop.adapter.module.payment_module_provider:
+        class: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider
+        arguments:
+            - '@prestashop.core.admin.module.repository'
+            - '@prestashop.bundle.repository.module'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'

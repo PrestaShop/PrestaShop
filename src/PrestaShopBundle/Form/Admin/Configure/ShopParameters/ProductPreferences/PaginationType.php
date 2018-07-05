@@ -65,8 +65,7 @@ class PaginationType extends AbstractType
                 ],
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
-            ])
-        ;
+            ]);
     }
 
     /**

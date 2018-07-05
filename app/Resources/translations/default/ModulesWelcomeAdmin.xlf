@@ -6,163 +6,163 @@
         <source>Let's create your first product</source>
         <target>Let's create your first product</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:77</note>
+File: modules/welcome/OnBoarding/Configuration.php:84</note>
       </trans-unit>
       <trans-unit id="543a5aed6af3b1a0caf2bfe48b6c59f2">
         <source>What do you want to tell about it? Think about what your customers want to know.</source>
         <target>What do you want to tell about it? Think about what your customers want to know.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:79</note>
+File: modules/welcome/OnBoarding/Configuration.php:86</note>
       </trans-unit>
       <trans-unit id="3aeb6c214db86e113e07bdefd6f0bbbe">
         <source>Add clear and attractive information. Don't worry, you can edit it later :)</source>
         <target>Add clear and attractive information. Don't worry, you can edit it later :)</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:80</note>
+File: modules/welcome/OnBoarding/Configuration.php:87</note>
       </trans-unit>
       <trans-unit id="96fd3aef4886801f89835232451ed4ee">
         <source>Give your product a catchy name.</source>
         <target>Give your product a catchy name.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:85</note>
+File: modules/welcome/OnBoarding/Configuration.php:92</note>
       </trans-unit>
       <trans-unit id="ae94c31490652b720e0f269281ec587a">
         <source>Fill out the essential details in this tab. The other tabs are for more advanced information.</source>
         <target>Fill out the essential details in this tab. The other tabs are for more advanced information.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:98</note>
+File: modules/welcome/OnBoarding/Configuration.php:105</note>
       </trans-unit>
       <trans-unit id="d9be3eb406443bd8858204256bf83513">
         <source>Add one or more pictures so your product looks tempting!</source>
         <target>Add one or more pictures so your product looks tempting!</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:105</note>
+File: modules/welcome/OnBoarding/Configuration.php:112</note>
       </trans-unit>
       <trans-unit id="69168bfbea070ea2d4d311cef7c4c39a">
         <source>How much do you want to sell it for?</source>
         <target>How much do you want to sell it for?</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:112</note>
+File: modules/welcome/OnBoarding/Configuration.php:119</note>
       </trans-unit>
       <trans-unit id="331ca7db26429b18d4fc27a4c0682aa2">
         <source>Yay! You just created your first product. Looks good, right?</source>
         <target>Yay! You just created your first product. Looks good, right?</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:123</note>
+File: modules/welcome/OnBoarding/Configuration.php:130</note>
       </trans-unit>
       <trans-unit id="0edb272a8cfaf08e1253f7b453df3480">
         <source>Give your shop its own identity</source>
         <target>Give your shop its own identity</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:131</note>
+File: modules/welcome/OnBoarding/Configuration.php:138</note>
       </trans-unit>
       <trans-unit id="f22c2cafb35dcc4a2a0d140a3d651d73">
         <source>How do you want your shop to look? What makes it so special?</source>
         <target>How do you want your shop to look? What makes it so special?</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:133</note>
+File: modules/welcome/OnBoarding/Configuration.php:140</note>
       </trans-unit>
       <trans-unit id="888a400770d1964e24b28779d48a3ece">
         <source>Customize your theme or choose the best design from our theme catalog.</source>
         <target>Customize your theme or choose the best design from our theme catalog.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:134</note>
+File: modules/welcome/OnBoarding/Configuration.php:141</note>
       </trans-unit>
       <trans-unit id="cf297199c39d0871b40dacdbceb98832">
         <source>A good way to start is to add your own logo here!</source>
         <target>A good way to start is to add your own logo here!</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:139</note>
+File: modules/welcome/OnBoarding/Configuration.php:146</note>
       </trans-unit>
       <trans-unit id="f2495fb7f9d820abb99c7b920f74361c">
         <source>If you want something really special, have a look at the theme catalog!</source>
         <target>If you want something really special, have a look at the theme catalog!</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:149</note>
+File: modules/welcome/OnBoarding/Configuration.php:156</note>
       </trans-unit>
       <trans-unit id="9067f937e50eccdb6e7aeaf92cd054e1">
         <source>Get your shop ready for payments</source>
         <target>Get your shop ready for payments</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:157</note>
+File: modules/welcome/OnBoarding/Configuration.php:168</note>
       </trans-unit>
       <trans-unit id="69b49a643f6ca4b943c6bc99e263b5b4">
         <source>How do you want your customers to pay you?</source>
         <target>How do you want your customers to pay you?</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:159</note>
-      </trans-unit>
-      <trans-unit id="2f612032b9e1b60bd7b569e99c1e9ee4">
-        <source>Adapt your offer to your market: add the most popular payment methods for your customers!</source>
-        <target>Adapt your offer to your market: add the most popular payment methods for your customers!</target>
-        <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:160</note>
+File: modules/welcome/OnBoarding/Configuration.php:170</note>
       </trans-unit>
       <trans-unit id="af7c66bbf83c48324a2787cc5f5b90cc">
         <source>These payment methods are already available to your customers.</source>
         <target>These payment methods are already available to your customers.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:165</note>
+File: modules/welcome/OnBoarding/Configuration.php:175</note>
+      </trans-unit>
+      <trans-unit id="2f612032b9e1b60bd7b569e99c1e9ee4">
+        <source>Adapt your offer to your market: add the most popular payment methods for your customers!</source>
+        <target>Adapt your offer to your market: add the most popular payment methods for your customers!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:188</note>
       </trans-unit>
       <trans-unit id="5bb5e61f625be5604d26e93ce35bf820">
         <source>And you can choose to add other payment methods from here!</source>
         <target>And you can choose to add other payment methods from here!</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:175</note>
+File: modules/welcome/OnBoarding/Configuration.php:194</note>
       </trans-unit>
       <trans-unit id="2eda6b6f1c298d51960ba299fbb9b2c3">
         <source>Choose your shipping solutions</source>
         <target>Choose your shipping solutions</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:183</note>
+File: modules/welcome/OnBoarding/Configuration.php:203</note>
       </trans-unit>
       <trans-unit id="7461f1e6cc12ebf12c1b757fda70cd04">
         <source>How do you want to deliver your products?</source>
         <target>How do you want to deliver your products?</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:185</note>
-      </trans-unit>
-      <trans-unit id="d769ab532918e6ff5f39d12c0f21ba42">
-        <source>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</source>
-        <target>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</target>
-        <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:186</note>
+File: modules/welcome/OnBoarding/Configuration.php:205</note>
       </trans-unit>
       <trans-unit id="57667bc65ba18f633595319dc6e2ff0f">
         <source>Here are the shipping methods available on your shop today.</source>
         <target>Here are the shipping methods available on your shop today.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:191</note>
+File: modules/welcome/OnBoarding/Configuration.php:210</note>
+      </trans-unit>
+      <trans-unit id="d769ab532918e6ff5f39d12c0f21ba42">
+        <source>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</source>
+        <target>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:223</note>
       </trans-unit>
       <trans-unit id="369cb52120a70dd8568cb6529ed6c765">
         <source>You can offer more delivery options by setting up additional carriers</source>
         <target>You can offer more delivery options by setting up additional carriers</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:201</note>
+File: modules/welcome/OnBoarding/Configuration.php:230</note>
       </trans-unit>
       <trans-unit id="8e0dbde341d9f7ee07f245d2434b3285">
         <source>Improve your shop with modules</source>
         <target>Improve your shop with modules</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:209</note>
+File: modules/welcome/OnBoarding/Configuration.php:240</note>
       </trans-unit>
       <trans-unit id="ee566ba0c5af0554cf89c9fc12699986">
         <source>Add new features and manage existing ones thanks to modules.</source>
         <target>Add new features and manage existing ones thanks to modules.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:211</note>
+File: modules/welcome/OnBoarding/Configuration.php:242</note>
       </trans-unit>
       <trans-unit id="8f2dd8cbf2ed7e2edf0a56c63fe7f8c9">
         <source>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</source>
         <target>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:212</note>
+File: modules/welcome/OnBoarding/Configuration.php:243</note>
       </trans-unit>
       <trans-unit id="9ef9b18a610d823a8a3555acb879c686">
         <source>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</source>
         <target>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</target>
         <note>Context:
-File: modules/welcome/OnBoarding/Configuration.php:217</note>
+File: modules/welcome/OnBoarding/Configuration.php:248</note>
       </trans-unit>
     </body>
   </file>

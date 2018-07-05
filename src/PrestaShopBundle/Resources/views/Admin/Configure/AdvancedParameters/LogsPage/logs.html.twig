@@ -31,10 +31,11 @@
   {% endblock %}
 
   {% block logs_main_panel %}
-    {{ include('@AdvancedParameters/LogsPage/Blocks/main_panel.html.twig', {
-      'logs': logs
-      })
-    }}
+    <div class="col-md-12">
+      <div class="col">
+        {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+      </div>
+    </div>
   {% endblock %}
 
   {% block logs_by_mail %}

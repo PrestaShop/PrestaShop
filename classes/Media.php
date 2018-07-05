@@ -699,8 +699,8 @@ class MediaCore
     public static function clearCache()
     {
         $files = array_merge(
-            glob(_PS_THEME_DIR_.'assets/cache/*'),
-            glob(_PS_THEME_DIR_.'cache/*')
+            glob(_PS_THEME_DIR_.'assets/cache/*', GLOB_NOSORT),
+            glob(_PS_THEME_DIR_.'cache/*', GLOB_NOSORT)
         );
 
         foreach ($files as $file) {

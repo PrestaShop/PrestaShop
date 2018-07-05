@@ -58,7 +58,7 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         foreach ($currencies as $currency) {
-            $choices[$currency['name']] = $currency['id_currency'];
+            $choices[sprintf('%s (%s)', $currency['name'], $currency['iso_code'])] = $currency['id_currency'];
         }
 
         return $choices;

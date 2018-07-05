@@ -96,7 +96,7 @@
 
 	$( document ).ready(function() {
 		{if isset($multiple) && isset($max_files)}
-			var {$id|escape:'html':'UTF-8'}_max_files = {$max_files - $files|count};
+			var {$id|escape:'html':'UTF-8'}_max_files = {$max_files - ($files|count)};
 		{/if}
 
 		{if isset($files) && $files}

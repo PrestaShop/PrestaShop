@@ -595,7 +595,7 @@ abstract class ModuleCore implements ModuleInterface
         $upgrade_path = _PS_MODULE_DIR_.$module_name.'/upgrade/';
 
         // Check if folder exist and it could be read
-        if (file_exists($upgrade_path) && ($files = scandir($upgrade_path))) {
+        if (file_exists($upgrade_path) && ($files = scandir($upgrade_path, SCANDIR_SORT_NONE))) {
             // Read each file name
             foreach ($files as $file) {
                 if (!in_array($file, array('.', '..', '.svn', 'index.php')) && preg_match('/\.php$/', $file)) {
@@ -1546,7 +1546,7 @@ abstract class ModuleCore implements ModuleInterface
     public static function getModulesDirOnDisk()
     {
         $module_list = array();
-        $modules = scandir(_PS_MODULE_DIR_);
+        $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
         foreach ($modules as $name) {
             if (is_file(_PS_MODULE_DIR_.$name)) {
                 continue;
@@ -3185,7 +3185,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isSymfonyContext()
     {
-        return !defined('ADMIN_LEGACY_CONTEXT') && $this->context->controller instanceof AdminLegacyLayoutControllerCore;
+        return !$this->isAdminLegacyContext() && defined('_PS_ADMIN_DIR_');
     }
 
     /**

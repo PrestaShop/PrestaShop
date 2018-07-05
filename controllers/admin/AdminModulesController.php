@@ -407,7 +407,7 @@ class AdminModulesControllerCore extends AdminController
         $success = false;
         if (substr($file, -4) == '.zip') {
             if (Tools::ZipExtract($file, $tmp_folder)) {
-                $zip_folders = scandir($tmp_folder);
+                $zip_folders = scandir($tmp_folder, SCANDIR_SORT_NONE);
                 if (Tools::ZipExtract($file, _PS_MODULE_DIR_)) {
                     $success = true;
                 }
@@ -415,7 +415,7 @@ class AdminModulesControllerCore extends AdminController
         } else {
             $archive = new Archive_Tar($file);
             if ($archive->extract($tmp_folder)) {
-                $zip_folders = scandir($tmp_folder);
+                $zip_folders = scandir($tmp_folder, SCANDIR_SORT_NONE);
                 if ($archive->extract(_PS_MODULE_DIR_)) {
                     $success = true;
                 }
@@ -450,7 +450,7 @@ class AdminModulesControllerCore extends AdminController
             return;
         }
         if (is_dir($dir)) {
-            $objects = scandir($dir);
+            $objects = scandir($dir, SCANDIR_SORT_NONE);
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
                     if (filetype($dir.'/'.$object) == 'dir') {

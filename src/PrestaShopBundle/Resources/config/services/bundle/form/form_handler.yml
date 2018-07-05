@@ -40,8 +40,19 @@ services:
               'notifications': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType'
             - 'AdministrationPage'
 
-    prestashop.admin.customer_preferences.form_handler:
+    prestashop.admin.shipping_preferences.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.shipping_preferences.data_provider'
+            -
+              'handling': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
+              'carrier_options': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
+            - 'ShippingPreferencesPage'
+
+    prestashop.admin.customer_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.hook.dispatcher'
@@ -49,6 +60,10 @@ services:
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
             - 'CustomerPreferencesPage'
+        calls:
+            - method: setTabRepository
+              arguments:
+                  - '@prestashop.core.admin.tab.repository'
 
     prestashop.admin.order_preferences.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -150,3 +165,13 @@ services:
               'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
               'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
             - 'LocalizationPage'
+
+    prestashop.admin.payment_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.payment_preferences.form_data_provider'
+            -
+              'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+            - 'PaymentPreferences'

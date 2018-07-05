@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -42,24 +43,23 @@ final class FilterLogsByAttributeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id_log', TextType::class, array('required' => false))
-            ->add('employee', TextType::class, array('required' => false))
-            ->add('severity', TextType::class, array('required' => false))
-            ->add('message', TextType::class, array('required' => false))
-            ->add('object_type', TextType::class, array('required' => false))
-            ->add('object_id', TextType::class, array('required' => false))
-            ->add('error_code', TextType::class, array('required' => false))
-            ->add('date_from', DatePickerType::class, array(
+            ->add('id_log', TextType::class, ['required' => false])
+            ->add('employee', TextType::class, ['required' => false])
+            ->add('severity', TextType::class, ['required' => false])
+            ->add('message', TextType::class, ['required' => false])
+            ->add('object_type', TextType::class, ['required' => false])
+            ->add('object_id', TextType::class, ['required' => false])
+            ->add('error_code', TextType::class, ['required' => false])
+            ->add('date_from', DatePickerType::class, [
                 'required' => false,
-                'attr' => array('placeholder' => 'From'),
+                'attr' => ['placeholder' => 'From'],
                 'translation_domain' => 'Admin.Global',
-            ))
-            ->add('date_to', DatePickerType::class, array(
+            ])
+            ->add('date_to', DatePickerType::class, [
                 'required' => false,
-                'attr' => array('placeholder' => 'To'),
+                'attr' => ['placeholder' => 'To'],
                 'translation_domain' => 'Admin.Global',
-            ))
-        ;
+            ]);
     }
 
     /**
@@ -67,9 +67,9 @@ final class FilterLogsByAttributeType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature'
-        ));
+        ]);
     }
 
     /**
