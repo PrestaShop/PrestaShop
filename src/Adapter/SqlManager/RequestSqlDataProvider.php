@@ -62,9 +62,7 @@ class RequestSqlDataProvider
      */
     public function getTables()
     {
-        $tables = (new RequestSql())->getTables();
-
-        return $tables;
+        return (new RequestSql())->getTables();
     }
 
     /**
@@ -76,9 +74,7 @@ class RequestSqlDataProvider
      */
     public function getTableColumns($table)
     {
-        $columns = (new RequestSql())->getAttributesByTable($table);
-
-        return $columns;
+        return (new RequestSql())->getAttributesByTable($table);
     }
 
     /**
