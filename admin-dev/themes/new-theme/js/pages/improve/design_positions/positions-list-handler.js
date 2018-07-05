@@ -65,6 +65,7 @@ class PositionsListHandler {
 
     self.$modulesList.on('change', function () {
       const $checkedCount = self.$modulesList.filter(':checked').length;
+
       if ($checkedCount === 0) {
         self.$panelSelection.hide();
         self.$panelSelectionSingleSelection.hide();
@@ -72,8 +73,10 @@ class PositionsListHandler {
       } else if ($checkedCount === 1) {
         self.$panelSelection.show();
         self.$panelSelectionSingleSelection.show();
+        self.$panelSelectionMultipleSelection.hide();
       } else {
         self.$panelSelection.show();
+        self.$panelSelectionSingleSelection.hide();
         self.$panelSelectionMultipleSelection.show();
         $('#modules-position-selection-count').html($checkedCount);
       }
@@ -104,6 +107,10 @@ class PositionsListHandler {
 
     self.$hookSearch.on('input', () => {
       this.modulesPositionFilterHooks();
+    });
+
+    $('.hook-checker').on('click', function() {
+      $(`.hook${$(this).data('hook-id')}`).prop('checked', $(this).prop('checked'));
     });
   }
 
@@ -161,19 +168,19 @@ class PositionsListHandler {
     }
 
     if ($hookName !== '' || $moduleId !== 'all') {
+      // Prepare set of matched elements
       let $hooksToShowFromModule = $();
       let $hooksToShowFromHookName = $();
       let $currentHooks;
       let $start;
 
-      if ($moduleId !== 'all') {
-        $currentHooks = $(`.module-position-${$moduleId}`);
-        $currentHooks.addClass('highlight');
-      }
-
       for (let $id = 0; $id < self.$hooksList.length; $id++) {
-        if ($moduleId !== 'all' && $currentHooks.length > 0) {
-          $hooksToShowFromModule = $hooksToShowFromModule.add(self.$hooksList[$id].container);
+        if ($moduleId !== 'all') {
+          $currentHooks = self.$hooksList[$id].container.find(`.module-position-${$moduleId}`);
+          if ($currentHooks.length > 0) {
+            $hooksToShowFromModule = $hooksToShowFromModule.add(self.$hooksList[$id].container);
+            $currentHooks.addClass('highlight');
+          }
         }
 
         if ($hookName !== '') {
@@ -188,14 +195,14 @@ class PositionsListHandler {
             );
           }
         }
+      }
 
-        if ($moduleId === 'all' && $hookName !== '') {
-          $hooksToShowFromHookName.show();
-        } else if ($hookName === '' && $moduleId !== 'all') {
-          $hooksToShowFromModule.show();
-        } else {
-          $hooksToShowFromHookName.filter($hooksToShowFromModule).show();
-        }
+      if ($moduleId === 'all' && $hookName !== '') {
+        $hooksToShowFromHookName.show();
+      } else if ($hookName === '' && $moduleId !== 'all') {
+        $hooksToShowFromModule.show();
+      } else {
+        $hooksToShowFromHookName.filter($hooksToShowFromModule).show();
       }
     }
 

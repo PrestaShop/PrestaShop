@@ -88,7 +88,7 @@
                 <span class="hook-name">{{ hook['name'] }}</span>
                 <label class="badge badge-primary badge-pill float-right">
                   {% if hook['modules_count'] and canMove %}
-                    <input type="checkbox" id="Ghook{{ hook['id_hook'] }}" onclick="hookCheckboxes({{ hook['id_hook'] }}, 0, this)"/>
+                    <input type="checkbox" class="hook-checker" id="Ghook{{ hook['id_hook'] }}" data-hook-id="{{ hook['id_hook'] }}" />
                   {% endif %}
 
                   {{ hook['modules_count'] }}
