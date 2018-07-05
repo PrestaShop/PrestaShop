@@ -30,7 +30,7 @@
   module.attributes.urls,
   module.attributes.name
 %}
-
+<div class="module-actions">
   {% if url_active == 'buy' %}
   <div class="form-action-button-container">
     <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
@@ -38,7 +38,6 @@
     </a>
   </div>
   {% elseif urls|length %}
-  <div class="btn-group form-action-button-container">
     <form class="btn-group form-action-button" method="post" action="{{ urls[url_active] }}">
       <button type="submit" class="btn btn-primary-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
           data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
@@ -46,10 +45,9 @@
       </button>
     </form>
     {% if (urls|length > 1) %}
-          <input type="hidden" class="btn">
-          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="caret"></span>
-            <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+        <div class="btn-group form-action-button-container">
+          <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ 'Other'|trans({}, 'Admin.Modules.Feature') }}
           </button>
           <div class="dropdown-menu">
             {% for module_action, module_url in urls %}
@@ -67,3 +65,4 @@
     {% endif %}
   </div>
   {% endif %}
+</div>
