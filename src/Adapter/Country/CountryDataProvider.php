@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,17 +30,17 @@ use Country;
 use Configuration;
 
 /**
- * This class will provide data from DB / ORM about Country
+ * This class will provide data from DB / ORM about Country.
  */
 class CountryDataProvider
 {
     /**
-     * Return available countries
+     * Return available countries.
      *
-     * @param int $id_lang Language ID
-     * @param bool $active return only active coutries
+     * @param int  $id_lang        Language ID
+     * @param bool $active         return only active coutries
      * @param bool $contain_states return only country with states
-     * @param bool $list_states Include the states list with the returned list
+     * @param bool $list_states    Include the states list with the returned list
      *
      * @return array Countries and corresponding zones
      */
@@ -50,7 +50,7 @@ class CountryDataProvider
     }
 
     /**
-     * Get Country IsoCode by Id
+     * Get Country IsoCode by Id.
      *
      * @param int $id Country Id
      *
@@ -64,7 +64,7 @@ class CountryDataProvider
     }
 
     /**
-     * Get country Id by ISO code
+     * Get country Id by ISO code.
      *
      * @param string $isoCode Country ISO code
      *

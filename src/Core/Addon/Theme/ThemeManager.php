@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -149,9 +149,9 @@ class ThemeManager implements AddonManagerInterface
      *    - update configuration
      *    - enable/disable modules.
      *
-     * @param string $name The theme name to enable
+     * @param string $name  The theme name to enable
+     * @param bool   $force bypass user privilege checks
      *
-     * @param bool $force bypass user privilege checks
      * @return bool True for success
      */
     public function enable($name, $force = false)
@@ -232,9 +232,10 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Get all errors of theme install
+     * Get all errors of theme install.
      *
      * @param string $themeName The technical theme name
+     *
      * @return array|false
      */
     public function getErrors($themeName)
@@ -307,9 +308,10 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Reset the modules received in parameters if they are installed and enabled
+     * Reset the modules received in parameters if they are installed and enabled.
      *
      * @param string[] $modules
+     *
      * @return $this
      */
     private function doResetModules(array $modules)
@@ -423,7 +425,7 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Import translation from Theme to Database
+     * Import translation from Theme to Database.
      *
      * @param Theme $theme
      */
@@ -450,17 +452,17 @@ class ThemeManager implements AddonManagerInterface
             try {
                 $lang = $translationService->findLanguageByLocale($locale);
             } catch (Exception $exception) {
-                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale '.$locale.' does not exists');
                 continue;
             }
 
             // check if translation dir for this lang exists
-            if (!is_dir($translationFolder . $locale)) {
+            if (!is_dir($translationFolder.$locale)) {
                 continue;
             }
 
             // construct a new catalog for this lang and import in database if key and message are different
-            $messageCatalog = $this->getCatalogueFromPaths($translationFolder . $locale, $locale);
+            $messageCatalog = $this->getCatalogueFromPaths($translationFolder.$locale, $locale);
 
             // get all default domain from catalog
             $allDomains = $this->getDefaultDomains($locale, $themeProvider);
@@ -471,9 +473,9 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * Get all default domain from catalog
+     * Get all default domain from catalog.
      *
-     * @param string $locale
+     * @param string                                               $locale
      * @param \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider
      *
      * @return array
@@ -499,7 +501,7 @@ class ThemeManager implements AddonManagerInterface
 
         foreach (array_keys($defaultCatalogue) as $domain) {
             // AdminCatalogFeature.fr-FR to AdminCatalogFeature
-            $domain = str_replace('.' . $locale, '', $domain);
+            $domain = str_replace('.'.$locale, '', $domain);
 
             $allDomains[] = $domain;
         }
@@ -508,17 +510,17 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * @param TranslationService $translationService
-     * @param MessageCatalogue $messageCatalog
-     * @param array $allDomains
+     * @param TranslationService            $translationService
+     * @param MessageCatalogue              $messageCatalog
+     * @param array                         $allDomains
      * @param \PrestaShopBundle\Entity\Lang $lang
-     * @param string $locale
-     * @param string $themeName
+     * @param string                        $locale
+     * @param string                        $themeName
      */
     private function handleImport(TranslationService $translationService, MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
     {
         foreach ($messageCatalog->all() as $domain => $messages) {
-            $domain = str_replace('.' . $locale, '', $domain);
+            $domain = str_replace('.'.$locale, '', $domain);
 
             if (in_array($domain, $allDomains)) {
                 continue;

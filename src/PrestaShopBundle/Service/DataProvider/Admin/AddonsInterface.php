@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 /**
@@ -35,8 +36,8 @@ interface AddonsInterface
     /**
      * Send a request to addons.prestashop.com to retrieve Modules/Addons data.
      *
-     * @param string $action The query type.
-     * @param array $params The request parameters.
+     * @param string $action the query type
+     * @param array  $params the request parameters
      */
     public function request($action, $params);
 }

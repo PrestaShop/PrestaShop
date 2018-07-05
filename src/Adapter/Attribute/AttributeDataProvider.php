@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,14 +34,14 @@ use Shop;
 use Context;
 
 /**
- * This class will provide data from DB / ORM about Attributes
+ * This class will provide data from DB / ORM about Attributes.
  */
 class AttributeDataProvider
 {
     /**
-     * Get all attributes for a given language
+     * Get all attributes for a given language.
      *
-     * @param int $id_lang Language id
+     * @param int  $id_lang  Language id
      * @param bool $not_null Get only not null fields if true
      *
      * @return array Attributes
@@ -51,12 +51,12 @@ class AttributeDataProvider
         return Attribute::getAttributes($id_lang, $not_null);
     }
 
-
     /**
-     * Get all attributes ids for a given group
+     * Get all attributes ids for a given group.
      *
-     * @param int $id_group Attribute group id
+     * @param int  $id_group Attribute group id
      * @param bool $not_null Get only not null fields if true
+     *
      * @return array Attributes
      */
     public static function getAttributeIdsByGroup($id_group, $not_null = false)
@@ -72,7 +72,7 @@ class AttributeDataProvider
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
 			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			'.Shop::addSqlAssociation('attribute', 'a').'
-			WHERE ag.`id_attribute_group` = '.(int)$id_group.'
+			WHERE ag.`id_attribute_group` = '.(int) $id_group.'
 			'.($not_null ? 'AND a.`id_attribute` IS NOT NULL' : '').'
 			ORDER BY a.`position` ASC
 		');
@@ -83,7 +83,7 @@ class AttributeDataProvider
     }
 
     /**
-     * Get combination for a product
+     * Get combination for a product.
      *
      * @param int $idProduct
      *
@@ -94,7 +94,7 @@ class AttributeDataProvider
         $context = Context::getContext();
 
         //get product
-        $product = new Product((int)$idProduct, false);
+        $product = new Product((int) $idProduct, false);
         if (!is_object($product) || empty($product->id)) {
             return false;
         }
@@ -113,7 +113,7 @@ class AttributeDataProvider
     }
 
     /**
-     * Get combination images ids
+     * Get combination images ids.
      *
      * @param int $idAttribute
      *
@@ -125,7 +125,7 @@ class AttributeDataProvider
 			SELECT a.`id_image` as id
 			FROM `'._DB_PREFIX_.'product_attribute_image` a
 			'.Shop::addSqlAssociation('product_attribute', 'a').'
-			WHERE a.`id_product_attribute` = '.(int)$idAttribute.'
+			WHERE a.`id_product_attribute` = '.(int) $idAttribute.'
 		');
     }
 }

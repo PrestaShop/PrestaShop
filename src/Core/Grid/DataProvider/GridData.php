@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
 
 /**
- * Class GridData is responsible for storing grid data
+ * Class GridData is responsible for storing grid data.
  */
 final class GridData implements GridDataInterface
 {
@@ -49,9 +49,9 @@ final class GridData implements GridDataInterface
     private $query;
 
     /**
-     * @param RowCollectionInterface  $rows      Filtered & paginated rows data
-     * @param int                     $rowsTotal Total number of rows (without pagination)
-     * @param string                  $query     Query used to get rows
+     * @param RowCollectionInterface $rows      Filtered & paginated rows data
+     * @param int                    $rowsTotal Total number of rows (without pagination)
+     * @param string                 $query     Query used to get rows
      */
     public function __construct(RowCollectionInterface $rows, $rowsTotal, $query = '')
     {

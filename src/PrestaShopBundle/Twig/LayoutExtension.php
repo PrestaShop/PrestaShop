@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -67,7 +68,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     /**
      * Provides globals for Twig templates.
      *
-     * @return array The base globals available in twig templates.
+     * @return array the base globals available in twig templates
      */
     public function getGlobals()
     {
@@ -122,14 +123,14 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * Parameters can be set manually into twig template or sent from controller
      * For details : check Resources/views/Admin/Layout.html.twig
      *
-     * @param string        $controllerName    The legacy controller name
-     * @param string        $title             The page title to override default one
-     * @param array         $headerToolbarBtn  The header toolbar to override
-     * @param string        $displayType       The legacy display type variable
-     * @param bool          $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
-     * @param array|string  $headerTabContent  Tabs labels
-     * @param bool          $enableSidebar     Allow to use right sidebar to display docs for instance
-     * @param string        $helpLink          If specified, will be used instead of legacy one
+     * @param string       $controllerName    The legacy controller name
+     * @param string       $title             The page title to override default one
+     * @param array        $headerToolbarBtn  The header toolbar to override
+     * @param string       $displayType       The legacy display type variable
+     * @param bool         $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value
+     * @param array|string $headerTabContent  Tabs labels
+     * @param bool         $enableSidebar     Allow to use right sidebar to display docs for instance
+     * @param string       $helpLink          If specified, will be used instead of legacy one
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
@@ -145,7 +146,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $enableSidebar = false,
         $helpLink = ''
     ) {
-        if ($this->environment == 'test') {
+        if ('test' == $this->environment) {
             return <<<EOF
 <html>
   <head>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Class RowAction holds information related to row action for each row element in grid
+ * Class RowAction holds information related to row action for each row element in grid.
  */
 final class RowAction implements RowActionInterface
 {

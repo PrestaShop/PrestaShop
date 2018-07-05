@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CountryByIdChoiceProvider provides country choices with ID values
+ * Class CountryByIdChoiceProvider provides country choices with ID values.
  */
 final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
 {
@@ -45,7 +45,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
     private $langId;
 
     /**
-     * @param int $langId
+     * @param int                 $langId
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(
@@ -57,7 +57,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get currency choices
+     * Get currency choices.
      *
      * @return array
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Doctrine\Common\Cache\ArrayCache;
@@ -84,7 +85,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $translator;
 
     /**
-     * Path to the module directory, coming from Confiuration class
+     * Path to the module directory, coming from Confiuration class.
      *
      * @var string
      */
@@ -95,10 +96,10 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $prestaTrustChecker = null;
 
-    #### CACHE PROPERTIES ####
+    //### CACHE PROPERTIES ####
 
     /**
-     * Key of the cache content
+     * Key of the cache content.
      *
      * @var string
      */
@@ -112,20 +113,20 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $cache = array();
 
     /**
-     * Optionnal Doctrine cache provider
+     * Optionnal Doctrine cache provider.
      *
      * @var \Doctrine\Common\Cache\CacheProvider
      */
     private $cacheProvider;
 
     /**
-     * Keep loaded modules in cache
+     * Keep loaded modules in cache.
      *
      * @var ArrayCache
      */
     private $loadedModules;
 
-    #### END OF CACHE PROPERTIES ####
+    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -157,13 +158,16 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Setter for the optional PrestaTrust checker
+     * Setter for the optional PrestaTrust checker.
+     *
      * @param PrestaTrustChecker $checker
+     *
      * @return $this
      */
     public function setPrestaTrustChecker(PrestaTrustChecker $checker)
     {
         $this->prestaTrustChecker = $checker;
+
         return $this;
     }
 
@@ -197,7 +201,6 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * @param AddonListFilter $filter
-     *
      * @param bool            $skip_main_class_attributes
      *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
@@ -205,7 +208,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false)
     {
         if ($filter->status >= AddonListFilterStatus::ON_DISK
-            && $filter->status != AddonListFilterStatus::ALL) {
+            && AddonListFilterStatus::ALL != $filter->status) {
             $modules = $this->getModulesOnDisk($skip_main_class_attributes);
         } else {
             $modules = $this->getList();
@@ -213,11 +216,11 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
-            if ($filter->type != AddonListFilterType::ALL) {
-                if ($module->attributes->get('productType') == 'module') {
+            if (AddonListFilterType::ALL != $filter->type) {
+                if ('module' == $module->attributes->get('productType')) {
                     $productType = AddonListFilterType::MODULE;
                 }
-                if ($module->attributes->get('productType') == 'service') {
+                if ('service' == $module->attributes->get('productType')) {
                     $productType = AddonListFilterType::SERVICE;
                 }
                 if (!isset($productType) || $productType & ~$filter->type) {
@@ -227,31 +230,31 @@ class ModuleRepository implements ModuleRepositoryInterface
             }
 
             // Part Two : Remove module not installed if specified
-            if ($filter->status != AddonListFilterStatus::ALL) {
-                if ($module->database->get('installed') == 1
+            if (AddonListFilterStatus::ALL != $filter->status) {
+                if (1 == $module->database->get('installed')
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 0
+                if (0 == $module->database->get('installed')
                     && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 1
+                if (1 == $module->database->get('installed')
+                    && 1 == $module->database->get('active')
                     && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
                     && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 0
+                if (1 == $module->database->get('installed')
+                    && 0 == $module->database->get('active')
                     && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
                     && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
@@ -260,7 +263,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             }
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
-            if ($filter->origin != AddonListFilterOrigin::ALL) {
+            if (AddonListFilterOrigin::ALL != $filter->origin) {
                 if (!$module->attributes->has('origin_filter_value') &&
                     !$filter->hasOrigin(AddonListFilterOrigin::DISK)
                 ) {
@@ -275,6 +278,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
             }
         }
+
         return $modules;
     }
 
@@ -392,6 +396,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Admin.Modules.Notification'));
             }
         }
+
         return $modules;
     }
 
@@ -399,8 +404,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      * Get the new module presenter class of the specified name provided.
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
      *
-     * @param string $name The technical name of the module
-     *
+     * @param string $name                       The technical name of the module
      * @param bool   $skip_main_class_attributes
      *
      * @return Module
@@ -474,7 +478,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $disk['version'] = $tmp_module->version;
 
                 $attributes = array_merge($attributes, $main_class_attributes);
-            } else if (!$skip_main_class_attributes) {
+            } elseif (!$skip_main_class_attributes) {
                 $main_class_attributes['warning'] = 'Invalid module class';
             } else {
                 $disk['is_valid'] = 1;
@@ -492,6 +496,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($this->prestaTrustChecker) {
             $this->prestaTrustChecker->loadDetailsIntoModule($module);
         }
+
         return $module;
     }
 
@@ -503,8 +508,10 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Send request to get module details on the marketplace, then merge the data received in Module instance
+     * Send request to get module details on the marketplace, then merge the data received in Module instance.
+     *
      * @param $moduleId
+     *
      * @return Module
      */
     public function getModuleById($moduleId)
@@ -571,6 +578,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * Function loading all installed modules on the shop. Can be used as example for AddonListFilter use.
+     *
      * @return array
      */
     public function getInstalledModules()
@@ -583,7 +591,8 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Returns installed module filepaths
+     * Returns installed module filepaths.
+     *
      * @return array
      */
     public function getInstalledModulesPaths()

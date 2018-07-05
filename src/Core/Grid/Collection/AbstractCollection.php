@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Countable;
 use Iterator;
 
 /**
- * Class AbstractCollection is responsible for providing base collection implementation
+ * Class AbstractCollection is responsible for providing base collection implementation.
  */
 abstract class AbstractCollection implements Iterator, Countable
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to generate the product SEO form
+ * This form class is responsible to generate the product SEO form.
  */
 class ProductSeo extends CommonAbstractType
 {
@@ -43,7 +43,7 @@ class ProductSeo extends CommonAbstractType
     private $router;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -64,10 +64,10 @@ class ProductSeo extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $remoteUrls = [
-            '301-product' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            '302-product' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            '301-category' => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
-            '302-category' => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
+            '301-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            '302-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            '301-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
+            '302-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
         ];
 
         $builder->add(
@@ -81,7 +81,7 @@ class ProductSeo extends CommonAbstractType
                         'counter' => 70,
                         'counter_type' => 'recommended',
                     ],
-                    'required' => false
+                    'required' => false,
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
@@ -91,7 +91,7 @@ class ProductSeo extends CommonAbstractType
                     'popover_placement' => 'right',
                     'class' => 'px-0',
                 ],
-                'required' => false
+                'required' => false,
             ]
         )
             ->add(
@@ -105,7 +105,7 @@ class ProductSeo extends CommonAbstractType
                             'counter' => 160,
                             'counter_type' => 'recommended',
                         ],
-                        'required' => false
+                        'required' => false,
                     ],
                     'locales' => $this->locales,
                     'hideTabs' => true,
@@ -115,7 +115,7 @@ class ProductSeo extends CommonAbstractType
                         'popover_placement' => 'right',
                         'class' => 'px-0',
                     ],
-                    'required' => false
+                    'required' => false,
                 ]
             )
             ->add(
@@ -144,6 +144,7 @@ class ProductSeo extends CommonAbstractType
                         if (array_key_exists($index, $remoteUrls)) {
                             return ['data-remoteurl' => $remoteUrls[$index]];
                         }
+
                         return [];
                     },
                     'required' => true,
@@ -160,7 +161,7 @@ class ProductSeo extends CommonAbstractType
                 'id_type_redirected',
                 TypeaheadProductCollectionType::class,
                 [
-                    'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+                    'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
                     'mapping_value' => 'id',
                     'mapping_name' => 'name',
                     'mapping_type' => $options['mapping_type'],

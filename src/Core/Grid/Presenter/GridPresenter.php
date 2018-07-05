@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
- * Class GridPresenter is responsible for presenting grid
+ * Class GridPresenter is responsible for presenting grid.
  */
 final class GridPresenter implements GridPresenterInterface
 {
@@ -89,7 +89,7 @@ final class GridPresenter implements GridPresenterInterface
     }
 
     /**
-     * Get presented columns with filter form
+     * Get presented columns with filter form.
      *
      * @param DefinitionInterface $definition
      *

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -69,7 +69,6 @@ class ThemeTranslationsFactory extends TranslationsFactory
             ->setThemeName($themeName)
             ->setLocale($locale)
             ->synchronizeTheme();
-        ;
 
         $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale, $search);
 
@@ -81,17 +80,19 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * @param $locale
      * @param $domain
+     *
      * @return mixed
      */
     protected function removeLocaleFromDomain($locale, $domain)
     {
-        return str_replace('.' . $locale, '', $domain);
+        return str_replace('.'.$locale, '', $domain);
     }
 
     /**
      * @param $themeName
      * @param $locale
      * @param null $search
+     *
      * @return array
      */
     protected function getFrontTranslationsForThemeAndLocale($themeName, $locale, $search = null)

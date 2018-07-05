@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,11 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-
 use Currency;
 
 /**
- * This class will provide data from DB / ORM about Currency
+ * This class will provide data from DB / ORM about Currency.
  */
 class CurrencyDataProvider
 {
@@ -52,7 +51,7 @@ class CurrencyDataProvider
     }
 
     /**
-     * Return available currencies
+     * Return available currencies.
      *
      * @return array Currencies
      */
@@ -62,17 +61,16 @@ class CurrencyDataProvider
     }
 
     /**
-     * Get a Currency entity instance by ISO code
+     * Get a Currency entity instance by ISO code.
      *
-     * @param string $isoCode
-     *  An ISO 4217 currency code
-     *
+     * @param string   $isoCode
+     *                          An ISO 4217 currency code
      * @param int|null $idLang
-     *  Set this parameter if you want the currency in a specific language.
-     *  If null, default language will be used.
+     *                          Set this parameter if you want the currency in a specific language.
+     *                          If null, default language will be used.
      *
-     * @return Currency|null
-     *  The asked Currency object, or null if not found.
+     * @return currency|null
+     *                       The asked Currency object, or null if not found
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
@@ -92,15 +90,14 @@ class CurrencyDataProvider
      * Get a Currency entity instance.
      * If the passed ISO code is known, this Currency entity will be loaded with known data.
      *
-     * @param string $isoCode
-     *  An ISO 4217 currency code
-     *
+     * @param string   $isoCode
+     *                          An ISO 4217 currency code
      * @param int|null $idLang
-     *  Set this parameter if you want the currency in a specific language.
-     *  If null, default language will be used.
+     *                          Set this parameter if you want the currency in a specific language.
+     *                          If null, default language will be used.
      *
-     * @return Currency
-     *  The asked Currency object, loaded with relevant data if passed ISO code is known.
+     * @return currency
+     *                  The asked Currency object, loaded with relevant data if passed ISO code is known
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
@@ -121,13 +118,12 @@ class CurrencyDataProvider
      * If this entity already exists in DB (has a known currency_id), it will be updated.
      *
      * @param Currency $currencyEntity
-     *  Currency object model to save
+     *                                 Currency object model to save
      *
      * @throws PrestaShopException
-     *  If something wrong happened with DB when saving $currencyEntity
-     *
+     *                             If something wrong happened with DB when saving $currencyEntity
      * @throws Exception
-     *  If an unexpected result is retrieved when saving $currencyEntity
+     *                             If an unexpected result is retrieved when saving $currencyEntity
      */
     public function saveCurrency(Currency $currencyEntity)
     {
@@ -137,7 +133,7 @@ class CurrencyDataProvider
     }
 
     /**
-     * Gets a legacy Currency instance by ID
+     * Gets a legacy Currency instance by ID.
      *
      * @param int $currencyId
      *
@@ -149,7 +145,7 @@ class CurrencyDataProvider
     }
 
     /**
-     * Get Default currency Iso code
+     * Get Default currency Iso code.
      */
     public function getDefaultCurrencyIsoCode()
     {

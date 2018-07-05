@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -41,12 +41,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Import" page display
+ * Responsible of "Configure > Advanced Parameters > Import" page display.
  */
 class ImportController extends FrameworkBundleAdminController
 {
     /**
-     * Show import form & handle forwarding to legacy controller
+     * Show import form & handle forwarding to legacy controller.
      *
      * @param Request $request
      *
@@ -135,14 +135,14 @@ class ImportController extends FrameworkBundleAdminController
             PageVoter::LEVEL_DELETE,
         ])) {
             return $this->json([
-                'error' =>  $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
+                'error' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
             ]);
         }
 
         $uploadedFile = $request->files->get('file');
         if (!$uploadedFile instanceof UploadedFile) {
             return $this->json([
-                'error' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification')
+                'error' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification'),
             ]);
         }
 
@@ -162,7 +162,8 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete import file
+     * Delete import file.
+     *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
      *
@@ -181,11 +182,13 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Download import file from history
+     * Download import file from history.
+     *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function downloadAction(Request $request)
@@ -203,7 +206,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get generic template parameters
+     * Get generic template parameters.
      *
      * @param Request $request
      *
@@ -225,7 +228,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Fowards submitted form data to legacy import page
+     * Fowards submitted form data to legacy import page.
      *
      * @param Request $request
      *
@@ -234,7 +237,7 @@ class ImportController extends FrameworkBundleAdminController
     private function fowardRequestToLegacyResponse(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext =  $this->get('prestashop.adapter.legacy.context');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
 

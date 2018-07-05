@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,15 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
-use Configuration;
 use Exception;
-use Tools;
 use PhpEncryption;
 
 /**
@@ -77,8 +76,9 @@ class AddonsDataProvider implements AddonsInterface
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
-        if (file_put_contents($temp_filename, $module_data) !== false) {
+        if (false !== file_put_contents($temp_filename, $module_data)) {
             $this->zipManager->storeInModulesFolder($temp_filename);
+
             return true;
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
@@ -147,6 +147,7 @@ class AddonsDataProvider implements AddonsInterface
                             ->setPassword($params['password_addons'])
                             ->getModuleZip($params['id_module']);
                     }
+
                     return $this->marketplaceClient->getModuleZip($params['id_module']);
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
@@ -63,7 +64,7 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        return ($this->session->has('should_use_legacy_page_for_'.$page) && $this->session->get('should_use_legacy_page_for_'.$page, 0) == 1);
+        return $this->session->has('should_use_legacy_page_for_'.$page) && 1 == $this->session->get('should_use_legacy_page_for_'.$page, 0);
     }
 
     /* (non-PHPdoc)
@@ -75,7 +76,7 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        if ((bool)$useLegacy) {
+        if ((bool) $useLegacy) {
             $this->session->set('should_use_legacy_page_for_'.$page, 1);
         } else {
             $this->session->remove('should_use_legacy_page_for_'.$page);
@@ -106,7 +107,7 @@ class PagePreference implements AdminPagePreferenceInterface
                 return false;
             default:
                 // show only for 1.7.x
-                if ($currentVersion[0] != '1' || $currentVersion[1] != '7') {
+                if ('1' != $currentVersion[0] || '7' != $currentVersion[1]) {
                     return false;
                 }
                 // show only if upgrade from older version than current one

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Context;
 use Shop;
 
 /**
- * This class will provide data from DB / ORM about Category
+ * This class will provide data from DB / ORM about Category.
  */
 class CategoryDataProvider
 {
@@ -53,7 +53,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Get a category
+     * Get a category.
      *
      * @param null $idCategory
      * @param null $idLang
@@ -79,16 +79,16 @@ class CategoryDataProvider
     }
 
     /**
-     * Get all nested categories
+     * Get all nested categories.
      *
      * @param int|null $root_category
      * @param bool|int $id_lang
-     * @param bool $active
+     * @param bool     $active
      * @param int|null $groups
-     * @param bool $use_shop_restriction
-     * @param string $sql_filter
-     * @param string $sql_sort
-     * @param string $sql_limit
+     * @param bool     $use_shop_restriction
+     * @param string   $sql_filter
+     * @param string   $sql_sort
+     * @param string   $sql_limit
      *
      * @return array categories
      */
@@ -102,16 +102,17 @@ class CategoryDataProvider
     }
 
     /**
-     * Return available categories Names - excluding Root category
+     * Return available categories Names - excluding Root category.
      *
      * @param int|null $root_category
      * @param bool|int $id_lang
-     * @param bool $active return only active categories
+     * @param bool     $active        return only active categories
      * @param $groups
-     * @param bool $use_shop_restriction
+     * @param bool   $use_shop_restriction
      * @param string $sql_filter
      * @param string $sql_sort
      * @param string $sql_limit
+     *
      * @return array Categories
      */
     public function getAllCategoriesName($root_category = null, $id_lang = false, $active = true, $groups = null, $use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
@@ -122,11 +123,13 @@ class CategoryDataProvider
 
         $categories = Category::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
         array_shift($categories);
+
         return $categories;
     }
 
     /**
-     * Return a simple array id/name of categories for a specified product
+     * Return a simple array id/name of categories for a specified product.
+     *
      * @param \Product $product
      *
      * @return array Categories
@@ -142,7 +145,7 @@ class CategoryDataProvider
                 $results[] = [
                     'id' => $category['id_category'],
                     'name' => $category['name'],
-                    'breadcrumb' => $this->getBreadCrumb($category['id_category'])
+                    'breadcrumb' => $this->getBreadCrumb($category['id_category']),
                 ];
                 $productCategories[$category['name']] = $category['id_category'];
             }
@@ -152,7 +155,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Return a simple array id/name of categories
+     * Return a simple array id/name of categories.
      *
      * @return array Categories
      */
@@ -163,7 +166,7 @@ class CategoryDataProvider
             $results[] = [
                 'id' => $category['id_category'],
                 'name' => $category['name'],
-                'breadcrumb' => $this->getBreadCrumb($category['id_category'])
+                'breadcrumb' => $this->getBreadCrumb($category['id_category']),
             ];
         }
 
@@ -171,7 +174,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Construct the breadcrumb using the already constructed list of all categories
+     * Construct the breadcrumb using the already constructed list of all categories.
      *
      * @param int    $categoryId
      * @param string $delimiter
@@ -205,11 +208,12 @@ class CategoryDataProvider
     }
 
     /**
-     * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories
+     * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories.
      *
      * @param $query
      * @param $limit
      * @param bool $nameAsBreadCrumb
+     *
      * @return array
      */
     public function getAjaxCategories($query, $limit, $nameAsBreadCrumb = false)
@@ -221,7 +225,7 @@ class CategoryDataProvider
         }
 
         if (is_integer($limit)) {
-            $limit = 'LIMIT ' . $limit;
+            $limit = 'LIMIT '.$limit;
         } else {
             $limit = '';
         }

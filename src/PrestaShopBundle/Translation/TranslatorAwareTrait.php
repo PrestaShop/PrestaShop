@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Translation;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Trait TranslatorAwareTrait is used for services that depends on translator
+ * Trait TranslatorAwareTrait is used for services that depends on translator.
  */
 trait TranslatorAwareTrait
 {
@@ -39,7 +39,7 @@ trait TranslatorAwareTrait
     protected $translator;
 
     /**
-     * Set translator instance
+     * Set translator instance.
      *
      * @param TranslatorInterface $translator
      */

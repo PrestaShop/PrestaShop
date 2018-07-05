@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
@@ -263,7 +262,9 @@ class CartPresenter implements PresenterInterface
     /**
      * @param Cart $cart
      * @param bool $shouldSeparateGifts
+     *
      * @return array
+     *
      * @throws \Exception
      */
     public function present($cart, $shouldSeparateGifts = false)
@@ -307,7 +308,7 @@ class CartPresenter implements PresenterInterface
         }
 
         if ($cart->gift) {
-            $giftWrappingPrice = ($cart->getGiftWrappingPrice($this->includeTaxes()) != 0)
+            $giftWrappingPrice = (0 != $cart->getGiftWrappingPrice($this->includeTaxes()))
                 ? $cart->getGiftWrappingPrice($this->includeTaxes())
                 : 0;
 
@@ -330,7 +331,7 @@ class CartPresenter implements PresenterInterface
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
-            'value' => $shippingCost != 0
+            'value' => 0 != $shippingCost
                 ? $this->priceFormatter->format($shippingCost)
                 : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
         );
@@ -375,7 +376,7 @@ class CartPresenter implements PresenterInterface
             return $count + $product['quantity'];
         }, 0);
 
-        $summary_string = $products_count === 1 ?
+        $summary_string = 1 === $products_count ?
             $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
             $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout')
         ;
@@ -383,7 +384,7 @@ class CartPresenter implements PresenterInterface
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
         Hook::exec('overrideMinimalPurchasePrice', array(
-            'minimalPurchase' => &$minimalPurchase
+            'minimalPurchase' => &$minimalPurchase,
         ));
 
         // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
@@ -451,7 +452,7 @@ class CartPresenter implements PresenterInterface
 
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
-            if ($cartHasTax && $cartVoucher['reduction_tax'] == '0') {
+            if ($cartHasTax && '0' == $cartVoucher['reduction_tax']) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['reduction_amount'] * (1 + $cartHasTax / 100);
             }
 
@@ -461,7 +462,7 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
+            if (isset($cartVoucher['reduction_percent']) && '0.00' == $cartVoucher['reduction_amount']) {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
@@ -486,9 +487,10 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * Receives a string containing a list of attributes affected to the product and returns them as an array
+     * Receives a string containing a list of attributes affected to the product and returns them as an array.
      *
      * @param string $attributes
+     *
      * @return array Converted attributes in an array
      */
     protected function getAttributesArrayFromString($attributes)

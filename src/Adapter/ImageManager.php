@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Image;
@@ -52,6 +53,7 @@ class ImageManager
      * @param string $imageType
      * @param string $tableName
      * @param string $imageDir
+     *
      * @return string The HTML < img > tag
      */
     public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = 'p')
@@ -88,6 +90,7 @@ class ImageManager
      * @param string $imageType
      * @param string $tableName
      * @param string $imageDir
+     *
      * @return string
      */
     private function getThumbnailTag($imageId, $imageType, $tableName, $imageDir)
@@ -107,29 +110,31 @@ class ImageManager
      * @param $imageType
      * @param $tableName
      * @param $imageDir
+     *
      * @return string
      */
     private function getImagePath($imageId, $imageType, $tableName, $imageDir)
     {
-        $parentDirectory = _PS_IMG_DIR_ . $imageDir;
+        $parentDirectory = _PS_IMG_DIR_.$imageDir;
 
-        if ($tableName == 'product') {
+        if ('product' == $tableName) {
             $image = new Image($imageId);
 
-            return $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
+            return $parentDirectory.'/'.$image->getExistingImgPath().'.'.$imageType;
         }
 
-        return $parentDirectory . '/' . $imageId . '.' . $imageType;
+        return $parentDirectory.'/'.$imageId.'.'.$imageType;
     }
 
     /**
      * @param $imageId
      * @param $imageType
      * @param $tableName
+     *
      * @return string
      */
     private function makeCachedImageName($imageId, $imageType, $tableName)
     {
-        return $tableName . '_mini_' . $imageId . '.' . $imageType;
+        return $tableName.'_mini_'.$imageId.'.'.$imageType;
     }
 }

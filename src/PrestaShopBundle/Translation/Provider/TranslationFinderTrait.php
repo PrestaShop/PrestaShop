@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,9 @@ trait TranslationFinderTrait
      * @param $paths
      * @param $locale
      * @param null $pattern
+     *
      * @return MessageCatalogue
+     *
      * @throws \Exception
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
@@ -49,12 +51,12 @@ trait TranslationFinderTrait
             $finder->name($pattern);
         }
         $translationFiles = $finder->files()->notName('index.php')->in($paths);
-        if (count($translationFiles) === 0) {
+        if (0 === count($translationFiles)) {
             throw new \Exception('There is no translation file available.');
         }
 
         foreach ($translationFiles as $file) {
-            if (strpos($file->getBasename('.xlf'), $locale) !== false) {
+            if (false !== strpos($file->getBasename('.xlf'), $locale)) {
                 $domain = $file->getBasename('.xlf');
             } else {
                 $domain = $file->getBasename('.xlf').'.'.$locale;

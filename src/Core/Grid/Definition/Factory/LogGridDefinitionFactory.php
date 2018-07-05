@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -41,7 +41,7 @@ use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
- * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
+ * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition.
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {

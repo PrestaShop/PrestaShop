@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the virtual product
+ * This form class is responsible to generate the virtual product.
  */
 class ProductVirtual extends CommonAbstractType
 {
@@ -44,7 +44,7 @@ class ProductVirtual extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -83,8 +83,8 @@ class ProductVirtual extends CommonAbstractType
                     'required' => false,
                     'label' => $this->translator->trans('File', [], 'Admin.Global'),
                     'constraints' => [
-                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
-                    ]
+                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M']),
+                    ],
                 ]
             )
             ->add(
@@ -114,7 +114,7 @@ class ProductVirtual extends CommonAbstractType
                 [
                     'label' => $this->translator->trans('Expiration date', [], 'Admin.Catalog.Feature'),
                     'required' => false,
-                    'attr' => ['placeholder' => 'YYYY-MM-DD']
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 ]
             )
             ->add(
@@ -125,7 +125,7 @@ class ProductVirtual extends CommonAbstractType
                     'required' => false,
                     'constraints' => [
                         new Assert\Type(['type' => 'numeric']),
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -133,7 +133,7 @@ class ProductVirtual extends CommonAbstractType
                 FormType\ButtonType::class,
                 [
                     'label' => $this->translator->trans('Save', [], 'Admin.Actions'),
-                    'attr' => ['class' => 'btn-primary pull-right']
+                    'attr' => ['class' => 'btn-primary pull-right'],
                 ]
             );
 
@@ -145,7 +145,7 @@ class ProductVirtual extends CommonAbstractType
             if ($form->getParent()) {
                 $event->setData([]);
                 $form->add('name', FormType\TextType::class, ['mapped' => false]);
-            } elseif ($data['is_virtual_file'] == 0) {
+            } elseif (0 == $data['is_virtual_file']) {
                 //disable name mapping when is virtual not defined to yes
                 $form->add('name', FormType\TextType::class, ['mapped' => false]);
             }

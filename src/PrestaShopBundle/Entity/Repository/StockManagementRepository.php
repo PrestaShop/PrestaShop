@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -102,10 +102,11 @@ abstract class StockManagementRepository
 
     /**
      * @param ContainerInterface $container
-     * @param Connection $connection
-     * @param ContextAdapter $contextAdapter
-     * @param ImageManager $imageManager
+     * @param Connection         $connection
+     * @param ContextAdapter     $contextAdapter
+     * @param ImageManager       $imageManager
      * @param $tablePrefix
+     *
      * @throws NotImplementedException
      */
     public function __construct(
@@ -130,7 +131,7 @@ abstract class StockManagementRepository
         }
 
         $languageId = $this->context->employee->id_lang;
-        $this->languageId = (int)$languageId;
+        $this->languageId = (int) $languageId;
 
         if (!$this->context->shop instanceof Shop) {
             throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
@@ -146,6 +147,7 @@ abstract class StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     protected function addAdditionalData(array $rows)
@@ -158,6 +160,7 @@ abstract class StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     protected function addImageThumbnailPaths(array $rows)
@@ -166,13 +169,13 @@ abstract class StockManagementRepository
             $row['product_thumbnail'] = 'N/A';
             $row['combination_thumbnail'] = 'N/A';
 
-            if ((int)$row['product_cover_id'] > 0) {
+            if ((int) $row['product_cover_id'] > 0) {
                 $row['product_thumbnail'] = $this->imageManager->getThumbnailPath(
                     $row['product_cover_id']
                 );
             }
 
-            if ((int)$row['combination_cover_id'] > 0) {
+            if ((int) $row['combination_cover_id'] > 0) {
                 $row['combination_thumbnail'] = $this->imageManager->getThumbnailPath(
                     $row['combination_cover_id']
                 );
@@ -184,6 +187,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return mixed
      */
     public function getData(QueryParamsCollection $queryParams)
@@ -192,7 +196,7 @@ abstract class StockManagementRepository
                 $this->andWhere($queryParams),
                 $this->having($queryParams),
                 $this->orderBy($queryParams)
-            ) . $this->paginate();
+            ).$this->paginate();
 
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, $queryParams);
@@ -210,7 +214,8 @@ abstract class StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param null $orderByClause
+     * @param null   $orderByClause
+     *
      * @return mixed
      */
     protected function selectSql(
@@ -223,6 +228,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return bool|string
      */
     public function countPages(QueryParamsCollection $queryParams)
@@ -238,7 +244,7 @@ abstract class StockManagementRepository
 
         $statement->execute();
 
-        $count = (int)$statement->fetchColumn();
+        $count = (int) $statement->fetchColumn();
         $statement->closeCursor();
 
         return $count;
@@ -246,6 +252,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function andWhere(QueryParamsCollection $queryParams)
@@ -265,6 +272,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function having(QueryParamsCollection $queryParams)
@@ -279,12 +287,13 @@ abstract class StockManagementRepository
             '{combination_name}' => 'combination_name',
             '{product_reference}' => 'product_reference',
             '{supplier_name}' => 'supplier_name',
-            '{product_name}' => 'product_name'
+            '{product_name}' => 'product_name',
         ));
     }
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function orderBy(QueryParamsCollection $queryParams)
@@ -324,9 +333,9 @@ abstract class StockManagementRepository
     }
 
     /**
-     * @param Statement $statement
+     * @param Statement                  $statement
      * @param QueryParamsCollection|null $queryParams
-     * @param ProductIdentity|null $productIdentity
+     * @param ProductIdentity|null       $productIdentity
      */
     protected function bindStockManagementValues(
         Statement $statement,
@@ -362,7 +371,7 @@ abstract class StockManagementRepository
     }
 
     /**
-     * @param Statement $statement
+     * @param Statement             $statement
      * @param QueryParamsCollection $queryParams
      */
     protected function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams)
@@ -379,7 +388,7 @@ abstract class StockManagementRepository
     }
 
     /**
-     * @param Statement $statement
+     * @param Statement             $statement
      * @param QueryParamsCollection $queryParams
      */
     protected function bindMaxResultsValue(Statement $statement, QueryParamsCollection $queryParams)
@@ -393,20 +402,20 @@ abstract class StockManagementRepository
     }
 
     /**
-     * Store the number of rows found in a previous query executed with SQL_CALC_FOUND_ROWS
+     * Store the number of rows found in a previous query executed with SQL_CALC_FOUND_ROWS.
      */
     protected function getFoundRows()
     {
         $statement = $this->connection->prepare('SELECT FOUND_ROWS()');
         $statement->execute();
-        $rowCount = (int)$statement->fetchColumn();
+        $rowCount = (int) $statement->fetchColumn();
         $statement->closeCursor();
 
         return $rowCount;
     }
 
     /**
-     * Get the combination name subquery to be used in the select field of the main query
+     * Get the combination name subquery to be used in the select field of the main query.
      *
      * @return string
      */
@@ -450,28 +459,28 @@ abstract class StockManagementRepository
                       CONCAT(fp.id_feature, ":", fp.id_feature_value)
                       ORDER BY fp.id_feature_value
                     ) AS features
-                        FROM ' . $this->tablePrefix . 'feature_product fp
-                            JOIN  ' . $this->tablePrefix . 'feature f ON (
+                        FROM '.$this->tablePrefix.'feature_product fp
+                            JOIN  '.$this->tablePrefix.'feature f ON (
                                 fp.id_feature = f.id_feature
                             )
-                            JOIN ' . $this->tablePrefix . 'feature_shop fs ON (
+                            JOIN '.$this->tablePrefix.'feature_shop fs ON (
                                 fs.id_shop = :shop_id AND
                                 fs.id_feature = f.id_feature
                             )
-                            JOIN ' . $this->tablePrefix . 'feature_value fv ON (
+                            JOIN '.$this->tablePrefix.'feature_value fv ON (
                                 f.id_feature = fv.id_feature AND
                                 fp.id_feature_value = fv.id_feature_value
                             )
                         WHERE fv.custom = 0 AND fp.id_product=:id_product';
             $statement = $this->connection->prepare($query);
-            $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
+            $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);
             $statement->bindValue('shop_id', $this->shopId, \PDO::PARAM_INT);
             $statement->execute();
             $this->productFeatures[$row['product_id']] = $statement->fetchColumn(0);
             $statement->closeCursor();
         }
 
-        return (string)$this->productFeatures[$row['product_id']];
+        return (string) $this->productFeatures[$row['product_id']];
     }
 
     /**
@@ -486,9 +495,9 @@ abstract class StockManagementRepository
                   WHERE id_product_attribute=:id_product_attribute
                   LIMIT 1';
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('id_product_attribute', (int)$row['combination_id'], \PDO::PARAM_INT);
+        $statement->bindValue('id_product_attribute', (int) $row['combination_id'], \PDO::PARAM_INT);
         $statement->execute();
-        $combinationCoverId = (int)$statement->fetchColumn(0);
+        $combinationCoverId = (int) $statement->fetchColumn(0);
         $statement->closeCursor();
 
         return $combinationCoverId;
@@ -514,12 +523,12 @@ abstract class StockManagementRepository
                         )                    
                     WHERE pac.id_product_attribute=:id_product_attribute';
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('id_product_attribute', (int)$row['combination_id'], \PDO::PARAM_INT);
+        $statement->bindValue('id_product_attribute', (int) $row['combination_id'], \PDO::PARAM_INT);
         $statement->execute();
         $productAttributes = $statement->fetchColumn(0);
         $statement->closeCursor();
 
-        return (string)$productAttributes;
+        return (string) $productAttributes;
     }
 
     /**
@@ -531,7 +540,7 @@ abstract class StockManagementRepository
     {
         foreach ($rows as &$row) {
             $row['product_features'] = $this->getProductFeatures($row);
-            if ($row['combination_id'] != 0) {
+            if (0 != $row['combination_id']) {
                 $row['combination_cover_id'] = $this->getCombinationCoverId($row);
                 $row['product_attributes'] = $this->getProductAttributes($row);
             } else {

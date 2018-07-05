@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,11 +47,11 @@ class LegacyContext
 {
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
-     * that will contains all you need in the Core architecture
+     * that will contains all you need in the Core architecture.
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return Context The Legacy context, for Adapter use only.
+     * @return Context the Legacy context, for Adapter use only
      */
     public function getContext()
     {
@@ -72,6 +72,7 @@ class LegacyContext
 
     /**
      * Gets the Admin base url (actually random directory name).
+     *
      * @return string
      */
     public function getAdminBaseUrl()
@@ -82,9 +83,10 @@ class LegacyContext
     /**
      * Adapter to get Admin HTTP link.
      *
-     * @param string $controller the controller name
-     * @param bool $withToken
+     * @param string        $controller  the controller name
+     * @param bool          $withToken
      * @param array[string] $extraParams
+     *
      * @return string
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
@@ -96,6 +98,7 @@ class LegacyContext
         }
 
         $link = new Link();
+
         return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
@@ -107,11 +110,12 @@ class LegacyContext
     public function getFrontUrl($controller)
     {
         $legacyContext = $this->getContext();
+
         return $legacyContext->link->getPageLink($controller);
     }
 
     /**
-     * Adapter to get Root Url
+     * Adapter to get Root Url.
      *
      * @return string The lagacy root URL
      */
@@ -133,15 +137,15 @@ class LegacyContext
     }
 
     /**
-     * Adapter to get admin legacy layout into old controller context
+     * Adapter to get admin legacy layout into old controller context.
      *
-     * @param string $controllerName The legacy controller name
-     * @param string $title The page title to override default one
-     * @param array $headerToolbarBtn The header toolbar to override
-     * @param string $displayType The legacy display type variable
-     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
-     * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
-     * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string $controllerName    The legacy controller name
+     * @param string $title             The page title to override default one
+     * @param array  $headerToolbarBtn  The header toolbar to override
+     * @param string $displayType       The legacy display type variable
+     * @param bool   $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
+     * @param bool   $enableSidebar     Allow to use right sidebar to display docs for instance
+     * @param string $helpLink          If specified, will be used instead of legacy one
      *
      * @return string The html layout
      */
@@ -190,14 +194,16 @@ class LegacyContext
             if ($b['id_lang'] == $defaultLanguageFirst->id) {
                 return 1; // $b is the default one.
             }
+
             return 0;
         });
+
         return $languages;
     }
 
     /**
-     * Returns language ISO code set for the current employee
-
+     * Returns language ISO code set for the current employee.
+     *
      * @return string Languages
      */
     public function getEmployeeLanguageIso()
@@ -206,7 +212,7 @@ class LegacyContext
     }
 
     /**
-     * Returns Currency set for the current employee
+     * Returns Currency set for the current employee.
      */
     public function getEmployeeCurrency()
     {
@@ -215,6 +221,7 @@ class LegacyContext
         if (null === $employeeCurrency) {
             $employeeCurrency = $this->getContext()->currency->sign;
         }
+
         return $employeeCurrency;
     }
 
@@ -229,13 +236,13 @@ class LegacyContext
             return $context->language;
         }
 
-        return new Language;
+        return new Language();
     }
 
     /**
-     * Get employee's default tab name
+     * Get employee's default tab name.
      *
-     * @return string           Default tab name for employee
+     * @return string Default tab name for employee
      *
      * @throws RuntimeException Throws exception if employee does not exist in context
      */

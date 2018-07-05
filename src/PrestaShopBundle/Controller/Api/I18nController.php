@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,9 +34,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class I18nController extends ApiController
 {
     /**
-     * Show translation for page-app build with vue-js
+     * Show translation for page-app build with vue-js.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listTranslationAction(Request $request)

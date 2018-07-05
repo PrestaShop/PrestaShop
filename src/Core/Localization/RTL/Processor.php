@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,11 +30,10 @@ use PrestaShop\PrestaShop\Adapter\Entity\Language;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 
 /**
- * Processes stylesheets by transforming them to RTL
+ * Processes stylesheets by transforming them to RTL.
  */
 class Processor
 {
-
     /**
      * @var string Installed language 2-letter ISO code
      */
@@ -88,8 +87,8 @@ class Processor
     /**
      * Processor constructor.
      *
-     * @param string $adminDir Path to PrestaShop's admin directory
-     * @param string $themesDir Path to the FO themes directory
+     * @param string   $adminDir                Path to PrestaShop's admin directory
+     * @param string   $themesDir               Path to the FO themes directory
      * @param string[] $defaultModulesToProcess Path to the default modules to process
      */
     public function __construct($adminDir, $themesDir, array $defaultModulesToProcess)
@@ -100,7 +99,7 @@ class Processor
     }
 
     /**
-     * Specifies the installed language 2-letter ISO code
+     * Specifies the installed language 2-letter ISO code.
      *
      * @param string $languageCode
      *
@@ -109,11 +108,12 @@ class Processor
     public function setLanguageCode($languageCode)
     {
         $this->languageCode = $languageCode;
+
         return $this;
     }
 
     /**
-     * Specifies if the BO theme should be processed
+     * Specifies if the BO theme should be processed.
      *
      * @param bool $processBOTheme
      *
@@ -122,11 +122,12 @@ class Processor
     public function setProcessBOTheme($processBOTheme)
     {
         $this->processBOTheme = $processBOTheme;
+
         return $this;
     }
 
     /**
-     * Specifies the names of the FO themes to process
+     * Specifies the names of the FO themes to process.
      *
      * @param string[] $processFOThemes
      *
@@ -135,11 +136,12 @@ class Processor
     public function setProcessFOThemes(array $processFOThemes)
     {
         $this->processFOThemes = $processFOThemes;
+
         return $this;
     }
 
     /**
-     * Specifies additional paths to process
+     * Specifies additional paths to process.
      *
      * @param string[] $processPaths
      *
@@ -148,11 +150,12 @@ class Processor
     public function setProcessPaths(array $processPaths)
     {
         $this->processPaths = $processPaths;
+
         return $this;
     }
 
     /**
-     * Specifies if this is performed during install
+     * Specifies if this is performed during install.
      *
      * @param bool $isInstall
      *
@@ -161,11 +164,12 @@ class Processor
     public function setIsInstall($isInstall)
     {
         $this->isInstall = $isInstall;
+
         return $this;
     }
 
     /**
-     * Specifies if the RTL files should be generated even if they already exist
+     * Specifies if the RTL files should be generated even if they already exist.
      *
      * @param bool $regenerate
      *
@@ -174,11 +178,12 @@ class Processor
     public function setRegenerate($regenerate)
     {
         $this->regenerate = $regenerate;
+
         return $this;
     }
 
     /**
-     * Specifies if the default modules should be processed
+     * Specifies if the default modules should be processed.
      *
      * @param bool $processDefaultModules
      *
@@ -187,6 +192,7 @@ class Processor
     public function setProcessDefaultModules($processDefaultModules)
     {
         $this->processDefaultModules = $processDefaultModules;
+
         return $this;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CarrierByReferenceChoiceProvider is responsible for providing carrier choices with value reference
+ * Class CarrierByReferenceChoiceProvider is responsible for providing carrier choices with value reference.
  */
 final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterface
 {
@@ -47,7 +47,7 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
 
     /**
      * @param CarrierDataProvider $carrierDataProvider
-     * @param int $langId
+     * @param int                 $langId
      */
     public function __construct(CarrierDataProvider $carrierDataProvider, $langId)
     {

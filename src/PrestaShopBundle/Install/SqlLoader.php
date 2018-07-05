@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -58,7 +58,7 @@ class SqlLoader
     }
 
     /**
-     * Set a list of keywords which will be replaced in queries
+     * Set a list of keywords which will be replaced in queries.
      *
      * @param array $data
      */
@@ -70,12 +70,12 @@ class SqlLoader
     }
 
     /**
-     * Parse a SQL file and execute queries
+     * Parse a SQL file and execute queries.
      *
      * @deprecated use parseFile()
      *
      * @param string $filename
-     * @param bool $stop_when_fail
+     * @param bool   $stop_when_fail
      */
     public function parse_file($filename, $stop_when_fail = true)
     {
@@ -83,10 +83,10 @@ class SqlLoader
     }
 
     /**
-     * Parse a SQL file and execute queries
+     * Parse a SQL file and execute queries.
      *
      * @param string $filename
-     * @param bool $stop_when_fail
+     * @param bool   $stop_when_fail
      */
     public function parseFile($filename, $stop_when_fail = true)
     {
@@ -98,10 +98,10 @@ class SqlLoader
     }
 
     /**
-     * Parse and execute a list of SQL queries
+     * Parse and execute a list of SQL queries.
      *
      * @param string $content
-     * @param bool $stop_when_fail
+     * @param bool   $stop_when_fail
      */
     public function parse($content, $stop_when_fail = true)
     {
@@ -132,7 +132,7 @@ class SqlLoader
     }
 
     /**
-     * Get list of errors from last parsing
+     * Get list of errors from last parsing.
      *
      * @return array
      */

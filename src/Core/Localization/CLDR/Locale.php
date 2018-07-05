@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,5 +29,4 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 class Locale
 {
-
 }

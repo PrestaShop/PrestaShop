@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\DBAL\Connection;
 use PDO;
 
 /**
- * Class ModuleRepository is responsible for retrieving module data from database
+ * Class ModuleRepository is responsible for retrieving module data from database.
  */
 class ModuleRepository
 {
@@ -51,7 +51,7 @@ class ModuleRepository
 
     /**
      * @param Connection $connection
-     * @param string $databasePrefix
+     * @param string     $databasePrefix
      */
     public function __construct(Connection $connection, $databasePrefix)
     {
@@ -61,7 +61,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled countries for module in shop
+     * Find enabled countries for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -83,7 +83,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled currencies for module in shop
+     * Find enabled currencies for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -105,7 +105,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled groups for module in shop
+     * Find enabled groups for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -127,7 +127,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled carriers for module in shop
+     * Find enabled carriers for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId

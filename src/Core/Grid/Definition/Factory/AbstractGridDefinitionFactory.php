@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
- * Class AbstractGridDefinitionFactory implements grid definition creation
+ * Class AbstractGridDefinitionFactory implements grid definition creation.
  */
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
@@ -61,28 +61,28 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     }
 
     /**
-     * Get unique grid identifier
+     * Get unique grid identifier.
      *
      * @return string
      */
     abstract protected function getId();
 
     /**
-     * Get translated grid name
+     * Get translated grid name.
      *
      * @return string
      */
     abstract protected function getName();
 
     /**
-     * Get defined columns for grid
+     * Get defined columns for grid.
      *
      * @return ColumnCollectionInterface
      */
     abstract protected function getColumns();
 
     /**
-     * Get defined grid actions
+     * Get defined grid actions.
      *
      * @return GridActionCollectionInterface|null
      */
@@ -92,7 +92,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     }
 
     /**
-     * Get defined bulk actions
+     * Get defined bulk actions.
      *
      * @return BulkActionCollectionInterface|null
      */
@@ -103,7 +103,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
 
     /**
      * @param string $id
-     * @param array $options
+     * @param array  $options
      * @param string $domain
      *
      * @return string

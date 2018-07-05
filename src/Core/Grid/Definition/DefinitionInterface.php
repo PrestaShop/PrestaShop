@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,26 +31,26 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 
 /**
- * Interface GridDefinitionInterface defines contract for grid definition
+ * Interface GridDefinitionInterface defines contract for grid definition.
  */
 interface DefinitionInterface
 {
     /**
-     * Get unique grid identifier
+     * Get unique grid identifier.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * Get grid name
+     * Get grid name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set grid name
+     * Set grid name.
      *
      * @param string $name
      *
@@ -59,14 +59,14 @@ interface DefinitionInterface
     public function setName($name);
 
     /**
-     * Get grid columns
+     * Get grid columns.
      *
      * @return ColumnCollectionInterface
      */
     public function getColumns();
 
     /**
-     * Set grid columns
+     * Set grid columns.
      *
      * @param ColumnCollectionInterface $columns
      *
@@ -87,14 +87,14 @@ interface DefinitionInterface
     public function setBulkActions(BulkActionCollectionInterface $bulkActions);
 
     /**
-     * Get grid actions
+     * Get grid actions.
      *
      * @return GridActionCollectionInterface
      */
     public function getGridActions();
 
     /**
-     * Set grid actions
+     * Set grid actions.
      *
      * @param GridActionCollectionInterface $gridActions
      *

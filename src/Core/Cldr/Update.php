@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
 use Tools as ToolsLegacy;
@@ -31,8 +32,6 @@ use ZipArchive;
 
 /**
  * Class Update will download CLDR data and extract/install them into the cache directory.
- *
- * @package PrestaShop\PrestaShop\Core\Cldr
  */
 class Update extends Repository
 {
@@ -44,7 +43,7 @@ class Update extends Repository
     /**
      * Constructor.
      *
-     * @param string $psCacheDir The cache directory for CLDR downloads.
+     * @param string $psCacheDir the cache directory for CLDR downloads
      */
     public function __construct($psCacheDir)
     {
@@ -69,12 +68,12 @@ class Update extends Repository
     }
 
     /**
-     * Init CLDR data and download default language
+     * Init CLDR data and download default language.
      */
     public function init()
     {
         if (!is_file($file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip')) {
-            $fp = fopen($file, "w");
+            $fp = fopen($file, 'w');
 
             $curl = new Curl();
             $curl->setopt(CURLOPT_FILE, $fp);
@@ -83,17 +82,17 @@ class Update extends Repository
             $curl->get(self::ZIP_CORE_URL);
 
             if ($curl->error) {
-                throw new \Exception("Failed to download '" .
-                    self::ZIP_CORE_URL . "'.");
-            };
+                throw new \Exception("Failed to download '".
+                    self::ZIP_CORE_URL."'.");
+            }
 
             fclose($fp);
         }
 
         //extract ONLY supplemental json files
         $archive = new ZipArchive();
-        if ($archive->open($file) === true) {
-            for ($i = 0; $i < $archive->numFiles; $i++) {
+        if (true === $archive->open($file)) {
+            for ($i = 0; $i < $archive->numFiles; ++$i) {
                 $filename = $archive->getNameIndex($i);
                 if (preg_match('%^supplemental\/(.*).json$%', $filename)) {
                     if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
@@ -101,8 +100,8 @@ class Update extends Repository
                     }
 
                     if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
-                        copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
-                        $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
+                        copy('zip://'.$file.'#'.$filename, $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename);
+                        $this->newDatasFile[] = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename;
                     }
                 }
             }
@@ -114,9 +113,8 @@ class Update extends Repository
         $this->generateSupplementalDatas();
     }
 
-
     /**
-     * Fetch CLDR data for a locale
+     * Fetch CLDR data for a locale.
      *
      * @param string $locale
      */
@@ -134,7 +132,7 @@ class Update extends Repository
         $archive = new ZipArchive();
         $archive->open($file);
 
-        for ($i = 0; $i < $archive->numFiles; $i++) {
+        for ($i = 0; $i < $archive->numFiles; ++$i) {
             $filename = $archive->getNameIndex($i);
 
             if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
@@ -143,8 +141,8 @@ class Update extends Repository
                 }
 
                 if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
-                    copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
-                    $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
+                    copy('zip://'.$file.'#'.$filename, $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename);
+                    $this->newDatasFile[] = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename;
                 }
             }
         }
@@ -154,20 +152,20 @@ class Update extends Repository
     }
 
     /**
-     * Generate CLDR supplemental data
+     * Generate CLDR supplemental data.
      */
     private function generateSupplementalDatas()
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath . 'supplemental', SCANDIR_SORT_NONE);
+        $files = @scandir($rootPath.'supplemental', SCANDIR_SORT_NONE);
 
         foreach ($files as $file) {
             if (is_file($file)) {
                 $newFileName = 'supplemental--'.pathinfo($file)['filename'];
                 if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
                     copy(
-                        $rootPath . 'supplemental' . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
+                        $rootPath.'supplemental'.DIRECTORY_SEPARATOR.$file,
+                        $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
                     );
                 }
             }
@@ -175,14 +173,14 @@ class Update extends Repository
     }
 
     /**
-     * Generate CLDR translations main data
+     * Generate CLDR translations main data.
      *
      * @param string $locale
      */
     private function generateMainDatas($locale)
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath . 'main' . DIRECTORY_SEPARATOR . $locale, SCANDIR_SORT_NONE);
+        $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale, SCANDIR_SORT_NONE);
 
         if (!$files) {
             return;
@@ -190,10 +188,10 @@ class Update extends Repository
         foreach ($files as $file) {
             if (is_file($file)) {
                 $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
-                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
                     copy(
-                        $rootPath . 'main' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $file,
-                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
+                        $rootPath.'main'.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$file,
+                        $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
                     );
                 }
             }

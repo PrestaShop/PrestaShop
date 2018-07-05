@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use OrderInvoice as InvoiceLegacy;
@@ -31,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Order\InvoiceInterface;
 final class Invoice implements InvoiceInterface
 {
     /**
-     * Return collection of Invoice
+     * Return collection of Invoice.
      *
      * @param string $dateFrom Date From
      * @param string $dateTo   Date To

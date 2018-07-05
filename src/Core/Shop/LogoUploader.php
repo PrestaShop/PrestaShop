@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Shop;
 
 use Configuration;
@@ -35,9 +34,7 @@ use Shop;
 use Tools;
 
 /**
- * Class LogoUploader used to manage upload of Shop logos and favicon
- *
- * @package PrestaShop\PrestaShop\Core\Shop
+ * Class LogoUploader used to manage upload of Shop logos and favicon.
  */
 class LogoUploader
 {
@@ -78,13 +75,14 @@ class LogoUploader
     }
 
     /**
-     * Generic function which allows logo upload
+     * Generic function which allows logo upload.
      *
      * @param $fieldName
      * @param $logoPrefix
      * @param $files[] the array of files to avoid use $_POST
      *
      * @return bool
+     *
      * @throws PrestaShopException in case of upload failure
      */
     public function update($fieldName, $logoPrefix, array $files = [])
@@ -101,10 +99,10 @@ class LogoUploader
                 throw new PrestaShopException(sprintf('%Upload of temporary file to %s has failed.', $tmpName));
             }
 
-            $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            $fileExtension = ('PS_STORES_ICON' == $fieldName) ? '.gif' : '.jpg';
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
-            if ($fieldName == 'PS_STORES_ICON') {
+            if ('PS_STORES_ICON' == $fieldName) {
                 if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_.$logoName, null, null, 'gif', true)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
@@ -136,7 +134,7 @@ class LogoUploader
 
     private function updateInMultiShopContext(&$idShop, &$idShopGroup, $fieldName)
     {
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+        if (Shop::CONTEXT_SHOP == Shop::getContext()) {
             $idShop = Shop::getContextShopID();
             $idShopGroup = Shop::getContextShopGroupID();
             Shop::setContext(Shop::CONTEXT_ALL);
@@ -145,10 +143,10 @@ class LogoUploader
             $logoGroup = Configuration::get($fieldName);
             Shop::setContext(Shop::CONTEXT_SHOP);
             $logoShop = Configuration::get($fieldName);
-            if ($logoAll != $logoShop && $logoGroup != $logoShop && $logoShop != false) {
+            if ($logoAll != $logoShop && $logoGroup != $logoShop && false != $logoShop) {
                 @unlink(_PS_IMG_DIR_.Configuration::get($fieldName));
             }
-        } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
+        } elseif (Shop::CONTEXT_GROUP == Shop::getContext()) {
             $idShopGroup = Shop::getContextShopGroupID();
             Shop::setContext(Shop::CONTEXT_ALL);
             $logoAll = Configuration::get($fieldName);
@@ -172,7 +170,7 @@ class LogoUploader
                         'An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".',
                         array(
                             $files[$name]['tmp_name'],
-                            $destination
+                            $destination,
                         ),
                         'Admin.Design.Notification'
                     )
@@ -192,17 +190,17 @@ class LogoUploader
             .'-'
             .$logoPrefix
             .'-'
-            .(int)Configuration::get('PS_IMG_UPDATE_TIME')
-            .(int)$shopId.$fileExtension
+            .(int) Configuration::get('PS_IMG_UPDATE_TIME')
+            .(int) $shopId.$fileExtension
         ;
 
-        if ($this->shop->getContext() == Shop::CONTEXT_ALL
-            || $shopId == 0
-            || Shop::isFeatureActive() == false
+        if (Shop::CONTEXT_ALL == $this->shop->getContext()
+            || 0 == $shopId
+            || false == Shop::isFeatureActive()
         ) {
             $logoName = Tools::link_rewrite($shopName)
-                . '-'
-                . $logoPrefix.'-'.(int)Configuration::get('PS_IMG_UPDATE_TIME').$fileExtension
+                .'-'
+                .$logoPrefix.'-'.(int) Configuration::get('PS_IMG_UPDATE_TIME').$fileExtension
             ;
         }
 

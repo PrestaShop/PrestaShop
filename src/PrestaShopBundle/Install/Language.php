@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ class Language
         $this->iso_code = strtolower($iso);
         $xmlPath = _PS_INSTALL_LANGS_PATH_.$iso.'/';
         $this->setPropertiesFromXml($xmlPath);
-        $this->is_rtl = ($this->is_rtl === 'true') ? true : false;
+        $this->is_rtl = ('true' === $this->is_rtl) ? true : false;
     }
 
     public function setPropertiesFromXml($xmlPath)
@@ -51,13 +51,13 @@ class Language
         $xml = @simplexml_load_file($xmlPath.'/language.xml');
         if ($xml) {
             foreach ($xml->children() as $node) {
-                $this->{$node->getName()} = (string)$node;
+                $this->{$node->getName()} = (string) $node;
             }
         }
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return mixed
      */
@@ -67,7 +67,7 @@ class Language
     }
 
     /**
-     * Get locale
+     * Get locale.
      *
      * @return mixed
      */
@@ -77,7 +77,7 @@ class Language
     }
 
     /**
-     * Get language_code
+     * Get language_code.
      *
      * @return mixed
      */
@@ -87,7 +87,7 @@ class Language
     }
 
     /**
-     * Get is_rtl
+     * Get is_rtl.
      *
      * @return mixed
      */
@@ -97,7 +97,7 @@ class Language
     }
 
     /**
-     * Get date_format_lite
+     * Get date_format_lite.
      *
      * @return mixed
      */
@@ -107,7 +107,7 @@ class Language
     }
 
     /**
-     * Get date_format_full
+     * Get date_format_full.
      *
      * @return mixed
      */
@@ -128,7 +128,7 @@ class Language
 
             if ($xml = @simplexml_load_file($filename)) {
                 foreach ($xml->country as $country) {
-                    $this->countries[strtolower((string)$country['id'])] = (string)$country->name;
+                    $this->countries[strtolower((string) $country['id'])] = (string) $country->name;
                 }
             }
         }

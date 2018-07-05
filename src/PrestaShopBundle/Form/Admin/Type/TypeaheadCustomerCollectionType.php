@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a customer
+ * This form class is responsible to create a customer.
  */
 class TypeaheadCustomerCollectionType extends CommonAbstractType
 {
@@ -75,12 +75,12 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                 $customer = $this->customerAdapter->getCustomer($id);
                 $collection[] = [
                     'id' => $id,
-                    'name' => $customer->firstname . ' ' . $customer->lastname . ' - ' . $customer->email,
+                    'name' => $customer->firstname.' '.$customer->lastname.' - '.$customer->email,
                 ];
-                $i++;
+                ++$i;
 
                 //if collection length is up to limit, break
-                if ($options['limit'] != 0 && $i >= $options['limit']) {
+                if (0 != $options['limit'] && $i >= $options['limit']) {
                     break;
                 }
             }

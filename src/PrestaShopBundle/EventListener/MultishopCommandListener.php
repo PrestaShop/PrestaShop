@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,8 @@ class MultishopCommandListener
     public $context;
 
     /**
-     * Path to root dir, needed to require config file
+     * Path to root dir, needed to require config file.
+     *
      * @var string
      */
     public $rootDir;
@@ -80,7 +81,7 @@ class MultishopCommandListener
     private function fixUnloadedConfig()
     {
         if (!defined('_DB_PREFIX_')) {
-            require_once($this->rootDir.'/../config/config.inc.php');
+            require_once $this->rootDir.'/../config/config.inc.php';
         }
     }
 }

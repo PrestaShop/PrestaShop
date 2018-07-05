@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -184,13 +184,12 @@ class Module implements ModuleInterface
      */
     public function hasValidInstance()
     {
-        if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
-            || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)) {
-
+        if (($this->disk->has('is_present') && false === $this->disk->getBoolean('is_present'))
+            || ($this->disk->has('is_valid') && false === $this->disk->getBoolean('is_valid'))) {
             return false;
         }
 
-        if ($this->instance === null) {
+        if (null === $this->instance) {
             // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
@@ -220,6 +219,7 @@ class Module implements ModuleInterface
         $this->database->set('installed', $result);
         $this->database->set('active', $result);
         $this->database->set('version', $this->attributes->get('version'));
+
         return $result;
     }
 
@@ -231,6 +231,7 @@ class Module implements ModuleInterface
 
         $result = $this->instance->uninstall();
         $this->database->set('installed', !$result);
+
         return $result;
     }
 
@@ -243,6 +244,7 @@ class Module implements ModuleInterface
     public function onUpgrade($version)
     {
         $this->database->set('version', $this->attributes->get('version_available'));
+
         return true;
     }
 
@@ -260,6 +262,7 @@ class Module implements ModuleInterface
 
         $result = $this->instance->enable();
         $this->database->set('active', $result);
+
         return $result;
     }
 
@@ -278,6 +281,7 @@ class Module implements ModuleInterface
 
         $result = $this->instance->disable();
         $this->database->set('active', !$result);
+
         return $result;
     }
 
@@ -289,6 +293,7 @@ class Module implements ModuleInterface
 
         $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
         $this->database->set('active_on_mobile', $result);
+
         return $result;
     }
 
@@ -300,6 +305,7 @@ class Module implements ModuleInterface
 
         $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
         $this->database->set('active_on_mobile', !$result);
+
         return $result;
     }
 
@@ -363,13 +369,13 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace
+     * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace.
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeUpgraded()
     {
-        if ($this->database->get('installed') == 0) {
+        if (0 == $this->database->get('installed')) {
             return false;
         }
 
@@ -383,13 +389,13 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Only check if an upgrade is available on the marketplace
+     * Only check if an upgrade is available on the marketplace.
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeUpgradedFromAddons()
     {
-        return $this->attributes->get('version_available') !== 0
+        return 0 !== $this->attributes->get('version_available')
             && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
     }
 }

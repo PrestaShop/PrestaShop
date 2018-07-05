@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -52,17 +52,17 @@ class ManufacturerRepository
     private $shopId;
 
     /**
-     * @param Connection $connection
+     * @param Connection     $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
+     *
      * @throws NotImplementedException
      */
     public function __construct(
         Connection $connection,
         ContextAdapter $contextAdapter,
         $tablePrefix
-    )
-    {
+    ) {
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
 

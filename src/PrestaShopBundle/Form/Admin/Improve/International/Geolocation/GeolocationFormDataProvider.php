@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Validation\ValidatorInterface;
 
 /**
- * Class GeolocationFormDataProvider is responsible for handling geolocation form data
+ * Class GeolocationFormDataProvider is responsible for handling geolocation form data.
  */
 final class GeolocationFormDataProvider implements FormDataProviderInterface
 {
@@ -62,11 +62,11 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
     private $validator;
 
     /**
-     * @param DataConfigurationInterface $geolocationByIpAddressConfiguration
-     * @param DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration
-     * @param DataConfigurationInterface $geolocationOptionsConfiguration
+     * @param DataConfigurationInterface  $geolocationByIpAddressConfiguration
+     * @param DataConfigurationInterface  $geolocationIpAddressWhitelistConfiguration
+     * @param DataConfigurationInterface  $geolocationOptionsConfiguration
      * @param GeoLiteCityCheckerInterface $geoLiteCityChecker
-     * @param ValidatorInterface $validator
+     * @param ValidatorInterface          $validator
      */
     public function __construct(
         DataConfigurationInterface $geolocationByIpAddressConfiguration,

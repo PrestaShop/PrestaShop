@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -96,7 +96,7 @@ class ProductSpecificPrice extends CommonAbstractType
     {
         //If context multi-shop, hide shop selector
         //Else show selector
-        if (count($this->shops) == 1) {
+        if (1 == count($this->shops)) {
             $builder->add(
                 'sp_id_shop',
                 FormType\HiddenType::class,
@@ -163,7 +163,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 'sp_id_customer',
                 TypeaheadCustomerCollectionType::class,
                 [
-                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true) . '&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
                     'mapping_value' => 'id_customer',
                     'mapping_name' => 'fullname_and_email',
                     'placeholder' => $this->translator->trans('All customers', [], 'Admin.Global'),

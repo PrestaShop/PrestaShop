@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,10 +30,8 @@ use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\RunTimeProvider;
 use ICanBoogie\CLDR\WebProvider;
 use ICanBoogie\CLDR\Currency;
-use ICanBoogie\CLDR\Numbers;
 use ICanBoogie\CLDR\NumberFormatter;
 use ICanBoogie\CLDR\Repository as cldrRepository;
-use PrestaShop\PrestaShop\Core\Cldr\Localize;
 
 class Repository
 {
@@ -96,7 +94,7 @@ class Repository
             $this->region = $locale->getRegion();
         }
 
-        if ($this->locale == 'en' && $this->region == 'EN') {
+        if ('en' == $this->locale && 'EN' == $this->region) {
             $this->region = 'US';
         }
 
@@ -107,7 +105,7 @@ class Repository
     private function localeConversion($locale)
     {
         $locale = explode('-', $locale);
-        if (count($locale) == 3) {
+        if (3 == count($locale)) {
             $this->locale = $locale[0];
             $this->region = $locale[1].'-'.strtoupper($locale[2]);
         } else {
@@ -134,7 +132,7 @@ class Repository
     }
 
     /**
-     * set a locale
+     * set a locale.
      *
      * @param string $locale Locale
      */
@@ -145,7 +143,7 @@ class Repository
     }
 
     /**
-     * set a region
+     * set a region.
      *
      * @param string $region Region
      */
@@ -155,7 +153,7 @@ class Repository
     }
 
     /**
-     * Return current cldr repository
+     * Return current cldr repository.
      *
      * @return object cldr repository
      */
@@ -165,7 +163,7 @@ class Repository
     }
 
     /**
-     * get all available currencies
+     * get all available currencies.
      *
      * @return array currencies
      */
@@ -174,27 +172,27 @@ class Repository
         $currencies = $this->repository->supplemental['codeMappings'];
         $datas = array();
         foreach (array_keys($currencies) as $currency_code) {
-            if ($currency_code === 'XTS' || strlen($currency_code) !== 3) {
+            if ('XTS' === $currency_code || 3 !== strlen($currency_code)) {
                 continue;
             }
             $currency = $this->getCurrency($currency_code);
             $datas[] = array(
                 'name' => ucfirst($currency['name']).' ('.$currency_code.')',
                 'code' => $currency_code,
-                'iso_code' => $currency['iso_code']
+                'iso_code' => $currency['iso_code'],
             );
         }
 
         //sort array naturally
         uasort($datas, function ($x, $y) {
-            return strnatcmp($x["name"], $y["name"]);
+            return strnatcmp($x['name'], $y['name']);
         });
 
         return $datas;
     }
 
     /**
-     * Return a iso code num currency by iso code
+     * Return a iso code num currency by iso code.
      *
      * @param string $code currency iso code
      *
@@ -212,7 +210,7 @@ class Repository
     }
 
     /**
-     * Return a currency
+     * Return a currency.
      *
      * @param string $code currency iso code
      *
@@ -222,13 +220,13 @@ class Repository
     {
         if (!$code) {
             $territory = $this->repository->territories[$this->region];
-            $code = (string)$territory->currency;
+            $code = (string) $territory->currency;
         } elseif (!$this->isCurrencyValid($code)) {
             return array(
                 'name' => $code,
                 'symbol' => '',
                 'code' => $code,
-                'iso_code' => ''
+                'iso_code' => '',
             );
         }
 
@@ -239,12 +237,12 @@ class Repository
             'name' => $localized_currency->name,
             'symbol' => $this->getCurrencySymbol($code),
             'code' => $code,
-            'iso_code' => $this->getCurrencyIsoCodeNum($code)
+            'iso_code' => $this->getCurrencyIsoCodeNum($code),
         );
     }
 
     /**
-     * Return a currency symbol
+     * Return a currency symbol.
      *
      * @param string $code currency iso code
      *
@@ -259,10 +257,10 @@ class Repository
     }
 
     /**
-     * Return a formatted price
+     * Return a formatted price.
      *
-     * @param float $price
-     * @param string $code iso code
+     * @param float  $price
+     * @param string $code  iso code
      *
      * @return string well formatted price
      */
@@ -275,7 +273,7 @@ class Repository
     }
 
     /**
-     * Return a formatted number
+     * Return a formatted number.
      *
      * @param float $number
      *
@@ -290,7 +288,7 @@ class Repository
     }
 
     /**
-     * Check if a curency iso code is valid
+     * Check if a curency iso code is valid.
      *
      * @param string $str iso code
      *
@@ -298,7 +296,7 @@ class Repository
      */
     private function isCurrencyValid($str)
     {
-        if ($str === 'XTS' || strlen($str) !==3 || empty($this->repository->supplemental['codeMappings'][$str])) {
+        if ('XTS' === $str || 3 !== strlen($str) || empty($this->repository->supplemental['codeMappings'][$str])) {
             return false;
         }
 
@@ -306,7 +304,7 @@ class Repository
     }
 
     /**
-     * Get currency format pattern
+     * Get currency format pattern.
      *
      * @param string $locale locale
      *
@@ -315,6 +313,7 @@ class Repository
     public function getCurrencyFormatPattern($locale = null)
     {
         $locale = $this->repository->locales[$locale ? $locale : $this->getCulture()];
+
         return $locale['numbers']['currencyFormats-numberSystem-latn']['standard'];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
@@ -102,9 +103,7 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * Clears module list cache
-     *
-     * @return void
+     * Clears module list cache.
      */
     public function clearModuleListCache()
     {
@@ -115,6 +114,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     /**
      * @deprecated since version 1.7.3.0
+     *
      * @return array
      */
     public function getAllModules()
@@ -127,7 +127,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function getCatalogModules(array $filters = array())
     {
-        if (count($this->catalog_modules) === 0 && !$this->failed) {
+        if (0 === count($this->catalog_modules) && !$this->failed) {
             $this->loadCatalogData();
         }
 
@@ -141,12 +141,12 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
-
     /**
-     * Check the permissions of the current context (CLI or employee) for a module
+     * Check the permissions of the current context (CLI or employee) for a module.
      *
-     * @param array $actions Actions to check
-     * @param string $name The module name
+     * @param array  $actions Actions to check
+     * @param string $name    The module name
+     *
      * @return array of allowed actions
      */
     protected function filterAllowedActions(array $actions, $name = '')
@@ -157,15 +157,17 @@ class AdminModuleDataProvider implements ModuleInterface
                 $allowedActions[$actionName] = $actions[$actionName];
             }
         }
+
         return $allowedActions;
     }
 
     /**
-     * Check the permissions of the current context (CLI or employee) for a specified action
+     * Check the permissions of the current context (CLI or employee) for a specified action.
      *
      * @param string $action The action called in the module
-     * @param string $name (Optionnal for 'install') The module name to check
-     * @return boolean
+     * @param string $name   (Optionnal for 'install') The module name to check
+     *
+     * @return bool
      */
     public function isAllowedAccess($action, $name = '')
     {
@@ -178,10 +180,10 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         if ('uninstall' === $action) {
-            return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
+            return $this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name);
         }
 
-        return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
+        return $this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name);
     }
 
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
@@ -266,7 +268,7 @@ class AdminModuleDataProvider implements ModuleInterface
             $addon->attributes->set('urls', $urls);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
-            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
+            } elseif ('buy' === $url_active || array_key_exists($url_active, $urls)) {
                 $addon->attributes->set('url_active', $url_active);
             } else {
                 $addon->attributes->set('url_active', key($urls));
@@ -307,9 +309,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
                         foreach ($modules as $key => $module) {
-                            if (strpos($module->displayName, $keyword) !== false
-                                || strpos($module->name, $keyword) !== false
-                                || strpos($module->description, $keyword) !== false) {
+                            if (false !== strpos($module->displayName, $keyword)
+                                || false !== strpos($module->name, $keyword)
+                                || false !== strpos($module->description, $keyword)) {
                                 $search_result[] = $key;
                             }
                         }
@@ -361,7 +363,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     $addons = $this->addonsDataProvider->request($action, $params);
                     foreach ($addons as $addonsType => $addon) {
                         if (empty($addon->name)) {
-                            $this->logger->error(sprintf("The addon with id %s does not have name.", $addon->id));
+                            $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
 
                             continue;
                         }
@@ -374,8 +376,8 @@ class AdminModuleDataProvider implements ModuleInterface
                         if (isset($addon->version)) {
                             $addon->version_available = $addon->version;
                         }
-                        if (! isset($addon->product_type)) {
-                            $addon->productType = isset($addonsType)?rtrim($addonsType, 's'):'module';
+                        if (!isset($addon->product_type)) {
+                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
                         } else {
                             $addon->productType = $addon->product_type;
                         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,26 +27,26 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Interface BulkActionInterface defines contract for single grid bulk action
+ * Interface BulkActionInterface defines contract for single grid bulk action.
  */
 interface BulkActionInterface
 {
     /**
-     * Get unique bulk action identifier for grid
+     * Get unique bulk action identifier for grid.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * Get translated bulk action name
+     * Get translated bulk action name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Get row action icon
+     * Get row action icon.
      *
      * @return string
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,11 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Payment;
 
 use DOMDocument;
-use DOMNode;
 
 class PaymentOptionFormDecorator
 {
@@ -37,10 +35,10 @@ class PaymentOptionFormDecorator
         $doc = new DOMDocument();
         $doc->encoding = 'UTF-8';
 
-        $doc->loadHTML('<?xml encoding="UTF-8">' . $formHTML);
+        $doc->loadHTML('<?xml encoding="UTF-8">'.$formHTML);
 
         $forms = $doc->getElementsByTagName('form');
-        if ($forms->length !== 1) {
+        if (1 !== $forms->length) {
             return false;
         }
 

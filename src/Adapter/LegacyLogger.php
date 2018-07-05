@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Monolog\Logger;
@@ -43,8 +44,7 @@ class LegacyLogger implements LoggerInterface
      * trigger the SMS alerts and wake you up.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function alert($message, array $context = array())
     {
@@ -57,8 +57,7 @@ class LegacyLogger implements LoggerInterface
      * Example: Application component unavailable, unexpected exception.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function critical($message, array $context = array())
     {
@@ -70,8 +69,7 @@ class LegacyLogger implements LoggerInterface
      * be logged and monitored.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function error($message, array $context = array())
     {
@@ -85,8 +83,7 @@ class LegacyLogger implements LoggerInterface
      * that are not necessarily wrong.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function warning($message, array $context = array())
     {
@@ -97,8 +94,7 @@ class LegacyLogger implements LoggerInterface
      * Normal but significant events.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function notice($message, array $context = array())
     {
@@ -111,8 +107,7 @@ class LegacyLogger implements LoggerInterface
      * Example: User logs in, SQL logs.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function info($message, array $context = array())
     {
@@ -123,8 +118,7 @@ class LegacyLogger implements LoggerInterface
      * Detailed debug information.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function debug($message, array $context = array())
     {
@@ -134,10 +128,9 @@ class LegacyLogger implements LoggerInterface
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed $level
+     * @param mixed  $level
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
      */
     public function log($level, $message, array $context = array())
     {
@@ -160,10 +153,10 @@ class LegacyLogger implements LoggerInterface
                 break;
         }
 
-        $error_code = !empty($context['error_code'])?$context['error_code']:null;
-        $object_type = !empty($context['object_type'])?$context['object_type']:null;
-        $object_id = !empty($context['object_id'])?$context['object_id']:null;
-        $allow_duplicate = !empty($context['allow_duplicate'])?$context['allow_duplicate']:null;
+        $error_code = !empty($context['error_code']) ? $context['error_code'] : null;
+        $object_type = !empty($context['object_type']) ? $context['object_type'] : null;
+        $object_id = !empty($context['object_id']) ? $context['object_id'] : null;
+        $allow_duplicate = !empty($context['allow_duplicate']) ? $context['allow_duplicate'] : null;
 
         PrestaShopLogger::addLog($message, $pslevel, $error_code, $object_type, $object_id, $allow_duplicate);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * FileUploader is responsible for uploading import files to import directory
+ * FileUploader is responsible for uploading import files to import directory.
  */
 final class FileUploader
 {
@@ -50,7 +50,7 @@ final class FileUploader
 
     /**
      * @param TranslatorInterface $translator
-     * @param ImportDirectory $importDirectory
+     * @param ImportDirectory     $importDirectory
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -61,7 +61,7 @@ final class FileUploader
     }
 
     /**
-     * Handle import file uploading to admin import/ directory
+     * Handle import file uploading to admin import/ directory.
      *
      * @param UploadedFile $uploadedFile
      *
@@ -96,13 +96,13 @@ final class FileUploader
     }
 
     /**
-     * Check if uploaded file is valid
+     * Check if uploaded file is valid.
      *
      * @param UploadedFile $uploadedFile
      *
-     * @return string|false     Returns error string on error or FALSE otherwise
+     * @return string|false Returns error string on error or FALSE otherwise
      */
-    protected function validateUploadedFile(UploadedFile $uploadedFile)
+    private function validateUploadedFile(UploadedFile $uploadedFile)
     {
         $error = false;
 

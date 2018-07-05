@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * FileRemoval is responsible for deleting import files
+ * FileRemoval is responsible for deleting import files.
  */
 final class FileRemoval
 {
@@ -45,7 +45,7 @@ final class FileRemoval
     }
 
     /**
-     * Remove file from import directory
+     * Remove file from import directory.
      *
      * @param $filename
      */

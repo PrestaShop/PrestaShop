@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -70,7 +70,7 @@ class CartRuleCalculator
     protected function applyCartRule(CartRuleData $cartRuleData)
     {
         $cartRule = $cartRuleData->getCartRule();
-        $cart     = $this->calculator->getCart();
+        $cart = $this->calculator->getCart();
 
         if (!\CartRule::isFeatureActive()) {
             return;
@@ -98,7 +98,7 @@ class CartRuleCalculator
         }
 
         // Discount (%) on the whole order
-        if ($cartRule->reduction_percent && $cartRule->reduction_product == 0) {
+        if ($cartRule->reduction_percent && 0 == $cartRule->reduction_product) {
             foreach ($this->cartRows as $cartRow) {
                 $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                 $cartRuleData->addDiscountApplied($amount);
@@ -116,37 +116,37 @@ class CartRuleCalculator
         }
 
         // Discount (%) on the cheapest product
-        if ($cartRule->reduction_percent && $cartRule->reduction_product == -1) {
+        if ($cartRule->reduction_percent && -1 == $cartRule->reduction_product) {
             /** @var CartRow|null $cartRowCheapest */
             $cartRowCheapest = null;
             foreach ($this->cartRows as $cartRow) {
-                if ($cartRowCheapest === null
+                if (null === $cartRowCheapest
                     || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
                                                                                            ->getTaxIncluded()
                 ) {
                     $cartRowCheapest = $cartRow;
                 }
             }
-            if ($cartRowCheapest !== null) {
+            if (null !== $cartRowCheapest) {
                 // apply only on one product of the cheapest row
                 $discountTaxIncluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
                                        * $cartRule->reduction_percent / 100;
                 $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
                                        * $cartRule->reduction_percent / 100;
-                $amount              = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+                $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
                 $cartRowCheapest->applyFlatDiscount($amount);
                 $cartRuleData->addDiscountApplied($amount);
             }
         }
 
         // Discount (%) on the selection of products
-        if ($cartRule->reduction_percent && $cartRule->reduction_product == -2) {
+        if ($cartRule->reduction_percent && -2 == $cartRule->reduction_product) {
             $selected_products = $cartRule->checkProductRestrictionsFromCart($cart, true);
             if (is_array($selected_products)) {
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
-                    if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                        || in_array($product['id_product'] . '-0', $selected_products)
+                    if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
+                        || in_array($product['id_product'].'-0', $selected_products)
                            && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                                || !$cartRule->reduction_exclude_special)) {
                         $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
@@ -174,7 +174,7 @@ class CartRuleCalculator
                         $concernedRows->addCartRow($cartRow);
                     }
                 }
-            } elseif ($cartRule->reduction_product == 0) {
+            } elseif (0 == $cartRule->reduction_product) {
                 // Discount (¤) on the whole order
                 $concernedRows = $this->cartRows;
             }
@@ -196,7 +196,7 @@ class CartRuleCalculator
             foreach ($concernedRows as $concernedRow) {
                 // get current line tax rate
                 $taxRate = 0;
-                if ($concernedRow->getFinalTotalPrice()->getTaxExcluded() != 0) {
+                if (0 != $concernedRow->getFinalTotalPrice()->getTaxExcluded()) {
                     $taxRate = ($concernedRow->getFinalTotalPrice()->getTaxIncluded()
                                 - $concernedRow->getFinalTotalPrice()->getTaxExcluded())
                                / $concernedRow->getFinalTotalPrice()->getTaxExcluded();
@@ -204,7 +204,7 @@ class CartRuleCalculator
                 $weightFactor = 0;
                 if ($cartRule->reduction_tax) {
                     // if cart rule amount is set tax included : calculate weight tax included
-                    if ($totalTaxIncl != 0) {
+                    if (0 != $totalTaxIncl) {
                         $weightFactor = $concernedRow->getFinalTotalPrice()->getTaxIncluded() / $totalTaxIncl;
                     }
                     $discountAmountTaxIncl = $discountConverted * $weightFactor;
@@ -212,7 +212,7 @@ class CartRuleCalculator
                     $discountAmountTaxExcl = $discountAmountTaxIncl / (1 + $taxRate);
                 } else {
                     // if cart rule amount is set tax excluded : calculate weight tax excluded
-                    if ($totalTaxExcl != 0) {
+                    if (0 != $totalTaxExcl) {
                         $weightFactor = $concernedRow->getFinalTotalPrice()->getTaxExcluded() / $totalTaxExcl;
                     }
                     $discountAmountTaxExcl = $discountConverted * $weightFactor;
@@ -240,7 +240,7 @@ class CartRuleCalculator
 
     protected function convertAmountBetweenCurrencies($amount, \Currency $currencyFrom, \Currency $currencyTo)
     {
-        if ($amount == 0 || $currencyFrom->conversion_rate == 0) {
+        if (0 == $amount || 0 == $currencyFrom->conversion_rate) {
             return 0;
         }
 

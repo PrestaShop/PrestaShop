@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,12 +37,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class LocalizationController is responsible for handling "Improve > International > Localization" page
+ * Class LocalizationController is responsible for handling "Improve > International > Localization" page.
  */
 class LocalizationController extends FrameworkBundleAdminController
 {
     /**
-     * Show localization settings page
+     * Show localization settings page.
      *
      * @Template("@PrestaShop/Admin/Improve/International/Localization/localization.html.twig")
      *
@@ -75,7 +75,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Save localization settings
+     * Save localization settings.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_localization_show_settings")
@@ -108,7 +108,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handles localization pack import
+     * Handles localization pack import.
      *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_localization_show_settings")
@@ -152,7 +152,7 @@ class LocalizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns localization settings form handler
+     * Returns localization settings form handler.
      *
      * @return FormHandlerInterface
      */

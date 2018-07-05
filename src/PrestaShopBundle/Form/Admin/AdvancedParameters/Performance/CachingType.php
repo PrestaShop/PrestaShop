@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Caching" form in Performance page
+ * This form class generates the "Caching" form in Performance page.
  */
 class CachingType extends TranslatorAwareType
 {
@@ -67,7 +67,7 @@ class CachingType extends TranslatorAwareType
                         $disabled = true;
                     }
 
-                    return $disabled === true ? $this->getErrorsMessages()[$index] : $value;
+                    return true === $disabled ? $this->getErrorsMessages()[$index] : $value;
                 },
                 'choice_attr' => function ($value, $key, $index) {
                     $disabled = false;
@@ -78,11 +78,11 @@ class CachingType extends TranslatorAwareType
                         $disabled = true;
                     }
 
-                    return $disabled === true ? ['disabled' => $disabled] : [];
+                    return true === $disabled ? ['disabled' => $disabled] : [];
                 },
                 'expanded' => true,
                 'required' => false,
-                'placeholder' => false
+                'placeholder' => false,
             ]);
     }
 
@@ -113,8 +113,8 @@ class CachingType extends TranslatorAwareType
     {
         return [
             'CacheMemcache' => $this->trans('Memcached via PHP::Memcache', 'Admin.Advparameters.Feature')
-                . ' '
-                . $this->trans(
+                .' '
+                .$this->trans(
                     '(you must install the [a]Memcache PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
@@ -123,8 +123,8 @@ class CachingType extends TranslatorAwareType
                     ]
                 ),
             'CacheMemcached' => $this->trans('Memcached via PHP::Memcached', 'Admin.Advparameters.Feature')
-                . ' '
-                . $this->trans(
+                .' '
+                .$this->trans(
                     '(you must install the [a]Memcached PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
@@ -133,8 +133,8 @@ class CachingType extends TranslatorAwareType
                     ]
                 ),
             'CacheApc' => $this->trans('APC', 'Admin.Advparameters.Feature')
-                . ' '
-                . $this->trans(
+                .' '
+                .$this->trans(
                     '(you must install the [a]APC PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
@@ -143,8 +143,8 @@ class CachingType extends TranslatorAwareType
                     ]
                 ),
             'CacheXcache' => $this->trans('Xcache', 'Admin.Advparameters.Feature')
-                . ' '
-                . $this->trans(
+                .' '
+                .$this->trans(
                     '(you must install the [a]Xcache extension[/a])',
                     'Admin.Advparameters.Notification',
                     [

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CountryChoiceProvider is responsible for providing both enabled/disabled country choices with ISO code values
+ * Class CountryChoiceProvider is responsible for providing both enabled/disabled country choices with ISO code values.
  */
 final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
@@ -45,7 +45,7 @@ final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterfac
     private $langId;
 
     /**
-     * @param int $langId
+     * @param int                 $langId
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(
@@ -57,7 +57,7 @@ final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterfac
     }
 
     /**
-     * Get country choices
+     * Get country choices.
      *
      * @return array
      */

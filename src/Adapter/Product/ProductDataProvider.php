@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Image;
@@ -35,9 +36,10 @@ use Context;
 class ProductDataProvider
 {
     /**
-     * Get a new ProductCore instance
+     * Get a new ProductCore instance.
      *
      * @param null $idProduct
+     *
      * @return Product
      */
     public function getProductInstance($idProduct = null)
@@ -50,12 +52,12 @@ class ProductDataProvider
     }
 
     /**
-     * Get a product
+     * Get a product.
      *
-     * @param int $id_product
-     * @param bool $full
-     * @param int|null $id_lang
-     * @param int|null $id_shop
+     * @param int         $id_product
+     * @param bool        $full
+     * @param int|null    $id_lang
+     * @param int|null    $id_shop
      * @param object|null $context
      *
      * @throws \LogicException If the product id is not set
@@ -84,21 +86,22 @@ class ProductDataProvider
     }
 
     /**
-     * Get default taxe rate product
+     * Get default taxe rate product.
      *
      * @return int id tax rule group
      */
     public function getIdTaxRulesGroup()
     {
         $product = new Product();
+
         return $product->getIdTaxRulesGroup();
     }
 
     /**
-     * Get product quantity
+     * Get product quantity.
      *
-     * @param int $id_product
-     * @param int|null $id_product_attribute
+     * @param int       $id_product
+     * @param int|null  $id_product_attribute
      * @param bool|null $cache_is_pack
      *
      * @return int stock
@@ -109,7 +112,7 @@ class ProductDataProvider
     }
 
     /**
-     * Get associated images to product
+     * Get associated images to product.
      *
      * @param int $id_product
      * @param int $id_lang
@@ -127,7 +130,7 @@ class ProductDataProvider
     }
 
     /**
-     * Get an image
+     * Get an image.
      *
      * @param int $id_image
      *
@@ -135,7 +138,7 @@ class ProductDataProvider
      */
     public function getImage($id_image)
     {
-        $imageData = new Image((int)$id_image);
+        $imageData = new Image((int) $id_image);
 
         return [
             'id' => $imageData->id,

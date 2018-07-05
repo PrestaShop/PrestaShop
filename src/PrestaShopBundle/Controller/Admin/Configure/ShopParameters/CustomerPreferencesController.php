@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -35,17 +34,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controller responsible of "Configure > Shop Parameters > Customer Settings" page
+ * Controller responsible of "Configure > Shop Parameters > Customer Settings" page.
  */
 class CustomerPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show customer preferences page
+     * Show customer preferences page.
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/customer_preferences.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
+     *
      * @return array Template parameters
      */
     public function indexAction(Request $request)
@@ -65,6 +65,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
 
     /**
      * Process the Customer Preferences configuration form.
+     *
      * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_customer_preferences")
      * @DemoRestricted(redirectRoute="admin_customer_preferences")
      *

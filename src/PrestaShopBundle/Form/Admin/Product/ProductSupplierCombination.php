@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to generate the basic product suppliers form
+ * This form class is responsible to generate the basic product suppliers form.
  */
 class ProductSupplierCombination extends CommonAbstractType
 {
@@ -42,7 +42,7 @@ class ProductSupplierCombination extends CommonAbstractType
     private $currencyAdapter;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $contextLegacy
@@ -78,8 +78,8 @@ class ProductSupplierCombination extends CommonAbstractType
                     'required' => false,
                     'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'float'])
-                    ]
+                        new Assert\Type(['type' => 'float']),
+                    ],
                 ]
             )
             ->add(

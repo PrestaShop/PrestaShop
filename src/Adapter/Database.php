@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
@@ -31,10 +32,12 @@ use DbQuery;
 class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface
 {
     /**
-     * Perform a SELECT sql statement
+     * Perform a SELECT sql statement.
      *
      * @param $sqlString
+     *
      * @return array|false
+     *
      * @throws \PrestaShopDatabaseException
      */
     public function select($sqlString)
@@ -43,9 +46,10 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     }
 
     /**
-     * Escape $unsafe to be used into a SQL statement
+     * Escape $unsafe to be used into a SQL statement.
      *
      * @param $unsafeData
+     *
      * @return string
      */
     public function escape($unsafeData)
@@ -54,7 +58,7 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     }
 
     /**
-     * Returns a value from the first row, first column of a SELECT query
+     * Returns a value from the first row, first column of a SELECT query.
      *
      * @param string|DbQuery $sql
      * @param bool           $useMaster

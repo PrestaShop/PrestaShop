@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Displays themes from Addons under "Improve > Design > Themes Catalog"
+ * Displays themes from Addons under "Improve > Design > Themes Catalog".
  */
 class ThemeCatalogController extends FrameworkBundleAdminController
 {
     /**
-     * Displays themes from Addons under "Improve > Design > Themes Catalog"
+     * Displays themes from Addons under "Improve > Design > Themes Catalog".
      *
      * @param Request $request
      *
@@ -47,15 +47,15 @@ class ThemeCatalogController extends FrameworkBundleAdminController
         $versionHelper = $this->get('prestashop.core.foundation.version');
 
         $pageContent = file_get_contents(
-            'https://addons.prestashop.com/iframe/search-' . $versionHelper->getMajorVersion() . '.php?'
-            . http_build_query([
+            'https://addons.prestashop.com/iframe/search-'.$versionHelper->getMajorVersion().'.php?'
+            .http_build_query([
                 'psVersion' => $versionHelper->getVersion(),
                 'isoLang' => $this->getContext()->language->iso_code,
                 'isoCurrency' => $this->getContext()->currency->iso_code,
                 'isoCountry' => $this->getContext()->country->iso_code,
                 'activity' => $configuration->getInt('PS_SHOP_ACTIVITY'),
                 'parentUrl' => $request->getSchemeAndHttpHost(),
-                'onlyThemes' => 1
+                'onlyThemes' => 1,
             ])
         );
 

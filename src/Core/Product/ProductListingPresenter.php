@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Product;
 
 class ProductListingPresenter extends ProductPresenter
@@ -38,11 +39,11 @@ class ProductListingPresenter extends ProductPresenter
             $language
         );
 
-        if ($product['id_product_attribute'] != 0 && !$settings->allow_add_variant_to_cart_from_listing) {
+        if (0 != $product['id_product_attribute'] && !$settings->allow_add_variant_to_cart_from_listing) {
             $presentedProduct['add_to_cart_url'] = null;
         }
 
-        if ($product['customizable'] == 2 || !empty($product['customization_required'])) {
+        if (2 == $product['customizable'] || !empty($product['customization_required'])) {
             $presentedProduct['add_to_cart_url'] = null;
         }
 

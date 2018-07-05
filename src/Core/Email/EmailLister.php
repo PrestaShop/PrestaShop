@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -38,9 +39,11 @@ class EmailLister
     }
 
     /**
-     * Return the list of available mails
+     * Return the list of available mails.
+     *
      * @param null $lang
      * @param null $dir
+     *
      * @return array|null
      */
     public function getAvailableMails($dir)
@@ -54,11 +57,11 @@ class EmailLister
 
         // Remove unwanted .html / .txt / .tpl / .php / . / ..
         foreach ($mail_directory as $mail) {
-            if (strpos($mail->getFilename(), '.') !== false) {
+            if (false !== strpos($mail->getFilename(), '.')) {
                 $tmp = explode('.', $mail->getFilename());
 
                 // Check for filename existence (left part) and if extension is html (right part)
-                if (($tmp === false || !isset($tmp[0])) || (isset($tmp[1]) && $tmp[1] !== 'html')) {
+                if ((false === $tmp || !isset($tmp[0])) || (isset($tmp[1]) && 'html' !== $tmp[1])) {
                     continue;
                 }
 
@@ -72,17 +75,17 @@ class EmailLister
         return $mail_list;
     }
 
-
     /**
-     * Give in input getAvailableMails(), will output a human readable and proper string name
+     * Give in input getAvailableMails(), will output a human readable and proper string name.
+     *
      * @return string
      */
     public function getCleanedMailName($mail_name)
     {
-        if (strpos($mail_name, '.') !== false) {
+        if (false !== strpos($mail_name, '.')) {
             $tmp = explode('.', $mail_name);
 
-            if ($tmp === false || !isset($tmp[0])) {
+            if (false === $tmp || !isset($tmp[0])) {
                 return $mail_name;
             }
 

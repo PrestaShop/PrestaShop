@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -68,12 +68,14 @@ class ModuleZip
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function setSandboxPath($sandboxPath)
     {
         $this->sandboxPath = $sandboxPath;
+
         return $this;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -55,7 +56,7 @@ class SslMiddleware
         $enabled = (1 == Configuration::get('PS_SSL_ENABLED'));
         $forced = (1 == Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
         $serverParams = $event->getRequest()->server;
-        $refererSsl = ($serverParams->has('HTTP_REFERER') && strpos($serverParams->get('HTTP_REFERER'), 'https') === 0);
+        $refererSsl = ($serverParams->has('HTTP_REFERER') && 0 === strpos($serverParams->get('HTTP_REFERER'), 'https'));
 
         if ($enabled && ($forced || $refererSsl)) {
             $this->redirectToSsl($event);
@@ -65,8 +66,8 @@ class SslMiddleware
     private function redirectToSsl(GetResponseEvent $event)
     {
         $event->stopPropagation();
-        $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        header("HTTP/1.1 302 Found");
+        $redirect = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 302 Found');
         header("Location: $redirect");
         exit();
     }

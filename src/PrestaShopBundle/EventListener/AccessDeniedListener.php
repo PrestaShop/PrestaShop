@@ -97,7 +97,7 @@ class AccessDeniedListener
     private function computeRedirectionUrl(AdminSecurity $adminSecurity)
     {
         $route = $adminSecurity->getRedirectRoute();
-        if ($route !== null) {
+        if (null !== $route) {
             return $this->router->generate($route);
         }
 

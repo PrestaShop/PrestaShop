@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Install;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
@@ -33,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Db;
 class Database extends AbstractInstall
 {
     /**
-     * Check database configuration and try a connection
+     * Check database configuration and try a connection.
      *
      * @param string $server
      * @param string $database
@@ -41,7 +40,8 @@ class Database extends AbstractInstall
      * @param string $password
      * @param string $prefix
      * @param string $engine
-     * @param bool $clear
+     * @param bool   $clear
+     *
      * @return array List of errors
      */
     public function testDatabaseSettings($server, $database, $login, $password, $prefix, $clear = false)
@@ -81,9 +81,9 @@ class Database extends AbstractInstall
                     if (!Db::checkAutoIncrement($server, $login, $password)) {
                         $errors[] = $this->translator->trans('The values of auto_increment increment and offset must be set to 1', array(), 'Install');
                     }
-                    if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true) {
-                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', array('%database%' =>$database), 'Install');
-                        if ($create_error != false) {
+                    if (true !== ($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix))) {
+                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', array('%database%' => $database), 'Install');
+                        if (false != $create_error) {
                             $errors[] = $create_error;
                         }
                     }
@@ -107,12 +107,14 @@ class Database extends AbstractInstall
         if (count($errors)) {
             $this->setError($errors);
         }
+
         return $errors;
     }
 
     public function createDatabase($server, $database, $login, $password, $dropit = false)
     {
         $class = '\\'.Db::getClass();
+
         return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
     }
 
@@ -122,6 +124,7 @@ class Database extends AbstractInstall
         $instance = new $class($server, $login, $password, $database, true);
         $engine = $instance->getBestEngine();
         unset($instance);
+
         return $engine;
     }
 }

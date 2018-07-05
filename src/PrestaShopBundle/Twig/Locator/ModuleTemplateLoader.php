@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig\Locator;
 
 use Twig\Loader\FilesystemLoader;
@@ -39,9 +40,9 @@ class ModuleTemplateLoader extends FilesystemLoader
     private $rootPath;
 
     /**
-     * @param array  $namespaces A collection of path namespaces with namespace names.
-     * @param string|array $paths    A path or an array of paths where to look for templates
-     * @param string|null  $rootPath The root path common to all relative paths (null for getcwd())
+     * @param array        $namespaces a collection of path namespaces with namespace names
+     * @param string|array $paths      A path or an array of paths where to look for templates
+     * @param string|null  $rootPath   The root path common to all relative paths (null for getcwd())
      */
     public function __construct(array $namespaces, $paths = array(), $rootPath = null)
     {
@@ -57,6 +58,7 @@ class ModuleTemplateLoader extends FilesystemLoader
 
     /**
      * Register namespaces in module and link them to the right paths.
+     *
      * @param $paths
      * @param array $namespaces
      */
@@ -66,7 +68,7 @@ class ModuleTemplateLoader extends FilesystemLoader
             $templatePaths = array();
 
             foreach ($paths as $path) {
-                if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {
+                if (is_dir($dir = $path.'/views/PrestaShop/'.$namespacePath)) {
                     $templatePaths[] = $dir;
                 }
             }
