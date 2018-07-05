@@ -216,6 +216,10 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
+        if (empty($this->id)) {
+            return true;
+        }
+        
         if (!$this->isUsed()) {
             return parent::delete();
         } else {
