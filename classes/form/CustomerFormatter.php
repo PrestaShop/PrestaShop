@@ -91,19 +91,22 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setType('hidden')
         ;
 
-        $genderField = (new FormField)
-            ->setName('id_gender')
-            ->setType('radio-buttons')
-            ->setLabel(
-                $this->translator->trans(
-                    'Social title', [], 'Shop.Forms.Labels'
+        $genders = Gender::getGenders($this->language->id);
+        if ($genders->count() > 0) {
+            $genderField = (new FormField)
+                ->setName('id_gender')
+                ->setType('radio-buttons')
+                ->setLabel(
+                    $this->translator->trans(
+                        'Social title', [], 'Shop.Forms.Labels'
+                    )
                 )
-            )
-        ;
-        foreach (Gender::getGenders($this->language->id) as $gender) {
-            $genderField->addAvailableValue($gender->id, $gender->name);
+            ;
+            foreach ($genders as $gender) {
+                $genderField->addAvailableValue($gender->id, $gender->name);
+            }
+            $format[$genderField->getName()] = $genderField;
         }
-        $format[$genderField->getName()] = $genderField;
 
         $format['firstname'] = (new FormField)
             ->setName('firstname')
