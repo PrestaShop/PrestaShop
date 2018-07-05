@@ -1,6 +1,6 @@
 admin_webservice:
     path: /
-    methods: [GET]
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
         _legacy_controller: AdminWebservice

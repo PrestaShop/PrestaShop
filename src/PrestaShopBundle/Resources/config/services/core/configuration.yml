@@ -2,3 +2,10 @@ services:
     prestashop.core.configuration.ini_configuration:
         class: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
         public: true
+
+    prestashop.core.configuration.webservice_can_be_enabled_configuration_checker:
+        class: 'PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker'
+        public: true
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.configuration'

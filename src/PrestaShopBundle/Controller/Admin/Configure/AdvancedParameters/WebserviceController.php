@@ -27,16 +27,22 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\WebserviceKeyGridSearchCriteria;
+use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Entity\Repository\WebserviceKeyRepository;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Webservice" page display
+ *
+ * @todo: add unit tests
  */
 class WebserviceController extends FrameworkBundleAdminController
 {
@@ -44,17 +50,46 @@ class WebserviceController extends FrameworkBundleAdminController
 
     /**
      * Displays the Webservice main page.
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/webservice.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param FormInterface $form
      * @return Response
      */
-    public function indexAction(FormInterface $form = null)
+    public function indexAction(FormInterface $form = null, Request $request)
     {
+        /*
+         * Listing TODO-list
+         * - sort columns
+         * - pagination
+         * - "enabled"= drop-down yes/no
+         * - 4 actions standard
+         * - Bulk: select all, unselect all, delete selected
+         * - foreach item: edit/delete
+         */
+
+
         $form = is_null($form) ? $this->getFormHandler()->getForm() : $form;
 
-        return [
+        // Search
+        // temporary search criteria class, to be removed
+        $searchCriteria = new WebserviceKeyGridSearchCriteria($request);
+
+        $gridWebserviceKeyFactory = $this->get('prestashop.core.grid.webservice_key_factory');
+        $grid = $gridWebserviceKeyFactory->createUsingSearchCriteria($searchCriteria);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        $configurationWarnings = $this->lookForWarnings($request);
+
+        if (false === empty($configurationWarnings)) {
+            foreach ($configurationWarnings as $warningMessage) {
+                $this->addFlash('warning', $warningMessage);
+
+            }
+        }
+
+        $twigValues = [
             'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false, // temporary
@@ -63,7 +98,11 @@ class WebserviceController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminWebservice'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
+            'grid' => $presentedGrid,
         ];
+
+        return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
+
     }
 
     /**
@@ -101,8 +140,31 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    protected function getFormHandler()
+    private function getFormHandler()
     {
         return $this->get('prestashop.adapter.webservice.form_handler');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return string[]
+     */
+    private function lookForWarnings(Request $request)
+    {
+        /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
+        $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
+
+        $warningMessages = $configurationChecker->analyseConfigurationForIssues($request);
+
+        return $warningMessages;
+    }
+
+    /**
+     * @return WebserviceKeyRepository
+     */
+    private function getWebserviceKeyRepository()
+    {
+        return $this->get('prestashop.core.admin.webservice_key.repository');
     }
 }

@@ -26,7 +26,17 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
-    <div class="container">
+
+    {% block logs_main_panel %}
+        <div class="col-md-12">
+            <div class="col">
+                {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block webservice_configuration_panel %}
+    <div class="col-md-12">
         {{ form_start(form, {'attr' : {'class': 'form'} }) }}
         <div class="row">
             {% block webservice_configuration %}
@@ -67,8 +77,6 @@
         </div>
         {{ form_end(form) }}
     </div>
-{% endblock %}
+    {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
 {% endblock %}
