@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -76,7 +76,7 @@ class DatabaseTranslationLoader implements LoaderInterface
             $queryBuilder->andWhere('t.theme IS NULL');
         }
 
-        if ($domain !== '*') {
+        if ('*' !== $domain) {
             $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')
                 ->setParameter('domain', $domain)
             ;

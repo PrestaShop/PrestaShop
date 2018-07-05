@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -57,6 +57,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listProductsAction(Request $request)
@@ -71,7 +72,7 @@ class StockController extends ApiController
             'info' => array(
                 'edit_bulk_url' => $this->container->get('router')->generate('api_stock_bulk_edit_products'),
             ),
-            'data' => $this->stockRepository->getData($queryParamsCollection)
+            'data' => $this->stockRepository->getData($queryParamsCollection),
         );
         $totalPages = $this->stockRepository->countPages($queryParamsCollection);
 
@@ -80,6 +81,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function editProductAction(Request $request)
@@ -93,7 +95,7 @@ class StockController extends ApiController
 
         $productIdentity = ProductIdentity::fromArray(array(
             'product_id' => $request->attributes->get('productId'),
-            'combination_id' => $request->attributes->get('combinationId', 0)
+            'combination_id' => $request->attributes->get('combinationId', 0),
         ));
 
         try {
@@ -108,6 +110,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function bulkEditProductsAction(Request $request)
@@ -132,6 +135,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return CsvResponse|JsonResponse
      */
     public function listProductsExportAction(Request $request)
@@ -169,11 +173,12 @@ class StockController extends ApiController
             ->setData($dataCallback)
             ->setHeadersData($headersData)
             ->setLimit(10000)
-            ->setFileName('stock_' . date('Y-m-d_His') . '.csv');
+            ->setFileName('stock_'.date('Y-m-d_His').'.csv');
     }
 
     /**
      * @param Request $request
+     *
      * @return int
      */
     private function guardAgainstMissingDeltaParameter(Request $request)
@@ -194,6 +199,7 @@ class StockController extends ApiController
     /**
      * @param $content
      * @param $message
+     *
      * @return mixed
      */
     private function guardAgainstInvalidRequestContent($content, $message)
@@ -209,11 +215,12 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstInvalidBulkEditionRequest(Request $request)
     {
-        if (strlen($request->getContent()) == 0) {
+        if (0 == strlen($request->getContent())) {
             $message = 'The request body should contain a JSON-encoded array of product identifiers and deltas';
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
@@ -223,18 +230,19 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstMissingParametersInBulkEditionRequest(Request $request)
     {
         $decodedContent = $this->guardAgainstInvalidJsonBody($request->getContent());
 
-        $message = 'Each item of JSON-encoded array in the request body should contain ' .
+        $message = 'Each item of JSON-encoded array in the request body should contain '.
             'a product id ("product_id"), a quantity delta ("delta"). '.
             'The item of index #%d is invalid.';
 
         array_walk($decodedContent, function ($item, $index) use ($message) {
-            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item) || $item['delta'] == 0) {
+            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item) || 0 == $item['delta']) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
         });

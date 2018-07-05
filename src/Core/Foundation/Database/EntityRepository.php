@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
@@ -51,15 +52,15 @@ class EntityRepository
     {
         if (0 === strpos($method, 'findOneBy')) {
             $one = true;
-            $by  = substr($method, 9);
+            $by = substr($method, 9);
         } elseif (0 === strpos($method, 'findBy')) {
             $one = false;
-            $by  = substr($method, 6);
+            $by = substr($method, 6);
         } else {
             throw new Exception(sprintf('Undefind method %s.', $method));
         }
 
-        if (count($arguments) !== 1) {
+        if (1 !== count($arguments)) {
             throw new Exception(sprintf('Method %s takes exactly one argument.', $method));
         }
 
@@ -76,8 +77,10 @@ class EntityRepository
 
     /**
      * Convert a camelCase field name to a snakeCase one
-     * e.g.: findAllByIdCMS => id_cms
+     * e.g.: findAllByIdCMS => id_cms.
+     *
      * @param $camel_case_field_name
+     *
      * @return string
      */
     private function convertToDbFieldName($camel_case_field_name)
@@ -86,15 +89,17 @@ class EntityRepository
     }
 
     /**
-     * Return ID field name
+     * Return ID field name.
+     *
      * @return mixed
+     *
      * @throws Exception
      */
     protected function getIdFieldName()
     {
         $primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
-        if (count($primary) === 0) {
+        if (0 === count($primary)) {
             throw new Exception(
                 sprintf(
                     'No primary key defined in entity `%s`.',
@@ -114,16 +119,18 @@ class EntityRepository
     }
 
     /**
-     * Returns escaped+prefixed current table name
+     * Returns escaped+prefixed current table name.
+     *
      * @return mixed
      */
     protected function getTableNameWithPrefix()
     {
-        return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
+        return $this->db->escape($this->tablesPrefix.$this->entityMetaData->getTableName());
     }
 
     /**
-     * Returns escaped DB table prefix
+     * Returns escaped DB table prefix.
+     *
      * @return mixed
      */
     protected function getPrefix()
@@ -132,13 +139,15 @@ class EntityRepository
     }
 
     /**
-     * Return a new empty Entity depending on current Repository selected
+     * Return a new empty Entity depending on current Repository selected.
+     *
      * @return mixed
      */
     public function getNewEntity()
     {
         $entityClassName = $this->entityMetaData->getEntityClassName();
-        return new $entityClassName;
+
+        return new $entityClassName();
     }
 
     /**
@@ -152,14 +161,15 @@ class EntityRepository
      */
     protected function hydrateOne(array $rows)
     {
-        if (count($rows) === 0) {
+        if (0 === count($rows)) {
             return null;
         } elseif (count($rows) > 1) {
             throw new Exception('Too many rows returned.');
         } else {
             $data = $rows[0];
-            $entity = $this-> getNewEntity();
+            $entity = $this->getNewEntity();
             $entity->hydrate($data);
+
             return $entity;
         }
     }
@@ -172,21 +182,25 @@ class EntityRepository
             $entity->hydrate($row);
             $entities[] = $entity;
         }
+
         return $entities;
     }
 
     /**
-     * Constructs and performs 'SELECT' in DB
+     * Constructs and performs 'SELECT' in DB.
+     *
      * @param $one
      * @param array $cumulativeConditions
+     *
      * @return array|mixed|null
+     *
      * @throws Exception
      */
     private function doFind($one, array $cumulativeConditions)
     {
         $whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
 
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $whereClause;
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix().' WHERE '.$whereClause;
 
         $rows = $this->db->select($sql);
 
@@ -198,9 +212,12 @@ class EntityRepository
     }
 
     /**
-     * Find one entity in DB
+     * Find one entity in DB.
+     *
      * @param $id
+     *
      * @return array|mixed|null
+     *
      * @throws Exception
      */
     public function findOne($id)
@@ -212,12 +229,14 @@ class EntityRepository
     }
 
     /**
-     * Find all entities in DB
+     * Find all entities in DB.
+     *
      * @return array
      */
     public function findAll()
     {
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix();
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix();
+
         return $this->hydrateMany($this->db->select($sql));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
@@ -65,7 +64,8 @@ class ProductPresenter
      * and customer groups with active "Show price" option.
      *
      * @param ProductPresentationSettings $settings
-     * @param array $product
+     * @param array                       $product
+     *
      * @return bool
      */
     private function shouldShowPrice(
@@ -79,6 +79,7 @@ class ProductPresenter
      * The "Add to cart" button should be shown for products available for order.
      *
      * @param $product
+     *
      * @return mixed
      */
     private function shouldShowAddToCartButton($product)
@@ -156,23 +157,23 @@ class ProductPresenter
         }
 
         if ($product['specific_prices']) {
-            $presentedProduct['has_discount']  = (0 != $product['reduction']);
+            $presentedProduct['has_discount'] = (0 != $product['reduction']);
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
 
-            $absoluteReduction     = new Number($product['specific_prices']['reduction']);
-            $absoluteReduction     = $absoluteReduction->times(new Number('100'));
-            $negativeReduction     = $absoluteReduction->toNegative();
+            $absoluteReduction = new Number($product['specific_prices']['reduction']);
+            $absoluteReduction = $absoluteReduction->times(new Number('100'));
+            $negativeReduction = $absoluteReduction->toNegative();
             $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
             // TODO: add percent sign according to locale preferences
-            $presentedProduct['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
-            $presentedProduct['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
+            $presentedProduct['discount_percentage'] = Tools::displayNumber($presNegativeReduction).'%';
+            $presentedProduct['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction).'%';
             // TODO: Fix issue with tax calculation
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
                 $product['reduction']
             );
-            $presentedProduct['discount_amount_to_display'] = '-' . $presentedProduct['discount_amount'];
+            $presentedProduct['discount_amount_to_display'] = '-'.$presentedProduct['discount_amount'];
             $regular_price = $product['price_without_reduction'];
         }
 
@@ -223,7 +224,7 @@ class ProductPresenter
 
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
-        if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
+        if ((2 == $product['customizable'] || !empty($product['customization_required']))) {
             $shouldEnable = false;
 
             if (isset($product['customizations'])) {
@@ -260,10 +261,10 @@ class ProductPresenter
     }
 
     /**
-     * @inheritdoc
-     * @param array $product
+     * @param array    $product
      * @param Language $language
-     * @param bool $canonical
+     * @param bool     $canonical
+     *
      * @return string
      */
     private function getProductURL(
@@ -271,9 +272,9 @@ class ProductPresenter
         Language $language,
         $canonical = false
     ) {
-        $linkRewrite = isset($product['link_rewrite'])?$product['link_rewrite']:null;
-        $category = isset($product['category'])?$product['category']:null;
-        $ean13 = isset($product['ean13'])?$product['ean13']:null;
+        $linkRewrite = isset($product['link_rewrite']) ? $product['link_rewrite'] : null;
+        $category = isset($product['category']) ? $product['category'] : null;
+        $ean13 = isset($product['ean13']) ? $product['ean13'] : null;
 
         return $this->link->getProductLink(
             $product['id_product'],
@@ -420,9 +421,10 @@ class ProductPresenter
     }
 
     /**
-     * @param array $presentedProduct
-     * @param array $product
+     * @param array    $presentedProduct
+     * @param array    $product
      * @param Language $language
+     *
      * @return array
      */
     private function addDeliveryInformation(
@@ -442,10 +444,11 @@ class ProductPresenter
     }
 
     /**
-     * @param array $presentedProduct
+     * @param array                       $presentedProduct
      * @param ProductPresentationSettings $settings
-     * @param array $product
-     * @param Language $language
+     * @param array                       $product
+     * @param Language                    $language
+     *
      * @return array
      */
     public function addQuantityInformation(
@@ -509,11 +512,12 @@ class ProductPresenter
 
     /**
      * Override availability message when quantity of products in stock is less than what has been defined
-     * in Shop Parameters > Product Settings
+     * in Shop Parameters > Product Settings.
      *
-     * @param array $product
+     * @param array                       $product
      * @param ProductPresentationSettings $settings
-     * @param array $presentedProduct
+     * @param array                       $presentedProduct
+     *
      * @return array
      */
     protected function applyLastItemsInStockDisplayRule(
@@ -532,9 +536,11 @@ class ProductPresenter
     }
 
     /**
-     * Add new attribute reference_to_display if the product reference or the selected combinations reference is set
+     * Add new attribute reference_to_display if the product reference or the selected combinations reference is set.
+     *
      * @param array $product
      * @param array $presentedProduct
+     *
      * @return array
      */
     public function addReferenceToDisplay(array $product, array $presentedProduct)
@@ -545,7 +551,7 @@ class ProductPresenter
 
         if (isset($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
-                if (isset($attribute['reference']) && $attribute['reference'] != null) {
+                if (isset($attribute['reference']) && null != $attribute['reference']) {
                     $presentedProduct['reference_to_display'] = $attribute['reference'];
                 }
             }
@@ -555,9 +561,11 @@ class ProductPresenter
     }
 
     /**
-     * Add all specific references to product
+     * Add all specific references to product.
+     *
      * @param array $product
      * @param array $presentedProduct
+     *
      * @return array
      */
     public function addAttributesSpecificReferences(array $product, array $presentedProduct)
@@ -756,106 +764,107 @@ class ProductPresenter
             'name',
             'description',
             'description_short',
-            "on_sale",
-            "online_only",
-            "ecotax",
-            "minimal_quantity",
-            "low_stock_threshold",
-            "low_stock_alert",
-            "price",
-            "unity",
-            "unit_price_ratio",
-            "additional_shipping_cost",
-            "customizable",
-            "text_fields",
-            "uploadable_files",
-            "redirect_type",
-            "id_type_redirected",
-            "available_for_order",
-            "available_date",
-            "show_condition",
-            "condition",
-            "show_price",
-            "indexed",
-            "visibility",
-            "cache_default_attribute",
-            "advanced_stock_management",
-            "date_add",
-            "date_upd",
-            "pack_stock_type",
-            "meta_description",
-            "meta_keywords",
-            "meta_title",
-            "link_rewrite",
-            "name",
-            "description",
-            "description_short",
-            "available_now",
-            "available_later",
-            "id",
-            "out_of_stock",
-            "new",
-            "quantity_wanted",
-            "extraContent",
-            "allow_oosp",
-            "category",
-            "category_name",
-            "link",
-            "attribute_price",
-            "price_tax_exc",
-            "price_without_reduction",
-            "reduction",
-            "specific_prices",
-            "quantity",
-            "quantity_all_versions",
-            "id_image",
-            "features",
-            "attachments",
-            "virtual",
-            "pack",
-            "packItems",
-            "nopackprice",
-            "customization_required",
-            "attributes",
-            "rate",
-            "tax_name",
-            "ecotax_rate",
-            "unit_price",
-            "customizations",
-            "is_customizable",
-            "show_quantities",
-            "quantity_label",
-            "quantity_discounts",
-            "customer_group_discount",
-            "weight_unit",
-            "images",
-            "cover",
-            "url",
-            "canonical_url",
-            "has_discount",
-            "discount_type",
-            "discount_percentage",
-            "discount_percentage_absolute",
-            "discount_amount",
-            "discount_amount_to_display",
-            "price_amount",
-            "unit_price_full",
-            "add_to_cart_url",
-            "main_variants",
-            "flags",
-            "labels",
-            "show_availability",
-            "availability_date",
-            "availability_message",
-            "availability",
-            "reference_to_display",
-            "delivery_in_stock",
-            "delivery_out_stock",
+            'on_sale',
+            'online_only',
+            'ecotax',
+            'minimal_quantity',
+            'low_stock_threshold',
+            'low_stock_alert',
+            'price',
+            'unity',
+            'unit_price_ratio',
+            'additional_shipping_cost',
+            'customizable',
+            'text_fields',
+            'uploadable_files',
+            'redirect_type',
+            'id_type_redirected',
+            'available_for_order',
+            'available_date',
+            'show_condition',
+            'condition',
+            'show_price',
+            'indexed',
+            'visibility',
+            'cache_default_attribute',
+            'advanced_stock_management',
+            'date_add',
+            'date_upd',
+            'pack_stock_type',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'link_rewrite',
+            'name',
+            'description',
+            'description_short',
+            'available_now',
+            'available_later',
+            'id',
+            'out_of_stock',
+            'new',
+            'quantity_wanted',
+            'extraContent',
+            'allow_oosp',
+            'category',
+            'category_name',
+            'link',
+            'attribute_price',
+            'price_tax_exc',
+            'price_without_reduction',
+            'reduction',
+            'specific_prices',
+            'quantity',
+            'quantity_all_versions',
+            'id_image',
+            'features',
+            'attachments',
+            'virtual',
+            'pack',
+            'packItems',
+            'nopackprice',
+            'customization_required',
+            'attributes',
+            'rate',
+            'tax_name',
+            'ecotax_rate',
+            'unit_price',
+            'customizations',
+            'is_customizable',
+            'show_quantities',
+            'quantity_label',
+            'quantity_discounts',
+            'customer_group_discount',
+            'weight_unit',
+            'images',
+            'cover',
+            'url',
+            'canonical_url',
+            'has_discount',
+            'discount_type',
+            'discount_percentage',
+            'discount_percentage_absolute',
+            'discount_amount',
+            'discount_amount_to_display',
+            'price_amount',
+            'unit_price_full',
+            'add_to_cart_url',
+            'main_variants',
+            'flags',
+            'labels',
+            'show_availability',
+            'availability_date',
+            'availability_message',
+            'availability',
+            'reference_to_display',
+            'delivery_in_stock',
+            'delivery_out_stock',
         );
     }
 
     /**
      * @param array $product
+     *
      * @return string
      */
     protected function getProductEmbeddedAttributes(array $product)
@@ -872,9 +881,9 @@ class ProductPresenter
     }
 
     /**
-     * Assemble the same features in one array
+     * Assemble the same features in one array.
      *
-     * @param  array $productFeatures
+     * @param array $productFeatures
      *
      * @return array
      */

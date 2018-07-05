@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInte
 use PrestaShopBundle\Entity\Repository\ModuleRepository;
 
 /**
- * Class PaymentModuleListProvider is responsible for providing payment module list
+ * Class PaymentModuleListProvider is responsible for providing payment module list.
  */
 final class PaymentModuleListProvider implements PaymentModuleListProviderInterface
 {
@@ -55,8 +55,8 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
 
     /**
      * @param AddonRepositoryInterface $addonRepository
-     * @param ModuleRepository $moduleRepository
-     * @param int $shopId
+     * @param ModuleRepository         $moduleRepository
+     * @param int                      $shopId
      */
     public function __construct(
         AddonRepositoryInterface $addonRepository,

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use Countable;
 use Iterator;
 
 /**
- * Interface RowCollectionInterface defines interface for raw rows wrapper
+ * Interface RowCollectionInterface defines interface for raw rows wrapper.
  */
 interface RowCollectionInterface extends Countable, Iterator
 {
     /**
-     * Get raw rows
+     * Get raw rows.
      *
      * @return array
      */

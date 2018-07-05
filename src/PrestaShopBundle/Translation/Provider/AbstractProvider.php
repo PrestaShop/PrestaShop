@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -118,8 +118,8 @@ abstract class AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultCatalogue($empty = true) {
-
+    public function getDefaultCatalogue($empty = true)
+    {
     }
 
     /**
@@ -147,6 +147,7 @@ abstract class AbstractProvider implements ProviderInterface
      * Get the Catalogue from database only.
      *
      * @param null $theme
+     *
      * @return MessageCatalogue A MessageCatalogue instance
      */
     public function getDatabaseCatalogue($theme = null)

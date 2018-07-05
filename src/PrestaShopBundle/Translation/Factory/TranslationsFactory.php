@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,8 @@
 namespace PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
-use PrestaShopBundle\Translation\Provider\UseDefaultCatalogueInterface;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * This class returns a collection of translations, using locale and identifier.
@@ -79,6 +77,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
                 $treeBuilder = new TreeBuilder($locale, $theme);
+
                 return $treeBuilder->makeTranslationArray($provider, $search);
             }
         }

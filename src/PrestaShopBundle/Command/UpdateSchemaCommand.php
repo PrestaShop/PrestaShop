@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -49,18 +49,17 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')
-            ->setDescription("Update the database");
+            ->setDescription('Update the database');
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = include(__DIR__.'/../../../app/config/parameters.php');
-        if ($input->getOption('env') === 'test') {
+        $config = include __DIR__.'/../../../app/config/parameters.php';
+        if ('test' === $input->getOption('env')) {
             $this->dbName = 'test_'.$config['parameters']['database_name'];
         } else {
             $this->dbName = $config['parameters']['database_name'];
@@ -85,13 +84,13 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                     AND TABLE_SCHEMA = "'.$this->dbName.'"
                     AND TABLE_NAME LIKE "'.$this->dbPrefix.'%" '
         );
-        
+
         $results = $query->fetchAll();
         foreach ($results as $result) {
             $drop = 'ALTER TABLE '.$result['TABLE_NAME'].' DROP FOREIGN KEY '.$result['CONSTRAINT_NAME'];
-            $output->writeln('Executing: ' . $drop);
+            $output->writeln('Executing: '.$drop);
             $conn->executeQuery($drop);
-            $sqls++;
+            ++$sqls;
         }
 
         $schemaTool = new SchemaTool($this->em);
@@ -172,19 +171,19 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         $results = $query->fetchAll();
                         $oldDefaultValue = $results[0]['Default'];
                         $extra = $results[0]['Extra'];
-                        if ($oldDefaultValue !== null
-                            && strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
+                        if (null !== $oldDefaultValue
+                            && false === strpos($oldDefaultValue, 'CURRENT_TIMESTAMP')) {
                             $oldDefaultValue = "'".$oldDefaultValue."'";
                         }
-                        if ($oldDefaultValue === null) {
+                        if (null === $oldDefaultValue) {
                             $oldDefaultValue = 'NULL';
                         }
                         // set the old default value
-                        if (!($results[0]['Null'] == 'NO' && $results[0]['Default'] === null)
-                            && !($oldDefaultValue === 'NULL'
-                                && strpos($matches[0][$matchKey], 'NOT NULL') !== false)
-                            && (strpos($matches[0][$matchKey], 'BLOB') === false)
-                            && (strpos($matches[0][$matchKey], 'TEXT') === false)
+                        if (!('NO' == $results[0]['Null'] && null === $results[0]['Default'])
+                            && !('NULL' === $oldDefaultValue
+                                && false !== strpos($matches[0][$matchKey], 'NOT NULL'))
+                            && (false === strpos($matches[0][$matchKey], 'BLOB'))
+                            && (false === strpos($matches[0][$matchKey], 'TEXT'))
                         ) {
                             if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                                 $matches[0][$matchKey] =
@@ -207,7 +206,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
         // Now execute the queries!
         foreach ($updateSchemaSql as $sql) {
             try {
-                $output->writeln('Executing: ' . $sql);
+                $output->writeln('Executing: '.$sql);
                 $conn->executeQuery($sql);
             } catch (\Exception $e) {
                 $conn->rollBack();

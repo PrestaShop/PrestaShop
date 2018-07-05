@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfigura
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 
 /**
- * Class PaymentModulePreferencesConfiguration is responsible for configuring payment module restrictions
+ * Class PaymentModulePreferencesConfiguration is responsible for configuring payment module restrictions.
  */
 final class PaymentModulePreferencesConfiguration implements DataConfigurationInterface
 {
@@ -46,7 +46,7 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
     private $paymentRestrictionsConfigurator;
 
     /**
-     * @param PaymentModuleListProviderInterface $paymentModuleProvider
+     * @param PaymentModuleListProviderInterface       $paymentModuleProvider
      * @param PaymentRestrictionsConfiguratorInterface $paymentRestrictionsConfigurator
      */
     public function __construct(

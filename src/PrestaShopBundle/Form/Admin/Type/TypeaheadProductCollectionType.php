@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
- * This form class is responsible to create a product, with or without attribute field
+ * This form class is responsible to create a product, with or without attribute field.
  */
 class TypeaheadProductCollectionType extends CommonAbstractType
 {
@@ -92,15 +92,15 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         $product = $this->productAdapter->getProduct($id);
                         $collection[] = [
                             'id' => $id,
-                            'name' => reset($product->name) . ' (ref:' . $product->reference . ')',
+                            'name' => reset($product->name).' (ref:'.$product->reference.')',
                             'image' => $product->image,
                         ];
                         break;
                 }
-                $i++;
+                ++$i;
 
                 //if collection length is up to limit, break
-                if ($options['limit'] != 0 && $i >= $options['limit']) {
+                if (0 != $options['limit'] && $i >= $options['limit']) {
                     break;
                 }
             }

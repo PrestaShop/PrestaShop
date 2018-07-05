@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ class CsvResponse extends StreamedResponse
     private $data;
 
     /**
-     * @var String Export filename
+     * @var string Export filename
      */
     private $fileName;
 
@@ -82,12 +82,13 @@ class CsvResponse extends StreamedResponse
             $this->setCallback(array($this, 'processData'));
         }
 
-        $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
+        $this->setFileName('export_'.date('Y-m-d_His').'.csv');
         $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
     }
 
     /**
      * @param array|callable $data
+     *
      * @return $this
      */
     public function setData($data)
@@ -99,6 +100,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param array $headersData
+     *
      * @return $this
      */
     public function setHeadersData(array $headersData)
@@ -110,6 +112,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param $modeType int
+     *
      * @return $this
      */
     public function setModeType($modeType)
@@ -121,6 +124,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * @param $start int
+     *
      * @return $this
      */
     public function setStart($start)
@@ -130,9 +134,9 @@ class CsvResponse extends StreamedResponse
         return $this;
     }
 
-
     /**
      * @param $limit int
+     *
      * @return $this
      */
     public function setLimit($limit)
@@ -143,7 +147,8 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param String $fileName
+     * @param string $fileName
+     *
      * @return $this
      */
     public function setFileName($fileName)
@@ -160,7 +165,8 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Callback function for StreamedResponse
+     * Callback function for StreamedResponse.
+     *
      * @throws \LogicException
      */
     public function processData()
@@ -183,7 +189,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Process to data export if $this->data is an array
+     * Process to data export if $this->data is an array.
      */
     private function processDataArray()
     {
@@ -198,7 +204,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Process to data export if $this->data is a callable function
+     * Process to data export if $this->data is a callable function.
      */
     private function processDataCallback()
     {
@@ -209,7 +215,7 @@ class CsvResponse extends StreamedResponse
             $data = call_user_func_array($this->data, array($this->start, $this->limit));
 
             $count = count($data);
-            if ($count === 0) {
+            if (0 === $count) {
                 break;
             }
 
@@ -226,14 +232,13 @@ class CsvResponse extends StreamedResponse
             }
 
             $this->incrementData();
-
         } while ($count === $this->limit);
 
         $this->dumpFile($handle);
     }
 
     /**
-     * Just init $this->start if it is null
+     * Just init $this->start if it is null.
      */
     private function initStart()
     {
@@ -251,7 +256,8 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * Increment the start data for the process
+     * Increment the start data for the process.
+     *
      * @throws \LogicException
      */
     private function incrementData()

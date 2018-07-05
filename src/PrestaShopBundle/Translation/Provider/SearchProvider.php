@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,9 +33,10 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     private $domain;
 
     /**
-     * Set domain
+     * Set domain.
      *
      * @param $domain
+     *
      * @return $this
      */
     public function setDomain($domain)
@@ -46,7 +47,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     }
 
     /**
-     * Get domain
+     * Get domain.
      *
      * @return mixed
      */

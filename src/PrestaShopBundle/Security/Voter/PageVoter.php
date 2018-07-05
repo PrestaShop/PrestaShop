@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,19 +38,20 @@ class PageVoter extends Voter
 
     const DELETE = 'delete';
 
-    const READ   = 'read';
+    const READ = 'read';
 
-    const LEVEL_DELETE   = 4;
+    const LEVEL_DELETE = 4;
 
-    const LEVEL_UPDATE   = 2;
+    const LEVEL_UPDATE = 2;
 
-    const LEVEL_CREATE   = 3;
+    const LEVEL_CREATE = 3;
 
-    const LEVEL_READ   = 1;
+    const LEVEL_READ = 1;
 
     /**
      * @param string $attribute
-     * @param mixed $subject
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -63,16 +64,17 @@ class PageVoter extends Voter
     }
 
     /**
-     * @param string $attribute
-     * @param mixed $subject
+     * @param string         $attribute
+     * @param mixed          $subject
      * @param TokenInterface $token
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
-        $global =  $subject . $attribute;
+        $global = $subject.$attribute;
 
         return $this->can($global, $employeeProfileId);
     }
@@ -80,10 +82,11 @@ class PageVoter extends Voter
     /**
      * @param $action
      * @param $employeeProfileId
+     *
      * @return bool
      */
     protected function can($action, $employeeProfileId)
     {
-        return Access::isGranted('ROLE_MOD_TAB_' . strtoupper($action), $employeeProfileId);
+        return Access::isGranted('ROLE_MOD_TAB_'.strtoupper($action), $employeeProfileId);
     }
 }

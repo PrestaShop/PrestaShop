@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
@@ -52,17 +51,17 @@ class SortOrder
 
     public function isRandom()
     {
-        return $this->getDirection() === 'random';
+        return 'random' === $this->getDirection();
     }
 
     public function toArray()
     {
         return [
-            'entity'        => $this->entity,
-            'field'         => $this->field,
-            'direction'     => $this->direction,
-            'label'         => $this->label,
-            'urlParameter'  => $this->toString()
+            'entity' => $this->entity,
+            'field' => $this->field,
+            'direction' => $this->direction,
+            'label' => $this->label,
+            'urlParameter' => $this->toString(),
         ];
     }
 
@@ -74,12 +73,14 @@ class SortOrder
     public static function newFromString($paramValue)
     {
         list($entity, $field, $direction) = explode('.', $paramValue);
+
         return new SortOrder($entity, $field, $direction);
     }
 
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -91,6 +92,7 @@ class SortOrder
     public function setEntity($entity)
     {
         $this->entity = $entity;
+
         return $this;
     }
 
@@ -102,6 +104,7 @@ class SortOrder
     public function setField($field)
     {
         $this->field = $field;
+
         return $this;
     }
 
@@ -121,6 +124,7 @@ class SortOrder
         }
 
         $this->direction = $direction;
+
         return $this->direction;
     }
 
@@ -131,18 +135,19 @@ class SortOrder
 
     private function getLegacyPrefix()
     {
-        if ($this->entity === 'product') {
-            if ($this->field === 'name') {
+        if ('product' === $this->entity) {
+            if ('name' === $this->field) {
                 return 'pl.';
-            } elseif ($this->field === 'position') {
+            } elseif ('position' === $this->field) {
                 return 'cp.';
-            } elseif ($this->field === 'manufacturer_name') {
+            } elseif ('manufacturer_name' === $this->field) {
                 $this->setField('name');
+
                 return 'm.';
             } else {
                 return 'p.';
             }
-        } elseif ($this->entity === 'manufacturer') {
+        } elseif ('manufacturer' === $this->entity) {
             return 'm.';
         }
     }
@@ -150,8 +155,8 @@ class SortOrder
     public function toLegacyOrderBy($prefix = false)
     {
         if ($prefix) {
-            return $this->getLegacyPrefix() . $this->field;
-        } elseif ($this->entity === 'manufacturer' && $this->field === 'name') {
+            return $this->getLegacyPrefix().$this->field;
+        } elseif ('manufacturer' === $this->entity && 'name' === $this->field) {
             return 'manufacturer_name';
         } else {
             return $this->field;

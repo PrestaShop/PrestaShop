@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,12 +37,13 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class SqlTranslationLoader implements LoaderInterface
 {
     /**
-     * @var  Theme
+     * @var Theme
      */
     protected $theme;
 
     /**
      * @param $theme
+     *
      * @return $this
      */
     public function setTheme(Theme $theme)

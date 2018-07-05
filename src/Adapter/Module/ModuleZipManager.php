@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-
 use Exception;
 use Tools;
 use ZipArchive;
@@ -51,8 +50,9 @@ class ModuleZipManager
      */
     private $filesystem;
 
-     /**
-     * Translator
+    /**
+     * Translator.
+     *
      * @var TranslatorInterface
      */
     private $translator;
@@ -61,13 +61,12 @@ class ModuleZipManager
      * @var EventDispatcherInterface
      */
     private $dispatcher;
-    
+
     public function __construct(
         Filesystem $filesystem,
         TranslatorInterface $translator,
         EventDispatcherInterface $dispatcher
-        )
-    {
+        ) {
         $this->filesystem = $filesystem;
         $this->translator = $translator;
         $this->dispatcher = $dispatcher;
@@ -75,15 +74,18 @@ class ModuleZipManager
 
     /**
      * Detect module name from zipball.
-     * @param String $source
-     * @return String
+     *
+     * @param string $source
+     *
+     * @return string
+     *
      * @throws Exception If unable to find the module name
      */
     public function getName($source)
     {
         $this->initSource($source);
-        
-        if ($this->getSource($source)->getName($source) !== null) {
+
+        if (null !== $this->getSource($source)->getName($source)) {
             return $this->getSource($source)->getName($source);
         }
 
@@ -97,13 +99,13 @@ class ModuleZipManager
 
         $sandboxPath = $this->getSandboxPath($source);
         $zip = new ZipArchive();
-        if ($zip->open($source) === false || !$zip->extractTo($sandboxPath) || !$zip->close()) {
+        if (false === $zip->open($source) || !$zip->extractTo($sandboxPath) || !$zip->close()) {
             throw new Exception(
                 $this->translator->trans(
                     'Cannot extract module in %path% to get its name. %error%',
                     array(
                         '%path%' => $sandboxPath,
-                        '%error%' => $zip->getStatusString()),
+                        '%error%' => $zip->getStatusString(), ),
                     'Admin.Modules.Notification'));
         }
 
@@ -117,7 +119,7 @@ class ModuleZipManager
 
         $validModuleStructure = false;
         // We must have only one folder in the zip, which contains the module files
-        if (iterator_count($directories->directories()) == 1) {
+        if (1 == iterator_count($directories->directories())) {
             $directories = iterator_to_array($directories);
             $moduleName = basename(current($directories)->getFileName());
 
@@ -145,12 +147,14 @@ class ModuleZipManager
         }
 
         $this->getSource($source)->setName($moduleName);
+
         return $moduleName;
     }
 
     /**
-     * When ready, send the module Zip in the modules folder
-     * @param String $source
+     * When ready, send the module Zip in the modules folder.
+     *
+     * @param string $source
      */
     public function storeInModulesFolder($source)
     {
@@ -174,17 +178,20 @@ class ModuleZipManager
     private function getSandboxPath($source)
     {
         $sandboxPath = $this->getSource($source)->getSandboxPath();
-        if ($sandboxPath === null) {
+        if (null === $sandboxPath) {
             $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
             $this->filesystem->mkdir($sandboxPath);
             $this->getSource($source)->setSandboxPath($sandboxPath);
         }
+
         return $sandboxPath;
     }
 
     /**
-     * Get a ModuleZip instance from a given source (= zip filepath)
+     * Get a ModuleZip instance from a given source (= zip filepath).
+     *
      * @param string $source
+     *
      * @return null|ModuleZip
      */
     private function getSource($source)
@@ -192,12 +199,14 @@ class ModuleZipManager
         if (!array_key_exists($source, self::$sources)) {
             return null;
         }
+
         return self::$sources[$source];
     }
 
     /**
-     * Init all data regarding a source before proceeding it
-     * @param String $source
+     * Init all data regarding a source before proceeding it.
+     *
+     * @param string $source
      */
     private function initSource($source)
     {
@@ -205,7 +214,7 @@ class ModuleZipManager
             $source = Tools::createFileFromUrl($source);
         }
 
-        if ($this->getSource($source) === null) {
+        if (null === $this->getSource($source)) {
             self::$sources[$source] = new ModuleZip($source);
         }
     }

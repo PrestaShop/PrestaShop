@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * Class GeolocationIpAddressWhitelistConfiguration is responsible for configuring geolocation IP address whitelist data
+ * Class GeolocationIpAddressWhitelistConfiguration is responsible for configuring geolocation IP address whitelist data.
  */
 final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurationInterface
 {

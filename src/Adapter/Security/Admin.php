@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Admin Middleware security
+ * Admin Middleware security.
  */
 class Admin
 {
@@ -48,7 +48,7 @@ class Admin
      * Constructor.
      *
      * @param LegacyContext $context
-     * @param TokenStorage $securityTokenStorage
+     * @param TokenStorage  $securityTokenStorage
      */
     public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage, UserProviderInterface $userProvider)
     {
@@ -60,7 +60,7 @@ class Admin
 
     /**
      * Check if employee is logged in
-     * If not logged in, redirect to admin home page
+     * If not logged in, redirect to admin home page.
      *
      * @param GetResponseEvent $event
      *
@@ -78,7 +78,7 @@ class Admin
         }
 
         // in case of exception handler sub request, avoid infinite redirection
-        if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
+        if (HttpKernelInterface::SUB_REQUEST === $event->getRequestType()
             && isset($event->getRequest()->attributes['exception'])
         ) {
             return true;
@@ -90,12 +90,12 @@ class Admin
         //if http request - add 403 error
         $request = Request::createFromGlobals();
         if ($request->isXmlHttpRequest()) {
-            header("HTTP/1.1 403 Forbidden");
+            header('HTTP/1.1 403 Forbidden');
             exit();
         }
 
         //redirect to admin home page
-        header("Location: ".$this->context->getAdminLink('', false));
+        header('Location: '.$this->context->getAdminLink('', false));
         exit();
     }
 }

@@ -70,10 +70,10 @@ class DemoModeEnabledListener
     /**
      * DemoModeEnabledListener constructor.
      *
-     * @param RouterInterface $router
+     * @param RouterInterface     $router
      * @param TranslatorInterface $translator
-     * @param SessionInterface $session
-     * @param Reader $annotationReader
+     * @param SessionInterface    $session
+     * @param Reader              $annotationReader
      * @param $isDemoModeEnabled
      */
     public function __construct(
@@ -143,7 +143,8 @@ class DemoModeEnabledListener
      * Retrieve DemoRestricted Annotation.
      *
      * @param Controller $controllerObject
-     * @param string $methodName
+     * @param string     $methodName
+     *
      * @return DemoRestricted|null
      */
     private function getAnnotation($controllerObject, $methodName)

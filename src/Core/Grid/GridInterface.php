@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,21 +33,21 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 interface GridInterface
 {
     /**
-     * Get grid definition
+     * Get grid definition.
      *
      * @return DefinitionInterface
      */
     public function getDefinition();
 
     /**
-     * Get grid data
+     * Get grid data.
      *
      * @return GridDataInterface
      */
     public function getData();
 
     /**
-     * Get grid data search criteria
+     * Get grid data search criteria.
      *
      * @return SearchCriteriaInterface
      */

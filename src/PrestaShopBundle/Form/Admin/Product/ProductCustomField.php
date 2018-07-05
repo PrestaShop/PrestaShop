@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product custom fields configuration form
+ * This form class is responsible to generate the product custom fields configuration form.
  */
 class ProductCustomField extends CommonAbstractType
 {
@@ -41,7 +41,7 @@ class ProductCustomField extends CommonAbstractType
     private $locales;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -70,11 +70,11 @@ class ProductCustomField extends CommonAbstractType
                 'type' => FormType\TextType::class,
                 'options' => ['constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Length(['min' => 2])
+                    new Assert\Length(['min' => 2]),
                 ]],
                 'locales' => $this->locales,
                 'hideTabs' => true,
-                'label' => $this->translator->trans('Label', [], 'Admin.Global')
+                'label' => $this->translator->trans('Label', [], 'Admin.Global'),
             ])
             ->add('type', FormType\ChoiceType::class, [
                 'label' => $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
@@ -85,7 +85,7 @@ class ProductCustomField extends CommonAbstractType
                 'attr' => [
                     'class' => 'c-select',
                 ],
-                'required' => true
+                'required' => true,
             ])
             ->add('require', FormType\CheckboxType::class, [
                 'label' => $this->translator->trans('Required', [], 'Admin.Global'),

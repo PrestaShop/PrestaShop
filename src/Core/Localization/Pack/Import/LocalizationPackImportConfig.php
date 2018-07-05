@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
  * Class LocalizationPackImportConfig is value object which is responsible
- * for storing localization pack configuration for import
+ * for storing localization pack configuration for import.
  */
 final class LocalizationPackImportConfig implements LocalizationPackImportConfigInterface
 {
@@ -60,7 +60,7 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     }
 
     /**
-     * Get country ISO code
+     * Get country ISO code.
      *
      * @return string
      */
@@ -70,7 +70,7 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     }
 
     /**
-     * Get content to import
+     * Get content to import.
      *
      * @return array
      */
@@ -80,7 +80,7 @@ final class LocalizationPackImportConfig implements LocalizationPackImportConfig
     }
 
     /**
-     * Whether pack data should be downloaded
+     * Whether pack data should be downloaded.
      *
      * @return bool
      */

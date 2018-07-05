@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -82,7 +82,7 @@ class Theme implements AddonInterface
             if (is_array($modules)) {
                 foreach (array_values($modules) as $module) {
                     if (is_array($module)) {
-                        $module=key($module);
+                        $module = key($module);
                     }
                     if (null !== $module && !in_array($module, $modulesToEnable)) {
                         $modulesToEnable[] = $module;

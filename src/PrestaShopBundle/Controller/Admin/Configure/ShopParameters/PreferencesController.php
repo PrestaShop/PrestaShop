@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,14 +37,14 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Configure > Shop Parameters > General" page
+ * Responsible of "Configure > Shop Parameters > General" page.
  */
 class PreferencesController extends FrameworkBundleAdminController
 {
     const CONTROLLER_NAME = 'AdminPreferences';
 
     /**
-     * @param Request $request
+     * @param Request            $request
      * @param FormInterface|null $form
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
@@ -81,7 +81,7 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the form
+     * Process the form.
      *
      * @param Request $request
      *

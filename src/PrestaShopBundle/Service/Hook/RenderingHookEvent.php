@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Hook;
 
 /**
@@ -49,14 +50,16 @@ class RenderingHookEvent extends HookEvent
      * This content will be pushed in a stack between each listener call.
      * Every response is kept, but a given listener cannot see the previous listeners' responses.
      *
-     * @param string $content The rendering content returned by the listener
+     * @param string    $content      The rendering content returned by the listener
      * @param undefined $fromListener The listener that sets the content
-     * @return $this for fluent use.
+     *
+     * @return $this for fluent use
      */
     public function setContent($content, $fromListener = null)
     {
         $this->currentContent = $content;
         $this->currentListener = $fromListener;
+
         return $this;
     }
 
@@ -72,12 +75,14 @@ class RenderingHookEvent extends HookEvent
 
     /**
      * Retrieves the last pushed content (and cleans the corresponding attribute).
+     *
      * @return string
      */
     public function popContent()
     {
         $content = $this->currentContent;
         $this->currentContent = '';
+
         return $content;
     }
 
@@ -90,6 +95,7 @@ class RenderingHookEvent extends HookEvent
     {
         $listener = $this->currentListener;
         $this->currentListener = null;
+
         return $listener;
     }
 }

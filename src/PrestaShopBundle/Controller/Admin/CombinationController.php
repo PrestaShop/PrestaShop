@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ class CombinationController extends FrameworkBundleAdminController
         $response = new Response();
 
         $combinationIds = explode('-', $combinationIds);
-        if ($combinationIds === false || count($combinationIds) == 0) {
+        if (false === $combinationIds || 0 == count($combinationIds)) {
             return $response;
         }
 
@@ -62,7 +63,7 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * get All Combinations for a product
+     * get All Combinations for a product.
      *
      * @param int $idProduct The product id
      *
@@ -74,7 +75,7 @@ class CombinationController extends FrameworkBundleAdminController
 
         //get product
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         //get combinations
         $modelMapper = new ProductAdminModelAdapter(

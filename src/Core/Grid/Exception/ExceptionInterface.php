@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Exception;
 
 /**
- * Interface ExceptionInterface is implemented by all grid exceptions
+ * Interface ExceptionInterface is implemented by all grid exceptions.
  */
 interface ExceptionInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
 {
     /**
      * @param array $queryParams
+     *
      * @return array|mixed
      */
     protected function parseOrderParams(array $queryParams)
@@ -71,12 +72,13 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'available_quantity',
             'physical_quantity',
             'active',
-            'low_stock'
+            'low_stock',
         );
     }
 
     /**
      * @param $queryParams
+     *
      * @return mixed
      */
     protected function setDefaultOrderParam($queryParams)

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,18 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use Tools as ToolsLegacy;
 use Product;
 use Combination;
 
 /**
- * This class will provide data from DB / ORM about product combination
+ * This class will provide data from DB / ORM about product combination.
  */
 class CombinationDataProvider
 {
@@ -50,7 +50,8 @@ class CombinationDataProvider
     }
 
     /**
-     * Get a combination values
+     * Get a combination values.
+     *
      * @deprecated since 1.7.3.1 really slow, use getFormCombinations instead.
      *
      * @param int $combinationId The id_product_attribute
@@ -72,9 +73,12 @@ class CombinationDataProvider
 
     /**
      * Retrieve combinations data for a specific language id.
+     *
      * @param array $combinationIds
-     * @param int $languageId
-     * @return array a list of formatted combinations.
+     * @param int   $languageId
+     *
+     * @return array a list of formatted combinations
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -100,6 +104,7 @@ class CombinationDataProvider
     /**
      * @param $attributesCombinations
      * @param $product
+     *
      * @return array
      */
     public function completeCombination($attributesCombinations, $product)
@@ -151,8 +156,8 @@ class CombinationDataProvider
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
             'attribute_low_stock_threshold' => $combination['low_stock_threshold'],
             'attribute_low_stock_alert' => (bool) $combination['low_stock_alert'],
-            'available_date_attribute' =>  $combination['available_date'],
-            'attribute_default' => (bool)$combination['default_on'],
+            'available_date_attribute' => $combination['available_date'],
+            'attribute_default' => (bool) $combination['default_on'],
             'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combination['id_product_attribute']),
             'name' => $this->getCombinationName($attributesCombinations),
             'id_product' => $product->id,

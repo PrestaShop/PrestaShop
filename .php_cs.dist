@@ -1,0 +1,12 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()->in(__DIR__.'/src');
+
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(false)
+    ->setRules([
+        '@Symfony' => true,
+    ])
+    ->setFinder($finder)
+    ->setCacheFile(__DIR__.'/var/.php_cs.cache')
+;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 use Iterator;
 
 /**
- * Interface RowActionCollectionInterface defines contract for row actions collection
+ * Interface RowActionCollectionInterface defines contract for row actions collection.
  */
 interface RowActionCollectionInterface extends Iterator
 {
     /**
-     * Add row action to collection
+     * Add row action to collection.
      *
      * @param RowActionInterface $action
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -69,7 +69,7 @@ class ModuleTabUnregister
      *
      * This is done automatically as part of the module uninstallation.
      *
-     * @return bool Returns true if the module tabs were successfully uninstalled, false if any of them failed to do so.
+     * @return bool returns true if the module tabs were successfully uninstalled, false if any of them failed to do so
      */
     public function unregisterTabs(Module $module)
     {
@@ -86,8 +86,7 @@ class ModuleTabUnregister
     /**
      * Uninstalls a tab given its defined structure.
      *
-     * @param Tab $tab The instance of entity tab.
-     *
+     * @param Tab $tab the instance of entity tab
      */
     private function unregisterTab(Tab $tab)
     {

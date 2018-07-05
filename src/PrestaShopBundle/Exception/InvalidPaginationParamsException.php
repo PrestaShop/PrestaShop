@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,17 +32,16 @@ use Exception;
 class InvalidPaginationParamsException extends OutOfBoundsException
 {
     /**
-     * @param string $message
-     * @param int $code
+     * @param string         $message
+     * @param int            $code
      * @param Exception|null $previous
      */
     public function __construct(
         $message = '',
         $code = 0,
         Exception $previous = null
-    )
-    {
-        if ($message == '') {
+    ) {
+        if ('' == $message) {
             $message = 'A page index should be an integer greater than 1.';
         }
 

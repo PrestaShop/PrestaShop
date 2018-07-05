@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Class PanelAction is responsible for holding single grid action data
+ * Class PanelAction is responsible for holding single grid action data.
  */
 final class GridAction implements GridActionInterface
 {

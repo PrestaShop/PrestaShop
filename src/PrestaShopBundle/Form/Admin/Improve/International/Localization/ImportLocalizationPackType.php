@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ImportLocalizationPackType is responsible for building 'Import a localization pack' form
- * in 'Improve > International > Localization'
+ * in 'Improve > International > Localization'.
  */
 class ImportLocalizationPackType extends TranslatorAwareType
 {
@@ -46,8 +46,8 @@ class ImportLocalizationPackType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $localizationPackChoices
+     * @param array               $locales
+     * @param array               $localizationPackChoices
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -87,7 +87,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
     }
 
     /**
-     * Get import content choices
+     * Get import content choices.
      *
      * @return array
      */

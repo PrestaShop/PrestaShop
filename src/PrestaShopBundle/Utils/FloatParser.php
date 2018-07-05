@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,37 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Utils;
 
 /**
- * Converts strings into floats
+ * Converts strings into floats.
  */
 class FloatParser
 {
     private static $translationTable = array(
         // arabic numbers
-        "٠" => "0",
-        "١" => "1",
-        "٢" => "2",
-        "٣" => "3",
-        "٤" => "4",
-        "٥" => "5",
-        "٦" => "6",
-        "٧" => "7",
-        "٨" => "8",
-        "٩" => "9",
+        '٠' => '0',
+        '١' => '1',
+        '٢' => '2',
+        '٣' => '3',
+        '٤' => '4',
+        '٥' => '5',
+        '٦' => '6',
+        '٧' => '7',
+        '٨' => '8',
+        '٩' => '9',
         // persian numbers (NOT the same UTF codes!)
-        "۰" => "0",
-        "۱" => "1",
-        "۲" => "2",
-        "۳" => "3",
-        "۴" => "4",
-        "۵" => "5",
-        "۶" => "6",
-        "۷" => "7",
-        "۸" => "8",
-        "۹" => "9",
+        '۰' => '0',
+        '۱' => '1',
+        '۲' => '2',
+        '۳' => '3',
+        '۴' => '4',
+        '۵' => '5',
+        '۶' => '6',
+        '۷' => '7',
+        '۸' => '8',
+        '۹' => '9',
     );
 
     /**
@@ -73,8 +72,8 @@ class FloatParser
      *
      * @param string $value
      *
-     * @throws \InvalidArgumentException If the provided value is not a string
-     * or if it cannot be interpreted as a number.
+     * @throws \InvalidArgumentException if the provided value is not a string
+     *                                   or if it cannot be interpreted as a number
      *
      * @return float
      */
@@ -115,7 +114,7 @@ class FloatParser
         $decimal = array_pop($split);
 
         // reconstruct the number using dot as decimal separator
-        $value = implode('', $split) . '.' . $decimal;
+        $value = implode('', $split).'.'.$decimal;
 
         return (float) $value;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 /**
- * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com
+ * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com.
  */
 final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 {
@@ -46,7 +46,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param Version $version
+     * @param Version                $version
      */
     public function __construct(ConfigurationInterface $configuration, Version $version)
     {

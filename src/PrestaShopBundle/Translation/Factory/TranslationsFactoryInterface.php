@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -48,8 +48,9 @@ interface TranslationsFactoryInterface
      *
      * @param string $domainIdentifier Domain identifier
      * @param string $locale           Locale identifier
-     * @param null $theme
-     * @param null $search
+     * @param null   $theme
+     * @param null   $search
+     *
      * @@return array Translation tree structure
      */
     public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page
+ * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page.
  */
 class PaymentModulePreferencesType extends TranslatorAwareType
 {
@@ -69,12 +69,12 @@ class PaymentModulePreferencesType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $paymentModules
-     * @param array $countryChoices
-     * @param array $groupChoices
-     * @param array $carrierChoices
-     * @param array $currencyChoices
+     * @param array               $locales
+     * @param array               $paymentModules
+     * @param array               $countryChoices
+     * @param array               $groupChoices
+     * @param array               $carrierChoices
+     * @param array               $currencyChoices
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(
@@ -127,7 +127,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple currency choices for payment modules
+     * Get multiple currency choices for payment modules.
      *
      * @return array
      */
@@ -161,7 +161,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple country choices for payment modules
+     * Get multiple country choices for payment modules.
      *
      * @return array
      */
@@ -190,7 +190,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple group choices for payment modules
+     * Get multiple group choices for payment modules.
      *
      * @return array
      */
@@ -211,7 +211,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple carrier choices for payment modules
+     * Get multiple carrier choices for payment modules.
      *
      * @return array
      */
@@ -232,7 +232,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get currency choices with specific addtional choices
+     * Get currency choices with specific addtional choices.
      *
      * @return array
      */
@@ -245,7 +245,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get payment preferences specific currency choices
+     * Get payment preferences specific currency choices.
      *
      * @return array
      */
@@ -258,7 +258,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get country choices by country ISO codes
+     * Get country choices by country ISO codes.
      *
      * @param array $limitedCountryIsoCodes
      *
@@ -280,7 +280,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Sort payment modules by display name
+     * Sort payment modules by display name.
      *
      * @param array $paymentModules
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -288,13 +287,14 @@ class ModuleController extends FrameworkBundleAdminController
         if (!method_exists($moduleManager, $action)) {
             $response[$module]['status'] = false;
             $response[$module]['msg'] = $this->trans('Invalid action', 'Admin.Notifications.Error');
+
             return new JsonResponse($response);
         }
 
         try {
             $response[$module]['status'] = $moduleManager->{$action}($module);
 
-            if ($response[$module]['status'] === null) {
+            if (null === $response[$module]['status']) {
                 $response[$module]['status'] = false;
                 $response[$module]['msg'] = $this->trans(
                     '%module% did not return a valid response on %action% action.',
@@ -304,7 +304,7 @@ class ModuleController extends FrameworkBundleAdminController
                         '%action%' => $action,
                     )
                 );
-            } elseif ($response[$module]['status'] === false) {
+            } elseif (false === $response[$module]['status']) {
                 $error = $moduleManager->getError($module);
                 $response[$module]['msg'] = $this->trans(
                     'Cannot %action% module %module%. %error_details%',
@@ -341,7 +341,7 @@ class ModuleController extends FrameworkBundleAdminController
                                 '%action%' => $e->getAction(),
                                 '%module%' => $module,
                             )
-                        )
+                        ),
                     ));
         } catch (Exception $e) {
             $response[$module]['status'] = false;
@@ -359,7 +359,7 @@ class ModuleController extends FrameworkBundleAdminController
             $logger->error($response[$module]['msg']);
         }
 
-        if ($response[$module]['status'] === true && $action != 'uninstall') {
+        if (true === $response[$module]['status'] && 'uninstall' != $action) {
             $moduleInstance = $moduleRepository->getModule($module);
             $collection = AddonsCollection::createFrom(array($moduleInstance));
             $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($collection);
@@ -374,6 +374,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return JsonResponse
      */
     protected function getDisabledFunctionalityResponse($request)
@@ -424,6 +425,7 @@ class ModuleController extends FrameworkBundleAdminController
     public function notificationsCountAction()
     {
         $moduleManager = $this->container->get('prestashop.module.manager');
+
         return new JsonResponse(array(
             'count' => $moduleManager->countModulesWithNotifications(),
         ));
@@ -431,6 +433,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function getPreferredModulesAction(Request $request)
@@ -510,13 +513,13 @@ class ModuleController extends FrameworkBundleAdminController
                     }
                 }
 
-                if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {
+                if (ModuleRepository::PARTNER_AUTHOR === $module->get('author')) {
                     $module->set('type', 'addonsPartner');
                 }
 
                 if ($perm) {
                     $module->fillLogo();
-                    if ($module->database->get('installed') == 1) {
+                    if (1 == $module->database->get('installed')) {
                         $modulesList['installed'][] = $modulePresenter->present($module);
                     } else {
                         $modulesList['not_installed'][] = $modulePresenter->present($module);
@@ -553,7 +556,7 @@ class ModuleController extends FrameworkBundleAdminController
                     $this->authorizationLevel($this::CONTROLLER_NAME),
                     array(
                         PageVoter::LEVEL_CREATE,
-                        PageVoter::LEVEL_DELETE
+                        PageVoter::LEVEL_DELETE,
                     )
                 )
             ) {
@@ -571,7 +574,7 @@ class ModuleController extends FrameworkBundleAdminController
                 new Assert\NotNull(),
                 new Assert\File(
                     array(
-                        'maxSize'   => ini_get('upload_max_filesize'),
+                        'maxSize' => ini_get('upload_max_filesize'),
                         'mimeTypes' => array(
                             'application/zip',
                             'application/x-gzip',
@@ -601,14 +604,14 @@ class ModuleController extends FrameworkBundleAdminController
                 'module_name' => $module_name,
             );
 
-            if ($installation_response['status'] === null) {
+            if (null === $installation_response['status']) {
                 $installation_response['status'] = false;
                 $installation_response['msg'] = $this->trans(
                     '%module% did not return a valid response on installation.',
                     'Admin.Modules.Notification',
                     array('%module%' => $module_name)
                 );
-            } elseif ($installation_response['status'] === true) {
+            } elseif (true === $installation_response['status']) {
                 $installation_response['msg'] = $this->trans(
                     'Installation of module %module% was successful.',
                     'Admin.Modules.Notification',
@@ -635,6 +638,7 @@ class ModuleController extends FrameworkBundleAdminController
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')->generateAddonsUrls($collection);
+
             return new JsonResponse(
                     array(
                         'status' => false,
@@ -648,7 +652,7 @@ class ModuleController extends FrameworkBundleAdminController
                                 '%action%' => $e->getAction(),
                                 '%module%' => $module_name,
                             )
-                    )));
+                    ), ));
         } catch (Exception $e) {
             if (isset($module_name)) {
                 $moduleManager->disable($module_name);

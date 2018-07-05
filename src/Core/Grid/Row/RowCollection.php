@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Row;
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class RowCollection is a wrapper around rows from database
+ * Class RowCollection is a wrapper around rows from database.
  */
 class RowCollection extends AbstractCollection implements RowCollectionInterface
 {

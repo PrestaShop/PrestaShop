@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Attribute
+ * Attribute.
  *
  * @ORM\Table(
  *     indexes={@ORM\Index(name="attribute_group", columns={"id_attribute_group"})}
  * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeRepository")
  */
-
 class Attribute
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_attribute", type="integer")
@@ -64,7 +62,7 @@ class Attribute
     private $color;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer")
      */
@@ -85,7 +83,7 @@ class Attribute
     private $attributeLangs;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -94,9 +92,9 @@ class Attribute
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -104,7 +102,7 @@ class Attribute
     }
 
     /**
-     * Set color
+     * Set color.
      *
      * @param string $color
      *
@@ -118,7 +116,7 @@ class Attribute
     }
 
     /**
-     * Get color
+     * Get color.
      *
      * @return string
      */
@@ -128,9 +126,9 @@ class Attribute
     }
 
     /**
-     * Set position
+     * Set position.
      *
-     * @param integer $position
+     * @param int $position
      *
      * @return Attribute
      */
@@ -142,9 +140,9 @@ class Attribute
     }
 
     /**
-     * Get position
+     * Get position.
      *
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {
@@ -152,7 +150,7 @@ class Attribute
     }
 
     /**
-     * Set attributeGroup
+     * Set attributeGroup.
      *
      * @param \PrestaShopBundle\Entity\AttributeGroup $attributeGroup
      *
@@ -166,7 +164,7 @@ class Attribute
     }
 
     /**
-     * Get attributeGroup
+     * Get attributeGroup.
      *
      * @return \PrestaShopBundle\Entity\AttributeGroup
      */
@@ -176,7 +174,7 @@ class Attribute
     }
 
     /**
-     * Add shop
+     * Add shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
@@ -190,7 +188,7 @@ class Attribute
     }
 
     /**
-     * Remove shop
+     * Remove shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      */
@@ -200,7 +198,7 @@ class Attribute
     }
 
     /**
-     * Get shops
+     * Get shops.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

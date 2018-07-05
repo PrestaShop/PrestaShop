@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -48,16 +48,16 @@ class DatabaseDump
     {
         $host_and_maybe_port = explode(':', _DB_SERVER_);
 
-        if (count($host_and_maybe_port) === 1) {
+        if (1 === count($host_and_maybe_port)) {
             $this->host = $host_and_maybe_port[0];
             $this->port = 3306;
-        } elseif (count($host_and_maybe_port) === 2) {
+        } elseif (2 === count($host_and_maybe_port)) {
             $this->host = $host_and_maybe_port[0];
             $this->port = $host_and_maybe_port[1];
         }
 
-        if ($dumpFile === null) {
-            $this->dumpFile = sys_get_temp_dir() . '/' . 'ps_dump.sql';
+        if (null === $dumpFile) {
+            $this->dumpFile = sys_get_temp_dir().'/'.'ps_dump.sql';
         } else {
             $this->dumpFile = $dumpFile;
         }
@@ -67,7 +67,7 @@ class DatabaseDump
     }
 
     /**
-     * Wrapper to easily build mysql commands: sets password, port, user
+     * Wrapper to easily build mysql commands: sets password, port, user.
      *
      * @param string $executable
      * @param array  $arguments
@@ -98,6 +98,7 @@ class DatabaseDump
      * @param string $command
      *
      * @return array
+     *
      * @throws Exception
      */
     private function exec($command)
@@ -106,7 +107,7 @@ class DatabaseDump
         $ret = 1;
         exec($command, $output, $ret);
 
-        if ($ret !== 0) {
+        if (0 !== $ret) {
             throw new Exception(sprintf('Unable to exec command: `%s`, missing a binary?', $command));
         }
 
@@ -119,7 +120,7 @@ class DatabaseDump
     private function dump()
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile). ' 2> /dev/null';
+        $dumpCommand .= ' > '.escapeshellarg($this->dumpFile).' 2> /dev/null';
         $this->exec($dumpCommand);
     }
 
@@ -129,12 +130,12 @@ class DatabaseDump
     public function restore()
     {
         $restoreCommand = $this->buildMySQLCommand('mysql', array($this->databaseName));
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $restoreCommand .= ' < '.escapeshellarg($this->dumpFile).' 2> /dev/null';
         $this->exec($restoreCommand);
     }
 
     /**
-     * Make a database dump
+     * Make a database dump.
      */
     public static function create()
     {
@@ -144,7 +145,7 @@ class DatabaseDump
     }
 
     /**
-     * Restore a database dump
+     * Restore a database dump.
      */
     public static function restoreDb()
     {

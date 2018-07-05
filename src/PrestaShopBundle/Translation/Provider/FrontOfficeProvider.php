@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -87,6 +87,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
 
     /**
      * @param null $themeName
+     *
      * @return MessageCatalogue
      */
     public function getDatabaseCatalogue($themeName = null)

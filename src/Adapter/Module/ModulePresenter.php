@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Currency;
@@ -42,7 +43,7 @@ class ModulePresenter implements PresenterInterface
     public function __construct(Currency $currency, PriceFormatter $priceFormatter)
     {
         $this->currency = $currency;
-        $this->priceFormatter  = $priceFormatter;
+        $this->priceFormatter = $priceFormatter;
     }
 
     /**
@@ -53,7 +54,7 @@ class ModulePresenter implements PresenterInterface
     public function present($module)
     {
         if (!is_a($module, '\\PrestaShop\\PrestaShop\\Adapter\\Module\\Module')) {
-            throw new \Exception("ModulePresenter can only present instance of Module");
+            throw new \Exception('ModulePresenter can only present instance of Module');
         }
 
         $attributes = $module->attributes->all();
@@ -77,13 +78,15 @@ class ModulePresenter implements PresenterInterface
             $prices['displayPrice'] = '$'.$prices['USD'];
             $prices['raw'] = $prices['USD'];
         }
+
         return $prices;
     }
 
     /**
-     * Generate the list of small icons to be displayed near the module name
-     * 
+     * Generate the list of small icons to be displayed near the module name.
+     *
      * @param array $attributes Attributes of presented module
+     *
      * @return array
      */
     private function addPicos(array $attributes)
@@ -105,6 +108,7 @@ class ModulePresenter implements PresenterInterface
                 'class' => $class,
             );
         }
+
         return $picos;
     }
 }

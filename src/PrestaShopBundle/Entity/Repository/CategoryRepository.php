@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -65,17 +65,17 @@ class CategoryRepository
     private $contextAdapter;
 
     /**
-     * @param Connection $connection
+     * @param Connection     $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
+     *
      * @throws NotImplementedException
      */
     public function __construct(
         Connection $connection,
         ContextAdapter $contextAdapter,
         $tablePrefix
-    )
-    {
+    ) {
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
 
@@ -87,7 +87,7 @@ class CategoryRepository
         }
 
         $languageId = $context->employee->id_lang;
-        $this->languageId = (int)$languageId;
+        $this->languageId = (int) $languageId;
 
         if (!$context->shop instanceof Shop) {
             throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
@@ -103,6 +103,7 @@ class CategoryRepository
 
     /**
      * @param bool $tree if tree needed for categories
+     *
      * @return mixed
      */
     public function getCategories($tree = false)
@@ -137,6 +138,7 @@ class CategoryRepository
 
     /**
      * @param $rows array categories rows
+     *
      * @return array
      */
     private function buildTreeCategories($rows)

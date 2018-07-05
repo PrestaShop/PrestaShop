@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class ColumnCollection holds collection of columns for grid
+ * Class ColumnCollection holds collection of columns for grid.
  *
  * @property ColumnInterface[] $items
  */

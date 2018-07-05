@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Carrier;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
- * This class will provide data from DB / ORM about Category
+ * This class will provide data from DB / ORM about Category.
  */
 class CarrierDataProvider
 {
@@ -45,12 +45,12 @@ class CarrierDataProvider
     }
 
     /**
-     * Get all carriers in a given language
+     * Get all carriers in a given language.
      *
-     * @param int $id_lang Language id
-     * @param bool $active Returns only active carriers when true
-     * @param bool $delete
-     * @param bool|int $id_zone
+     * @param int         $id_lang   Language id
+     * @param bool        $active    Returns only active carriers when true
+     * @param bool        $delete
+     * @param bool|int    $id_zone
      * @param null|string $ids_group
      * @param $modules_filters , possible values:
      * PS_CARRIERS_ONLY
@@ -67,7 +67,7 @@ class CarrierDataProvider
     }
 
     /**
-     * Get all active carriers in given language, usable for choice form type
+     * Get all active carriers in given language, usable for choice form type.
      *
      * @param int|null $languageId if not provided - will use the default language
      *
@@ -90,7 +90,7 @@ class CarrierDataProvider
     }
 
     /**
-     * Get carriers order by choices
+     * Get carriers order by choices.
      *
      * @return array order by choices
      */
@@ -103,7 +103,7 @@ class CarrierDataProvider
     }
 
     /**
-     * Get carriers order way choices
+     * Get carriers order way choices.
      *
      * @return array order way choices
      */
@@ -116,7 +116,7 @@ class CarrierDataProvider
     }
 
     /**
-     * Get the CarrierCore class ALL_CARRIERS constant value
+     * Get the CarrierCore class ALL_CARRIERS constant value.
      *
      * @return int
      */

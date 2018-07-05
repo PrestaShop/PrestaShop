@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -60,9 +60,10 @@ class ThemeProvider extends AbstractProvider
     public $defaultTranslationDir;
 
     /**
-     * Set domain
+     * Set domain.
      *
      * @param $domain
+     *
      * @return $this
      */
     public function setDomain($domain)
@@ -73,7 +74,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * Get domain
+     * Get domain.
      *
      * @return mixed
      */
@@ -134,6 +135,7 @@ class ThemeProvider extends AbstractProvider
 
     /**
      * @param null $baseDir
+     *
      * @return string Path to app/themes/{themeName}/translations/{locale}
      */
     public function getResourceDirectory($baseDir = null)
@@ -181,6 +183,7 @@ class ThemeProvider extends AbstractProvider
 
     /**
      * @param null $themeName
+     *
      * @return \Symfony\Component\Translation\MessageCatalogue
      */
     public function getDatabaseCatalogue($themeName = null)
@@ -251,7 +254,7 @@ class ThemeProvider extends AbstractProvider
 
     /**
      * {@inheritdoc}
-     * string Path to app/Resources/translations/{locale}
+     * string Path to app/Resources/translations/{locale}.
      */
     public function getDefaultResourceDirectory()
     {

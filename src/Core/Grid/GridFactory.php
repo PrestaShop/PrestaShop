@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
- * Class GridFactory is responsible for creating final Grid instance
+ * Class GridFactory is responsible for creating final Grid instance.
  */
 final class GridFactory implements GridFactoryInterface
 {

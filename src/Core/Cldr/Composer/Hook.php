@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,14 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Cldr\Composer;
 
 use Composer\Script\Event;
 
 /**
- * Class Hook used to download CLDR data during composer install/update
- *
- * @package PrestaShop\PrestaShop\Core\Cldr\Composer
+ * Class Hook used to download CLDR data during composer install/update.
  */
 class Hook
 {
@@ -38,24 +37,25 @@ class Hook
     const ZIP_CORE_URL = 'https://i18n.prestashop.com/cldr/cldr.zip';
 
     /**
-     * Triggers CLDR download
+     * Triggers CLDR download.
      *
      * @param Event $event
+     *
      * @throws \Exception
      * @throws \PrestaShopDatabaseException
      */
     public static function init(Event $event = null)
     {
         if ($event) {
-            $event->getIO()->write("Init CLDR data download...");
+            $event->getIO()->write('Init CLDR data download...');
         }
-        $root_dir = realpath(__DIR__ . '/../../../../');
+        $root_dir = realpath(__DIR__.'/../../../../');
         $cldrFolder = "$root_dir/translations/cldr";
         $cldrFilePath = "$cldrFolder/cldr.zip";
         $zipUrl = self::ZIP_CORE_URL;
 
         if (!file_exists($cldrFilePath)) {
-            $fp = fopen($cldrFilePath, "w");
+            $fp = fopen($cldrFilePath, 'w');
             $ch = curl_init($zipUrl);
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -66,13 +66,13 @@ class Hook
 
             if (!empty($error)) {
                 throw new \Exception("Failed to download '$zipUrl', error: '$error'.");
-            };
+            }
             exec("cd $cldrFolder && unzip -oqq $cldrFilePath -d .. && cd -");
             unlink($cldrFilePath);
         }
 
         if ($event) {
-            $event->getIO()->write("Finished...");
+            $event->getIO()->write('Finished...');
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
- * Number specification class
+ * Number specification class.
  *
  * Regroups rules and data used when formatting a decimal number in a given locale and a given numbering system
  * (latin, arab, ...).
@@ -39,30 +39,23 @@ class Number implements NumberInterface
     /**
      * Number specification constructor.
      *
-     * @param string $positivePattern
-     *  CLDR formatting pattern for positive amounts
-     *
-     * @param string $negativePattern
-     *  CLDR formatting pattern for negative amounts
-     *
+     * @param string             $positivePattern
+     *                                               CLDR formatting pattern for positive amounts
+     * @param string             $negativePattern
+     *                                               CLDR formatting pattern for negative amounts
      * @param NumberSymbolList[] $symbols
-     *  List of available number symbols lists (NumberSymbolList objects)
-     *  Each list is indexed by numbering system
-     *
-     * @param int $maxFractionDigits
-     *  Maximum number of digits after decimal separator
-     *
-     * @param int $minFractionDigits
-     *  Minimum number of digits after decimal separator
-     *
-     * @param bool $groupingUsed
-     *  Is digits grouping used ?
-     *
-     * @param int $primaryGroupSize
-     *  Size of primary digits group in the number
-     *
-     * @param int $secondaryGroupSize
-     *  Size of secondary digits group in the number
+     *                                               List of available number symbols lists (NumberSymbolList objects)
+     *                                               Each list is indexed by numbering system
+     * @param int                $maxFractionDigits
+     *                                               Maximum number of digits after decimal separator
+     * @param int                $minFractionDigits
+     *                                               Minimum number of digits after decimal separator
+     * @param bool               $groupingUsed
+     *                                               Is digits grouping used ?
+     * @param int                $primaryGroupSize
+     *                                               Size of primary digits group in the number
+     * @param int                $secondaryGroupSize
+     *                                               Size of secondary digits group in the number
      *
      * @throws LocalizationException
      */
@@ -76,13 +69,13 @@ class Number implements NumberInterface
         $primaryGroupSize,
         $secondaryGroupSize
     ) {
-        $this->positivePattern    = $positivePattern;
-        $this->negativePattern    = $negativePattern;
-        $this->symbols            = $symbols;
-        $this->maxFractionDigits  = $maxFractionDigits;
-        $this->minFractionDigits  = $minFractionDigits;
-        $this->groupingUsed       = $groupingUsed;
-        $this->primaryGroupSize   = $primaryGroupSize;
+        $this->positivePattern = $positivePattern;
+        $this->negativePattern = $negativePattern;
+        $this->symbols = $symbols;
+        $this->maxFractionDigits = $maxFractionDigits;
+        $this->minFractionDigits = $minFractionDigits;
+        $this->groupingUsed = $groupingUsed;
+        $this->primaryGroupSize = $primaryGroupSize;
         $this->secondaryGroupSize = $secondaryGroupSize;
 
         $this->validateData();
@@ -114,21 +107,21 @@ class Number implements NumberInterface
 
     /**
      * List of available number symbols lists (NumberSymbolList objects)
-     * Each list is indexed by numbering system
+     * Each list is indexed by numbering system.
      *
      * @var NumberSymbolList[]
      */
     protected $symbols;
 
     /**
-     * Maximum number of digits after decimal separator (rounding if needed)
+     * Maximum number of digits after decimal separator (rounding if needed).
      *
      * @var int
      */
     protected $maxFractionDigits;
 
     /**
-     * Minimum number of digits after decimal separator (fill with "0" if needed)
+     * Minimum number of digits after decimal separator (fill with "0" if needed).
      *
      * @var int
      */
@@ -136,7 +129,7 @@ class Number implements NumberInterface
 
     /**
      * Is digits grouping used ?
-     * eg: if yes -> "9 999 999". If no => "9999999"
+     * eg: if yes -> "9 999 999". If no => "9999999".
      *
      * @var bool
      */
@@ -144,7 +137,7 @@ class Number implements NumberInterface
 
     /**
      * Size of primary digits group in the number
-     * eg: 999 is the primary group in this number : 1 234 999.567
+     * eg: 999 is the primary group in this number : 1 234 999.567.
      *
      * @var int
      */
@@ -153,7 +146,7 @@ class Number implements NumberInterface
     /**
      * Size of secondary digits groups in the number
      * eg: 999 is a secondary group in this number : 123 999 456.789
-     * eg: another secondary group (still 999) : 999 123 456.789
+     * eg: another secondary group (still 999) : 999 123 456.789.
      *
      * @var int
      */
@@ -172,12 +165,13 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the specified symbols list for a given numbering system
+     * Get the specified symbols list for a given numbering system.
      *
      * @param string $numberingSystem
-     *  Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
+     *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      *
      * @return NumberSymbolList
+     *
      * @throws LocalizationException
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
@@ -190,7 +184,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the formatting rules for this number (when positive)
+     * Get the formatting rules for this number (when positive).
      *
      * This pattern uses the Unicode CLDR number pattern syntax
      *
@@ -202,7 +196,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the formatting rules for this number (when negative)
+     * Get the formatting rules for this number (when negative).
      *
      * This pattern uses the Unicode CLDR number pattern syntax
      *
@@ -214,7 +208,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the maximum number of digits after decimal separator (rounding if needed)
+     * Get the maximum number of digits after decimal separator (rounding if needed).
      *
      * @return int
      */
@@ -224,7 +218,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the minimum number of digits after decimal separator (fill with "0" if needed)
+     * Get the minimum number of digits after decimal separator (fill with "0" if needed).
      *
      * @return int
      */
@@ -244,7 +238,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the size of primary digits group in the number
+     * Get the size of primary digits group in the number.
      *
      * @return int
      */
@@ -254,7 +248,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Get the size of secondary digits groups in the number
+     * Get the size of secondary digits groups in the number.
      *
      * @return int
      */
@@ -264,7 +258,7 @@ class Number implements NumberInterface
     }
 
     /**
-     * Data (attributes) validation
+     * Data (attributes) validation.
      *
      * @throws LocalizationException
      */

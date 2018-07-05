@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,22 +26,22 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Improve > Modules > Modules Catalog" page display
+ * Responsible of "Improve > Modules > Modules Catalog" page display.
  */
 class AddonsStoreController extends FrameworkBundleAdminController
 {
     /**
-     * @var string The controller name for routing.
+     * @var string the controller name for routing
      */
     const CONTROLLER_NAME = 'AdminAddonsCatalog';
 
     /**
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -62,6 +62,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
      * @return string
      */
     private function getAddonsUrl(Request $request)

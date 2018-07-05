@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
- * The Currency class is used to feed callers with currency-related data
+ * The Currency class is used to feed callers with currency-related data.
  *
  * For instance, the LocaleRepository uses currency data to build Price specifications
  */
@@ -43,7 +43,7 @@ class Currency implements CurrencyInterface
     protected $isActive;
 
     /**
-     * Conversion rate of this currency against the default shop's currency
+     * Conversion rate of this currency against the default shop's currency.
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
@@ -57,7 +57,7 @@ class Currency implements CurrencyInterface
     protected $conversionRate;
 
     /**
-     * Currency's alphabetic ISO code (ISO 4217)
+     * Currency's alphabetic ISO code (ISO 4217).
      *
      * @see https://www.iso.org/iso-4217-currency-codes.html
      *
@@ -66,7 +66,7 @@ class Currency implements CurrencyInterface
     protected $isoCode;
 
     /**
-     * Currency's numeric ISO code (ISO 4217)
+     * Currency's numeric ISO code (ISO 4217).
      *
      * @see https://www.iso.org/iso-4217-currency-codes.html
      *
@@ -75,7 +75,7 @@ class Currency implements CurrencyInterface
     protected $numericIsoCode;
 
     /**
-     * Currency's symbols, by locale code
+     * Currency's symbols, by locale code.
      *
      * eg.: $symbolsUSD = [
      *     'en-US' => '$',
@@ -87,41 +87,34 @@ class Currency implements CurrencyInterface
     protected $symbols;
 
     /**
-     * Number of decimal digits to use with this currency
+     * Number of decimal digits to use with this currency.
      *
      * @var int
      */
     protected $precision;
 
     /**
-     * the currency's name, by locale code
+     * the currency's name, by locale code.
      *
      * @var string[]
      */
     protected $names;
 
     /**
-     * @param bool $isActive
-     *  Is this currency active ?
-     *
-     * @param float $conversionRate
-     *  Conversion rate of this currency against the default shop's currency
-     *
-     * @param string $isoCode
-     *  Currency's alphabetic ISO code (ISO 4217)
-     *
-     * @param int $numericIsoCode
-     *  Currency's numeric ISO code (ISO 4217)
-     *
-     * @param string[] $symbols
-     *  Currency's symbols, by locale code
-     *
-     * @param int $precision
-     *  Number of decimal digits to use with this currency
-     *
+     * @param bool      $isActive
+     *                                  Is this currency active ?
+     * @param float     $conversionRate
+     *                                  Conversion rate of this currency against the default shop's currency
+     * @param string    $isoCode
+     *                                  Currency's alphabetic ISO code (ISO 4217)
+     * @param int       $numericIsoCode
+     *                                  Currency's numeric ISO code (ISO 4217)
+     * @param string[]  $symbols
+     *                                  Currency's symbols, by locale code
+     * @param int       $precision
+     *                                  Number of decimal digits to use with this currency
      * @param string [] $names
-     *  the currency's name, by locale code
-     *
+     *                                  the currency's name, by locale code
      */
     public function __construct(
         $isActive,
@@ -132,17 +125,17 @@ class Currency implements CurrencyInterface
         $precision,
         $names
     ) {
-        $this->isActive       = $isActive;
+        $this->isActive = $isActive;
         $this->conversionRate = $conversionRate;
-        $this->isoCode        = $isoCode;
+        $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
-        $this->symbols        = $symbols;
-        $this->precision      = $precision;
-        $this->names          = $names;
+        $this->symbols = $symbols;
+        $this->precision = $precision;
+        $this->names = $names;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isActive()
     {
@@ -150,7 +143,7 @@ class Currency implements CurrencyInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getConversionRate()
     {
@@ -158,7 +151,7 @@ class Currency implements CurrencyInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getIsoCode()
     {
@@ -166,7 +159,7 @@ class Currency implements CurrencyInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getNumericIsoCode()
     {
@@ -174,21 +167,21 @@ class Currency implements CurrencyInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      *
      * @throws LocalizationException
      */
     public function getSymbol($localeCode)
     {
         if (!isset($this->symbols[$localeCode])) {
-            throw new LocalizationException("Unknown locale code");
+            throw new LocalizationException('Unknown locale code');
         }
 
         return $this->symbols[$localeCode];
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getDecimalPrecision()
     {
@@ -196,14 +189,14 @@ class Currency implements CurrencyInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      *
      * @throws LocalizationException
      */
     public function getName($localeCode)
     {
         if (!isset($this->names[$localeCode])) {
-            throw new LocalizationException("Unknown locale code");
+            throw new LocalizationException('Unknown locale code');
         }
 
         return $this->names[$localeCode];

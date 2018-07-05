@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -42,8 +43,9 @@ class StockManager implements StockInterface
      * Gets available stock for a given product / combination / shop.
      *
      * @param object $product
-     * @param null $id_product_attribute
-     * @param null $id_shop
+     * @param null   $id_product_attribute
+     * @param null   $id_shop
+     *
      * @return StockAvailable
      */
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
@@ -52,24 +54,24 @@ class StockManager implements StockInterface
 
         if (!$stockAvailable->id) {
             $shopAdapter = new ShopAdapter();
-            $stockAvailable->id_product = (int)$product->id;
-            $stockAvailable->id_product_attribute = (int)$id_product_attribute;
+            $stockAvailable->id_product = (int) $product->id;
+            $stockAvailable->id_product_attribute = (int) $id_product_attribute;
 
-            $outOfStock = $this->outOfStock((int)$product->id, $id_shop);
-            $stockAvailable->out_of_stock = (int)$outOfStock;
+            $outOfStock = $this->outOfStock((int) $product->id, $id_shop);
+            $stockAvailable->out_of_stock = (int) $outOfStock;
 
-            if ($id_shop === null) {
+            if (null === $id_shop) {
                 $shop_group = $shopAdapter->getContextShopGroup();
             } else {
-                $shop_group = $shopAdapter->ShopGroup((int)$shopAdapter->getGroupFromShop((int)$id_shop));
+                $shop_group = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $id_shop));
             }
 
             // if quantities are shared between shops of the group
             if ($shop_group->share_stock) {
                 $stockAvailable->id_shop = 0;
-                $stockAvailable->id_shop_group = (int)$shop_group->id;
+                $stockAvailable->id_shop_group = (int) $shop_group->id;
             } else {
-                $stockAvailable->id_shop = (int)$id_shop;
+                $stockAvailable->id_shop = (int) $id_shop;
                 $stockAvailable->id_shop_group = 0;
             }
             $stockAvailable->add();
@@ -79,13 +81,13 @@ class StockManager implements StockInterface
     }
 
     /**
-     * Returns True if Stocks are managed by a module (or by legacy ASM)
+     * Returns True if Stocks are managed by a module (or by legacy ASM).
      *
-     * @return boolean True if Stocks are managed by a module (or by legacy ASM)
+     * @return bool True if Stocks are managed by a module (or by legacy ASM)
      */
     public function isAsmGloballyActivated()
     {
-        return (bool)(new ConfigurationAdapter())->get('PS_ADVANCED_STOCK_MANAGEMENT');
+        return (bool) (new ConfigurationAdapter())->get('PS_ADVANCED_STOCK_MANAGEMENT');
     }
 
     /**
@@ -94,6 +96,7 @@ class StockManager implements StockInterface
      * @param $cancellationState
      * @param int|null $idProduct
      * @param int|null $idOrder
+     *
      * @return bool
      */
     public function updatePhysicalProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
@@ -103,11 +106,11 @@ class StockManager implements StockInterface
         $updatePhysicalQuantityQuery = '
             UPDATE {table_prefix}stock_available sa
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = '.(int)$shopId.'
+            WHERE sa.id_shop = '.(int) $shopId.'
         ';
 
         if ($idProduct) {
-            $updatePhysicalQuantityQuery .= ' AND sa.id_product = '.(int)$idProduct;
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product = '.(int) $idProduct;
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
@@ -121,6 +124,7 @@ class StockManager implements StockInterface
      * @param $cancellationState
      * @param int|null $idProduct
      * @param int|null $idOrder
+     *
      * @return bool
      */
     private function updateReservedProductQuantity($shopId, $errorState, $cancellationState, $idProduct = null, $idOrder = null)
@@ -147,19 +151,19 @@ class StockManager implements StockInterface
 
         $strParams = array(
             '{table_prefix}' => _DB_PREFIX_,
-            ':shop_id' => (int)$shopId,
-            ':error_state' => (int)$errorState,
-            ':cancellation_state' => (int)$cancellationState,
+            ':shop_id' => (int) $shopId,
+            ':error_state' => (int) $errorState,
+            ':cancellation_state' => (int) $cancellationState,
         );
 
         if ($idProduct) {
             $updateReservedQuantityQuery .= ' AND sa.id_product = :product_id';
-            $strParams[':product_id'] = (int)$idProduct;
+            $strParams[':product_id'] = (int) $idProduct;
         }
 
         if ($idOrder) {
             $updateReservedQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = :order_id)';
-            $strParams[':order_id'] = (int)$idOrder;
+            $strParams[':order_id'] = (int) $idOrder;
         }
 
         $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
@@ -168,9 +172,10 @@ class StockManager implements StockInterface
     }
 
     /**
-     * Instance a new StockAvailable
+     * Instance a new StockAvailable.
      *
      * @param null $stockAvailableId
+     *
      * @return StockAvailable
      */
     public function newStockAvailable($stockAvailableId = null)
@@ -183,11 +188,12 @@ class StockManager implements StockInterface
     }
 
     /**
-     * Use legacy getStockAvailableIdByProductId
+     * Use legacy getStockAvailableIdByProductId.
      *
      * @param $productId
      * @param null $productAttributeId
      * @param null $shopId
+     *
      * @return bool|int
      */
     public function getStockAvailableIdByProductId($productId, $productAttributeId = null, $shopId = null)
@@ -196,10 +202,11 @@ class StockManager implements StockInterface
     }
 
     /**
-     * For a given product, get its "out of stock" flag
+     * For a given product, get its "out of stock" flag.
      *
      * @param int $productId
-     * @param int $shopId Optional : gets context if null @see Context::getContext()
+     * @param int $shopId    Optional : gets context if null @see Context::getContext()
+     *
      * @return bool : depends on stock @see $depends_on_stock
      */
     public function outOfStock($productId, $shopId = null)

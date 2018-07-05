@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShopBundle\Entity;
 
@@ -306,7 +305,7 @@ class AdminFilter
                     $subjectWithoutOperator = str_replace($operator, '', $subject);
 
                     $flag = FILTER_DEFAULT;
-                    if ($filter === FILTER_SANITIZE_NUMBER_FLOAT) {
+                    if (FILTER_SANITIZE_NUMBER_FLOAT === $filter) {
                         $flag = FILTER_FLAG_ALLOW_FRACTION;
                     }
 

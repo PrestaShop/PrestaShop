@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
@@ -34,7 +35,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
- *
  */
 class CommonController extends FrameworkBundleAdminController
 {
@@ -55,71 +55,73 @@ class CommonController extends FrameworkBundleAdminController
      *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
      *
      * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
+     *
      * @param Request $request
-     * @param integer $limit
-     * @param integer $offset
-     * @param integer $total
-     * @param string $view full|quicknav To change default template used to render the content
+     * @param int     $limit
+     * @param int     $offset
+     * @param int     $total
+     * @param string  $view    full|quicknav To change default template used to render the content
+     *
      * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
         $limit = max($limit, 10);
 
-        $currentPage = floor($offset/$limit)+1;
-        $pageCount = ceil($total/$limit);
+        $currentPage = floor($offset / $limit) + 1;
+        $pageCount = ceil($total / $limit);
         $from = $offset;
-        $to = $offset+$limit-1;
+        $to = $offset + $limit - 1;
 
         // urls from route
         $callerParameters = $request->attributes->get('caller_parameters', array());
         foreach ($callerParameters as $k => $v) {
-            if (strpos($k, '_') === 0) {
+            if (0 === strpos($k, '_')) {
                 unset($callerParameters[$k]);
             }
         }
         $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
-        $nextPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
+        $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => min($total-1, $offset+$limit),
-                'limit' => $limit
+                'offset' => min($total - 1, $offset + $limit),
+                'limit' => $limit,
             )
         ));
 
-        $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
+        $previousPageUrl = (!$routeName || (0 == $offset)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => max(0, $offset-$limit),
-                'limit' => $limit
+                'offset' => max(0, $offset - $limit),
+                'limit' => $limit,
             )
         ));
-        $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
+        $firstPageUrl = (!$routeName || (0 == $offset)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
-                'limit' => $limit
+                'limit' => $limit,
             )
         ));
-        $lastPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
+        $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => ($pageCount-1)*$limit,
-                'limit' => $limit
+                'offset' => ($pageCount - 1) * $limit,
+                'limit' => $limit,
             )
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
-                'limit' => '_limit'
+                'limit' => '_limit',
             )
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 999999,
-                'limit' => $limit
+                'limit' => $limit,
             )
         ));
         $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
@@ -140,9 +142,10 @@ class CommonController extends FrameworkBundleAdminController
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
         );
-        if ($view != 'full') {
+        if ('full' != $view) {
             return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', $vars);
         }
+
         return $vars;
     }
 
@@ -150,16 +153,18 @@ class CommonController extends FrameworkBundleAdminController
      * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
      *
      * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
+     *
      * @param string $domain
-     * @param integer $limit
-     * @param integer $randomize
+     * @param int    $limit
+     * @param int    $randomize
+     *
      * @return array Template vars
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
         $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
         /* @var $recommendedModules RecommendedModules */
-        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
+        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, (1 == $randomize));
 
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
@@ -175,7 +180,7 @@ class CommonController extends FrameworkBundleAdminController
             $modules[] = $module;
         }
 
-        if ($randomize == 1) {
+        if (1 == $randomize) {
             shuffle($modules);
         }
 
@@ -190,11 +195,12 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * Render a right sidebar with content from an URL
+     * Render a right sidebar with content from an URL.
      *
      * @param $url
      * @param string $title
      * @param string $footer
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function renderSidebarAction($url, $title = '', $footer = '')

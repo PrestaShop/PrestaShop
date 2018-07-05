@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,6 +35,7 @@ interface RepositoryInterface
 {
     /**
      * Returns the complete list of items.
+     *
      * @return array
      */
     public function findAll();

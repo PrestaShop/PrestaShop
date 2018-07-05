@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class LocalizationPackByIsoCodeChoiceProvider provides localization pack choices with iso code values
+ * Class LocalizationPackByIsoCodeChoiceProvider provides localization pack choices with iso code values.
  */
 final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
@@ -60,8 +60,8 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
     /**
      * @param LocalizationPackLoaderInterface $remoteLocalizationPackLoader
      * @param LocalizationPackLoaderInterface $localLocalizationPackLoader
-     * @param ConfigurationInterface $configuration
-     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface          $configuration
+     * @param TranslatorInterface             $translator
      */
     public function __construct(
         LocalizationPackLoaderInterface $remoteLocalizationPackLoader,
@@ -76,7 +76,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
     }
 
     /**
-     * Get localization pack choices
+     * Get localization pack choices.
      *
      * @return array
      */
@@ -113,7 +113,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
                 $packName = $this->translator->trans(
                     '%s (local)',
                     [
-                        (string) $pack['name']
+                        (string) $pack['name'],
                     ],
                     'Admin.International.Feature'
                 );

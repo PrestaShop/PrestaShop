@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
@@ -76,7 +75,7 @@ class OrderPresenter implements PresenterInterface
     }
 
     /**
-     * Set if we need to skip product details from the results
+     * Set if we need to skip product details from the results.
      *
      * @param $value
      */
@@ -97,6 +96,7 @@ class OrderPresenter implements PresenterInterface
      * @param Order $order
      *
      * @return array
+     *
      * @throws \Exception
      */
     public function present($order)
@@ -158,16 +158,16 @@ class OrderPresenter implements PresenterInterface
 
             $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
             $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
-            $orderProduct['price'] = $this->priceFormatter->format($orderProduct[$productPrice], Currency::getCurrencyInstance((int)$order->id_currency));
-            $orderProduct['total'] = $this->priceFormatter->format($orderProduct[$totalPrice], Currency::getCurrencyInstance((int)$order->id_currency));
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct[$productPrice], Currency::getCurrencyInstance((int) $order->id_currency));
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct[$totalPrice], Currency::getCurrencyInstance((int) $order->id_currency));
 
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
                 $product_download = new ProductDownload($id_product_download);
-                if ($product_download->display_filename != '') {
+                if ('' != $product_download->display_filename) {
                     $orderProduct['download_link'] = $product_download->getTextLink(false, $orderProduct['download_hash'])
-                        . '&id_order=' . (int)$order->id
-                        . '&secure_key=' . $order->secure_key;
+                        .'&id_order='.(int) $order->id
+                        .'&secure_key='.$order->secure_key;
                 }
             }
 
@@ -206,7 +206,7 @@ class OrderPresenter implements PresenterInterface
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
             'amount' => $total_products,
-            'value' => $this->priceFormatter->format($total_products, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'value' => $this->priceFormatter->format($total_products, Currency::getCurrencyInstance((int) $order->id_currency)),
         );
 
         $discount_amount = $includeTaxes
@@ -217,7 +217,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'discount',
                 'label' => $this->translator->trans('Discount', array(), 'Shop.Theme.Checkout'),
                 'amount' => $discount_amount,
-                'value' => $this->priceFormatter->format($discount_amount, Currency::getCurrencyInstance((int)$order->id_currency)),
+                'value' => $this->priceFormatter->format($discount_amount, Currency::getCurrencyInstance((int) $order->id_currency)),
             );
         }
 
@@ -228,7 +228,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
                 'amount' => $shippingCost,
-                'value' => $shippingCost != 0 ? $this->priceFormatter->format($shippingCost, Currency::getCurrencyInstance((int)$order->id_currency)) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+                'value' => 0 != $shippingCost ? $this->priceFormatter->format($shippingCost, Currency::getCurrencyInstance((int) $order->id_currency)) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
             );
         }
 
@@ -244,7 +244,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
                 'amount' => $tax,
-                'value' => $this->priceFormatter->format($tax, Currency::getCurrencyInstance((int)$order->id_currency)),
+                'value' => $this->priceFormatter->format($tax, Currency::getCurrencyInstance((int) $order->id_currency)),
             );
         }
 
@@ -256,7 +256,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
                 'amount' => $giftWrapping,
-                'value' => $this->priceFormatter->format($giftWrapping, Currency::getCurrencyInstance((int)$order->id_currency)),
+                'value' => $this->priceFormatter->format($giftWrapping, Currency::getCurrencyInstance((int) $order->id_currency)),
             );
         }
 
@@ -282,14 +282,14 @@ class OrderPresenter implements PresenterInterface
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
             'amount' => $amount,
-            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int) $order->id_currency)),
         );
 
         $amounts['totals']['total_paid'] = array(
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid_real,
-            'value' => $this->priceFormatter->format($order->total_paid_real, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'value' => $this->priceFormatter->format($order->total_paid_real, Currency::getCurrencyInstance((int) $order->id_currency)),
         );
 
         return $amounts;
@@ -309,14 +309,14 @@ class OrderPresenter implements PresenterInterface
             'id' => $order->id,
             'reference' => $order->reference,
             'order_date' => Tools::displayDate($order->date_add, null, false),
-            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order=' . $order->id),
-            'reorder_url' => HistoryController::getUrlToReorder((int)$order->id, $context),
+            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order='.$order->id),
+            'reorder_url' => HistoryController::getUrlToReorder((int) $order->id, $context),
             'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
-            'is_returnable' => (int)$order->isReturnable(),
+            'is_returnable' => (int) $order->isReturnable(),
             'payment' => $order->payment,
             'module' => $order->module,
-            'recyclable' => (bool)$order->recyclable,
+            'recyclable' => (bool) $order->recyclable,
             'is_valid' => $order->valid,
         );
 
@@ -454,7 +454,7 @@ class OrderPresenter implements PresenterInterface
     {
         $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
         $orderCarrier = $this->objectPresenter->present($carrier);
-        $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
+        $orderCarrier['name'] = ('0' == $carrier->name) ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
         $orderCarrier['delay'] = $carrier->delay;
 
         return $orderCarrier;
@@ -509,6 +509,7 @@ class OrderPresenter implements PresenterInterface
     private function getLabels()
     {
         $includeTaxes = $this->includeTaxes();
+
         return array(
             'tax_short' => $includeTaxes
                 ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')

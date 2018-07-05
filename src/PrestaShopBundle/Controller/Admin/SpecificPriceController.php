@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,18 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Admin controller for the attribute / attribute group
+ * Admin controller for the attribute / attribute group.
  */
 class SpecificPriceController extends FrameworkBundleAdminController
 {
     /**
-     * get specific price list for a product
+     * get specific price list for a product.
      *
      * @param $idProduct The product ID
      *
@@ -55,9 +56,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $groups = $this->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
+
             return $response;
         }
 
@@ -74,7 +76,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Add specific price Form process
+     * Add specific price Form process.
      *
      * @param Request $request The request
      *
@@ -97,10 +99,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete a specific price
+     * Delete a specific price.
      *
-     * @param int $idSpecificPrice The specific price ID
-     * @param Request $request The request
+     * @param int     $idSpecificPrice The specific price ID
+     * @param Request $request         The request
      *
      * @return string
      */
@@ -111,11 +113,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);
 
-        if ($res['status'] == 'error') {
+        if ('error' == $res['status']) {
             $response->setStatusCode(400);
         }
 
         $response->setData($res['message']);
+
         return $response;
     }
 }

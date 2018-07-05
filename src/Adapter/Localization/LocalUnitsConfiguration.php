@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
  * Class LocalUnitsConfiguration is responsible for 'Improve > International > Localization' page
- * 'Local units' form data
+ * 'Local units' form data.
  */
 class LocalUnitsConfiguration implements DataConfigurationInterface
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,7 +47,6 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
      */
     private $environment;
 
-
     /**
      * @var \Symfony\Component\DependencyInjection\Container
      */
@@ -54,7 +54,8 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
 
     /**
      * AdminExtension constructor.
-     * @param RequestStack|null $requestStack
+     *
+     * @param RequestStack|null  $requestStack
      * @param ContainerInterface $container
      */
     public function __construct(RequestStack $requestStack = null, ContainerInterface $container)

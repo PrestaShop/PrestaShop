@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -63,6 +63,7 @@ class ModuleProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
+
         return $this;
     }
 

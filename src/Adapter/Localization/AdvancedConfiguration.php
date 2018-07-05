@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
  * Class AdvancedConfiguration is responsible for 'Improve > International > Localization' page
- * 'Advanced' form data
+ * 'Advanced' form data.
  */
 class AdvancedConfiguration implements DataConfigurationInterface
 {

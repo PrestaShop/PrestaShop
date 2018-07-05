@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Validate;
@@ -43,22 +44,23 @@ abstract class AbstractAdminQueryBuilder
 
     private $lastCompiledSql = null;
 
-    final private function compileSqlWhere(array $whereArray)
+    private function compileSqlWhere(array $whereArray)
     {
         $operator = 'AND';
         $s = array();
         while ($item = array_shift($whereArray)) {
-            if ($item == 'OR') {
+            if ('OR' == $item) {
                 $operator = 'OR';
-            } elseif ($item == 'AND') {
+            } elseif ('AND' == $item) {
                 $operator = 'AND';
             } else {
-                $s[] = (is_array($item)? $this->compileSqlWhere($item) : $item);
+                $s[] = (is_array($item) ? $this->compileSqlWhere($item) : $item);
             }
         }
-        if (count($s) == 1) {
+        if (1 == count($s)) {
             return $s[0];
         }
+
         return '('.implode(' '.$operator.' ', $s).')';
     }
 
@@ -108,13 +110,15 @@ abstract class AbstractAdminQueryBuilder
      * $order = array('name ASC', 'id_product DESC');
      *
      * @param array[array[mixed]] $select
-     * @param array[mixed] $table
-     * @param array[mixed] $where
-     * @param array[string] $groupBy
-     * @param array[string] $order
-     * @param string $limit
-     * @throws LogicException if SQL elements cannot be joined.
-     * @return string The SQL query ready to be executed.
+     * @param array[mixed]        $table
+     * @param array[mixed]        $where
+     * @param array[string]       $groupBy
+     * @param array[string]       $order
+     * @param string              $limit
+     *
+     * @throws LogicException if SQL elements cannot be joined
+     *
+     * @return string the SQL query ready to be executed
      */
     protected function compileSqlQuery(array $select, array $table, array $where = array(), array $groupBy = array(), array $order = array(), $limit = null)
     {
@@ -123,7 +127,7 @@ abstract class AbstractAdminQueryBuilder
         // SELECT
         $s = array();
         foreach ($select as $alias => $field) {
-            $a = is_string($alias)? ' AS `'.$alias.'`' : '';
+            $a = is_string($alias) ? ' AS `'.$alias.'`' : '';
             if (is_array($field)) {
                 if (isset($field['table'])) {
                     $s[] = ' '.$field['table'].'.`'.$field['field'].'` '.$a;
@@ -134,7 +138,7 @@ abstract class AbstractAdminQueryBuilder
                 $s[] = ' '.$field.$a;
             }
         }
-        if (count($s) === 0) {
+        if (0 === count($s)) {
             throw new LogicException('Compile SQL failed: No field to SELECT!');
         }
         $sql[] = 'SELECT SQL_CALC_FOUND_ROWS'.implode(','.PHP_EOL, $s);
@@ -148,13 +152,13 @@ abstract class AbstractAdminQueryBuilder
                 }
                 $s[0] = ' `'._DB_PREFIX_.$join.'` '.$alias;
             } else {
-                if (count($s) === 0) {
+                if (0 === count($s)) {
                     throw new LogicException('Compile SQL failed: cannot join the table alias '.$alias.' into SQL query before to insert initial table.');
                 }
-                $s[] = ' '.$join['join'].' `'._DB_PREFIX_.$join['table'].'` '.$alias.((isset($join['on']))?' ON ('.$join['on'].')':'');
+                $s[] = ' '.$join['join'].' `'._DB_PREFIX_.$join['table'].'` '.$alias.((isset($join['on'])) ? ' ON ('.$join['on'].')' : '');
             }
         }
-        if (count($s) === 0) {
+        if (0 === count($s)) {
             throw new LogicException('Compile SQL failed: No table to insert into FROM!');
         }
         $sql[] = 'FROM '.implode(' '.PHP_EOL, $s);
@@ -169,7 +173,7 @@ abstract class AbstractAdminQueryBuilder
 
         // GROUP BY
         if (!empty($groupBy)) {
-            $sql[] = 'GROUP BY '. implode(', ', array_map('pSQL', $groupBy)) . PHP_EOL;
+            $sql[] = 'GROUP BY '.implode(', ', array_map('pSQL', $groupBy)).PHP_EOL;
         }
 
         // ORDER
@@ -178,12 +182,12 @@ abstract class AbstractAdminQueryBuilder
             foreach ($order as $o) {
                 $value = explode(' ', $o);
                 if (!empty($value) && 2 === count($value) && Validate::isOrderBy($value[0]) && Validate::isOrderWay($value[1])) {
-                    $goodOrder[] = ' `'.bqSQL($value[0]).'` '. $value[1];
+                    $goodOrder[] = ' `'.bqSQL($value[0]).'` '.$value[1];
                 }
             }
 
             if (count($goodOrder) > 0) {
-                $sql[] = 'ORDER BY ' . implode(', ', $goodOrder) . PHP_EOL;
+                $sql[] = 'ORDER BY '.implode(', ', $goodOrder).PHP_EOL;
             }
         }
 
@@ -193,6 +197,7 @@ abstract class AbstractAdminQueryBuilder
         }
 
         $this->lastCompiledSql = implode(' '.PHP_EOL, $sql).';';
+
         return $this->lastCompiledSql;
     }
 

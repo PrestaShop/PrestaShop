@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
 use SplFileInfo;
@@ -43,7 +44,7 @@ class FileSystem
 
     private function joinTwoPaths($a, $b)
     {
-        return $this->normalizePath($a) . DIRECTORY_SEPARATOR . $this->normalizePath($b);
+        return $this->normalizePath($a).DIRECTORY_SEPARATOR.$this->normalizePath($b);
     }
 
     /**
@@ -53,7 +54,7 @@ class FileSystem
     {
         if (func_num_args() < 2) {
             throw new Exception('joinPaths requires at least 2 arguments.');
-        } elseif (func_num_args() === 2) {
+        } elseif (2 === func_num_args()) {
             $arg_O = func_get_arg(0);
             $arg_1 = func_get_arg(1);
 
@@ -66,7 +67,7 @@ class FileSystem
                 $arg_0,
                 call_user_func_array(
                     array($this,
-                          'joinPaths'),
+                          'joinPaths', ),
                     array_slice($func_args, 1)
                 )
             );
@@ -78,6 +79,7 @@ class FileSystem
      * Throws exception if $path is not a file.
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
+     *
      * @return an array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
@@ -103,7 +105,7 @@ class FileSystem
         $entries = array();
 
         foreach (scandir($path) as $entry) {
-            if ($entry === '.' || $entry === '..') {
+            if ('.' === $entry || '..' === $entry) {
                 continue;
             }
 

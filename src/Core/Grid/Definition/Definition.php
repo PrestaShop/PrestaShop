@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,6 +25,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition;
+
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -33,17 +34,17 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
 /**
- * Class Definition is responsible for storing grid definition (columns, row actions & etc.)
+ * Class Definition is responsible for storing grid definition (columns, row actions & etc.).
  */
 final class Definition implements DefinitionInterface
 {
     /**
-     * @var string  Unique grid identifier
+     * @var string Unique grid identifier
      */
     private $id;
 
     /**
-     * @var string  Grid name
+     * @var string Grid name
      */
     private $name;
 
@@ -63,7 +64,7 @@ final class Definition implements DefinitionInterface
     private $bulkActions;
 
     /**
-     * @param string $id   Unique grid identifier (used as table ID when rendering table)
+     * @param string $id Unique grid identifier (used as table ID when rendering table)
      */
     public function __construct($id)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -43,7 +44,7 @@ class FrameworkBundleAdminController extends Controller
     protected $layoutTitle;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -65,14 +66,14 @@ class FrameworkBundleAdminController extends Controller
 
     public function hashUpdateJsAction($hash)
     {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+        $contents = file_get_contents('http://localhost:8080/'.$hash.'.hot-update.js');
 
         return new Response($contents);
     }
 
     public function hashUpdateJsonAction($hash)
     {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+        $contents = file_get_contents('http://localhost:8080/'.$hash.'.hot-update.json');
 
         return new Response($contents);
     }
@@ -83,6 +84,7 @@ class FrameworkBundleAdminController extends Controller
      * Parse all errors mapped by id html field
      *
      * @param Form $form The form
+     *
      * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
@@ -121,6 +123,7 @@ class FrameworkBundleAdminController extends Controller
                 );
             }
         }
+
         return $errors;
     }
 
@@ -144,6 +147,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param $hookName The hook name
      * @param $parameters The hook parameters
+     *
      * @return array The responses of hooks
      */
     protected function renderHook($hookName, array $parameters)
@@ -152,7 +156,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Generates a documentation link
+     * Generates a documentation link.
      */
     protected function generateSidebarLink($section, $title = false)
     {
@@ -173,8 +177,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get the old but still useful context
-     *
+     * Get the old but still useful context.
      */
     protected function getContext()
     {
@@ -183,6 +186,7 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * @param $lang
+     *
      * @return mixed
      */
     protected function langToLocale($lang)
@@ -230,7 +234,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get the translated chain from key
+     * Get the translated chain from key.
      *
      * @param $key the key to be translated
      * @param $domain the domain to be selected
@@ -244,7 +248,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Return errors as flash error messages
+     * Return errors as flash error messages.
      *
      * @param array $errorMessages
      */
@@ -256,7 +260,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Redirect employee to default page
+     * Redirect employee to default page.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Interface GridFactoryInterface exposes contract for grid factory which is responsible for creating Grid instances
+ * Interface GridFactoryInterface exposes contract for grid factory which is responsible for creating Grid instances.
  */
 interface GridFactoryInterface
 {
     /**
-     * Create grid with filtered data
+     * Create grid with filtered data.
      *
      * @param SearchCriteriaInterface $searchCriteria
      *

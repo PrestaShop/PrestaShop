@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,15 +29,15 @@ namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 use Manufacturer;
 
 /**
- * This class will provide data from DB / ORM about Manufacturer
+ * This class will provide data from DB / ORM about Manufacturer.
  */
 class ManufacturerDataProvider
 {
     /**
-     * Get all Manufacturer
+     * Get all Manufacturer.
      *
      * @param bool $get_nb_products
-     * @param int $id_lang
+     * @param int  $id_lang
      * @param bool $active
      * @param bool $p
      * @param bool $n

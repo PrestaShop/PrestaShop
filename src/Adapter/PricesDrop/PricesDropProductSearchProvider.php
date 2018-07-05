@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\PricesDrop;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -35,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use Symfony\Component\Translation\TranslatorInterface;
 use Product;
-use Tools;
 
 class PricesDropProductSearchProvider implements ProductSearchProviderInterface
 {
@@ -58,7 +56,7 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $type !== 'products',
+            'products' !== $type,
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
         );
@@ -93,7 +91,7 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
                     ),
                     (new SortOrder('product', 'price', 'desc'))->setLabel(
                         $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
-                    )
+                    ),
                 ]
             );
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,6 +34,7 @@ class MovementsCollection
 
     /**
      * @param array $stockMovementsParams
+     *
      * @return $this
      */
     public function fromArray(array $stockMovementsParams)
@@ -43,14 +44,14 @@ class MovementsCollection
         array_walk($stockMovementsParams, function ($item) use (&$movements) {
             $combinationId = 0;
 
-            if ($item['delta'] != 0) {
+            if (0 != $item['delta']) {
                 if (array_key_exists('combination_id', $item)) {
                     $combinationId = $item['combination_id'];
                 }
 
                 $productIdentity = ProductIdentity::fromArray(array(
                     'product_id' => $item['product_id'],
-                    'combination_id' => $combinationId
+                    'combination_id' => $combinationId,
                 ));
 
                 $movements[] = new Movement($productIdentity, $item['delta']);
@@ -64,6 +65,7 @@ class MovementsCollection
 
     /**
      * @param callable $callback
+     *
      * @return array
      */
     public function map(callable $callback)

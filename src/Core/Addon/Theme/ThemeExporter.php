@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -60,7 +60,7 @@ class ThemeExporter
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
         $this->copyTranslations($theme, $cacheDir);
 
-        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_'). DIRECTORY_SEPARATOR .$theme->getName().'.zip';
+        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_').DIRECTORY_SEPARATOR.$theme->getName().'.zip';
         $this->createZip($cacheDir, $finalFile);
 
         $this->fileSystem->remove($cacheDir);
@@ -99,7 +99,7 @@ class ThemeExporter
      */
     protected function copyTranslations(Theme $theme, $cacheDir)
     {
-        $translationsDir = $cacheDir . 'translations';
+        $translationsDir = $cacheDir.'translations';
 
         $this->fileSystem->remove($translationsDir);
         $this->fileSystem->mkdir($translationsDir);
@@ -107,7 +107,7 @@ class ThemeExporter
         $languages = $this->langRepository->findAll();
         if (count($languages) > 0) {
             /**
-             * @var \PrestaShopBundle\Entity\Lang $lang
+             * @var \PrestaShopBundle\Entity\Lang
              */
             foreach ($languages as $lang) {
                 $locale = $lang->getLocale();

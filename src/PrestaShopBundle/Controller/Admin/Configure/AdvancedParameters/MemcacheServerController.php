@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,14 +28,13 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Performance" servers block management
+ * Responsible of "Configure > Advanced Parameters > Performance" servers block management.
  */
 class MemcacheServerController extends FrameworkBundleAdminController
 {
@@ -50,6 +49,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
+     *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function testAction(Request $request)
@@ -73,6 +73,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
+     *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function addAction(Request $request)
@@ -87,8 +88,8 @@ class MemcacheServerController extends FrameworkBundleAdminController
             )
         )) {
             return new JsonResponse(array(
-                'errors' => array($this->trans('You do not have permission to create this.', 'Admin.Notifications.Error')
-                )
+                'errors' => array($this->trans('You do not have permission to create this.', 'Admin.Notifications.Error'),
+                ),
             ), 400);
         }
 
@@ -115,15 +116,15 @@ class MemcacheServerController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(array('errors' => array(
-            $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification')
+            $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification'),
         )), 400);
-
     }
 
     /**
      * @DemoRestricted(redirectRoute="admin_servers_test")
      *
      * @param Request $request
+     *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request)
@@ -138,8 +139,8 @@ class MemcacheServerController extends FrameworkBundleAdminController
             )
         )) {
             return new JsonResponse(array(
-                'errors' => array($this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error')
-                )
+                'errors' => array($this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
+                ),
             ), 400);
         }
 
@@ -150,7 +151,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(array('errors' => array(
-            $this->trans('There was an error when attempting to delete the Memcached server.', 'Admin.Advparameters.Notification')
+            $this->trans('There was an error when attempting to delete the Memcached server.', 'Admin.Advparameters.Notification'),
         )), 400);
     }
 

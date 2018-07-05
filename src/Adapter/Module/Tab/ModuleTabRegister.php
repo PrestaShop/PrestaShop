@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -87,8 +87,8 @@ class ModuleTabRegister
      * Fetch module-defined tabs and find undeclared ModuleAdminControllers.
      *
      * This is done automatically as part of the module installation.
-     * @param Module $module
      *
+     * @param Module $module
      */
     public function registerTabs(Module $module)
     {
@@ -109,10 +109,11 @@ class ModuleTabRegister
 
     /**
      * Looks for ModuleAdminControllers not declared as Tab and
-     * add them to the list to register
+     * add them to the list to register.
      *
      * @param string $moduleName
-     * @param array $tabs
+     * @param array  $tabs
+     *
      * @return array
      */
     protected function addUndeclaredTabs($moduleName, array $tabs)
@@ -139,15 +140,18 @@ class ModuleTabRegister
                 'visible' => false,
             );
         }
+
         return $tabs;
     }
 
     /**
-     * Check mandatory data for tab registration, such as class name and class exists
+     * Check mandatory data for tab registration, such as class name and class exists.
      *
-     * @param string $moduleName
+     * @param string       $moduleName
      * @param ParameterBag $data
-     * @return boolean (= true) when no issue detected
+     *
+     * @return bool (= true) when no issue detected
+     *
      * @throws Exception in case of invalid data
      */
     protected function checkIsValid($moduleName, ParameterBag $data)
@@ -164,6 +168,7 @@ class ModuleTabRegister
         if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
+
         return true;
     }
 
@@ -173,6 +178,7 @@ class ModuleTabRegister
      * not explicitely declared by the module developer.
      *
      * @param string $moduleName
+     *
      * @return array of Symfony\Component\Finder\SplFileInfo, listing all the ModuleAdminControllers found
      */
     protected function getModuleAdminControllers($moduleName)
@@ -198,6 +204,7 @@ class ModuleTabRegister
      * Convert SPLFileInfo array to file names. Better & easier to check if a class to register exists.
      *
      * @param string $moduleName
+     *
      * @return array of strings
      */
     protected function getModuleAdminControllersFilename($moduleName)
@@ -209,9 +216,10 @@ class ModuleTabRegister
 
     /**
      * From the name given by the module maintainer, associate a value per language
-     * installed on the shop
+     * installed on the shop.
      *
      * @param mixed $names
+     *
      * @return array Name to use for each installed language
      */
     protected function getTabNames($names)
@@ -232,14 +240,15 @@ class ModuleTabRegister
                 $translatedNames[$lang['id_lang']] = reset($names); // Get the first name available in the array
             }
         }
+
         return $translatedNames;
     }
 
     /**
-     * Install a tab according to its defined structure
+     * Install a tab according to its defined structure.
      *
-     * @param Module $module
-     * @param ParameterBag $tabDetails The structure of the tab.
+     * @param Module       $module
+     * @param ParameterBag $tabDetails the structure of the tab
      *
      * @throws Exception in case of error from validation or save
      */
@@ -268,9 +277,10 @@ class ModuleTabRegister
     }
 
     /**
-     * Find the parent ID from the given tab context
+     * Find the parent ID from the given tab context.
      *
-     * @param ParameterBag $tabDetails The structure of the tab.
+     * @param ParameterBag $tabDetails the structure of the tab
+     *
      * @return int ID of the parent, 0 if none
      */
     protected function findParentId(ParameterBag $tabDetails)
@@ -286,6 +296,7 @@ class ModuleTabRegister
         } elseif (true === $tabDetails->getBoolean('visible', true)) {
             $idParent = $this->tabRepository->findOneIdByClassName($this->defaultParent);
         }
+
         return $this->duplicateParentIfAlone((int) $idParent);
     }
 
@@ -294,17 +305,18 @@ class ModuleTabRegister
      * or its link will be overriden.
      *
      * @param int $idParent
+     *
      * @return int new parent ID
      */
     protected function duplicateParentIfAlone($idParent)
     {
         // If the given parent has already children, don't touch anything
-        if ($idParent === 0 || count($this->tabRepository->findByParentId($idParent))) {
+        if (0 === $idParent || count($this->tabRepository->findByParentId($idParent))) {
             return $idParent;
         }
 
         $currentTab = new Tab($idParent);
-        $newTab = clone($currentTab);
+        $newTab = clone $currentTab;
         $newTab->id = 0;
         $newTab->id_parent = $currentTab->id_parent;
         $newTab->class_name = $currentTab->class_name.self::SUFFIX;
@@ -316,6 +328,7 @@ class ModuleTabRegister
 
         $currentTab->id_parent = $newTab->id;
         $currentTab->save();
+
         return $newTab->id;
     }
 }

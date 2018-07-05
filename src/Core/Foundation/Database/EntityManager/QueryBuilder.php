@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
 
 use PrestaShop\PrestaShop\Core\Foundation\Database\Exception;
@@ -41,7 +42,7 @@ class QueryBuilder
         $escaped = $this->db->escape($value);
 
         if (is_string($value)) {
-            return "'" . $escaped . "'";
+            return "'".$escaped."'";
         } else {
             return $escaped;
         }
@@ -51,7 +52,7 @@ class QueryBuilder
     {
         $operator = strtoupper($andOrOr);
 
-        if ($operator !== 'AND' && $operator !== 'OR') {
+        if ('AND' !== $operator && 'OR' !== $operator) {
             throw new Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));
         }
 
@@ -59,13 +60,13 @@ class QueryBuilder
 
         foreach ($conditions as $key => $value) {
             if (is_scalar($value)) {
-                $parts[] = $key . ' = ' . $this->quote($value);
+                $parts[] = $key.' = '.$this->quote($value);
             } else {
                 $list = array();
                 foreach ($value as $item) {
                     $list[] = $this->quote($item);
                 }
-                $parts[] = $key . ' IN (' . implode(', ', $list) . ')';
+                $parts[] = $key.' IN ('.implode(', ', $list).')';
             }
         }
 

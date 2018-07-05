@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class Grid is responsible for holding final Grid data
+ * Class Grid is responsible for holding final Grid data.
  */
 final class Grid implements GridInterface
 {
@@ -51,7 +51,7 @@ final class Grid implements GridInterface
     private $searchCriteria;
 
     /**
-     * @param DefinitionInterface $definition
+     * @param DefinitionInterface     $definition
      * @param GridDataInterface       $data
      * @param SearchCriteriaInterface $searchCriteria
      */

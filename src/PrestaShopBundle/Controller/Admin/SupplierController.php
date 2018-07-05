@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -30,14 +31,14 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 /**
- * Admin controller for suppliers page
+ * Admin controller for suppliers page.
  */
 class SupplierController extends FrameworkBundleAdminController
 {
     /**
-     * refreshProductSupplierCombinationFormAction
+     * refreshProductSupplierCombinationFormAction.
      *
-     * @param int $idProduct
+     * @param int        $idProduct
      * @param int|string $supplierIds The suppliers ids separate by "-"
      *
      * @return string|Response
@@ -49,15 +50,16 @@ class SupplierController extends FrameworkBundleAdminController
         $response = new Response();
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
 
         $suppliers = explode('-', $supplierIds);
-        if ($supplierIds == 0 || count($suppliers) == 0) {
+        if (0 == $supplierIds || 0 == count($suppliers)) {
             return $response;
         }
 
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
+
             return $response;
         }
 
@@ -88,13 +90,13 @@ class SupplierController extends FrameworkBundleAdminController
         $simpleSubForm = $form->create('step6', FormType::class);
 
         foreach ($suppliers as $idSupplier) {
-            if ($idSupplier == 0 || !is_numeric($idSupplier)) {
+            if (0 == $idSupplier || !is_numeric($idSupplier)) {
                 continue;
             }
 
             $simpleSubForm->add('supplier_combination_'.$idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
                 'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
-                'entry_options'  => array(
+                'entry_options' => array(
                     'id_supplier' => $idSupplier,
                 ),
                 'prototype' => true,
@@ -108,7 +110,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         return $this->render('@Product/ProductPage/Forms/form_supplier_combination.html.twig', array(
             'suppliers' => $suppliers,
-            'form' => $form->getForm()['step6']->createView()
+            'form' => $form->getForm()['step6']->createView(),
         ));
     }
 }

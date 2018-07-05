@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Security\Admin;
 
 use Access;
@@ -33,8 +34,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
- * Class EmployeeProvider To retrieve Employee entities for the Symfony security components
- * @package PrestaShopBundle\Security\Admin
+ * Class EmployeeProvider To retrieve Employee entities for the Symfony security components.
  */
 class EmployeeProvider implements UserProviderInterface
 {
@@ -56,6 +56,7 @@ class EmployeeProvider implements UserProviderInterface
      * Fetch the Employee entity that matches the given username.
      *
      * @param string $username
+     *
      * @return Employee
      */
     public function loadUserByUsername($username)
@@ -65,6 +66,7 @@ class EmployeeProvider implements UserProviderInterface
             $employee->setRoles(
                 array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
             );
+
             return $employee;
         }
 
@@ -77,6 +79,7 @@ class EmployeeProvider implements UserProviderInterface
      * Reload an Employee and returns a fresh instance.
      *
      * @param UserInterface $employee
+     *
      * @return Employee
      */
     public function refreshUser(UserInterface $employee)
@@ -94,10 +97,11 @@ class EmployeeProvider implements UserProviderInterface
      * Tests if the given class supports the security layer. Here, only Employee class is allowed to be used to authenticate.
      *
      * @param string $class
+     *
      * @return bool
      */
     public function supportsClass($class)
     {
-        return $class === 'PrestaShopBundle\Security\Admin\Employee';
+        return 'PrestaShopBundle\Security\Admin\Employee' === $class;
     }
 }

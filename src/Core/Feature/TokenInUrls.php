@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Feature;
 
 /**
@@ -40,6 +39,6 @@ final class TokenInUrls
      */
     public static function isDisabled()
     {
-        return getenv(self::ENV_VAR) === self::DISABLED;
+        return self::DISABLED === getenv(self::ENV_VAR);
     }
 }

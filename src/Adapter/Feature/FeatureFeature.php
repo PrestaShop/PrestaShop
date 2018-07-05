@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
- * This class manages Feature feature
+ * This class manages Feature feature.
  */
 class FeatureFeature implements FeatureInterface
 {

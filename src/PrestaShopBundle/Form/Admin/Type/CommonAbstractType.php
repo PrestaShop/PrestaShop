@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ abstract class CommonAbstractType extends AbstractType
     const PRESTASHOP_DECIMALS = 6;
 
     /**
-     * Get the configuration adapter
+     * Get the configuration adapter.
      *
      * @return object Configuration adapter
      */
@@ -47,11 +47,12 @@ abstract class CommonAbstractType extends AbstractType
     }
 
     /**
-     * Format legacy data list to mapping SF2 form field choice
+     * Format legacy data list to mapping SF2 form field choice.
      *
-     * @param array $list
+     * @param array  $list
      * @param string $mapping_value
      * @param string $mapping_name
+     *
      * @return array
      */
     protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
@@ -64,23 +65,26 @@ abstract class CommonAbstractType extends AbstractType
                 $new_list[$item[$mapping_name]] = $item[$mapping_value];
             }
         }
+
         return $new_list;
     }
 
     /**
-     * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals)
+     * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals).
      *
-     * @param array $list
+     * @param array  $list
      * @param string $mapping_value
      * @param string $mapping_name
+     *
      * @return array
      */
     protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
         $new_list = [];
         foreach ($list as $item) {
-            $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
+            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
         }
+
         return $new_list;
     }
 }

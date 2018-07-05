@@ -30,8 +30,6 @@ if (file_exists('.git/hooks/pre-commit')) {
     echo "A Git precommit file was found, a backup was created.\n";
 }
 
-if (file_exists('pre-commit')) {
-    copy('pre-commit', '.git/hooks/pre-commit');
-    chmod('.git/hooks/pre-commit', 0750);
-    echo "\e[32mPre-commit Hook has been installed.\e[0;m\n";
-}
+file_put_contents('.git/hooks/pre-commit', file_get_contents(__DIR__.'/pre-commit'), FILE_APPEND | LOCK_EX);
+chmod('.git/hooks/pre-commit', 0750);
+echo "\e[32mPre-commit Hook has been installed.\e[0;m\n";

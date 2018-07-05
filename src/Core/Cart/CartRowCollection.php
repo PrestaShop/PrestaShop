@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,11 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 class CartRowCollection implements \Iterator, \Countable
 {
-
     /**
      * @var CartRow[]
      */
-    protected $cartRows         = array();
+    protected $cartRows = array();
     protected $iteratorPosition = 0;
 
     public function addCartRow(CartRow $cartRow)
@@ -65,7 +64,7 @@ class CartRowCollection implements \Iterator, \Countable
 
     public function valid()
     {
-        return $this->getKey($this->iteratorPosition) !== null
+        return null !== $this->getKey($this->iteratorPosition)
                && array_key_exists(
                    $this->getKey($this->iteratorPosition),
                    $this->cartRows
@@ -88,7 +87,8 @@ class CartRowCollection implements \Iterator, \Countable
     }
 
     /**
-     * return product data as array
+     * return product data as array.
+     *
      * @return array
      */
     public function getProducts()

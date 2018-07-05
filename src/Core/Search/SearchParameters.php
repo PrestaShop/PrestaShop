@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Search;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Retrieve filters parameters if any from the User request.
+ *
  * @param array $defaultValues if a filter is not found, set the default value
  */
 final class SearchParameters
@@ -38,12 +40,13 @@ final class SearchParameters
         'offset',
         'orderBy',
         'sortOrder',
-        'filters'
+        'filters',
     );
 
     /**
      * @param Request $request
-     * @param array $defaultValues
+     * @param array   $defaultValues
+     *
      * @return array
      */
     public function getFiltersFromRequest(Request $request, array $defaultValues)

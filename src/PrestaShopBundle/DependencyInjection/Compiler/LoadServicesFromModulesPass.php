@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -48,7 +49,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      * Load all services registered in every module.
      *
      * @param ContainerBuilder $container
-     * @return void
      */
     private function registerServicesFromModules(ContainerBuilder $container)
     {

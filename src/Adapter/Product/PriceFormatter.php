@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Tools;
@@ -33,7 +32,7 @@ class PriceFormatter
 {
     public function convertAmount($price, $currency = null)
     {
-        return (float)Tools::convertPrice($price, $currency);
+        return (float) Tools::convertPrice($price, $currency);
     }
 
     public function format($price, $currency = null)
