@@ -811,7 +811,7 @@ class HookCore extends ObjectModel
                 $exceptions = Module::getExceptionsStatic($array['id_module'], $array['id_hook']);
 
                 $controller_obj = Context::getContext()->controller;
-                $controller = $controller_obj->controller_name;
+                $controller = $controller_obj === null ? null : $controller_obj->controller_name;
 
                 //check if current controller is a module controller
                 if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module)) {
