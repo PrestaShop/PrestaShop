@@ -84,11 +84,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new SimpleColumn('id_log'))
-                ->setName($this->trans('ID', [], 'Global.Actions'))
+                ->setName($this->trans('ID', [], 'Admin.Global'))
             )
             ->add(
                 (new EmployeeNameWithAvatarColumn('employee'))
-                ->setName($this->trans('Employee', [], ''))
+                ->setName($this->trans('Employee', [], 'Admin.Global'))
             )
             ->add(
                 (new SeverityLevelColumn('severity'))
@@ -99,7 +99,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new SimpleColumn('message'))
-                ->setName($this->trans('Message', [], 'Global.Actions'))
+                ->setName($this->trans('Message', [], 'Admin.Global'))
             )
             ->add(
                 (new SimpleColumn('object_type'))
@@ -115,7 +115,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DateTimeColumn('date_add'))
-                ->setName($this->trans('Date', [], 'Admin.Advparameters.Feature'))
+                ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
                     'filter' => new ColumnFilterOption(DateRangeType::class),
@@ -123,7 +123,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Global.Actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
                         'attr' => [

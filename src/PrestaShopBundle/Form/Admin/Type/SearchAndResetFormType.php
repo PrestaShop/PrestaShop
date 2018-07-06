@@ -64,7 +64,7 @@ class SearchAndResetFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'Global.Actions',
+            'translation_domain' => 'Admin.Global',
         ]);
     }
 
