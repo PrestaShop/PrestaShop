@@ -24,45 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Search;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use Symfony\Component\HttpFoundation\Request;
-
-class WebserviceKeyGridSearchCriteria implements SearchCriteriaInterface
+/**
+ * If your grid has a ActionColumn, it can be configured with multiple ActionButtons
+ */
+interface ActionButtonInterface
 {
-    private $request;
+    /**
+     * @param array current grid row
+     *
+     * @return string
+     */
+    public function getLink(array $row);
 
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
+    /**
+     * @return string
+     */
+    public function getTitle();
 
-    public function getOrderBy()
-    {
-        return '`'.$this->request->get('orderBy', 'id_webservice_account').'`';
-    }
+    /**
+     * @return string
+     */
+    public function getIcon();
 
-    public function getOrderWay()
-    {
-        return $this->request->get('sortOrder', 'asc');
-    }
-
-    public function getOffset()
-    {
-        return $this->request->get('offset', 0);
-    }
-
-    public function getLimit()
-    {
-        return $this->request->get('limit', 10);
-    }
-
-    public function getFilters()
-    {
-        $filters = $this->request->get('webservice_keys', []);
-
-        unset($filters['_token']);
-
-        return $filters;
-    }
+    /**
+     * @return bool
+     */
+    public function needsConfirmation();
 }

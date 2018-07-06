@@ -130,8 +130,6 @@ class WebserviceKeyRepository implements RepositoryInterface, DoctrineQueryBuild
         }
 
         $filters = $searchCriteria->getFilters();
-        //var_dump($searchCriteria);
-        //die();
         foreach ($filters as $filterName => $filterValue) {
             if (empty($filterValue)) {
                 continue;

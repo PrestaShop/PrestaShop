@@ -29,6 +29,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+        arguments:
+            - '@router'
 
     # Grid factories
     prestashop.core.grid.log_factory:

@@ -23,4 +23,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{# @todo: implement actions rendering if column has any defined actions #}
+{% if column.options.actions is not empty %}
+
+    {# Display first action button #}
+    {% set action = column.options.actions|first %}
+
+    <a href="{{ action.link(row) }}" title="{{ action.title }}" class="btn btn-default">
+        <i class="material-icons">{{ action.icon }}</i> {{ action.title }}
+    </a>
+
+    {# If there are more than 1 action button, display other buttons in a drop-down menu #}
+    {% if column.options.actions|length > 1 %}
+
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-caret-down"></i>&nbsp;
+        </button>
+
+        <ul class="dropdown-menu">
+            {% for action in column.options.actions %}
+                {% if not loop.first %} {# skip 1st action button, already displayed #}
+                    <li>
+                        <a href="{{ action.link(row) }}"
+                                {% if action.needsConfirmation() %}
+                                    onclick="if (confirm('{{ action.title }} selected item?')){return true;}else{event.stopPropagation(); event.preventDefault();};"
+                                {% endif %}
+                           title="{{ action.title }}" class="btn btn-default">
+                            <i class="material-icons">{{ action.icon }}</i> {{ action.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}

@@ -4,3 +4,24 @@ admin_webservice:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
         _legacy_controller: AdminWebservice
+
+admin_webservice_add_key:
+    path: /add
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_edit_key:
+    path: /edit/{webservice_key_id}
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_delete_key:
+    path: /delete/{webservice_key_id}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:delete'
+        _legacy_controller: AdminWebservice

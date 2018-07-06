@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\WebserviceKeyGridSearchCriteria;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
@@ -67,7 +68,7 @@ class WebserviceController extends FrameworkBundleAdminController
          * - foreach item: edit/delete
          */
 
-        if('POST' === $request->getMethod()) {
+        if($request->isMethod('POST')) {
             if ($request->request->has('form')) {
                 $submittedForm =$request->request->get('form');
                 if (array_key_exists('webservice_configuration', $submittedForm)) {
@@ -102,7 +103,50 @@ class WebserviceController extends FrameworkBundleAdminController
         ];
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
+    }
 
+    /**
+     * Displays the "Add/edit a webservice key" page.
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     * @param string $action_name
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, $webservice_key_id = null)
+    {
+        $isEdit = (null === $webservice_key_id);
+
+        throw new \RuntimeException('Not implemented yet');
+    }
+
+    /**
+     * Performs a delete action then redirect to index
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param int $webservice_key_id
+     *
+     * @return Response
+     */
+    public function deleteAction($webservice_key_id)
+    {
+        /** @var WebserviceKeyRepository $repository */
+        $repository = $this->get('prestashop.core.admin.webservice_key.repository');
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+
+        // TODO: delete with or withou Doctrine ?
+        /*
+        $key = $repository->find($webservice_key_id);
+
+        if (null === $key) {
+            $entityManager->remove($key);
+            $entityManager->flush();
+        }*/
+
+        return $this->redirectToRoute('admin_webservice');
     }
 
     /**

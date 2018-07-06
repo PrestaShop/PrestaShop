@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ActionButton;
+use PrestaShop\PrestaShop\Core\Grid\Column\ActionButton\DeleteActionButton;
+use PrestaShop\PrestaShop\Core\Grid\Column\ActionButton\EditActionButton;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -40,12 +43,26 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class WebserviceKeyGridDefinitionFactory is responsible for creating new instance of Webservice key grid definition
  */
 final class WebserviceKeyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -95,9 +112,24 @@ final class WebserviceKeyGridDefinitionFactory extends AbstractGridDefinitionFac
                             'class' => 'btn btn-primary',
                         ],
                     ],
+                    'actions' => [
+                        new ActionButton(
+                            $this->router,
+                            'admin_webservice_edit_key',
+                            ['webservice_key_id' => 'id_webservice_account'], // should it be an object ? like a Mapping or ParameterMapping ?
+                            $this->trans('Edit', [], 'Global.Actions'),
+                            'edit'
+                        ),
+                        new ActionButton(
+                            $this->router,
+                            'admin_webservice_delete_key',
+                            ['webservice_key_id' => 'id_webservice_account'], // should it be an object ? like a Mapping or ParameterMapping ?
+                            $this->trans('Delete', [], 'Global.Actions'),
+                            'delete'
+                        ),
+                    ]
                 ])
-            )
-            ;
+            );
     }
 
     /**

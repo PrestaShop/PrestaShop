@@ -24,45 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Search;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use Symfony\Component\HttpFoundation\Request;
-
-class WebserviceKeyGridSearchCriteria implements SearchCriteriaInterface
+class ColumnDefinitionException extends \InvalidArgumentException
 {
-    private $request;
-
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    public function getOrderBy()
-    {
-        return '`'.$this->request->get('orderBy', 'id_webservice_account').'`';
-    }
-
-    public function getOrderWay()
-    {
-        return $this->request->get('sortOrder', 'asc');
-    }
-
-    public function getOffset()
-    {
-        return $this->request->get('offset', 0);
-    }
-
-    public function getLimit()
-    {
-        return $this->request->get('limit', 10);
-    }
-
-    public function getFilters()
-    {
-        $filters = $this->request->get('webservice_keys', []);
-
-        unset($filters['_token']);
-
-        return $filters;
-    }
 }
