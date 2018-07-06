@@ -1100,8 +1100,13 @@ class LanguageCore extends ObjectModel
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
                 $raw_file_data = curl_exec($ch);
            
-                if(curl_errno($ch)){
-                   echo 'error:' . curl_error($ch);
+                if (curl_errno($ch)){
+                    throw new \Exception(
+                        sprintf(
+                            'Download of localization package failed %s',
+                            curl_error($ch)
+                        )
+                    );
                 }
                 curl_close($ch);
            
@@ -1112,6 +1117,8 @@ class LanguageCore extends ObjectModel
                 $fs = new Filesystem();
                 $fs->copy($url, $file, true);
 
+            } else {
+                throw new \Exception('No download methods available');
             }
             
         }
