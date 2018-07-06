@@ -96,7 +96,7 @@ final class WebserviceKeyGridDefinitionFactory extends AbstractGridDefinitionFac
             ->add((new SimpleColumn('description'))
                 ->setName($this->trans('Key description', [], 'Global.Actions'))
             )
-            ->add((new EnabledOrNotColumn('active'))
+            ->add((new EnabledOrNotColumn('active')) // @todo: this should be a ToggleColumn instead
                 ->setName($this->trans('Enabled', [], 'Global.Actions'))
                 ->setOptions([
                     'sortable' => false,
@@ -134,12 +134,19 @@ final class WebserviceKeyGridDefinitionFactory extends AbstractGridDefinitionFac
 
     /**
      * {@inheritdoc}
+     *
+     * @todo: add Grid Actions
      */
     protected function getGridActions()
     {
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @todo: add Bulk Actions
+     */
     protected function getBulkActions()
     {
         return null;

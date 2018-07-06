@@ -28,35 +28,56 @@ namespace PrestaShop\PrestaShop\Core\Grid\Search;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class WebserviceKeyGridSearchCriteria implements SearchCriteriaInterface
+final class WebserviceKeyGridSearchCriteria implements SearchCriteriaInterface
 {
+    /**
+     * @var Request
+     */
     private $request;
 
+    /**
+     * @param Request $request
+     */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getOrderBy()
     {
         return '`'.$this->request->get('orderBy', 'id_webservice_account').'`';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getOrderWay()
     {
         return $this->request->get('sortOrder', 'asc');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getOffset()
     {
         return $this->request->get('offset', 0);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getLimit()
     {
         return $this->request->get('limit', 10);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFilters()
     {
         $filters = $this->request->get('webservice_keys', []);

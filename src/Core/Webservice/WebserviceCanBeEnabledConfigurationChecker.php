@@ -62,6 +62,14 @@ class WebserviceCanBeEnabledConfigurationChecker
         $this->configuration = $configuration;
     }
 
+    /**
+     * Analyses server configuration and PrestaShop configuration in order
+     * to check whether PrestaShop Webservice can be enabled or not.
+     *
+     * @param Request|null $request optional if given, is used for deeper analysis
+     *
+     * @return array
+     */
     public function analyseConfigurationForIssues(Request $request = null)
     {
         $issues = $this->lookForIssues($request);
@@ -89,8 +97,11 @@ class WebserviceCanBeEnabledConfigurationChecker
     {
         $issues = [];
 
-        if ($request !== null) {
-            if (strpos($request->server->get('SERVER_SOFTWARE'), 'Apache') === false) {
+        $isRequestAvailableForAnalysis = ($request !== null);
+
+        if ($isRequestAvailableForAnalysis) {
+            $requestsComesFromApacheServer = (strpos($request->server->get('SERVER_SOFTWARE'), 'Apache'));
+            if (false === $requestsComesFromApacheServer) {
                 $issues[] = self::ISSUE_NOT_APACHE_SERVER;
             }
         }

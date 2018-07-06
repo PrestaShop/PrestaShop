@@ -33,13 +33,16 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 /**
  * Manages the configuration data about upload quota options.
  */
-class WebserviceConfiguration implements DataConfigurationInterface
+final class WebserviceConfiguration implements DataConfigurationInterface
 {
     /**
      * @var Configuration
      */
     private $configuration;
 
+    /**
+     * @param Configuration $configuration
+     */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;

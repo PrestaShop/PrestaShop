@@ -37,13 +37,25 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
  */
 class WebserviceKeyRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
-    /** @var \Doctrine\DBAL\Driver\Connection */
+    /**
+     * @var \Doctrine\DBAL\Driver\Connection
+     */
     private $connection;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $databasePrefix;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $webserviceKeyTable;
 
+    /**
+     * @param Connection $connection
+     * @param string $databasePrefix
+     */
     public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
