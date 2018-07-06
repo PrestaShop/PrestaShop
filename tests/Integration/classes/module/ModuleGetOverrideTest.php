@@ -39,7 +39,7 @@ class ModulesGetOverrideTest extends IntegrationTestCase
 
         foreach (scandir(_PS_MODULE_DIR_) as $entry)
         {
-            if ($entry[0] !== '.')
+            if ('.' !== $entry[0] && 'ps_mbo' !== $entry[0])
             {
                 if (file_exists(_PS_MODULE_DIR_.$entry.DIRECTORY_SEPARATOR.$entry.'.php'))
                 {
@@ -54,7 +54,7 @@ class ModulesGetOverrideTest extends IntegrationTestCase
     /**
      * @dataProvider listModulesOnDisk
      * Note: improves module list fixtures in order to cancel any override.
-     * @todo: PHP7 incompatability on module overidding
+     * @todo: PHP7 incompatibility on module overidding
      */
     public function testDummyGetOverride($moduleName)
     {
