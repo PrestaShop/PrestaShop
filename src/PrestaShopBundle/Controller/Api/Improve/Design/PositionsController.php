@@ -43,9 +43,9 @@ class PositionsController extends ApiController
      */
     public function updateAction(Request $request)
     {
-        $moduleId = (int) $request->request->get('moduleId');
-        $hookId = (int) $request->request->get('hookId');
-        $way = (int) $request->request->get('way');
+        $moduleId = $request->request->getInt('moduleId');
+        $hookId = $request->request->getInt('hookId');
+        $way = $request->request->getInt('way');
         $positions = $request->request->get('positions');
         $position = (int) is_array($positions) ? array_search($hookId.'_'.$moduleId, $positions) + 1 : null;
 

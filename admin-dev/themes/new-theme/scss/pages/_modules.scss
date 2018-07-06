@@ -136,18 +136,18 @@
     }
     .module-name-list {
       font-weight: bolder;
-      color: #7A7A7A-dark;
+      color: $gray-dark;
       margin: 0;
     }
     .module-version-author-list {
       font-weight: bold;
-      color: #7A7A7A-medium;
+      color: $gray-medium;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       b {
         font-weight: bold;
-        color: #7A7A7A-dark;
+        color: $gray-dark;
       }
     }
 
@@ -293,7 +293,7 @@
         font-family: 'Material Icons';
         font-size: 1.5rem;
         position: relative;
-        color: #7A7A7A-medium;
+        color: $gray-medium;
         right: 20px;
       }
     }

@@ -37,7 +37,6 @@ class PositionsListHandler {
     self.$panelSelectionMultipleSelection = $("#modules-position-multiple-selection");
 
     self.$panelSelectionOriginalY = self.$panelSelection.offset().top;
-    self.$panelSelectionOriginalYTopMargin = 140;
     self.$showModules = $("#show-modules");
     self.$modulesList = $('.modules-position-checkbox');
     self.$hookPosition = $("#hook-position");
@@ -59,7 +58,7 @@ class PositionsListHandler {
         'top',
         $scrollTop < 20 ?
         0 :
-        $scrollTop - self.$panelSelectionOriginalY + self.$panelSelectionOriginalYTopMargin
+        $scrollTop - self.$panelSelectionOriginalY
       );
     });
 
@@ -111,6 +110,13 @@ class PositionsListHandler {
 
     $('.hook-checker').on('click', function() {
       $(`.hook${$(this).data('hook-id')}`).prop('checked', $(this).prop('checked'));
+    });
+
+    $('.modules-position-checkbox').on('click', function() {
+      $(`#Ghook${$(this).data('hook-id')}`).prop(
+        'checked',
+        $(`.hook${$(this).data('hook-id')}:not(:checked)`).length === 0
+      );
     });
   }
 
