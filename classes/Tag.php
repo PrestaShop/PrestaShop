@@ -131,9 +131,13 @@ class TagCore extends ObjectModel
         }
         $data = rtrim($data, ',');
 
-        $result = Db::getInstance()->execute('
-        INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`, `id_lang`)
-        VALUES '.$data);
+        $result = true;
+        if (!empty($data)) {
+            $result = Db::getInstance()->execute('
+                INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`, `id_lang`)
+                VALUES '.$data
+            );
+        }
 
         if ($list != array()) {
             self::updateTagCount($list);
