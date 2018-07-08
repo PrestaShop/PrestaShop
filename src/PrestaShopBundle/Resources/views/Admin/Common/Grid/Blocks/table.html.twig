@@ -38,7 +38,7 @@
       <tr>
         {% for column in grid.columns %}
           <td>
-            {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'grid': grid, 'column': column, 'row': row}) }}
+            {{ column_content(column, row, grid) }}
           </td>
         {% endfor %}
       </tr>

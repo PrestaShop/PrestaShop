@@ -58,3 +58,10 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
         tags:
             - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.column:
+        class: 'PrestaShopBundle\Twig\Extension\ColumnExtension'
+        arguments:
+            - '@templating.engine.twig'
+        tags:
+            - { name: twig.extension }
