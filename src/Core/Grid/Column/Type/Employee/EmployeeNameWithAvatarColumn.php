@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class EmployeeNameWithAvatarColumn extends AbstractColumn
 {
@@ -36,5 +37,20 @@ final class EmployeeNameWithAvatarColumn extends AbstractColumn
     public function getType()
     {
         return 'employee_name_with_avatar';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired([
+                'field'
+            ])
+            ->setAllowedTypes('field', 'string')
+        ;
     }
 }

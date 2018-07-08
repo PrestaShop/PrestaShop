@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
@@ -79,39 +79,58 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new BulkActionColumn('bulk_action'))
                 ->setOptions([
-                    'bulk_value' => 'id_log',
+                    'bulk_field' => 'id_log',
                 ])
             )
             ->add(
-                (new SimpleColumn('id_log'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
+                (new DataColumn('id_log'))
+                ->setName($this->trans('ID', [], 'Global.Actions'))
+                ->setOptions([
+                    'field' => 'id_log',
+                ])
             )
             ->add(
                 (new EmployeeNameWithAvatarColumn('employee'))
                 ->setName($this->trans('Employee', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'employee',
+                ])
             )
             ->add(
                 (new SeverityLevelColumn('severity'))
                 ->setName($this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'with_message' => true,
+                    'field' => 'severity',
                 ])
             )
             ->add(
-                (new SimpleColumn('message'))
+                (new DataColumn('message'))
                 ->setName($this->trans('Message', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'message',
+                ])
             )
             ->add(
-                (new SimpleColumn('object_type'))
+                (new DataColumn('object_type'))
                 ->setName($this->trans('Object type', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'field' => 'object_type',
+                ])
             )
             ->add(
-                (new SimpleColumn('object_id'))
+                (new DataColumn('object_id'))
                 ->setName($this->trans('Object ID', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'field' => 'object_id',
+                ])
             )
             ->add(
-                (new SimpleColumn('error_code'))
+                (new DataColumn('error_code'))
                 ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'field' => 'error_code',
+                ])
             )
             ->add(
                 (new DateTimeColumn('date_add'))
@@ -119,6 +138,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
                     'filter' => new ColumnFilterOption(DateRangeType::class),
+                    'field' => 'date_add',
                 ])
             )
             ->add(

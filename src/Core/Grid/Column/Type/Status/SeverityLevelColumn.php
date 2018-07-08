@@ -49,6 +49,9 @@ final class SeverityLevelColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver
+            ->setRequired([
+                'field',
+            ])
             ->setDefaults([
                 'with_message' => false,
                 'filter' => new ColumnFilterOption(TextType::class, [
@@ -56,6 +59,7 @@ final class SeverityLevelColumn extends AbstractColumn
                 ]),
             ])
             ->setAllowedTypes('with_message', 'bool')
+            ->setAllowedTypes('field', 'string')
         ;
     }
 }
