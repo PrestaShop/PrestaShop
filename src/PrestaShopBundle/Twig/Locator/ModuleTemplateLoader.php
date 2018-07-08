@@ -34,22 +34,11 @@ use Twig\Loader\FilesystemLoader;
 class ModuleTemplateLoader extends FilesystemLoader
 {
     /**
-     * {@inheritdoc}
-     */
-    private $rootPath;
-
-    /**
      * @param array  $namespaces A collection of path namespaces with namespace names.
      * @param string|array $paths    A path or an array of paths where to look for templates
-     * @param string|null  $rootPath The root path common to all relative paths (null for getcwd())
      */
-    public function __construct(array $namespaces, $paths = array(), $rootPath = null)
+    public function __construct(array $namespaces, $paths = array())
     {
-        $this->rootPath = (null === $rootPath ? getcwd() : $rootPath).DIRECTORY_SEPARATOR;
-        if (false !== $realPath = realpath($rootPath)) {
-            $this->rootPath = $realPath.DIRECTORY_SEPARATOR;
-        }
-
         if ($paths) {
             $this->registerNamespacesFromConfig($paths, $namespaces);
         }
