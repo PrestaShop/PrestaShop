@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\TemporarySearchCriteria;
+use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -51,24 +51,20 @@ class RequestSqlController extends FrameworkBundleAdminController
      *      message="Access denied."
      * )
      *
-     * @param Request $request
+     * @param Request           $request
+     * @param RequestSqlFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, RequestSqlFilters $filters)
     {
         // handle "Export to SQL manager" action from legacy pages
         if ($request->query->has('addrequest_sql')) {
             return $this->forward('PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create');
         }
 
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        // temporary search criteria class, to be removed
-        $searchCriteria = new TemporarySearchCriteria($request);
-
         $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
-        $grid = $gridLogFactory->createUsingSearchCriteria($searchCriteria);
+        $grid = $gridLogFactory->createUsingSearchCriteria($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
@@ -86,10 +82,33 @@ class RequestSqlController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
             'requestSqlGrid' => $presentedGrid,
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @DemoRestricted(redirectRoute="admin_logs")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        if (!$request->request->has('request_sql')) {
+            return $this->redirectToRoute('admin_request_sql');
+        }
+
+        $filters = $request->request->get('request_sql');
+
+        return $this->redirectToRoute('admin_request_sql', ['filters' => [
+            'id_request_sql' => $filters['id_request_sql'],
+            'name' => $filters['name'],
+            'sql' => $filters['sql'],
+        ]]);
     }
 
     /**

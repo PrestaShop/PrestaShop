@@ -24,36 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class ActionsColumn extends AbstractColumn
+class RequestSqlFilters extends Filters
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public static function getDefaults()
     {
-        return 'actions';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'actions' => null,
-                'filter' => new ColumnFilterOption(SubmitType::class, []),
-            ])
-            ->setAllowedTypes('filter', ColumnFilterOption::class)
-            ->setAllowedTypes('actions', ['null', RowActionCollection::class])
-        ;
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_request_sql',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
     }
 }
