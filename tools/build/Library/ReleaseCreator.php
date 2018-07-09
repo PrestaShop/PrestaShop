@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Foundation\Version;
+
 /**
  * This class is used to create a release of PrestaShop,
  * see ReleaseCreator::createRelease() function.
@@ -315,7 +317,6 @@ class ReleaseCreator
     {
         $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
-            ->setConfigAutoloadConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -344,22 +345,27 @@ class ReleaseCreator
     }
 
     /**
-     * Define all config/autoload.php constants to the desired version.
+     * Define the PrestaShop version to the desired version.
      *
-     * @return $this
+     * @return self
      * @throws BuildException
      */
-    protected function setConfigAutoloadConstants()
+    protected function setupShopVersion()
     {
-        $configAutoloadPath = $this->tempProjectPath.'/config/autoload.php';
-        $configAutoloadContent = file_get_contents($configAutoloadPath);
-        $configAutoloadNewContent = preg_replace('#_PS_VERSION_\', \'(.*)\'\)#', '_PS_VERSION_\', \'' . $this->version . '\')', $configAutoloadContent);
+        $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
+        $version = new Version($this->version);
 
-        if (!file_put_contents($configAutoloadPath, $configAutoloadNewContent)) {
-            throw new BuildException("Unable to update contents of '$configAutoloadPath'");
+
+        $kernelFileContent = file_get_contents($kernelFile);
+        $kernelFileContent = preg_replace('#VERSION = \', \'(.*)\'\#;', $version->getVersion(), $kernelFileContent);
+        $kernelFileContent = preg_replace('#MAJOR_VERSION_STRING = \', \'(.*)\'\#;', $version->getMajorVersionString(), $kernelFileContent);
+        $kernelFileContent = preg_replace('#MAJOR_VERSION = \', \'(.*)\'\#;', $version->getMajorVersion(), $kernelFileContent);
+        $kernelFileContent = preg_replace('#MINOR_VERSION = \', \'(.*)\'\#;', $version->getMinorVersion(), $kernelFileContent);
+        $kernelFileContent = preg_replace('#RELEASE_VERSION = \', \'(.*)\'\#;', $version->getReleaseVersion(), $kernelFileContent);
+
+        if (!file_put_contents($kernelFile, $kernelFileContent)) {
+            throw new BuildException("Unable to update contents of $kernelFile.");
         }
-
-        return $this;
     }
 
     /**
