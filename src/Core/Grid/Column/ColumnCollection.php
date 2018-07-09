@@ -111,9 +111,9 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
             $existingColumnKeyPosition++;
         }
 
-        $columns = array_slice($this->items, 0, $existingColumnKeyPosition);
-        $columns = array_merge($columns, [$newColumn->getId() => $newColumn]);
-        $columns = array_merge($columns, array_slice($this->items, $existingColumnKeyPosition));
+        $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true) +
+            [$newColumn->getId() => $newColumn] +
+            array_slice($this->items, $existingColumnKeyPosition, $this->count(), true);
 
         $this->items = $columns;
     }

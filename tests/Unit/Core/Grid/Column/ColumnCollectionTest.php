@@ -141,6 +141,29 @@ class ColumnCollectionTest extends TestCase
         ], $this->getColumnPositions($columns));
     }
 
+    public function testNumericColumnIdAreAccepted()
+    {
+        $columns = (new ColumnCollection())
+            ->add($this->createColumnMock(3))
+            ->addAfter(3, $this->createColumnMock(1))
+            ->addBefore(3, $this->createColumnMock(2))
+            ->add($this->createColumnMock('second'))
+            ->addAfter('second', $this->createColumnMock(9))
+            ->addBefore('second', $this->createColumnMock('7'))
+            ->add($this->createColumnMock(5))
+        ;
+
+        $this->assertEquals([
+            2,
+            3,
+            1,
+            '7',
+            'second',
+            9,
+            5,
+        ], $this->getColumnPositions($columns));
+    }
+
     public function testItThrowsExceptionWhenAddingColumnAfterNonExistingColumn()
     {
         $this->expectException(ColumnNotFoundException::class);
