@@ -7,7 +7,7 @@
 {block name='page_content'}
   {block name='order_return_infos'}
     <div id="order-return-infos" class="card">
-      <div class="card-block">
+      <div class="card-body">
         <p>
           <strong>{l
             s='%number% on %date%'
@@ -66,10 +66,10 @@
                           <div class="modal-body">
                             {foreach from=$customization.fields item="field"}
                               <div class="product-customization-line row">
-                                <div class="col-sm-3 col-xs-4 label">
+                                <div class="col-4 col-sm-3 label">
                                   {$field.label}
                                 </div>
-                                <div class="col-sm-9 col-xs-8 value">
+                                <div class="col-8 col-sm-9 value">
                                   {if $field.type == 'text'}
                                     {if (int)$field.id_module}
                                       {$field.text nofilter}
@@ -108,7 +108,7 @@
 
   {if $return.state == 2}
     <section class="card">
-      <div class="card-block">
+      <div class="card-body">
         <h3 class="card-title h3">{l s='Reminder' d='Shop.Theme.Customeraccount'}</h3>
         <p class="card-text">
           {l

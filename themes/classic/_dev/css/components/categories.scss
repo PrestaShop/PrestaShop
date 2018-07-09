@@ -50,7 +50,7 @@
   }
   .sort-by {
     white-space: normal;
-    word-break: break-word;
+    word-break: break-all;
     margin-right: -0.9375rem;
     margin-left: 0.9375rem;
     text-align: right
@@ -90,7 +90,7 @@
     background: $gray-lighter;
     border: none;
     border-radius: 0;
-    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
     margin: 0;
   }
 }
@@ -399,7 +399,7 @@
           }
           .collapse {
             display: none;
-            &.in {
+            &.show {
               display: block;
             }
           }
@@ -456,8 +456,8 @@
   #category {
     #left-column {
       #search_filters_wrapper {
-        margin-left: -15px;
-        margin-right: -15px;
+        margin-right: ($grid-gutter-width / -2);
+        margin-left: ($grid-gutter-width / -2);
       }
     }
   }

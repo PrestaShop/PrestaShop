@@ -34,17 +34,17 @@
     {foreach $stores as $store}
       <article id="store-{$store.id}" class="store-item card">
         <div class="store-item-container clearfix">
-          <div class="col-md-3 store-picture hidden-sm-down">
+          <div class="col-md-3 store-picture d-none d-md-block">
             <img src="{$store.image.bySize.stores_default.url}" alt="{$store.image.legend}" title="{$store.image.legend}">
           </div>
-          <div class="col-md-5 col-sm-7 col-xs-12 store-description">
+          <div class="col-sm-7 col-md-5 store-description">
             <p class="h3 card-title">{$store.name}</p>
             <address>{$store.address.formatted nofilter}</address>
             {if $store.note || $store.phone || $store.fax || $store.email}
               <a data-toggle="collapse" href="#about-{$store.id}" aria-expanded="false" aria-controls="about-{$store.id}"><strong>{l s='About and Contact' d='Shop.Theme.Global'}</strong><i class="material-icons">&#xE409;</i></a>
             {/if}
           </div>
-          <div class="col-md-4 col-sm-5 col-xs-12 divide-left">
+          <div class="col-sm-5 col-md-4 divide-left">
             <table>
               {foreach $store.business_hours as $day}
               <tr>
@@ -63,12 +63,12 @@
         </div>
         <footer id="about-{$store.id}" class="collapse">
           <div class="store-item-footer divide-top">
-            <div class="card-block">
+            <div class="card-body">
               {if $store.note}
                 <p class="text-justify">{$store.note}<p>
               {/if}
             </div>
-            <ul class="card-block">
+            <ul class="card-body">
               {if $store.phone}
                 <li><i class="material-icons">&#xE0B0;</i>{$store.phone}</li>
               {/if}

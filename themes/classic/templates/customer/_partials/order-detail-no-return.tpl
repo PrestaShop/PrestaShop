@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='order_products_table'}
-  <div class="box hidden-sm-down">
+  <div class="box d-none d-md-block">
     <table id="order-products" class="table table-bordered">
       <thead class="thead-default">
         <tr>
@@ -62,10 +62,10 @@
                         <div class="modal-body">
                           {foreach from=$customization.fields item="field"}
                             <div class="product-customization-line row">
-                              <div class="col-sm-3 col-xs-4 label">
+                              <div class="col-4 col-sm-3 label">
                                 {$field.label}
                               </div>
-                              <div class="col-sm-9 col-xs-8 value">
+                              <div class="col-8 col-sm-9 value">
                                 {if $field.type == 'text'}
                                   {if (int)$field.id_module}
                                     {$field.text nofilter}
@@ -95,20 +95,20 @@
               {$product.quantity}
             {/if}
           </td>
-          <td class="text-xs-right">{$product.price}</td>
-          <td class="text-xs-right">{$product.total}</td>
+          <td class="text-right">{$product.price}</td>
+          <td class="text-right">{$product.total}</td>
         </tr>
       {/foreach}
       <tfoot>
         {foreach $order.subtotals as $line}
           {if $line.value}
-            <tr class="text-xs-right line-{$line.type}">
+            <tr class="text-right line-{$line.type}">
               <td colspan="3">{$line.label}</td>
               <td>{$line.value}</td>
             </tr>
           {/if}
         {/foreach}
-        <tr class="text-xs-right line-{$order.totals.total.type}">
+        <tr class="text-right line-{$order.totals.total.type}">
           <td colspan="3">{$order.totals.total.label}</td>
           <td>{$order.totals.total.value}</td>
         </tr>
@@ -116,7 +116,7 @@
     </table>
   </div>
 
-  <div class="order-items hidden-md-up box">
+  <div class="order-items d-md-none box">
     {foreach from=$order.products item=product}
       <div class="order-item">
         <div class="row">
@@ -137,10 +137,10 @@
           </div>
           <div class="col-sm-7 qty">
             <div class="row">
-              <div class="col-xs-4 text-sm-left text-xs-left">
+              <div class="col-4 text-left text-sm-left">
                 {$product.price}
               </div>
-              <div class="col-xs-4">
+              <div class="col-4">
                 {if $product.customizations}
                   {foreach $product.customizations as $customization}
                     {$customization.quantity}
@@ -149,7 +149,7 @@
                   {$product.quantity}
                 {/if}
               </div>
-              <div class="col-xs-4 text-xs-right">
+              <div class="col-4 text-right">
                 {$product.total}
               </div>
             </div>
@@ -158,18 +158,18 @@
       </div>
     {/foreach}
   </div>
-  <div class="order-totals hidden-md-up box">
+  <div class="order-totals d-md-none box">
     {foreach $order.subtotals as $line}
       {if $line.value}
         <div class="order-total row">
-          <div class="col-xs-8"><strong>{$line.label}</strong></div>
-          <div class="col-xs-4 text-xs-right">{$line.value}</div>
+          <div class="col-8"><strong>{$line.label}</strong></div>
+          <div class="col-4 text-right">{$line.value}</div>
         </div>
       {/if}
     {/foreach}
     <div class="order-total row">
-      <div class="col-xs-8"><strong>{$order.totals.total.label}</strong></div>
-      <div class="col-xs-4 text-xs-right">{$order.totals.total.value}</div>
+      <div class="col-8"><strong>{$order.totals.total.label}</strong></div>
+      <div class="col-4 text-right">{$order.totals.total.value}</div>
     </div>
   </div>
 {/block}

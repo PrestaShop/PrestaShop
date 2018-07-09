@@ -148,7 +148,7 @@
   margin-top: $medium-space;
   padding-top: $medium-space;
   overflow: hidden;
-  box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.3);
   li {
     margin-bottom: 0.3125rem;
   }
@@ -202,7 +202,7 @@
   .links {
     .collapse {
       display: none;
-      &.in {
+      &.show {
         display: block;
       }
     }

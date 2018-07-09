@@ -35,7 +35,7 @@
 {/block}
 
 {block name='cart_actions'}
-  <div class="checkout text-sm-center card-block">
+  <div class="checkout text-sm-center card-body">
     <button type="button" class="btn btn-primary disabled" disabled>{l s='Checkout' d='Shop.Theme.Actions'}</button>
   </div>
 {/block}

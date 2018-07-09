@@ -33,7 +33,7 @@
     <div id="order-infos">
       <div class="box">
           <div class="row">
-            <div class="col-xs-{if $order.details.reorder_url}9{else}12{/if}">
+            <div class="col-{if $order.details.reorder_url}9{else}12{/if}">
               <strong>
                 {l
                   s='Order Reference %reference% - placed on %date%'
@@ -43,7 +43,7 @@
               </strong>
             </div>
             {if $order.details.reorder_url}
-              <div class="col-xs-3 text-xs-right">
+              <div class="col-3 text-right">
                 <a href="{$order.details.reorder_url}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
               </div>
             {/if}
@@ -82,7 +82,7 @@
   {block name='order_history'}
     <section id="order-history" class="box">
       <h3>{l s='Follow your order\'s status step-by-step' d='Shop.Theme.Customeraccount'}</h3>
-      <table class="table table-striped table-bordered table-labeled hidden-xs-down">
+      <table class="table table-striped table-bordered table-labeled d-none d-sm-block">
         <thead class="thead-default">
           <tr>
             <th>{l s='Date' d='Shop.Theme.Global'}</th>
@@ -102,7 +102,7 @@
           {/foreach}
         </tbody>
       </table>
-      <div class="hidden-sm-up history-lines">
+      <div class="d-md-none history-lines">
         {foreach from=$order.history item=state}
           <div class="history-line">
             <div class="date">{$state.history_date}</div>
@@ -127,7 +127,7 @@
   {block name='addresses'}
     <div class="addresses">
       {if $order.addresses.delivery}
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-sm-6">
           <article id="delivery-address" class="box">
             <h4>{l s='Delivery address %alias%' d='Shop.Theme.Checkout' sprintf=['%alias%' => $order.addresses.delivery.alias]}</h4>
             <address>{$order.addresses.delivery.formatted nofilter}</address>
@@ -135,7 +135,7 @@
         </div>
       {/if}
 
-      <div class="col-lg-6 col-md-6 col-sm-6">
+      <div class="col-sm-6">
         <article id="invoice-address" class="box">
           <h4>{l s='Invoice address %alias%' d='Shop.Theme.Checkout' sprintf=['%alias%' => $order.addresses.invoice.alias]}</h4>
           <address>{$order.addresses.invoice.formatted nofilter}</address>
@@ -158,7 +158,7 @@
   {block name='order_carriers'}
     {if $order.shipping}
       <div class="box">
-        <table class="table table-striped table-bordered hidden-sm-down">
+        <table class="table table-striped table-bordered d-none d-md-block">
           <thead class="thead-default">
             <tr>
               <th>{l s='Date' d='Shop.Theme.Global'}</th>
@@ -180,7 +180,7 @@
             {/foreach}
           </tbody>
         </table>
-        <div class="hidden-md-up shipping-lines">
+        <div class="d-md-none shipping-lines">
           {foreach from=$order.shipping item=line}
             <div class="shipping-line">
               <ul>

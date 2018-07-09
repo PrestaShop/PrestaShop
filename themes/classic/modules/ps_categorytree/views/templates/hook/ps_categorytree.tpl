@@ -59,7 +59,7 @@
   {/strip}
 {/function}
 
-<div class="block-categories hidden-sm-down">
+<div class="block-categories d-none d-md-block">
   <ul class="category-top-menu">
     <li><a class="text-uppercase h6" href="{$categories.link nofilter}">{$categories.name}</a></li>
     <li>{categories nodes=$categories.children}</li>

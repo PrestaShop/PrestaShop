@@ -23,21 +23,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<div class="block_newsletter col-lg-8 col-md-12 col-sm-12">
+<div class="block_newsletter col-lg-8">
   <div class="row">
-    <p id="block-newsletter-label" class="col-md-5 col-xs-12">{l s='Get our latest news and special sales' d='Shop.Theme.Global'}</p>
-    <div class="col-md-7 col-xs-12">
+    <p id="block-newsletter-label" class="col-md-5">{l s='Get our latest news and special sales' d='Shop.Theme.Global'}</p>
+    <div class="col-md-7">
       <form action="{$urls.pages.index}#footer" method="post">
         <div class="row">
-          <div class="col-xs-12">
+          <div class="col-12">
             <input
-              class="btn btn-primary float-xs-right hidden-xs-down"
+              class="btn btn-primary float-right d-none d-sm-block"
               name="submitNewsletter"
               type="submit"
               value="{l s='Subscribe' d='Shop.Theme.Actions'}"
             >
             <input
-              class="btn btn-primary float-xs-right hidden-sm-up"
+              class="btn btn-primary float-right d-sm-none"
               name="submitNewsletter"
               type="submit"
               value="{l s='OK' d='Shop.Theme.Actions'}"
@@ -54,7 +54,7 @@
             <input type="hidden" name="action" value="0">
             <div class="clearfix"></div>
           </div>
-          <div class="col-xs-12">
+          <div class="col-12">
               {if $conditions}
                 <p>{$conditions}</p>
               {/if}

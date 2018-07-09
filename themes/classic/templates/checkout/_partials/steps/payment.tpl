@@ -7,13 +7,13 @@
   {if $is_free}
     <p>{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
   {/if}
-  <div class="payment-options {if $is_free}hidden-xs-up{/if}">
+  <div class="payment-options {if $is_free}d-none{/if}">
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
           <div id="{$option.id}-container" class="payment-option clearfix">
             {* This is the way an option should be selected when Javascript is enabled *}
-            <span class="custom-radio float-xs-left">
+            <span class="custom-radio float-left">
               <input
                 class="ps-shown-by-js {if $option.binary} binary {/if}"
                 id="{$option.id}"
@@ -89,7 +89,7 @@
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
-            <div class="float-xs-left">
+            <div class="float-left">
               <span class="custom-checkbox">
                 <input  id    = "conditions_to_approve[{$condition_name}]"
                         name  = "conditions_to_approve[{$condition_name}]"

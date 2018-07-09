@@ -63,7 +63,6 @@
     width: 100%;
     margin-bottom: 0.375rem;
     display: block;
-    width: 100%;
   }
   .add-to-cart {
     height: 2.75rem;
@@ -86,24 +85,22 @@
   }
   #quantity_wanted {
     color: $gray-darker;
-    background-color: white;
     height: 2.75rem;
-    padding: 0.175rem 0.5rem;
-    width: 3rem;
+    &:focus{
+      box-shadow: none;
+    }
   }
   .input-group-btn-vertical {
     width: auto;
     .btn {
-      padding: 0.5rem 0.6875rem;
+      &.btn-touchspin {
+        height: 1.438rem;
+      }
       i {
         font-size: 1rem;
-        top: 0.125rem;
-        left: 0.1875rem;
+        line-height: 1rem;
       }
     }
-  }
-  .btn-touchspin {
-    height: 1.438rem;
   }
 }
 .product-discounts {

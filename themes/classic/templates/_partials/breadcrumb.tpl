@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<nav data-depth="{$breadcrumb.count}" class="breadcrumb hidden-sm-down">
+<nav data-depth="{$breadcrumb.count}" class="breadcrumb d-none d-md-block">
   <ol itemscope itemtype="http://schema.org/BreadcrumbList">
     {block name='breadcrumb'}
       {foreach from=$breadcrumb.links item=path name=breadcrumb}

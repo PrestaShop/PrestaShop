@@ -44,13 +44,15 @@
       }
     }
   }
-  .carousel-control {
+  .carousel-control-prev,
+  .carousel-control-next{
     opacity: 1;
-    .icon-next,
-    .icon-prev {
-      &::before {
-        content: "";
-      }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background: none;
+      position: absolute;
+      width: auto;
+      height: auto;
       i {
         font-size: 3.125rem;
         color: white;
@@ -61,15 +63,17 @@
         }
       }
     }
+    .carousel-control-prev-icon{
+      left: 0;
+    }
+    .carousel-control-next-icon{
+      right: 0;
+    }
     .icon-prev {
       left: 1rem;
     }
     .icon-next {
       right: 2rem;
-    }
-    &.left,
-    &.right {
-      background: none;
     }
   }
 }
