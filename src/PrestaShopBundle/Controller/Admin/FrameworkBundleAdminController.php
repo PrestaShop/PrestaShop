@@ -26,9 +26,11 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -38,8 +40,14 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  */
 class FrameworkBundleAdminController extends Controller
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
 
+    /**
+     * @var string|null
+     */
     protected $layoutTitle;
 
     /**
@@ -57,10 +65,10 @@ class FrameworkBundleAdminController extends Controller
      */
     public function overviewAction()
     {
-        return array(
+        return [
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
-        );
+        ];
     }
 
     public function hashUpdateJsAction($hash)
@@ -83,6 +91,7 @@ class FrameworkBundleAdminController extends Controller
      * Parse all errors mapped by id html field
      *
      * @param Form $form The form
+     *
      * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
@@ -97,9 +106,9 @@ class FrameworkBundleAdminController extends Controller
 
         foreach ($form->getErrors(true) as $error) {
             if (!$error->getCause()) {
-                $form_id = 'bubbling_errors';
+                $formId = 'bubbling_errors';
             } else {
-                $form_id = str_replace(
+                $formId = str_replace(
                     ['.', 'children[', ']', '_data'],
                     ['_', '', '', ''],
                     $error->getCause()->getPropertyPath()
@@ -107,20 +116,21 @@ class FrameworkBundleAdminController extends Controller
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$form_id][] = $translator->transchoice(
+                $errors[$formId][] = $translator->transChoice(
                     $error->getMessageTemplate(),
                     $error->getMessagePluralization(),
                     $error->getMessageParameters(),
                     'form_error'
                 );
             } else {
-                $errors[$form_id][] = $translator->trans(
+                $errors[$formId][] = $translator->trans(
                     $error->getMessageTemplate(),
                     $error->getMessageParameters(),
                     'form_error'
                 );
             }
         }
+
         return $errors;
     }
 
@@ -129,8 +139,8 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::dispatchForParameters()
      *
-     * @param $hookName The hook name
-     * @param $parameters The hook parameters
+     * @param string $hookName   The hook name
+     * @param array  $parameters The hook parameters
      */
     protected function dispatchHook($hookName, array $parameters)
     {
@@ -142,8 +152,9 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::renderForParameters()
      *
-     * @param $hookName The hook name
-     * @param $parameters The hook parameters
+     * @param string $hookName   The hook name
+     * @param array  $parameters The hook parameters
+     *
      * @return array The responses of hooks
      */
     protected function renderHook($hookName, array $parameters)
@@ -153,13 +164,18 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Generates a documentation link
+     *
+     * @param string      $section Legacy controller name
+     * @param bool|string $title   Help title
+     *
+     * @return string
      */
     protected function generateSidebarLink($section, $title = false)
     {
         $version = $this->get('prestashop.core.foundation.version')->getVersion();
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
-        if (empty($title)) {
+        if (false === $title) {
             $title = $this->trans('Help', 'Admin.Global');
         }
 
@@ -209,36 +225,41 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.
      *
-     * @param mixed $controller name of the controller to valide access
+     * @param string $controller name of the controller to valide access
      *
      * @return int
      */
     protected function authorizationLevel($controller)
     {
-        if (
-            $this->isGranted(PageVoter::DELETE, $controller.'_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller.'_')) {
             return PageVoter::LEVEL_DELETE;
-        } elseif ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
-            return PageVoter::LEVEL_CREATE;
-        } elseif ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
-            return PageVoter::LEVEL_UPDATE;
-        } elseif ($this->isGranted(PageVoter::READ, $controller.'_')) {
-            return PageVoter::LEVEL_READ;
-        } else {
-            return 0;
         }
+
+        if ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
+            return PageVoter::LEVEL_CREATE;
+        }
+
+        if ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
+            return PageVoter::LEVEL_UPDATE;
+        }
+
+        if ($this->isGranted(PageVoter::READ, $controller.'_')) {
+            return PageVoter::LEVEL_READ;
+        }
+
+        return 0;
     }
 
     /**
      * Get the translated chain from key
      *
-     * @param $key the key to be translated
-     * @param $domain the domain to be selected
-     * @param $parameters Optional, pass parameters if needed (uncommon)
+     * @param string $key the key to be translated
+     * @param string $domain the domain to be selected
+     * @param array $parameters Optional, pass parameters if needed (uncommon)
      *
-     * @returns string
+     * @return string
      */
-    protected function trans($key, $domain, $parameters = array())
+    protected function trans($key, $domain, array $parameters = [])
     {
         return $this->get('translator')->trans($key, $parameters, $domain);
     }
@@ -258,7 +279,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Redirect employee to default page
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     protected function redirectToDefaultPage()
     {
