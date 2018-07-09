@@ -311,9 +311,18 @@
 
 {% block search_and_reset_widget %}
     {% spaceless %}
+        {% set formVars = form.vars.attr %}
         <div class="input-group">
             {{ form_widget(form.search) }}
-            {{ form_widget(form.reset, {'attr': {'data-url': form.vars.attr['data-url'] }}) }}
+            {{ form_widget(form.reset,
+                    {
+                        'attr': {
+                            'data-url': formVars['data-url'],
+                            'data-redirect': formVars['data-redirect']
+                        }
+                    }
+                )
+            }}
         </div>
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
