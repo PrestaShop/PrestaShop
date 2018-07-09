@@ -173,8 +173,8 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
                 continue;
             }
 
-            $qb->andWhere("`$filterName` LIKE %:$filterName%");
-            $qb->setParameter($filterName, $value);
+            $qb->andWhere("`$filterName` LIKE :$filterName");
+            $qb->setParameter($filterName, '%'.$value.'%');
         }
 
         return $qb;
