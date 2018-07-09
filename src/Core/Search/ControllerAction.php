@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
-use InvalidArgumentException;
-
 /**
  * Utility class to extract information from modern controller FQCN.
  */
@@ -42,10 +40,6 @@ final class ControllerAction
      */
     public static function fromString($controller)
     {
-        if (!preg_match('~(\w+)Controller::(?:\w+)Action$~')) {
-            throw new InvalidArgumentException('String expected with MyNamespace\Foo\FooController::bazAction format.');
-        }
-
         return [
             self::getControllerName($controller),
             self::getActionName($controller),
@@ -59,7 +53,7 @@ final class ControllerAction
      */
     private static function getControllerName($controller)
     {
-        preg_match('~(\w+)Controller$~', $controller, $matches);
+        preg_match('~(\w+)Controller(?:::(?:\w+)Action)?$~', $controller, $matches);
 
         return !empty($matches) ? strtolower($matches[1]) : 'N/A';
     }
