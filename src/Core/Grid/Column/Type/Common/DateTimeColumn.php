@@ -49,11 +49,15 @@ final class DateTimeColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver
+            ->setRequired([
+                'field',
+            ])
             ->setDefaults([
                 'format' => 'Y-m-d H:i:s',
                 'filter' => new ColumnFilterOption(DateRangeType::class, []),
             ])
             ->setAllowedTypes('format', 'string')
+            ->setAllowedTypes('field', 'string')
         ;
     }
 }
