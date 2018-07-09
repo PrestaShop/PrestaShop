@@ -313,7 +313,7 @@
     {% spaceless %}
         <div class="input-group">
             {{ form_widget(form.search) }}
-            {{ form_widget(form.reset, {'attr': {'data-url': form.vars.attr.url }}) }}
+            {{ form_widget(form.reset, {'attr': {'data-url': form.vars.attr['data-url'] }}) }}
         </div>
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
