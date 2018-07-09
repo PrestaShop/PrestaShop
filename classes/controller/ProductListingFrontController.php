@@ -278,7 +278,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         }
 
         $resultsPerPage = (int) Tools::getValue('resultsPerPage');
-        if ($resultsPerPage <= 0 || $resultsPerPage > 36) {
+        if ($resultsPerPage <= 0) {
             $resultsPerPage = Configuration::get('PS_PRODUCTS_PER_PAGE');
         }
 
