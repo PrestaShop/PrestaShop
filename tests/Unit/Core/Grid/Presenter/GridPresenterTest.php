@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -104,9 +104,9 @@ class GridPresenterTest extends TestCase
         $definition = $this->createMock(DefinitionInterface::class);
         $definition->method('getColumns')
             ->willReturn((new ColumnCollection())
-                ->add(new SimpleColumn('test_1'))
-                ->add(new SimpleColumn('test_2'))
-                ->add(new SimpleColumn('test_3'))
+                ->add($this->createColumnMock('test_1'))
+                ->add($this->createColumnMock('test_2'))
+                ->add($this->createColumnMock('test_3'))
             );
         $definition->method('getBulkActions')
             ->willReturn(new BulkActionCollection());
@@ -124,5 +124,14 @@ class GridPresenterTest extends TestCase
             ->willReturn($criteria);
 
         return $grid;
+    }
+
+    private function createColumnMock($id)
+    {
+        $column = $this->createMock(ColumnInterface::class);
+        $column->method('getId')
+            ->willReturn($id);
+
+        return $column;
     }
 }
