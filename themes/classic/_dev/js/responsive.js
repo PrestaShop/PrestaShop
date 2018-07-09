@@ -29,7 +29,8 @@ prestashop.responsive = prestashop.responsive || {};
 
 prestashop.responsive.current_width = window.innerWidth;
 prestashop.responsive.min_width = 768;
-prestashop.responsive.mobile = prestashop.responsive.current_width < prestashop.responsive.min_width;
+prestashop.responsive.mobile_query = window.matchMedia("(max-width: 767px)");
+prestashop.responsive.mobile = prestashop.responsive.mobile_query.matches;
 
 function swapChildren(obj1, obj2)
 {
@@ -61,12 +62,10 @@ function toggleMobileStyles()
 }
 
 $(window).on('resize', function() {
-	var _cw = prestashop.responsive.current_width;
-	var _mw = prestashop.responsive.min_width;
-	var _w = window.innerWidth;
-	var _toggle = (_cw >= _mw && _w < _mw) || (_cw < _mw && _w >= _mw);
-	prestashop.responsive.current_width = _w;
-  prestashop.responsive.mobile = prestashop.responsive.current_width < prestashop.responsive.min_width;
+	var _mobile = prestashop.responsive.mobile_query.matches;
+	var _toggle = _mobile !== prestashop.responsive.mobile;
+	prestashop.responsive.mobile = _mobile;
+	prestashop.responsive.current_width = $(window).width();
 	if (_toggle) {
 		toggleMobileStyles();
 	}
