@@ -51,7 +51,7 @@ final class LinkRowAction extends AbstractRowAction
             ->setRequired([
                 'route',
                 'route_param_name',
-                'route_param_row_key',
+                'route_param_field',
             ])
             ->setDefaults([
                 'icon' => '',
@@ -61,7 +61,7 @@ final class LinkRowAction extends AbstractRowAction
             ->setAllowedTypes('confirm_message', 'string')
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
-            ->setAllowedTypes('route_param_row_key', 'string')
+            ->setAllowedTypes('route_param_field', 'string')
         ;
     }
 }

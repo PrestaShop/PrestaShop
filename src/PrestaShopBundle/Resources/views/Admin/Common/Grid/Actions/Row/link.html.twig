@@ -24,7 +24,7 @@
  *#}
 
 <a class="dropdown-item {% if action.options.confirm_message %}js-confirm-btn{% endif %}"
-   href="{{ path(action.options.route, { (action.options.route_param_name) : row[action.options.route_param_row_key]}) }}"
+   href="{{ path(action.options.route, { (action.options.route_param_name) : row[action.options.route_param_field]}) }}"
    data-confirm-message="{{ action.options.confirm_message }}"
 >
   {% if action.options.icon is not empty %}
