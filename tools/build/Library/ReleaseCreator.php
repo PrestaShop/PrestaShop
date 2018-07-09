@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
-
 /**
  * This class is used to create a release of PrestaShop,
  * see ReleaseCreator::createRelease() function.
@@ -260,6 +258,7 @@ class ReleaseCreator
         );
         $this->createTmpProjectDir()
             ->setFilesConstants()
+            ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
             ->createPackage();
@@ -357,15 +356,37 @@ class ReleaseCreator
 
 
         $kernelFileContent = file_get_contents($kernelFile);
-        $kernelFileContent = preg_replace('#VERSION = \', \'(.*)\'\#;', $version->getVersion(), $kernelFileContent);
-        $kernelFileContent = preg_replace('#MAJOR_VERSION_STRING = \', \'(.*)\'\#;', $version->getMajorVersionString(), $kernelFileContent);
-        $kernelFileContent = preg_replace('#MAJOR_VERSION = \', \'(.*)\'\#;', $version->getMajorVersion(), $kernelFileContent);
-        $kernelFileContent = preg_replace('#MINOR_VERSION = \', \'(.*)\'\#;', $version->getMinorVersion(), $kernelFileContent);
-        $kernelFileContent = preg_replace('#RELEASE_VERSION = \', \'(.*)\'\#;', $version->getReleaseVersion(), $kernelFileContent);
+        $kernelFileContent = preg_replace(
+            '~const VERSION = \'(.*)\';~',
+            "const VERSION = '".$version->getVersion()."';",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MAJOR_VERSION_STRING = \'(.*)\';~',
+            "const MAJOR_VERSION_STRING = '".$version->getMajorVersionString()."';",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MAJOR_VERSION = (.*);~',
+            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MINOR_VERSION = (.*);~',
+            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const RELEASE_VERSION = (.*);~',
+            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            $kernelFileContent
+        );
 
         if (!file_put_contents($kernelFile, $kernelFileContent)) {
             throw new BuildException("Unable to update contents of $kernelFile.");
         }
+
+        return $this;
     }
 
     /**
