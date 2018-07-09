@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e331c63050094a2ddd7b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ed370fdcae37c1ad1b8f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -711,7 +711,7 @@
 /************************************************************************/
 /******/ ({
 
-/***/ 22:
+/***/ 18:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -851,14 +851,63 @@ var TableSorting = function () {
 
 /***/ }),
 
-/***/ 230:
+/***/ 23:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_url_polyfill__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_url_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_url_polyfill__);
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+var $ = global.$;
+
+/**
+ * Enable all datepickers.
+ */
+var init = function initDatePickers() {
+  $('.datepicker input[type="text"]').datetimepicker({
+    locale: global.full_language_code,
+    format: 'YYYY-MM-DD'
+  });
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (init);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+
+/***/ }),
+
+/***/ 233:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_confirmation_alert__ = __webpack_require__(260);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_confirmation_alert__ = __webpack_require__(261);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid__ = __webpack_require__(35);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1001,7 +1050,7 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 260:
+/***/ 261:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1070,6 +1119,339 @@ var ConfirmationAlert = function () {
 
 /***/ }),
 
+/***/ 27:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {(function(global) {
+  /**
+   * Polyfill URLSearchParams
+   *
+   * Inspired from : https://github.com/WebReflection/url-search-params/blob/master/src/url-search-params.js
+   */
+
+  var checkIfIteratorIsSupported = function() {
+    try {
+      return !!Symbol.iterator;
+    } catch(error) {
+      return false;
+    }
+  };
+
+
+  var iteratorSupported = checkIfIteratorIsSupported();
+
+  var createIterator = function(items) {
+    var iterator = {
+      next: function() {
+        var value = items.shift();
+        return { done: value === void 0, value: value };
+      }
+    };
+
+    if(iteratorSupported) {
+      iterator[Symbol.iterator] = function() {
+        return iterator;
+      };
+    }
+
+    return iterator;
+  };
+
+  var polyfillURLSearchParams= function() {
+
+    var URLSearchParams = function(searchString) {
+      Object.defineProperty(this, '_entries', { value: {} });
+
+      if(typeof searchString === 'string') {
+        if(searchString !== '') {
+          searchString = searchString.replace(/^\?/, '');
+          var attributes = searchString.split('&');
+          var attribute;
+          for(var i = 0; i < attributes.length; i++) {
+            attribute = attributes[i].split('=');
+            this.append(
+              decodeURIComponent(attribute[0]),
+              (attribute.length > 1) ? decodeURIComponent(attribute[1]) : ''
+            );
+          }
+        }
+      } else if(searchString instanceof URLSearchParams) {
+        var _this = this;
+        searchString.forEach(function(value, name) {
+          _this.append(value, name);
+        });
+      }
+    };
+
+    var proto = URLSearchParams.prototype;
+
+    proto.append = function(name, value) {
+      if(name in this._entries) {
+        this._entries[name].push(value.toString());
+      } else {
+        this._entries[name] = [value.toString()];
+      }
+    };
+
+    proto.delete = function(name) {
+      delete this._entries[name];
+    };
+
+    proto.get = function(name) {
+      return (name in this._entries) ? this._entries[name][0] : null;
+    };
+
+    proto.getAll = function(name) {
+      return (name in this._entries) ? this._entries[name].slice(0) : [];
+    };
+
+    proto.has = function(name) {
+      return (name in this._entries);
+    };
+
+    proto.set = function(name, value) {
+      this._entries[name] = [value.toString()];
+    };
+
+    proto.forEach = function(callback, thisArg) {
+      var entries;
+      for(var name in this._entries) {
+        if(this._entries.hasOwnProperty(name)) {
+          entries = this._entries[name];
+          for(var i = 0; i < entries.length; i++) {
+            callback.call(thisArg, entries[i], name, this);
+          }
+        }
+      }
+    };
+
+    proto.keys = function() {
+      var items = [];
+      this.forEach(function(value, name) { items.push(name); });
+      return createIterator(items);
+    };
+
+    proto.values = function() {
+      var items = [];
+      this.forEach(function(value) { items.push(value); });
+      return createIterator(items);
+    };
+
+    proto.entries = function() {
+      var items = [];
+      this.forEach(function(value, name) { items.push([name, value]); });
+      return createIterator(items);
+    };
+
+    if(iteratorSupported) {
+      proto[Symbol.iterator] = proto.entries;
+    }
+
+    proto.toString = function() {
+      var searchString = '';
+      this.forEach(function(value, name) {
+        if(searchString.length > 0) searchString+= '&';
+        searchString += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+      });
+      return searchString;
+    };
+
+    global.URLSearchParams = URLSearchParams;
+  };
+
+  if(!('URLSearchParams' in global) || (new URLSearchParams('?a=1').toString() !== 'a=1')) {
+    polyfillURLSearchParams();
+  }
+
+  // HTMLAnchorElement
+
+})(
+  (typeof global !== 'undefined') ? global
+    : ((typeof window !== 'undefined') ? window
+    : ((typeof self !== 'undefined') ? self : this))
+);
+
+(function(global) {
+  /**
+   * Polyfill URL
+   *
+   * Inspired from : https://github.com/arv/DOM-URL-Polyfill/blob/master/src/url.js
+   */
+
+  var checkIfURLIsSupported = function() {
+    try {
+      var u = new URL('b', 'http://a');
+      u.pathname = 'c%20d';
+      return (u.href === 'http://a/c%20d') && u.searchParams;
+    } catch(e) {
+      return false;
+    }
+  };
+
+
+  var polyfillURL = function() {
+    var _URL = global.URL;
+
+    var URL = function(url, base) {
+      if(typeof url !== 'string') url = String(url);
+
+      var doc = document.implementation.createHTMLDocument('');
+      window.doc = doc;
+      if(base) {
+        var baseElement = doc.createElement('base');
+        baseElement.href = base;
+        doc.head.appendChild(baseElement);
+      }
+
+      var anchorElement = doc.createElement('a');
+      anchorElement.href = url;
+      doc.body.appendChild(anchorElement);
+      anchorElement.href = anchorElement.href; // force href to refresh
+
+      if(anchorElement.protocol === ':' || !/:/.test(anchorElement.href)) {
+        throw new TypeError('Invalid URL');
+      }
+
+      Object.defineProperty(this, '_anchorElement', {
+        value: anchorElement
+      });
+    };
+
+    var proto = URL.prototype;
+
+    var linkURLWithAnchorAttribute = function(attributeName) {
+      Object.defineProperty(proto, attributeName, {
+        get: function() {
+          return this._anchorElement[attributeName];
+        },
+        set: function(value) {
+          this._anchorElement[attributeName] = value;
+        },
+        enumerable: true
+      });
+    };
+
+    ['hash', 'host', 'hostname', 'port', 'protocol', 'search']
+    .forEach(function(attributeName) {
+      linkURLWithAnchorAttribute(attributeName);
+    });
+
+    Object.defineProperties(proto, {
+
+      'toString': {
+        get: function() {
+          var _this = this;
+          return function() {
+            return _this.href;
+          };
+        }
+      },
+
+      'href' : {
+        get: function() {
+          return this._anchorElement.href.replace(/\?$/,'');
+        },
+        set: function(value) {
+          this._anchorElement.href = value;
+        },
+        enumerable: true
+      },
+
+      'pathname' : {
+        get: function() {
+          return this._anchorElement.pathname.replace(/(^\/?)/,'/');
+        },
+        set: function(value) {
+          this._anchorElement.pathname = value;
+        },
+        enumerable: true
+      },
+
+      'origin': {
+        get: function() {
+          return this._anchorElement.protocol + '//' + this._anchorElement.hostname + (this._anchorElement.port ? (':' + this._anchorElement.port) : '');
+        },
+        enumerable: true
+      },
+
+      'password': { // TODO
+        get: function() {
+          return '';
+        },
+        set: function(value) {
+        },
+        enumerable: true
+      },
+
+      'username': { // TODO
+        get: function() {
+          return '';
+        },
+        set: function(value) {
+        },
+        enumerable: true
+      },
+
+      'searchParams': {
+        get: function() {
+          var searchParams = new URLSearchParams(this.search);
+          var _this = this;
+          ['append', 'delete', 'set'].forEach(function(methodName) {
+            var method = searchParams[methodName];
+            searchParams[methodName] = function() {
+              method.apply(searchParams, arguments);
+              _this.search = searchParams.toString();
+            };
+          });
+          return searchParams;
+        },
+        enumerable: true
+      }
+    });
+
+    URL.createObjectURL = function(blob) {
+      return _URL.createObjectURL.apply(_URL, arguments);
+    };
+
+    URL.revokeObjectURL = function(url) {
+      return _URL.revokeObjectURL.apply(_URL, arguments);
+    };
+
+    global.URL = URL;
+
+  };
+
+  if(!checkIfURLIsSupported()) {
+    polyfillURL();
+  }
+
+  if((global.location !== void 0) && !('origin' in global.location)) {
+    var getOrigin = function() {
+      return global.location.protocol + '//' + global.location.hostname + (global.location.port ? (':' + global.location.port) : '');
+    };
+
+    try {
+      Object.defineProperty(global.location, 'origin', {
+        get: getOrigin,
+        enumerable: true
+      });
+    } catch(e) {
+      setInterval(function() {
+        global.location.origin = getOrigin();
+      }, 100);
+    }
+  }
+
+})(
+  (typeof global !== 'undefined') ? global
+    : ((typeof window !== 'undefined') ? window
+    : ((typeof self !== 'undefined') ? self : this))
+);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+
 /***/ 3:
 /***/ (function(module, exports) {
 
@@ -1098,10 +1480,57 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 32:
+/***/ 34:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * Send a Post Request to reset search Action.
+ */
+
+var $ = global.$;
+
+var init = function resetSearch(url) {
+  $.post(url);
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (init);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+
+/***/ }),
+
+/***/ 35:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_utils_table_sorting__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_utils_datepicker__ = __webpack_require__(23);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1130,6 +1559,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+
+
+
 
 var $ = window.$;
 
@@ -1162,6 +1595,8 @@ var Grid = function () {
       this._handleBulkActionSelectAllCheckbox();
       this._handleBulkActionCheckboxSelect();
       this._handleCommonGridActions();
+      this._handleSortingGrid();
+      this._enableDatePickers();
       this._handleBulkActionsSubmit();
     }
 
@@ -1182,15 +1617,42 @@ var Grid = function () {
       var showSqlActionId = commonActionSuffix + 'common_show_query';
       var exportSqlManagerActionId = commonActionSuffix + 'common_export_sql_manager';
 
-      this.$gridPanel.on('click', refreshListActionId, function () {
+      this.$grid.on('click', refreshListActionId, function () {
         return _this._onRefreshClick();
       });
-      this.$gridPanel.on('click', showSqlActionId, function () {
+      this.$grid.on('click', showSqlActionId, function () {
         return _this._onShowSqlQueryClick();
       });
-      this.$gridPanel.on('click', exportSqlManagerActionId, function () {
+      this.$grid.on('click', exportSqlManagerActionId, function () {
         return _this._onExportSqlManagerClick();
       });
+
+      $('.reset-search').on('click', function (event) {
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__["a" /* default */])($(event.target).data('url'));
+      });
+    }
+
+    /**
+     * Handles the column sorting using Table component
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleSortingGrid',
+    value: function _handleSortingGrid() {
+      var $sortableTable = this.$grid.find('table.table');
+      new __WEBPACK_IMPORTED_MODULE_1__app_utils_table_sorting__["a" /* default */]($sortableTable).attach();
+    }
+
+    /**
+     * If any, enable Date pickers component on date inputs.
+     */
+
+  }, {
+    key: '_enableDatePickers',
+    value: function _enableDatePickers() {
+      __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__app_utils_datepicker__["a" /* default */])();
     }
 
     /**
@@ -1257,8 +1719,7 @@ var Grid = function () {
         var confirmationMessage = $button.data('confirm-message').toString();
 
         if (confirmationMessage) {
-          var confirmed = confirm(confirmationMessage);
-          if (!confirmed) {
+          if (!confirm(confirmationMessage)) {
             return;
           }
         }
@@ -1319,13 +1780,12 @@ var Grid = function () {
   }, {
     key: '_onShowSqlQueryClick',
     value: function _onShowSqlQueryClick() {
-      var identifier = this.$gridPanel.find('.js-grid').attr('id');
       var query = this.$gridPanel.find('.js-grid-table').data('query');
 
-      var $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
+      var $sqlManagerForm = $('#' + this.gridId + '_common_show_query_modal_form');
       $sqlManagerForm.find('textarea[name="sql"]').val(query);
 
-      var $modal = $('#' + identifier + '_common_show_query_modal');
+      var $modal = $('#' + this.gridId + '_grid_common_show_query_modal');
       $modal.modal('show');
 
       $modal.on('click', '.btn-sql-submit', function () {
@@ -1360,7 +1820,7 @@ var Grid = function () {
 /***/ 459:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(230);
+module.exports = __webpack_require__(233);
 
 
 /***/ })
