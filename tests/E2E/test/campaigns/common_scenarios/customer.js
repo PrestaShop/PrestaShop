@@ -1,6 +1,8 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 const {Customer} = require('../../selectors/BO/customers/customer');
 const {accountPage} = require('../../selectors/FO/add_account_page');
+const {productPage} = require('../../selectors/FO/product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {BO} = require('../../selectors/BO/customers/index');
 
 let promise = Promise.resolve();
@@ -121,5 +123,15 @@ module.exports = {
     test('should check the customer "Last name"', () => client.checkAttributeValue(accountPage.lastname_input, 'value', customerData.last_name));
     test('should check that the customer "Email" is equal to "' + date_time + customerData.email_address + '"', () => client.checkAttributeValue(accountPage.email_input, 'value', date_time + customerData.email_address));
     test('should check that the customer "Birthday" is equal to "' + customerData.birthday.month + '/' + customerData.birthday.day + '/' + customerData.birthday.year + '"', () => client.checkAttributeValue(accountPage.birthday_input, 'value', customerData.birthday.month + '/' + customerData.birthday.day + '/' + customerData.birthday.year, "contain"));
+  },
+  fillGuestInfo: function (message, client) {
+    test(message, () => {
+      return promise
+        .then(() => client.waitAndSetValue(accountPage.firstname_input, "I am"))
+        .then(() => client.waitAndSetValue(accountPage.lastname_input, "a Guest"))
+        .then(() => client.waitAndSetValue(accountPage.email_input, "guest@example.com"))
+        .then(() => client.waitForExistAndClick(accountPage.customer_form_continue_button))
+        .then(() => client.waitForVisible(accountPage.checkout_step_complete));
+    });
   }
 };
