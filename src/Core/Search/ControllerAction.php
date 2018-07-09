@@ -26,19 +26,26 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
+use InvalidArgumentException;
+
 /**
  * Utility class to extract information from modern controller FQCN.
  */
 final class ControllerAction
 {
     /**
-     * Retrieve the Controller's action and name from a FQCN.
+     * Retrieve the Controller's action and name from a FQCN notation of Symfony controller.
+     * This function expects a string like MyNamespace\Foo\FooController::bazAction.
      *
      * @param string $controller
      * @return array
      */
     public static function fromString($controller)
     {
+        if (!preg_match('~(\w+)Controller::(?:\w+)Action$~')) {
+            throw new InvalidArgumentException('String expected with MyNamespace\Foo\FooController::bazAction format.');
+        }
+
         return [
             self::getControllerName($controller),
             self::getActionName($controller),
@@ -50,9 +57,8 @@ final class ControllerAction
      * @param string $controller the full controller name.
      * @return string
      */
-    public static function getControllerName($controller)
+    private static function getControllerName($controller)
     {
-        // Set an offset to avoid matching the first occurrence of Controller.
         preg_match('~(\w+)Controller$~', $controller, $matches);
 
         return !empty($matches) ? strtolower($matches[1]) : 'N/A';
@@ -63,7 +69,7 @@ final class ControllerAction
      * @param string $controller the full controller name.
      * @return string
      */
-    public static function getActionName($controller)
+    private static function getActionName($controller)
     {
         preg_match('~::(\w+)Action$~', $controller, $matches);
 
