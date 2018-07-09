@@ -753,6 +753,7 @@ class LinkCore
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
                     'AdminImport' => 'admin_import',
                     'AdminInformation' => 'admin_system_information',
+                    // 'AdminLogs' => 'admin_logs', @TODO: uncomment when search feature is done.
                     'AdminMaintenance' => 'admin_maintenance',
                     'AdminModulesCatalog' => 'admin_module_catalog',
                     'AdminModulesManage' => 'admin_module_manage',

@@ -90,44 +90,5 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script type="text/javascript">
-    //<![CDATA
-    function position_exception_textchange() {
-      // TODO : Add & Remove automatically the "custom pages" in the "em_list_x"
-      var obj = $(this);
-      var shopID = obj.attr('id').replace(/\D/g, '');
-      var list = obj.closest('form').find('#em_list_' + shopID);
-      var values = obj.val().split(',');
-      var len = values.length;
-
-      list.find('option').prop('selected', false);
-      for (var i = 0; i < len; i++) {
-        list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
-      }
-    }
-
-    function position_exception_listchange() {
-      var obj = $(this);
-      var shopID = obj.attr('id').replace(/\D/g, '');
-      var val = obj.val();
-      var str = '';
-      if (val)
-        str = val.join(', ');
-      obj.closest('form').find('#em_text_' + shopID).val(str);
-    }
-
-    $(document).ready(function(){
-      $('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
-        $(this).change(position_exception_textchange).change();
-      });
-      $('form[id="hook_module_form"] select[id^="em_list_"]').each(function(){
-        $(this).change(position_exception_listchange);
-      });
-      $('select[name=id_hook]').on('change', function() {
-        $('#new_hook').attr('value', $(this).val());
-      });
-    });
-    //]]>
-  </script>
-  <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}?{{ random() }}"></script>
+  <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}"></script>
 {% endblock %}
