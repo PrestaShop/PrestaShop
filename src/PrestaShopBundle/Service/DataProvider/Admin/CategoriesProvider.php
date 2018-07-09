@@ -63,11 +63,11 @@ class CategoriesProvider
     /**
      * Return the list of categories with the number of associated modules.
      *
-     * @param array the list of modules
+     * @param array|AddonsCollection the list of modules
      *
      * @return array the list of categories
      */
-    public function getCategoriesMenu(array $modules)
+    public function getCategoriesMenu($modules)
     {
         if (null === self::$categories) {
             // The Root category is "Categories"
