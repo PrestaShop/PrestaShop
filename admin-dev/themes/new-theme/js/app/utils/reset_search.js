@@ -24,13 +24,13 @@
  */
 
 /**
- * Send a Post Request.
+ * Send a Post Request to reset search Action.
  */
+
+const $ = global.$;
+
 const init = function resetSearch(url) {
-    const request = new XMLHttpRequest();
-    request.open('POST', url, true);
-    request.setRequestHeader('Content-Type', 'application/json');
-    request.send([]);
+    $.post(url);
 };
 
 export default init;

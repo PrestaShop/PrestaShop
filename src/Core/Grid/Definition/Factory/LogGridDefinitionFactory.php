@@ -127,7 +127,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
                         'attr' => [
-                            'url' => $this->resetActionUrl,
+                            'data-url' => $this->resetActionUrl,
                         ],
                     ]),
                 ])
