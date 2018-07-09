@@ -46,7 +46,7 @@ module.exports = {
           test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, data.customer.lastname));
           if (authentication === "create_account") {
             test('should set the "Email" input', () => client.waitAndSetValue(accountPage.new_email_input, data.customer.email.replace("%ID", date_time)));
-            test('should set the "Password" input', () => client.waitAndSetValue(accountPage.new_password_input, data.customer.password));
+            test('should set the "Password" input', () => client.waitAndSetValue(accountPage.password_account_input, data.customer.password));
           } else {
             test('should set the "Email" input', () => client.waitAndSetValue(accountPage.new_email_input, data.customer.email.replace("%ID", '_guest' + date_time)));
           }
@@ -176,5 +176,16 @@ module.exports = {
       test('should compare both informations', () => client.checkExportedFileInfo(1000));
       test('should reset filter', () => client.waitForExistAndClick(ShoppingCarts.reset_button));
     }, 'order', true);
+  },
+  initCheckout: function (client) {
+    test('should add some product to cart"', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(productPage.cloths_category))
+        .then(() => client.waitForExistAndClick(productPage.second_product_clothes_category))
+        .then(() => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button))
+        .then(() => client.waitForVisible(CheckoutOrderPage.blockcart_modal))
+        .then(() => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button))
+        .then(() => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
+    });
   }
 };

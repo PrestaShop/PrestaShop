@@ -1,5 +1,8 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 const {Customer} = require('../../selectors/BO/customers/customer');
+const {productPage} = require('../../selectors/FO/product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
+const {accountPage} = require('../../selectors/FO/add_account_page');
 const {BO} = require('../../selectors/BO/customers/index');
 
 let promise = Promise.resolve();
@@ -113,5 +116,15 @@ module.exports = {
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nThe selection has been successfully deleted.'));
     }, 'customer');
+  },
+  fillGuestInfo: function (message, client) {
+    test(message, () => {
+      return promise
+        .then(() => client.waitAndSetValue(accountPage.firstname_input, "I am"))
+        .then(() => client.waitAndSetValue(accountPage.lastname_input, "a Guest"))
+        .then(() => client.waitAndSetValue(accountPage.email_input, "guest@example.com"))
+        .then(() => client.waitForExistAndClick(accountPage.customer_form_continue_button))
+        .then(() => client.waitForVisible(accountPage.checkout_step_complete));
+    });
   }
 };

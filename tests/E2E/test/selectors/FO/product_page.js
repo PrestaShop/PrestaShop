@@ -31,6 +31,7 @@ module.exports = {
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
     filename_link: '(//*[@id="attachments"]//a)[1]',
-    second_product: '(//*[@id="content"]//h3[@itemprop="name"])[2]'
+    cloths_category: '//*[@id="category-3"]',
+    second_product_clothes_category: '//*[@id="js-product-list"]//article[2]'
   }
 };

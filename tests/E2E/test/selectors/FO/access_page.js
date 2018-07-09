@@ -15,10 +15,11 @@ module.exports = {
     page_link: '//*[@id="main"]//a[@title="%pageName"]',
     page_content: '//*[@id="content"]/p',
     address_information_link: '//*[@id="addresses-link"]',
-    address_information:'//*[@id="address-%ID"]//address',
+    address_information: '//*[@id="address-%ID"]//address',
     addresses_warning: '//*[@id="notifications"]//li',
     page_category: '//*[@id="wrapper"]//a/span[contains(text(),"%CATEGORY")]',
     review_page_link: '//*[@id="content"]//a[contains(text(),"%PAGENAME")]',
-    not_found_erreur_message: '//*[@id="main"]//h1'
+    not_found_erreur_message: '//*[@id="main"]//h1',
+    personal_info: '//*[@id="footer_account_list"]//a[@title="Personal info"]'
   }
 };
