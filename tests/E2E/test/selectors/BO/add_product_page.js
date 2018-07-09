@@ -203,6 +203,11 @@ module.exports = {
     created_category: '//*[@id="ps_categoryTags"]/span[2]/span',
     preview_link: '//a',
     continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
+    expand_categories_button: '//*[@id="categories"]//div[@class="categories-tree-actions js-categories-tree-actions"]/span[contains(@data-action,"expand")]/i',
+    selected_category: '//*[@id="form_step1_categories"]/ul[@class="category-tree"]/li[2]/ul/li[2]/div[@class="checkbox"]/label/input[1]',
+    accessories_category: '//*[@id="choice_tree"]/ul/li/ul/li[2]/div/label/input',
+    accessories_category_label: '//*[@id="form_step1_categories"]/ul[@class="category-tree"]/li[2]/ul/li[2]/div[@class="checkbox"]/label',
+
   },
 
   ProductList: {
@@ -224,6 +229,16 @@ module.exports = {
     pagination_next: '//*[@id="pagination_next_url"]',
     pagination_previous: '//*[@id="product_catalog_list"]//li[@class="page-item previous "]//a',
     page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
-    item_per_page: '//*[@id="paginator_select_page_limit"]'
+    item_per_page: '//*[@id="paginator_select_page_limit"]',
+    category_list: '//*[@id="product_catalog_list"]/div[2]/div/table/tbody/tr[%ID]/td[5]',
+    category: '//*[@id="choice_tree"]/ul/li/ul/li[%ID]/div/label',
+    subCat: '//*[@id="choice_tree"]/ul/li/ul/li[%I]/ul/li[%J]/div/label',
+    subCat_number: '//*[@id="choice_tree"]/ul/li/ul/li[%ID]/ul/li',
+    categories_filters: '//*[@id="product_catalog_list"]//table/tbody/tr[%ID]/td[6]',
+    product_name_link: '//*[@id="product_catalog_list"]//table/tbody/tr[%ID]/td[4]/a',
+    pencil: '//*[@id="product_catalog_list"]/div[2]/div/table/tbody/tr[%ID]/td[10]/div/div/a[1]/i',
+    filter_by_catrgory_button: '//*[@id="product_catalog_category_tree_filter"]/button',
+    expand_filter_button: '//*[@id="product_catalog_category_tree_filter_expand"]',
+    product_category: '//*[@id="ps_categoryTags"]/span[%ID]/span'
   }
 };
