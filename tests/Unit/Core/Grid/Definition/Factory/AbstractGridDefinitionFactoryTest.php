@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 
@@ -77,9 +77,18 @@ class AbstractGridDefinitionFactoryTest extends TestCase
     private function getColumns()
     {
         return (new ColumnCollection())
-            ->add(new SimpleColumn('test_1'))
-            ->add(new SimpleColumn('test_2'))
-            ->add(new SimpleColumn('test_3'))
+            ->add($this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_2'))
+            ->add($this->createColumnMock('test_3'))
         ;
+    }
+
+    private function createColumnMock($id)
+    {
+        $column = $this->createMock(ColumnInterface::class);
+        $column->method('getId')
+            ->willReturn($id);
+
+        return $column;
     }
 }
