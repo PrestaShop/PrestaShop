@@ -71,4 +71,14 @@ final class FilterLogsByAttributeType extends CommonAbstractType
             'translation_domain' => 'Admin.Advparameters.Feature'
         ]);
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * This is required for search, and must match Grid name.
+     */
+    public function getBlockPrefix()
+    {
+        return 'logs';
+    }
 }
