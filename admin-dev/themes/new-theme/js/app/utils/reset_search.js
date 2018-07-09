@@ -1,5 +1,5 @@
-{#**
- * 2007-2017 PrestaShop
+/**
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{%
-  set employeeName, employeeImage = row.employee, 'http://profile.prestashop.com/'~row.email|url_encode~'.jpg'
-%}
-<span class="employee_avatar_small">
-    <img class="img rounded-circle" alt="{{ employeeName }}" src="{{ employeeImage }}" height="32" width="32" />
-</span>
-{{ employeeName }}
+ */
+
+/**
+ * Send a Post Request to reset search Action.
+ */
+
+const $ = global.$;
+
+const init = function resetSearch(url) {
+    $.post(url);
+};
+
+export default init;

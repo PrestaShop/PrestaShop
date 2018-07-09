@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Symfony\Component\HttpFoundation\Response;
@@ -227,5 +228,22 @@ class CommonController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', [
             'kpiRow' => $presenter->present($kpiRow),
         ]);
+    }
+
+    /**
+     * @param string $route
+     * @param string $controller
+     * @param string $action
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \LogicException
+     */
+    public function resetSearchAction($controller, $action)
+    {
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
+
+        $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+
+        return new JsonResponse();
     }
 }

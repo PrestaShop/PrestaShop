@@ -24,35 +24,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ActionColumn extends AbstractColumn
+/**
+ * FormType used in rendering of "Search and Reset" action in Grids.
+ */
+class SearchAndResetFormType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return 'action';
+        $builder
+            ->add('search', SubmitType::class, [
+                'label' => 'Search',
+                'attr' => [
+                    'class' => 'btn btn-primary',
+                ],
+            ])
+            ->add('reset', ResetType::class, [
+                'label' => 'Reset',
+                'attr' => [
+                    'class' => 'btn btn-link reset-search',
+                ],
+            ])
+        ;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
-            ->setDefaults([
-                'actions' => [],
-                'filter' => new ColumnFilterOption(SubmitType::class, []),
-            ])
-            ->setAllowedTypes('filter', ColumnFilterOption::class)
-            ->setAllowedTypes('actions', 'array')
-        ;
+        $resolver->setDefaults([
+            'translation_domain' => 'Admin.Global',
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'search_and_reset';
     }
 }

@@ -24,17 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee;
+namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-
-final class EmployeeNameWithAvatarColumn extends AbstractColumn
+/**
+ * Define a Column filter option.
+ */
+final class ColumnFilterOption
 {
     /**
-     * {@inheritdoc}
+     * @var string class name that must implements FormTypeInterface
      */
-    public function getType()
+    private $filterType;
+
+    /**
+     * @var array
+     */
+    private $filterTypeOptions;
+
+    /**
+     * @param string $filterType
+     * @param array $filterTypeOptions
+     */
+    public function __construct($filterType, array $filterTypeOptions = [])
     {
-        return 'employee_name_with_avatar';
+        $this->filterType = $filterType;
+        $this->filterTypeOptions = $filterTypeOptions;
+    }
+
+    /**
+     * @return string the class name of Form Type.
+     */
+    public function getFilterType()
+    {
+        return $this->filterType;
+    }
+
+    /**
+     * @return array the form type options if any.
+     */
+    public function getFilterTypeOptions()
+    {
+        return $this->filterTypeOptions;
     }
 }

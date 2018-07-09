@@ -23,49 +23,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace Tests\Unit\Core\Search;
 
-namespace PrestaShop\PrestaShop\Core\Grid\Search;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Search\ControllerAction;
 
-use Symfony\Component\HttpFoundation\Request;
-
-/**
- * Class TemporarySearchCriteria is temporary search criteria class. Should be removed.
- */
-class TemporarySearchCriteria implements SearchCriteriaInterface
+class ControllerActionTest extends TestCase
 {
-    private $request;
-
-    public function __construct(Request $request)
+    /**
+     * @dataProvider getControllers
+     * @param string $fqcn
+     * @param array $result
+     */
+    public function testGetFromString($fqcn, $result)
     {
-        $this->request = $request;
+        self::assertEquals($result, ControllerAction::fromString($fqcn));
     }
 
-    public function getOrderBy()
+    /**
+     * @return array the list of controller names and expected results.
+     */
+    public function getControllers()
     {
-        return $this->request->get('orderBy', 'id_log');
-    }
-
-    public function getOrderWay()
-    {
-        return $this->request->get('sortOrder', 'asc');
-    }
-
-    public function getOffset()
-    {
-        return $this->request->get('offset', 0);
-    }
-
-    public function getLimit()
-    {
-        return $this->request->get('limit', 10);
-    }
-
-    public function getFilters()
-    {
-        $filters = $this->request->get('logs', []);
-
-        unset($filters['_token']);
-
-        return $filters;
+        return [
+            ['MyNamespace\Foo\Bar\BarController::fooAction', ['bar', 'foo']],
+            ['ModuleNameSpace\YoloController::yoloAction', ['yolo', 'yolo']],
+            ['PrestaShop\Controller\Admin\ProductController::formAction', ['product', 'form']],
+            ['ModuleController', ['module', 'N/A']],
+            ['foo::actionAction', ['N/A', 'action']],
+            ['This is not even a FQCN', ['N/A', 'N/A']],
+        ];
     }
 }

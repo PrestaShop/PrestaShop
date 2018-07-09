@@ -26,11 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
@@ -38,13 +37,23 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarC
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string the URL to reset Grid filters.
+     */
+    private $resetActionUrl;
+
+    public function __construct($resetActionUrl)
+    {
+        $this->resetActionUrl = $resetActionUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -67,52 +76,60 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk_action'))
+            ->add(
+                (new BulkActionColumn('bulk_action'))
                 ->setOptions([
                     'bulk_value' => 'id_log',
                 ])
             )
-            ->add((new SimpleColumn('id_log'))
-                ->setName($this->trans('ID', [], 'Global.Actions'))
+            ->add(
+                (new SimpleColumn('id_log'))
+                ->setName($this->trans('ID', [], 'Admin.Global'))
             )
-            ->add((new EmployeeNameWithAvatarColumn('employee'))
+            ->add(
+                (new EmployeeNameWithAvatarColumn('employee'))
                 ->setName($this->trans('Employee', [], 'Admin.Global'))
             )
-            ->add((new SeverityLevelColumn('severity'))
+            ->add(
+                (new SeverityLevelColumn('severity'))
                 ->setName($this->trans('Severity (1-4)', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'with_message' => true,
                 ])
             )
-            ->add((new SimpleColumn('message'))
+            ->add(
+                (new SimpleColumn('message'))
                 ->setName($this->trans('Message', [], 'Admin.Global'))
             )
-            ->add((new SimpleColumn('object_type'))
+            ->add(
+                (new SimpleColumn('object_type'))
                 ->setName($this->trans('Object type', [], 'Admin.Advparameters.Feature'))
             )
-            ->add((new SimpleColumn('object_id'))
+            ->add(
+                (new SimpleColumn('object_id'))
                 ->setName($this->trans('Object ID', [], 'Admin.Advparameters.Feature'))
             )
-            ->add((new SimpleColumn('error_code'))
+            ->add(
+                (new SimpleColumn('error_code'))
                 ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
             )
-            ->add((new DateTimeColumn('date_add'))
+            ->add(
+                (new DateTimeColumn('date_add'))
                 ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
-                    'filter_type' => DateRangeType::class,
+                    'filter' => new ColumnFilterOption(DateRangeType::class),
                 ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
-                    'filter_type' => SubmitType::class,
-                    'filter_type_options' => [
-                        'label' => $this->trans('Search', [], 'Admin.Actions'),
+                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
                         'attr' => [
-                            'class' => 'btn btn-primary',
+                            'data-url' => $this->resetActionUrl,
                         ],
-                    ],
+                    ]),
                 ])
             )
         ;
@@ -148,13 +165,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'storage',
                 'simple'
             ))
-        ;
-    }
-
-    protected function getBulkActions()
-    {
-        return (new BulkActionCollection())
-            ->add(new BulkAction('id', $this->trans('Edit', [], 'Admin.Actions'), 'edit'))
         ;
     }
 }

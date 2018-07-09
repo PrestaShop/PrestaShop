@@ -2,6 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -90,14 +91,12 @@ abstract class AbstractColumn implements ColumnInterface
     {
         $resolver
             ->setDefaults([
-                'filter_type' => TextType::class,
-                'filter_type_options' => [
+                'filter' => new ColumnFilterOption(TextType::class, [
                     'required' => false,
-                ],
+                ]),
                 'sortable' => true,
             ])
-            ->setAllowedTypes('filter_type', ['string', 'null'])
-            ->setAllowedTypes('filter_type_options', 'array')
+            ->setAllowedTypes('filter', ColumnFilterOption::class)
             ->setAllowedTypes('sortable', 'bool')
         ;
     }
