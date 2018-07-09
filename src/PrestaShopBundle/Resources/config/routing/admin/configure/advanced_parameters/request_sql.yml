@@ -1,8 +1,15 @@
 admin_request_sql:
     path: /
-    methods: [GET, POST]
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:index'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:search'
         _legacy_controller: AdminRequestSql
 
 admin_request_sql_process:
