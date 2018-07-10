@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Grid\Presenter;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
