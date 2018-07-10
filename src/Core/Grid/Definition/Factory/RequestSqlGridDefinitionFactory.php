@@ -50,11 +50,18 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     private $resetSearchUrl;
 
     /**
-     * @param string $resetSearchUrl
+     * @var string
      */
-    public function __construct($resetSearchUrl)
+    private $redirectionUrl;
+
+    /**
+     * @param string $resetSearchUrl
+     * @param string $redirectionUrl
+     */
+    public function __construct($resetSearchUrl, $redirectionUrl)
     {
         $this->resetSearchUrl = $resetSearchUrl;
+        $this->redirectionUrl = $redirectionUrl;
     }
 
     /**
@@ -108,6 +115,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
                         'attr' => [
                             'data-url' => $this->resetSearchUrl,
+                            'data-redirect' => $this->redirectionUrl,
                         ],
                     ]),
                     'actions' => (new RowActionCollection())
