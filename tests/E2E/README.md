@@ -99,34 +99,28 @@ npm run sanity-check
 #### Available command line parameters
 
 
-| Parameter            | Required           | Description  |
-| -------------------- |:------------------:| ------------:|
-| URL                  | :white_check_mark: | Front office URL of your PrestaShop website without the “http://” (default to **localhost**) |
-| DIR                  | :heavy_check_mark: | Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice. |
-| URLLASTSTABLEVERSION | :heavy_check_mark: | URL of the last stable version of PrestaShop (without the “http://”) from which you need to upgrade to the latest release candidate |
-| LANGUAGE             | :white_check_mark: | Language to install with (default to "en") |
-| COUNTRY              | :white_check_mark: | Country to install with (default o "france") |
-| DB_SERVER            | :white_check_mark: | DataBase server (default to "mysql") |
-| DB_USER              | :white_check_mark: | DataBase user (default to "root") |
-| DB_PASSWD            | :white_check_mark: | DataBase password (default to "doge") |
-| DB_EMPTY_PASSWD      | :white_check_mark: | Boolean option: set it to **true** if you have no password |
-| RCTARGET             | :heavy_check_mark: | Last stable version location directory (example: /project/prestashop1724/) |
-| RCLINK               | :white_check_mark: | RC Download link, if you have already downloaded the RC you have to copy the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option |
-| FILENAME             | :white_check_mark: | RC file name this parameter must be mentioned if the (RCLINK) option is not indicated |
-| MODULE               | :white_check_mark: | Module technical name to install (default to "gadwords") |
-| INSTALL              | :white_check_mark: | Boolean option: set it to **true** if you want to run the installation script (default to **false**) |
-| TEST_ADDONS          | :white_check_mark: | Boolean option: set it to **true** if you want disable check with Addons API (default to **false**) |
-| HEADLESS             | :white_check_mark: | Boolean option:Set it to true to run tests in headless mode (default to false)
-| ADMIN_EMAIL          | :white_check_mark: | Set admin email (default: "demo@prestashop.com")
-| ADMIN_PASSWORD       | :white_check_mark: | Set admin password (default: "prestashop_demo")
+| Parameter            | Description  |
+| -------------------- | ------------ |
+| URL                  | URL of your PrestaShop website (default to **http://localhost**) |
+| DIR                  | Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice. |
+| URLLASTSTABLEVERSION | URL of the last stable version of PrestaShop (without the “http://”) from which you need to upgrade to the latest release candidate |
+| LANGUAGE             | Language to install with (default to "en") |
+| COUNTRY              | Country to install with (default o "france") |
+| DB_SERVER            | DataBase server (default to "mysql") |
+| DB_USER              | DataBase user (default to "root") |
+| DB_PASSWD            | DataBase password (default to "doge") |
+| DB_EMPTY_PASSWD      | Boolean option: set it to **true** if you have no password |
+| RCTARGET             | Last stable version location directory (example: /project/prestashop1724/) |
+| RCLINK               | RC Download link, if you have already downloaded the RC you have to copy the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option |
+| FILENAME             | RC file name this parameter must be mentioned if the (RCLINK) option is not indicated |
+| MODULE               | Module technical name to install (default to "gadwords") |
+| INSTALL              | Boolean option: set it to **true** if you want to run the installation script (default to **false**) |
+| TEST_ADDONS          | Boolean option: set it to **true** if you want disable check with Addons API (default to **false**) |
+| HEADLESS             | Boolean option:Set it to true to run tests in headless mode (default to false)
+| ADMIN_EMAIL          | Set admin email (default: "demo@prestashop.com")
+| ADMIN_PASSWORD       | Set admin password (default: "prestashop_demo")
 
 #### Regular tests
-
-If you want to run only the most important partial configuration tests and you have PrestaShop installed on **localhost** you can simply run the campaign **Regular**
-
-```bash
-npm test
-```
 
 If you want to
   * Launch installation before running tests => you have to add your database parameters
@@ -138,6 +132,7 @@ npm test -- --URL=http://prestashop.localhost \
             --DB_SERVER=localhost \
             --DB_USER=prestashop \
             --DB_PASSWD=prestashop \
+            --INSTALL \
             --LANGUAGE=en \
             --COUNTRY=france \
             --MODULE=gadwords
