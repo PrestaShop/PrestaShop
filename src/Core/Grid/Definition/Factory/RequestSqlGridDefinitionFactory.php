@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\SimpleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -65,17 +65,26 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
-                    'bulk_value' => 'id_request_sql',
+                    'bulk_field' => 'id_request_sql',
                 ])
             )
-            ->add((new SimpleColumn('id_request_sql'))
+            ->add((new DataColumn('id_request_sql'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_request_sql',
+                ])
             )
-            ->add((new SimpleColumn('name'))
+            ->add((new DataColumn('name'))
                 ->setName($this->trans('SQL query Name', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'field' => 'name',
+                ])
             )
-            ->add((new SimpleColumn('sql'))
+            ->add((new DataColumn('sql'))
                 ->setName($this->trans('SQL query', [], 'Admin.Advparameters.Feature'))
+                ->setOptions([
+                    'field' => 'sql',
+                ])
             )
             ->add((new ActionsColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
