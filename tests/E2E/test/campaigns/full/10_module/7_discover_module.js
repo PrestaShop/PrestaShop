@@ -14,7 +14,7 @@ scenario('Discover "Advanced top menu" module in Back Office', () => {
     test('should click on "Selection" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.selection_tab));
     test('should search for the module "Advanced top menu"', () => {
       return promise
-        .then(() => client.waitAndSetValue(ModulePage.module_selection_input, 'pm_advancedtopmenu'))
+        .then(() => client.waitAndSetValue(ModulePage.modules_search_input, 'pm_advancedtopmenu'))
         .then(() => client.waitForExistAndClick(ModulePage.modules_search_button));
     });
     test('should click on "Discover" button', () => client.waitForExistAndClick(ModulePage.discover_button));

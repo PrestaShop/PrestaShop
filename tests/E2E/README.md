@@ -113,7 +113,7 @@ npm run sanity-check
 | RCTARGET             | Last stable version location directory (example: /project/prestashop1724/) |
 | RCLINK               | RC Download link, if you have already downloaded the RC you have to copy the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option |
 | FILENAME             | RC file name this parameter must be mentioned if the (RCLINK) option is not indicated |
-| MODULE               | Module technical name to install (default to "gadwords") |
+| MODULE               | Module technical name to install (default to "ps_legalcompliance") |
 | INSTALL              | Boolean option: set it to **true** if you want to run the installation script (default to **false**) |
 | TEST_ADDONS          | Boolean option: set it to **true** if you want disable check with Addons API (default to **false**) |
 | HEADLESS             | Boolean option:Set it to true to run tests in headless mode (default to false)
@@ -135,7 +135,7 @@ npm test -- --URL=http://prestashop.localhost \
             --INSTALL \
             --LANGUAGE=en \
             --COUNTRY=france \
-            --MODULE=gadwords
+            --MODULE=ps_mbo
 ```
 
 #### Specific test
