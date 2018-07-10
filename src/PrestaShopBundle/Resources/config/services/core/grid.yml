@@ -31,6 +31,8 @@ services:
     prestashop.core.grid.definition.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'requestsql', 'action': 'index'})"
         public: true
 
     # Grid factories
