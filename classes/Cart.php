@@ -3888,8 +3888,7 @@ class CartCore extends ObjectModel
         }
 
         if (!isset(self::$_isVirtualCart[$this->id])) {
-            $products = $this->getProducts();
-            if (!count($products)) {
+            if (!$this->hasProducts()) {
                 $isVirtual = false;
             } else {
                 $isVirtual = !$this->hasRealProducts();
@@ -3902,13 +3901,30 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Check if there's a product in the cart
+     *
+     * @return bool
+     */
+    public function hasProducts()
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
+            'JOIN '._DB_PREFIX_.'product p
+                ON (p.id_product = cp.id_product) '.
+            'JOIN '._DB_PREFIX_.'product_shop ps
+                ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.
+            'WHERE cp.id_cart='.(int)$this->id
+        );
+    }
+
+    /**
      * Return true if the current cart contains a real product
      *
      * @return bool
      */
     public function hasRealProducts()
     {
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return $this->hasProducts() && (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
             'JOIN '._DB_PREFIX_.'product p
                 ON (p.is_virtual = 0 AND p.id_product = cp.id_product) '.
