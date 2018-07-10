@@ -1,5 +1,5 @@
 _catalog:
-    resource: "catalog/catalog.yml"
+    resource: "catalog/_catalog.yml"
     prefix: /catalog/
 
 #_customers:
