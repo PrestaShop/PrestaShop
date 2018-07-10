@@ -3909,9 +3909,9 @@ class CartCore extends ObjectModel
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
-            'JOIN '._DB_PREFIX_.'product p
+            'INNER JOIN '._DB_PREFIX_.'product p
                 ON (p.id_product = cp.id_product) '.
-            'JOIN '._DB_PREFIX_.'product_shop ps
+            'INNER JOIN '._DB_PREFIX_.'product_shop ps
                 ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.
             'WHERE cp.id_cart='.(int)$this->id
         );
@@ -3926,9 +3926,9 @@ class CartCore extends ObjectModel
     {
         return $this->hasProducts() && (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
-            'JOIN '._DB_PREFIX_.'product p
+            'INNER JOIN '._DB_PREFIX_.'product p
                 ON (p.is_virtual = 0 AND p.id_product = cp.id_product) '.
-            'JOIN '._DB_PREFIX_.'product_shop ps
+            'INNER JOIN '._DB_PREFIX_.'product_shop ps
                 ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.
             'WHERE cp.id_cart='.(int)$this->id
         );
