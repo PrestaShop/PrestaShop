@@ -484,7 +484,7 @@ form#importDropzone {
 }
 
 /**
- *
+ * Module positions
  */
 
 #modules-position-selection-panel {
@@ -607,4 +607,8 @@ form#importDropzone {
   .dropdown-menu {
     min-width: auto;
   }
+}
+
+#unhook-button-position-bottom {
+  display: none;
 }

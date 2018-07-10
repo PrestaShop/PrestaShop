@@ -42,6 +42,7 @@ class PositionsListHandler {
     self.$hookPosition = $("#hook-position");
     self.$hookSearch = $("#hook-search");
     self.$modulePositionsForm = $('#module-positions-form');
+    self.$moduleUnhookButton = $('#unhook-button-position-bottom');
 
 
     self.handleList();
@@ -56,9 +57,7 @@ class PositionsListHandler {
       const $scrollTop = $(window).scrollTop();
       self.$panelSelection.css(
         'top',
-        $scrollTop < 20 ?
-        0 :
-        $scrollTop - self.$panelSelectionOriginalY
+        $scrollTop < 20 ? 0 : $scrollTop - self.$panelSelectionOriginalY
       );
     });
 
@@ -66,14 +65,17 @@ class PositionsListHandler {
       const $checkedCount = self.$modulesList.filter(':checked').length;
 
       if ($checkedCount === 0) {
+        self.$moduleUnhookButton.hide();
         self.$panelSelection.hide();
         self.$panelSelectionSingleSelection.hide();
         self.$panelSelectionMultipleSelection.hide();
       } else if ($checkedCount === 1) {
+        self.$moduleUnhookButton.show();
         self.$panelSelection.show();
         self.$panelSelectionSingleSelection.show();
         self.$panelSelectionMultipleSelection.hide();
       } else {
+        self.$moduleUnhookButton.show();
         self.$panelSelection.show();
         self.$panelSelectionSingleSelection.hide();
         self.$panelSelectionMultipleSelection.show();
@@ -112,7 +114,7 @@ class PositionsListHandler {
       $(`.hook${$(this).data('hook-id')}`).prop('checked', $(this).prop('checked'));
     });
 
-    $('.modules-position-checkbox').on('click', function() {
+    self.$modulesList.on('click', function() {
       $(`#Ghook${$(this).data('hook-id')}`).prop(
         'checked',
         $(`.hook${$(this).data('hook-id')}:not(:checked)`).length === 0
@@ -128,11 +130,11 @@ class PositionsListHandler {
       start: function(e, ui) {
         $(this).data('previous-index', ui.item.index());
       },
-      update:  function(e, ui) {
-        const $ids = ui.item.attr('id').split('_');
+      update: function(e, ui) {
+        const { hookId, moduleId } = ui.item.attr('id').split('_');
         const $data = {
-          hookId: $ids[0],
-          moduleId: $ids[1],
+          hookId,
+          moduleId,
           way: ($(this).data('previous-index') < ui.item.index()) ? 1 : 0,
           positions: [],
         };

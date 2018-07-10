@@ -175,7 +175,7 @@
             </section>
           {% endfor %}
 
-          <div id="unhook_button_position_bottom">
+          <div id="unhook-button-position-bottom">
             <button type="submit" class="btn btn-default" name="unhookform">
               <i class="material-icons">indeterminate_check_box</i>
               {{ 'Unhook the selection' | trans({}, 'Admin.Design.Feature') }}
@@ -205,5 +205,5 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}?{{ random() }}"></script>
+  <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}"></script>
 {% endblock %}

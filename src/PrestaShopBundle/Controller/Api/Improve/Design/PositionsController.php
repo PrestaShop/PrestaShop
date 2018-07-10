@@ -80,7 +80,7 @@ class PositionsController extends ApiController
      */
     public function getHookableListAction(Request $request)
     {
-        if (_PS_MODE_DEMO_) {
+        if ($this->isDemoModeEnabled()) {
             return $this->jsonResponse(
                 [
                     'hasError' => true,
@@ -146,7 +146,7 @@ class PositionsController extends ApiController
      */
     public function getHookableModuleListAction(Request $request)
     {
-        if (_PS_MODE_DEMO_) {
+        if ($this->isDemoModeEnabled()) {
             return $this->jsonResponse(
                 [
                     'hasError' => true,
