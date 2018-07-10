@@ -704,6 +704,22 @@ class SpecificPriceCore extends ObjectModel
             $this->id_product = (int)$id_product;
         }
         unset($this->id);
+        // specific price row may already have been created for catalog specific price rule
+        if (static::exists(
+            $this->id_product,
+            $this->id_product_attribute,
+            $this->id_shop,
+            $this->id_group,
+            $this->id_country,
+            $this->id_currency,
+            $this->id_customer,
+            $this->from_quantity,
+            $this->from,
+            $this->to,
+            true
+        )) {
+            return true;
+        }
         return $this->add();
     }
 
