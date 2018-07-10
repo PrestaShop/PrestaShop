@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -78,15 +79,7 @@ class InvoicesController extends FrameworkBundleAdminController
     public function generatePdfByDateAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
-
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
-            }
-        }
+        $this->processForm($formHandler, $request);
 
         return $this->redirectToRoute('admin_order_invoices');
     }
@@ -103,15 +96,7 @@ class InvoicesController extends FrameworkBundleAdminController
     public function generatePdfByStatusAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
-
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
-            }
-        }
+        $this->processForm($formHandler, $request);
 
         return $this->redirectToRoute('admin_order_invoices');
     }
@@ -129,17 +114,34 @@ class InvoicesController extends FrameworkBundleAdminController
     {
         $formHandler = $this->get('prestashop.admin.order.invoices.options.form_handler');
 
+        if ($this->processForm($formHandler, $request)) {
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_order_invoices');
+    }
+
+    /**
+     * Processes the form in a generic way
+     *
+     * @param FormHandlerInterface $formHandler
+     * @param Request $request
+     *
+     * @return bool false if an error occurred, true otherwise
+     */
+    private function processForm(FormHandlerInterface $formHandler, Request $request)
+    {
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
-            } else {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return false;
             }
         }
 
-        return $this->redirectToRoute('admin_order_invoices');
+        return true;
     }
 }
