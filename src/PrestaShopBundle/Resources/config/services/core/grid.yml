@@ -33,6 +33,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'requestsql', 'action': 'index'})"
+            - "@=service('router').generate('admin_request_sql')"
         public: true
 
     # Grid factories
