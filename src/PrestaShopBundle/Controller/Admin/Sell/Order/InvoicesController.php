@@ -83,9 +83,7 @@ class InvoicesController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            if ($errors = $formHandler->save($data)) {
+            if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
             }
         }
@@ -110,9 +108,7 @@ class InvoicesController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            if ($errors = $formHandler->save($data)) {
+            if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
             }
         }
