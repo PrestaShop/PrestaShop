@@ -3924,7 +3924,7 @@ class CartCore extends ObjectModel
      */
     public function hasRealProducts()
     {
-        return $this->hasProducts() && (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
             'INNER JOIN '._DB_PREFIX_.'product p
                 ON (p.is_virtual = 0 AND p.id_product = cp.id_product) '.
