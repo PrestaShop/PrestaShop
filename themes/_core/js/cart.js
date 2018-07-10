@@ -30,36 +30,38 @@ $(document).ready(() => {
     prestashop.cart = event.reason.cart;
     var getCartViewUrl = $('.js-cart').data('refresh-url');
     
-    if (getCartViewUrl) {
-      var requestData = {};
-
-      if (event && event.reason) {
-        requestData = {
-          id_product_attribute: event.reason.idProductAttribute,
-          id_product: event.reason.idProduct
-        };
-      }
-
-      $.post(getCartViewUrl, requestData).then((resp) => {
-        $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
-        $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
-        $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
-        $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
-        $('.cart-voucher').replaceWith(resp.cart_voucher);
-        $('.cart-overview').replaceWith(resp.cart_detailed);
-
-        $('#product_customization_id').val(0);
-
-        $('.js-cart-line-product-quantity').each((index, input) => {
-          var $input = $(input);
-          $input.attr('value', $input.val());
-        });
-
-        prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
-      }).fail((resp) => {
-        prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
-      });
+    if (!getCartViewUrl) {
+      return;
     }
+    
+    var requestData = {};
+
+    if (event && event.reason) {
+      requestData = {
+        id_product_attribute: event.reason.idProductAttribute,
+        id_product: event.reason.idProduct
+      };
+    }
+
+    $.post(getCartViewUrl, requestData).then((resp) => {
+      $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
+      $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
+      $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
+      $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
+      $('.cart-voucher').replaceWith(resp.cart_voucher);
+      $('.cart-overview').replaceWith(resp.cart_detailed);
+
+      $('#product_customization_id').val(0);
+
+      $('.js-cart-line-product-quantity').each((index, input) => {
+        var $input = $(input);
+        $input.attr('value', $input.val());
+      });
+
+      prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
+    }).fail((resp) => {
+      prestashop.emit('handleError', {eventType: 'updateCart', resp: resp})
+    });
   });
 
   var $body = $('body');
