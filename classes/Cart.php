@@ -2152,6 +2152,10 @@ class CartCore extends ObjectModel
     {
         static $address = array();
 
+        if (!count($this->getProducts())) {
+            return 0;
+        }
+
         $wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
 
         if ($wrapping_fees <= 0) {
