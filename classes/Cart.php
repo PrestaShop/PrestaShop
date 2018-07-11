@@ -2158,6 +2158,10 @@ class CartCore extends ObjectModel
             return $wrapping_fees;
         }
 
+        if (!count($this->getProducts())) {
+            return 0;
+        }
+
         if ($with_taxes) {
             if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                 // With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included
