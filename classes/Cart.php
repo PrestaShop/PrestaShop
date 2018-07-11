@@ -2152,6 +2152,11 @@ class CartCore extends ObjectModel
     {
         static $address = array();
 
+        // Check if cart is empty, or if the current cart contains at least a real product (not virtual)
+        if (!$this->hasProducts() || !$this->hasRealProducts()) {
+            return 0;
+        }
+
         $wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
 
         if ($wrapping_fees <= 0) {
@@ -3888,12 +3893,33 @@ class CartCore extends ObjectModel
         }
 
         if (!isset(self::$_isVirtualCart[$this->id])) {
-            $isVirtual = !$this->hasRealProducts();
+            if (!$this->hasProducts()) {
+                $isVirtual = false;
+            } else {
+                $isVirtual = !$this->hasRealProducts();
+            }
 
             self::$_isVirtualCart[$this->id] = $isVirtual;
         }
 
         return self::$_isVirtualCart[$this->id];
+    }
+
+    /**
+     * Check if there's a product in the cart
+     *
+     * @return bool
+     */
+    public function hasProducts()
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
+            'INNER JOIN '._DB_PREFIX_.'product p
+                ON (p.id_product = cp.id_product) '.
+            'INNER JOIN '._DB_PREFIX_.'product_shop ps
+                ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.
+            'WHERE cp.id_cart='.(int)$this->id
+        );
     }
 
     /**
@@ -3905,9 +3931,9 @@ class CartCore extends ObjectModel
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp '.
-            'JOIN '._DB_PREFIX_.'product p
+            'INNER JOIN '._DB_PREFIX_.'product p
                 ON (p.is_virtual = 0 AND p.id_product = cp.id_product) '.
-            'JOIN '._DB_PREFIX_.'product_shop ps
+            'INNER JOIN '._DB_PREFIX_.'product_shop ps
                 ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) '.
             'WHERE cp.id_cart='.(int)$this->id
         );
