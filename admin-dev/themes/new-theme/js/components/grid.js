@@ -26,6 +26,8 @@
 import resetSearch from '../app/utils/reset_search';
 import TableSorting from '../app/utils/table-sorting';
 import datePicker from '../app/utils/datepicker';
+import ColumnToggling from '../app/utils/column-toggling';
+
 
 const $ = window.$;
 
@@ -51,6 +53,7 @@ export default class Grid {
     this._handleCommonGridActions();
     this._handleSortingGrid();
     this._enableDatePickers();
+    this._enableToggleForBooleans();
   }
 
   /**
@@ -186,5 +189,15 @@ export default class Grid {
     const $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
     $sqlManagerForm.submit();
+  }
+
+  /**
+   * Handles boolean values toggling for 'toggle columns' using Table component
+   *
+   * @private
+   */
+  _enableToggleForBooleans() {
+      const $sortableTable = this.$grid.find('table.table');
+      new ColumnToggling($sortableTable).attach();
   }
 }
