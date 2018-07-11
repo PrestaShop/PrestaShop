@@ -82,10 +82,10 @@ class CombinationCore extends ObjectModel
             'isbn' =>               array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' =>                array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
             'quantity' =>           array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
-            'reference' =>          array('type' => self::TYPE_STRING, 'size' => 32),
             'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
 
             /* Shop fields */
+            'reference' =>           array('type' => self::TYPE_STRING, 'shop' => true, 'size' => 32),            
             'wholesale_price' =>     array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
             'price' =>               array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
             'ecotax' =>              array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
