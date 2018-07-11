@@ -1,0 +1,18 @@
+
+[{shop_url}] 
+
+Bonjour {firstname} {lastname},
+
+Merci d'avoir passé commande sur {shop_name} 
+
+À titre exceptionnel, nous vous accordons une remise de {amount}%
+sur votre prochaine commande ! Cette offre est valable {days} jours,
+ne perdez plus un instant !
+
+VOICI VOTRE BON DE RÉDUCTION : {voucher_num}
+
+Saisissez ce code dans votre panier afin d'obtenir votre réduction.
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

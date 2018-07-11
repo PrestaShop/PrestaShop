@@ -1,0 +1,59 @@
+
+[{shop_url}] 
+
+Congratulations! 
+
+A new order was placed on {shop_name} by the following customer:
+{firstname} {lastname} ({email}) 
+
+ORDER: {order_name} Placed on {date}
+
+PAYMENT: {payment} 		 
+
+REFERENCE
+
+PRODUCT
+
+UNIT PRICE
+
+QUANTITY
+
+TOTAL PRICE
+
+{items} 
+
+PRODUCTS 
+
+{total_products} 
+
+DISCOUNTS 
+
+{total_discounts} 
+
+GIFT-WRAPPING 
+
+{total_wrapping} 
+
+SHIPPING 
+
+{total_shipping} 
+
+TOTAL TAX PAID 
+
+{total_tax_paid} 
+
+TOTAL PAID 
+
+{total_paid} 
+
+{carrier} 
+
+{delivery_block_html} 
+
+{invoice_block_html} 
+
+{message} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

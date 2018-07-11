@@ -1,0 +1,21 @@
+
+[{shop_url}] 
+
+{firstname_friend} {lastname_friend}, join us! 
+
+Your friend {firstname} {lastname} wants to refer you on {shop_name}
+[{shop_url}]!
+
+We are pleased to offer you a voucher worth {discount} that you can
+use on your next order. Get referred and earn a discount voucher of
+{discount}! It's very easy to sign up. Just click here!
+[{link}] 		 
+
+When signing up, don't forget to provide the e-mail address of your
+referring friend: {email}.
+
+Best regards, 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

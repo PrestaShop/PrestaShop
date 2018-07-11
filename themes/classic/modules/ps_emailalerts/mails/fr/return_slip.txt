@@ -1,0 +1,36 @@
+
+[{shop_url}] 
+
+Bonjour, 
+
+Vous avez reçu une nouvelle demande de retour pour {shop_name}. 
+
+Détails du retour 
+
+COMMANDE : {order_name} passée le {date}
+
+CLIENT : {firstname} {lastname}, ({email}) 
+
+RÉFÉRENCE
+
+PRODUIT
+
+QUANTITÉ
+
+{items} 
+
+Adresse de livraison
+
+{delivery_block_html} 		 
+
+Adresse de facturation
+
+{invoice_block_html} 
+
+Message du client : 
+
+{message} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

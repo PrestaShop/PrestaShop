@@ -1,0 +1,251 @@
+/* Common */
+.bootstrap .form-control.tokenfield{
+  height: auto;
+  padding-bottom: 0;
+}
+.bootstrap input.token-input[type="text"]{
+  display: inline-block;
+  border:0;
+  padding: 0;
+  margin-top: -6px;
+  margin-bottom: 0;
+  background-color: transparent;
+  max-width:100%;
+  width: auto !important;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+#content.bootstrap.no-header-toolbar{
+  padding-top: 20px;
+}
+span.spacer {
+  margin-right: 2em;
+  margin-left: 2em;
+}
+
+
+/* Form */
+#form-loading{
+  display: none;
+}
+#form .toolbarBox a{
+  text-decoration: none;
+  display: inline-block;
+}
+#form .toolbarBox a i{
+  font-size: 22px;
+}
+#accordion_combinations td.img img{
+  max-width:50px;
+}
+#accordion_combinations .combination td.img .fake-img{
+  background: #ccc;
+  width:50px;
+  height:50px;
+}
+.product-combination-image{
+  display: inline-block;
+  border: 1px solid #ccc;
+  outline: solid 4px #fff;
+  margin: 5px;
+}
+.product-combination-image.img-highlight{
+  outline: solid 4px #ccc;
+}
+.product-combination-image input{
+  display:none;
+}
+.combination-form .title{
+  font-size: 20px;
+}
+.tt-menu{
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.tt-suggestion{
+  cursor: pointer
+}
+#form .form-input-title input {
+  font-size: 2.2em;
+  height: 2.2em;
+}
+#form .form-input-title input:not(:focus) {
+  /*background-image: url('/img/admin/edit_2.gif');
+  background-position: center right 1em;
+  background-repeat: no-repeat;*/
+}
+#form .form_switch_language, #form .form_step1_type_product {
+  padding-top: 1em;
+
+}
+#form .navbar-form-footer{
+  padding:15px;
+  border-top: 1px solid #ccc !important;
+  z-index: 400 !important;
+}
+#form .form-action-bar{
+  padding-right:210px
+}
+body.page-sidebar-closed #form .form-action-bar{
+  padding-right:50px
+}
+body.mobile-nav #form .form-action-bar{
+  padding-right:0
+}
+#form .form-action-bar .checkbox-active{
+  margin-right:10px;
+  display: inline-block
+}
+#form .form-action-bar .checkbox-active .checkbox{
+  display: inline-block
+}
+.form-inline .checkbox label,
+.form-inline .radio label{
+  padding-right: 0;
+  padding-left: 20px;
+}
+.form-inline.checkbox .col-sm-10{
+  width: auto
+}
+.checkbox-active .titatoggle input + span:after{
+  margin-top: 7px
+}
+#footer{
+  display: none;
+}
+ul.featureCollection,
+ul.customFieldCollection{
+  padding-right:0;
+}
+ul.nostyle{
+  list-style: none;
+}
+ul.typeahead-list li{
+  margin-top:5px;
+}
+ul.typeahead-list li img{
+  width: 50px;
+}
+ul.typeahead-list li .title{
+  display:inline-block;
+  float:none;
+}
+ul.typeahead-list.pack{
+  padding: 0;
+}
+ul.typeahead-list.pack li{
+  width: 200px;
+  border: 1px solid #eee;
+  display: inline-block;
+  overflow: hidden;
+  margin-left: 10px;
+  position: relative;
+  cursor: pointer
+}
+ul.typeahead-list.pack li img{
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
+}
+ul.typeahead-list.pack li span{
+  display: inline-block;
+  width: 100%;
+  padding: 0 5px;
+}
+ul.typeahead-list.pack li .title,
+ul.typeahead-list.pack li .ref {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ul.typeahead-list.pack li .quantity,
+ul.typeahead-list.pack li .ref {
+  color: #ccc;
+}
+ul.typeahead-list.pack li .delete{
+  position : absolute;
+  left: 2px;
+  top: 2px;
+  display: none;
+}
+ul.typeahead-list.pack li:hover{
+  border: 1px solid #00aff0;
+}
+ul.typeahead-list.pack li:hover .delete{
+  display: block;
+}
+#form_step1_new_category{
+  margin-top:20px;
+}
+ul.category-tree{
+  padding: 0;
+}
+ul.category-tree li{
+  list-style: none;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  background-position: 0 3px;
+}
+.bootstrap ul.category-tree li .checkbox,
+.bootstrap ul.category-tree li .radio{
+  padding-right: 20px;
+  padding-top: 0;
+}
+ul.category-tree li > ul{
+  display:none;
+}
+@media (max-width: 768px){
+  #form .form-action-bar{
+    padding-right:50px;
+  }
+}
+
+
+/* Listings */
+.icon-caret{
+  cursor: pointer;
+  color: #00aff0;
+}
+.icon-caret-selected{
+  color: #000000 !important;
+}
+
+/* recommended modules */
+div.left-separator {
+  border-right: 1px solid #eee;
+}
+
+/* Quick nav sidebar */
+div.quicknav-scroller {
+  overflow-y: auto;
+  top: 4.7em;
+  bottom: 13.6em;
+  position: fixed;
+  left: 0.5em;
+  right: 0.5em;
+  margin-left: 3em;
+  padding: 0.6em 0.6em 0em 0.1em;
+}
+div.quicknav-scroller table.table {
+  margin-bottom: 0 !important;
+}
+div.quicknav-header h2 {
+  margin: 0;
+}
+#product-attachment-file{
+  overflow-y: auto;
+  height: 120px;
+}
+
+ul.pagination input {
+  outline-style: none;
+  text-align: center;
+}

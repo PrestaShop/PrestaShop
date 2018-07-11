@@ -1,0 +1,18 @@
+
+[{shop_url}] 
+
+Bonjour {firstname} {lastname}, 
+
+Votre compte invité sur {shop_name} a été transformé en compte
+client. 
+
+ADRESSE E-MAIL : {email} 		 
+
+Conservez ces informations confidentielles. 
+
+Vous pouvez accéder à votre compte sur notre site Internet :
+{shop_url} 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

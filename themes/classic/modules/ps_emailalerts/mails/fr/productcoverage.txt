@@ -1,0 +1,13 @@
+
+[{shop_url}] 
+
+Bonjour, 
+
+En effet, la quantité disponible est maintenant inférieure au
+minimum de : {warning_coverage}.
+
+COUVERTURE ACTUELLE : {current_coverage} 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

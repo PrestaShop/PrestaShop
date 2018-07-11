@@ -53,18 +53,6 @@ scenario('The shop installation', () => {
     });
   }, 'installation');
 
-  /**
-   * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195
-   **/
-
-  scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
-    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
-    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
-  }, 'installation');
-
-  /****** END *****/
-
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
     test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join("autoupgrade")));
@@ -112,19 +100,6 @@ scenario('The shop installation', () => {
   scenario('Login in the Front Office', client => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO, UrlLastStableVersion));
   }, 'installation');
-
-  /**
-   * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-3195
-   **/
-
-  scenario('Check the existence of "Top sellers block" and "New products block"', client => {
-    test('should set the language of shop to "English"', () => client.changeLanguage());
-    test('should check the existence of "Top sellers" block', () => client.waitForVisible(AccessPageFO.top_sellers_block));
-    test('should check the existence of "New products" block', () => client.waitForVisible(AccessPageFO.new_products_block));
-  }, 'installation');
-
-  /****** END *****/
 
   orderCommonScenarios.createOrderFO();
 

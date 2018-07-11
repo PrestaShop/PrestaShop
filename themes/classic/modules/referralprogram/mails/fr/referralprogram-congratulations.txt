@@ -1,0 +1,18 @@
+
+[{shop_url}] 
+
+Bravo ! 
+
+Votre filleul(e) {sponsored_firstname} {sponsored_lastname} a
+effectué son premier achat sur {shop_name}
+[{shop_url}]!
+
+Nous avons le plaisir de vous offrir un bon d'achat de
+{discount_display} (BON DE RÉDUCTION # {discount_name}), que vous
+pourrez utiliser à l'occasion de votre prochaine commande. 		 
+
+Bien cordialement, 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

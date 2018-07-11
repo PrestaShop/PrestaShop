@@ -1,0 +1,16 @@
+
+[{shop_url}] 
+
+Bonjour, 
+
+Le stock a été réapprovisionné.
+
+Vous pouvez accéder à la fiche produit en cliquant sur le lien
+suivant: {product} [{product_link}]
+
+Vous pouvez donc de nouveau commander ce produit depuis notre
+catalogue en ligne. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

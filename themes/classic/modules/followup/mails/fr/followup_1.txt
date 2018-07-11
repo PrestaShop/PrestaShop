@@ -1,0 +1,24 @@
+
+[{shop_url}] 
+
+Bonjour {firstname} {lastname}, 
+
+Nous avons remarqué que lors de votre dernier passage chez
+{shop_name}, vous n'avez pas validé la commande que vous aviez
+entamée.
+
+Vous panier a été conservé, vous pouvez reprendre votre commande
+en vous rendant sur notre boutique : {shop_url}
+[{shop_url}]
+
+A titre exceptionnel, nous vous accordons également une remise de
+{amount}% sur votre commande ! Cette offre est valable {days} jours,
+ne perdez plus un instant ! 		 
+
+VOICI VOTRE BON DE RÉDUCTION : {voucher_num}
+
+Saisissez ce code dans votre panier afin d'obtenir votre réduction.
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

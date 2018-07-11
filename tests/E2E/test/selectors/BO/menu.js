@@ -21,7 +21,7 @@ module.exports = {
         supplier_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Suppliers"]',
         files_submenu: '#subtab-AdminAttachments',
         discounts_submenu: '#subtab-AdminParentCartRules',
-        catalog_price_rules_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Catalog Price Rules"]',
+        catalog_price_rules_tab: '#subtab-AdminSpecificPriceRule',
         stocks_submenu: '#subtab-AdminStockManagement',
         stock_tab: '//*[@id="head_tabs"]//a[text()="Stock"]',
         movement_tab: '//*[@id="head_tabs"]//a[text()="Movements"]'
@@ -79,7 +79,7 @@ module.exports = {
         countries_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Countries"]',
         states_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="States"]',
         taxes_submenu: '#subtab-AdminParentTaxes',
-        taxe_rules_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Tax Rules"]',
+        taxe_rules_tab: '#subtab-AdminTaxRulesGroup',
         translations_submenu: '#subtab-AdminTranslations'
       }
     },
@@ -92,7 +92,7 @@ module.exports = {
         statuses_tab: '//*[@id="head_tabs"]//a[text()="Statuses"]',
         product_settings_submenu: '#subtab-AdminPPreferences',
         customer_settings_submenu: '#subtab-AdminParentCustomerPreferences',
-        groups_tab: '//*[@id="head_tabs"]//a[text()="Groups"]',
+        groups_tab: '#subtab-AdminGroups',
         titles_tab: '//*[@id="head_tabs"]//a[text()="Titles"]',
         contact_submenu: '#subtab-AdminParentStores',
         stores_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Stores"]',

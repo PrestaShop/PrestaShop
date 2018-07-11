@@ -1,0 +1,15 @@
+
+[{shop_url}] 
+
+Hi, 
+
+This item is once again in-stock.
+
+You can access the product page by clicking on the link: {product}
+[{product_link}]
+
+You can order it right now from our online shop. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

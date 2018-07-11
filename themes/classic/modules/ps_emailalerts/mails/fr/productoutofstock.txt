@@ -1,0 +1,15 @@
+
+[{shop_url}] 
+
+Bonjour, 
+
+Le stock restant est maintenant inférieur au minimum de {last_qty}.
+
+STOCK RESTANT : {qty}
+
+Nous vous conseillons de vous rendre sur la page produit du panneau
+d'administration afin de renouveler vos stocks. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

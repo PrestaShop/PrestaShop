@@ -1,0 +1,14 @@
+
+[{shop_url}] 
+
+Bonjour {firstname} {lastname}, 
+
+ATTENTION : vous avez reçu un nouveau message d'alerte dans votre
+Back-Office.
+
+You can check for it in the "TOOLS" > "LOGS" section of your Back
+Office. 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+
