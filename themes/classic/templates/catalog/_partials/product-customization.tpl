@@ -24,7 +24,7 @@
  *}
 <section class="product-customization">
   {if !$configuration.is_catalog}
-    <div class="card card-block">
+    <div class="card card-body">
       <p class="h4 card-title">{l s='Product customization' d='Shop.Theme.Catalog'}</p>
       {l s='Don\'t forget to save your customization to be able to add to cart' d='Shop.Forms.Help'}
 
@@ -36,7 +36,7 @@
                 <label> {$field.label}</label>
                 {if $field.type == 'text'}
                   <textarea placeholder="{l s='Your message here' d='Shop.Forms.Help'}" class="product-message" maxlength="250" {if $field.required} required {/if} name="{$field.input_name}"></textarea>
-                  <small class="float-xs-right">{l s='250 char. max' d='Shop.Forms.Help'}</small>
+                  <small class="float-right">{l s='250 char. max' d='Shop.Forms.Help'}</small>
                   {if $field.text !== ''}
                       <h6 class="customization-message">{l s='Your customization:' d='Shop.Theme.Catalog'}
                           <label>{$field.text}</label>
@@ -53,13 +53,13 @@
                     <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}">
                     <button class="btn btn-primary">{l s='Choose file' d='Shop.Theme.Actions'}</button>
                   </span>
-                  <small class="float-xs-right">{l s='.png .jpg .gif' d='Shop.Forms.Help'}</small>
+                  <small class="float-right">{l s='.png .jpg .gif' d='Shop.Forms.Help'}</small>
                 {/if}
               </li>
             {/foreach}
           </ul>
           <div class="clearfix">
-            <button class="btn btn-primary float-xs-right" type="submit" name="submitCustomizedData">{l s='Save Customization' d='Shop.Theme.Actions'}</button>
+            <button class="btn btn-primary float-right" type="submit" name="submitCustomizedData">{l s='Save Customization' d='Shop.Theme.Actions'}</button>
           </div>
         </form>
       {/block}

@@ -24,7 +24,7 @@
  *}
 
 <div class="block-contact col-md-2 links wrapper">
-  <h3 class="h3 hidden-sm-down">{$title}</h3>
+  <h3 class="h3 d-none d-md-block">{$title}</h3>
   <div>
     {if $rss_links}
       <ul>

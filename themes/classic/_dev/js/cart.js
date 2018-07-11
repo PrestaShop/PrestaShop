@@ -16,17 +16,17 @@ let errorMsg = '';
 function createSpin()
 {
   $.each($(spinnerSelector), function (index, spinner) {
-     $(spinner).TouchSpin({
+    $(spinner).TouchSpin({
       verticalbuttons: true,
-      verticalupclass: 'material-icons touchspin-up',
-      verticaldownclass: 'material-icons touchspin-down',
-      buttondown_class: 'btn btn-touchspin js-touchspin js-increase-product-quantity',
-      buttonup_class: 'btn btn-touchspin js-touchspin js-decrease-product-quantity',
+      verticalup:'<i class="material-icons">keyboard_arrow_up</i>',
+      verticaldown:'<i class="material-icons">keyboard_arrow_down</i>',
+      buttondown_class: 'btn btn-touchspin js-touchspin',
+      buttonup_class: 'btn btn-touchspin js-touchspin',
       min: parseInt($(spinner).attr('min'), 10),
       max: 1000000
     });
   });
-  
+
   CheckUpdateQuantityOperations.switchErrorStat();
 }
 
@@ -56,7 +56,7 @@ $(document).ready(() => {
   }
 
   function findCartLineProductQuantityInput($target) {
-    var $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
+    let $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
 
     if ($input.is(':focus')) {
       return null;
@@ -114,18 +114,18 @@ $(document).ready(() => {
   }
 
   let abortPreviousRequests = () => {
-    var promise;
+    let promise;
     while (promises.length > 0) {
       promise = promises.pop();
       promise.abort();
     }
   };
 
-  var getTouchSpinInput = ($button) => {
+  let getTouchSpinInput = ($button) => {
     return $($button.parents('.bootstrap-touchspin').find('input'));
   };
 
-  var handleCartAction = (event) => {
+  let handleCartAction = (event) => {
     event.preventDefault();
 
     let $target = $(event.currentTarget);
@@ -152,7 +152,7 @@ $(document).ready(() => {
       }
     }).then(function (resp) {
       CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-      var $quantityInput = getTouchSpinInput($target);
+      let $quantityInput = getTouchSpinInput($target);
       $quantityInput.val(resp.quantity);
 
       // Refresh cart preview
@@ -192,7 +192,7 @@ $(document).ready(() => {
       CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       $target.val(resp.quantity);
 
-      var dataset;
+      let dataset;
       if ($target && $target.dataset) {
         dataset = $target.dataset;
       } else {
@@ -230,7 +230,7 @@ $(document).ready(() => {
 
     // There should be a valid product quantity in cart
     let targetValue = $target.val();
-    if (targetValue != parseInt(targetValue) || targetValue < 0 || isNaN(targetValue)) {
+    if (targetValue !== parseInt(targetValue) || targetValue < 0 || isNaN(targetValue)) {
       $target.val(baseValue);
 
       return;
@@ -238,11 +238,11 @@ $(document).ready(() => {
 
     // There should be a new product quantity in cart
     let qty = targetValue - baseValue;
-    if (qty == 0) {
+    if (qty === 0) {
       return;
     }
 
-    var requestData = getRequestData(qty);
+    let requestData = getRequestData(qty);
 
     sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target);
   }
@@ -259,7 +259,7 @@ $(document).ready(() => {
     'keyup',
     productLineInCartSelector,
     (event) => {
-      if (event.keyCode == 13) {
+      if (event.keyCode === 13) {
         updateProductQuantityInCart(event);
       }
     }
@@ -271,8 +271,8 @@ $(document).ready(() => {
     (event) => {
       event.stopPropagation();
 
-      var $code = $(event.currentTarget);
-      var $discountInput = $('[name=discount_name]');
+      let $code = $(event.currentTarget);
+      let $discountInput = $('[name=discount_name]');
 
       $discountInput.val($code.text());
 

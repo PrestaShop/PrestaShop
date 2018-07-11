@@ -28,12 +28,12 @@
       <div class="cart-voucher">
         {if $cart.vouchers.added}
           {block name='cart_voucher_list'}
-            <ul class="promo-name card-block">
+            <ul class="promo-name card-body">
               {foreach from=$cart.vouchers.added item=voucher}
                 <li class="cart-summary-line">
                   <span class="label">{$voucher.name}</span>
                   <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
-                  <div class="float-xs-right">
+                  <div class="float-right">
                     {$voucher.reduction_formatted}
                   </div>
                 </li>
@@ -69,7 +69,7 @@
           <p class="block-promo promo-highlighted">
             {l s='Take advantage of our exclusive offers:' d='Shop.Theme.Actions'}
           </p>
-          <ul class="js-discount card-block promo-discounts">
+          <ul class="js-discount card-body promo-discounts">
           {foreach from=$cart.discounts item=discount}
             <li class="cart-summary-line">
               <span class="label"><span class="code">{$discount.code}</span> - {$discount.name}</span>

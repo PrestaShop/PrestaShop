@@ -26,7 +26,7 @@
   <div class="user-info">
     {if $logged}
       <a
-        class="logout hidden-sm-down"
+        class="logout d-none d-md-inline-block"
         href="{$logout_url}"
         rel="nofollow"
       >
@@ -39,8 +39,8 @@
         title="{l s='View my customer account' d='Shop.Theme.Customeraccount'}"
         rel="nofollow"
       >
-        <i class="material-icons hidden-md-up logged">&#xE7FF;</i>
-        <span class="hidden-sm-down">{$customerName}</span>
+        <i class="material-icons d-md-none logged">&#xE7FF;</i>
+        <span class="d-none d-md-inline-block">{$customerName}</span>
       </a>
     {else}
       <a
@@ -49,7 +49,7 @@
         rel="nofollow"
       >
         <i class="material-icons">&#xE7FF;</i>
-        <span class="hidden-sm-down">{l s='Sign in' d='Shop.Theme.Actions'}</span>
+        <span class="d-none d-md-inline-block">{l s='Sign in' d='Shop.Theme.Actions'}</span>
       </a>
     {/if}
   </div>

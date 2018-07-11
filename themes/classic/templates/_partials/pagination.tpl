@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<nav class="pagination">
+<nav class="pagination row">
   <div class="col-md-4">
     {block name='pagination_summary'}
       {l s='Showing %from%-%to% of %total% item(s)' d='Shop.Theme.Catalog' sprintf=['%from%' => $pagination.items_shown_from ,'%to%' => $pagination.items_shown_to, '%total%' => $pagination.total_items]}
@@ -34,7 +34,7 @@
      {if $pagination.should_be_displayed}
         <ul class="page-list clearfix text-sm-center">
           {foreach from=$pagination.pages item="page"}
-          
+
             <li {if $page.current} class="current" {/if}>
               {if $page.type === 'spacer'}
                 <span class="spacer">&hellip;</span>

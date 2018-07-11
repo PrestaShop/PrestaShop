@@ -62,7 +62,8 @@ p {
   color: $gray-darker;
 }
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.btn-light{
   @include box-shadow-light;
   text-transform: uppercase;
   font-weight: 600;
@@ -71,6 +72,7 @@ p {
     margin-right: $small-space;
   }
 }
+
 .btn-tertiary {
   @extend .btn-secondary;
   background-color: #F7F7F7;
@@ -103,6 +105,7 @@ p {
 }
 .card {
   @include box-shadow;
+  margin-bottom: .75rem;
 }
 label ,.label {
   color: $gray-darker;
@@ -196,7 +199,7 @@ input, textarea {
 }
 .form-control-submit {
   &.disabled {
-    background: $brand-info;
+    background: $brand-warning;
     color: white;
   }
 }
@@ -239,7 +242,7 @@ input, textarea {
       background-color: white;
       height: $input-height;
       padding: 0.175rem 0.5rem;
-      width: 3rem;
+      width: 4.438rem;
       border: $input-btn-border-width solid $input-border-color;
       float: left;
     }
@@ -263,20 +266,13 @@ input, textarea {
     .bootstrap-touchspin-down {
       border-radius: 0;
     }
-    .touchspin-up {
-      &:after {
-        content: "\E5CE";
-      }
-    }
-    .touchspin-down {
-      &:after {
-        content: "\E5CF";
-      }
+    .btn-touchspin {
+      height: 1.25rem;
+      width:1.5rem;
     }
     i {
-      top: 0.0625rem;
-      left: 0.1875rem;
       font-size: 0.9375rem;
+      line-height: 0.75rem
     }
   }
 }

@@ -48,10 +48,10 @@ $(document).ready(() => {
     });
   });
 
-  var productConfig = (qv) => {
+  let productConfig = (qv) => {
     const MAX_THUMBS = 4;
-    var $arrows = $('.js-arrows');
-    var $thumbnails = qv.find('.js-qv-product-images');
+    let $arrows = $('.js-arrows');
+    let $thumbnails = qv.find('.js-qv-product-images');
     $('.js-thumb').on('click', (event) => {
       if ($('.js-thumb').hasClass('selected')) {
         $('.js-thumb').removeClass('selected');
@@ -74,19 +74,19 @@ $(document).ready(() => {
     }
     qv.find('#quantity_wanted').TouchSpin({
       verticalbuttons: true,
-      verticalupclass: 'material-icons touchspin-up',
-      verticaldownclass: 'material-icons touchspin-down',
+      verticalup:'<i class="material-icons">keyboard_arrow_up</i>',
+      verticaldown:'<i class="material-icons">keyboard_arrow_down</i>',
       buttondown_class: 'btn btn-touchspin js-touchspin',
       buttonup_class: 'btn btn-touchspin js-touchspin',
       min: 1,
       max: 1000000
     });
   };
-  var move = (direction) => {
+  let move = (direction) => {
     const THUMB_MARGIN = 20;
-    var $thumbnails = $('.js-qv-product-images');
-    var thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
-    var currentPosition = $thumbnails.position().top;
+    let $thumbnails = $('.js-qv-product-images');
+    let thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
+    let currentPosition = $thumbnails.position().top;
     $thumbnails.velocity({
       translateY: (direction === 'up') ? currentPosition + thumbHeight : currentPosition - thumbHeight
     }, function () {

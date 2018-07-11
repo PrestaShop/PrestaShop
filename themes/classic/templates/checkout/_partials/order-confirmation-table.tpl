@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div id="order-items" class="col-md-12">
+<div id="order-items" class="col-12">
 
   {block name='order_items_table_head'}
     <h3 class="card-title h3">{l s='Order items' d='Shop.Theme.Checkout'}</h3>
@@ -33,12 +33,12 @@
     {block name='order_confirmation_table'}
       {foreach from=$products item=product}
         <div class="order-line row">
-          <div class="col-sm-2 col-xs-3">
+          <div class="col-3 col-sm-2">
             <span class="image">
               <img src="{$product.cover.medium.url}" />
             </span>
           </div>
-          <div class="col-sm-4 col-xs-9 details">
+          <div class="col-9 col-sm-4 details">
             {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
               <span>{$product.name}</span>
             {if $add_product_link}</a>{/if}
@@ -59,10 +59,10 @@
                       <div class="modal-body">
                         {foreach from=$customization.fields item="field"}
                           <div class="product-customization-line row">
-                            <div class="col-sm-3 col-xs-4 label">
+                            <div class="col-4 col-sm-3 label">
                               {$field.label}
                             </div>
-                            <div class="col-sm-9 col-xs-8 value">
+                            <div class="col-8 col-sm-9 value">
                               {if $field.type == 'text'}
                                 {if (int)$field.id_module}
                                   {$field.text nofilter}
@@ -83,11 +83,11 @@
             {/if}
             {hook h='displayProductPriceBlock' product=$product type="unit_price"}
           </div>
-          <div class="col-sm-6 col-xs-12 qty">
+          <div class="col-sm-6 qty">
             <div class="row">
-              <div class="col-xs-5 text-sm-right text-xs-left">{$product.price}</div>
-              <div class="col-xs-2">{$product.quantity}</div>
-              <div class="col-xs-5 text-xs-right bold">{$product.total}</div>
+              <div class="col-5 text-left text-sm-right">{$product.price}</div>
+              <div class="col-2">{$product.quantity}</div>
+              <div class="col-5 text-right bold">{$product.total}</div>
             </div>
           </div>
         </div>

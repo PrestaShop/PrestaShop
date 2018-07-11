@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="card-block cart-summary-totals">
+<div class="card-body cart-summary-totals">
 
   {block name='cart_summary_total'}
     <div class="cart-summary-line cart-total">

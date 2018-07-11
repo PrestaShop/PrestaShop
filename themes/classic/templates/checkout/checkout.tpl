@@ -54,7 +54,7 @@
       {block name='content'}
         <section id="content">
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8 mb-4">
               {block name='cart_summary'}
                 {render file='checkout/checkout-process.tpl' ui=$checkout_process}
               {/block}

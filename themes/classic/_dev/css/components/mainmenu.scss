@@ -81,6 +81,14 @@
   }
   .top-menu {
     color: $gray-darker;
+    .category{
+      position: relative;
+    }
+    .collapse-icons-container{
+      position: absolute;
+      right: ($grid-gutter-width / 2);
+      top: 7px;
+    }
     .collapse-icons[aria-expanded="true"] {
       .add {
         display: none;
@@ -102,14 +110,14 @@
     }
     .collapse {
       display: none;
-      &.in {
+      &.show {
         display: block;
       }
     }
     .sub-menu {
       &.collapse {
         display: none;
-        &.in {
+        &.show {
           display: block;
         }
       }

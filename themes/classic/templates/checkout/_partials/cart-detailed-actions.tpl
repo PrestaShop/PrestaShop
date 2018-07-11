@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='cart_detailed_actions'}
-  <div class="checkout cart-detailed-actions card-block">
+  <div class="checkout cart-detailed-actions card-body">
     {if $cart.minimalPurchaseRequired}
       <div class="alert alert-warning" role="alert">
         {$cart.minimalPurchaseRequired}

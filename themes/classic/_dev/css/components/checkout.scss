@@ -21,9 +21,6 @@ body#checkout {
   a:hover {
     color: #1a8196;
   }
-  section#content {
-    margin-bottom: 1.563rem;
-  }
   .container {
     min-height: 100%;
   }
@@ -128,6 +125,9 @@ body#checkout {
     #conditions-to-approve {
       padding-top: 1rem;
     }
+    .nav-separator{
+      padding:.5rem 0;
+    }
     .payment-options {
       label {
         display: table-cell;
@@ -221,7 +221,7 @@ body#checkout {
     .carrier-delay,
     .carrier-name {
       display: inline-block;
-      word-break: break-word;
+      word-break: break-all;
       text-align: left;
     }
     #customer-form,
@@ -265,6 +265,10 @@ body#checkout {
   .modal-content {
     padding: $medium-space;
     background-color: $gray-light;
+    button.close{
+      position: absolute;
+      right: $medium-space;
+    }
   }
   #cart-summary-product-list {
     font-size: $font-size-sm;
@@ -385,7 +389,7 @@ body#checkout {
   .image {
     img {
         width: 100%;
-        border: 1px solid gray-lighter;
+        border: 1px solid $gray-lighter;
         margin-bottom: 1rem;
     }
   }

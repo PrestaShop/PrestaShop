@@ -18,7 +18,7 @@
     border-top: 1px solid rgba($gray,.3);
   }
   .layer {
-    display: none;
+    display: none !important;
   }
   .product-cover img {
     width: 95%;

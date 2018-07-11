@@ -42,7 +42,7 @@
       {/block}
     </div>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-12">
         <p class="text-sm-center">
           {block name='copyright_link'}
             <a class="_blank" href="http://www.prestashop.com" target="_blank">
