@@ -394,6 +394,7 @@ class AdminThemesControllerCore extends AdminController
         // Employee languages used for link and utm_source
         $lang = new Language($this->context->language->id);
         $iso_lang_uc = strtoupper($lang->iso_code);
+        $url = '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">'.$this->trans('favicon generator on PrestaShop Marketplace', array(), 'Admin.Design.Help').'</a>';
 
         $this->fields_options = array(
             'appearance' => array(
@@ -438,6 +439,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'PS_FAVICON' => array(
                         'title' => $this->trans('Favicon', array(), 'Admin.Design.Feature'),
+                        'desc' => $this->trans('Use our %url% to boost your brand image!', array('%url%' => $url), 'Admin.Design.Help'),
                         'hint' => $this->trans('It is the small icon that appears in browser tabs, next to the web address', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
