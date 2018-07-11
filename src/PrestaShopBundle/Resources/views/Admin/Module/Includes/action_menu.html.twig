@@ -33,14 +33,14 @@
 
   {% if url_active == 'buy' %}
   <div class="form-action-button-container">
-    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+    <a class="btn btn-primary btn-primary btn--reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
       {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
     </a>
   </div>
   {% elseif urls|length %}
   <div class="btn-group form-action-button-container">
     <form class="btn-group form-action-button" method="post" action="{{ urls[url_active] }}">
-      <button type="submit" class="btn btn-primary-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
+      <button type="submit" class="btn btn-primary btn-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
           data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
           {{ url_active|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
       </button>
