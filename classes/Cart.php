@@ -2152,7 +2152,8 @@ class CartCore extends ObjectModel
     {
         static $address = array();
 
-        if (!count($this->getProducts())) {
+        // Check if cart is empty, or if the current cart contains at least a real product (not virtual)
+        if (!$this->hasProducts() || !$this->hasRealProducts()) {
             return 0;
         }
 
