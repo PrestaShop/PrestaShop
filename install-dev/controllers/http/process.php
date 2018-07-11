@@ -372,13 +372,13 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     private function hasLargeFixtures()
     {
         $size = 0;
-        $fixtureDir = __DIR__.'/../../fixtures/fashion/data/';
-        $dh = @opendir($fixtureDir);
+        $fixtureDir = _PS_INSTALL_FIXTURES_PATH_.'fashion/data/';
+        $dh = opendir($fixtureDir);
         if ($dh) {
-            while (($xmlFile = @readdir($dh)) !== false) {
+            while (($xmlFile = readdir($dh)) !== false) {
                 $size += filesize($fixtureDir.$xmlFile);
             }
-            @closedir($dh);
+            closedir($dh);
         }
 
         return $size > Tools::getOctets('10M');
