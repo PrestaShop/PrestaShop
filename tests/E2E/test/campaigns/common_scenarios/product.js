@@ -2,6 +2,9 @@ const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 const {ProductList} = require('../../selectors/BO/add_product_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
+let data = require('../../datas/product-data');
+
+global.productVariations = [];
 
 /**** Example of product data ****
  * var productData = {
@@ -287,6 +290,24 @@ module.exports = {
       test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, 'Product successfully deleted.'));
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
+  },
+
+  addProductFeature(client, feature, id, predefinedValue = '', customValue = '', option = "predefined_value") {
+    test('should click on "Add a feature" button', () => {
+      return promise
+        .then(() => client.scrollTo(AddProductPage.add_related_product_btn))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_add_feature_btn, 3000))
+    });
+    test('should choose "' + feature + '" feature from the dropdown list', () => {
+      return promise
+        .then(() => client.scrollWaitForExistAndClick(AddProductPage.feature_select_button.replace('%ID', id)))
+        .then(() => client.waitForVisibleAndClick(AddProductPage.feature_select_option.replace('%ID', id).replace('%V', feature)));
+    });
+    if (option === "predefined_value") {
+      test('should choose "Cotton" pre-defined value from the dropdown list', () => client.waitAndSelectByVisibleText(AddProductPage.feature_value_select.replace('%ID', id).replace('%V', 'not(@disabled)'), predefinedValue, 2000));
+    } else {
+      test('should set the "Custom value" input', () => client.waitAndSetValue(AddProductPage.feature_custom_value.replace('%ID', 1), customValue));
+    }
   },
 
   checkProductInListFO(AccessPageFO, productPage, productData) {

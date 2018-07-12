@@ -53,7 +53,6 @@ class CreateCombinations extends Product {
       .waitForExistAndClick(AddProductPage.back_to_product.replace('%NUMBER', global.combinationId))
       .pause(2000)
   }
-
 }
 
 module.exports = CreateCombinations;

@@ -1,5 +1,6 @@
 const {getClient} = require('../common.webdriverio.js');
-const {languageFO} = require('../selectors/FO/index');
+const {selector} = require('../globals.webdriverio.js');
+const {languageFO} = require('../../test/selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
@@ -302,6 +303,7 @@ class CommonClient {
    */
   searchByValue(search_input, search_button, value) {
     return this.client
+      .pause(2000)
       .waitAndSetValue(search_input, value)
       .waitForExistAndClick(search_button);
   }
@@ -330,7 +332,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function (err, stats) {
+    fs.stat(folderPath + fileName, function(err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 

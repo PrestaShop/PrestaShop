@@ -3,6 +3,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
+const commonScenarios = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
 let data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
@@ -20,11 +21,15 @@ scenario('Create virtual Product in the Back Office', client => {
     test('should set the "Description" text', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "virtual product"', () => client.waitAndSelectByValue(AddProductPage.product_type, 2));
     test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
+    test('should select the "Tax rule" "10%"', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_arrow_button))
+        .then(() => client.waitForVisibleAndClick(AddProductPage.tax_rule_value.replace('%ID', 'FR Taux réduit (10%)')))
+    });
     test('should upload the first product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.virtual.new_category_name + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('should open all categories', () => client.openAllCategories());
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
@@ -38,10 +43,10 @@ scenario('Create virtual Product in the Back Office', client => {
     });
     test('should click on "ADD RELATED PRODUCT"', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('virtual'));
+    commonScenarios.addProductFeature(client, "Frame Size", 0, "Cotton");
     test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
-    test('should switch the product online', () =>  {
+    test('should switch the product online', () => {
       return promise
         .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
@@ -53,12 +58,12 @@ scenario('Create virtual Product in the Back Office', client => {
     });
   }, 'product/product');
 
-  scenario('Edit product quantities', client => {
-    test('should click on "Quantities"', () => client.scrollWaitForExistAndClick(AddProductPage.product_quantities_tab, 50));
+  scenario('Edit Virtual product tab', client => {
+    test('should go to the "Virtual product" tab ', () => client.scrollWaitForExistAndClick(AddProductPage.product_quantities_tab, 50));
     test('should set the "Quantity"', () => client.waitAndSetValue(AddProductPage.product_quantity_input, data.common.quantity));
     test('should set the "Minimum quantity for sale"', () => client.waitAndSetValue(AddProductPage.minimum_quantity_sale, data.common.qty_min));
     test('should indicate that the product have an associated file', () => client.associatedFile());
-    test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
+    test('should add a file', () => client.addFile(AddProductPage.options_add_virtual_product_file_button, 'image_test.jpg'), 50);
     test('should add file "NAME"', () => client.waitAndSetValue(AddProductPage.virtual_file_name, data.virtual.attached_file_name));
     test('should add file "NUMBER"', () => client.waitAndSetValue(AddProductPage.virtual_file_number_download, data.virtual.allowed_number_to_download));
     test('should add file "EXPIRATION DATE"', () => client.waitAndSetValue(AddProductPage.virtual_expiration_file_date, data.virtual.expiration_date));
@@ -138,7 +143,7 @@ scenario('Check the virtual product in the Front Office', () => {
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product name is equal to "' + (data.virtual.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.virtual.name + date_time).toUpperCase()));
-    test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+    test('should check that the product price is equal to "€11.00"', () => client.checkTextValue(productPage.product_price, '€11.00'));
     test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
     test('should check that the "summary" is equal to "' + data.common.summary + '"', () => client.checkTextValue(productPage.product_summary, data.common.summary));
     test('should check that the "description" is equal to "' + data.common.description + '"', () => client.checkTextValue(productPage.product_description, data.common.description));
@@ -157,4 +162,4 @@ scenario('Check the virtual product in the Front Office', () => {
         .then(() => client.signOutFO(AccessPageFO));
     });
   }, 'product/product');
-}, 'product/product', true);
+}, 'product/product',true);
