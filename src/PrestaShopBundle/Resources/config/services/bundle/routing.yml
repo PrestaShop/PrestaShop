@@ -1,4 +1,3 @@
-
 services:
     prestashop.bundle.routing.module_route_loader:
         class: 'PrestaShopBundle\Routing\YamlModuleLoader'
