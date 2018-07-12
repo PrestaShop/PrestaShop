@@ -116,8 +116,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     public function set($key, $value)
     {
         // By default, set a piece of configuration for all available shops and shop groups
-        $shopGroupId = 0;
-        $shopId = 0;
+        $shopGroupId = null;
+        $shopId = null;
 
         if ($this->shop instanceof Shop) {
             $shopGroupId = $this->shop->id_shop_group;
