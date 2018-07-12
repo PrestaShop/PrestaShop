@@ -28,13 +28,13 @@
 {% set valid = (row[column.id] is same as('1')) %}
 
 <i
-        class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
-        data-toggle-field-name="{{ column.options.field_to_display }}"
-        data-toggle-field-id="{{ row_id }}"
+    class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
+    data-toggle-field-name="{{ column.options.field_to_display }}"
+    data-toggle-field-id="{{ row_id }}"
 >
-    {% if valid == true %}
-        check
-    {% else %}
-        clear
-    {% endif %}
+{% if valid == true %}
+    check
+{% else %}
+    clear
+{% endif %}
 </i>

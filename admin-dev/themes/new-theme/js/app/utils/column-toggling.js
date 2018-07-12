@@ -36,7 +36,7 @@ class ColumnToggling {
      */
     constructor(table) {
         this.selector = '.ps-togglable-row';
-        this.rows = $(table).find(this.selector);
+        this.rows = table.find(this.selector);
     }
 
     /**
@@ -44,8 +44,7 @@ class ColumnToggling {
      */
     attach() {
         this.rows.on('click', (e) => {
-            const $row = $(e.delegateTarget);
-            this._toggleValue($row);
+            this._toggleValue($(e.delegateTarget));
         });
     }
 
