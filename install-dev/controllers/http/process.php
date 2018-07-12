@@ -82,42 +82,46 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $this->session->process_validated = array();
         }
 
-        if (Tools::getValue('generateSettingsFile')) {
-            $this->processGenerateSettingsFile();
-        } elseif (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile'])) {
-            $this->processInstallDatabase();
-        } elseif (Tools::getValue('installDefaultData')) {
-            $this->processInstallDefaultData();
-        } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
-            $this->processPopulateDatabase();
-            // download and install language pack
-            Language::downloadAndInstallLanguagePack($this->session->lang);
-        } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
-            Language::getRtlStylesheetProcessor()
-                ->setIsInstall(true)
-                ->setLanguageCode($this->session->lang)
-                ->setProcessFOThemes(array('classic'))
-                ->process();
-            $this->processConfigureShop();
-        } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
-            $this->processInstallFixtures();
-        } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full')) {
-            $this->processInstallModules();
-        } elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules'])) {
-            $this->processInstallAddonsModules();
-        } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
-            $this->processInstallTheme();
-        } else {
-            // With no parameters, we consider that we are doing a new install, so session where the last process step
-            // was stored can be cleaned
-            if (Tools::getValue('restart')) {
-                $this->session->process_validated = array();
-                $this->session->database_clear = true;
-            } elseif (!Tools::getValue('submitNext')) {
-                $this->session->step = 'configure';
-                $this->session->last_step = 'configure';
-                Tools::redirect('index.php');
+        try {
+            if (Tools::getValue('generateSettingsFile')) {
+                $this->processGenerateSettingsFile();
+            } elseif (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile'])) {
+                $this->processInstallDatabase();
+            } elseif (Tools::getValue('installDefaultData')) {
+                $this->processInstallDefaultData();
+            } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
+                $this->processPopulateDatabase();
+                // download and install language pack
+                Language::downloadAndInstallLanguagePack($this->session->lang);
+            } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
+                Language::getRtlStylesheetProcessor()
+                    ->setIsInstall(true)
+                    ->setLanguageCode($this->session->lang)
+                    ->setProcessFOThemes(array('classic'))
+                    ->process();
+                $this->processConfigureShop();
+            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
+                $this->processInstallFixtures();
+            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full')) {
+                $this->processInstallModules();
+            } elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules'])) {
+                $this->processInstallAddonsModules();
+            } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
+                $this->processInstallTheme();
             }
+        } catch (\Exception $e) {
+            $this->ajaxJsonAnswer(false, $e->getMessage());
+        }
+
+        // With no parameters, we consider that we are doing a new install, so session where the last process step
+        // was stored can be cleaned
+        if (Tools::getValue('restart')) {
+            $this->session->process_validated = array();
+            $this->session->database_clear = true;
+        } elseif (!Tools::getValue('submitNext')) {
+            $this->session->step = 'configure';
+            $this->session->last_step = 'configure';
+            Tools::redirect('index.php');
         }
     }
 
