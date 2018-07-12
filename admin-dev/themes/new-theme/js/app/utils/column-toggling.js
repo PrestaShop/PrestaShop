@@ -53,20 +53,16 @@ class ColumnToggling {
      * @private
      */
     _toggleValue(row) {
-        const url = new URL(window.location.href);
-        const token = url.searchParams.get('_token');
+        var row_id = row.data('toggleFieldId');
+        var urlForToggling = row.data('toggleUrl');
 
-        var log_id = row.data('toggleFieldId');
-        var urlForToggling = 'toggle/'+ log_id +'?_token=' + token;
-
-        $.post(urlForToggling, function () {
+        $.post(urlForToggling, {'row_id': row_id }, function () {
         })
         .done(function () {
             location.reload();
         })
         .fail(function () {
-            // what should be done if this fails ?
-            console.log('Failed to toggle row value ' + row.data('toggleFieldId') + ' ' + row.data('toggleFieldName'));
+            console.log('Failed to toggle row value ' + row_id + ' ' + row.data('toggleFieldName'));
         });
     }
 }

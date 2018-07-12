@@ -31,6 +31,7 @@
     class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
     data-toggle-field-name="{{ column.options.field_to_display }}"
     data-toggle-field-id="{{ row_id }}"
+    data-toggle-url="{{ column.options.url_toggle_callback }}"
 >
 {% if valid == true %}
     check
