@@ -31,4 +31,5 @@ namespace PrestaShop\PrestaShop\Core\Module;
  */
 interface ManufacturerInterface
 {
+    public function getId();
 }

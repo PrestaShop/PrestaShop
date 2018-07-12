@@ -32,7 +32,10 @@ use Manufacturer as LegacyManufacturer;
 /**
  * This class is the interface between the legacy Manufacturer class and the future implementation.
  */
-class Manufacturer extends LegacyManufacturer implements ManufacturerInterface
+class Manufacturer implements ManufacturerInterface
 {
-
+    public function getId()
+    {
+        return LegacyManufacturer::getId();
+    }
 }
