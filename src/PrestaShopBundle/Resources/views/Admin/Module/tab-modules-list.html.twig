@@ -70,3 +70,23 @@
     <a href="https://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{{ app.request.locale }}&amp;utm_content=download{% if adminListFromSource is defined %}&amp;utm_term={{ adminListFromSource }}{% endif %}" onclick="return !window.open(this.href);">{{ 'More modules on addons.prestashop.com'|trans({}) }}</a>
   </p>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.import-module-from-popin-form').on('submit', function (e) {
+            e.preventDefault();
+
+            $('.import-module-from-popin-form').hide();
+            $('#loading_message').show();
+
+            $.ajax({
+                url: $(this).attr('action') || window.location.pathname,
+                type: "POST",
+                data: $(this).serialize(),
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>

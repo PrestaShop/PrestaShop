@@ -23,47 +23,73 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set url, priceRaw, priceDisplay, url_active, urls, name =
-  module.attributes.url,
-  module.attributes.price.raw,
-  module.attributes.price.displayPrice,
-  module.attributes.url_active,
-  module.attributes.urls,
-  module.attributes.name
-%}
+    module.attributes.url,
+    module.attributes.price.raw,
+    module.attributes.price.displayPrice,
+    module.attributes.url_active,
+    module.attributes.urls,
+    module.attributes.name %}
 
   {% if url_active == 'buy' %}
-  <div class="form-action-button-container">
-    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
-      {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
-    </a>
-  </div>
+      <div class="form-action-button-container">
+          <a class="btn btn-primary btn-primary btn--reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons"
+             href="{{ url }}" target="_blank">
+              {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
+          </a>
+      </div>
   {% elseif urls|length %}
-  <div class="btn-group form-action-button-container">
-    <form class="btn-group form-action-button" method="post" action="{{ urls[url_active] }}">
-      <button type="submit" class="btn btn-primary-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
-          data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
-          {{ url_active|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
-      </button>
-    </form>
-    {% if (urls|length > 1) %}
-          <input type="hidden" class="btn">
-          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="caret"></span>
-            <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
-          </button>
-          <div class="dropdown-menu">
-            {% for module_action, module_url in urls %}
-              {% if module_action != url_active %}
-                  <li>
-                    <form method="post" action="{{ module_url }}">
-                      <button type="submit" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
-                        {{module_action|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions')}}
-                      </button>
-                    </form>
-                  </li>
-              {% endif %}
-            {% endfor %}
+      <div class="btn-group form-action-button-container">
+          <form class="btn-group form-action-button import-module-from-popin-form" method="post" action="{{ urls[url_active] }}">
+              <button type="submit"
+                      class="btn btn-primary btn-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
+                      data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
+                  {{ url_active|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
+              </button>
+          </form>
+
+          <div id="loading_message" style="display: none;">
+              <p class=module-import-processing-main-text>{{ 'In progress...'|trans({}, 'Admin.Modules.Notification') }}</p>
           </div>
-    {% endif %}
-  </div>
+
+          {% if (urls|length > 1) %}
+              <input type="hidden" class="btn">
+              <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+              </button>
+              <div class="dropdown-menu">
+                  {% for module_action, module_url in urls %}
+                      {% if module_action != url_active %}
+                          <li>
+                              <form class="import-module-from-popin-form" method="post" action="{{ module_url }}">
+                                  <button type="submit" class="dropdown-item module_action_menu_{{ module_action }}"
+                                          data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
+                                      {{ module_action|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
+                                  </button>
+                              </form>
+                          </li>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+          {% endif %}
+      </div>
   {% endif %}
+
+<script>
+    $(document).ready(function () {
+        $('#import-module-from-popin-form').on('submit', function (e) {
+            e.preventDefault();
+            $(this).after( "<p class=module-import-processing-main-text>{{ 'Installing module...'|trans({}, 'Admin.Modules.Notification') }}</p>" );
+            $(this).hide();
+            $.ajax({
+                url: $(this).attr('action') || window.location.pathname,
+                type: "POST",
+                data: $(this).serialize(),
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
