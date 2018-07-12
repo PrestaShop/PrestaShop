@@ -756,7 +756,7 @@ class LinkCore
                     'AdminLocalization' => 'admin_localization_show_settings',
                     'AdminGeolocation' => 'admin_geolocation',
                     'AdminPaymentPreferences' => 'admin_payment_preferences',
-                    'AdminWebservice' => 'admin_webservice',
+                    // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                 );
 
                 if (isset($routes[$controller])) {
