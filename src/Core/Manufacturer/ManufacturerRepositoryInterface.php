@@ -27,11 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\Manufacturer;
 
 /**
- * Define what should be a manufacturer
+ * Define what should be a manufacturer repository
  */
-interface ManufacturerInterface
+interface ManufacturerRepositoryInterface
 {
-    public function getId();
+    public function create(ManufacturerInterface $manufacturer);
 
-    public function getLanguageId();
+    public function retrieveFromId($id);
 }

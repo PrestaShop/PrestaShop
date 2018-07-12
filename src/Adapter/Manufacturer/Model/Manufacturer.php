@@ -24,14 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Manufacturer;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer\Model;
+
+use Manufacturer as LegacyManufacturer;
 
 /**
- * Define what should be a manufacturer
+ * Define what is a manufacturer.
  */
-interface ManufacturerInterface
+final class Manufacturer implements ManufacturerInterface
 {
-    public function getId();
+    /**
+     * @var int
+     */
+    private $id;
 
-    public function getLanguageId();
+    /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
+     * Manufacturer constructor: we do it only for validate the integrity of data.
+     * @param null $id
+     * @param null $languageId
+     */
+    public function __construct($id = null, $languageId = null)
+    {
+        LegacyManufacturer::__construct($id, $languageId);
+        $this->id = $id;
+        $this->languageId = $languageId;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getLanguageId()
+    {
+        return $this->languageId;
+    }
 }

@@ -24,14 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Manufacturer;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer\Query;
+
+use PrestaShop\PrestaShop\Core\Manufacturer\ManufacturerRepositoryInterface;
 
 /**
- * Define what should be a manufacturer
+ * Retrieves a new Manufacturer.
  */
-interface ManufacturerInterface
+class RetrieveManufacturerByIdQuery
 {
-    public function getId();
+    /**
+     * @var ManufacturerRepositoryInterface
+     */
+    private $manufacturerRepository;
 
-    public function getLanguageId();
+    public function __invoke($manufacturerId)
+    {
+        return $this->manufacturerRepository->get($manufacturerId);
+    }
+
+    public function __construct(ManufacturerRepositoryInterface $manufacturerRepository)
+    {
+        $this->manufacturerRepository = $manufacturerRepository;
+    }
 }

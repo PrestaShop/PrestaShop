@@ -24,15 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer\Command;
 
-use PrestaShop\PrestaShop\Core\Module\ManufacturerInterface;
-use Manufacturer as LegacyManufacturer;
+use PrestaShop\PrestaShop\Core\Manufacturer\ManufacturerRepositoryInterface;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\Model\Manufacturer;
 
 /**
- * This class is the interface between the legacy Manufacturer class and the future implementation.
+ * Creates a new Manufacturer.
  */
-class Manufacturer extends LegacyManufacturer implements ManufacturerInterface
+class CreateManufacturerCommand
 {
+    /**
+     * @var ManufacturerRepositoryInterface
+     */
+    private $manufacturerRepository;
 
+    public function __construct(ManufacturerRepositoryInterface $manufacturerRepository)
+    {
+        $this->manufacturerRepository = $manufacturerRepository;
+    }
+
+    public function __invoke(Manufacturer $createManufacturer)
+    {
+        $this->manufacturerRepository->create($createManufacturer);
+    }
 }
