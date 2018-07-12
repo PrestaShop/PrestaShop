@@ -716,7 +716,7 @@ class SpecificPriceCore extends ObjectModel
             $this->from_quantity,
             $this->from,
             $this->to,
-            true
+            $this->id_specific_price_rule != 0
         )) {
             return true;
         }
