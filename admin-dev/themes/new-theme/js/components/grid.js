@@ -71,7 +71,7 @@ export default class Grid {
     this.$grid.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
 
     $('.reset-search').on('click', (event) => {
-      resetSearch($(event.target).data('url'));
+      resetSearch($(event.target).data('url'), $(event.target).data('redirect'));
     });
   }
 

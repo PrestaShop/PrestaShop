@@ -29,8 +29,9 @@
 
 const $ = global.$;
 
-const init = function resetSearch(url) {
+const init = function resetSearch(url, redirectUrl) {
     $.post(url);
+    window.location.assign(redirectUrl);
 };
 
 export default init;
