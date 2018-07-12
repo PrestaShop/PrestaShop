@@ -35,7 +35,7 @@
                 <div class="col">
                     <div class="card">
                         <h3 class="card-header">
-                            <i class="material-icons">settings</i> {{ 'Configuration'|trans }}
+                            <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
                         </h3>
                         <div class="card-block">
                             <div class="card-text">
@@ -45,7 +45,11 @@
                                     {{ form_widget(form.webservice_configuration.enable_webservice) }}
                                 </div>
 
-                                <small class="form-text">{{ 'Before activating the webservice, you must be sure to:\n 1. Check that URL rewriting is available on this server.\n 2.Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.'|trans({}, 'Admin.Shopparameters.Help')|nl2br }}</small>
+                                <small class="form-text">
+                                    {{ 'Before activating the webservice, you must be sure to: '|trans({}, 'Admin.Advparameters.Help') }}<br/>
+                                    1. {{ 'Check that URL rewriting is available on this server.'|trans({}, 'Admin.Advparameters.Help') }}<br/>
+                                    2. {{ 'Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.'|trans({}, 'Admin.Advparameters.Help') }}
+                                </small>
 
                                 <div class="form-group">
                                     <label class="form-control-label">{{ 'Enable CGI mode for PHP'|trans }}</label>
@@ -53,7 +57,9 @@
                                     {{ form_widget(form.webservice_configuration.enable_cgi) }}
                                 </div>
 
-                                <small class="form-text">{{ 'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                <small class="form-text">
+                                    {{ 'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'|trans({}, 'Admin.Advparameters.Help') }}
+                                </small>
 
                                 {{ form_rest(form) }}
                             </div>
