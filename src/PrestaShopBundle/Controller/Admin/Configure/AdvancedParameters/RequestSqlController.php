@@ -278,13 +278,13 @@ class RequestSqlController extends FrameworkBundleAdminController
 
         $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
         $errors = $requestSqlManager->delete([$requestSqlId]);
-        if (!$errors) {
-            $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
+        if (empty($errors)) {
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_request_sql');
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
 
         return $this->redirectToRoute('admin_request_sql');
     }
