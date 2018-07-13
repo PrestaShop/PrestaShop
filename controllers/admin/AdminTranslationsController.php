@@ -402,10 +402,10 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $theme_exists = array('from_theme' => false, 'to_theme' => false);
             foreach ($this->themes as $theme) {
-                if ($theme->getDirectory() == $from_theme) {
+                if ($theme->getName() == $from_theme) {
                     $theme_exists['from_theme'] = true;
                 }
-                if ($theme->getDirectory() == $to_theme) {
+                if ($theme->getName() == $to_theme) {
                     $theme_exists['to_theme'] = true;
                 }
             }
