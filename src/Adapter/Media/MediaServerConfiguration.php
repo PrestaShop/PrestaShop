@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 class MediaServerConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var Configuration 
+     * @var Configuration
      */
     private $configuration;
 
