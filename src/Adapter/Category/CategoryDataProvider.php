@@ -37,6 +37,9 @@ use Shop;
  */
 class CategoryDataProvider
 {
+    /**
+     * @var int
+     */
     private $languageId;
 
     /** @var array the list of existing active categories until root */
@@ -251,6 +254,11 @@ class CategoryDataProvider
         return $results;
     }
 
+    /**
+     * @param int|null $idLang
+     * @param Shop|null $shop
+     * @return Category
+     */
     public function getRootCategory($idLang = null, Shop $shop = null)
     {
         return Category::getRootCategory($idLang, $shop);
