@@ -37,9 +37,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Product;
 use Tools;
 
+/**
+ * Used to query the Prices Drop, see PricesDropController in Front Office.
+ */
 class PricesDropProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -49,6 +59,12 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @param string $type
+     * @return array
+     */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
@@ -64,6 +80,9 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
