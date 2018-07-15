@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Hook;
 
+/**
+ * A simple and reusable Presenter for an instance of ObjectModel.
+ */
 class ObjectPresenter implements PresenterInterface
 {
     public function present($object)
