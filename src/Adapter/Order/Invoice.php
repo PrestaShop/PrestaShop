@@ -28,15 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use OrderInvoice as InvoiceLegacy;
 use PrestaShop\PrestaShop\Core\Order\InvoiceInterface;
 
+/**
+ * Invoice Helper.
+ */
 final class Invoice implements InvoiceInterface
 {
     /**
-     * Return collection of Invoice
-     *
-     * @param string $dateFrom Date From
-     * @param string $dateTo   Date To
-     *
-     * @return array[InvoiceLegacy]
+     * {@inheritdoc}
      */
     public static function getByDeliveryDateInterval($dateFrom, $dateTo)
     {
