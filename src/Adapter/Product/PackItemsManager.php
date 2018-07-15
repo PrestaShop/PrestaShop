@@ -29,6 +29,9 @@ use Pack;
 use Product;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
+/**
+ * Class responsible of getting information about Pack Items.
+ */
 class PackItemsManager
 {
     /**
