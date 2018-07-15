@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
 use Context;
+use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 use Product;
 use SpecificPriceRule;
@@ -41,6 +42,9 @@ use Stock;
  */
 class AdminAttributeGeneratorControllerWrapper
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
 
     public function __construct()

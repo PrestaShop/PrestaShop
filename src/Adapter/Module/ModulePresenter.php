@@ -29,6 +29,9 @@ use Currency;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 
+/**
+ * Responsible of a representation of a Module.
+ */
 class ModulePresenter implements PresenterInterface
 {
     /**
@@ -67,6 +70,10 @@ class ModulePresenter implements PresenterInterface
         );
     }
 
+    /**
+     * @param $prices
+     * @return mixed
+     */
     private function getModulePrice($prices)
     {
         $iso_code = $this->currency->iso_code;
