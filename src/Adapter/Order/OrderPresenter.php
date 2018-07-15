@@ -46,6 +46,9 @@ use TaxConfiguration;
 use Tools;
 use Currency;
 
+/**
+ * Class responsible of PHP and Javascript representation of an Order.
+ */
 class OrderPresenter implements PresenterInterface
 {
     /* @var CartPresenter */
@@ -94,10 +97,7 @@ class OrderPresenter implements PresenterInterface
     }
 
     /**
-     * @param Order $order
-     *
-     * @return array
-     * @throws \Exception
+     * {@inheritdoc}
      */
     public function present($order)
     {
@@ -356,6 +356,9 @@ class OrderPresenter implements PresenterInterface
         return $orderHistory;
     }
 
+    /**
+     * @return array
+     */
     private function getDefaultHistory()
     {
         return array(
@@ -501,11 +504,17 @@ class OrderPresenter implements PresenterInterface
         return '';
     }
 
+    /**
+     * @return bool
+     */
     private function includeTaxes()
     {
         return $this->taxConfiguration->includeTaxes();
     }
 
+    /**
+     * @return array
+     */
     private function getLabels()
     {
         $includeTaxes = $this->includeTaxes();

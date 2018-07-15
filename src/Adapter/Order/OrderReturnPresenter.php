@@ -31,6 +31,9 @@ use Exception;
 use Link;
 use Tools;
 
+/**
+ * Class responsible of PHP and Javascript representation of an Order return.
+ */
 class OrderReturnPresenter implements PresenterInterface
 {
     private $prefix;
