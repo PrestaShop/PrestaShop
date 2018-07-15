@@ -37,9 +37,20 @@ use Search;
 use Hook;
 use Tools;
 
+/**
+ * Class responsible of retrieving products in Search page of Front Office.
+ * @see SearchController
+ */
 class SearchProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -49,6 +60,9 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
