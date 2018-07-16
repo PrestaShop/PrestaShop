@@ -23,13 +23,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Module;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
-/**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
- *
- */
-class ModulePresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Language;
+
+class ProductListingPresenter extends ProductPresenter
 {
+    public function present(
+        ProductPresentationSettings $settings,
+        array $product,
+        Language $language
+    ) {
+        return new ProductListingLazyArray(
+            $settings,
+            $product,
+            $language,
+            $this->imageRetriever,
+            $this->link,
+            $this->priceFormatter,
+            $this->productColorsRetriever,
+            $this->translator
+        );
+    }
 }

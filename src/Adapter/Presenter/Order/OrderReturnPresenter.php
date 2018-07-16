@@ -23,13 +23,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Module;
 
-/**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
- *
- */
-class ModulePresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
+
+use Exception;
+use Link;
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+
+class OrderReturnPresenter implements PresenterInterface
 {
+    private $prefix;
+    private $link;
+
+    public function __construct($prefix, Link $link)
+    {
+        $this->prefix = $prefix;
+        $this->link = $link;
+    }
+
+    /**
+     * @param $orderReturn
+     *
+     * @return OrderReturnLazyArray
+     * @throws \ReflectionException
+     */
+    public function present($orderReturn)
+    {
+        if (!is_array($orderReturn)) {
+            throw new Exception('orderReturnPresenter can only present order_return passed as array');
+        }
+
+        return new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
+    }
 }

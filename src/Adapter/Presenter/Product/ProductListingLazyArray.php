@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,24 +23,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
-class TaxConfigurationCore
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+
+class ProductListingLazyArray extends ProductLazyArray
 {
-    private $taxCalculationMethod = array();
-
     /**
-     * @return bool
+     * @arrayAccess
+     * @return null|string
      */
-    public function includeTaxes()
+    public function getAddToCartUrl()
     {
-        if (!Configuration::get('PS_TAX')) {
+        if ($this->product['id_product_attribute'] != 0 && !$this->settings->allow_add_variant_to_cart_from_listing) {
+            return null;
+        }
+
+        if ($this->product['customizable'] == 2 || !empty($this->product['customization_required'])) {
+            return null;
+        }
+
+        return parent::getAddToCartUrl();
+    }
+
+    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
+    {
+        if (isset($product['attributes'])
+            && count($product['attributes']) > 0
+            && !$settings->allow_add_variant_to_cart_from_listing) {
             return false;
         }
 
-        $idCustomer = (int)Context::getContext()->cookie->id_customer;
-        if (!array_key_exists($idCustomer, $this->taxCalculationMethod)) {
-            $this->taxCalculationMethod[$idCustomer] = !Product::getTaxCalculationMethod($idCustomer);
-        }
-        return $this->taxCalculationMethod[$idCustomer];
+        return parent::shouldEnableAddToCartButton($product, $settings);
     }
 }

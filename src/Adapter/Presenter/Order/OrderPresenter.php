@@ -23,13 +23,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Module;
 
-/**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
- *
- */
-class ModulePresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
+
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
+
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use Order;
+use Exception;
+
+class OrderPresenter implements PresenterInterface
 {
+    /**
+     * @param Order $order
+     *
+     * @return OrderLazyArray
+     * @throws Exception
+     */
+    public function present($order)
+    {
+        if (!($order instanceof Order)) {
+            throw new Exception('OrderPresenter can only present instance of Order');
+        }
+
+        return new OrderLazyArray($order);
+    }
 }
