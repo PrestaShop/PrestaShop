@@ -669,7 +669,7 @@ class OrderDetailCore extends ObjectModel
         $this->id_warehouse = $id_warehouse;
 
         $product_quantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
-        $this->product_quantity_in_stock = ($product_quantity - (int)$product['cart_quantity'] < 0) ?
+        $this->product_quantity_in_stock = ($product_quantity < 0) ?
             $product_quantity : (int)$product['cart_quantity'];
 
         $this->setVirtualProductInformation($product);

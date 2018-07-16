@@ -1768,7 +1768,7 @@ class AdminOrdersControllerCore extends AdminController
             }
 
             $product['customized_product_quantity'] = $customized_product_quantity;
-            $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
+            $product['current_stock'] = (int)StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop'])+(int)StockAvailable::getAvailableProductQuantitybyOrder($order,$product['product_id'], $product['product_attribute_id']);
             $resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
             $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
