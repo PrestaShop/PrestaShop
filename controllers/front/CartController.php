@@ -426,8 +426,8 @@ class CartControllerCore extends FrontController
         // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             $this->{$ErrorKey}[] = $this->trans(
-                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                array('%product%' => $product->name),
+                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted. Maximum quantity is %quantity%',
+                array('%product%' => $product->name, '%quantity%' => $product->quantity),
                 'Shop.Notifications.Error'
             );
         }
@@ -498,8 +498,8 @@ class CartControllerCore extends FrontController
                 } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
                     // check quantity after cart quantity update
                     $this->{$ErrorKey}[] = $this->trans(
-                        'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                        array('%product%' => $product->name),
+                        'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted. Maximum quantity is %quantity%',
+                        array('%product%' => $product->name, '%quantity%' => $product->quantity),
                         'Shop.Notifications.Error'
                     );
                 }
@@ -581,8 +581,8 @@ class CartControllerCore extends FrontController
         }
         if ($product['active']) {
             return $this->trans(
-                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                array('%product%' => $product['name']),
+                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted. Maximum quantity is %quantity%',
+                array('%product%' => $product['name'], '%quantity%' => $product['stock_quantity'),
                 'Shop.Notifications.Error'
             );
         }
