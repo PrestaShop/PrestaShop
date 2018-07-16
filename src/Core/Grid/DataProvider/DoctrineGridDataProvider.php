@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
 use PDO;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -66,7 +67,23 @@ final class DoctrineGridDataProvider implements GridDataProviderInterface
         return new GridData(
             $rows,
             $rowsTotal,
-            $searchQueryBuilder->getSQL()
+            $this->getRawQuery($searchQueryBuilder)
         );
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @return string
+     */
+    private function getRawQuery(QueryBuilder $queryBuilder)
+    {
+        $query = $queryBuilder->getSQL();
+        $parameters = $queryBuilder->getParameters();
+
+        foreach ($parameters as $pattern => $value) {
+            $query = str_replace(":$pattern", $value, $query);
+        }
+
+        return $query;
     }
 }
