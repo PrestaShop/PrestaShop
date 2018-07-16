@@ -189,13 +189,12 @@ export default class Grid {
    * @private
    */
   _onShowSqlQueryClick() {
-    let identifier = this.$gridPanel.find('.js-grid').attr('id');
     let query = this.$gridPanel.find('.js-grid-table').data('query');
 
-    const $sqlManagerForm = $('#' + identifier + '_common_show_query_modal_form');
+    const $sqlManagerForm = $('#' + this.gridId + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
 
-    const $modal = $('#' + identifier + '_common_show_query_modal');
+    const $modal = $('#' + this.gridId + '_grid_common_show_query_modal');
     $modal.modal('show');
 
     $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
