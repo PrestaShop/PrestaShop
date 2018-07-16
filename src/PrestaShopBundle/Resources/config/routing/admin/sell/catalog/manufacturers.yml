@@ -1,0 +1,6 @@
+admin_manufacturers:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index
+        _legacy_controller: AdminManufacturers
