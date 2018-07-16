@@ -77,211 +77,328 @@ class SqlQueryValidator
         $errors = [];
 
         foreach ($sqlErrors as $key => $sqlError) {
-            switch ($key) {
-                case 'checkedFrom':
-                    if (isset($sqlError['table'])) {
-                        $errors[] = [
-                            'key' => 'The "%tablename%" table does not exist.',
-                            'parameters' => [
-                                '%tablename%' => $sqlError['table'],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } elseif (isset($sqlError['attribut'])) {
-                        $errors[] = [
-                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%attribute%' => $sqlError['attribut'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'Undefined "%s" error',
-                            'parameters' => [
-                                'checkedForm',
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'checkedSelect':
-                    if (isset($sqlError['table'])) {
-                        $errors[] = [
-                            'key' => 'The "%tablename%" table does not exist.',
-                            'parameters' => [
-                                '%tablename%' => $sqlError['table'],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } elseif (isset($sqlError['attribut'])) {
-                        $errors[] = [
-                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%attribute%' => $sqlError['attribut'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' =>'Admin.Advparameters.Notification',
-                        ];
-                    } elseif (isset($sqlError['*'])) {
-                        $errors[] = [
-                            'key' => 'The "*" operator cannot be used in a nested query.',
-                            'parameters' => [],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'Undefined "%s" error',
-                            'parameters' => [
-                                'checkedSelect',
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'checkedWhere':
-                    if (isset($sqlError['operator'])) {
-                        $errors[] = [
-                            'key' => 'The operator "%s" is incorrect.',
-                            'parameters' => [
-                                '%operator%' => $sqlError['operator'],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } elseif (isset($sqlError['attribut'])) {
-                        $errors[] = [
-                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%attribute%' => $sqlError['attribut'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'Undefined "%s" error',
-                            'parameters' => [
-                                'checkedWhere',
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'checkedHaving':
-                    if (isset($sqlError['operator'])) {
-                        $errors[] = [
-                            'key' => 'The "%operator%" operator is incorrect.',
-                            'parameters' => [
-                                '%operator%' => $sqlError['operator'],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } elseif (isset($sqlError['attribut'])) {
-                        $errors[] = [
-                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%attribute%' => $sqlError['attribut'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'Undefined "%s" error',
-                            'parameters' => [
-                                'checkedHaving',
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'checkedOrder':
-                    if (isset($sqlError['attribut'])) {
-                        $errors[] = [
-                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%attribute%' => $sqlError['attribut'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'Undefined "%s" error',
-                            'parameters' => [
-                                'checkedOrder',
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'checkedGroupBy':
-                    if (isset($sqlError['attribut'])) {
-                        $errors[] = [
-                            'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%attribute%' => $sqlError['attribut'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'Undefined "%s" error',
-                            'parameters' => [
-                                'checkedGroupBy',
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'checkedLimit':
-                    $errors[] = [
-                        'key' => 'The LIMIT clause must contain numeric arguments.',
-                        'parameters' => [],
-                        'domain' => 'Admin.Advparameters.Notification',
-                    ];
-                    break;
-                case 'returnNameTable':
-                    if (isset($sqlError['reference'])) {
-                        $errors[] = [
-                            'key' => 'The "%reference%" reference does not exist in the "%table%" table.',
-                            'parameters' => [
-                                '%reference%' => $sqlError['reference'][0],
-                                '%table%' => $sqlError['attribut'][1],
-                            ],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    } else {
-                        $errors[] = [
-                            'key' => 'When multiple tables are used, each attribute must refer back to a table.',
-                            'parameters' => [],
-                            'domain' => 'Admin.Advparameters.Notification',
-                        ];
-                    }
-                    break;
-                case 'testedRequired':
-                    $errors[] = [
-                        'key' => '"%key%" does not exist.',
-                        'parameters' => [
-                            '%key%' => $sqlError,
-                        ],
-                        'domain' => 'Admin.Notifications.Error',
-                    ];
-                    break;
-                case 'testedUnauthorized':
-                    $errors[] = [
-                        'key' => '"%key%" is an unauthorized keyword.',
-                        'parameters' => [
-                            '%key%' => $sqlError,
-                        ],
-                        'domain' => 'Admin.Advparameters.Notification',
-                    ];
-                    break;
+            if ('checkedFrom' === $key) {
+                $errors[] = $this->getFromKeywordError($sqlError);
+            } elseif ('checkedSelect' === $key) {
+                $errors[] = $this->getSelectKeywordError($sqlError);
+            } elseif ('checkedWhere' === $key) {
+                $errors[] = $this->getWhereKeywordError($sqlError);
+            } elseif ('checkedHaving' === $key) {
+                $errors[] = $this->getHavingKeywordError($sqlError);
+            } elseif ('checkedOrder' === $key) {
+                $errors[] = $this->getOrderKeywordError($sqlError);
+            } elseif ('checkedGroupBy' === $key) {
+                $errors[] = $this->getGroupKeywordError($sqlError);
+            } elseif ('checkedLimit' === $key) {
+                $errors[] = $this->getLimitKeywordError();
+            } elseif ('returnNameTable' === $key) {
+                $errors[] = $this->getReferenceError($sqlError);
+            } elseif ('testedRequired' === $key) {
+                $errors[] = $this->getRequiredKeyError($sqlError);
+            } elseif ('testedUnauthorized' === $key) {
+                $errors[] = $this->getUnauthorizedKeyError($sqlError);
             }
         }
 
         return $errors;
+    }
+
+    /**
+     * Get SQL error for "FROM" keyword validation
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getFromKeywordError(array $legacyError)
+    {
+        if (isset($legacyError['table'])) {
+            return [
+                'key' => 'The "%tablename%" table does not exist.',
+                'parameters' => [
+                    '%tablename%' => $legacyError['table'],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        if (isset($legacyError['attribut'])) {
+            return [
+                'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%attribute%' => $legacyError['attribut'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return $errors[] = [
+            'key' => 'Undefined "%s" error',
+            'parameters' => [
+                'checkedForm',
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get SQL error for "SELECT" keyword validation
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getSelectKeywordError(array $legacyError)
+    {
+        if (isset($legacyError['table'])) {
+            return [
+                'key' => 'The "%tablename%" table does not exist.',
+                'parameters' => [
+                    '%tablename%' => $legacyError['table'],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        if (isset($legacyError['attribut'])) {
+            return [
+                'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%attribute%' => $legacyError['attribut'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        if (isset($legacyError['*'])) {
+            return [
+                'key' => 'The "*" operator cannot be used in a nested query.',
+                'parameters' => [],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return [
+            'key' => 'Undefined "%s" error',
+            'parameters' => [
+                'checkedSelect',
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get SQL error for "WHERE" keyword validation
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getWhereKeywordError(array $legacyError)
+    {
+        if (isset($legacyError['operator'])) {
+            return [
+                'key' => 'The operator "%s" is incorrect.',
+                'parameters' => [
+                    '%operator%' => $legacyError['operator'],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        if (isset($legacyError['attribut'])) {
+            return [
+                'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%attribute%' => $legacyError['attribut'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return [
+            'key' => 'Undefined "%s" error',
+            'parameters' => [
+                'checkedWhere',
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get SQL error for "HAVING" keyword validation
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getHavingKeywordError(array $legacyError)
+    {
+        if (isset($legacyError['operator'])) {
+            return [
+                'key' => 'The "%operator%" operator is incorrect.',
+                'parameters' => [
+                    '%operator%' => $legacyError['operator'],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        if (isset($legacyError['attribut'])) {
+            return [
+                'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%attribute%' => $legacyError['attribut'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return [
+            'key' => 'Undefined "%s" error',
+            'parameters' => [
+                'checkedHaving',
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get SQL error for "ORDER" keyword validation
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getOrderKeywordError(array $legacyError)
+    {
+        if (isset($legacyError['attribut'])) {
+            return [
+                'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%attribute%' => $legacyError['attribut'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return [
+            'key' => 'Undefined "%s" error',
+            'parameters' => [
+                'checkedOrder',
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get SQL error for "GROUP" keyword validation
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getGroupKeywordError(array $legacyError)
+    {
+        if (isset($legacyError['attribut'])) {
+            return [
+                'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%attribute%' => $legacyError['attribut'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return [
+            'key' => 'Undefined "%s" error',
+            'parameters' => [
+                'checkedGroupBy',
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get SQL error for "LIMIT" keyword validation
+     *
+     * @return array
+     */
+    private function getLimitKeywordError()
+    {
+       return [
+            'key' => 'The LIMIT clause must contain numeric arguments.',
+            'parameters' => [],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get reference related SQL error
+     *
+     * @param array $legacyError
+     *
+     * @return array
+     */
+    private function getReferenceError(array $legacyError)
+    {
+        if (isset($legacyError['reference'])) {
+            return [
+                'key' => 'The "%reference%" reference does not exist in the "%table%" table.',
+                'parameters' => [
+                    '%reference%' => $legacyError['reference'][0],
+                    '%table%' => $legacyError['attribut'][1],
+                ],
+                'domain' => 'Admin.Advparameters.Notification',
+            ];
+        }
+
+        return [
+            'key' => 'When multiple tables are used, each attribute must refer back to a table.',
+            'parameters' => [],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
+    }
+
+    /**
+     * Get required key error
+     *
+     * @param string $legacyError
+     *
+     * @return array
+     */
+    private function getRequiredKeyError($legacyError)
+    {
+        return [
+            'key' => '"%key%" does not exist.',
+            'parameters' => [
+                '%key%' => $legacyError,
+            ],
+            'domain' => 'Admin.Notifications.Error',
+        ];
+    }
+
+    /**
+     * Get unauthorized key error
+     *
+     * @param string $legacyError
+     *
+     * @return array
+     */
+    private function getUnauthorizedKeyError($legacyError)
+    {
+        return [
+            'key' => '"%key%" is an unauthorized keyword.',
+            'parameters' => [
+                '%key%' => $legacyError,
+            ],
+            'domain' => 'Admin.Advparameters.Notification',
+        ];
     }
 }

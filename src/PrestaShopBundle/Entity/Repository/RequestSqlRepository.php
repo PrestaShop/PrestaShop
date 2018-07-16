@@ -84,59 +84,17 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     }
 
     /**
-     * Find all filtered request sql's
-     *
-     * @param array $filters
-     *
-     * @return array
-     */
-    public function findByFilters(array $filters)
-    {
-        $qb = $this->connection->createQueryBuilder();
-
-        $conditionValues = array_filter($filters['filters'], function ($value) {
-            return !empty($value);
-        });
-
-        $qb->select('rs.*')
-            ->from($this->requestSqlTable, 'rs')
-            ->orderBy('`'.$filters['orderBy'].'`', $filters['sortOrder'])
-            ->setFirstResult($filters['offset'])
-            ->setMaxResults($filters['limit']);
-
-        $scalarFilters = array_filter($conditionValues, function ($key) {
-            return in_array($key, ['name', 'sql']);
-        }, ARRAY_FILTER_USE_KEY);
-
-        foreach ($scalarFilters as $column => $value) {
-            $qb->andWhere("`$column` LIKE :$column");
-            $qb->setParameter($column, '%'.$value.'%');
-        }
-
-        if (!empty($conditionValues['id_request_sql'])) {
-            $qb->andWhere('rs.id_request_sql = :id_request_sql');
-            $qb->setParameter('id_request_sql', $conditionValues['id_request_sql']);
-        }
-
-        $statement = $qb->execute();
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $searchQueryBuilder = $this->buildQueryBySearchCriteria($searchCriteria);
 
-        $searchQueryBuilder
+        return $searchQueryBuilder
             ->select('rs.*')
             ->orderBy($searchCriteria->getOrderBy(), $searchCriteria->getOrderWay())
             ->setFirstResult($searchCriteria->getOffset())
             ->setMaxResults($searchCriteria->getLimit());
-
-        return $searchQueryBuilder;
     }
 
     /**
