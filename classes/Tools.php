@@ -26,7 +26,7 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Filesystem;
-
+use PHPSQLParser\PHPSQLParser;
 use Composer\CaBundle\CaBundle;
 
 class ToolsCore
@@ -2168,7 +2168,6 @@ class ToolsCore
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
-            require_once(_PS_TOOL_DIR_.'parser_sql/PHPSQLParser.php');
             $parser = new PHPSQLParser($sql);
             return $parser->parsed;
         }
