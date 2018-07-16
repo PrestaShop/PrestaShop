@@ -150,3 +150,19 @@ services:
     prestashop.adapter.geolocation_options.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.payment_module_preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration'
+        arguments:
+            - '@prestashop.adapter.module.payment_module_provider'
+            - '@prestashop.core.module.configuration.payment_restrictions_configurator'
+
+    prestashop.adapter.shipping_preferences.handling_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.shipping_preferences.carrier_options_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

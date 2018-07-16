@@ -982,7 +982,7 @@ class ToolsCore
     {
         $dirname = rtrim($dirname, '/').'/';
         if (file_exists($dirname)) {
-            if ($files = scandir($dirname)) {
+            if ($files = scandir($dirname, SCANDIR_SORT_NONE)) {
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..' && $file != '.svn') {
                         if (is_dir($dirname.$file)) {
@@ -1028,7 +1028,7 @@ class ToolsCore
     */
     public static function clearXMLCache()
     {
-        foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
+        foreach (scandir(_PS_ROOT_DIR_ . '/config/xml', SCANDIR_SORT_NONE) as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
             if (($path_info == 'xml') && ($file != 'default.xml')) {
                 self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
@@ -2380,21 +2380,15 @@ class ToolsCore
                 if ($uri['virtual']) {
                     if (!$rewrite_settings) {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
                     } else {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']." [L,R]\n");
                     }
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
+                    fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
                 }
 
@@ -2403,14 +2397,10 @@ class ToolsCore
                     fwrite($write_fd, "# Images\n");
                     if (Configuration::get('PS_LEGACY_IMAGES')) {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]'."\n");
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]'."\n");
                     }
 
@@ -2423,20 +2413,14 @@ class ToolsCore
                         }
                         $img_name .= '$'.$j;
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/'.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
                     }
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
+                    fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]'."\n");
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
+                    fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
                 }
 
@@ -2542,7 +2526,7 @@ FileETag none
             return false;
         }
 
-        $robots_content = self::getRobotsContent();
+        $robots_content = static::getRobotsContent();
 
         if (true === $executeHook) {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
@@ -2685,12 +2669,6 @@ FileETag none
 
     public static function generateIndex()
     {
-        if (defined('_PS_CREATION_DATE_')) {
-            $creationDate = _PS_CREATION_DATE_;
-            if (!empty($creationDate) && Configuration::get('PS_DISABLE_OVERRIDES')) {
-                PrestaShopAutoload::getInstance()->_include_override_path = false;
-            }
-        }
         PrestaShopAutoload::getInstance()->generateIndex();
     }
 
@@ -2869,7 +2847,7 @@ exit;
     protected static function throwDeprecated($error, $message, $class)
     {
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
-            trigger_error($error, E_USER_WARNING);
+            @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
         }
     }
@@ -3442,7 +3420,7 @@ exit;
     {
         $path = rtrim(rtrim($path, '\\'), '/').'/';
         $real_path = rtrim(rtrim($path.$dir, '\\'), '/').'/';
-        $files = scandir($real_path);
+        $files = scandir($real_path, SCANDIR_SORT_NONE);
         if (!$files) {
             return array();
         }

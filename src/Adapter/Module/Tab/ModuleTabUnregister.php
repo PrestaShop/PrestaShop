@@ -34,6 +34,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tab as TabClass;
 
+/**
+ * Class responsible of unregister existing tabs of Back Office's menu.
+ */
 class ModuleTabUnregister
 {
     /**

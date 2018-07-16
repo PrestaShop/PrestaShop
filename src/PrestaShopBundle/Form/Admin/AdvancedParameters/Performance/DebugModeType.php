@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -41,16 +42,15 @@ class DebugModeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disable_non_native_modules', SwitchType::class, array(
+            ->add('disable_non_native_modules', SwitchType::class, [
                 'required' => true,
-            ))
-            ->add('disable_overrides', SwitchType::class, array(
+            ])
+            ->add('disable_overrides', SwitchType::class, [
                 'required' => true,
-            ))
-            ->add('debug_mode', SwitchType::class, array(
+            ])
+            ->add('debug_mode', SwitchType::class, [
                 'required' => true,
-            ))
-        ;
+            ]);
     }
 
     /**
@@ -58,9 +58,9 @@ class DebugModeType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature'
-        ));
+        ]);
     }
 
     /**

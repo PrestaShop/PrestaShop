@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        public: true
+
+    # KPI implementations
+    prestashop.adapter.kpi.enabled_languages:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\EnabledLanguagesKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminLanguages")'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "enabled_languages"})'
+
+    prestashop.adapter.kpi.main_country:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\MainCountryKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "main_country"})'
+
+    prestashop.adapter.kpi.translations:
+        class: PrestaShop\PrestaShop\Adapter\Kpi\TranslationsKpi
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.kpi_configuration'
+            - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "frontoffice_translations"})'

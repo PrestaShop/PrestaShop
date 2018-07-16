@@ -530,7 +530,7 @@ File: controllers/admin/AdminShippingController.php:50</note>
         <source>N/A</source>
         <target>N/A</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig:66</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig:67</note>
       </trans-unit>
     </body>
   </file>

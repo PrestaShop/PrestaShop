@@ -23,12 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @deprecated 1.7.5, to be removed in 1.8
+ */
 class TextEmptyType extends AbstractTypeExtension implements DataTransformerInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

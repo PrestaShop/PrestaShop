@@ -31,10 +31,44 @@ interface ModuleInterface extends AddonInterface
 {
     public function onInstall();
     public function onUninstall();
+
+    /**
+     * Called when switching the current theme of the selected shop.
+     * You can update configuration, enable/disable modules...
+     *
+     * @return bool true for success
+     */
     public function onEnable();
+
+    /**
+     * Not necessarily the opposite of enable. Use this method if
+     * something must be done when switching to another theme (like uninstall
+     * very specific modules for example).
+     *
+     * @return bool true for success
+     */
     public function onDisable();
+
+    /**
+     * @return bool
+     */
     public function onMobileEnable();
+
+    /**
+     * @return bool
+     */
     public function onMobileDisable();
+
+    /**
+     * @return bool
+     */
     public function onReset();
+
+    /**
+     * Execute up files. You can update configuration, update sql schema.
+     * No file modification.
+     *
+     * @return bool true for success
+     */
     public function onUpgrade($version);
 }

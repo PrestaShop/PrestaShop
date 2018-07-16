@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,5 +140,28 @@ class TranslationsController extends FrameworkBundleAdminController
         $themeExporter->cleanArtifacts($themeName);
 
         return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+    }
+
+    /**
+     * Show translations settings page
+     *
+     * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function showSettingsAction(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
+
+        return [
+            'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'kpiRow' => $kpiRowFactory->build(),
+        ];
     }
 }

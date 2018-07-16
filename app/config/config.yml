@@ -61,7 +61,7 @@ twig:
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
     globals:
-        webpack_server:   false
+        webpack_server: false
 
 # Doctrine Configuration
 doctrine:

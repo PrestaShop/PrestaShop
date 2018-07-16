@@ -97,7 +97,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             ]
         )) {
-            $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
+            $this->addFlash('error', $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_product_preferences');
         }

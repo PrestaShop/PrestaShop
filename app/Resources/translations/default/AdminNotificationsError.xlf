@@ -632,6 +632,12 @@ File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1231</note>
         <note>Context:
 File: src/PrestaShopBundle/Controller/Admin/ProductController.php:1239</note>
       </trans-unit>
+      <trans-unit id="d3ee9a41133f8fc3c83c91d09053f249">
+        <source>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</source>
+        <target>The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:506</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1317,16 +1323,6 @@ File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/Preferences
         <target>You do not have permission to create this.</target>
         <note>Context:
 File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5a6013a735465600cb2b695361009999">
-        <source>You do not have permission to edit this</source>
-        <target>You do not have permission to edit this</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php:100</note>
       </trans-unit>
     </body>
   </file>

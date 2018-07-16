@@ -62,4 +62,16 @@ class CountryDataProvider
 
         return Country::getIsoById($countryId);
     }
+
+    /**
+     * Get country Id by ISO code
+     *
+     * @param string $isoCode Country ISO code
+     *
+     * @return int
+     */
+    public function getIdByIsoCode($isoCode)
+    {
+        return Country::getByIso($isoCode);
+    }
 }

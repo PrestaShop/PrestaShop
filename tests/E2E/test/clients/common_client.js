@@ -279,6 +279,22 @@ class CommonClient {
       .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1));
   }
 
+  /**
+   * This function allows to check the existence of file after downloading
+   * @param folderPath
+   * @param fileName
+   * @returns {*}
+   */
+  checkFile(folderPath, fileName, pause = 0) {
+    fs.stat(folderPath + fileName, function(err, stats) {
+      err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
+    });
+
+    return this.client
+      .pause(pause)
+      .then(() => expect(global.existingFile).to.be.true)
+  }
+
   waitForVisible(selector, timeout = 90000) {
     return this.client
       .waitForVisible(selector, timeout);
@@ -303,6 +319,12 @@ class CommonClient {
 
   switchWindow(id) {
     return this.client.switchWindow(id);
+  }
+
+  switchTab(id) {
+    return this.client
+      .then(() => this.client.getTabIds())
+      .then((ids) => this.client.switchTab(ids[id]));
   }
 
   isExisting(selector, pause = 0) {
@@ -410,6 +432,13 @@ class CommonClient {
     delete object[pos];
   }
 
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
+  }
+
   stringifyNumber(number) {
     let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
     let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
@@ -457,6 +486,11 @@ class CommonClient {
         expect(text).to.be.equal(data);
       });
     }
+  }
+
+  refresh() {
+    return this.client
+      .refresh();
   }
 
 }

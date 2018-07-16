@@ -32,5 +32,4 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
  */
 class ModulePresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
 {
-
 }

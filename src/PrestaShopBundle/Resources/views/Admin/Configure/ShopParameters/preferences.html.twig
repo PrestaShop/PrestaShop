@@ -43,7 +43,7 @@
                             <div class="card-text">
                                 <div class="form-group">
                                     {{ ps.label_with_help(('Enable SSL'|trans), ('If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                                    {% if isSslEnabled %}
+                                    {% if app.request.isSecure() %}
                                         {{ form_errors(generalForm.enable_ssl) }}
                                         {{ form_widget(generalForm.enable_ssl) }}
                                         <small class="form-text">{{ 'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for customer account identification and order processing.'|trans({}, 'Admin.Shopparameters.Help') }}</small>

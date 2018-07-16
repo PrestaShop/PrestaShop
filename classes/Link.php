@@ -745,6 +745,7 @@ class LinkCore
                     'AdminModulesNotifications' => 'admin_module_notification',
                     'AdminModulesSf' => 'admin_module_manage',
                     'AdminOrderPreferences' => 'admin_order_preferences',
+                    'AdminShipping' => 'admin_shipping_preferences',
                     'AdminPerformance' => 'admin_performance',
                     'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
@@ -754,6 +755,7 @@ class LinkCore
                     'AdminPayment' => 'admin_payment_methods',
                     'AdminLocalization' => 'admin_localization_show_settings',
                     'AdminGeolocation' => 'admin_geolocation',
+                    'AdminPaymentPreferences' => 'admin_payment_preferences',
                 );
 
                 if (isset($routes[$controller])) {
