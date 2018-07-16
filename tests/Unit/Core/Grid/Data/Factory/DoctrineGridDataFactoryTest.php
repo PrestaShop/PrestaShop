@@ -58,6 +58,7 @@ class DoctrineGridDataFactoryTest extends TestCase
         $this->assertInstanceOf(GridDataInterface::class, $data);
         $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
 
+
         $this->assertEquals(4, $data->getRecordsTotal());
         $this->assertCount(2, $data->getRecords());
         $this->assertEquals('SELECT * FROM ps_test', $data->getQuery());
@@ -84,7 +85,12 @@ class DoctrineGridDataFactoryTest extends TestCase
         $qb->method('execute')
             ->willReturn($statement);
         $qb->method('getSQL')
-            ->willReturn('SELECT * FROM ps_test');
+            ->willReturn('SELECT * FROM ps_test WHERE id = :id');
+        $qb->method('getParameters')
+            ->willReturn([
+                'id' => 1,
+            ])
+        ;
 
         $doctrineQueryBuilder = $this->createMock(DoctrineQueryBuilderInterface::class);
         $doctrineQueryBuilder->method('getSearchQueryBuilder')
