@@ -435,10 +435,10 @@ class OrderInvoiceCore extends ObjectModel
             foreach ($shipping_breakdown as &$row) {
                 if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                     $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
-                    $sum_of_tax_bases += $row['total_tax_excl'];
                 } else {
                     $row['total_tax_excl'] = $this->total_shipping_tax_excl;
                 }
+                $sum_of_tax_bases += $row['total_tax_excl'];
 
                 $row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
                 $sum_of_split_taxes += $row['total_amount'];
@@ -496,10 +496,10 @@ class OrderInvoiceCore extends ObjectModel
         foreach ($wrapping_breakdown as &$row) {
             if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                 $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
-                $sum_of_tax_bases += $row['total_tax_excl'];
             } else {
                 $row['total_tax_excl'] = $this->total_wrapping_tax_excl;
             }
+            $sum_of_tax_bases += $row['total_tax_excl'];
 
             $row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
             $sum_of_split_taxes += $row['total_amount'];
