@@ -1,3 +1,7 @@
 _products:
     resource: "products/products.yml"
     prefix: /products/
+
+_manufacturers:
+    resource: "manufacturers.yml"
+    prefix: /brands/
