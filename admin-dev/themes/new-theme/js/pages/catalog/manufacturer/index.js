@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,16 +21,10 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if 'center' == column.options.align %}
-  {% set class = 'text-center' %}
-{% elseif 'left' == column.options.align %}
-  {% set class = 'text-left' %}
-{% elseif 'right' == column.options.align %}
-  {% set class = 'text-right' %}
-{% endif %}
+import Grid from '../../../components/grid';
 
-<div {% if class|default('') is not empty %}class="{{ class }}"{% endif %}>
-  {{ row[column.options.field] }}
-</div>
+$(() => {
+  new Grid('#manufacturers_grid_panel').init();
+});

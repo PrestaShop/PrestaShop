@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,16 +22,25 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if 'center' == column.options.align %}
-  {% set class = 'text-center' %}
-{% elseif 'left' == column.options.align %}
-  {% set class = 'text-left' %}
-{% elseif 'right' == column.options.align %}
-  {% set class = 'text-right' %}
-{% endif %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-<div {% if class|default('') is not empty %}class="{{ class }}"{% endif %}>
-  {{ row[column.options.field] }}
-</div>
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+final class ManufacturerFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'name',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}

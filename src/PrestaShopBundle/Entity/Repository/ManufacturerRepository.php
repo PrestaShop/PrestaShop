@@ -26,13 +26,16 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use RuntimeException;
 use Shop;
 
-class ManufacturerRepository
+class ManufacturerRepository implements DoctrineQueryBuilderInterface
 {
     use NormalizeFieldTrait;
 
@@ -107,5 +110,66 @@ class ManufacturerRepository
         $rows = $statement->fetchAll();
 
         return $this->castNumericToInt($rows);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $qb = $this->createQueryBuilderFromSearchCriteria($searchCriteria);
+        $qb->select('m.id_manufacturer, m.name, m.active, COUNT(p.id_product) as products_count')
+            ->addSelect('(
+                SELECT COUNT(a.id_manufacturer) as addresses_count
+                FROM '.$this->tablePrefix.'address a
+                WHERE a.id_manufacturer = m.id_manufacturer
+                    AND a.deleted = 0
+                GROUP BY a.id_manufacturer    
+            ) as addresses_count')
+            ->orderBy(
+                $searchCriteria->getOrderBy(),
+                $searchCriteria->getOrderWay()
+            )
+            ->setFirstResult($searchCriteria->getOffset())
+            ->setMaxResults($searchCriteria->getLimit())
+        ;
+
+        return $qb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    {
+        $qb = $this->createQueryBuilderFromSearchCriteria($searchCriteria);
+        $qb->select('COUNT(m.id_manufacturer)');
+
+        return $qb;
+    }
+
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return QueryBuilder
+     */
+    private function createQueryBuilderFromSearchCriteria(SearchCriteriaInterface $searchCriteria)
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->from($this->tablePrefix.'manufacturer', 'm')
+            ->leftJoin('m', $this->tablePrefix.'product', 'p', 'm.id_manufacturer = p.id_manufacturer')
+            ->groupBy('m.id_manufacturer');
+
+        foreach ($searchCriteria->getFilters() as $name => $value) {
+            $value = trim($value);
+            if ('' === $value) {
+                continue;
+            }
+
+            $qb->andWhere("$name LIKE :$name");
+            $qb->setParameter($name, '%'.$value.'%');
+        }
+
+        return $qb;
     }
 }

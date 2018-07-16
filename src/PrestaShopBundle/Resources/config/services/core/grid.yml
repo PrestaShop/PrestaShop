@@ -8,6 +8,11 @@ services:
         arguments:
             - '@prestashop.core.admin.log.repository'
 
+    prestashop.core.grid.data_provider.manufacturer:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        arguments:
+            - '@prestashop.core.api.manufacturer.repository'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -23,6 +28,14 @@ services:
           - "@=service('router').generate('admin_logs')"
         public: true
 
+    prestashop.core.grid.definition.factory.manufacturer_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\ManufacturerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - "@=service('router').generate('admin_common_reset_search', {'controller': 'manufacturer', 'action': 'index'})"
+          - "@=service('router').generate('admin_manufacturers')"
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -30,6 +43,15 @@ services:
             - '@prestashop.core.grid.definition.factory.log_definition'
             - '@prestashop.core.grid.data_provider.log'
             - '@prestashop.hook.dispatcher'
+            - '@form.factory'
+
+    prestashop.core.grid.manufacturer_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.manufacturer_definition'
+            - '@prestashop.core.grid.data_provider.manufacturer'
+            - '@prestashop.hook.dispatcher'
+            - '@form.factory'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:

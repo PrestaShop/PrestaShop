@@ -26,14 +26,21 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
 class ManufacturerController extends FrameworkBundleAdminController
 {
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, ManufacturerFilters $filters)
     {
+        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
+        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/listing.html.twig', [
+            'manufacturersGrid' => $gridPresenter->present($manufacturerGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);

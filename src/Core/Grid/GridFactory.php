@@ -26,10 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class GridFactory is responsible for creating final Grid instance
@@ -52,18 +58,26 @@ final class GridFactory implements GridFactoryInterface
     private $dispatcher;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface      $dataProvider
-     * @param HookDispatcher                 $dispatcher
+     * @param GridDataProviderInterface $dataProvider
+     * @param HookDispatcher $dispatcher
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataProviderInterface $dataProvider,
-        HookDispatcher $dispatcher
+        HookDispatcher $dispatcher,
+        FormFactoryInterface $formFactory
     ) {
         $this->definitionFactory = $definitionFactory;
         $this->dataProvider = $dataProvider;
         $this->dispatcher = $dispatcher;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -78,11 +92,47 @@ final class GridFactory implements GridFactoryInterface
         ]);
 
         $data = $this->dataProvider->getData($searchCriteria);
+        $filtersForm = $this->getFiltersForm($definition, $searchCriteria);
 
         return new Grid(
             $definition,
             $data,
-            $searchCriteria
+            $searchCriteria,
+            $filtersForm
         );
+    }
+
+    /**
+     * Get presented columns with filter form
+     *
+     * @param DefinitionInterface $definition
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return FormInterface
+     */
+    private function getFiltersForm(DefinitionInterface $definition, SearchCriteriaInterface $searchCriteria)
+    {
+        $formBuilder = $this->formFactory->createNamedBuilder(
+            $definition->getId(),
+            FormType::class,
+            $searchCriteria->getFilters()
+        );
+
+        /** @var ColumnInterface $column */
+        foreach ($definition->getColumns() as $column) {
+            $options = $column->getOptions();
+
+            if (isset($options['filter'])) {
+                /** @var ColumnFilterOption $columnOption */
+                $columnOption = $options['filter'];
+                $formBuilder->add(
+                    $column->getId(),
+                    $columnOption->getFilterType(),
+                    $columnOption->getFilterTypeOptions()
+                );
+            }
+        }
+
+        return $formBuilder->getForm();
     }
 }

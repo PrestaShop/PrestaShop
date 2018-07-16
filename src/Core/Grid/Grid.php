@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class Grid is responsible for holding final Grid data
@@ -51,18 +52,26 @@ final class Grid implements GridInterface
     private $searchCriteria;
 
     /**
+     * @var FormInterface
+     */
+    private $filterForm;
+
+    /**
      * @param DefinitionInterface $definition
-     * @param GridDataInterface       $data
+     * @param GridDataInterface $data
      * @param SearchCriteriaInterface $searchCriteria
+     * @param FormInterface $filterForm
      */
     public function __construct(
         DefinitionInterface $definition,
         GridDataInterface $data,
-        SearchCriteriaInterface $searchCriteria = null
+        SearchCriteriaInterface $searchCriteria,
+        FormInterface $filterForm
     ) {
         $this->definition = $definition;
         $this->data = $data;
         $this->searchCriteria = $searchCriteria;
+        $this->filterForm = $filterForm;
     }
 
     /**
@@ -87,5 +96,13 @@ final class Grid implements GridInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFiltersForm()
+    {
+        return $this->filterForm;
     }
 }
