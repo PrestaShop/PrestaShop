@@ -24,12 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Order;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use DateTimeInterface;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider
+ */
+interface OrderInvoiceDataProviderInterface
+{
+    /**
+     * Returns all the order invoices that match the date interval
+     *
+     * @param DateTimeInterface $dateFrom
+     * @param DateTimeInterface $dateTo
+     *
+     * @return array collection of OrderInvoice objects
+     */
+    public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
+
+    /**
+     * Returns all the order invoices by given status
+     *
+     * @param int $orderStateId
+     *
+     * @return array collection of OrderInvoice objects
+     */
+    public function getByStatus($orderStateId);
+
+    /**
+     * Returns the next available invoice number
+     *
+     * @return int
+     */
+    public function getNextInvoiceNumber();
+}

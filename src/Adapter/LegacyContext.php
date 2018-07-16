@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Employee;
 use RuntimeException;
+use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
 use Context;
 use Language;
@@ -68,6 +69,16 @@ class LegacyContext
         }
 
         return $legacyContext;
+    }
+
+    /**
+     * Get smarty instance from legacy context
+     *
+     * @return Smarty
+     */
+    public function getSmarty()
+    {
+        return $this->getContext()->smarty;
     }
 
     /**

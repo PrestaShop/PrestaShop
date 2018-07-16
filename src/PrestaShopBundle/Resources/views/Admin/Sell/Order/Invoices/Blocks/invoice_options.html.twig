@@ -1,0 +1,113 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Orderscustomers.Feature" %}
+
+{% block invoice_options %}
+    <div class="col">
+        {{ form_start(invoiceOptionsForm, {'method': 'POST', 'action': path('admin_order_invoices_process')}) }}
+        <div class="card">
+            <h3 class="card-header">
+                <i class="material-icons">settings</i> {{ 'Invoice options'|trans }}
+            </h3>
+            <div class="card-block">
+                <div class="card-text">
+                    <div class="form-group">
+                        {{ ps.label_with_help('Enable invoices'|trans, 'If enabled, your customers will receive an invoice for the purchase.'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.enable_invoices) }}
+                        {{ form_widget(invoiceOptionsForm.enable_invoices) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Enable tax breakdown'|trans, 'If required, show the total amount per rate of the corresponding tax.'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.enable_tax_breakdown) }}
+                        {{ form_widget(invoiceOptionsForm.enable_tax_breakdown) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Enable product image'|trans, 'Adds an image in front of the product name on the invoice'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.enable_product_images) }}
+                        {{ form_widget(invoiceOptionsForm.enable_product_images) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Invoice prefix'|trans, 'Freely definable prefix for invoice number (e.g. #IN00001).'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.invoice_prefix) }}
+                        {{ form_widget(invoiceOptionsForm.invoice_prefix) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            {{ 'Add current year to invoice number'|trans }}
+                        </label>
+                        {{ form_errors(invoiceOptionsForm.add_current_year) }}
+                        {{ form_widget(invoiceOptionsForm.add_current_year) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            {{ 'Reset sequential invoice number at the beginning of the year'|trans }}
+                        </label>
+                        {{ form_errors(invoiceOptionsForm.reset_number_annually) }}
+                        {{ form_widget(invoiceOptionsForm.reset_number_annually) }}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">
+                            {{ 'Position of the year date'|trans }}
+                        </label>
+                        {{ form_errors(invoiceOptionsForm.year_position) }}
+                        {{ form_widget(invoiceOptionsForm.year_position) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Invoice number'|trans, 'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).'|trans({'%number%': invoiceOptionsForm.vars.next_invoice_number}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.invoice_number) }}
+                        {{ form_widget(invoiceOptionsForm.invoice_number) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Legal free text'|trans, 'Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.legal_free_text) }}
+                        {{ form_widget(invoiceOptionsForm.legal_free_text) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Footer text'|trans, 'This text will appear at the bottom of the invoice, below your company details.'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.footer_text) }}
+                        {{ form_widget(invoiceOptionsForm.footer_text) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Invoice model'|trans, 'Choose an invoice model.'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.invoice_model) }}
+                        {{ form_widget(invoiceOptionsForm.invoice_model) }}
+                    </div>
+                    <div class="form-group">
+                        {{ ps.label_with_help('Use the disk as cache for PDF invoices'|trans, 'Saves memory but slows down the PDF generation.'|trans({}, 'Admin.Orderscustomers.Help')) }}
+                        {{ form_errors(invoiceOptionsForm.use_disk_cache) }}
+                        {{ form_widget(invoiceOptionsForm.use_disk_cache) }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                </div>
+            </div>
+        </div>
+        {{ form_end(invoiceOptionsForm) }}
+    </div>
+{% endblock %}

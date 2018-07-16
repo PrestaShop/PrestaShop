@@ -48,3 +48,15 @@ services:
         arguments:
             - '@prestashop.adapter.data_provider.carrier'
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+    prestashop.core.form.choice_provider.order_state_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+            - '@prestashop.adapter.data_provider.order_state'
+
+    prestashop.core.form.choice_provider.invoice_model_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'
+        arguments:
+            - '@prestashop.core.file.finder.invoice_model'
+
