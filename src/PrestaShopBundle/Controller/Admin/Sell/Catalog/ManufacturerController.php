@@ -26,21 +26,29 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
 class ManufacturerController extends FrameworkBundleAdminController
 {
-    public function indexAction(Request $request, ManufacturerFilters $filters)
-    {
+    public function indexAction(
+        Request $request,
+        ManufacturerFilters $manufacturerFilters,
+        ManufacturerAddressFilters $addressFilters
+    ) {
         $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
-        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($filters);
+        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($manufacturerFilters);
+
+        $addressesGridFactory = $this->get('prestashop.core.grid.manufacturer_address_factory');
+        $addressesGrid = $addressesGridFactory->createUsingSearchCriteria($addressFilters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/listing.html.twig', [
             'manufacturersGrid' => $gridPresenter->present($manufacturerGrid),
+            'addressesGrid' => $gridPresenter->present($addressesGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);

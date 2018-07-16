@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,22 +22,25 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-{% trans_default_domain 'Admin.Catalog.Feature' %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block content %}
-  <div class="container-fluid">
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturersGrid} %}
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': addressesGrid} %}
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/manufacturer.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+final class ManufacturerAddressFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_address',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
+}

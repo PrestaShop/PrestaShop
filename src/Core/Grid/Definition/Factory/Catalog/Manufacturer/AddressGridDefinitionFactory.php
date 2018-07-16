@@ -27,10 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -56,7 +58,7 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn())
+            ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_address',
                 ])
@@ -65,6 +67,7 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_address',
+                    'align' => 'center',
                 ])
             )
             ->add((new DataColumn('name'))
@@ -100,11 +103,19 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('id_country'))
                 ->setName($this->trans('Country', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_country',
+                    'field' => 'country_name',
                 ])
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+                        'attr' => [
+                            'data-url' => '',
+                            'data-redirect' => '',
+                        ],
+                    ]),
+                ])
             )
         ;
     }
