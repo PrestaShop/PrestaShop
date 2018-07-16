@@ -334,6 +334,7 @@ GitHub contributors:
 - Luc
 - LucasC
 - Lucas CERDAN
+- Lucas Rolff
 - Luca T.
 - Luc Vandesype
 - LyoNick
