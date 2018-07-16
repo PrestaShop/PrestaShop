@@ -129,3 +129,8 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'profiles'
+
+    prestashop.core.grid.data_provider.manufacturer:
+      class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+      arguments:
+        - '@prestashop.core.api.manufacturer.repository'

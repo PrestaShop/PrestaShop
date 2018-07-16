@@ -117,3 +117,11 @@ services:
             - "@=service('router').generate('admin_profiles_index')"
             - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
         public: true
+
+    prestashop.core.grid.definition.factory.manufacturer_definition:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\ManufacturerGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - "@=service('router').generate('admin_common_reset_search', {'controller': 'manufacturer', 'action': 'index'})"
+        - "@=service('router').generate('admin_manufacturers')"
+      public: true

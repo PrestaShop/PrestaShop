@@ -24,25 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class ManufacturerController extends FrameworkBundleAdminController
+final class ManufacturerFilters extends Filters
 {
-    public function indexAction(Request $request, ManufacturerFilters $filters)
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
     {
-        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
-        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($filters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/listing.html.twig', [
-            'manufacturersGrid' => $gridPresenter->present($manufacturerGrid),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'name',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }
