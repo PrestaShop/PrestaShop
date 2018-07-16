@@ -145,3 +145,11 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'tax'
+
+    prestashop.core.grid.data_provider.manufacturer:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.api.manufacturer.repository'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'manufacturer'

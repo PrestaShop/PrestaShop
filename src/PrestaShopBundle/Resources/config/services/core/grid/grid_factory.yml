@@ -150,3 +150,12 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
         calls:
           - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+
+    prestashop.core.grid.manufacturer_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.manufacturer_definition'
+            - '@prestashop.core.grid.data_provider.manufacturer'
+            - '@form.factory'
+        calls:
+          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]

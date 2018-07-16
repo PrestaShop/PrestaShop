@@ -24,12 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog;
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 /**
  * Class ManufacturerGridDefinitionFactory is responsible for creating Manufacturers grid definition
@@ -69,9 +72,9 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'id_manufacturer',
                 ])
             )
-            ->add((new DataColumn('logo'))
-                ->setName($this->trans('Logo', [], 'Admin.Global'))
-            )
+//            ->add((new DataColumn('logo'))
+//                ->setName($this->trans('Logo', [], 'Admin.Global'))
+//            )
             ->add((new DataColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
@@ -81,19 +84,36 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new DataColumn('addresses'))
                 ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
-                    'field' => 'addresses',
+                    'field' => 'addresses_count',
+                    'align' => 'center',
+                    'modifier' => function (array $row) {
+                        return $row['addresses_count'] ?: '--';
+                    },
                 ])
             )
             ->add((new DataColumn('products'))
                 ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
-                    'field' => 'products',
+                    'field' => 'products_count',
+                    'align' => 'center',
                 ])
             )
             ->add((new DataColumn('status'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'align' => 'center',
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+                        'attr' => [
+                            'data-url' => '',
+                            'data-redirect' => '',
+                        ],
+                    ]),
                 ])
             )
         ;
