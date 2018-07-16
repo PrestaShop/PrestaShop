@@ -82,29 +82,26 @@ class RequestSqlExporter
         }
 
         $fileName = sprintf('request_sql_%s.csv', $requestSqlId);
-        if ($csv = fopen($this->exportDirectory.$fileName, 'w')) {
-            $headers = [];
-            foreach ($data['columns'] as $headerName) {
-                $headers[] = $headerName;
-            }
-
-            fputcsv($csv, $headers, ';');
-
-            foreach ($data['rows'] as $row) {
-                fputcsv($csv, $row, ';');
-            }
-
-            if (file_exists($this->exportDirectory.$fileName)) {
-                $charset = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL') ?: CharsetEncoding::UTF_8;
-
-                $response = new BinaryFileResponse($this->exportDirectory.$fileName);
-                $response->setCharset($charset);
-                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
-
-                return $response;
-            }
+        if (!($csv = fopen($this->exportDirectory.$fileName, 'w'))) {
+            return null;
         }
 
-        return null;
+        fputcsv($csv, $data['columns'], ';');
+
+        foreach ($data['rows'] as $row) {
+            fputcsv($csv, $row, ';');
+        }
+
+        if (!file_exists($this->exportDirectory.$fileName)) {
+            return null;
+        }
+
+        $charset = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL') ?: CharsetEncoding::UTF_8;
+
+        $response = new BinaryFileResponse($this->exportDirectory.$fileName);
+        $response->setCharset($charset);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+        return $response;
     }
 }

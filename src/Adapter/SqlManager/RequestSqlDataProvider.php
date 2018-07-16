@@ -26,15 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-use Db;
-use RequestSql;
-use Validate;
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
+use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 
 /**
  * Class RequestSqlDataProvider is responsible for providing data related to Request SQL model
  */
 class RequestSqlDataProvider
 {
+    /**
+     * @var RequestSql instance is used for retrieving DB tables & columns information
+     */
+    private $requestSql;
+
+    public function __construct()
+    {
+        $this->requestSql = new RequestSql();
+    }
+
     /**
      * Get Request SQL data by given id
      *
@@ -62,7 +72,7 @@ class RequestSqlDataProvider
      */
     public function getTables()
     {
-        return (new RequestSql())->getTables();
+        return $this->requestSql->getTables();
     }
 
     /**
@@ -74,19 +84,19 @@ class RequestSqlDataProvider
      */
     public function getTableColumns($table)
     {
-        return (new RequestSql())->getAttributesByTable($table);
+        return $this->requestSql->getAttributesByTable($table);
     }
 
     /**
      * Get Request SQL data
      *
-     * @param int $id ID of Request SQL
+     * @param int $requestSqlId ID of Request SQL
      *
      * @return array|null Array of Request SQL results or NULL if Request SQL model does not exist
      */
-    public function getRequestSqlResult($id)
+    public function getRequestSqlResult($requestSqlId)
     {
-        if (!$requestSql = $this->getRequestSql($id)) {
+        if (!$requestSql = $this->getRequestSql($requestSqlId)) {
             return null;
         }
 
@@ -96,12 +106,11 @@ class RequestSqlDataProvider
             $columns = array_keys(reset($rows));
         }
 
-        $result = [];
-        $result['request_sql'] = $requestSql;
-        $result['rows'] = $rows;
-        $result['columns'] = $columns;
-        $result['attributes'] = (new RequestSql())->attributes;
-
-        return $result;
+        return [
+            'request_sql' => $requestSql,
+            'rows' => $rows,
+            'columns' => $columns,
+            'attributes' => $this->requestSql->attributes,
+        ];
     }
 }
