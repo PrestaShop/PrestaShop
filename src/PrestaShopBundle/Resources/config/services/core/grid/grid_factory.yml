@@ -135,3 +135,11 @@ services:
         - '@prestashop.core.grid.data_provider.manufacturer'
         - '@prestashop.hook.dispatcher'
         - '@form.factory'
+
+    prestashop.core.grid.manufacturer_address_factory:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.manufacturer_address_definition'
+        - '@prestashop.core.grid.data_provider.manufacturer_address'
+        - '@prestashop.hook.dispatcher'
+        - '@form.factory'

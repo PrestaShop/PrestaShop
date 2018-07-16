@@ -134,3 +134,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
       arguments:
         - '@prestashop.core.api.manufacturer.repository'
+
+    prestashop.core.grid.data_provider.manufacturer_address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+      arguments:
+        - '@prestashop.core.grid.query.doctrine.manufacturer_address'

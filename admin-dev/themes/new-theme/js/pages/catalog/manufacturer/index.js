@@ -27,4 +27,5 @@ import Grid from '../../../components/grid';
 
 $(() => {
   new Grid('#manufacturers_grid_panel').init();
+  new Grid('#manufacturer_addresses_grid_panel').init();
 });
