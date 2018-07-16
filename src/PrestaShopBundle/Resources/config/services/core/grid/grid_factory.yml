@@ -156,6 +156,15 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.manufacturer_definition'
             - '@prestashop.core.grid.data_provider.manufacturer'
-            - '@form.factory'
+            - '@prestashop.core.grid.filter.form_factory'
         calls:
-          - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+
+    prestashop.core.grid.manufacturer_address_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.manufacturer_address_definition'
+            - '@prestashop.core.grid.data_provider.manufacturer_address'
+            - '@prestashop.core.grid.filter.form_factory'
+        calls:
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]

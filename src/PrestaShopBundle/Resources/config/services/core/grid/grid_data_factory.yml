@@ -153,3 +153,11 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'manufacturer'
+
+    prestashop.core.grid.data.factory.manufacturer_address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.query_builder.manufacturer_address'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'manufacturer_address'
