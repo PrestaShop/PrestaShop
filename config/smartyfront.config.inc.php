@@ -235,7 +235,6 @@ function smartyTranslate($params, $smarty)
         return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $params['sprintf']), $params);
     }
 
-
     if ($_LANG != null && isset($_LANG[$key])) {
         $msg = $_LANG[$key];
     } elseif ($_LANG != null && isset($_LANG[Tools::strtolower($key)])) {
