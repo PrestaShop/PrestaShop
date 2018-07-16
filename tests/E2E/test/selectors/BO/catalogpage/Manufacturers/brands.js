@@ -9,6 +9,6 @@ module.exports = {
     active_button: '//*[@id="manufacturer_form"]/div/div[2]/div[8]/div/span/label[1]',
     save_button: '//*[@id="manufacturer_form_submit_btn"]',
     short_description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
-    description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[4]'
+    description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[3]'
   }
 };
