@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -89,7 +90,23 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         return new GridData(
             $records,
             $recordsTotal,
-            $searchQueryBuilder->getSQL()
+            $this->getRawQuery($searchQueryBuilder)
         );
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @return string
+     */
+    private function getRawQuery(QueryBuilder $queryBuilder)
+    {
+        $query = $queryBuilder->getSQL();
+        $parameters = $queryBuilder->getParameters();
+
+        foreach ($parameters as $pattern => $value) {
+            $query = str_replace(":$pattern", $value, $query);
+        }
+
+        return $query;
     }
 }
