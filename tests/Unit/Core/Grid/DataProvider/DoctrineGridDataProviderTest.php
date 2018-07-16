@@ -58,7 +58,7 @@ class DoctrineGridDataProviderTest extends TestCase
 
         $this->assertEquals(4, $data->getRowsTotal());
         $this->assertCount(2, $data->getRows());
-        $this->assertEquals('SELECT * FROM ps_test', $data->getQuery());
+        $this->assertEquals('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
     }
 
     private function createDoctrineQueryBuilderMock()
@@ -82,7 +82,12 @@ class DoctrineGridDataProviderTest extends TestCase
         $qb->method('execute')
             ->willReturn($statement);
         $qb->method('getSQL')
-            ->willReturn('SELECT * FROM ps_test');
+            ->willReturn('SELECT * FROM ps_test WHERE id = :id');
+        $qb->method('getParameters')
+            ->willReturn([
+                'id' => 1,
+            ])
+        ;
 
         $doctrineQueryBuilder = $this->createMock(DoctrineQueryBuilderInterface::class);
         $doctrineQueryBuilder->method('getSearchQueryBuilder')
