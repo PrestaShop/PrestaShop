@@ -232,7 +232,13 @@ function smartyTranslate($params, $smarty)
             $params
         );
     } elseif ($params['pdf']) {
-        return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $params['sprintf']), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getPdfTranslation(
+                $params['s'],
+                $params['sprintf']
+            ),
+            $params
+        );
     }
 
     if ($_LANG != null && isset($_LANG[$key])) {
