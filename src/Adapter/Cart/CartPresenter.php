@@ -37,17 +37,41 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use CartRule;
 use Tools;
 use Hook;
 
+/**
+ * This class is used to render the PHP and Javascript representations of Customer Cart
+ * in Front Office.
+ */
 class CartPresenter implements PresenterInterface
 {
+    /**
+     * @var PriceFormatter
+     */
     private $priceFormatter;
+
+    /**
+     * @var \Link
+     */
     private $link;
+
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var ImageRetriever
+     */
     private $imageRetriever;
+
+    /**
+     * @var TaxConfiguration
+     */
     private $taxConfiguration;
 
     public function __construct()
@@ -60,11 +84,18 @@ class CartPresenter implements PresenterInterface
         $this->taxConfiguration = new TaxConfiguration();
     }
 
+    /**
+     * @return bool|mixed
+     */
     private function includeTaxes()
     {
         return $this->taxConfiguration->includeTaxes();
     }
 
+    /**
+     * @param array $rawProduct
+     * @return array
+     */
     private function presentProduct(array $rawProduct)
     {
         $settings = new ProductPresentationSettings();
@@ -149,6 +180,11 @@ class CartPresenter implements PresenterInterface
         );
     }
 
+    /**
+     * @param array $products
+     * @param Cart $cart
+     * @return array
+     */
     public function addCustomizedData(array $products, Cart $cart)
     {
         return array_map(function (array $product) use ($cart) {
@@ -436,6 +472,10 @@ class CartPresenter implements PresenterInterface
         );
     }
 
+    /**
+     * @param Cart $cart
+     * @return array
+     */
     private function getTemplateVarVouchers(Cart $cart)
     {
         $cartVouchers = $cart->getCartRules();

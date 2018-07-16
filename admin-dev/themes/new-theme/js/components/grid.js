@@ -23,6 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import resetSearch from '../app/utils/reset_search';
+import TableSorting from '../app/utils/table-sorting';
+import datePicker from '../app/utils/datepicker';
+
 const $ = window.$;
 
 /**
@@ -45,6 +49,8 @@ export default class Grid {
     this._handleBulkActionSelectAllCheckbox();
     this._handleBulkActionCheckboxSelect();
     this._handleCommonGridActions();
+    this._handleSortingGrid();
+    this._enableDatePickers();
   }
 
   /**
@@ -63,6 +69,27 @@ export default class Grid {
     this.$grid.on('click', refreshListActionId, () => this._onRefreshClick());
     this.$grid.on('click', showSqlActionId, () => this._onShowSqlQueryClick());
     this.$grid.on('click', exportSqlManagerActionId, () => this._onExportSqlManagerClick());
+
+    $('.reset-search').on('click', (event) => {
+      resetSearch($(event.target).data('url'), $(event.target).data('redirect'));
+    });
+  }
+
+  /**
+   * Handles the column sorting using Table component
+   *
+   * @private
+   */
+  _handleSortingGrid() {
+    const $sortableTable = this.$grid.find('table.table');
+    new TableSorting($sortableTable).attach();
+  }
+
+  /**
+   * If any, enable Date pickers component on date inputs.
+   */
+  _enableDatePickers() {
+    datePicker();
   }
 
   /**

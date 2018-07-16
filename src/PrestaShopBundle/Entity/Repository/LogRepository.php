@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,7 +67,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     {
         $queryBuilder = $this->getAllWithEmployeeInformationQuery($filters);
 
-        $query = $queryBuilder->getSql();
+        $query = $queryBuilder->getSQL();
         $parameters = $queryBuilder->getParameters();
 
         foreach ($parameters as $pattern => $value) {
@@ -103,7 +103,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             return !empty($value);
         });
         $scalarFilters = array_filter($wheres, function ($key) {
-            return !in_array($key, array('date_from', 'date_to', 'employee'));
+            return !in_array($key, array('date_from', 'date_to', 'employee'), true);
         },ARRAY_FILTER_USE_KEY);
 
         $qb = $queryBuilder
@@ -124,7 +124,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
         /* Manage Dates interval */
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
-            $qb->andWhere("l.date_add BETWEEN :date_from AND :date_to");
+            $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
             $qb->setParameters(array(
                'date_from' => $wheres['date_from'],
                'date_to' => $wheres['date_to'],
@@ -133,7 +133,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
         /* Manage Employee filter */
         if (!empty($wheres['employee'])) {
-            $qb->andWhere("e.lastname LIKE :employee OR e.firstname LIKE :employee");
+            $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
             $qb->setParameter('employee', '%'.$wheres['employee'].'%');
         }
 
@@ -215,7 +215,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             if ('employee' == $filterName) {
-                $qb->andWhere("e.lastname LIKE :employee OR e.firstname LIKE :employee");
+                $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
                 $qb->setParameter('employee', '%'.$filterValue.'%');
                 continue;
             }
@@ -224,7 +224,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
                 if (!empty($filterValue['from']) &&
                     !empty($filterValue['to'])
                 ) {
-                    $qb->andWhere("l.date_add BETWEEN :date_from AND :date_to");
+                    $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
                     $qb->setParameters(array(
                         'date_from' => $filterValue['from'],
                         'date_to' => $filterValue['to'],

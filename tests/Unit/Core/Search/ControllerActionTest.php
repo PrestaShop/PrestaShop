@@ -23,21 +23,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace Tests\Unit\Core\Search;
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Search\ControllerAction;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-
-/**
- * Class Column defines most simple column in the grid that renders raw data
- */
-final class SimpleColumn extends AbstractColumn
+class ControllerActionTest extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @dataProvider getControllers
+     * @param string $fqcn
+     * @param array $result
      */
-    public function getType()
+    public function testGetFromString($fqcn, $result)
     {
-        return 'simple';
+        self::assertEquals($result, ControllerAction::fromString($fqcn));
+    }
+
+    /**
+     * @return array the list of controller names and expected results.
+     */
+    public function getControllers()
+    {
+        return [
+            ['MyNamespace\Foo\Bar\BarController::fooAction', ['bar', 'foo']],
+            ['ModuleNameSpace\YoloController::yoloAction', ['yolo', 'yolo']],
+            ['PrestaShop\Controller\Admin\ProductController::formAction', ['product', 'form']],
+            ['ModuleController', ['module', 'N/A']],
+            ['foo::actionAction', ['N/A', 'action']],
+            ['This is not even a FQCN', ['N/A', 'N/A']],
+        ];
     }
 }

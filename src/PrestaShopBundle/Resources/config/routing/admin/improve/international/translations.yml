@@ -27,3 +27,10 @@ admin_international_translations_export_theme:
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:exportTheme
         _legacy_controller: AdminTranslations
+
+admin_international_translations_show_settings:
+    path: /settings
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:showSettings
+        _legacy_controller: AdminTranslations

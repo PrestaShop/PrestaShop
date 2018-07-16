@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,6 +22,29 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{{ row[column.id] }}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * This class manage the defaults values for user request filters
+ * of page Configure > Advanced Parameters > Logs.
+ */
+final class LogsFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_log',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
+}

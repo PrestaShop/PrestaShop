@@ -36,6 +36,9 @@ use Exception;
 use Tools;
 use ZipArchive;
 
+/**
+ * Responsible of unzipping of Module Zip archives.
+ */
 class ModuleZipManager
 {
     /*
@@ -47,7 +50,7 @@ class ModuleZipManager
      * Services
      */
     /**
-     * @var Symfony\Component\Filesystem\Filesystem
+     * @var \Symfony\Component\Filesystem\Filesystem
      */
     private $filesystem;
 
@@ -171,6 +174,10 @@ class ModuleZipManager
         $this->filesystem->remove($sandboxPath);
     }
 
+    /**
+     * @param $source
+     * @return null|string
+     */
     private function getSandboxPath($source)
     {
         $sandboxPath = $this->getSource($source)->getSandboxPath();

@@ -24,48 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Search;
+namespace PrestaShop\PrestaShop\Core\Kpi\Row;
 
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 
 /**
- * Class TemporarySearchCriteria is temporary search criteria class. Should be removed.
+ * Interface KpiRowInterface describes a KPI row
  */
-class TemporarySearchCriteria implements SearchCriteriaInterface
+interface KpiRowInterface
 {
-    private $request;
+    /**
+     * Add a KPI to this row
+     *
+     * @param KpiInterface $kpi
+     */
+    public function addKpi(KpiInterface $kpi);
 
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
+    /**
+     * @return array[KpiInterface]
+     */
+    public function getKpis();
 
-    public function getOrderBy()
-    {
-        return $this->request->get('orderBy', 'id_log');
-    }
+    /**
+     * @param bool $allowRefresh
+     */
+    public function setAllowRefresh($allowRefresh);
 
-    public function getOrderWay()
-    {
-        return $this->request->get('sortOrder', 'asc');
-    }
-
-    public function getOffset()
-    {
-        return $this->request->get('offset', 0);
-    }
-
-    public function getLimit()
-    {
-        return $this->request->get('limit', 10);
-    }
-
-    public function getFilters()
-    {
-        $filters = $this->request->get('logs', []);
-
-        unset($filters['_token']);
-
-        return $filters;
-    }
+    /**
+     * @return bool
+     */
+    public function isRefreshAllowed();
 }

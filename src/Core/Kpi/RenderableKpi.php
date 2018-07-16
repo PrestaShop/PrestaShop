@@ -1,5 +1,6 @@
-{#**
- * 2007-2017 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,29 +19,22 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
-<div class="col-md-12">
-  <div class="col">
-    <div class="card">
-      <div class="card-header">
-        <h3>
-          <i class="material-icons">bug_report</i>{{ 'Logs'|trans }} ({{ logsSum }})
-          {{ include('@AdvancedParameters/LogsPage/Blocks/actions.html.twig', {}) }}
-        </h3>
-      </div>
-      <div class="card-block">
-        <div class="card-text">
-          {{ include('@AdvancedParameters/LogsPage/Blocks/table.html.twig', {
-            'logs': logs,
-            'sql_query': sql_query
-            })
-          }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+ */
+
+namespace PrestaShop\PrestaShop\Core\Kpi;
+
+/**
+ * Interface RenderableKpi describes a renderable KPI
+ */
+interface RenderableKpi
+{
+    /**
+     * Renders the KPI's view
+     *
+     * @return string
+     */
+    public function render();
+}

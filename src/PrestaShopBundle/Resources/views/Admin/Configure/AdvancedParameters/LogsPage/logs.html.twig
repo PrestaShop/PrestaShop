@@ -39,7 +39,7 @@
   {% endblock %}
 
   {% block logs_by_mail %}
-    {{ form_start(logsByEmailForm) }}
+    {{ form_start(logsByEmailForm, {'action': path('admin_logs_save')}) }}
     <div class="col-md-12">
       <div class="col">
         <div class="card">
@@ -68,12 +68,6 @@
   {% endblock %}
 {% endblock %}
 {% block javascripts %}
-    {% if webpack_server %}
-      <script src="http://localhost:8080/sql-manager-helper.bundle.js"></script>
-      <script src="http://localhost:8080/table-filters-helper.bundle.js"></script>
-      <script src="http://localhost:8080/logs.bundle.js"></script>
-    {% else %}
-      <script src="{{ asset('themes/new-theme/public/logs.bundle.js') }}"></script>
-    {% endif %}
+  <script src="{{ asset('themes/new-theme/public/logs.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
