@@ -37,10 +37,29 @@ use Link;
 
 class ProductPresenter
 {
+    /**
+     * @var ImageRetriever
+     */
     protected $imageRetriever;
+
+    /**
+     * @var Link
+     */
     protected $link;
+
+    /**
+     * @var PriceFormatter
+     */
     protected $priceFormatter;
+
+    /**
+     * @var ProductColorsRetriever
+     */
     protected $productColorsRetriever;
+
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
     public function __construct(
