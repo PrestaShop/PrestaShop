@@ -41,7 +41,7 @@ export default class Grid {
   constructor(gridPanelSelector) {
     this.$gridPanel = $(gridPanelSelector);
     this.gridId = this.$gridPanel.data('grid-id');
-    this.$grid = this.$gridPanel.find('#' + this.gridId + '_grid');
+    this.$grid = $('#' + this.gridId + '_grid')
   }
 
   /**
@@ -143,18 +143,14 @@ export default class Grid {
       const confirmationMessage = $button.data('confirm-message').toString();
 
       if (confirmationMessage) {
-        const confirmed = confirm(confirmationMessage);
-        if (!confirmed) {
+        if (!confirm(confirmationMessage)) {
           return;
         }
       }
 
-      const formUrl = $button.data('form-url');
-      const formMethod = $button.data('form-method');
-
       const $form = this.$gridPanel.find('#' + this.gridId + '_grid_form');
-      $form.attr('action', formUrl);
-      $form.attr('method', formMethod);
+      $form.attr('action', $button.data('form-url'));
+      $form.attr('method', $button.data('form-method'));
 
       $form.submit();
     });

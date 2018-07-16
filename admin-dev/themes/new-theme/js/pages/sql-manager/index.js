@@ -47,6 +47,7 @@ class SqlManagerPage {
    */
   reloadDbTableColumns() {
     const $selectedOption = $('.js-db-tables-select').find('option:selected');
+    const $table = $('.js-table-columns');
 
     $.ajax($selectedOption.data('table-columns-url'))
       .then((response) => {
@@ -54,7 +55,6 @@ class SqlManagerPage {
 
         const columns = response.columns;
 
-        const $table = $('.js-table-columns');
         $table.removeClass('d-none');
         $table.find('tbody').empty();
 
@@ -98,9 +98,7 @@ class SqlManagerPage {
    * @param event
    */
   addDbTableColumnToQuery(event) {
-    const column = $(event.target).data('column');
-
-    this.addToQuery(column);
+    this.addToQuery($(event.target).data('column'));
   }
 
   /**

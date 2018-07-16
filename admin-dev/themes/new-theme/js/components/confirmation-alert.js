@@ -34,8 +34,7 @@ export default class ConfirmationAlert {
       const $btn = $(event.currentTarget);
       const message = $btn.data('confirm-message');
 
-      let confirmed = confirm(message);
-      if (confirmed) {
+      if (confirm(message)) {
           return true;
       }
 
