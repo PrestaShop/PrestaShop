@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -64,7 +65,9 @@ final class GridPresenter implements GridPresenterInterface
         list(
             $columns,
             $filterForm
-        ) = $this->presentColumns($definition, $grid->getSearchCriteria());
+        ) = $this->presentColumns($definition, $searchCriteria);
+
+        $rows = $this->presentRows($data->getRows(), $columns);
 
         return [
             'id' => $definition->getId(),
@@ -76,7 +79,7 @@ final class GridPresenter implements GridPresenterInterface
                 'bulk' => $definition->getBulkActions()->toArray(),
             ],
             'data' => [
-                'rows' => $data->getRows(),
+                'rows' => $rows,
                 'rows_total' => $data->getRowsTotal(),
                 'query' => $data->getQuery(),
             ],
@@ -136,5 +139,26 @@ final class GridPresenter implements GridPresenterInterface
             $columnsArray,
             $formBuilder->getForm(),
         ];
+    }
+
+    /**
+     * Present rows
+     *
+     * @param RowCollectionInterface $rows
+     * @param array                  $columns
+     *
+     * @return RowCollectionInterface
+     */
+    private function presentRows(RowCollectionInterface $rows, array $columns)
+    {
+        foreach ($columns as $column) {
+            $modifier = isset($column['options']['modifier']) ? $column['options']['modifier'] : null;
+
+            if (is_callable($modifier)) {
+                $rows->applyModification($modifier);
+            }
+        }
+
+        return $rows;
     }
 }

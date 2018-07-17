@@ -40,4 +40,13 @@ interface RowCollectionInterface extends Countable, Iterator
      * @return array
      */
     public function getRows();
+
+    /**
+     * Apply modification to all rows
+     *
+     * @param callable $modifier
+     *
+     * @return self
+     */
+    public function applyModification(callable $modifier);
 }
