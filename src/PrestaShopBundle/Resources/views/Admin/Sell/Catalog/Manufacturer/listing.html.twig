@@ -29,15 +29,11 @@
 {% block content %}
   <div class="container-fluid">
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Sell\\Catalog\\Manufacturer:renderManufacturersGrid',
-      {},
-      {'filters': manufacturerFilters}
+      'PrestaShopBundle:Admin\\Sell\\Catalog\\Manufacturer:renderManufacturersGrid'
     )) }}
 
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Sell\\Catalog\\Manufacturer:renderAddressesGrid',
-      {},
-      {'filters': addressesFilters}
+      'PrestaShopBundle:Admin\\Sell\\Catalog\\Manufacturer:renderAddressesGrid'
     )) }}
   </div>
 {% endblock %}
