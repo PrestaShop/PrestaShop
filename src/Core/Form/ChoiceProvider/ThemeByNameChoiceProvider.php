@@ -63,9 +63,7 @@ final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $themeChoices = [
-            $this->translator->trans('Core (no theme selected)', [], 'Admin.International.Feature') => '',
-        ];
+        $themeChoices = [];
 
         /** @var Theme $theme */
         foreach ($this->themeRepository->getList() as $theme) {

@@ -83,7 +83,10 @@ let config = {
       './js/pages/email'
     ],
     sql_manager: [
-      './js/pages/sql-manager',
+      './js/pages/sql-manager'
+    ],
+    translation_settings: [
+      './js/pages/translation-settings'
     ]
   },
   output: {

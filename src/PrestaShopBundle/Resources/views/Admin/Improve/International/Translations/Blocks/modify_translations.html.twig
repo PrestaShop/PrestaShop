@@ -47,23 +47,23 @@
                         {{ 'Type of translation'|trans }}
                     </label>
                     {{ form_errors(modifyTranslationsForm.translation_type) }}
-                    {{ form_widget(modifyTranslationsForm.translation_type) }}
+                    {{ form_widget(modifyTranslationsForm.translation_type, {'attr': {'class': 'js-translation-type'}}) }}
                 </div>
-                <div class="form-group">
+                <div class="form-group js-email-form-group d-none">
                     <label class="form-control-label">
                         {{ 'Select the type of email content'|trans }}
                     </label>
                     {{ form_errors(modifyTranslationsForm.email_content_type) }}
-                    {{ form_widget(modifyTranslationsForm.email_content_type) }}
+                    {{ form_widget(modifyTranslationsForm.email_content_type, {'attr': {'class': 'js-email-content-type'}}) }}
                 </div>
-                <div class="form-group">
+                <div class="form-group js-theme-form-group d-none">
                     <label class="form-control-label">
                         {{ 'Select your theme'|trans }}
                     </label>
                     {{ form_errors(modifyTranslationsForm.theme) }}
                     {{ form_widget(modifyTranslationsForm.theme) }}
                 </div>
-                <div class="form-group">
+                <div class="form-group js-module-form-group d-none">
                     <label class="form-control-label">
                         {{ 'Select your module'|trans }}
                     </label>
