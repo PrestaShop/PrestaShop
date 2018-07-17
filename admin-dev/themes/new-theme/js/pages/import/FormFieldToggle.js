@@ -128,8 +128,10 @@ export default class FormFieldToggle {
    * @param {int} entity
    */
   loadAvailableFields(entity) {
+    const url = -1 === window.location.href.indexOf('index.php') ? '../../../ajax.php' : '../../../../ajax.php';
+
     $.ajax({
-      url: '../../../ajax.php',
+      url: url,
       data: {
         getAvailableFields: 1,
         entity: entity
