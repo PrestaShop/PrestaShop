@@ -86,6 +86,8 @@ class ModifyTranslationsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $noTheme = $this->trans('Core (no theme selected)', 'Admin.International.Feature');
+
         $builder
             ->add('translation_type', ChoiceType::class, [
                 'choices' => $this->translationTypeChoiceProvider->getChoices(),
@@ -94,7 +96,14 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'choices' => $this->emailContentTypeChoiceProvider->getChoices(),
             ])
             ->add('theme', ChoiceType::class, [
-                'choices' => $this->themeChoiceProvider->getChoices(),
+                'choices' =>
+                    [$noTheme => ''] +
+                    $this->themeChoiceProvider->getChoices(),
+                'choice_attr' => [
+                    $noTheme => [
+                        'class' => 'js-no-theme'
+                    ],
+                ],
             ])
             ->add('module', ChoiceType::class, [
                 'placeholder' => '---',

@@ -81,6 +81,9 @@ let config = {
     ],
     email: [
       './js/pages/email'
+    ],
+    translation_settings: [
+      './js/pages/translation-settings',
     ]
   },
   output: {
