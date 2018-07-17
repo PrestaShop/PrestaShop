@@ -26,31 +26,74 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ManufacturerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ManufacturerController is responsible for "Sell > Catalog > Brands & Suppliers" page
+ */
 class ManufacturerController extends FrameworkBundleAdminController
 {
-    public function indexAction(
-        Request $request,
-        ManufacturerFilters $manufacturerFilters,
-        ManufacturerAddressFilters $addressFilters
-    ) {
-        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
-        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($manufacturerFilters);
-
-        $addressesGridFactory = $this->get('prestashop.core.grid.manufacturer_address_factory');
-        $addressesGrid = $addressesGridFactory->createUsingSearchCriteria($addressFilters);
-
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-
+    /**
+     * Show manufacturers listing page
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request)
+    {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/listing.html.twig', [
-            'manufacturersGrid' => $gridPresenter->present($manufacturerGrid),
-            'addressesGrid' => $gridPresenter->present($addressesGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
+    }
+
+    /**
+     * Render manufacturers grid
+     *
+     * @param ManufacturerFilters $filters
+     *
+     * @return Response
+     */
+    public function renderManufacturersGridAction(ManufacturerFilters $filters)
+    {
+        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
+        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($filters);
+
+        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [
+            'grid' => $this->getGridPresenter()->present($manufacturerGrid),
+        ]);
+    }
+
+    /**
+     * Render manufacturer addresses grid
+     *
+     * @param ManufacturerAddressFilters $filters
+     *
+     * @return Response
+     */
+    public function renderAddressesGridAction(ManufacturerAddressFilters $filters)
+    {
+        $addressesGridFactory = $this->get('prestashop.core.grid.manufacturer_address_factory');
+        $addressesGrid = $addressesGridFactory->createUsingSearchCriteria($filters);
+
+        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [
+            'grid' => $this->getGridPresenter()->present($addressesGrid),
+        ]);
+    }
+
+    /**
+     * Get grid presenter
+     *
+     * @return GridPresenter
+     */
+    private function getGridPresenter()
+    {
+        return $this->get('prestashop.core.grid.presenter.grid_presenter');
     }
 }

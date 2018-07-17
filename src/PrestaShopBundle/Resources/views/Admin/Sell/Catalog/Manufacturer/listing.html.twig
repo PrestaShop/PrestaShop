@@ -28,9 +28,17 @@
 
 {% block content %}
   <div class="container-fluid">
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturersGrid} %}
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Sell\\Catalog\\Manufacturer:renderManufacturersGrid',
+      {},
+      {'filters': manufacturerFilters}
+    )) }}
 
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': addressesGrid} %}
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Sell\\Catalog\\Manufacturer:renderAddressesGrid',
+      {},
+      {'filters': addressesFilters}
+    )) }}
   </div>
 {% endblock %}
 
