@@ -203,6 +203,28 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
+     * Download import sample file
+     *
+     * @param $sampleName
+     *
+     * @return Response
+     */
+    public function downloadSampleAction($sampleName)
+    {
+        $sampleFileProvider = $this->get('prestashop.core.import.sample.file_provider');
+        $sampleFile = $sampleFileProvider->getFile($sampleName);
+
+        if (null === $sampleFile) {
+            return $this->redirectToRoute('admin_import');
+        }
+
+        $response = new BinaryFileResponse($sampleFile->getPathname());
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $sampleFile->getFilename());
+
+        return $response;
+    }
+
+    /**
      * Get generic template parameters
      *
      * @param Request $request
