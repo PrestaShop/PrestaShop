@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,34 +21,12 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.International.Feature' %}
+import FormFieldToggle from "./FormFieldToggle";
 
-{% block content %}
-    <div class="container">
-        <div class="card">
-            {% block translations_kpis_row %}
-                <div class="row">
-                    {{ render(controller(
-                        'PrestaShopBundle:Admin\\Common:renderKpiRow',
-                        { 'kpiRow': kpiRow }
-                    )) }}
-                </div>
-            {% endblock %}
-        </div>
-
-        <div class="row">
-            <div class="col">
-                {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    <script src="{{ asset('themes/new-theme/public/translation_settings.bundle.js') }}"></script>
-{% endblock %}
+export default class TranslationSettingsPage {
+    init() {
+        new FormFieldToggle().init();
+    }
+}

@@ -94,6 +94,9 @@ const config = {
     ],
     module_card: [
       './js/app/pages/module-card'
+    ],
+    translation_settings: [
+      './js/pages/translation-settings'
     ]
   },
   output: {
