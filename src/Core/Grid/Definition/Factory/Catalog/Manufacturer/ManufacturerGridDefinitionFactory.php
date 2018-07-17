@@ -40,6 +40,26 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
+     * @var string
+     */
+    private $searchResetUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectUrl;
+
+    /**
+     * @param string $searchResetUrl
+     * @param string $redirectUrl
+     */
+    public function __construct($searchResetUrl, $redirectUrl)
+    {
+        $this->searchResetUrl = $searchResetUrl;
+        $this->redirectUrl = $redirectUrl;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -112,8 +132,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 ->setOptions([
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
                         'attr' => [
-                            'data-url' => '',
-                            'data-redirect' => '',
+                            'data-url' => $this->searchResetUrl,
+                            'data-redirect' => $this->redirectUrl,
                         ],
                     ]),
                 ])
