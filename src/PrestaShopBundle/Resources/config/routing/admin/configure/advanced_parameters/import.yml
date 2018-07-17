@@ -1,5 +1,5 @@
 admin_import:
-    path: /import
+    path: /
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:import'
