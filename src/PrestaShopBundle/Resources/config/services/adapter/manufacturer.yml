@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.manufacturer.thumbnail_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerThumbnailGenerator'

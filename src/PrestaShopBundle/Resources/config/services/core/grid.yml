@@ -37,6 +37,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer\ManufacturerGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
+          - '@prestashop.adapter.image_manager'
           - "@=service('router').generate('admin_common_reset_search', {'controller': 'manufacturer', 'action': 'index'})"
           - "@=service('router').generate('admin_manufacturers')"
         public: true
