@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -109,6 +110,7 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Country', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'country_name',
+                    'filter' => new ColumnFilterOption(CountryChoiceType::class),
                 ])
             )
             ->add((new ActionColumn('actions'))

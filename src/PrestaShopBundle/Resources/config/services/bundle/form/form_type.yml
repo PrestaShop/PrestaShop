@@ -432,3 +432,10 @@ services:
             - '@prestashop.adapter.data_provider.country'
         tags:
             - { name: form.type }
+
+    form.type.common.country_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.country_by_id'
+        tags:
+            - { name: form.type }
