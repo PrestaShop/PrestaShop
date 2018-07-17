@@ -477,6 +477,7 @@ services:
         tags:
             - { name: form.type }
 
+<<<<<<< HEAD
     form.type.email.email_configuration:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
         parent: 'form.type.translatable.aware'
@@ -597,6 +598,11 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+
+    form.type.common.country_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.country_by_id'
         tags:
             - { name: form.type }
 
