@@ -34,3 +34,10 @@ admin_international_translations_show_settings:
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:showSettings
         _legacy_controller: AdminTranslations
+
+admin_international_translations_modify:
+    path: /settings
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:modifyTranslations
+        _legacy_controller: AdminTranslations

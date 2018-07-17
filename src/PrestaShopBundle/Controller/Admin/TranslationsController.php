@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -159,12 +160,26 @@ class TranslationsController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
+        $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'kpiRow' => $kpiRowFactory->build(),
+            'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
         ];
+    }
+
+    /**
+     * Modify translations action
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     */
+    public function modifyTranslationsAction(Request $request)
+    {
+        //@todo implement
     }
 }

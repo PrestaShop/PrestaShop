@@ -479,3 +479,15 @@ services:
             - '@prestashop.core.form.choice_provider.contact_by_id'
         tags:
             - { name: form.type }
+
+    form.type.translations.modify:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.translation_type'
+            - '@prestashop.core.form.choice_provider.email_content_type'
+            - '@prestashop.core.form.choice_provider.theme_by_name'
+            - '@prestashop.core.form.choice_provider.module_by_name'
+        tags:
+            - { name: form.type }
