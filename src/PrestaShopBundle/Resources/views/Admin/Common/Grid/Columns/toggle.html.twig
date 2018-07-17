@@ -22,16 +22,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% set id_property_name = column.options.field_to_use_as_id %}
+{% set id_property_name = column.options.toggle_field %}
 {% set row_id = row[id_property_name] %}
 
 {% set valid = (row[column.id] is same as('1')) %}
 
 <i
     class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
-    data-toggle-field-name="{{ column.options.field_to_display }}"
+    data-toggle-field-name="{{ column.options.field }}"
     data-toggle-field-id="{{ row_id }}"
-    data-toggle-url="{{ column.options.url_toggle_callback }}"
+    data-toggle-url="{{ column.options.url }}"
 >
 {% if valid == true %}
     check
