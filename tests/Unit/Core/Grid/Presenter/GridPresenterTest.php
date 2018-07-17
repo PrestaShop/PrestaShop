@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter;
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -101,6 +103,9 @@ class GridPresenterTest extends TestCase
     private function createGridMock()
     {
         $data = $this->createMock(GridDataInterface::class);
+        $data->method('getRows')
+            ->willReturn(new RowCollection());
+
         $definition = $this->createMock(DefinitionInterface::class);
         $definition->method('getColumns')
             ->willReturn((new ColumnCollection())
