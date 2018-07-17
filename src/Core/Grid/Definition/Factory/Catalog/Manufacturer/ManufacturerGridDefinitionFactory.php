@@ -26,10 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
+use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerListingThumbnailGenerator;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ContentColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
@@ -50,13 +55,20 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     private $redirectUrl;
 
     /**
-     * @param string $searchResetUrl
-     * @param string $redirectUrl
+     * @var ImageManager
      */
-    public function __construct($searchResetUrl, $redirectUrl)
+    private $imageManager;
+
+    /**
+     * @param ImageManager $imageManager
+     * @param string       $searchResetUrl
+     * @param string       $redirectUrl
+     */
+    public function __construct(ImageManager $imageManager, $searchResetUrl, $redirectUrl)
     {
         $this->searchResetUrl = $searchResetUrl;
         $this->redirectUrl = $redirectUrl;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -80,6 +92,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
      */
     protected function getColumns()
     {
+        $imageManager = $this->imageManager;
+
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
@@ -92,9 +106,22 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'id_manufacturer',
                 ])
             )
-//            ->add((new DataColumn('logo'))
-//                ->setName($this->trans('Logo', [], 'Admin.Global'))
-//            )
+            ->add((new ContentColumn('logo'))
+                ->setName($this->trans('Logo', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'logo',
+                    'modifier' => function (array $row) use ($imageManager) {
+                        $row['logo'] = $imageManager->getThumbnailForListing(
+                            $row['id_manufacturer'],
+                            'jpg',
+                            'manufacturer',
+                            'm'
+                        );
+
+                        return $row;
+                    }
+                ])
+            )
             ->add((new DataColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
