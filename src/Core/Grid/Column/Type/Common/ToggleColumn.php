@@ -51,13 +51,13 @@ final class ToggleColumn extends AbstractColumn
     {
         $resolver
             ->setRequired([
-                'field_to_display', // field which is the boolean to display
-                'field_to_use_as_id', // field which can be used as ID to perform the toggle
-                'url_toggle_callback', // URL called when user clicks on togglable row
+                'field', // field which is the boolean to display
+                'toggle_field', // field which can be used as ID to perform the toggle
+                'url', // URL called when user clicks on togglable row
             ])
-            ->setAllowedTypes('field_to_display', 'string')
-            ->setAllowedTypes('field_to_use_as_id', 'string')
-            ->setAllowedTypes('url_toggle_callback', 'string')
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('toggle_field', 'string')
+            ->setAllowedTypes('url', 'string')
         ;
     }
 }
