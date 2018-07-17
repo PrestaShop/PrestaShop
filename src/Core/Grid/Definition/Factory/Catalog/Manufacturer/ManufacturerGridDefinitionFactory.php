@@ -87,7 +87,9 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'addresses_count',
                     'align' => 'center',
                     'modifier' => function (array $row) {
-                        return $row['addresses_count'] ?: '--';
+                        $row['addresses_count'] = null !== $row['addresses_count'] ? $row['addresses_count'] : '--';
+
+                        return $row;
                     },
                 ])
             )
