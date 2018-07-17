@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,28 +22,41 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.International.Feature' %}
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-{% block content %}
-    <div class="container">
-        <div class="card">
-            {% block translations_kpis_row %}
-                <div class="row">
-                    {{ render(controller(
-                        'PrestaShopBundle:Admin\\Common:renderKpiRow',
-                        { 'kpiRow': kpiRow }
-                    )) }}
-                </div>
-            {% endblock %}
-        </div>
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-        <div class="row">
-            <div class="col">
-                {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
-            </div>
-        </div>
-    </div>
-{% endblock %}
+/**
+ * Class EmailContentTypeChoiceProvider provides email content type choices
+ */
+final class EmailContentTypeChoiceProvider implements FormChoiceProviderInterface
+{
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * Get email content type choices
+     *
+     * @return array
+     */
+    public function getChoices()
+    {
+        return [
+            $this->translator->trans('Subject', [], 'Admin.Global') => 'subject',
+            $this->translator->trans('Body', [], 'Admin.International.Feature') => 'body',
+        ];
+    }
+}

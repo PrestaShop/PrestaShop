@@ -71,3 +71,24 @@ services:
         arguments:
             - '@prestashop.adapter.contact.repository'
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+    prestashop.core.form.choice_provider.translation_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TranslationTypeChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.email_content_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\EmailContentTypeChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.theme_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
+        arguments:
+            - '@translator'
+            - '@prestashop.core.addon.theme.repository'
+
+    prestashop.core.form.choice_provider.module_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
+        arguments:
+            - '@prestashop.core.admin.module.repository'
