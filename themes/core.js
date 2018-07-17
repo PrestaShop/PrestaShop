@@ -2792,6 +2792,15 @@
 	            }
 	        });
 	    });
+	
+	    _prestashop2['default'].on('updatedProduct', function (args) {
+	        if (!args.product_url) {
+	            return;
+	        }
+	        window.history.pushState({
+	            id_product_attribute: args.id_product_attribute
+	        }, undefined, args.product_url);
+	    });
 	});
 
 /***/ }),

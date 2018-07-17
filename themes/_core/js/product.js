@@ -311,4 +311,17 @@ $(document).ready(() => {
             }
         });
     });
+
+    prestashop.on('updatedProduct', (args) => {
+        if (!args.product_url) {
+            return;
+        }
+        window.history.pushState(
+            {
+              id_product_attribute: args.id_product_attribute
+            },
+            undefined,
+            args.product_url
+        );
+    });
 });
