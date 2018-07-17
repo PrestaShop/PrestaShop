@@ -171,7 +171,7 @@ class TranslationsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'kpiRow' => $kpiRowFactory->build(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
-            'addUpdateLanguageForm' => $addUpdateLanguageForm->createView()
+            'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
         ];
     }
 
