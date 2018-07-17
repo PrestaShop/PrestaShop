@@ -34,10 +34,10 @@
 <!-- Header -->
 <div id="header" class="clearfix">
 	<ul id="headerLinks">
-		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank"><?php echo $this->translator->trans('Forum', array(), 'Install'); ?></a></li>
-		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
-		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
-		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank"><?php echo $this->translator->trans('Blog', array(), 'Install') ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Forum', array(), 'Install'); ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
+		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Blog', array(), 'Install') ?></a></li>
 		<!--
 		<?php if ($this->getPhone()): ?>
 			<li id="phone_block" class="last">
@@ -93,7 +93,7 @@
 	<noscript>
 		<h4 class="errorBlock" style="margin-bottom:10px">
 			<?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', array(), 'Install'); ?>
-			<a href="<?php echo $this->translator->trans('http://enable-javascript.com/', array(), 'Install'); ?>" target="_blank">
+			<a href="<?php echo $this->translator->trans('https://enable-javascript.com/', array(), 'Install'); ?>" target="_blank" rel="noopener noreferrer">
 				<img src="theme/img/help.png" style="height:16px;width:16px" />
 			</a>
 		</h4>
