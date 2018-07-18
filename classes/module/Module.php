@@ -2084,7 +2084,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying warning message(s).
      *
-     * @param string|array $error
+     * @param string|array $warning
      *
      * @return string
      */
@@ -2111,6 +2111,13 @@ abstract class ModuleCore implements ModuleInterface
         return $output;
     }
 
+    /**
+     * Helper displaying confirmation message.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
     public function displayConfirmation($string)
     {
         $output = '
