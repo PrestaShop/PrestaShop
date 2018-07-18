@@ -60,7 +60,7 @@ class RowCollectionTest extends TestCase
             return $row;
         };
 
-        $this->rowCollection->applyModification($ageFieldModifier);
+        $this->rowCollection->map($ageFieldModifier);
 
         $this->assertEquals([
             [
@@ -84,7 +84,7 @@ class RowCollectionTest extends TestCase
             return $row;
         };
 
-        $this->rowCollection->applyModification($fullNameModifier);
+        $this->rowCollection->map($fullNameModifier);
 
         $this->assertEquals([
             [
