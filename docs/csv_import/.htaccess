@@ -1,6 +1,6 @@
 # Apache 2.2
 <IfModule !mod_authz_core.c>
-    Order alllow, deny
+    Order allow,deny
     Allow from all
 </IfModule>
 
