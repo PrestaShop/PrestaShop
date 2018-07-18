@@ -30,7 +30,7 @@ const $ = window.$;
  */
 export default class Grid {
   /**
-   * Grid's selector
+   * Grid id
    *
    * @param {string} id
    */
