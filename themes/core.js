@@ -2409,7 +2409,7 @@
 	function updateResults(data) {
 	    pendingQuery = false;
 	    prestashop.emit('updateProductList', data);
-	    window.history.pushState(data, undefined, data.current_url);
+	    window.history.pushState(data, document.title, data.current_url);
 	    window.scrollTo(0, 0);
 	}
 	
@@ -2799,7 +2799,7 @@
 	        }
 	        window.history.pushState({
 	            id_product_attribute: args.id_product_attribute
-	        }, undefined, args.product_url);
+	        }, document.title, args.product_url);
 	    });
 	});
 

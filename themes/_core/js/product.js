@@ -320,7 +320,7 @@ $(document).ready(() => {
             {
               id_product_attribute: args.id_product_attribute
             },
-            undefined,
+            document.title,
             args.product_url
         );
     });
