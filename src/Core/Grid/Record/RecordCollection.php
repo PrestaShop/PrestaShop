@@ -52,7 +52,7 @@ final class RecordCollection extends AbstractCollection implements RecordCollect
     /**
      * {@inheritdoc}
      */
-    public function applyModification(callable $modifier)
+    public function map(callable $modifier)
     {
         foreach ($this->items as $key => $row) {
             $this->items[$key] = $modifier($row);
