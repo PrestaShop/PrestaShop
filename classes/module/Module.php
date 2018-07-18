@@ -2050,24 +2050,24 @@ abstract class ModuleCore implements ModuleInterface
     
     /**
     * Helper displaying information message(s)
-    * @param string $string|array
+    * @param string $information|array
     * @return string
     */
-    public function displayInformation($string)
+    public function displayInformation($information)
     {
         $output = '
         <div class="bootstrap">
         <div class="module_info info alert alert-info">
             <button type="button" class="close" data-dismiss="alert">&times;</button>';
         
-        if (is_array($string)) {
+        if (is_array($information)) {
             $output .= '<ul>';
-            foreach ($string as $msg) {
+            foreach ($information as $msg) {
                 $output .= '<li>'.$msg.'</li>';
             }
             $output .= '</ul>';
         } else {
-            $output .= $string;
+            $output .= $information;
         }
 
         // Close div openned previously
