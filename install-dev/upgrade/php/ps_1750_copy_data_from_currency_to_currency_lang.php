@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function ps_1740_copy_data_from_currency_to_currency_lang()
+function ps_1750_copy_data_from_currency_to_currency_lang()
 {
     $currencies = Currency::getCurrencies();
     foreach ($currencies as $currency) {
