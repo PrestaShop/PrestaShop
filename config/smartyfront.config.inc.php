@@ -213,9 +213,7 @@ function smartyTranslate($params, $smarty)
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-    $filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
-
-    $basename = basename($filename, '.tpl');
+    $basename = basename($smarty->source->name, '.tpl');
     $key = $basename.'_'.md5($string);
 
     if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
@@ -223,9 +221,24 @@ function smartyTranslate($params, $smarty)
     }
 
     if ($params['mod']) {
-        return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], $basename, $params['sprintf'], $params['js']), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getModuleTranslation(
+                $params['mod'],
+                $params['s'],
+                $basename,
+                $params['sprintf'],
+                $params['js']
+            ),
+            $params
+        );
     } elseif ($params['pdf']) {
-        return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $params['sprintf']), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getPdfTranslation(
+                $params['s'],
+                $params['sprintf']
+            ),
+            $params
+        );
     }
 
     if ($_LANG != null && isset($_LANG[$key])) {
