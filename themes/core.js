@@ -2409,7 +2409,7 @@
 	function updateResults(data) {
 	    pendingQuery = false;
 	    prestashop.emit('updateProductList', data);
-	    window.history.pushState(data, undefined, data.current_url);
+	    window.history.pushState(data, document.title, data.current_url);
 	    window.scrollTo(0, 0);
 	}
 	
@@ -2791,6 +2791,15 @@
 	                showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
 	            }
 	        });
+	    });
+	
+	    _prestashop2['default'].on('updatedProduct', function (args) {
+	        if (!args.product_url || !args.id_product_attribute) {
+	            return;
+	        }
+	        window.history.pushState({
+	            id_product_attribute: args.id_product_attribute
+	        }, document.title, args.product_url);
 	    });
 	});
 
