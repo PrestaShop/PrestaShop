@@ -313,7 +313,7 @@ $(document).ready(() => {
     });
 
     prestashop.on('updatedProduct', (args) => {
-        if (!args.product_url) {
+        if (!args.product_url || !args.id_product_attribute) {
             return;
         }
         window.history.pushState(
