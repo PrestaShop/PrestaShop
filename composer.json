@@ -109,7 +109,7 @@
         }
     ],
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.10",
+        "friendsofphp/php-cs-fixer": "^2.12",
         "johnkary/phpunit-speedtrap": "^1.1",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
