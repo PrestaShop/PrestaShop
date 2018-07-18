@@ -2047,6 +2047,23 @@ abstract class ModuleCore implements ModuleInterface
         </div>';
         return $output;
     }
+    
+    /**
+    * Helper displaying information message
+    * @param string $string
+    * @return string
+    */
+    public function displayInformation($string)
+    {
+        $output = '
+        <div class="bootstrap">
+        <div class="module_info info alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            '.$string.'
+        </div>
+        </div>';
+        return $output;
+    }
 
     /*
      * Return exceptions for module in hook
