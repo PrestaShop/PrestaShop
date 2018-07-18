@@ -90,7 +90,6 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_address',
-                    'align' => 'center',
                 ])
             )
             ->add((new DataColumn('name'))

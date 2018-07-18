@@ -23,14 +23,4 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if 'center' == column.options.align %}
-  {% set class = 'text-center' %}
-{% elseif 'left' == column.options.align %}
-  {% set class = 'text-left' %}
-{% elseif 'right' == column.options.align %}
-  {% set class = 'text-right' %}
-{% endif %}
-
-<div {% if class|default('') is not empty %}class="{{ class }}"{% endif %}>
-  {{ row[column.options.field] }}
-</div>
+{{ row[column.options.field] }}

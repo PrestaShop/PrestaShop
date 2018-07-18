@@ -27,10 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
 use PrestaShop\PrestaShop\Adapter\ImageManager;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerListingThumbnailGenerator;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -38,10 +34,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ContentColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 /**
@@ -137,7 +131,6 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'field' => 'addresses_count',
-                    'align' => 'center',
                     'modifier' => function (array $row) {
                         $row['addresses_count'] = $row['addresses_count'] ?: '--';
 
@@ -149,14 +142,12 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'field' => 'products_count',
-                    'align' => 'center',
                 ])
             )
             ->add((new DataColumn('status'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
-                    'align' => 'center',
                 ])
             )
             ->add((new ActionColumn('actions'))

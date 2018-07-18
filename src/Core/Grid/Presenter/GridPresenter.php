@@ -155,7 +155,7 @@ final class GridPresenter implements GridPresenterInterface
             $modifier = isset($column['options']['modifier']) ? $column['options']['modifier'] : null;
 
             if (is_callable($modifier)) {
-                $rows->applyModification($modifier);
+                $rows->map($modifier);
             }
         }
 

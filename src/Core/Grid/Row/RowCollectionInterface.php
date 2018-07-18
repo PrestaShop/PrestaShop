@@ -48,5 +48,5 @@ interface RowCollectionInterface extends Countable, Iterator
      *
      * @return self
      */
-    public function applyModification(callable $modifier);
+    public function map(callable $modifier);
 }

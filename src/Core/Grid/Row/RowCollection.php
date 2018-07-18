@@ -52,7 +52,7 @@ class RowCollection extends AbstractCollection implements RowCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function applyModification(callable $modifier)
+    public function map(callable $modifier)
     {
         foreach ($this->items as $key => $row) {
             $this->items[$key] = $modifier($row);
