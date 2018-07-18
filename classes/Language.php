@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\Translator;
 use Symfony\Component\Filesystem\Filesystem;
+use Exception;
 
 class LanguageCore extends ObjectModel
 {
@@ -686,7 +687,7 @@ class LanguageCore extends ObjectModel
             $allLanguages = json_decode($allLanguages, true);
 
             if (JSON_ERROR_NONE !== json_last_error()) {
-                throw new \Exception(
+                throw new Exception(
                     sprintf(
                         'The legacy to standard locales JSON could not be decoded %s',
                         json_last_error_msg()
@@ -737,7 +738,7 @@ class LanguageCore extends ObjectModel
 
         $jsonLastErrorCode = json_last_error();
         if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
-            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
+            throw new Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
         }
 
         return $allLanguages[$iso] ?: false;
@@ -1090,8 +1091,37 @@ class LanguageCore extends ObjectModel
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification').' ('.$file.')';
         } else {
-            $fs = new Filesystem();
-            $fs->copy($url, $file, true);
+
+            if (function_exists('curl_init')) {
+
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_HEADER, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+                $raw_file_data = curl_exec($ch);
+           
+                if (curl_errno($ch)) {
+                    throw new Exception(
+                        sprintf(
+                            'Download of localization package failed %s',
+                            curl_error($ch)
+                        )
+                    );
+                }
+                curl_close($ch);
+           
+                file_put_contents($file, $raw_file_data);
+                
+            } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
+
+                $fs = new Filesystem();
+                $fs->copy($url, $file, true);
+
+            } else {
+                throw new Exception('No download methods available');
+            }
+            
         }
     }
 
