@@ -29,6 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacture
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerListingThumbnailGenerator;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -37,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ContentColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Grid;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
 /**
@@ -165,6 +170,33 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     ]),
                 ])
             )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add(new GridAction(
+                'common_refresh_list',
+                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
+                'refresh',
+                'simple'
+            ))
+            ->add(new GridAction(
+                'common_show_query',
+                $this->trans('Show SQL query', [], 'Admin.Actions'),
+                'code',
+                'simple'
+            ))
+            ->add(new GridAction(
+                'common_export_sql_manager',
+                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
+                'storage',
+                'simple'
+            ))
         ;
     }
 }
