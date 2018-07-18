@@ -2291,7 +2291,7 @@ abstract class ModuleCore implements ModuleInterface
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
         if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id])) {
-            if (false === strpos($template, 'module:')) {
+            if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
                 $template = $this->getTemplatePath($template);
             }
 
@@ -2341,9 +2341,10 @@ abstract class ModuleCore implements ModuleInterface
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
         Tools::enableCache();
-        if (false === strpos($template, 'module:')) {
+        if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
             $template = $this->getTemplatePath($template);
         }
+
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
         return $is_cached;
