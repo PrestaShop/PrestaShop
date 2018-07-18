@@ -732,7 +732,7 @@ class ToolsCore
     /**
      * Return price with currency sign for a given product
      *
-     * @deprecated Since 1.7.4.0. Please use Locale::formatPrice() instead
+     * @deprecated Since 1.7.5.0. Please use Locale::formatPrice() instead
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
      * @param float $price
@@ -754,7 +754,7 @@ class ToolsCore
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
         @trigger_error(
-            'Tools::displayPrice() is deprecated since version 1.7.4.0. '
+            'Tools::displayPrice() is deprecated since version 1.7.5.0. '
             . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatPrice() instead.',
             E_USER_DEPRECATED
         );
@@ -789,7 +789,7 @@ class ToolsCore
     /**
      * Returns a well formatted number
      *
-     * @deprecated Since 1.7.4.0. Please use Locale::formatNumber() instead
+     * @deprecated Since 1.7.5.0. Please use Locale::formatNumber() instead
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
      * @param float $number
@@ -807,7 +807,7 @@ class ToolsCore
     public static function displayNumber($number, $currency = null)
     {
         @trigger_error(
-            'Tools::displayNumber() is deprecated since version 1.7.4.0. '
+            'Tools::displayNumber() is deprecated since version 1.7.5.0. '
             . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatNumber() instead.',
             E_USER_DEPRECATED
         );
