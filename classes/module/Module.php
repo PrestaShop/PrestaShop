@@ -2049,7 +2049,7 @@ abstract class ModuleCore implements ModuleInterface
     }
     
     /**
-    * Helper displaying information message
+    * Helper displaying information message(s)
     * @param string $string|array
     * @return string
     */
