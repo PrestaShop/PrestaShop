@@ -532,6 +532,7 @@ class CartPresenter implements PresenterInterface
                     'token' => Tools::getToken(false),
                 )
             );
+            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = $cartVoucher['free_shipping'];
         }
 
         return array(
