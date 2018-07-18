@@ -25,8 +25,6 @@
 
 import Grid from '../../../components/grid/grid';
 import ReloadListActionExtension from '../../../components/grid/extension/reload-list-extension';
-import DatePickerExtension from '../../../components/grid/extension/date-picker-extension';
-import BulkActionCheckboxExtension from '../../../components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
 import SortingExtension from '../../../components/grid/extension/sorting-extension';
@@ -37,8 +35,6 @@ $(() => {
     const grid = new Grid('logs');
 
     grid.addExtension(new ReloadListActionExtension());
-    grid.addExtension(new DatePickerExtension());
-    grid.addExtension(new BulkActionCheckboxExtension());
     grid.addExtension(new ExportToSqlManagerExtension());
     grid.addExtension(new FiltersResetExtension());
     grid.addExtension(new SortingExtension());
