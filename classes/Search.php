@@ -96,10 +96,20 @@ class SearchCore
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
-        $words          = explode(' ', $sanitizedString);
+        $words = explode(' ', $sanitizedString);
         if (strpos($string, '-') !== false) {
             $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
             $words2          = explode(' ', $sanitizedString);
+            // foreach word containing hyphen, we want to index additional word removing the hyphen
+            // eg: t-shirt => tshirt
+            foreach ($words2 as $word) {
+                if (strpos($word, '-') !== false) {
+                    $word = str_replace(['-'], '', $word);
+                    if (!empty($word)) {
+                        $words[] = str_replace(['-'], '', $word);
+                    }
+                }
+            }
             $words = array_unique(array_merge($words, $words2));
         } else {
             $words = array_unique($words);
