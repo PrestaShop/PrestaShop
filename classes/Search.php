@@ -104,18 +104,16 @@ class SearchCore
             // eg: t-shirt => tshirt
             foreach ($words2 as $word) {
                 if (strpos($word, '-') !== false) {
-                    $word = str_replace(['-'], '', $word);
+                    $word = str_replace('-', '', $word);
                     if (!empty($word)) {
-                        $words[] = str_replace(['-'], '', $word);
+                        $words[] = $word;
                     }
                 }
             }
-            $words = array_unique(array_merge($words, $words2));
-        } else {
-            $words = array_unique($words);
+            $words = array_merge($words, $words2);
         }
 
-        return $words;
+        return array_unique($words);
     }
 
     public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
