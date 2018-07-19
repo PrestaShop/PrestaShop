@@ -4,3 +4,10 @@ admin_email:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:index'
         _legacy_controller: AdminEmails
+
+admin_email_process:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processForm'
+        _legacy_controller: AdminEmails
