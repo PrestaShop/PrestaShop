@@ -24,23 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
-
-class EmailController extends FrameworkBundleAdminController
+/**
+ * Class PhpExtensionChecker provides object-oriented way to check if PHP extensions are loaded
+ */
+final class PhpExtensionChecker implements PhpExtensionCheckerInterface
 {
-    public function indexAction(Request $request)
+    /**
+     * {@inheritdoc}
+     */
+    public function loaded($extension)
     {
-        $emailConfigurationFormHandler = $this->get('prestashop.admin.email_configuration.form_handler');
-        $form = $emailConfigurationFormHandler->getForm();
-
-        $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
-
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/email.html.twig', [
-            'emailConfigurationForm' => $form->createView(),
-            'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
-        ]);
+        return extension_loaded($extension);
     }
 }

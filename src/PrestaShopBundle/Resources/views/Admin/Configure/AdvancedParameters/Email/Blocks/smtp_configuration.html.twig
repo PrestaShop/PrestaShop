@@ -55,9 +55,14 @@
       </div>
 
       <div class="form-group">
-        {{ ps.label_with_help(('Encryption'|trans), (''|trans({}, 'Admin.Advparameters.Help'))) }}
+        <label class="form-control-label">{{ 'Encryption'|trans }}</label>
         {{ form_errors(emailConfigurationForm.smtp_config.encryption) }}
         {{ form_widget(emailConfigurationForm.smtp_config.encryption) }}
+        {% if not isOpenSslExtensionLoaded %}
+          <small class="form-text">
+            {{ 'SSL does not seem to be available on your server.'|trans({}, 'Admin.Advparameters.Notification') }}
+          </small>
+        {% endif %}
       </div>
 
       <div class="form-group">
