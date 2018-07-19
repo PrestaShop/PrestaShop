@@ -46,7 +46,7 @@ interface CurrencyInterface
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
-     * Example :
+     * Example:
      * Given the Euro as default shop's currency,
      * If 1 dollar = 1.31 euros,
      * Then conversion rate for Dollar will be 1.31
@@ -93,8 +93,8 @@ interface CurrencyInterface
     /**
      * Get the number of decimal digits to use with this currency
      *
-     * Example : Euro's decimal precision is 2 (1 234,56 EUR)
-     * Example : Colombian peso's decimal precision is 0 (1 235 COP)
+     * Example: Euro's decimal precision is 2 (1 234,56 EUR)
+     * Example: Colombian peso's decimal precision is 0 (1 235 COP)
      *
      * @return int
      */

@@ -2,7 +2,7 @@
     <php>
         <server name="KERNEL_CLASS" value="AppKernel" />
         <env name="SYMFONY_ENV" value="test"/>
-        <env name="kernel.environment" value="test" />
+        <env name="kernel.environment" value="test"/>
     </php>
     <listeners>
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
@@ -23,4 +23,9 @@
             <directory>Integration</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../src/</directory>
+        </whitelist>
+    </filter>
 </phpunit>

@@ -76,11 +76,16 @@ class Number implements NumberInterface
         $primaryGroupSize,
         $secondaryGroupSize
     ) {
-        $this->positivePattern    = $positivePattern;
-        $this->negativePattern    = $negativePattern;
-        $this->symbols            = $symbols;
-        $this->maxFractionDigits  = $maxFractionDigits;
-        $this->minFractionDigits  = $minFractionDigits;
+        $this->positivePattern = $positivePattern;
+        $this->negativePattern = $negativePattern;
+        $this->symbols         = $symbols;
+
+        if ($maxFractionDigits < $minFractionDigits) {
+            $minFractionDigits = $maxFractionDigits;
+        }
+        $this->maxFractionDigits = $maxFractionDigits;
+        $this->minFractionDigits = $minFractionDigits;
+
         $this->groupingUsed       = $groupingUsed;
         $this->primaryGroupSize   = $primaryGroupSize;
         $this->secondaryGroupSize = $secondaryGroupSize;
@@ -144,7 +149,7 @@ class Number implements NumberInterface
 
     /**
      * Size of primary digits group in the number
-     * eg: 999 is the primary group in this number : 1 234 999.567
+     * e.g.: 999 is the primary group in this number: 1 234 999.567
      *
      * @var int
      */
@@ -152,8 +157,8 @@ class Number implements NumberInterface
 
     /**
      * Size of secondary digits groups in the number
-     * eg: 999 is a secondary group in this number : 123 999 456.789
-     * eg: another secondary group (still 999) : 999 123 456.789
+     * eg: 999 is a secondary group in this number: 123 999 456.789
+     * eg: another secondary group (still 999): 999 123 456.789
      *
      * @var int
      */
@@ -294,10 +299,10 @@ class Number implements NumberInterface
             }
         }
 
-        if (!isset($this->maxFractionDigits)
-            || !is_int($this->maxFractionDigits)
+        if (isset($this->maxFractionDigits)
+            && !is_int($this->maxFractionDigits)
         ) {
-            throw new LocalizationException('Invalid maxFractionDigits');
+            throw new LocalizationException('Invalid maxFractionDigits : ' . print_r($this->maxFractionDigits));
         }
 
         if (!isset($this->minFractionDigits)

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2018 PrestaShop
  *
@@ -25,9 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
+namespace Tests\TestCase;
 
-class Number
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tests\Unit\ContextMocker;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+
+class SymfonyIntegrationTestCase extends KernelTestCase
 {
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+
+        $this->bootKernel();
+        $this->container = self::$kernel->getContainer();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
+    public static function setUpBeforeClass()
+    {
+        Database::restoreTestDB();
+        require_once(__DIR__ . '/../../config/config.inc.php');
+    }
 }

@@ -24,22 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+namespace PrestaShop\PrestaShop\Core\Localization\Exception;
 
-/**
- * Currency data repository interface
- *
- * Describes the behavior of currency DataRepository classes
- */
-interface DataRepositoryInterface
+class LocalizationFileNotFoundException extends LocalizationException
 {
-    /**
-     * Get complete currency data by currency code
-     *
-     * @param string $currencyCode
-     *
-     * @return array
-     *  The currency data
-     */
-    public function getDataByCurrencyCode($currencyCode);
+
 }
