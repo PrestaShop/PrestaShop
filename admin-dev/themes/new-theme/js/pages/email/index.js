@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,29 +21,28 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.Advparameters.Feature' %}
+ */
 
-{% block content %}
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col">
-        {{ form_start(emailConfigurationForm) }}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
+const $ = window.$;
 
-          {% block email_configuration_form_rest %}
-            {{ form_rest(emailConfigurationForm) }}
-          {% endblock %}
-        {{ form_end(emailConfigurationForm) }}
-      </div>
-    </div>
-  </div>
-{% endblock %}
+$(() => {
+  $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
+    const emailMethod = $(event.target).val();
 
-{% block javascripts %}
-  {{ parent() }}
+    2 == emailMethod ? showSmtpConfiguration() : hideSmtpConfiguration();
+  });
 
-  <script src="{{ asset('themes/new-theme/public/email.bundle.js') }}"></script>
-{% endblock %}
+  /**
+   * Show SMTP configuration form
+   */
+  function showSmtpConfiguration() {
+    $('.js-smtp-configuration').removeClass('d-none');
+  }
+
+  /**
+   * Hide SMTP configuration
+   */
+  function hideSmtpConfiguration() {
+    $('.js-smtp-configuration').addClass('d-none');
+  }
+});
