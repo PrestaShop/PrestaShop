@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Email;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
-final class EmailConfiguration implements DataConfigurationInterface
+final class SmtpDataConfigurator implements DataConfigurationInterface
 {
     /**
      * @var ConfigurationInterface
@@ -50,38 +50,28 @@ final class EmailConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'send_emails_to' => $this->configuration->get('PS_MAIL_EMAIL_MESSAGE'),
-            'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD'),
-            'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE'),
-            'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS'),
+            'domain' => $this->configuration->get('PS_MAIL_DOMAIN'),
+            'server' => $this->configuration->get('PS_MAIL_SERVER'),
+            'username' => $this->configuration->get('PS_MAIL_USER'),
+            'password' => $this->configuration->get('PS_MAIL_PASSWD'),
+            'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION'),
+            'port' => $this->configuration->get('PS_MAIL_SMTP_PORT'),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
-        if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_MAIL_EMAIL_MESSAGE', $config['send_emails_to']);
-            $this->configuration->set('PS_MAIL_METHOD', $config['mail_method']);
-            $this->configuration->set('PS_MAIL_TYPE', $config['mail_type']);
-            $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
-        }
-
-        return [];
+        // TODO: Implement updateConfiguration() method.
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $config)
+    public function validateConfiguration(array $configuration)
     {
-        return isset(
-            $config['send_emails_to'],
-            $config['mail_method'],
-            $config['mail_type'],
-            $config['log_emails']
-        );
+        // TODO: Implement validateConfiguration() method.
     }
 }
