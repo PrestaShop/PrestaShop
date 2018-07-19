@@ -464,5 +464,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
         arguments:
             - '@prestashop.core.form.choice_provider.mail_method'
+            - '@prestashop.core.form.choice_provider.contact_by_id'
         tags:
             - { name: form.type }
