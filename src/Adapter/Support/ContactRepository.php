@@ -24,50 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Adapter\Support;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Entity\Contact;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
- * Class ContactByIdChoiceProvider is responsible for providing shop contact choices
+ * Class ContactRepository
  */
-final class ContactByIdChoiceProvider implements FormChoiceProviderInterface
+final class ContactRepository implements ContactRepositoryInterface
 {
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
-
-    /**
-     * @var int
-     */
-    private $langId;
-
-    /**
-     * @param ContactRepositoryInterface $contactRepository
-     * @param int $langId
-     */
-    public function __construct(
-        ContactRepositoryInterface $contactRepository,
-        $langId
-    ) {
-        $this->contactRepository = $contactRepository;
-        $this->langId = $langId;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function getChoices()
+    public function getContacts($langId)
     {
-        $choices = [];
-        $contacts = $this->contactRepository->getContacts($this->langId);
-
-        foreach ($contacts as $contact) {
-            $choices[$contact['name']] = $contact['id_contact'];
-        }
-
-        return $choices;
+        return Contact::getContacts($langId);
     }
 }

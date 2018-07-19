@@ -43,11 +43,20 @@ class EmailConfigurationType extends AbstractType
     private $mailMethodChoiceProvider;
 
     /**
-     * @param FormChoiceProviderInterface $mailMethodChoiceProvider
+     * @var FormChoiceProviderInterface
      */
-    public function __construct(FormChoiceProviderInterface $mailMethodChoiceProvider)
-    {
+    private $contactsChoiceProvider;
+
+    /**
+     * @param FormChoiceProviderInterface $mailMethodChoiceProvider
+     * @param FormChoiceProviderInterface $contactsChoiceProvider
+     */
+    public function __construct(
+        FormChoiceProviderInterface $mailMethodChoiceProvider,
+        FormChoiceProviderInterface $contactsChoiceProvider
+    ) {
         $this->mailMethodChoiceProvider = $mailMethodChoiceProvider;
+        $this->contactsChoiceProvider = $contactsChoiceProvider;
     }
 
     /**
@@ -56,7 +65,9 @@ class EmailConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('send_emails_to', ChoiceType::class)
+            ->add('send_emails_to', ChoiceType::class, [
+                'choices' => $this->contactsChoiceProvider->getChoices(),
+            ])
             ->add('mail_method', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => false,
