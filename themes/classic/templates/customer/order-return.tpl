@@ -90,13 +90,7 @@
                 {/if}
               </td>
               <td>
-                {if !$product.customizations}
-                  {$product.product_quantity}
-                {else}
-                  {foreach $product.customizations as $customization}
-                    {$customization.quantity}
-                  {/foreach}
-                {/if}
+                {$product.product_quantity}
               </td>
             </tr>
           {/foreach}
