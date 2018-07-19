@@ -1,0 +1,6 @@
+admin_email:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:index'
+        _legacy_controller: AdminEmails
