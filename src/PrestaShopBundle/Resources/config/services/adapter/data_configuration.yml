@@ -171,3 +171,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.configuration:
+        class: 'PrestaShop\PrestaShop\Core\Email\EmailConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
