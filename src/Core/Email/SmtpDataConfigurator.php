@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Email;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
+/**
+ * Class SmtpDataConfigurator is responsible for configuring SMTP data
+ */
 final class SmtpDataConfigurator implements DataConfigurationInterface
 {
     /**
@@ -62,16 +65,35 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $config)
     {
-        // TODO: Implement updateConfiguration() method.
+        if ($this->validateConfiguration($config)) {
+            $this->configuration->set('PS_MAIL_DOMAIN', $config['domain']);
+            $this->configuration->set('PS_MAIL_SERVER', $config['server']);
+            $this->configuration->set('PS_MAIL_USER', $config['username']);
+            $this->configuration->set('PS_MAIL_SMTP_ENCRYPTION', $config['encryption']);
+            $this->configuration->set('PS_MAIL_SMTP_PORT', $config['port']);
+
+            if (!empty($config['password'])) {
+                $this->configuration->set('PS_MAIL_PASSWD', $config['password']);
+            }
+        }
+
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    public function validateConfiguration(array $config)
     {
-        // TODO: Implement validateConfiguration() method.
+        return isset(
+            $config['domain'],
+            $config['server'],
+            $config['username'],
+            $config['password'],
+            $config['encryption'],
+            $config['port']
+        );
     }
 }
