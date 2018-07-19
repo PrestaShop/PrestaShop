@@ -24,43 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * Class MailMethodChoiceProvider provides choices for mail methods
- */
-final class MailMethodChoiceProvider implements FormChoiceProviderInterface
+class SmtpConfigurationType extends AbstractType
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function getChoices()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = [];
-
-        if (null === $this->configuration->get('_PS_HOST_MODE_')) {
-            $choices['Use PHP\'s mail() function (recommended; works in most cases)'] = 1;
-        }
-
-        $choices['Set my own SMTP parameters (for advanced users ONLY)'] = 2;
-        $choices['Never send emails (may be useful for testing purposes)'] = 3;
-
-        return $choices;
+        $builder
+            ->add('domain', TextType::class)
+            ->add('server', TextType::class)
+            ->add('username', TextType::class)
+            ->add('password', PasswordType::class)
+            ->add('encryption', ChoiceType::class, [
+                'choices' => [
+                    'None' => 'off',
+                    'TLS' => 'tls',
+                    'SSL' => 'ssl',
+                ],
+            ])
+            ->add('port', TextType::class)
+        ;
     }
 }
