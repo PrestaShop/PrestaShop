@@ -172,7 +172,12 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.core.email.configuration:
-        class: 'PrestaShop\PrestaShop\Core\Email\EmailConfiguration'
+    prestashop.core.email.email_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.smtp_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
