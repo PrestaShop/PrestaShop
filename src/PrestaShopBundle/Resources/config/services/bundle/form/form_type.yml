@@ -459,3 +459,10 @@ services:
             - '@prestashop.adapter.data_provider.country'
         tags:
             - { name: form.type }
+
+    form.type.email.email_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.mail_method'
+        tags:
+            - { name: form.type }

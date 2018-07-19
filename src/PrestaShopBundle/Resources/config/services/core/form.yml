@@ -60,3 +60,7 @@ services:
         arguments:
             - '@prestashop.core.file.cached_finder.invoice_model'
 
+    prestashop.core.form.choice_provider.mail_method:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
