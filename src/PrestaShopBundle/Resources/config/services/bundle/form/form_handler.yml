@@ -218,4 +218,5 @@ services:
             - '@prestashop.admin.payment_preferences.form_data_provider' # change
             -
               'email_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
+              'smtp_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
             - 'EmailConfiguration'
