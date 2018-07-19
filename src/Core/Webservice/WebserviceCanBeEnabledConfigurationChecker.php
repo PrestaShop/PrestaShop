@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Webservice;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use RuntimeException;
 
 /**
  * Looks at server configuration in order to check PrestaShop Webservice can be enabled
@@ -67,9 +68,10 @@ class WebserviceCanBeEnabledConfigurationChecker
      * to check whether PrestaShop Webservice can be used or not.
      *
      * @param Request $request optional
-     * @return array
+     *
+     * @return array empty if no errors
      */
-    public function analyseConfigurationForIssues(Request $request = null)
+    public function getErrors(Request $request = null)
     {
         $issues = $this->lookForIssues($request);
 
@@ -78,7 +80,7 @@ class WebserviceCanBeEnabledConfigurationChecker
 
         foreach ($issues as $issue) {
             if (false === array_key_exists($issue, $allWarningMessages)) {
-                throw new \RuntimeException(sprintf('Unexpected configuration issue %s', $issue));
+                throw new RuntimeException(sprintf('Unexpected configuration issue %s', $issue));
             }
 
             $selectedWarningMessages[] = $allWarningMessages[$issue];
