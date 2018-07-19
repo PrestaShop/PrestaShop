@@ -50,28 +50,19 @@ class WebserviceController extends FrameworkBundleAdminController
      * Displays the Webservice main page.
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
-     * @param FormInterface $form
+     * @param Request $request
+     *
      * @return Response
      */
-    public function indexAction(FormInterface $form = null, Request $request)
+    public function indexAction(Request $request)
     {
-        $form = is_null($form) ? $this->getFormHandler()->getForm() : $form;
-
-        if (Request::METHOD_POST === $request->getMethod()) {
-            if ($request->request->has('form')) {
-                $submittedForm = $request->request->get('form');
-                if (array_key_exists('webservice_configuration', $submittedForm)) {
-                    return $this->processFormAction($request);
-                }
-            }
-        }
+        $form = $this->getFormHandler()->getForm();
 
         $configurationWarnings = $this->lookForWarnings($request);
 
         if (false === empty($configurationWarnings)) {
             foreach ($configurationWarnings as $warningMessage) {
                 $this->addFlash('warning', $warningMessage);
-
             }
         }
 
@@ -94,9 +85,10 @@ class WebserviceController extends FrameworkBundleAdminController
      * Process the Webservice configuration form
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
-    private function processFormAction(Request $request)
+    public function processFormAction(Request $request)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
 
@@ -108,11 +100,10 @@ class WebserviceController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_webservice');
+            } else {
+                $this->flashErrors($saveErrors);
             }
-
-            $this->flashErrors($saveErrors);
+            return $this->redirectToRoute('admin_webservice');
         }
 
         return $this->redirectToRoute('admin_webservice');
@@ -136,7 +127,7 @@ class WebserviceController extends FrameworkBundleAdminController
         /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
         $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
 
-        $warningMessages = $configurationChecker->analyseConfigurationForIssues($request);
+        $warningMessages = $configurationChecker->getErrors($request);
 
         return $warningMessages;
     }
