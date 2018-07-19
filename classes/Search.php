@@ -93,7 +93,22 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}\x{
 
 class SearchCore
 {
-    public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false)
+    public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
+    {
+        $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
+        $words          = explode(' ', $sanitizedString);
+        if (strpos($string, '-') !== false) {
+            $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
+            $words2          = explode(' ', $sanitizedString);
+            $words = array_unique(array_merge($words, $words2));
+        } else {
+            $words = array_unique($words);
+        }
+
+        return $words;
+    }
+
+    public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
     {
         $string = trim($string);
         if (empty($string)) {
@@ -107,7 +122,11 @@ class SearchCore
         $string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
         if ($indexation) {
-            $string = preg_replace('/[._-]+/', ' ', $string);
+            if (!$keepHyphens) {
+                $string = str_replace(['.', '_', '-'], '', $string);
+            } else {
+                $string = str_replace(['.', '_'], '', $string);
+            }
         } else {
             $words = explode(' ', $string);
             $processed_words = array();
@@ -121,10 +140,10 @@ class SearchCore
                 }
             }
             $string = implode(' ', $processed_words);
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = preg_replace('/[^\s]-+/', '', $string);
+            $string = str_replace(['.', '_'], '', $string);
+            if (!$keepHyphens) {
+                $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' ' . $string));
+            }
         }
 
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
