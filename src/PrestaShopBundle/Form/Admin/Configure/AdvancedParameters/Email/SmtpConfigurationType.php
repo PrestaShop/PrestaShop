@@ -40,10 +40,18 @@ class SmtpConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('domain', TextType::class)
-            ->add('server', TextType::class)
-            ->add('username', TextType::class)
-            ->add('password', PasswordType::class)
+            ->add('domain', TextType::class, [
+                'required' => false,
+            ])
+            ->add('server', TextType::class, [
+                'required' => false,
+            ])
+            ->add('username', TextType::class, [
+                'required' => false,
+            ])
+            ->add('password', PasswordType::class, [
+                'required' => false,
+            ])
             ->add('encryption', ChoiceType::class, [
                 'choices' => [
                     'None' => 'off',
@@ -51,7 +59,9 @@ class SmtpConfigurationType extends AbstractType
                     'SSL' => 'ssl',
                 ],
             ])
-            ->add('port', TextType::class)
+            ->add('port', TextType::class, [
+                'required' => false,
+            ])
         ;
     }
 }
