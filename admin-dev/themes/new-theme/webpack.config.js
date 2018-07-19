@@ -78,6 +78,9 @@ let config = {
     ],
     payment_preferences: [
       './js/pages/payment-preferences'
+    ],
+    module_card: [
+        './js/app/pages/module-card'
     ]
   },
   output: {

@@ -23,7 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% if modulesList is defined and modulesList is not empty %}
-<div class="row row-margin-bottom">
+<script src="{{ asset('themes/new-theme/public/module_card.bundle.js') }}"></script>
+    
+  <div class="row row-margin-bottom">
   <div class="col-lg-12">
     <ul class="nav nav-pills">
       {% if modulesList.notInstalled|length > 0 %}
