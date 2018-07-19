@@ -79,18 +79,26 @@ admin_module_import:
         _controller: PrestaShopBundle:Admin/Module:importModule
 
 admin_module_notification:
-    path:     /notifications
+    path:     /alerts
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:notification
+        _controller: PrestaShopBundle:Admin/Improve/Modules/ModuleAlerts:index
         _legacy_controller: AdminModulesNotifications
         
 admin_module_notification_count:
-    path:     /notifications/count
+    path:     /alerts/count
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:notificationsCount
+        _controller: PrestaShopBundle:Admin\Improve\Modules\ModuleAlerts:notificationsCount
         _legacy_controller: AdminModulesNotifications
+        
+
+admin_module_updates:
+    path:     /updates
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Improve/Modules/ModuleUpdates:index
+        _legacy_controller: AdminModulesUpdates
 
 admin_module_addons_store:
     path:     /addons-store

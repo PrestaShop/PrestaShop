@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,35 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <div class="module-notification-kpis">
+ */
 
-            <div id="module-kpi-settings" class="module-kpi">
-                <i class="material-icons">settings</i>
-                {{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature')|replace({'[1]' : '<span class="module-kpi-number">', '[/1]' : '</span>'})|raw }}
-            </div>
+namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-            <div id="module-kpi-update" class="module-kpi">
-                <i class="material-icons">update</i>
-                {{ '%nbModules% modules to update'|trans({'%nbModules%' : modules.to_update|length}, 'Admin.Modules.Feature')|replace({'[1]' : '<span class="module-kpi-number">', '[/1]' : '</span>'})|raw }}
-            </div>
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-        </div>
-    </div>
-</div>
+/**
+ * Responsible of "Improve > Modules > Modules & Services > Alerts" page display
+ */
+class ModuleAlertsController extends ModuleAbstractController
+{
+    /**
+     * @return Response
+     */
+    public function indexAction()
+    {
+        return $this->render(
+            'PrestaShopBundle:Admin/Module:alerts.html.twig',
+            $this->getNotificationPageData('to_configure')
+        );
+    }
 
-<hr class="top-menu-separator"/>
+    /**
+     * @return JsonResponse with number of modules having at least one notification
+     */
+    public function notificationsCountAction()
+    {
+        $moduleManager = $this->container->get('prestashop.module.manager');
+        return new JsonResponse($moduleManager->countModulesWithNotificationsDetailed());
+    }
+}

@@ -31,32 +31,20 @@
     {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
     {# Contains toolbar-nav for module page #}
     {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-    {# Module notification KPI's #}
-    {% include 'PrestaShopBundle:Admin/Module/Includes:notification_kpis.html.twig' %}
     {# Actual Page Content #}
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div id="module-short-list-configure" class="module-short-list">
-                <span class="module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature') }}</span>
-                <span class="help-box" data-toggle="popover"
-                      data-title="{{ "Modules to configure"|trans({}, 'Admin.Modules.Feature') }}"
-                      data-content="{{ "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'Admin.Modules.Help') }}">
-                </span>
-            </div>
-            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules': modules.to_configure, 'display_type': 'list', id: 'notification'  } %}
-
-            <hr class="top-menu-separator">
             <div id="module-short-list-update" class="module-short-list">
-                <span class="module-search-result-wording">{{ '%nbModules% modules to update'|trans({'%nbModules%' : modules.to_update|length}, 'Admin.Modules.Feature') }}</span>
+                <span class="module-search-result-wording">{{ '%nbModules% modules to update'|trans({'%nbModules%' : modules|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
                       data-title="{{ "Modules to update"|trans({}, 'Admin.Modules.Feature') }}"
                       data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
-                {% if (modules.to_update|length > 1) and (level >= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE')) %}
+                {% if (modules|length > 1) and (level >= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE')) %}
                 <a class="btn btn-primary-reverse float-right btn-outline-primary light-button module_action_menu_upgrade_all" href="#" data-confirm_modal="module-modal-confirm-upgrade-all">{{ "Upgrade All"|trans({}, 'Admin.Modules.Feature') }}</a>
                 {% endif %}
             </div>
-            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules.to_update, 'display_type': 'list', id: 'update', 'level' : level } %}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules, 'display_type': 'list', id: 'update', 'level' : level } %}
         </div>
     </div>
 {% endblock %}

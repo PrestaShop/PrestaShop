@@ -29,6 +29,7 @@ use Currency;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Exception;
 
 class ModulePresenter implements PresenterInterface
@@ -80,6 +81,22 @@ class ModulePresenter implements PresenterInterface
             $prices['raw'] = $prices['USD'];
         }
         return $prices;
+    }
+
+    /**
+     * Transform a collection of addons as a simple array of data.
+     *
+     * @param AddonsCollection $modules
+     * @return array
+     */
+    public function presentCollection(AddonsCollection $modules)
+    {
+        $presentedProducts = array();
+        foreach ($modules as $name => $product) {
+            $presentedProducts[$name] = $this->present($product);
+        }
+
+        return $presentedProducts;
     }
 
     /**
