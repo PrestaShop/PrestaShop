@@ -78,6 +78,9 @@ let config = {
     ],
     payment_preferences: [
       './js/pages/payment-preferences'
+    ],
+    email: [
+      './js/pages/email'
     ]
   },
   output: {
