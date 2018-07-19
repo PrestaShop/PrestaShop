@@ -284,7 +284,7 @@ module.exports = {
                   .then(() => client.pause(4000))
                   .then(() => client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
               });
-              test('should open the product in new tab if exist', () =>  client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
+              test('should open the product in new tab if exist', () =>  client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time), global.isVisible));
           }
           if (i !== pagination) {
             test('should click on "NEXT" button', () => {
