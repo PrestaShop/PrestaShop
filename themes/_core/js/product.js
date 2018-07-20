@@ -111,9 +111,10 @@ function updateProduct(event, eventType, updateUrl) {
     }
 
     // New request only if new value
-    if (event !== null
-        && event.type === 'keyup'
-        && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+    if (event !== null &&
+        event !== undefined &&
+        event.type === 'keyup' &&
+        $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
     ) {
         return;
     }
