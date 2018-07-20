@@ -184,9 +184,6 @@
                 <tab id="Module_Page_old" id_parent="Modules" active="0" hide_host_mode="0" icon="">
                     <class_name>AdminModules</class_name>
                 </tab>
-                <tab id="Marketing_tools" id_parent="Modules" active="1" hide_host_mode="0" icon="">
-                    <class_name>AdminAddonsCatalog</class_name>
-                </tab>
 
             <!--LOOK & FEEL-->
             <tab id="Look_feel" id_parent="IMPROVE" active="1" hide_host_mode="0" icon="desktop_mac">
