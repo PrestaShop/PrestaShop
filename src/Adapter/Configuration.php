@@ -127,7 +127,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             $shopId = $this->shop->id;
         }
 
-        $html = isset($options['html']) ? $options['html'] : false;
+        $html = isset($options['html']) ? (bool) $options['html'] : false;
 
         $success = ConfigurationLegacy::updateValue(
             $key,
