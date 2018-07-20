@@ -346,17 +346,22 @@ class AdminSearchControllerCore extends AdminController
             }
             $this->tpl_view_vars['nb_results'] = $nb_results;
 
-            if (isset($this->_list['features']) && count($this->_list['features'])) {
+            if ($this->isCountableAndNotEmpty($this->_list, 'features')) {
                 $this->tpl_view_vars['features'] = $this->_list['features'];
             }
-            if (isset($this->_list['categories']) && count($this->_list['categories'])) {
+
+            if ($this->isCountableAndNotEmpty($this->_list, 'categories')) {
                 $categories = array();
                 foreach ($this->_list['categories'] as $category) {
-                    $categories[] = Tools::getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
+                    $categories[] = Tools::getPath(
+                        $this->context->link->getAdminLink('AdminCategories', false),
+                        $category['id_category']
+                    );
                 }
                 $this->tpl_view_vars['categories'] = $categories;
             }
-            if (isset($this->_list['products']) && count($this->_list['products'])) {
+
+            if ($this->isCountableAndNotEmpty($this->_list, 'products')) {
                 $view = '';
                 $this->initProductList();
 
@@ -387,7 +392,8 @@ class AdminSearchControllerCore extends AdminController
                 $this->tpl_view_vars['products'] = $view;
                 $this->tpl_view_vars['productsCount'] = count($this->_list['products']);
             }
-            if (isset($this->_list['customers']) && count($this->_list['customers'])) {
+
+            if ($this->isCountableAndNotEmpty($this->_list, 'customers')) {
                 $view = '';
                 $this->initCustomerList();
 
@@ -401,16 +407,16 @@ class AdminSearchControllerCore extends AdminController
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminCustomers', false);
                 $helper->token = Tools::getAdminTokenLite('AdminCustomers');
 
-                if ($this->_list['customers']) {
-                    foreach ($this->_list['customers'] as $key => $val) {
-                        $this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int)$val['id_customer']);
-                    }
-                    $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
+                foreach ($this->_list['customers'] as $key => $val) {
+                    $this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int)$val['id_customer']);
                 }
+
+                $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
                 $this->tpl_view_vars['customers'] = $view;
                 $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
             }
-            if (isset($this->_list['orders']) && count($this->_list['orders'])) {
+
+            if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
                 $view = '';
                 $this->initOrderList();
 
@@ -424,20 +430,37 @@ class AdminSearchControllerCore extends AdminController
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
                 $helper->token = Tools::getAdminTokenLite('AdminOrders');
 
-                if ($this->_list['orders']) {
-                    $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
-                }
+                $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
                 $this->tpl_view_vars['orders'] = $view;
             }
 
-            if (isset($this->_list['modules']) && count($this->_list['modules'])) {
+            if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
-            if (isset($this->_list['addons']) && count($this->_list['addons'])) {
+
+            if ($this->isCountableAndNotEmpty($this->_list, 'addons')) {
                 $this->tpl_view_vars['addons'] = $this->_list['addons'];
             }
 
             return parent::renderView();
         }
+    }
+
+    /**
+     * Check if key is present in array, is countable and has data.
+     *
+     * @param array  $array Array
+     * @param string $key   Key
+     *
+     * @return boolean
+     */
+    protected function isCountableAndNotEmpty(array $array, $key)
+    {
+        return isset($array[$key]) &&
+            (
+                $array[$key] instanceof Countable ||
+                is_array($array[$key])
+            ) &&
+            count($array[$key]);
     }
 }
