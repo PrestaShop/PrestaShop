@@ -112,8 +112,7 @@ class Payment {
   confirm() {
     var option = this.getSelectedOption();
     if (option) {
-      $('.custom-checkbox').click(false);
-      $('.btn-primary').prop('disabled',true);
+      $(this.confirmationSelector + ' button').prop('disabled', true);
       $('#pay-with-' + option + '-form form').submit();
     }
   }
