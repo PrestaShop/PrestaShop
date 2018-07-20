@@ -321,7 +321,7 @@ class OrderHistoryCore extends ObjectModel
             foreach ($invoices as $invoice) {
                 /** @var OrderInvoice $invoice */
                 $rest_paid = $invoice->getRestPaid();
-                if ($rest_paid > 0) {
+                if ($rest_paid > 0 && (int)$invoice->number > 0) {
                     $payment = new OrderPayment();
                     $payment->order_reference = Tools::substr($order->reference, 0, 9);
                     $payment->id_currency = $order->id_currency;
