@@ -2106,10 +2106,7 @@ class AdminOrdersControllerCore extends AdminController
             $order->total_shipping_tax_incl = $order_invoice->total_shipping_tax_incl;
             $order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
         }
-
-        // Update product available quantity
-        StockAvailable::updateQuantity($order_detail->product_id, $order_detail->product_attribute_id, ($order_detail->product_quantity * -1), $order->id_shop);
-
+        
         // discount
         $order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
         $order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));

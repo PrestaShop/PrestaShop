@@ -27,6 +27,9 @@
 define('PS_UNPACK_NATIVE', 1);
 define('PS_UNPACK_MODIFIED', 2);
 
+/**
+ * @deprecated since v1.6.1.20
+ */
 class BlowfishCore extends Crypt_Blowfish
 {
     public function encrypt($plaintext)

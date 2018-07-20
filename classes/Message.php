@@ -56,7 +56,7 @@ class MessageCore extends ObjectModel
         'table' => 'message',
         'primary' => 'id_message',
         'fields' => array(
-            'message' =>        array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
+            'message' =>        array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 6400),
             'id_cart' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_order' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_customer' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
