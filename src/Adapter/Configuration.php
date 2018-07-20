@@ -52,7 +52,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     {
         throw new NotImplementedException();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -110,10 +110,12 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * Set configuration value
      * @param $key
      * @param $value
+     * @param bool   $html   Specify if html is authorized in value
+     *
      * @return $this
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function set($key, $value, $html = false)
     {
         // By default, set a piece of configuration for all available shops and shop groups
         $shopGroupId = null;
@@ -127,7 +129,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
-            false,
+            $html,
             $shopGroupId,
             $shopId
         );
@@ -149,7 +151,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Removes a configuration key.
-     * 
+     *
      * @param type $key
      * @return type
      */
