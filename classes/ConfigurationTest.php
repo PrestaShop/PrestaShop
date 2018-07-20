@@ -176,7 +176,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return ini_get('allow_url_fopen');
+        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
     }
 
     public static function test_system($funcs)
