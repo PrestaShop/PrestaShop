@@ -89,7 +89,6 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
-                'fopen' => false,
             ));
         }
 
@@ -110,6 +109,7 @@ class ConfigurationTestCore
             'mbstring' => false,
             'dom' => false,
             'pdo_mysql' => false,
+            'fopen' => false,
         );
     }
 
