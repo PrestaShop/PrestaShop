@@ -52,7 +52,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     {
         throw new NotImplementedException();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -108,12 +108,15 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Set configuration value
-     * @param $key
-     * @param $value
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @param array  $options Options
+     *
      * @return $this
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function set($key, $value, array $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
         $shopGroupId = null;
@@ -124,10 +127,12 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             $shopId = $this->shop->id;
         }
 
+        $html = isset($options['html']) ? (bool) $options['html'] : false;
+
         $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
-            false,
+            $html,
             $shopGroupId,
             $shopId
         );
@@ -149,7 +154,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Removes a configuration key.
-     * 
+     *
      * @param type $key
      * @return type
      */
