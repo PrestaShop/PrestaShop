@@ -108,14 +108,15 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Set configuration value
-     * @param $key
-     * @param $value
-     * @param bool   $html   Specify if html is authorized in value
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @param array  $options Options
      *
      * @return $this
      * @throws \Exception
      */
-    public function set($key, $value, $html = false)
+    public function set($key, $value, $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
         $shopGroupId = null;
@@ -125,6 +126,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
         }
+
+        $html = isset($options['html']) ? $options['html'] : false;
 
         $success = ConfigurationLegacy::updateValue(
             $key,

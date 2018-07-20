@@ -64,7 +64,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop']);
             $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip']);
-            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], true);
+            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], ['html' => true]);
         }
 
         return [];
