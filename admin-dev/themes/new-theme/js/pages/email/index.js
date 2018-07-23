@@ -27,9 +27,9 @@ const $ = window.$;
 
 $(() => {
   $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
-    const emailMethod = $(event.target).val();
+    const mailMethod = $(event.target).val();
 
-    2 == emailMethod ? showSmtpConfiguration() : hideSmtpConfiguration();
+    getSmtpMailMethodOption() == mailMethod ? showSmtpConfiguration() : hideSmtpConfiguration();
   });
 
   /**
@@ -44,5 +44,9 @@ $(() => {
    */
   function hideSmtpConfiguration() {
     $('.js-smtp-configuration').addClass('d-none');
+  }
+
+  function getSmtpMailMethodOption() {
+    return $('.js-email-method').data('smtp-mail-method');
   }
 });
