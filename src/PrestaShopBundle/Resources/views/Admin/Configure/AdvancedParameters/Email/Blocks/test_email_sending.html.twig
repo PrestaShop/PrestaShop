@@ -37,6 +37,12 @@
         </label>
         {{ form_widget(testEmailSendingForm.send_email_to) }}
       </div>
+
+      <div class="alert alert-danger d-none js-test-email-errors" role="alert"></div>
+      <div class="alert alert-success d-none js-test-email-success" role="alert">
+        <p class="alert-text">{{ 'A test email has been sent to the email address you provided.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+      </div>
+      <div class="spinner d-none js-test-email-loader"></div>
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">
