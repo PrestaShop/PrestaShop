@@ -211,7 +211,18 @@
 {% block typeahead_customer_collection_widget %}
     {{ form_errors(form) }}
     <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-sm-12"></ul>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-sm-12">
+        {% if collection is defined and collection|length > 0 %}
+            {% for item in collection %}
+                <li class="media">
+                    <div class="media-body">
+                        {{ template_collection|format(item.name)|raw }}
+                    </div>
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
     <script>
         $( document ).ready(function() {
             //remove collection item
@@ -221,6 +232,7 @@
 
                 modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
                     onContinue: function(){
+                        _this.closest('li').remove();
                         _this.parent().parent().hide();
                         _this.parent().remove();
                     }

@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -181,7 +182,11 @@ class ProductSpecificPrice extends CommonAbstractType
                     'required' => false,
                     'placeholder' => $this->translator->trans('Apply to all combinations', [], 'Admin.Catalog.Feature'),
                     'label' => $this->translator->trans('Combinations', [], 'Admin.Catalog.Feature'),
-                    'attr' => ['data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => 1])],
+                    'attr' => [
+                        'data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => 1]),
+                        // used to force selected select option after options have been loaded
+                        'data-selected-attribute' => (array_keys($options, 'selected_product_attribute')) ? $options['selected_product_attribute'] : '0',
+                    ],
                 ]
             )
             ->add(
@@ -265,6 +270,11 @@ class ProductSpecificPrice extends CommonAbstractType
                     'required' => true,
                 ]
             )
+            // field used to know whether this is a create or an update
+            ->add(
+                'sp_update_id',
+                FormType\HiddenType::class
+            )
             ->add(
                 'save',
                 FormType\ButtonType::class,
@@ -306,6 +316,16 @@ class ProductSpecificPrice extends CommonAbstractType
                 ]
             );
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'selected_product_attribute' => '0', // used to force selected select option after options have been loaded
+        ]);
     }
 
     /**

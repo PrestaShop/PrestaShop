@@ -8,6 +8,15 @@ admin_specific_price_list:
     requirements:
         idProduct: \d+
 
+admin_get_specific_price_update_form:
+    path:     /get-form/{idSpecificPrice}/
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::getUpdateFormAction
+        idSpecificPrice: 0
+    requirements:
+        idSpecificPrice: \d+
+
 admin_specific_price_add:
     path:     /add
     methods:  [POST]

@@ -565,15 +565,11 @@ var nav = (function() {
  * Specific prices management
  */
 var specificPrices = (function() {
+
   var id_product = $('#form_id_product').val();
   var elem = $('#js-specific-price-list');
-  var leaveInitialPrice = $('#form_step2_specific_price_leave_bprice');
-  var productPriceField = $('#form_step2_specific_price_sp_price');
-  var discountTypeField = $('#form_step2_specific_price_sp_reduction_type');
-  var discountTaxField = $('#form_step2_specific_price_sp_reduction_tax');
   var initSpecificPriceForm = new Object();
 
-  /** Get all specific prices */
   function getInitSpecificPriceForm() {
     $('#specific_price_form').find('select,input').each(function() {
         initSpecificPriceForm[$(this).attr('id')] = $(this).val();
@@ -583,7 +579,9 @@ var specificPrices = (function() {
     });
   }
 
-  /** Get all specific prices */
+  /**
+   * Get all specific prices and build the specific prices listing
+   */
   function getAll() {
     var url = elem.attr('data').replace(/list\/\d+/, 'list/' + id_product);
 
@@ -600,6 +598,7 @@ var specificPrices = (function() {
           elem.addClass('hide');
         }
 
+        // build listing
         $.each(specific_prices, function(key, specific_price) {
           var row = '<tr>' +
             '<td>' + specific_price.rule_name + '</td>' +
@@ -612,17 +611,24 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') +
+            (specific_price.can_edit ? '<a href="#js-specific-price-list-edit" data-specific-price-id="'+specific_price.id_specific_price+'" class="specific-price-edit btn tooltip-link edit pl-0 pr-0"><i class="material-icons">edit</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);
+
+            // setup listeners for "edit" action
+            $('.specific-price-edit').click(function () {
+                var specificPriceId = $(this).data('specificPriceId');
+                loadUpdateSpecificPriceForm(specificPriceId);
+            });
         });
       }
     });
   }
 
   /**
-   * Add a specific price
+   * Add a specific price by sending submitted form through ajax POST call
    * @param {object} elem - The clicked link
    */
   function add(elem) {
@@ -676,7 +682,9 @@ var specificPrices = (function() {
     }).show();
   }
 
-  /** refresh combinations list selector for specific price form */
+  /**
+   * Refresh combinations list selector for specific price form
+   */
   function refreshCombinationsList() {
     var elem = $('#form_step2_specific_price_sp_id_product_attribute');
     var url = elem.attr('data-action').replace(/product-combinations\/\d+/, 'product-combinations/' + id_product);
@@ -691,6 +699,10 @@ var specificPrices = (function() {
         $.each(combinations, function(key, combination) {
           elem.append('<option value="' + combination.id + '">' + combination.name + '</option>');
         });
+
+        if (elem.data('selectedAttribute') != '0') {
+            elem.val(elem.data('selectedAttribute')).trigger('change');
+        }
       }
     });
   }
@@ -711,59 +723,119 @@ var specificPrices = (function() {
     });
   }
 
+
+  /**
+   * Load a pre-filled form to edit a specific price.
+   * The form is loaded using ajax.
+   *
+   * @param specificPriceId
+   */
+  function loadUpdateSpecificPriceForm(specificPriceId) {
+    var url = $('#specific_price_form').data('urlGetUpdateForm').replace(/get-form\/\d+/, 'get-form/' + specificPriceId);
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(specific_price_update_form) {
+          // remove "add a price" form and replace it with "edit a price"  loadedform
+          $('#specific_price_form').empty();
+          $('#specific_price_form').append(specific_price_update_form);
+
+          // hide form
+          $('#specific_price_form .js-cancel').click();
+
+          // since form has been updated, jquery behaviors must be re-initialized
+          _init();
+          showSpecificPriceTaxFieldIfEligible();
+          enableSpecificPriceFieldIfEligible();
+          enableSpecificPriceTaxFieldIfEligible();
+          $('.datepicker input').datetimepicker({format: 'YYYY-MM-DD'});
+
+          if ($('#form_step2_specific_price_sp_price').val() != '') {
+              $('#form_step2_specific_price_sp_price').prop('disabled', false);
+              $('#form_step2_specific_price_leave_bprice').prop('checked', false);
+          }
+
+          // show form
+          if (false == $('#specific_price_form').hasClass('show')) {
+              $('#specific_price_form').collapse('show');
+          }
+
+          // now "add a specific price" button must reload the page because this is how the initial form is created
+          $('#specific-price-add-button').click(function () {
+              location.reload();
+          });
+        }
+    });
+  }
+
+  /**
+   * Initialize form behavior
+   */
+  function _init() {
+    $('#specific-price .add').click(function () {
+      $(this).hide();
+    });
+
+    $('#specific_price_form .js-cancel').click(function () {
+      resetForm();
+      $('#specific-price > a').click();
+      $('#specific-price .add').click().show();
+      $('#form_step2_specific_price_sp_price').prop('disabled', true);
+    });
+
+    $('#specific_price_form .js-save').click(function () {
+      add($(this));
+    });
+
+    $(document).on('click', '#js-specific-price-list .js-delete', function (e) {
+      e.preventDefault();
+      remove($(this));
+    });
+
+    $('#form_step2_specific_price_sp_reduction_type').change(function () {
+      showSpecificPriceTaxFieldIfEligible();
+    });
+
+    refreshCombinationsList();
+
+    $('#form_step2_specific_price_leave_bprice').on('click', function togglePriceField() {
+      enableSpecificPriceFieldIfEligible();
+    });
+
+    $('#form_step2_specific_price_sp_reduction_type').on('change', function toggleDiscountTaxField() {
+      enableSpecificPriceTaxFieldIfEligible();
+    });
+
+    getInitSpecificPriceForm();
+  }
+
+  function showSpecificPriceTaxFieldIfEligible() {
+    if ($('#form_step2_specific_price_sp_reduction_type').val() === 'percentage') {
+        $('#form_step2_specific_price_sp_reduction_tax').hide();
+    } else {
+        $('#form_step2_specific_price_sp_reduction_tax').show();
+    }
+  }
+
+  function enableSpecificPriceFieldIfEligible() {
+    $('#form_step2_specific_price_sp_price').prop('disabled', $('#form_step2_specific_price_leave_bprice').is(':checked')).val('');
+  }
+
+  function enableSpecificPriceTaxFieldIfEligible() {
+    var uglySelect2Selector = $('#select2-form_step2_specific_price_sp_reduction_tax-container').parent().parent();
+
+    if ($('#form_step2_specific_price_sp_reduction_type').val() === 'amount') {
+        uglySelect2Selector.show();
+    } else {
+        uglySelect2Selector.hide();
+    }
+  }
+
   return {
     'init': function() {
-      this.getAll();
-
-      $('#specific-price .add').click(function() {
-        $(this).hide();
-      });
-
-      $('#specific_price_form .js-cancel').click(function() {
-        resetForm();
-        $('#specific-price > a').click();
-        $('#specific-price .add').click().show();
-        productPriceField.prop('disabled', true);
-      });
-
-      $('#specific_price_form .js-save').click(function() {
-        add($(this));
-      });
-
-      $(document).on('click', '#js-specific-price-list .js-delete', function(e) {
-        e.preventDefault();
-        remove($(this));
-      });
-
-      $('#form_step2_specific_price_sp_reduction_type').change(function() {
-        if ($(this).val() === 'percentage') {
-          $('#form_step2_specific_price_sp_reduction_tax').hide();
-        } else {
-          $('#form_step2_specific_price_sp_reduction_tax').show();
-        }
-      });
-
-      this.refreshCombinationsList();
-
-      /* enable price field only when needed */
-      leaveInitialPrice.on('click', function togglePriceField() {
-        productPriceField.prop('disabled', $(this).is(':checked'))
-          .val('')
-        ;
-      });
-
-      /* enable tax type field only when reduction by amount is selected */
-      discountTypeField.on('change', function toggleDiscountTaxField() {
-        var uglySelect2Selector = $('#select2-form_step2_specific_price_sp_reduction_tax-container').parent().parent();
-        if ($(this).val() === 'amount') {
-          uglySelect2Selector.show();
-        }else {
-          uglySelect2Selector.hide();
-        }
-      });
-
-      this.getInitSpecificPriceForm();
-
+      getAll();
+      _init();
     },
     'getAll': function() {
       getAll();
