@@ -242,6 +242,12 @@ class InstallControllerHttp
             if (self::$steps->current()->getControllerInstance()->validate()) {
                 self::$steps->next();
             }
+
+            // Don't display system step if mandatory requirements is valid
+            if (self::$steps->current()->getName() == 'system' && self::$steps->current()->getControllerInstance()->validate()) {
+                self::$steps->next();
+            }
+
             $session->step = self::$steps->current()->getName();
 
             // Change last step
