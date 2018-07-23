@@ -25,7 +25,7 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block smtp_configuration %}
-  <div class="card js-smtp-configuration">
+  <div class="card js-smtp-configuration {% if emailConfigurationForm.email_config.mail_method.vars.value != smtpMailMethod %}d-none{% endif %}">
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Email'|trans({}, 'Admin.Global') }}
     </h3>

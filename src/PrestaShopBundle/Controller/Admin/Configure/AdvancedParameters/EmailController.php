@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Email\EmailMethodOption;
+use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +52,7 @@ class EmailController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/email.html.twig', [
             'emailConfigurationForm' => $emailConfigurationForm->createView(),
             'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
+            'smtpMailMethod' => MailMethodOption::SMTP,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
