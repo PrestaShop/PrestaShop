@@ -94,7 +94,8 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
             $config['server'],
             $config['username'],
             $config['encryption'],
-            $config['port']
-        ) && array_key_exists('password', $config);
+            $config['port'],
+            $config['password']
+        );
     }
 }

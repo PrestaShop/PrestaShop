@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,10 +51,13 @@ class EmailController extends FrameworkBundleAdminController
         $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
         $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
 
+        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class);
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/email.html.twig', [
             'emailConfigurationForm' => $emailConfigurationForm->createView(),
             'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
             'smtpMailMethod' => MailMethodOption::SMTP,
+            'testEmailSendingForm' => $testEmailSendingForm->createView(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -82,6 +87,28 @@ class EmailController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_email');
+    }
+
+    /**
+     * Processes test email sending
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function processTestEmailSendingAction(Request $request)
+    {
+        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class);
+        $testEmailSendingForm->handleRequest($request);
+
+        $result = [];
+
+        if ($testEmailSendingForm->isSubmitted()) {
+            $emailConfigurationTester = $this->get('prestashop.adapter.email.email_configuration_tester');
+            $result['errors'] = $emailConfigurationTester->testConfiguration($testEmailSendingForm->getData());
+        }
+
+        return $this->json($result);
     }
 
     /**
