@@ -70,14 +70,14 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
 
         $smtpChecked = MailMethodOption::SMTP === (int) $config['mail_method'];
 
-        $smtpPassword = !empty($config['smtp_password']) ?
+        $password = !empty($config['smtp_password']) ?
             urldecode($config['smtp_password']) :
             $this->configuration->get('PS_MAIL_PASSWD')
         ;
-        $smtpPassword = str_replace(
+        $password = str_replace(
             ['&lt;', '&gt;', '&quot;', '&amp;'],
             ['<', '>', '"', '&'],
-            Tools::htmlentitiesUTF8($smtpPassword)
+            Tools::htmlentitiesUTF8($password)
         );
 
         $result = Mail::sendMailTest(
@@ -89,14 +89,14 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             Tools::htmlentitiesUTF8($config['send_email_to']),
             Tools::htmlentitiesUTF8($this->configuration->get('PS_SHOP_EMAIL')),
             Tools::htmlentitiesUTF8($config['smtp_username']),
-            $smtpPassword,
+            $password,
             Tools::htmlentitiesUTF8($config['smtp_port']),
             Tools::htmlentitiesUTF8($config['smtp_encryption'])
         );
 
         $errors = [];
 
-        if (false === $result) {
+        if (false === $result || is_string($result)) {
             $errors[] = $this->translator->trans('Error: Please check your configuration', [], 'Admin.Advparameters.Feature');
         }
 

@@ -25,10 +25,12 @@
 
 const $ = window.$;
 
+/**
+ * Class is responsible for managing test email sending
+ */
 class EmailSendingTest {
   constructor() {
     $('.js-send-test-email-btn').on('click', (event) => {
-      console.log('test');
       event.preventDefault();
 
       this._handle(event);
@@ -52,14 +54,99 @@ class EmailSendingTest {
     $('#test_email_sending_smtp_encryption').val($('#form_smtp_config_encryption').val());
 
     const $testEmailSendingForm = $(event.target).closest('form');
-    console.log($testEmailSendingForm.serialize());
+
+    this._resetUI();
+    this._showLoader();
 
     $.post({
       url: $testEmailSendingForm.attr('action'),
       data: $testEmailSendingForm.serialize(),
     }).then((response) => {
-      console.log(response);
+      this._hideLoader();
+
+      if (0 === response.errors.length) {
+        this._showSuccess();
+
+        return;
+      }
+
+      this._showErrors(response.errors);
     });
+  }
+
+  /**
+   * Make sure that additional content (alerts, loader) is not visible
+   *
+   * @private
+   */
+  _resetUI() {
+    this._hideLoader();
+    this._hideSuccess();
+    this._hideErrors();
+  }
+
+  /**
+   * Show success message
+   *
+   * @private
+   */
+  _showSuccess() {
+    $('.js-test-email-success').removeClass('d-none');
+  }
+
+  /**
+   * Hide success messsage
+   *
+   * @private
+   */
+  _hideSuccess() {
+    $('.js-test-email-success').addClass('d-none');
+  }
+
+  /**
+   * Show loader during AJAX call
+   *
+   * @private
+   */
+  _showLoader() {
+    $('.js-test-email-loader').removeClass('d-none');
+  }
+
+  /**
+   * Hide loader
+   *
+   * @private
+   */
+  _hideLoader() {
+    $('.js-test-email-loader').addClass('d-none');
+  }
+
+  /**
+   * Show errors
+   *
+   * @param {Array} errors
+   *
+   * @private
+   */
+  _showErrors(errors) {
+    const $errors = $('.js-test-email-errors');
+
+    errors.forEach((error) => {
+      $errors.append('<p>' + error + '</p>');
+    });
+
+    $errors.removeClass('d-none');
+  }
+
+  /**
+   * Hide errors
+   *
+   * @private
+   */
+  _hideErrors() {
+    $('.js-test-email-errors')
+      .addClass('d-none')
+      .empty();
   }
 }
 
