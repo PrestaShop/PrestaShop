@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.email.email_configuration_tester:
+        class: 'PrestaShop\PrestaShop\Adapter\Email\EmailConfigurationTester'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'

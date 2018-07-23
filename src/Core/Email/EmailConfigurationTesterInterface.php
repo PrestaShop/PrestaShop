@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -23,34 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import EmailSendingTest from './email-sending-test';
+namespace PrestaShop\PrestaShop\Core\Email;
 
-const $ = window.$;
-
-$(() => {
-  new EmailSendingTest();
-
-  $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
-    const mailMethod = $(event.target).val();
-
-    getSmtpMailMethodOption() == mailMethod ? showSmtpConfiguration() : hideSmtpConfiguration();
-  });
-
-  /**
-   * Show SMTP configuration form
-   */
-  function showSmtpConfiguration() {
-    $('.js-smtp-configuration').removeClass('d-none');
-  }
-
-  /**
-   * Hide SMTP configuration
-   */
-  function hideSmtpConfiguration() {
-    $('.js-smtp-configuration').addClass('d-none');
-  }
-
-  function getSmtpMailMethodOption() {
-    return $('.js-email-method').data('smtp-mail-method');
-  }
-});
+/**
+ * Interface EmailConfigurationTesterInterface defines contract for email configuration tester
+ */
+interface EmailConfigurationTesterInterface
+{
+    /**
+     * Test email configuration
+     *
+     * @param array $config
+     *
+     * @return bool
+     */
+    public function testConfiguration(array $config);
+}

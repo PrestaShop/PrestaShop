@@ -37,6 +37,8 @@
             {{ form_rest(emailConfigurationForm) }}
           {% endblock %}
         {{ form_end(emailConfigurationForm) }}
+
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/test_email_sending.html.twig' %}
       </div>
     </div>
   </div>
