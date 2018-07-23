@@ -42,15 +42,18 @@ class SmtpConfigurationType extends AbstractType
         $builder
             ->add('domain', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('server', TextType::class, [
                 'required' => false,
             ])
             ->add('username', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('password', PasswordType::class, [
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('encryption', ChoiceType::class, [
                 'choices' => [

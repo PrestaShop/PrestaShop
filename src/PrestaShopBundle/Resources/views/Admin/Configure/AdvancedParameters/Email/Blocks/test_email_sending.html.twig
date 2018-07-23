@@ -1,4 +1,4 @@
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,36 +21,31 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-import EmailSendingTest from './email-sending-test';
-
-const $ = window.$;
-
-$(() => {
-  new EmailSendingTest();
-
-  $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
-    const mailMethod = $(event.target).val();
-
-    getSmtpMailMethodOption() == mailMethod ? showSmtpConfiguration() : hideSmtpConfiguration();
-  });
-
-  /**
-   * Show SMTP configuration form
-   */
-  function showSmtpConfiguration() {
-    $('.js-smtp-configuration').removeClass('d-none');
-  }
-
-  /**
-   * Hide SMTP configuration
-   */
-  function hideSmtpConfiguration() {
-    $('.js-smtp-configuration').addClass('d-none');
-  }
-
-  function getSmtpMailMethodOption() {
-    return $('.js-email-method').data('smtp-mail-method');
-  }
-});
+{% block test_email_sending %}
+  {{ form_start(testEmailSendingForm, {'action': path('admin_send_test_email')}) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Test your email configuration'|trans }}
+    </h3>
+    <div class="card-body">
+      <div class="form-group">
+        <label for="send_test_email" class="form-control-label">
+          {{ 'Send a test email to'|trans }}
+        </label>
+        {{ form_widget(testEmailSendingForm.send_email_to) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary js-send-test-email-btn">
+          <i class="material-icons">email</i>
+          {{ 'Send a test email'|trans }}
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ form_end(testEmailSendingForm) }}
+{% endblock %}

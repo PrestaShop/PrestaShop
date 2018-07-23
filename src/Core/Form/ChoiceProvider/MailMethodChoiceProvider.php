@@ -24,32 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Email;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class MailMethodOption defines available email sending method options
+ * Class MailMethodChoiceProvider provides choices for mail methods
  */
-final class MailMethodOption
+final class MailMethodChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var int Option defines that emails should be sent using native mail() function
+     * @var ConfigurationInterface
      */
-    const NATIVE = 1;
+    private $configuration;
 
     /**
-     *  @var int Option defines that emails should be sent using configured SMTP settings
+     * @param ConfigurationInterface $configuration
      */
-    const SMTP = 2;
-
-    /**
-     * @var int Option defines that emails should not be sent
-     */
-    const NONE = 3;
-
-    /**
-     * Class should not be initialized as its responsibility is to hold mail method options
-     */
-    private function __construct()
+    public function __construct(ConfigurationInterface $configuration)
     {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $choices = [];
+
+        if (null === $this->configuration->get('_PS_HOST_MODE_')) {
+            $choices['Use PHP\'s mail() function (recommended; works in most cases)'] = 1;
+        }
+
+        $choices['Set my own SMTP parameters (for advanced users ONLY)'] = 2;
+        $choices['Never send emails (may be useful for testing purposes)'] = 3;
+
+        return $choices;
     }
 }

@@ -11,3 +11,10 @@ admin_email_process:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processForm'
         _legacy_controller: AdminEmails
+
+admin_send_test_email:
+    path: /send-testing-email
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processTestEmailSending'
+        _legacy_controller: AdminEmails
