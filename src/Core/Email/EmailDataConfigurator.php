@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Email;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
+/**
+ * Class EmailDataConfigurator is responsible for configuring email data
+ */
 final class EmailDataConfigurator implements DataConfigurationInterface
 {
     /**

@@ -62,7 +62,7 @@ final class ContactByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $choices = [];
-        $contacts = $this->contactRepository->getContacts($this->langId);
+        $contacts = $this->contactRepository->findAllByLangId($this->langId);
 
         foreach ($contacts as $contact) {
             $choices[$contact['name']] = $contact['id_contact'];
