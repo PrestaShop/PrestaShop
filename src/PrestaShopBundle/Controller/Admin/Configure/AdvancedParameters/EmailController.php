@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,6 +67,8 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Process email configuration saving
      *
+     * @DemoRestricted(redirectRoute="admin_email")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -98,6 +101,14 @@ class EmailController extends FrameworkBundleAdminController
      */
     public function processTestEmailSendingAction(Request $request)
     {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'errors' => [
+                    $this->getDemoModeErrorMessage(),
+                ],
+            ]);
+        }
+
         $testEmailSendingForm = $this->createForm(TestEmailSendingType::class);
         $testEmailSendingForm->handleRequest($request);
 
