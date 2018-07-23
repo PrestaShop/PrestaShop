@@ -38,5 +38,5 @@ interface ContactRepositoryInterface
      *
      * @return array
      */
-    public function getContacts($langId);
+    public function findAllByLangId($langId);
 }
