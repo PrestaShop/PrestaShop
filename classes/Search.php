@@ -107,7 +107,7 @@ class SearchCore
         $string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
         if ($indexation) {
-            $string = preg_replace('/[._-]+/', ' ', $string);
+            $string = preg_replace('/[._]+/', ' ', $string);
         } else {
             $words = explode(' ', $string);
             $processed_words = array();
@@ -122,9 +122,7 @@ class SearchCore
             }
             $string = implode(' ', $processed_words);
             $string = preg_replace('/[._]+/', '', $string);
-            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
             $string = preg_replace('/[._]+/', '', $string);
-            $string = preg_replace('/[^\s]-+/', '', $string);
         }
 
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
