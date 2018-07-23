@@ -1,38 +1,43 @@
+var $ = window.$;
+
 export default function() {
   $(document).ready(function() {
-    let $jsCombinationsList = $('.js-combinations-list');
+    const $jsCombinationsList = $('.js-combinations-list');
     // If we are not on the product page, return
     if (0 === $jsCombinationsList.length) {
         return;
     }
-    let idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
-    let idsCount = idsProductAttribute.length;
+
+    const idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
+    const idsCount = idsProductAttribute.length;
+    const step = 50;
     let currentCount = 0;
-    let step = 50;
 
-    let refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
+    const refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
 
-    $.get(refreshImagesUrl)
-      .then(function(response) {
-        if (idsProductAttribute[0] != '') {
-          getCombinations(response);
-        }
-      });
+    $.get(refreshImagesUrl).then(function(response) {
+      if (idsProductAttribute.length !== 0) {
+        getCombinations(response);
+      }
+    });
 
     $('#create-combinations').click(function(event) {
       event.preventDefault();
       form.send(false, false, generate);
     });
 
-    let productDropzone = Dropzone.forElement('#product-images-dropzone');
+    const productDropzone = Dropzone.forElement('#product-images-dropzone');
     let updateCombinationImages = function () {
-      var productAttributeIds = $.map($('.js-combinations-list .combination'), function (combination) {
-        return $(combination).data('index');
+      var productAttributeIds = $.map(
+        $('.js-combinations-list .combination'),
+        (combination) => {
+          return $(combination).data('index');
+        }
+      );
+
+      $.get(refreshImagesUrl).then((response) => {
+        refreshImagesCombination(response, productAttributeIds);
       });
-      $.get(refreshImagesUrl)
-        .then(function(response) {
-          refreshImagesCombination(response, productAttributeIds);
-        });
     };
     productDropzone.on('success', updateCombinationImages);
 
@@ -49,9 +54,9 @@ export default function() {
       refreshDefaultImage();
     });
 
-    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te').keyup(function () {
-      var self = $(this);
-      var price = priceCalculation.normalizePrice(self.val());
+    $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te').keyup(function() {
+      const self = $(this);
+      const price = priceCalculation.normalizePrice(self.val());
 
       if ('product_combination_bulk_impact_on_price_ti' === self.attr('id')) {
         $('#product_combination_bulk_impact_on_price_te').val(priceCalculation.removeCurrentTax(price)).change();
@@ -60,22 +65,16 @@ export default function() {
       }
     });
 
-    /*
-     * Retrieve URL to get a set of combination forms from data attribute
-     * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
-     */
-    let combinationUrl = $jsCombinationsList.data('combinations-url').replace(/\/\d+(?=\?.*)/, '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-'));
-
-    let getCombinations = (combinationsImages) => {
+    const getCombinations = (combinationsImages) => {
       let $jsCombinationsBulkForm = $('#combinations-bulk-form');
       if (!$jsCombinationsBulkForm.hasClass('inactive')) {
         $jsCombinationsBulkForm.addClass('inactive');
       }
-      $.get(combinationUrl).then(function (resp) {
+
+      $.get(getCombinationsUrl()).then(function (resp) {
         $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
         currentCount += step;
-        combinationUrl = $jsCombinationsList.data('combinations-url').replace(/\/\d+(?=\?.*)/, '/' + idsProductAttribute.slice(currentCount, currentCount+step).join('-'));
         if (currentCount < idsCount) {
           getCombinations(combinationsImages);
         } else {
@@ -84,6 +83,19 @@ export default function() {
           $('[data-toggle="popover"]').popover();
         }
       });
+    };
+
+    /*
+     * Retrieve URL to get a set of combination forms from data attribute
+     * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
+     */
+    const getCombinationsUrl = () => {
+      return $jsCombinationsList
+        .data('combinations-url')
+        .replace(
+          ':numbers',
+          idsProductAttribute.slice(currentCount, currentCount+step).join('-')
+        );
     };
   });
 
