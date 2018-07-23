@@ -23,12 +23,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import EmailSendingTest from './email-sending-test';
-import SmtpConfigurationToggler from './smtp-configuration-toggler';
-
 const $ = window.$;
 
-$(() => {
-  new EmailSendingTest();
-  new SmtpConfigurationToggler();
-});
+/**
+ * Class SmtpConfigurationToggler is responsible for showing/hiding SMTP configuration form
+ */
+class SmtpConfigurationToggler {
+  constructor() {
+    $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
+      const mailMethod = $(event.target).val();
+
+      this._getSmtpMailMethodOption() == mailMethod ? this._showSmtpConfiguration() : this._hideSmtpConfiguration();
+    });
+  }
+
+  /**
+   * Show SMTP configuration form
+   *
+   * @private
+   */
+  _showSmtpConfiguration() {
+    $('.js-smtp-configuration').removeClass('d-none');
+  }
+
+  /**
+   * Hide SMTP configuration
+   *
+   * @private
+   */
+  _hideSmtpConfiguration() {
+    $('.js-smtp-configuration').addClass('d-none');
+  }
+
+  /**
+   * Get SMTP mail option value
+   *
+   * @private
+   *
+   * @returns {String}
+   */
+  _getSmtpMailMethodOption() {
+    return $('.js-email-method').data('smtp-mail-method');
+  }
+}
+
+export default SmtpConfigurationToggler;
