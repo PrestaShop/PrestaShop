@@ -1082,6 +1082,10 @@ class LinkCore
 
         $uriPath = Dispatcher::getInstance()->createUrl($controller, $idLang, $request, false, '', $idShop);
 
+        if (substr($uriPath, 0, 10) === 'index.php?') {
+            return $this->getBaseLink($idShop, $ssl, $relativeProtocol) . ltrim($uriPath, '/');
+        } 
+
         return $this->getBaseLink($idShop, $ssl, $relativeProtocol) . $this->getLangLink($idLang, null, $idShop) . ltrim($uriPath, '/');
     }
 
