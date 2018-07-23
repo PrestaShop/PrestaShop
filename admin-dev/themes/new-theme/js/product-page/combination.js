@@ -9,11 +9,13 @@ export default function() {
     }
 
     const idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
+    const refreshImagesUrl = $jsCombinationsList
+      .attr('data-action-refresh-images')
+      .replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
     const idsCount = idsProductAttribute.length;
     const step = 50;
     let currentCount = 0;
 
-    const refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
 
     $.get(refreshImagesUrl).then(function(response) {
       if (idsProductAttribute.length !== 0) {
@@ -27,8 +29,8 @@ export default function() {
     });
 
     const productDropzone = Dropzone.forElement('#product-images-dropzone');
-    let updateCombinationImages = function () {
-      var productAttributeIds = $.map(
+    const updateCombinationImages = function() {
+      const productAttributeIds = $.map(
         $('.js-combinations-list .combination'),
         (combination) => {
           return $(combination).data('index');
@@ -42,14 +44,9 @@ export default function() {
     productDropzone.on('success', updateCombinationImages);
 
     $(document).on('click', '#form .product-combination-image', function() {
-      var input = $(this).find('input');
-      var isChecked = input.attr('checked') === 'checked';
-      if (isChecked) {
-        input.removeAttr('checked');
-      } else {
-        input.attr('checked', 'checked');
-      }
-
+      const input = $(this).find('input');
+      const isChecked = input.prop('checked');
+      input.prop('checked', !isChecked);
       $(this).toggleClass('img-highlight', !isChecked);
       refreshDefaultImage();
     });
@@ -99,17 +96,16 @@ export default function() {
     };
   });
 
-  let refreshImagesCombination = (combinationsImages, idsProductAttribute) => {
+  const refreshImagesCombination = (combinationsImages, idsProductAttribute) => {
     $.each(idsProductAttribute, function (index, value) {
-      var $combinationElem = $('.combination[data="' + value + '"]');
-      var $imagesElem = $combinationElem.find('.images');
-      var $index = $combinationElem.attr('data-index');
+      const $combinationElem = $('.combination[data="' + value + '"]');
+      const $index = $combinationElem.attr('data-index');
+      let $imagesElem = $combinationElem.find('.images');
+      let html = '';
 
       if (0 === $imagesElem.length) {
         $imagesElem = $('#combination_' + $index + '_id_image_attr');
       }
-
-      var html = '';
 
       $.each(combinationsImages[value], function(key, image) {
         html += `<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
@@ -124,13 +120,13 @@ export default function() {
     refreshDefaultImage();
   };
 
-  let refreshDefaultImage = () => {
-    var productDefaultImageUrl = null;
-    var productCoverImageElem = $('#product-images-dropzone').find('.iscover');
+  const refreshDefaultImage = () => {
+    const productCoverImageElem = $('#product-images-dropzone').find('.iscover');
+    let productDefaultImageUrl = null;
 
     /** get product cover image */
     if (productCoverImageElem.length === 1) {
-      var imgElem = productCoverImageElem.parent().find('.dz-image');
+      let imgElem = productCoverImageElem.parent().find('.dz-image');
 
       /** Dropzone.js workaround : If this is a fresh upload image, look up for an img, else find a background url */
       if (imgElem.find('img').length) {
@@ -143,10 +139,10 @@ export default function() {
     }
 
     $.each($('#form .combination-form'), function(key, elem) {
-      var defaultImageUrl = productDefaultImageUrl;
+      let defaultImageUrl = productDefaultImageUrl;
 
       /** get first selected image */
-      var defaultImageElem = $(elem).find('.product-combination-image input:checked:first');
+      const defaultImageElem = $(elem).find('.product-combination-image input:checked:first');
       if (defaultImageElem.length === 1) {
         defaultImageUrl = defaultImageElem.parent().find('img').attr('src');
       }
@@ -158,7 +154,7 @@ export default function() {
     });
   };
 
-  let generate = () => {
+  const generate = () => {
     $.ajax({
       type: 'POST',
       url: $('#form_step3_attributes').attr('data-action'),
@@ -170,7 +166,7 @@ export default function() {
         refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
-        let url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
+        const url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
         $.get(url)
           .then(function(combinationsImages) {
             refreshImagesCombination(combinationsImages, response.ids_product_attribute);
