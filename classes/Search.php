@@ -226,7 +226,7 @@ class SearchCore
 
         $intersect_array = array();
         $score_array = array();
-        $words = explode(' ', Search::sanitize($expr, $id_lang, false, $context->language->iso_code));
+        $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
@@ -587,7 +587,7 @@ class SearchCore
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
         if (strncmp($key, 'id_', 3) && isset($weight_array[$key])) {
-            $words = explode(' ', Search::sanitize($value, (int)$id_lang, true, $iso_code));
+            $words = Search::extractKeyWords($value, (int)$id_lang, true, $iso_code);
             foreach ($words as $word) {
                 if (!empty($word)) {
                     $word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
