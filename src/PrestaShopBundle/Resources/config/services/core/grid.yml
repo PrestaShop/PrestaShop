@@ -41,3 +41,16 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
         arguments:
             - '@form.factory'
+
+    # Query builder
+    prestashop.core.grid.abstract_query_builder:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        abstract: true
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.core.grid.query_builder.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\EmailLogsQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
