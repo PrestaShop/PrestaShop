@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Email;
 /**
  * Class EmailMethodOption defines available email sending method options
  */
-final class EmailMethodOption
+final class MailMethodOption
 {
     /**
      * @var int Option defines that emails should be sent using native mail() function
@@ -39,7 +39,7 @@ final class EmailMethodOption
     /**
      *  @var int Option defines that emails should be sent using configured SMTP settings
      */
-    const CUSTOM_SMTP = 2;
+    const SMTP = 2;
 
     /**
      * @var int Option defines that emails should not be sent
