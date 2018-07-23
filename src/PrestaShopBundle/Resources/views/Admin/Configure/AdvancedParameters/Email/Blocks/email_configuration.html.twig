@@ -39,7 +39,7 @@
         </small>
       </div>
 
-      <div class="form-group js-email-method">
+      <div class="form-group js-email-method" data-smtp-mail-method="{{ smtpMailMethod }}">
         {{ form_errors(emailConfigurationForm.email_config.mail_method) }}
         {{ form_widget(emailConfigurationForm.email_config.mail_method) }}
       </div>
