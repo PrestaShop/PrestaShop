@@ -31,7 +31,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,14 +101,34 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function processTestEmailSendingAction(Request $request)
     {
+        if (!$request->isXmlHttpRequest()) {
+            return $this->redirectToRoute('admin_email');
+        }
+
         if ($this->isDemoModeEnabled()) {
             return $this->json([
                 'errors' => [
                     $this->getDemoModeErrorMessage(),
+                ],
+            ]);
+        }
+
+        if (!in_array(
+            $this->authorizationLevel($request->attributes->get('_legacy_controller')),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            return $this->json([
+                'errors' => [
+                    $this->trans('Access denied.', 'Admin.Notifications.Error'),
                 ],
             ]);
         }
