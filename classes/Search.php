@@ -131,9 +131,9 @@ class SearchCore
 
         if ($indexation) {
             if (!$keepHyphens) {
-                $string = str_replace(['.', '_', '-'], '', $string);
+                $string = str_replace(['.', '_', '-'], ' ', $string);
             } else {
-                $string = str_replace(['.', '_'], '', $string);
+                $string = str_replace(['.', '_'], ' ', $string);
             }
         } else {
             $words = explode(' ', $string);
