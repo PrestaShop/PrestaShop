@@ -30,14 +30,14 @@ use PrestaShop\PrestaShop\Adapter\Entity\Contact;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
- * Class ContactRepository
+ * Class ContactRepository is responsible for retrieving contact data from database
  */
 final class ContactRepository implements ContactRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getContacts($langId)
+    public function findAllByLangId($langId)
     {
         return Contact::getContacts($langId);
     }
