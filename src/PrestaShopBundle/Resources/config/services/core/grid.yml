@@ -23,6 +23,11 @@ services:
           - "@=service('router').generate('admin_logs')"
         public: true
 
+    prestashop.core.grid.definition.factory.email_logs_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
