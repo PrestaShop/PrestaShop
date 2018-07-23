@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -72,9 +73,37 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
      */
     public function setData(array $data)
     {
+        $errors = $this->checkSmtpConfiguration($data);
+        if (!empty($errors)) {
+            return $errors;
+        }
+
         return array_merge(
             $this->emailDataConfigurator->updateConfiguration($data['email_config']),
             $this->smtpDataConfigurator->updateConfiguration($data['smtp_config'])
         );
+    }
+
+    /**
+     * Check if SMTP is configured if SMTP mail method is selected
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    private function checkSmtpConfiguration(array $config)
+    {
+        $errors = [];
+        $isSmtpNotConfigured = empty($config['smtp_config']['server']) || empty($config['smtp_config']['port']);
+
+        if (MailMethodOption::SMTP === $config['email_config']['mail_method'] && $isSmtpNotConfigured) {
+            $errors[] = [
+                'key' => 'You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.',
+                'parameters' => [],
+                'domain' => 'Admin.Shopparameters.Notification',
+            ];
+        }
+
+        return $errors;
     }
 }

@@ -74,8 +74,10 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
             $this->configuration->set('PS_MAIL_SMTP_ENCRYPTION', $config['encryption']);
             $this->configuration->set('PS_MAIL_SMTP_PORT', $config['port']);
 
-            if (!empty($config['password'])) {
-                $this->configuration->set('PS_MAIL_PASSWD', $config['password']);
+            $smtpPassword = (string) $config['password'];
+
+            if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
+                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword);
             }
         }
 
@@ -91,9 +93,8 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
             $config['domain'],
             $config['server'],
             $config['username'],
-            $config['password'],
             $config['encryption'],
             $config['port']
-        );
+        ) && array_key_exists('password', $config);
     }
 }
