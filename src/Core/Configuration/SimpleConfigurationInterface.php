@@ -26,58 +26,39 @@
 
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+
 /**
- * Interface AdvancedConfigurationInterface defines contract for advanced configuration
+ * Interface SimpleConfigurationInterface defines configuration
  */
-interface AdvancedConfigurationInterface extends SimpleConfigurationInterface
+interface SimpleConfigurationInterface extends ConfigurationInterface
 {
     /**
-     * Get configuration value as integer
+     * Get configuration value
      *
      * @param string $key
-     * @param int $default
+     * @param mixed $default
      *
-     * @return int
+     * @return mixed
      */
-    public function getInt($key, $default = 0);
+    public function get($key, $default = null);
 
     /**
-     * Get configuration value as boolean
+     * Set configuration value
      *
      * @param string $key
-     * @param bool $default
+     * @param mixed $value
      *
      * @return bool
      */
-    public function getBool($key, $default = false);
+    public function set($key, $value);
 
     /**
-     * Get all configuration values
-     *
-     * @return array
-     */
-    public function all();
-
-    /**
-     * Get all configuration value keys
-     *
-     * @return string[]
-     */
-    public function keys();
-
-    /**
-     * Check if configuration exists
+     * Remove configuration
      *
      * @param string $key
      *
      * @return bool
      */
-    public function has($key);
-
-    /**
-     * Get configuration values count
-     *
-     * @return int
-     */
-    public function count();
+    public function remove($key);
 }
