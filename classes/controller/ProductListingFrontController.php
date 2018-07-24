@@ -376,7 +376,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $searchVariables = array(
             'result' => $result,
             'label' => $this->getListingLabel(),
-            'products' => $products,
+            'products' => &$products,
             'sort_orders' => $sort_orders,
             'sort_selected' => $sort_selected,
             'pagination' => $pagination,
