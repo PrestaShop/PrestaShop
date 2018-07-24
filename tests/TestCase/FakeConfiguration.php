@@ -39,7 +39,7 @@ class FakeConfiguration implements ConfigurationInterface
         $this->keys = $keys;
     }
 
-    public function get($key)
+    public function get($key, $default = null)
     {
         if (!array_key_exists($key, $this->keys)) {
             throw new Exception("Key $key does not exist in the fake configuration.");
