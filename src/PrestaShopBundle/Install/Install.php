@@ -1108,7 +1108,7 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        if ($entity === 'category') {
+        if ($entity === 'category' || $entity === null) {
             Category::regenerateEntireNtree();
         }
 
