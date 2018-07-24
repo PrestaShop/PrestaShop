@@ -3158,11 +3158,17 @@ exit;
             $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
         }
 
-        $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
-
-        register_shutdown_function(function() use ($dir) {
-            $fs = new Filesystem();
-            $fs->remove($dir);
+        register_shutdown_function(function() use ($env) {
+            $directory = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
+                if (is_dir($directory)) {
+                $directories = new DirectoryIterator($directory);
+                $fs = new Filesystem();
+                foreach ($directories as $fileinfo) {
+                    if (!$fileinfo->isDot() && $fileinfo->getFilename() != 'smarty') {
+                        $fs->remove($fileinfo->getPathName());
+                    }
+                }
+            }
             Hook::exec('actionClearSf2Cache');
         });
     }

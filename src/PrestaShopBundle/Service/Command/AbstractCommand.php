@@ -88,7 +88,7 @@ abstract class AbstractCommand
     /**
      * Add cache:clear to the execution.
      */
-    public function addCacheClear()
+    public function addCacheClear($all = true)
     {
         $this->commands[] = array(
             'command' => 'doctrine:cache:clear-metadata',
@@ -105,9 +105,11 @@ abstract class AbstractCommand
             '--flush' => true,
         );
 
-        $this->commands[] = array(
-            'command' => 'cache:clear',
-            '--no-warmup' => true,
-        );
+        if ($all) {
+            $this->commands[] = array(
+                'command' => 'cache:clear',
+                '--no-warmup' => true,
+            );
+        }
     }
 }
