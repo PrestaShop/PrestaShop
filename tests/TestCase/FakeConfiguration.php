@@ -27,10 +27,10 @@
 
 namespace Tests\TestCase;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use Exception;
 
-class FakeConfiguration implements ConfigurationInterface
+class FakeConfiguration implements AdvancedConfigurationInterface
 {
     private $keys;
 
@@ -51,5 +51,44 @@ class FakeConfiguration implements ConfigurationInterface
     {
         $this->keys[$key] = $value;
         return $this;
+    }
+
+    public function getInt($key, $default = 0)
+    {
+        return (int) $this->get($key, $default);
+    }
+
+    public function getBool($key, $default = false)
+    {
+        return (bool) $this->get($key, $default);
+    }
+
+    public function all()
+    {
+        return $this->keys;
+    }
+
+    public function keys()
+    {
+       return array_keys($this->keys);
+    }
+
+    public function has($key)
+    {
+        return isset($this->keys[$key]);
+    }
+
+    public function count()
+    {
+        return count($this->keys);
+    }
+
+    public function remove($key)
+    {
+        if (isset($this->keys[$key])) {
+            unset($this->keys[$key]);
+        }
+
+        return true;
     }
 }
