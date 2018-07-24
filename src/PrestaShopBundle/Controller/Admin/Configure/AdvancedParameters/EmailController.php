@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
+use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -46,22 +47,37 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
-     * @param Request $request
+     * @param Request         $request
+     * @param EmailLogsFilter $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, EmailLogsFilter $filters)
     {
         $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
         $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
 
         $testEmailSendingForm = $this->createForm(TestEmailSendingType::class);
 
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
+
+        $presentedEmailLogsGrid = null;
+
+        if ($isEmailLogsEnabled) {
+            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+            $emailLogsGridFactory = $this->get('prestashop.core.grid.factory.email_logs');
+            $emailLogsGrid = $emailLogsGridFactory->createUsingSearchCriteria($filters);
+            $presentedEmailLogsGrid = $gridPresenter->present($emailLogsGrid);
+        }
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/email.html.twig', [
             'emailConfigurationForm' => $emailConfigurationForm->createView(),
             'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
             'smtpMailMethod' => MailMethodOption::SMTP,
             'testEmailSendingForm' => $testEmailSendingForm->createView(),
+            'emailLogsGrid' => $presentedEmailLogsGrid,
+            'isEmailLogsEnabled' => $isEmailLogsEnabled,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
