@@ -18,7 +18,7 @@ export default function() {
 
 
     $.get(refreshImagesUrl).then(function(response) {
-      if (idsProductAttribute.length !== 0) {
+      if (idsCount !== 0) {
         getCombinations(response);
       }
     });
