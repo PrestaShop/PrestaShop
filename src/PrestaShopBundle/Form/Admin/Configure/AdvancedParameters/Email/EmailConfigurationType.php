@@ -28,14 +28,17 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class EmailConfigurationType defines email sending configuration
  */
-class EmailConfigurationType extends AbstractType
+class EmailConfigurationType extends TranslatorAwareType
 {
     /**
      * @var FormChoiceProviderInterface
@@ -48,13 +51,19 @@ class EmailConfigurationType extends AbstractType
     private $contactsChoiceProvider;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param FormChoiceProviderInterface $mailMethodChoiceProvider
      * @param FormChoiceProviderInterface $contactsChoiceProvider
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         FormChoiceProviderInterface $mailMethodChoiceProvider,
         FormChoiceProviderInterface $contactsChoiceProvider
     ) {
+        parent::__construct($translator, $locales);
+
         $this->mailMethodChoiceProvider = $mailMethodChoiceProvider;
         $this->contactsChoiceProvider = $contactsChoiceProvider;
     }
@@ -77,9 +86,9 @@ class EmailConfigurationType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
-                    'Send email in HTML format' => 1,
-                    'Send email in text format' => 2,
-                    'Both' => 3,
+                    $this->trans('Send email in HTML format', 'Admin.Advparameters.Feature') => 1,
+                    $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => 2,
+                    $this->trans('Both', 'Admin.Advparameters.Feature') => 3,
                 ],
             ])
             ->add('log_emails', SwitchType::class)
