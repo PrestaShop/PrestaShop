@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class MailMethodChoiceProvider provides choices for mail methods
@@ -40,11 +41,20 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var TranslatorInterface
      */
-    public function __construct(ConfigurationInterface $configuration)
-    {
+    private $translator;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        ConfigurationInterface $configuration,
+        TranslatorInterface $translator
+    ) {
         $this->configuration = $configuration;
+        $this->translator = $translator;
     }
 
     /**
@@ -55,11 +65,11 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         if (null === $this->configuration->get('_PS_HOST_MODE_')) {
-            $choices['Use PHP\'s mail() function (recommended; works in most cases)'] = 1;
+            $choices[$this->translator->trans('Use PHP\'s mail() function (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')] = 1;
         }
 
-        $choices['Set my own SMTP parameters (for advanced users ONLY)'] = 2;
-        $choices['Never send emails (may be useful for testing purposes)'] = 3;
+        $choices[$this->translator->trans('Set my own SMTP parameters (for advanced users ONLY)', [], 'Admin.Advparameters.Feature')] = 2;
+        $choices[$this->translator->trans('Never send emails (may be useful for testing purposes)', [], 'Admin.Advparameters.Feature')] = 3;
 
         return $choices;
     }
