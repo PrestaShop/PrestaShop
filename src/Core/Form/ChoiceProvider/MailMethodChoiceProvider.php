@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -65,12 +66,25 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         if (null === $this->configuration->get('_PS_HOST_MODE_')) {
-            $choices[$this->translator->trans('Use PHP\'s mail() function (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')] = 1;
+            $choices[$this->transLabel('Use PHP\'s mail() function (recommended; works in most cases)')] =
+                MailOption::METHOD_NATIVE;
         }
 
-        $choices[$this->translator->trans('Set my own SMTP parameters (for advanced users ONLY)', [], 'Admin.Advparameters.Feature')] = 2;
-        $choices[$this->translator->trans('Never send emails (may be useful for testing purposes)', [], 'Admin.Advparameters.Feature')] = 3;
+        $choices[$this->transLabel('Set my own SMTP parameters (for advanced users ONLY)')] = MailOption::METHOD_SMTP;
+        $choices[$this->transLabel('Never send emails (may be useful for testing purposes)')] = MailOption::METHOD_NONE;
 
         return $choices;
+    }
+
+    /**
+     * Translate label
+     *
+     * @param string $labelKey
+     *
+     * @return string
+     */
+    private function transLabel($labelKey)
+    {
+        return $this->translator->trans($labelKey, [], 'Admin.Advparameters.Feature');
     }
 }

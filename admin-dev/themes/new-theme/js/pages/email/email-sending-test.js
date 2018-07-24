@@ -30,9 +30,12 @@ const $ = window.$;
  */
 class EmailSendingTest {
   constructor() {
-    $('.js-send-test-email-btn').on('click', (event) => {
-      event.preventDefault();
+    this.$successAlert = $('.js-test-email-success');
+    this.$errorAlert = $('.js-test-email-errors');
+    this.$loader = $('.js-test-email-loader');
+    this.$sendEmailBtn = $('.js-send-test-email-btn');
 
+    this.$sendEmailBtn.on('click', (event) => {
       this._handle(event);
     });
   }
@@ -93,16 +96,16 @@ class EmailSendingTest {
    * @private
    */
   _showSuccess() {
-    $('.js-test-email-success').removeClass('d-none');
+    this.$successAlert.removeClass('d-none');
   }
 
   /**
-   * Hide success messsage
+   * Hide success message
    *
    * @private
    */
   _hideSuccess() {
-    $('.js-test-email-success').addClass('d-none');
+    this.$successAlert.addClass('d-none');
   }
 
   /**
@@ -111,7 +114,7 @@ class EmailSendingTest {
    * @private
    */
   _showLoader() {
-    $('.js-test-email-loader').removeClass('d-none');
+    this.$loader.removeClass('d-none');
   }
 
   /**
@@ -120,7 +123,7 @@ class EmailSendingTest {
    * @private
    */
   _hideLoader() {
-    $('.js-test-email-loader').addClass('d-none');
+    this.$loader.addClass('d-none');
   }
 
   /**
@@ -131,13 +134,11 @@ class EmailSendingTest {
    * @private
    */
   _showErrors(errors) {
-    const $errors = $('.js-test-email-errors');
-
     errors.forEach((error) => {
-      $errors.append('<p>' + error + '</p>');
+      this.$errorAlert.append('<p>' + error + '</p>');
     });
 
-    $errors.removeClass('d-none');
+    this.$errorAlert.removeClass('d-none');
   }
 
   /**
@@ -146,9 +147,7 @@ class EmailSendingTest {
    * @private
    */
   _hideErrors() {
-    $('.js-test-email-errors')
-      .addClass('d-none')
-      .empty();
+    this.$errorAlert.addClass('d-none').empty();
   }
 
   /**
@@ -157,7 +156,7 @@ class EmailSendingTest {
    * @private
    */
   _showSendEmailButton() {
-    $('.js-send-test-email-btn').removeClass('d-none');
+    this.$sendEmailBtn.removeClass('d-none');
   }
 
   /**
@@ -166,7 +165,7 @@ class EmailSendingTest {
    * @private
    */
   _hideSendEmailButton() {
-    $('.js-send-test-email-btn').addClass('d-none');
+    this.$sendEmailBtn.addClass('d-none');
   }
 }
 

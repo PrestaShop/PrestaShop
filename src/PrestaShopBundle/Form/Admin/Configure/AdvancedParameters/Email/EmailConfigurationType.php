@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
+use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -86,9 +87,9 @@ class EmailConfigurationType extends TranslatorAwareType
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
-                    $this->trans('Send email in HTML format', 'Admin.Advparameters.Feature') => 1,
-                    $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => 2,
-                    $this->trans('Both', 'Admin.Advparameters.Feature') => 3,
+                    $this->trans('Send email in HTML format', 'Admin.Advparameters.Feature') => MailOption::TYPE_HTML,
+                    $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => MailOption::TYPE_TXT,
+                    $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
                 ],
             ])
             ->add('log_emails', SwitchType::class)

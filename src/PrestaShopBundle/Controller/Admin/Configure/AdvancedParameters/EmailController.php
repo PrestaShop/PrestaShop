@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
+use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
@@ -74,7 +74,7 @@ class EmailController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/email.html.twig', [
             'emailConfigurationForm' => $emailConfigurationForm->createView(),
             'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
-            'smtpMailMethod' => MailMethodOption::SMTP,
+            'smtpMailMethod' => MailOption::METHOD_SMTP,
             'testEmailSendingForm' => $testEmailSendingForm->createView(),
             'emailLogsGrid' => $presentedEmailLogsGrid,
             'isEmailLogsEnabled' => $isEmailLogsEnabled,
@@ -115,16 +115,15 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Processes test email sending
      *
+     * @DemoRestricted(redirectRoute="admin_email")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
      * @param Request $request
      *
      * @return Response
      */
     public function processTestEmailSendingAction(Request $request)
     {
-        if (!$request->isXmlHttpRequest()) {
-            return $this->redirectToRoute('admin_email');
-        }
-
         if ($this->isDemoModeEnabled()) {
             return $this->json([
                 'errors' => [
