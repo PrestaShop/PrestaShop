@@ -8,6 +8,11 @@ services:
         arguments:
             - '@prestashop.core.admin.log.repository'
 
+    prestashop.core.grid.data_provider.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        arguments:
+            - '@prestashop.core.grid.query_builder.email_logs'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -23,7 +28,7 @@ services:
           - "@=service('router').generate('admin_logs')"
         public: true
 
-    prestashop.core.grid.definition.factory.email_logs_definition:
+    prestashop.core.grid.definition.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
@@ -34,6 +39,13 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.log_definition'
             - '@prestashop.core.grid.data_provider.log'
+            - '@prestashop.hook.dispatcher'
+
+    prestashop.core.grid.factory.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.email_logs'
+            - '@prestashop.core.grid.data_provider.email_logs'
             - '@prestashop.hook.dispatcher'
 
     # Grid presenter
