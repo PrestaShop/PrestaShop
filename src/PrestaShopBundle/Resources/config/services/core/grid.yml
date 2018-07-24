@@ -31,6 +31,9 @@ services:
     prestashop.core.grid.definition.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - "@=service('router').generate('admin_common_reset_search', {'controller': 'emails', 'action': 'index'})"
+          - "@=service('router').generate('admin_email')"
         public: true
 
     # Grid factories
