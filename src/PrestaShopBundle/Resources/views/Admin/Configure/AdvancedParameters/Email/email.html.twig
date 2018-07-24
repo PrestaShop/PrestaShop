@@ -29,6 +29,10 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
+        {% if isEmailLogsEnabled %}
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': emailLogsGrid } %}
+        {% endif %}
+
         {{ form_start(emailConfigurationForm) }}
           {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig' %}
           {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
