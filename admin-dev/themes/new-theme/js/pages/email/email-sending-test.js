@@ -55,7 +55,9 @@ class EmailSendingTest {
 
     const $testEmailSendingForm = $(event.target).closest('form');
 
-    this._resetUI();
+    this._resetMessages();
+
+    this._hideSendEmailButton();
     this._showLoader();
 
     $.post({
@@ -63,6 +65,7 @@ class EmailSendingTest {
       data: $testEmailSendingForm.serialize(),
     }).then((response) => {
       this._hideLoader();
+      this._showSendEmailButton();
 
       if (0 === response.errors.length) {
         this._showSuccess();
@@ -79,8 +82,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  _resetUI() {
-    this._hideLoader();
+  _resetMessages() {
     this._hideSuccess();
     this._hideErrors();
   }
@@ -147,6 +149,24 @@ class EmailSendingTest {
     $('.js-test-email-errors')
       .addClass('d-none')
       .empty();
+  }
+
+  /**
+   * Show send email button
+   *
+   * @private
+   */
+  _showSendEmailButton() {
+    $('.js-send-test-email-btn').removeClass('d-none');
+  }
+
+  /**
+   * Hide send email button
+   *
+   * @private
+   */
+  _hideSendEmailButton() {
+    $('.js-send-test-email-btn').addClass('d-none');
   }
 }
 

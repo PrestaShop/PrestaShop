@@ -23,23 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
-  {% block grid_header %}
-    <div class="card-header">
-      <h3>
-        <i class="material-icons">list</i>
-        {{ grid.name }} ({{ grid.data.rows_total }})
-      </h3>
+{% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': emailLogsGrid } %}
+  {% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+  {% block grid_footer %}
+    <div class="card-footer">
+      <a href="{{ getAdminLink('AdminDashboard') }}" class="btn btn-outline-secondary">
+        <i class="material-icons">arrow_back</i>
+        {{ 'Back to the dashboard'|trans() }}
+      </a>
     </div>
   {% endblock %}
-
-  {% block grid_body %}
-    <div class="card-block">
-      {% block grid_view_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
-      {% endblock %}
-    </div>
-  {% endblock %}
-
-  {% block grid_footer %}{% endblock %}
-</div>
+{% endembed %}
