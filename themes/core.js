@@ -1718,6 +1718,11 @@
 	  _prestashop2['default'].on('updateCart', function (event) {
 	    _prestashop2['default'].cart = event.reason.cart;
 	    var getCartViewUrl = (0, _jquery2['default'])('.js-cart').data('refresh-url');
+	
+	    if (!getCartViewUrl) {
+	      return;
+	    }
+	
 	    var requestData = {};
 	
 	    if (event && event.reason) {
@@ -1794,6 +1799,7 @@
 	            reason: {
 	              idProduct: resp.id_product,
 	              idProductAttribute: resp.id_product_attribute,
+	              idCustomization: resp.id_customization,
 	              linkAction: 'add-to-cart',
 	              cart: resp.cart
 	            },
@@ -2351,6 +2357,7 @@
 	    value: function confirm() {
 	      var option = this.getSelectedOption();
 	      if (option) {
+	        (0, _jquery2['default'])(this.confirmationSelector + ' button').prop('disabled', true);
 	        (0, _jquery2['default'])('#pay-with-' + option + '-form form').submit();
 	      }
 	    }
