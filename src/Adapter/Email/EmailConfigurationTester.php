@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Mail;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Email\EmailConfigurationTesterInterface;
-use PrestaShop\PrestaShop\Core\Email\MailMethodOption;
+use PrestaShop\PrestaShop\Core\Email\MailOption;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -65,10 +65,14 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
      */
     public function testConfiguration(array $config)
     {
-        $content = $this->translator->trans('This is a test message. Your server is now configured to send email.', [], 'Admin.Advparameters.Feature');
+        $content = $this->translator->trans(
+            'This is a test message. Your server is now configured to send email.',
+            [],
+            'Admin.Advparameters.Feature'
+        );
         $subject = $this->translator->trans('Test message -- Prestashop', [], 'Admin.Advparameters.Feature');
 
-        $smtpChecked = MailMethodOption::SMTP === (int) $config['mail_method'];
+        $smtpChecked = MailOption::METHOD_SMTP === (int) $config['mail_method'];
 
         $password = !empty($config['smtp_password']) ?
             urldecode($config['smtp_password']) :
@@ -97,7 +101,8 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
         $errors = [];
 
         if (false === $result || is_string($result)) {
-            $errors[] = $this->translator->trans('Error: Please check your configuration', [], 'Admin.Advparameters.Feature');
+            $errors[] =
+                $this->translator->trans('Error: Please check your configuration', [], 'Admin.Advparameters.Feature');
         }
 
         if (is_string($result)) {
