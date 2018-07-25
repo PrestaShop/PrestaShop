@@ -24,61 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
+
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid
+ * Class BulkActionCollection holds bulk action collection available for grid
+ *
+ * @property BulkActionInterface[] $items
  */
-final class BulkAction implements BulkActionInterface
+final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $icon;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @param string $id   Action identifier should be unique between all grid row actions
-     * @param string $name Translated action name
-     * @param string $icon Action icon name
-     */
-    public function __construct($id, $name, $icon)
+    public function add(BulkActionInterface $bulkAction)
     {
-        $this->name = $name;
-        $this->id = $id;
-        $this->icon = $icon;
+        $this->items[$bulkAction->getId()] = $bulkAction;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName()
+    public function toArray()
     {
-        return $this->name;
-    }
+        $bulkActionsArray = [];
 
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
+        foreach ($this->items as $bulkAction) {
+            $bulkActionsArray[] = [
+                'id' => $bulkAction->getId(),
+                'name' => $bulkAction->getName(),
+                'type' => $bulkAction->getType(),
+                'options' => $bulkAction->getOptions(),
+            ];
+        }
 
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
+        return $bulkActionsArray;
     }
 }
