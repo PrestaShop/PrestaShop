@@ -24,44 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\AbstractGridAction;
 
-/**
- * Class PanelActionCollection is responsible for holding single grid actions
- *
- * @property GridActionInterface[] $items
- */
-final class GridActionCollection extends AbstractCollection implements GridActionCollectionInterface
+final class SimpleGridAction extends AbstractGridAction
 {
     /**
      * {@inheritdoc}
      */
-    public function add(GridActionInterface $action)
+    public function getType()
     {
-        $this->items[$action->getId()] = $action;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        $actionsArray = [];
-
-        foreach ($this->items as $action) {
-            $actionsArray[] = [
-                'id' => $action->getId(),
-                'name' => $action->getName(),
-                'icon' => $action->getIcon(),
-                'type' => $action->getType(),
-                'options' => $action->getOptions(),
-            ];
-        }
-
-        return $actionsArray;
+        return 'simple';
     }
 }

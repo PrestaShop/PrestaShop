@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,15 +22,39 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Type;
 
-<form action="{{ path('admin_logs_delete') }}" method="POST" class="dropdown-item">
-  <input name="_method" type="hidden" value="DELETE" />
-  <input name="_token" type="hidden" value="{{ csrf_token('logs') }}" />
-  {% set message = 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') %}
-  <button type="button" id="logs-deleteAll" class="btn btn-block btn-sm" data-confirm-message="{{ message }}">
-    {{ action.name }}
-  </button>
-</form>
+use PrestaShop\PrestaShop\Core\Grid\Action\AbstractGridAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class SubmitGridAction extends AbstractGridAction
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'submit';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'submit_route',
+            ])
+            ->setDefaults([
+                'submit_method' => 'POST',
+                'confirm_message'=> null,
+            ])
+            ->setAllowedTypes('submit_route', 'string')
+            ->setAllowedTypes('confirm_message', ['null', 'string'])
+            ->setAllowedValues('submit_method', ['POST', 'GET'])
+        ;
+    }
+}
