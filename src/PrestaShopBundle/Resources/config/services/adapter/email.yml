@@ -7,3 +7,6 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+
+    prestashop.adapter.email.email_log_eraser:
+        class: 'PrestaShop\PrestaShop\Adapter\Email\EmailLogEraser'
