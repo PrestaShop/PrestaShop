@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,9 +21,22 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block content %}
-  {{ pageContent|raw }}
-{% endblock %}
+import TableSorting from '../../../app/utils/table-sorting';
+
+/**
+ * Class ReloadListExtension extends grid with "List reload" action
+ */
+export default class SortingExtension {
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    const $sortableTable = grid.getContainer().find('table.table');
+
+    new TableSorting($sortableTable).attach();
+  }
+}

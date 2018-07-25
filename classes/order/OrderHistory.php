@@ -323,6 +323,12 @@ class OrderHistoryCore extends ObjectModel
                     $product_quantity = (int) ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']);
 
                     if ($product_quantity > 0) {
+                        $current_shop_context_type = Context::getContext()->shop->getContextType();
+                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP) {
+                            //change to order shop context
+                            $current_shop_group_id = Context::getContext()->shop->getContextShopGroupID();
+                            Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, $order->id_shop);
+                        }
                         (new StockManager)->saveMovement(
                             (int)$product['product_id'],
                             (int)$product['product_attribute_id'],
@@ -331,7 +337,11 @@ class OrderHistoryCore extends ObjectModel
                                 'id_order' => $order->id,
                                 'id_stock_mvt_reason' => ($new_os->shipped == 1 ? Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON') : Configuration::get('PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON'))
                             )
-                        );
+                        );                     
+                        //back to current shop context
+                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP) {
+                            Context::getContext()->shop->setContext($current_shop_context_type, $current_shop_group_id);
+                        }
                     }
                 }
             }

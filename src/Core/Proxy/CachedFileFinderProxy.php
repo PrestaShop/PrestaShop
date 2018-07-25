@@ -1,5 +1,6 @@
+<?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,24 +19,47 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../../components/grid/grid';
-import ReloadListActionExtension from '../../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../../components/grid/extension/sorting-extension';
+namespace PrestaShop\PrestaShop\Core\Proxy;
 
-const $ = global.$;
+use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 
-$(() => {
-  const grid = new Grid('logs');
+/**
+ * Class CachedFileFinderProxy is a local cache proxy of file finder
+ */
+final class CachedFileFinderProxy implements FileFinderInterface
+{
+    /**
+     * @var FileFinderInterface
+     */
+    private $delegate;
 
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SortingExtension());
-});
+    /**
+     * @var array
+     */
+    private $filesCache;
+
+    /**
+     * @param FileFinderInterface $delegate instance of file finder
+     */
+    public function __construct(FileFinderInterface $delegate)
+    {
+        $this->delegate = $delegate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find()
+    {
+        if (null === $this->filesCache) {
+            $this->filesCache = $this->delegate->find();
+        }
+
+        return $this->filesCache;
+    }
+}

@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation;
-
-use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
 
 /**
  * Class responsible of managing the right version of Shop
@@ -71,24 +68,16 @@ class Version
     /**
      * Initialize version data
      *
-     * @param string  $version            Version
-     * @param string  $majorVersionString Major version in string format
-     * @param integer $majorVersion       Major version
-     * @param integer $minorVersion       Minor version
-     * @param integer $releaseVersion     Release version
+     * @param string  $version  Version
      */
-    public function __construct(
-        $version,
-        $majorVersionString,
-        $majorVersion,
-        $minorVersion = 0,
-        $releaseVersion = 0
-    ) {
+    public function __construct($version)
+    {
         $this->version = $version;
-        $this->majorVersionString = $majorVersionString;
-        $this->majorVersion = $majorVersion;
-        $this->minorVersion = $minorVersion;
-        $this->releaseVersion = $releaseVersion;
+        $versions = explode('.', $version);
+        $this->majorVersionString = $versions[0] . '.' . $versions[1];
+        $this->majorVersion = (int) ($versions[0] . $versions[1]);
+        $this->minorVersion = $versions[2];
+        $this->releaseVersion = $versions[3];
     }
 
     /**
@@ -265,7 +254,7 @@ class Version
     private function checkVersion($version)
     {
         if (!preg_match('~^\d+(\.\d+){0,}$~', $version)) {
-            throw new InvalidVersionException($version);
+            throw new InvalidArgumentException("Invalid version used: $version");
         }
 
         return true;

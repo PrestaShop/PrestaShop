@@ -11,6 +11,7 @@ module.exports = {
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
     configure_module_button: '//form[contains(@action, "action/configure/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
+    configure_module_theme_button: '//button[contains(@class,"module_action_menu_configure")]',
     success_install_message: '//*[@id="importDropzone"]/div[3]/i',
     action_dropdown: '//div[@data-tech-name="%moduleTechName"]//button[contains(@class,"dropdown-toggle")]',
     uninstall_button: '//form[contains(@action, "action/uninstall/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-uninstall"]',
@@ -63,6 +64,12 @@ module.exports = {
       account_owner_input: '//*[@id="BANK_WIRE_OWNER"]',
       account_details_textarea: '//*[@id="BANK_WIRE_DETAILS"]',
       bank_address_textarea: '//*[@id="BANK_WIRE_ADDRESS"]',
+      save_button: '//*[@id="module_form_submit_btn"]'
+    },
+    MainMenuPage: {
+      available_item_list: '//*[@id="availableItems"]//option[@value="CAT%ID"]',
+      add_item_button: '//*[@id="addItem"]',
+      selected_item_list : '//*[@id="items"]//option[@value="CAT%ID"]',
       save_button: '//*[@id="module_form_submit_btn"]'
     },
 

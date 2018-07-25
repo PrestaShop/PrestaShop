@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
@@ -50,10 +51,12 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
+        $date = (new DateTime())->format('Y-m-d');
+
         return [
             'generate_by_date' => [
-                'date_from' => date('Y-m-d'),
-                'date_to' => date('Y-m-d'),
+                'date_from' => $date,
+                'date_to' => $date,
             ],
         ];
     }
