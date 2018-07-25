@@ -49,6 +49,11 @@ function buildRelease() {
 
 function __main() {
 
+    if [[ $# -eq 0 ]] ; then
+        usage
+        exit 0
+    fi
+
     local positional=()
     while [[ $# -gt 0 ]]
     do
@@ -80,7 +85,7 @@ function __main() {
             shift
         ;;
         *)
-        positional+=("$1")
+        positional+=("$key")
         shift
         ;;
     esac
