@@ -28,7 +28,6 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * LogGridDefinitionFactory constructor.
      * @param string $resetActionUrl
      * @param string $redirectionUrl
      */
@@ -127,7 +126,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_email_logs'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_delete_email_logs',
+                    'submit_route' => 'admin_delete_selected_email_logs',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
                 ])
             )

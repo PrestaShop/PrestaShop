@@ -19,9 +19,16 @@ admin_send_test_email:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processTestEmailSending'
         _legacy_controller: AdminEmails
 
-admin_delete_email_logs:
-    path: /delete-logs
+admin_delete_selected_email_logs:
+    path: /delete/selected
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processDeleteEmailLogs'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processDeleteSelectedEmailLogs'
+        _legacy_controller: AdminEmails
+
+admin_delete_all_email_logs:
+    path: /delete/all
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processDeleteAllEmailLogs'
         _legacy_controller: AdminEmails
