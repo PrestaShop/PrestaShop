@@ -4,8 +4,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -116,6 +117,16 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                             'data-redirect' => $this->redirectionUrl,
                         ],
                     ]),
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('delete'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'route' => 'admin_delete_single_email_log',
+                                'route_param_name' => 'mailId',
+                                'route_param_field' => 'id_mail',
+                            ])
+                        )
+                    ,
                 ])
             )
         ;
