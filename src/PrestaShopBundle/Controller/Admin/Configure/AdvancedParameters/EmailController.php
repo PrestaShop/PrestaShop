@@ -122,7 +122,7 @@ class EmailController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processDeleteEmailLogsAction(Request $request)
+    public function processDeleteSelectedEmailLogsAction(Request $request)
     {
         $mailLogsToDelete = $request->request->get('email_logs_delete_email_logs');
 
