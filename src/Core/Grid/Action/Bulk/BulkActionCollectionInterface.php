@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,30 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if grid.actions.bulk|length > 0 %}
-    <div class="btn-group">
-      <button id="product_bulk_menu"
-              class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
-              data-toggle="dropdown"
-              disabled
-      >
-        {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
-        <i class="icon-caret-up"></i>
-      </button>
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
 
-      <div class="dropdown-menu">
-        {% for action in grid.actions.bulk %}
-          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Bulk/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
-        {% endfor %}
-      </div>
-    </div>
-{% endif %}
+use Iterator;
+
+/**
+ * Interface BulkActionCollectionInterface defines bulk actions contract
+ */
+interface BulkActionCollectionInterface extends Iterator
+{
+    /**
+     * Add bulk action to collection
+     *
+     * @param BulkActionInterface $bulkAction
+     *
+     * @return self
+     */
+    public function add(BulkActionInterface $bulkAction);
+
+    /**
+     * Get bulk actions as array
+     *
+     * @return array
+     */
+    public function toArray();
+}
