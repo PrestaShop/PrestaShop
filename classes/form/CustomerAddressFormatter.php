@@ -95,6 +95,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 if ($field === 'postcode') {
                     if ($this->country->need_zip_code) {
                         $formField->setRequired(true);
+                        $formField->setType('number');
                     }
                 } elseif ($field === 'phone') {
                     $formField->setType('tel');
