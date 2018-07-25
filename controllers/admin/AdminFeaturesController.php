@@ -372,6 +372,15 @@ class AdminFeaturesControllerCore extends AdminController
         );
 
         $this->getlanguages();
+        
+        $fields_value = $this->getFieldsValue($this->object);
+        Hook::exec('action'.$this->controller_name.'FormModifier', array(
+            'object' => &$this->object,
+            'fields' => &$this->fields_form,
+            'fields_value' => &$fields_value,
+            'form_vars' => &$this->tpl_form_vars,
+        ));
+
         $helper = new HelperForm();
         $helper->show_cancel_button = true;
 
