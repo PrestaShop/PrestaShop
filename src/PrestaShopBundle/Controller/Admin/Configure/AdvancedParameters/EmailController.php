@@ -115,10 +115,46 @@ class EmailController extends FrameworkBundleAdminController
     /**
      * Delete selected email logs
      *
+     * @DemoRestricted(redirectRoute="admin_email")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function processDeleteEmailLogsAction(Request $request)
     {
+        $mailLogsToDelete = $request->request->get('email_logs_delete_email_logs');
+
+        $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
+        $errors = $mailLogsEraser->erase($mailLogsToDelete);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_email');
+    }
+
+    /**
+     * Delete all email logs
+     *
+     * @DemoRestricted(redirectRoute="admin_email")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @return RedirectResponse
+     */
+    public function processDeleteAllEmailLogsAction()
+    {
+        $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
+        $mailLogsEraser->eraseAll();
+
+        return $this->redirectToRoute('admin_email');
     }
 
     /**
