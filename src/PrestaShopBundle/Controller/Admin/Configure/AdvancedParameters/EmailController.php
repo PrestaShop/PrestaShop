@@ -113,6 +113,15 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delete selected email logs
+     *
+     * @param Request $request
+     */
+    public function processDeleteEmailLogsAction(Request $request)
+    {
+    }
+
+    /**
      * Processes test email sending
      *
      * @DemoRestricted(redirectRoute="admin_email")

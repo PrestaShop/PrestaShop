@@ -24,28 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
-
-use Iterator;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
 
 /**
- * Interface BulkActionCollectionInterface defines bulk actions contract
+ * Interface BulkActionInterface defines contract for single grid bulk action
  */
-interface BulkActionCollectionInterface extends Iterator
+interface BulkActionInterface
 {
     /**
-     * Add bulk action to collection
+     * Get unique bulk action identifier for grid
      *
-     * @param BulkActionInterface $bulkAction
-     *
-     * @return self
+     * @return string
      */
-    public function add(BulkActionInterface $bulkAction);
+    public function getId();
 
     /**
-     * Get bulk actions as array
+     * Get translated bulk action name
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Get action type
+     *
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * Get action options
      *
      * @return array
      */
-    public function toArray();
+    public function getOptions();
+
+    /**
+     * Set options for bulk action
+     *
+     * @param array $options
+     *
+     * @return self
+     */
+    public function setOptions(array $options);
+
+    /**
+     * Set bulk action name
+     *
+     * @param string $name
+     *
+     * @return self
+     */
+    public function setName($name);
 }

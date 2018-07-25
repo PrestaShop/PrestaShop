@@ -2,9 +2,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
@@ -57,6 +60,11 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
+            ->add((new BulkActionColumn('delete_email_logs'))
+                ->setOptions([
+                    'bulk_field' => 'id_mail',
+                ])
+            )
             ->add((new DataColumn('id_mail'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
@@ -105,6 +113,22 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                             'data-redirect' => $this->redirectionUrl,
                         ],
                     ]),
+                ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('delete_email_logs'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_delete_email_logs',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
                 ])
             )
         ;

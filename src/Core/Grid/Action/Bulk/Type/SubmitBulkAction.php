@@ -24,42 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class BulkActionCollection holds bulk action collection available for grid
- *
- * @property BulkActionInterface[] $items
+ * Class BulkAction holds data about single bulk action available in grid
  */
-final class BulkActionCollection extends AbstractCollection implements BulkActionCollectionInterface
+final class SubmitBulkAction extends AbstractBulkAction
 {
     /**
      * {@inheritdoc}
      */
-    public function add(BulkActionInterface $bulkAction)
+    public function getType()
     {
-        $this->items[$bulkAction->getId()] = $bulkAction;
-
-        return $this;
+        return 'submit';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        $bulkActionsArray = [];
-
-        foreach ($this->items as $bulkAction) {
-            $bulkActionsArray[] = [
-                'id' => $bulkAction->getId(),
-                'name' => $bulkAction->getName(),
-                'icon' => $bulkAction->getIcon(),
-            ];
-        }
-
-        return $bulkActionsArray;
+        $resolver
+            ->setRequired([
+                'submit_route',
+            ])
+            ->setDefaults([
+                'confirm_message' => null,
+                'submit_method' => 'POST',
+            ])
+            ->setAllowedTypes('submit_route', 'string')
+            ->setAllowedTypes('confirm_message', ['string', 'null'])
+            ->setAllowedValues('submit_method', ['POST', 'GET'])
+        ;
     }
 }
