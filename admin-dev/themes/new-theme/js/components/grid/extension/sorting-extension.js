@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,24 +18,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../../components/grid/grid';
-import ReloadListActionExtension from '../../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../../components/grid/extension/sorting-extension';
+import TableSorting from '../../../app/utils/table-sorting';
 
-const $ = global.$;
+/**
+ * Class ReloadListExtension extends grid with "List reload" action
+ */
+export default class SortingExtension {
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    const $sortableTable = grid.getContainer().find('table.table');
 
-$(() => {
-  const grid = new Grid('logs');
-
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SortingExtension());
-});
+    new TableSorting($sortableTable).attach();
+  }
+}

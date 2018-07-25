@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,24 +18,28 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../../components/grid/grid';
-import ReloadListActionExtension from '../../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../../components/grid/extension/sorting-extension';
+import resetSearch from '../../../app/utils/reset_search';
 
-const $ = global.$;
+const $ = window.$;
 
-$(() => {
-  const grid = new Grid('logs');
+/**
+ * Class FiltersResetExtension extends grid with filters resetting
+ */
+export default class FiltersResetExtension {
 
-  grid.addExtension(new ReloadListActionExtension());
-  grid.addExtension(new ExportToSqlManagerExtension());
-  grid.addExtension(new FiltersResetExtension());
-  grid.addExtension(new SortingExtension());
-});
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    grid.getContainer().on('click', '.reset-search', (event) => {
+      resetSearch($(event.target).data('url'), $(event.target).data('redirect'));
+    });
+  }
+}
