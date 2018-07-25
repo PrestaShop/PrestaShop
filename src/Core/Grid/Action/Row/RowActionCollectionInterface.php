@@ -24,20 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use Iterator;
 
 /**
- * Class RowActionCollection defines contract for grid row action collection
+ * Interface RowActionCollectionInterface defines contract for row actions collection
  */
-final class RowActionCollection extends AbstractCollection implements RowActionCollectionInterface
+interface RowActionCollectionInterface extends Iterator
 {
     /**
-     * {@inheritdoc}
+     * Add row action to collection
+     *
+     * @param RowActionInterface $action
+     *
+     * @return self
      */
-    public function add(RowActionInterface $action)
-    {
-        $this->items[$action->getIdentifier()] = $action;
-    }
+    public function add(RowActionInterface $action);
 }

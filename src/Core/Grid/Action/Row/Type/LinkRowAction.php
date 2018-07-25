@@ -24,22 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ActionColumn extends AbstractColumn
+final class LinkRowAction extends AbstractRowAction
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'action';
+        return 'link';
     }
 
     /**
@@ -48,12 +45,18 @@ class ActionColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
-                'actions' => null,
-                'filter' => new ColumnFilterOption(SubmitType::class, []),
+            ->setRequired([
+                'route',
+                'route_param_name',
+                'route_param_field',
             ])
-            ->setAllowedTypes('filter', ColumnFilterOption::class)
-            ->setAllowedTypes('actions', ['null', RowActionCollection::class])
+            ->setDefaults([
+                'confirm_message' => '',
+            ])
+            ->setAllowedTypes('route', 'string')
+            ->setAllowedTypes('route_param_name', 'string')
+            ->setAllowedTypes('route_param_field', 'string')
+            ->setAllowedTypes('confirm_message', 'string')
         ;
     }
 }
