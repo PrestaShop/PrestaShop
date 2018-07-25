@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,21 +21,14 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
-
-use Iterator;
-
-/**
- * Interface RowActionCollectionInterface defines contract for row actions collection
- */
-interface RowActionCollectionInterface extends Iterator
-{
-    /**
-     * Add row action to collection
-     *
-     * @param RowActionInterface $action
-     */
-    public function add(RowActionInterface $action);
-}
+<a class="btn tooltip-link {% if action.options.confirm_message %}js-confirm-btn{% endif %}"
+   href="{{ path(action.options.route, { (action.options.route_param_name) : row[action.options.route_param_field]}) }}"
+   data-confirm-message="{{ action.options.confirm_message }}"
+>
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
+  {{ action.name }}
+</a>

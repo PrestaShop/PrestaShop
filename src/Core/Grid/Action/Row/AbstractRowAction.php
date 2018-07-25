@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
-
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractGridAction implements GridActionInterface
+/**
+ * Class AbstractRowAction
+ */
+abstract class AbstractRowAction implements RowActionInterface
 {
     /**
      * @var string
@@ -41,19 +43,14 @@ abstract class AbstractGridAction implements GridActionInterface
     private $name;
 
     /**
-     * @var string
+     * @var array|null
      */
-    private $type;
+    private $options;
 
     /**
      * @var string
      */
     private $icon;
-
-    /**
-     * @var array
-     */
-    private $options;
 
     /**
      * @param string $id
@@ -82,19 +79,20 @@ abstract class AbstractGridAction implements GridActionInterface
     /**
      * {@inheritdoc}
      */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
     public function setName($name)
     {
         $this->name = $name;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIcon()
-    {
-        return $this->icon;
     }
 
     /**
@@ -130,7 +128,7 @@ abstract class AbstractGridAction implements GridActionInterface
     }
 
     /**
-     * Default bulk action options configuration. You can override it if options are needed.
+     * Default action options configuration. You can override it if options are needed.
      *
      * @param OptionsResolver $resolver
      */
