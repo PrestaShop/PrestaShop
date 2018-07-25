@@ -26,10 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-/**
- * Class PanelAction is responsible for holding single grid action data
- */
-final class GridAction implements GridActionInterface
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+abstract class AbstractGridAction implements GridActionInterface
 {
     /**
      * @var string
@@ -52,17 +51,16 @@ final class GridAction implements GridActionInterface
     private $icon;
 
     /**
-     * @param string $id   Unique action identifier
-     * @param string $name Translated action name
-     * @param string $icon Action icon
-     * @param string $type Type of grid action
+     * @var array
      */
-    public function __construct($id, $name, $icon, $type)
+    private $options;
+
+    /**
+     * @param string $id
+     */
+    public function __construct($id)
     {
         $this->id = $id;
-        $this->name = $name;
-        $this->icon = $icon;
-        $this->type = $type;
     }
 
     /**
@@ -84,6 +82,16 @@ final class GridAction implements GridActionInterface
     /**
      * {@inheritdoc}
      */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getIcon()
     {
         return $this->icon;
@@ -92,8 +100,54 @@ final class GridAction implements GridActionInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function setIcon($icon)
     {
-        return $this->type;
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $this->resolveOptions($options);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        if (null === $this->options) {
+            $this->resolveOptions();
+        }
+
+        return $this->options;
+    }
+
+    /**
+     * Default bulk action options configuration. You can override it if options are needed.
+     *
+     * @param OptionsResolver $resolver
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+    }
+
+    /**
+     * Resolve bulk action options
+     *
+     * @param array $options
+     */
+    private function resolveOptions(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
     }
 }

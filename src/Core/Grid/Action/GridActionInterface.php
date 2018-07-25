@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Interface PanelActionInterface
+ * Interface GridActionInterface
  */
 interface GridActionInterface
 {
@@ -46,6 +46,15 @@ interface GridActionInterface
     public function getName();
 
     /**
+     * Set action name
+     *
+     * @param string $name
+     *
+     * @return self
+     */
+    public function setName($name);
+
+    /**
      * Returns action icon name
      *
      * @return string
@@ -53,9 +62,34 @@ interface GridActionInterface
     public function getIcon();
 
     /**
+     * Set action icon name
+     *
+     * @param string $icon
+     *
+     * @return string
+     */
+    public function setIcon($icon);
+
+    /**
      * Returns grid action type
      *
      * @return string
      */
     public function getType();
+
+    /**
+     * Get action options
+     *
+     * @return array
+     */
+    public function getOptions();
+
+    /**
+     * Set action options
+     *
+     * @param array $options
+     *
+     * @return self
+     */
+    public function setOptions(array $options);
 }
