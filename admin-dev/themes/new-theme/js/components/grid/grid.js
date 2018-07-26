@@ -37,10 +37,6 @@ export default class Grid {
   constructor(id) {
     this.id = id;
     this.$container = $('#' + this.id + '_grid');
-
-    if (0 === this.$container.length) {
-      throw 'Grid with id "' + this.id + '" does not exist.';
-    }
   }
 
   /**
