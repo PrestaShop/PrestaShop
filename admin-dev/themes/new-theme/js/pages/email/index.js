@@ -25,10 +25,25 @@
 
 import EmailSendingTest from './email-sending-test';
 import SmtpConfigurationToggler from './smtp-configuration-toggler';
+import Grid from '../../components/grid/grid';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 
 const $ = window.$;
 
 $(() => {
+  const emailLogsGrid = new Grid('email_logs');
+
+  emailLogsGrid.addExtension(new ReloadListActionExtension());
+  emailLogsGrid.addExtension(new ExportToSqlManagerExtension());
+  emailLogsGrid.addExtension(new FiltersResetExtension());
+  emailLogsGrid.addExtension(new SortingExtension());
+  emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
+
+
   new EmailSendingTest();
   new SmtpConfigurationToggler();
 });
