@@ -45,7 +45,7 @@ final class GridPresenter implements GridPresenterInterface
         return [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $grid->getFiltersForm()->createView(),
+            'filter_form' => $grid->getFilterForm()->createView(),
             'columns' => $definition->getColumns()->toArray(),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),

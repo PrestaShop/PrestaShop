@@ -93,8 +93,8 @@ class EmailController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $emailLogsGridDefinitionFactory = $this->get('prestashop.core.grid.definition.factory.email_logs');
-        $emailLogsDefinition = $emailLogsGridDefinitionFactory->create();
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.email_logs');
+        $emailLogsDefinition = $definitionFactory->create();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
         $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
