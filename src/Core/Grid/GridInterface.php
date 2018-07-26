@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\Form\FormInterface;
 
 interface GridInterface
 {
@@ -52,4 +53,11 @@ interface GridInterface
      * @return SearchCriteriaInterface
      */
     public function getSearchCriteria();
+
+    /**
+     * Get grid filter form
+     *
+     * @return FormInterface
+     */
+    public function getFiltersForm();
 }

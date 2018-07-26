@@ -85,6 +85,31 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $emailLogsGridDefinitionFactory = $this->get('prestashop.core.grid.definition.factory.email_logs');
+        $emailLogsDefinition = $emailLogsGridDefinitionFactory->create();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_email', ['filters' => $filters]);
+    }
+
+    /**
      * Process email configuration saving
      *
      * @DemoRestricted(redirectRoute="admin_email")
