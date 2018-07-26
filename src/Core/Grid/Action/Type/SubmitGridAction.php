@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Type;
 use PrestaShop\PrestaShop\Core\Grid\Action\AbstractGridAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class SubmitGridAction represents grid action that can be submitted
+ */
 final class SubmitGridAction extends AbstractGridAction
 {
     /**
