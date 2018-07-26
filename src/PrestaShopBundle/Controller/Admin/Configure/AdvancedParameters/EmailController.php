@@ -128,10 +128,10 @@ class EmailController extends FrameworkBundleAdminController
         if ($emailConfigurationForm->isSubmitted()) {
             $errors = $formHandler->save($emailConfigurationForm->getData());
 
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } else {
+            if (!empty($errors)) {
                 $this->flashErrors($errors);
+            } else {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             }
         }
 
@@ -215,9 +215,6 @@ class EmailController extends FrameworkBundleAdminController
 
     /**
      * Processes test email sending
-     *
-     * @DemoRestricted(redirectRoute="admin_email")
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      *

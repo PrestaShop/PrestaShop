@@ -13,7 +13,7 @@ admin_email_search:
         _legacy_controller: AdminEmails
 
 admin_email_process:
-    path: /settings/
+    path: /settings
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processForm'
@@ -25,6 +25,7 @@ admin_send_test_email:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processTestEmailSending'
         _legacy_controller: AdminEmails
+    condition: 'request.isXmlHttpRequest()'
 
 admin_delete_selected_email_logs:
     path: /delete/selected

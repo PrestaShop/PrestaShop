@@ -58,10 +58,8 @@ export default class SubmitBulkActionExtension {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
 
-    if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length) {
-      if (!confirm(confirmMessage)) {
-        return;
-      }
+    if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+      return;
     }
 
     const $form = $('#' + grid.getId() + '_filter_form');
