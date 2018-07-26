@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<a class="btn tooltip-link {% if action.options.confirm_message %}js-confirm-btn{% endif %}"
+<a class="btn tooltip-link js-link-row-action"
    href="{{ path(action.options.route, { (action.options.route_param_name) : row[action.options.route_param_field]}) }}"
    data-confirm-message="{{ action.options.confirm_message }}"
 >

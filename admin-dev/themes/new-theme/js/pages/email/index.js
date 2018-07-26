@@ -33,6 +33,7 @@ import SortingExtension from '../../components/grid/extension/sorting-extension'
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -46,6 +47,7 @@ $(() => {
   emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
   emailLogsGrid.addExtension(new SubmitBulkExtension());
   emailLogsGrid.addExtension(new SubmitGridExtension());
+  emailLogsGrid.addExtension(new LinkRowActionExtension());
 
   new EmailSendingTest();
   new SmtpConfigurationToggler();

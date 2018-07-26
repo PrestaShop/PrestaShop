@@ -56,7 +56,7 @@ class EmailSendingTest {
     $('#test_email_sending_smtp_port').val($('#form_smtp_config_port').val());
     $('#test_email_sending_smtp_encryption').val($('#form_smtp_config_encryption').val());
 
-    const $testEmailSendingForm = $(event.target).closest('form');
+    const $testEmailSendingForm = $(event.currentTarget).closest('form');
 
     this._resetMessages();
 
