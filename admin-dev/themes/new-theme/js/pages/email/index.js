@@ -31,6 +31,7 @@ import ExportToSqlManagerExtension from '../../components/grid/extension/export-
 import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 
 const $ = window.$;
 
@@ -42,7 +43,7 @@ $(() => {
   emailLogsGrid.addExtension(new FiltersResetExtension());
   emailLogsGrid.addExtension(new SortingExtension());
   emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
-
+  emailLogsGrid.addExtension(new SubmitBulkExtension());
 
   new EmailSendingTest();
   new SmtpConfigurationToggler();
