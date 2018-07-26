@@ -1,0 +1,13 @@
+admin_backup:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:index'
+        _legacy_controller: 'AdminBackup'
+
+admin_backup_process:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processForm'
+        _legacy_controller: 'AdminBackup'

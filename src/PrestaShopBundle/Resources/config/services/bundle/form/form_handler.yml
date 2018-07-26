@@ -231,6 +231,16 @@ services:
               'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
             - 'RequestSql'
 
+    prestashop.admin.backup.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.backup.form_data_provider'
+            -
+              'backup_options': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupOptionsType'
+            - 'Backup'
+
     # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
