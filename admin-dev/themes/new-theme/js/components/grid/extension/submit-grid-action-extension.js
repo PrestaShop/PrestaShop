@@ -31,7 +31,7 @@ const $ = window.$;
 export default class SubmitGridActionExtension {
   constructor() {
     return {
-      'extend': (grid) => this.extend(grid)
+      extend: (grid) => this.extend(grid)
     };
   }
 
