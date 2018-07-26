@@ -2,6 +2,11 @@ services:
     _defaults:
         public: true
 
+    prestashop.core.grid.filter.form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactory'
+        arguments:
+            - '@form.factory'
+
     # Grid data providers
     prestashop.core.grid.data_provider.log:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
@@ -42,6 +47,7 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.log_definition'
             - '@prestashop.core.grid.data_provider.log'
+            - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.hook.dispatcher'
 
     prestashop.core.grid.factory.email_logs:
@@ -49,13 +55,12 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.email_logs'
             - '@prestashop.core.grid.data_provider.email_logs'
+            - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.hook.dispatcher'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
-        arguments:
-            - '@form.factory'
 
     # Query builder
     prestashop.core.grid.abstract_query_builder:

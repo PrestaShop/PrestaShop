@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,16 +22,24 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if grid.filter_form|length > 1 %}
-  <tr class="column-filters {% if 0 == grid.data.rows_total and grid.filters is empty %}d-none{% endif %}">
-    {% for column in grid.columns %}
-      <th>
-        {% if grid.filter_form[column.id] is defined %}
-          {{ form_widget(grid.filter_form[column.id]) }}
-        {% endif %}
-      </th>
-    {% endfor %}
-  </tr>
-{% endif %}
+namespace PrestaShop\PrestaShop\Core\Grid\Filter;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use Symfony\Component\Form\FormInterface;
+
+/**
+ * Interface FilterFormFactoryInterface
+ */
+interface FilterFormFactoryInterface
+{
+    /**
+     * Create filters form for grid definition
+     *
+     * @param DefinitionInterface $definition
+     *
+     * @return FormInterface
+     */
+    public function create(DefinitionInterface $definition);
+}

@@ -26,32 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 /**
  * Class GridPresenter is responsible for presenting grid
  */
 final class GridPresenter implements GridPresenterInterface
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @param FormFactoryInterface $formFactory
-     */
-    public function __construct(FormFactoryInterface $formFactory)
-    {
-        $this->formFactory = $formFactory;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -61,16 +42,11 @@ final class GridPresenter implements GridPresenterInterface
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
 
-        list(
-            $columns,
-            $filterForm
-        ) = $this->presentColumns($definition, $grid->getSearchCriteria());
-
         return [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $filterForm->createView(),
-            'columns' => $columns,
+            'filter_form' => $grid->getFiltersForm()->createView(),
+            'columns' => $definition->getColumns()->toArray(),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),
                 'bulk' => $definition->getBulkActions()->toArray(),
@@ -88,53 +64,7 @@ final class GridPresenter implements GridPresenterInterface
                 'order_by' => $searchCriteria->getOrderBy(),
                 'order_way' => $searchCriteria->getOrderWay(),
             ],
-        ];
-    }
-
-    /**
-     * Get presented columns with filter form
-     *
-     * @param DefinitionInterface $definition
-     * @param SearchCriteriaInterface $searchCriteria
-     *
-     * @return array
-     */
-    private function presentColumns(
-        DefinitionInterface $definition,
-        SearchCriteriaInterface $searchCriteria
-    ) {
-        $formBuilder = $this->formFactory->createNamedBuilder(
-            $definition->getId(),
-            FormType::class,
-            $searchCriteria->getFilters()
-        );
-        $columnsArray = [];
-
-        /** @var ColumnInterface $column */
-        foreach ($definition->getColumns() as $column) {
-            $columnOptions = $column->getOptions();
-
-            $columnsArray[] = [
-                'id' => $column->getId(),
-                'name' => $column->getName(),
-                'type' => $column->getType(),
-                'options' => $columnOptions,
-            ];
-
-            if (isset($columnOptions['filter'])) {
-                /** @var ColumnFilterOption $columnOption */
-                $columnOption = $columnOptions['filter'];
-                $formBuilder->add(
-                    $column->getId(),
-                    $columnOption->getFilterType(),
-                    $columnOption->getFilterTypeOptions()
-                );
-            }
-        }
-
-        return [
-            $columnsArray,
-            $formBuilder->getForm(),
+            'filters' => $searchCriteria->getFilters(),
         ];
     }
 }
