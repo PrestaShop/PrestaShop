@@ -101,7 +101,7 @@ final class Grid implements GridInterface
     /**
      * {@inheritdoc}
      */
-    public function getFiltersForm()
+    public function getFilterForm()
     {
         return $this->filtersForm;
     }

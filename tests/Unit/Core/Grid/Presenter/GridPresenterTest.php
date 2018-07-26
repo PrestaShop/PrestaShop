@@ -36,8 +36,6 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
@@ -50,7 +48,7 @@ class GridPresenterTest extends TestCase
 
     public function setUp()
     {
-        $this->gridPresenter = new GridPresenter($this->createFormFactoryMock());
+        $this->gridPresenter = new GridPresenter();
     }
 
     public function testGridInstanceIsPresentedAsArray()
@@ -66,6 +64,7 @@ class GridPresenterTest extends TestCase
             'data' => ['rows', 'rows_total', 'query'],
             'pagination' => ['offset', 'limit'],
             'sorting' => ['order_by', 'order_way'],
+            'filters' => [],
         ];
 
         $this->assertInternalType('array', $presentedGrid);
@@ -77,25 +76,6 @@ class GridPresenterTest extends TestCase
                 $this->assertArrayHasKey($innerItemName, $presentedGrid[$itemName]);
             }
         }
-    }
-
-    private function createFormFactoryMock()
-    {
-        $form = $this->createMock(FormInterface::class);
-        $form->method('createView')
-            ->willReturn(new FormView());
-
-        $formBuilder = $this->createMock(FormBuilderInterface::class);
-        $formBuilder->method('add')
-            ->willReturn($this->returnSelf());
-        $formBuilder->method('getForm')
-            ->willReturn($form);
-
-        $formFactory = $this->createMock(FormFactoryInterface::class);
-        $formFactory->method('createNamedBuilder')
-            ->willReturn($formBuilder);
-
-        return $formFactory;
     }
 
     private function createGridMock()
@@ -112,8 +92,10 @@ class GridPresenterTest extends TestCase
             ->willReturn(new BulkActionCollection());
         $definition->method('getGridActions')
             ->willReturn(new GridActionCollection());
-
         $criteria = $this->createMock(SearchCriteriaInterface::class);
+        $filterForm = $this->createMock(FormInterface::class);
+        $filterForm->method('createView')
+            ->willReturn(new FormView());
 
         $grid = $this->createMock(GridInterface::class);
         $grid->method('getData')
@@ -122,6 +104,8 @@ class GridPresenterTest extends TestCase
             ->willReturn($definition);
         $grid->method('getSearchCriteria')
             ->willReturn($criteria);
+        $grid->method('getFilterForm')
+            ->willReturn($filterForm);
 
         return $grid;
     }
