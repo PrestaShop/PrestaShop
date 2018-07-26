@@ -35,6 +35,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class EmailConfigurationTester is responsible for sending test email
+ *
+ * @internal
  */
 final class EmailConfigurationTester implements EmailConfigurationTesterInterface
 {

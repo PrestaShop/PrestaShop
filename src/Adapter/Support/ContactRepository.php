@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
  * Class ContactRepository is responsible for retrieving contact data from database
+ *
+ * @internal
  */
 final class ContactRepository implements ContactRepositoryInterface
 {

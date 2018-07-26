@@ -25,6 +25,9 @@
 
 const $ = window.$;
 
+/**
+ * Handles submit of grid actions
+ */
 export default class SubmitBulkActionExtension {
   constructor() {
     return {
