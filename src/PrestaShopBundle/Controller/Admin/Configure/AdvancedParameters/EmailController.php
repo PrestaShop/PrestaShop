@@ -152,7 +152,10 @@ class EmailController extends FrameworkBundleAdminController
     public function processDeleteAllEmailLogsAction()
     {
         $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
-        $mailLogsEraser->eraseAll();
+
+        if ($mailLogsEraser->eraseAll()) {
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        }
 
         return $this->redirectToRoute('admin_email');
     }
