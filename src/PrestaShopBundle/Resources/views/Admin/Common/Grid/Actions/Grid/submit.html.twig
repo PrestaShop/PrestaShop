@@ -27,16 +27,14 @@
 
 <button type="button"
         id="{{ grid.id }}_grid_action_{{ action.id }}"
-        class="dropdown-item js-{{ action.id }}-grid-action"
+        class="dropdown-item js-grid-action-submit-btn"
         data-confirm-message="{{ action.options.confirm_message }}"
+        data-url="{{ path(action.options.submit_route) }}"
+        data-method="{{ action.options.submit_method }}"
+        data-csrf="{{ csrf_token(action.id) }}"
 >
-  {% if action.icon is not empty %}<i class="material-icons">{{ action.icon }}</i>{% endif %}
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>
-
-<form action="{{ path(action.options.submit_route) }}"
-      method="{{ action.options.submit_method }}"
-      class="d-none"
->
-  <input name="_token" type="hidden" value="{{ csrf_token(action.id) }}" />
-</form>
