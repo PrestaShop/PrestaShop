@@ -59,5 +59,5 @@ interface GridInterface
      *
      * @return FormInterface
      */
-    public function getFiltersForm();
+    public function getFilterForm();
 }
