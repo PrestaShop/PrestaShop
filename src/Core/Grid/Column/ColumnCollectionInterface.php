@@ -69,4 +69,11 @@ interface ColumnCollectionInterface extends Iterator, Countable
      * @return self
      */
     public function remove($id);
+
+    /**
+     * Get columns as array
+     *
+     * @return array
+     */
+    public function toArray();
 }
