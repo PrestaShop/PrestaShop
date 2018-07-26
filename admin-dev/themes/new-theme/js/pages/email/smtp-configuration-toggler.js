@@ -33,7 +33,7 @@ class SmtpConfigurationToggler {
     $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
       const mailMethod = $(event.currentTarget).val();
 
-      this._getSmtpMailMethodOption() === mailMethod ? this._showSmtpConfiguration() : this._hideSmtpConfiguration();
+      this._getSmtpMailMethodOption() == mailMethod ? this._showSmtpConfiguration() : this._hideSmtpConfiguration();
     });
   }
 

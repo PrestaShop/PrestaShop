@@ -70,13 +70,12 @@ class EmailSendingTest {
       this._hideLoader();
       this._showSendEmailButton();
 
-      if (0 === response.errors.length) {
-        this._showSuccess();
-
+      if (0 !== response.errors.length) {
+        this._showErrors(response.errors);
         return;
       }
 
-      this._showErrors(response.errors);
+      this._showSuccess();
     });
   }
 
