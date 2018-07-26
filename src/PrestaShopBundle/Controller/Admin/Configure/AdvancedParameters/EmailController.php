@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Email\MailOption;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmailLogsFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType;
@@ -161,6 +162,33 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delete single email log
+     *
+     * @DemoRestricted(redirectRoute="admin_email")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param int $mailId
+     *
+     * @return RedirectResponse
+     */
+    public function processSingleEmailLogAction($mailId)
+    {
+        $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
+        $errors = $mailLogsEraser->erase([$mailId]);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_email');
+    }
+
+    /**
      * Processes test email sending
      *
      * @DemoRestricted(redirectRoute="admin_email")
@@ -211,6 +239,8 @@ class EmailController extends FrameworkBundleAdminController
 
     /**
      * Get email configuration form handler
+     *
+     * @return FormHandlerInterface
      */
     protected function getEmailConfigurationFormHandler()
     {
