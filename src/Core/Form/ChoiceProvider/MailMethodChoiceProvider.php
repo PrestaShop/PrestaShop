@@ -66,25 +66,31 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         if (null === $this->configuration->get('_PS_HOST_MODE_')) {
-            $choices[$this->transLabel('Use PHP\'s mail() function (recommended; works in most cases)')] =
-                MailOption::METHOD_NATIVE;
+            $choices[
+                $this->trans('Use PHP\'s mail() function (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')
+            ] = MailOption::METHOD_NATIVE;
         }
 
-        $choices[$this->transLabel('Set my own SMTP parameters (for advanced users ONLY)')] = MailOption::METHOD_SMTP;
-        $choices[$this->transLabel('Never send emails (may be useful for testing purposes)')] = MailOption::METHOD_NONE;
+        $choices[
+            $this->trans('Set my own SMTP parameters (for advanced users ONLY)', [], 'Admin.Advparameters.Feature')
+        ] = MailOption::METHOD_SMTP;
+
+        $choices[
+            $this->trans('Never send emails (may be useful for testing purposes)', [], 'Admin.Advparameters.Feature')
+        ] = MailOption::METHOD_NONE;
 
         return $choices;
     }
 
     /**
-     * Translate label
-     *
-     * @param string $labelKey
+     * @param string $key
+     * @param array $params
+     * @param string $domain
      *
      * @return string
      */
-    private function transLabel($labelKey)
+    private function trans($key, array $params, $domain)
     {
-        return $this->translator->trans($labelKey, [], 'Admin.Advparameters.Feature');
+        return $this->translator->trans($key, $params, $domain);
     }
 }
