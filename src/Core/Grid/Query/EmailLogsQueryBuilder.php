@@ -53,9 +53,14 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin('m', $this->dbPrefix.'lang', 'l', 'm.id_lang = l.id_lang');
 
         foreach ($filters as $name => $value) {
-            $fieldName = 'language' === $name ? 'l.name' : $name;
+            if ('language' === $name) {
+                $qb->andWhere("l.id_lang = :$name");
+                $qb->setParameter($name, $value);
 
-            $qb->andWhere("$fieldName LIKE :$name");
+                continue;
+            }
+
+            $qb->andWhere("$name LIKE :$name");
             $qb->setParameter($name, '%'.$value.'%');
         }
 

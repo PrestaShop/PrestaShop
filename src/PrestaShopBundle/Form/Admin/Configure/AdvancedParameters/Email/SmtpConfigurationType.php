@@ -61,6 +61,7 @@ class SmtpConfigurationType extends AbstractType
                     'TLS' => 'tls',
                     'SSL' => 'ssl',
                 ],
+                'choice_translation_domain' => false,
             ])
             ->add('port', TextType::class, [
                 'required' => false,
