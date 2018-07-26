@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.actions.bulk|length > 0 %}
+{% if grid.actions.bulk|length > 0 and grid.data.rows_total > 0 %}
   <div class="md-checkbox mt-3">
     <label>
       <input type="checkbox"
