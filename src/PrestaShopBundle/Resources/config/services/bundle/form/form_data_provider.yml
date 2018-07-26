@@ -120,3 +120,8 @@ services:
         arguments:
             - '@prestashop.core.email.email_configurator'
             - '@prestashop.core.email.smtp_configurator'
+
+    prestashop.admin.backup.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupDataProvider'
+        arguments:
+            - '@prestashop.core.backup.options_configuration'

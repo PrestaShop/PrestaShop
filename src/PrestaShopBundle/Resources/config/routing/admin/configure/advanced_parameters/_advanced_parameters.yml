@@ -21,3 +21,7 @@ _system_information:
 _email:
     resource: "email.yml"
     prefix: /emails
+
+_backup:
+    resource: "backup.yml"
+    prefix: /backup
