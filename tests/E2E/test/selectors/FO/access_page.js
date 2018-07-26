@@ -36,7 +36,6 @@ module.exports = {
     display_nav2_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[2]/div[4]/div//p[contains(text(),"%NAVLINKWIDGET")]',
     second_display_nav2_link_widget: '//*[@id="header"]/nav/div/div/div[1]/div[2]/div[4]/div/div[2]/p',
     nav_full_width_link_widget: '//*[@id="header"]/div[3]/div//p[contains(text(),"%NAVFULLWIDTHLINKWIDGET")]',
-    not_found_error_message: '//*[@id="main"]//h1',
     terms_and_conditions_input: '//*[@id="customer-form"]//input[contains(@name,"psgdpr")]',
     second_nav_full_width_link_widget: '//*[@id="header"]/div[3]/div/div[2]/p',
     nav_left_column_link_widget: '//*[@id="left-column"]//div[contains(@class,"links")]//p[contains(text(),"%NAVLEFTCOLUMNLINKWIDGET")]',
@@ -46,6 +45,8 @@ module.exports = {
     nav_shopping_cart_footer_link_widget: '//div[contains(@class,"cart-grid-body")]//p[contains(text(),"%NAVSHOPPINGCARTFOOTERLINKWIDGET")]',
     second_nav_shopping_cart_footer_link_widget: '//div[contains(@class,"cart-grid-body")]//div[2]/p',
     display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div//p[contains(text(),"%DISPLAYTOP")]',
-    second_display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div/div[2]/p'
+    second_display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div/div[2]/p',
+    not_found_error_message: '//*[@id="main"]//h1',
+    product_name: '//*[@id="js-product-list"]//h2//a[contains(text(),"%PAGENAME")]'
   }
 };

@@ -232,6 +232,8 @@ module.exports = {
     page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
     item_per_page: '//*[@id="paginator_select_page_limit"]',
     product_category: '//*[@id="product_catalog_list"]//div//tr[%I]/td[6]',
-    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]'
+    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]',
+    status_filter: '//*[@id="product_filter_column_active"]//select[@name=\'filter_column_active\']',
+    item_per_page_select: '//*[@id="paginator_select_page_limit"]'
   }
 };

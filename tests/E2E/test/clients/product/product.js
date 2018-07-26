@@ -140,6 +140,8 @@ class Product extends CommonClient {
       return this.client
         .click(selector)
         .pause(2000);
+    } else {
+      return this.client.pause(0)
     }
   }
 
@@ -163,8 +165,7 @@ class Product extends CommonClient {
   getProductPageNumber(selector) {
     return this.client
       .execute(function (selector) {
-        let count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
-        return count;
+        return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
       }, selector)
       .then((count) => {
         global.productsNumber = count.value;
@@ -242,10 +243,15 @@ class Product extends CommonClient {
   }
 
   clickPageNext(selector) {
-    if (global.isVisible) {
-      return this.client
-        .scrollWaitForExistAndClick(selector);
-    }
+    return this.client
+      .scrollWaitForExistAndClick(selector);
+  }
+
+  getProductName(selector, i) {
+    return this.client
+      .getText(selector).then(function (name) {
+        global.productInfo.push({'name':name, 'status':'false'})
+      });
   }
 
   UrlModification(globalVar, productName) {
