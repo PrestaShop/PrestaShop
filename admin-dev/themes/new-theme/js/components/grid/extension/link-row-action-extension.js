@@ -36,10 +36,8 @@ export default class LinkRowActionExtension {
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
-      if (confirmMessage.length) {
-        if (!confirm(confirmMessage)) {
-          event.preventDefault();
-        }
+      if (confirmMessage.length && !confirm(confirmMessage)) {
+        event.preventDefault();
       }
     });
   }
