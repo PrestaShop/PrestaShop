@@ -37,7 +37,7 @@ admin_delete_single_email_log:
     path: /delete/{mailId}
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processDeleteAllEmailLogs'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processSingleEmailLog'
         _legacy_controller: AdminEmails
     requirements:
         mailId: \d+

@@ -23,48 +23,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
-export default class SubmitBulkActionExtension {
-  constructor() {
-    return {
-      'extend': (grid) => this.extend(grid),
-    }
-  }
-
+/**
+ * Class LinkRowActionExtension handles link row actions
+ */
+export default class LinkRowActionExtension {
   /**
-   * Extend grid with bulk action submitting
+   * Extend grid
    *
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getContainer().on('click', '.js-bulk-action-submit-btn', (event) => {
-      this.submit(event, grid);
-    });
-  }
+    grid.getContainer().on('click', '.js-link-row-action', (event) => {
+      const confirmMessage = $(event.currentTarget).data('confirm-message');
 
-  /**
-   * Handle bulk action submitting
-   *
-   * @param {Event} event
-   * @param {Grid} grid
-   *
-   * @private
-   */
-  submit(event, grid) {
-    const $submitBtn = $(event.currentTarget);
-    const confirmMessage = $submitBtn.data('confirm-message');
-
-    if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length) {
-      if (!confirm(confirmMessage)) {
-        return;
+      if (confirmMessage.length) {
+        if (!confirm(confirmMessage)) {
+          event.preventDefault();
+        }
       }
-    }
-
-    const $form = $('#' + grid.getId() + '_filter_form');
-
-    $form.attr('action', $submitBtn.data('form-url'));
-    $form.attr('method', $submitBtn.data('form-method'));
-    $form.submit();
+    });
   }
 }

@@ -124,6 +124,8 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_delete_single_email_log',
                                 'route_param_name' => 'mailId',
                                 'route_param_field' => 'id_mail',
+                                'confirm_message' =>
+                                    $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                             ])
                         )
                     ,
