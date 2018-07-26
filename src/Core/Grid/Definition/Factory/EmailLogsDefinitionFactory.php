@@ -2,6 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -16,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class EmailLogsDefinitionFactory is responsible for creating email logs definition
@@ -33,13 +35,20 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $languageChoiceProvider;
+
+    /**
      * @param string $resetActionUrl
      * @param string $redirectionUrl
+     * @param FormChoiceProviderInterface $languageChoiceProvider
      */
-    public function __construct($resetActionUrl, $redirectionUrl)
+    public function __construct($resetActionUrl, $redirectionUrl, FormChoiceProviderInterface $languageChoiceProvider)
     {
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
+        $this->languageChoiceProvider = $languageChoiceProvider;
     }
 
     /**
@@ -91,6 +100,11 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Language', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'language',
+                    'filter' => new ColumnFilterOption(ChoiceType::class, [
+                        'required' => false,
+                        'choices' => $this->languageChoiceProvider->getChoices(),
+                        'choice_translation_domain' => false,
+                    ]),
                 ])
             )
             ->add((new DataColumn('subject'))

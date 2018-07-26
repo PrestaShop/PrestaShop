@@ -77,6 +77,7 @@ class EmailConfigurationType extends TranslatorAwareType
         $builder
             ->add('send_emails_to', ChoiceType::class, [
                 'choices' => $this->contactsChoiceProvider->getChoices(),
+                'choice_translation_domain' => false,
             ])
             ->add('mail_method', ChoiceType::class, [
                 'expanded' => true,

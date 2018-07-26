@@ -39,6 +39,7 @@ services:
         arguments:
           - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
           - "@=service('router').generate('admin_email')"
+          - '@prestashop.core.form.choice_provider.language_by_id'
         public: true
 
     # Grid factories
