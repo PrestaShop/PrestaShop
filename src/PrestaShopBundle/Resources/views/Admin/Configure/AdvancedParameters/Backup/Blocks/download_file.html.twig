@@ -22,32 +22,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% block content %}
-  <div class="container-fluid">
-    {% if hasDownloadFile %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig' %}
-    {% endif %}
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
-      </div>
-    </div>
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">cloud_download</i>
+    {{ 'Download'|trans({}, 'Admin.Actions') }}
+  </h3>
+  <div class="card-body">
+    <p>
+      <a href="{{ downloadFile.url }}" class="btn btn-outline-primary">
+        <i class="material-icons">cloud_download</i>
+        {{ 'Download the backup file (%s MB)'|trans({'%s': downloadFile.size}) }}
+      </a>
+    </p>
+    <p>{{ 'Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.'|trans }}</p>
   </div>
-{% endblock %}
+</div>
