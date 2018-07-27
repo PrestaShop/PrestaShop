@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Adapter\Backup\Backup;
 use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
 use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -51,9 +52,23 @@ class BackupController extends FrameworkBundleAdminController
         $backupForm = $this->getBackupFormHandler()->getForm();
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
+        $hasDownloadFile = false;
+        $downloadFile = null;
+
+        if ($request->query->has('download_filename')) {
+            $hasDownloadFile = true;
+            $backup = new Backup($request->query->get('download_filename'));
+            $downloadFile = [
+                'url' => $backup->getUrl(),
+                'size' => $backup->getSize(),
+            ];
+        }
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/backup.html.twig', [
             'backupForm' => $backupForm->createView(),
             'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
+            'hasDownloadFile' => $hasDownloadFile,
+            'downloadFile' => $downloadFile,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
