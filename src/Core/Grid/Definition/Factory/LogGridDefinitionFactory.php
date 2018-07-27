@@ -49,9 +49,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $resetActionUrl;
 
-    public function __construct($resetActionUrl)
+    /**
+     * @var string the URL for redirection.
+     */
+    private $redirectionUrl;
+
+    /**
+     * LogGridDefinitionFactory constructor.
+     * @param string $resetActionUrl
+     * @param string $redirectionUrl
+     */
+    public function __construct($resetActionUrl, $redirectionUrl)
     {
         $this->resetActionUrl = $resetActionUrl;
+        $this->redirectionUrl = $redirectionUrl;
     }
 
     /**
@@ -148,6 +159,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
                         'attr' => [
                             'data-url' => $this->resetActionUrl,
+                            'data-redirect' => $this->redirectionUrl,
                         ],
                     ]),
                 ])

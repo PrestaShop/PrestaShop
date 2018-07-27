@@ -237,6 +237,33 @@ services:
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
+    form.type.order.invoices.generate_by_date:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
+        parent: 'form.type.common_type'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.invoices.generate_by_status:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
+        parent: 'form.type.common_type'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
+            - '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
+        tags:
+            - { name: form.type }
+
+    form.type.order.invoices.invoice_options:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.invoice_model_by_name'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
+        tags:
+            - { name: form.type }
+
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
         tags:

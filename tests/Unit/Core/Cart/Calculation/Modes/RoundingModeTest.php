@@ -38,7 +38,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
      * PS_ROUND_DOWN
      * PS_ROUND_HALF_UP
      * PS_ROUND_HALF_DOWN
-     * PS_ROUND_HALF_DOWN
+     * PS_ROUND_HALF_EVEN
      * PS_ROUND_HALF_ODD
      */
     protected $defaultRoundingMode;
@@ -66,6 +66,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
      */
     protected function setRoundingMode($roundingMode)
     {
+        Tools::$round_mode = null;
         // using Configuration instead of Adapter\Configuration because of different behavior
         Configuration::set('PS_PRICE_ROUND_MODE', $roundingMode);
     }

@@ -102,9 +102,11 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     {
         $filtersClass = $argument->getType();
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
-        // is the url contains filters?
+
         $query = $request->query;
-        if ($query->has('filters') || $query->has('limit')) {
+        $doesTheUrlContainsFilters = ($query->has('filters') || $query->has('limit') || $query->has('sortOrder'));
+
+        if ($doesTheUrlContainsFilters) {
             $filters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
 
             $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(

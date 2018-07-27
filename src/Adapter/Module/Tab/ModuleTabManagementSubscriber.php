@@ -40,7 +40,7 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
      */
     private $moduleTabRegister;
     /**
-     * @var ModuleTabDeregister
+     * @var ModuleTabUnregister
      */
     private $moduleTabUnregister;
     
@@ -49,7 +49,10 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
         $this->moduleTabRegister = $moduleTabRegister;
         $this->moduleTabUnregister = $moduleTabUnregister;
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -58,11 +61,17 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param ModuleManagementEvent $event
+     */
     public function onModuleInstall(ModuleManagementEvent $event)
     {
         $this->moduleTabRegister->registerTabs($event->getModule());
     }
-    
+
+    /**
+     * @param ModuleManagementEvent $event
+     */
     public function onModuleUninstall(ModuleManagementEvent $event)
     {
         $this->moduleTabUnregister->unregisterTabs($event->getModule());

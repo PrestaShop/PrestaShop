@@ -2047,6 +2047,34 @@ abstract class ModuleCore implements ModuleInterface
         </div>';
         return $output;
     }
+    
+    /**
+    * Helper displaying information message(s)
+    * @param string|array $information
+    * @return string
+    */
+    public function displayInformation($information)
+    {
+        $output = '
+        <div class="bootstrap">
+        <div class="module_info info alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>';
+
+        if (is_array($information)) {
+            $output .= '<ul>';
+            foreach ($information as $msg) {
+                $output .= '<li>'.$msg.'</li>';
+            }
+            $output .= '</ul>';
+        } else {
+            $output .= $information;
+        }
+
+        // Close div openned previously
+        $output .= '</div></div>';
+
+        return $output;
+    }
 
     /*
      * Return exceptions for module in hook
