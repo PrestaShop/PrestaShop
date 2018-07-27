@@ -89,7 +89,10 @@ class MaintenanceController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
+            );
             return $redirectResponse;
         }
 

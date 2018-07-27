@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7ae26264a1ddea3d38cd1733db3bb05",
+    "content-hash": "fdbb31150f7c7c5629ee062b15dd62f4",
     "packages": [
+        {
+            "name": "analog/analog",
+            "version": "1.0.10-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jbroadway/analog.git",
+                "reference": "65dce6b5aff8c77307c783e607c04a35df8259d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jbroadway/analog/zipball/65dce6b5aff8c77307c783e607c04a35df8259d6",
+                "reference": "65dce6b5aff8c77307c783e607c04a35df8259d6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "psr/log": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Analog": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johnny Broadway",
+                    "email": "johnny@johnnybroadway.com",
+                    "homepage": "http://www.johnnybroadway.com/"
+                }
+            ],
+            "description": "PHP logging class that can be extended via closures. Includes several pre-built handlers including file, mail, syslog, HTTP post, and MongoDB.",
+            "homepage": "https://github.com/jbroadway/analog",
+            "keywords": [
+                "alerts",
+                "debug",
+                "debugging",
+                "error",
+                "log",
+                "logger",
+                "logging",
+                "syslog"
+            ],
+            "time": "2017-09-17T02:30:30+00:00"
+        },
         {
             "name": "beberlei/DoctrineExtensions",
             "version": "v1.0.23",
@@ -1339,6 +1388,62 @@
                 "maxmind"
             ],
             "time": "2017-01-31T17:28:48+00:00"
+        },
+        {
+            "name": "greenlion/php-sql-parser",
+            "version": "v4.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/greenlion/PHP-SQL-Parser.git",
+                "reference": "b4e8522ebca3e5c8bbd4e2c25edaef155a96db20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/greenlion/PHP-SQL-Parser/zipball/b4e8522ebca3e5c8bbd4e2c25edaef155a96db20",
+                "reference": "b4e8522ebca3e5c8bbd4e2c25edaef155a96db20",
+                "shasum": ""
+            },
+            "require": {
+                "analog/analog": "^1.0.6",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0.14",
+                "squizlabs/php_codesniffer": "^1.5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPSQLParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "André Rothe",
+                    "email": "phosco@gmx.de",
+                    "homepage": "https://www.phosco.info",
+                    "role": "Committer"
+                },
+                {
+                    "name": "Justin Swanhart",
+                    "email": "greenlion@gmail.com",
+                    "homepage": "http://code.google.com/u/greenlion@gmail.com/",
+                    "role": "Owner"
+                }
+            ],
+            "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
+            "homepage": "https://github.com/greenlion/PHP-SQL-Parser",
+            "keywords": [
+                "creator",
+                "mysql",
+                "parser",
+                "sql"
+            ],
+            "time": "2017-05-16T21:20:45+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3288,16 +3393,16 @@
         },
         {
             "name": "prestashop/ps_customtext",
-            "version": "v4.0.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_customtext.git",
-                "reference": "06f8b844690da20fd2517858402943873967ae55"
+                "reference": "2fc6fed900971410938592c23bcf62f23a9664da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_customtext/zipball/06f8b844690da20fd2517858402943873967ae55",
-                "reference": "06f8b844690da20fd2517858402943873967ae55",
+                "url": "https://api.github.com/repos/PrestaShop/ps_customtext/zipball/2fc6fed900971410938592c23bcf62f23a9664da",
+                "reference": "2fc6fed900971410938592c23bcf62f23a9664da",
                 "shasum": ""
             },
             "require": {
@@ -3316,7 +3421,7 @@
             ],
             "description": "PrestaShop module ps_customtext",
             "homepage": "https://github.com/PrestaShop/ps_customtext",
-            "time": "2018-06-05T10:01:21+00:00"
+            "time": "2018-07-20T09:25:10+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",
@@ -3707,16 +3812,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.5",
+            "version": "v1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "e198abbd17b3aaa5a4c09e34bb65f8552b9ee832"
+                "reference": "b1a332e8afbb858b1cd54c952d34b27fc82d505d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/e198abbd17b3aaa5a4c09e34bb65f8552b9ee832",
-                "reference": "e198abbd17b3aaa5a4c09e34bb65f8552b9ee832",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/b1a332e8afbb858b1cd54c952d34b27fc82d505d",
+                "reference": "b1a332e8afbb858b1cd54c952d34b27fc82d505d",
                 "shasum": ""
             },
             "require": {
@@ -3735,7 +3840,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-06-25T13:27:25+00:00"
+            "time": "2018-07-18T09:53:26+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
