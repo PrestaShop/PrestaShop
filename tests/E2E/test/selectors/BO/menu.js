@@ -52,7 +52,7 @@ module.exports = {
       },
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
-        theme_logo_submenu: '#subtab-AdminThemes',
+        theme_logo_submenu: '#subtab-AdminThemesParent',
         theme_catalog_submenu: '#subtab-AdminThemesCatalog',
         pages_submenu: '#subtab-AdminCmsContent',
         positions_submenu: '#subtab-AdminModulesPositions',
