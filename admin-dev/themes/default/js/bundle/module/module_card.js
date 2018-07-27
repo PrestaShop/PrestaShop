@@ -1,12 +1,5 @@
 var module_card_controller = {};
 
-$(document).ready(function () {
-
-    module_card_controller = new AdminModuleCard();
-    module_card_controller.init();
-
-});
-
 /**
  * AdminModule card Controller.
  * @constructor
@@ -245,3 +238,10 @@ var AdminModuleCard = function () {
     };
 
 };
+
+$(document).ready(function () {
+
+    module_card_controller = new AdminModuleCard();
+    module_card_controller.init();
+
+});
