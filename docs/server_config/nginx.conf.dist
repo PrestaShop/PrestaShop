@@ -97,6 +97,12 @@ server {
         access_log off;
     }
 
+    location /admin/ { #Change this to your admin folder
+        if (!-e $request_filename) {
+            rewrite ^/.*$ /admin/index.php last; #Change this to your admin folder
+        }
+    }
+
     location / {
         # Redirect pretty urls to index.php
         try_files $uri $uri/ /index.php?$args;

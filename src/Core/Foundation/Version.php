@@ -33,9 +33,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
  */
 class Version
 {
-    const STRING = 0;
-    const INTEGER = 1;
-
     /**
      * Full version name.
      *

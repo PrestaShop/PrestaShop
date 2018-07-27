@@ -23,10 +23,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../../components/grid';
+import Grid from '../../../components/grid/grid';
+import ReloadListActionExtension from '../../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
+import SortingExtension from '../../../components/grid/extension/sorting-extension';
 
 const $ = global.$;
 
 $(() => {
-    new Grid('#logs_grid_panel').init();
+  const grid = new Grid('logs');
+
+  grid.addExtension(new ReloadListActionExtension());
+  grid.addExtension(new ExportToSqlManagerExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new SortingExtension());
 });

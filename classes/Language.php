@@ -1089,9 +1089,10 @@ class LanguageCore extends ObjectModel
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification').' ('.$file.')';
+        } elseif ($content = Tools::file_get_contents($url)) {
+            file_put_contents($file, $content);
         } else {
-            $fs = new Filesystem();
-            $fs->copy($url, $file, true);
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification').' '.$url;
         }
     }
 
@@ -1394,7 +1395,7 @@ class LanguageCore extends ObjectModel
 
                 // Update table
                 if (!empty($updateWhere) && !empty($updateField)) {
-                    $sql = 'UPDATE `' . bqSQL($tableName) . '` SET ' . $updateField . ' 
+                    $sql = 'UPDATE `' . bqSQL($tableName) . '` SET ' . $updateField . '
                     WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int) $lang->id . '"
                     ' . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : '') . '
                     LIMIT 1;';
