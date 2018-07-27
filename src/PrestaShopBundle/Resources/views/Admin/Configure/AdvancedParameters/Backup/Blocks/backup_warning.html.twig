@@ -26,7 +26,7 @@
 
 <div class="alert alert-warning" role="alert">
   <h4>{{ 'Disclaimer before creating a new backup'|trans({}, 'Admin.Advparameters.Notification') }}</h4>
-  <ol class="mb-0">
+  <ol>
     <li>{{ 'PrestaShop is not responsible for your database, its backups and/or recovery.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
     <li>{{ 'PrestaShop is open-source software. You are using it at your own risk under the license agreement.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
     <li>{{ 'You should back up your data on a regular basis (both files and database).'|trans({}, 'Admin.Advparameters.Notification') }}</li>
@@ -37,4 +37,6 @@
     <li>{{ 'Always check your data.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
     <li>{{ 'Never restore a backup on a live site.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
   </ol>
+
+  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_form.html.twig' %}
 </div>

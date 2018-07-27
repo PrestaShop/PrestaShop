@@ -11,3 +11,10 @@ admin_backup_process:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processForm'
         _legacy_controller: 'AdminBackup'
+
+admin_backup_create:
+    path: /create
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processBackupCreate'
+        _legacy_controller: 'AdminBackup'
