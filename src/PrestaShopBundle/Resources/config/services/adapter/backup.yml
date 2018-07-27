@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.backup.database_creator:
+        class: 'PrestaShop\PrestaShop\Adapter\Backup\DatabaseBackupCreator'
