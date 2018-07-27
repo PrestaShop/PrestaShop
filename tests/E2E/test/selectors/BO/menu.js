@@ -45,10 +45,10 @@ module.exports = {
       Modules: {
         modules_menu: '//*[@id="subtab-AdminParentModulesSf"]/a',
         modules_services_submenu: '#subtab-AdminModulesSf',
-        installed_modules_tabs: '#subtab-AdminModulesManage',
-        notifications_tabs: '#subtab-AdminModulesNotifications',
-        selection_tab: '#subtab-AdminPsMboModule',
-        modules_catalog_submenu: '#subtab-AdminAddonsCatalog'
+        installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
+        notifications_tabs: '//*[@id="subtab-AdminModulesNotifications"]',
+        selection_tab: '//*[@id="subtab-AdminModulesCatalog"]',
+        modules_catalog_submenu: '#subtab-AdminAddonsCatalog',
       },
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
