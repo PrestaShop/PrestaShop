@@ -75,6 +75,29 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show file download view
+     *
+     * @param Request $request
+     * @param string  $downloadFileName
+     *
+     * @return Response
+     */
+    public function downloadViewAction(Request $request, $downloadFileName)
+    {
+        $backup = new Backup($downloadFileName);
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/download_view.html.twig', [
+            'downloadFile' => [
+                'url' => $backup->getUrl(),
+                'size' => $backup->getSize(),
+            ],
+            'layoutTitle' => $this->trans('View', 'Admin.Actions'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
      * Process backup options saving
      *
      * @param Request $request
