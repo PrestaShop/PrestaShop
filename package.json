@@ -1,13 +1,19 @@
 {
-    "name": "prestashop-common",
-    "version": "1.0.0",
-    "scripts": {
-        "install-test": "npm -C tests/js install",
-        "upgrade-test": "npm -C tests/js update",
-        "test": "cd tests/js && grunt test",
-        "test-short": "cd tests/js && grunt test-short",
-        "test-verbose": "cd tests/js && grunt --stack test-verbose"
-    },
-    "author": "PrestaShop",
-    "license": "OSL-3.0"
+  "name": "prestashop-common",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint -c .eslintrc.js --ext .js,.vue ."
+  },
+  "author": "PrestaShop",
+  "license": "OSL-3.0",
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-html": "^4.0.5",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0"
+  }
 }
