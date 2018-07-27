@@ -73,7 +73,8 @@ class AppKernel extends Kernel
         if ($this->parametersFileExists()) {
             try {
                 $this->enableComposerAutoloaderOnModules($this->getActiveModules());
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return $bundles;
@@ -93,7 +94,8 @@ class AppKernel extends Kernel
             try {
                 $this->getConnection()->connect();
                 $activeModules = $this->getActiveModules();
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return array_merge(
@@ -224,5 +226,18 @@ class AppKernel extends Kernel
                 include_once $autoloader;
             }
         }
+    }
+
+    /**
+     * Gets the application root dir.
+     * Override Kernel due to the fact that we remove the composer.json in
+     * downloaded package. More we are not a framework and the root directory
+     * should always be the parent of this file.
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        return realpath(__DIR__ . '/..');
     }
 }

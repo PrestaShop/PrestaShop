@@ -24,6 +24,73 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.4.2 - (2018-07-27)
+####################################
+- Back Office:
+  - Bug fix:
+    - #9358: AdminSearchController.php : Parameter must be an array or an object that implements Countable
+    - #9359: Allow configuration to save html data
+    - #9330: It is impossible to create a SQL query "SELECT"  - SQL Manager page
+    - #9326: Module translations aren't working when using Smarty Extend into TPL
+    - #9327: Fixed Product form when stock management is disabled
+    - #9322: Backward compatibility of  $this->isCached() in modules
+    - #9279: Fix detection of APCu on Performance page
+- Front Office:
+  - Bug fix:
+    - #9378: Generate core.js
+    - #9374: Fix multishop price calculation
+    - #9364: Fix JS error after add to cart
+    - #9365: Wrong generated template path when using getCurrentSubTemplate with a full path name.
+    - #9357: Core.js typeerror after updatecart
+    - #9335: Url does not update when changing product attributes
+- Core:
+  - Bug fix:
+    - #9348: Fixed a misnamed variable
+    - #9345: Can't install prestashop in dev mode with open_basedir
+    - #9339: Fix bug extra space: htaccess directive order
+- Installer:
+  - Improvement:
+    - #9361: Set allow_url_fopen optional in the system step
+  - Bug fix:
+    - #9371: Ntree regeneration should be done also if the entity arg is empty during install
+    - #9355: Allow to install PrestaShop without allow_url_fopen enabled
+- Tests:
+  - Improvement:
+    - #9321: Add some fixes to the script and update scenario of onboarding
+
+####################################
+#   v1.7.4.1 - (2018-07-16)
+####################################
+- Back Office:
+  - Improvement:
+    - #9311: Apply shop context in configuration
+  - Bug fix:
+    - #9299: Fix error while duplicating a product when catalog specific price rules are stored
+    - #9297: Fix display when a module uses $this->bootstrap = false;
+    - #9261: Update Controller name for link generation to modules catalog
+    - #9268: Added .htaccess to var folder
+- Front Office:
+  - Bug fix:
+    - #9315: Fix not visible category display
+    - #9295: Fix free shipping display on cart
+    - #9270: Apache 2.4 configuration
+    - #9252: Add combinations in cart summary
+- Core:
+  - Bug fix:
+    - #9288: Fix Cart::isVirtualCart() method when cart is empty
+    - #9298: Fix/remove mbo from tests
+    - #9220: Ability to use widget block from specific hook
+    - #9269: Update ps_themecusto to version 1.0.6
+    - #9237: Fixed bug with friendly URLs and Media Servers
+    - #9101: Fix have cart rule today
+- Installer:
+  - Improvement:
+    - #9302: Reduce the number of ajax calls if the fixtures are not too larges and if there's enough memory available
+  - Bug fix:
+    - #9271: Catch more exceptions during install & display the error intead of a JS error
+    - #9258: Limit subquery results in upgrade sql 1.7.0.0
+
+####################################
 #   v1.7.4.0 - (2018-07-03)
 ####################################
 - Back Office:
@@ -162,7 +229,7 @@ Release Notes for PrestaShop 1.7
     - #8781: Getting Currency data from Currency data layers middleware stack
     - #8888: New Locale integration tests
     - #8935: CLDR : Replace legacy number and price formatting
-    - #8246: Make PS compatible with PHP 7.2 
+    - #8246: Make PS compatible with PHP 7.2
     - #8882: Migrate import page
     - #8883: Migrate ShopParameters->General page
     - #8732: CLDR reference data (files) reader
@@ -223,7 +290,7 @@ Release Notes for PrestaShop 1.7
     - #9024: Merge 1.7.3.2 into develop
     - #9029: Revert CLDR integration
     - #8985: Fixed order gets wrong status when ordered all qty of the product.
-    - #9010: Check if template_vars if an array before merge in OrderHistory::sendEmail() 
+    - #9010: Check if template_vars if an array before merge in OrderHistory::sendEmail()
     - #8767: Show prices within a tax if it's needed
     - #8998: Create missing subfolders in folder override/classes
     - #8954: Allowed robots access to assets requierd to be mobile-friendly

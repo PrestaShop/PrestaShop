@@ -6129,7 +6129,7 @@ class ProductCore extends ObjectModel
                 COUNT(pa.id_product) = ' . count($idAttributes)
         );
 
-        if ($idProductAttribute === false && $find_best) {
+        if ($idProductAttribute === false && $findBest) {
             //find the best possible combination
             //first we order $idAttributes by the group position
             $orderred = array();
