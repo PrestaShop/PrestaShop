@@ -11,7 +11,7 @@ scenario('Search "Contact form Modules"', () => {
   scenario('Check that the result of search modules is correct', client => {
     test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
     test('should click on "Selection" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.selection_tab));
-    test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.modules_search_input, "contact form"));
+    test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, "contact form"));
     test('should click on "Search" button', () => {
       return promise
         .then(() => client.waitForExistAndClick(ModulePage.selection_search_button))
