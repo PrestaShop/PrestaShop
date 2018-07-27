@@ -44,8 +44,8 @@ scenario('Modify quantity and check the movement of a group of product', client 
     test('should verify the new "Quantity" and "Type" of the two changed products', () => {
       return promise
         .then(() => client.pause(2000))
-        .then(() => client.getTextInVar(Movement.time_movement.replace('%P', 1), 'firstMovementDate'))
-        .then(() => client.getTextInVar(Movement.time_movement.replace('%P', 2), 'secondMovementDate'))
+        .then(() => client.getTextInVar(Movement.time_movement.replace('%P', 2), 'firstMovementDate'))
+        .then(() => client.getTextInVar(Movement.time_movement.replace('%P', 1), 'secondMovementDate'))
         .then(() => client.checkOrderMovement(Movement, client));
     });
   }, 'stocks');
