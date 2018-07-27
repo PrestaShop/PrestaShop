@@ -30,38 +30,19 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        {{ form_start(backupForm) }}
-        <div class="card">
-          <h3 class="card-header">
-            <i class="material-icons">settings</i> {{ 'Backup options'|trans({}, 'Admin.Advparameters.Feature') }}
-          </h3>
-          <div class="card-body">
-            <div class="form-group">
-              <label>{{ 'Ignore statistics tables'|trans }}</label>
-              {{ form_errors(backupForm.backup_options.backup_all) }}
-              {{ form_widget(backupForm.backup_options.backup_all) }}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
+      </div>
+    </div>
 
-              <small class="form-text">
-                {{ 'Drop existing tables during import.'|trans({}, 'Admin.Advparameters.Help') }}
-              </small>
-            </div>
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
+      </div>
+    </div>
 
-            <div class="form-group">
-              {% set helpMessage = 'If enabled, the backup script will drop your tables prior to restoring data.'|trans({}, 'Admin.Advparameters.Help') %}
-              {% set helpMessage = helpMessage ~ ' ' ~ '(ie. "DROP TABLE IF EXISTS")'|trans({}, 'Admin.Advparameters.Help') %}
-
-              {{ ps.label_with_help(('Drop existing tables during import'|trans), helpMessage) }}
-              {{ form_errors(backupForm.backup_options.backup_drop_tables) }}
-              {{ form_widget(backupForm.backup_options.backup_drop_tables) }}
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="d-flex justify-content-end">
-              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
-          </div>
-        </div>
-        {{ form_end(backupForm) }}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
       </div>
     </div>
   </div>

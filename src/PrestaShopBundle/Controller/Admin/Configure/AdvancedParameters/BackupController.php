@@ -47,9 +47,11 @@ class BackupController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $backupForm = $this->getBackupFormHandler()->getForm();
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/backup.html.twig', [
             'backupForm' => $backupForm->createView(),
+            'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
