@@ -86,10 +86,10 @@ class ModulePresenter implements PresenterInterface
     /**
      * Transform a collection of addons as a simple array of data.
      *
-     * @param AddonsCollection $modules
+     * @param AddonsCollection|array $modules
      * @return array
      */
-    public function presentCollection(AddonsCollection $modules)
+    public function presentCollection($modules)
     {
         $presentedProducts = array();
         foreach ($modules as $name => $product) {
@@ -101,7 +101,7 @@ class ModulePresenter implements PresenterInterface
 
     /**
      * Generate the list of small icons to be displayed near the module name
-     * 
+     *
      * @param array $attributes Attributes of presented module
      * @return array
      */

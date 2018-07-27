@@ -6,7 +6,7 @@ admin_module_cart:
     path: /cart/{moduleId}
     methods: [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:getModuleCart
+        _controller: PrestaShopBundle:Admin/Improve/Module:getModuleCart
     requirements:
         moduleId: \d+
 
@@ -14,7 +14,7 @@ admin_module_catalog:
     path:     /catalog
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:catalog
+        _controller: PrestaShopBundle:Admin/Improve/Module:catalog
         _legacy_controller: AdminModulesCatalog
 
 admin_module_catalog_refresh:
@@ -23,14 +23,14 @@ admin_module_catalog_refresh:
     defaults:
         category:
         keyword:
-        _controller: PrestaShopBundle:Admin/Module:refreshCatalog
+        _controller: PrestaShopBundle:Admin/Improve/Module:refreshCatalog
         _legacy_controller: AdminModulesCatalog
 
 admin_module_catalog_post:
     path:     /catalog/recommended
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:getPreferredModules
+        _controller: PrestaShopBundle:Admin/Improve/Module:getPreferredModules
         _legacy_controller: AdminModulesCatalog
 
 admin_module_manage:
@@ -39,14 +39,14 @@ admin_module_manage:
     defaults:
         category:
         keyword:
-        _controller: PrestaShopBundle:Admin/Module:manage
+        _controller: PrestaShopBundle:Admin/Improve/Module:manage
         _legacy_controller: AdminModulesManage
 
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}
     methods:  [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:module
+        _controller: PrestaShopBundle:Admin/Improve/Module:module
     requirements:
         action: install|uninstall|enable|disable|enable_mobile|disable_mobile|reset|upgrade
 
@@ -54,14 +54,14 @@ admin_module_configure_action:
     path:     /manage/action/configure/{module_name}
     methods:  [GET, POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:configureModule
+        _controller: PrestaShopBundle:Admin/Improve/Module:configureModule
         _legacy_controller: AdminModules
 
 admin_module_manage_action_bulk:
     path:     /manage/bulk/{action}
     methods:  [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:module
+        _controller: PrestaShopBundle:Admin/Improve/Module:module
     requirements:
         action: install|uninstall|configure|enable|disable|reset|upgrade
 
@@ -69,25 +69,25 @@ admin_module_manage_update_all:
     path:     /manage/update/all
     methods:  [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Module:module
+        _controller: PrestaShopBundle:Admin/Improve/Module:module
 
 admin_module_import:
     path:     /import
     methods:  [POST]
     defaults:
         module_name:
-        _controller: PrestaShopBundle:Admin/Module:importModule
+        _controller: PrestaShopBundle:Admin/Improve/Module:importModule
 
 admin_module_notification:
     path:     /alerts
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Improve/Modules/ModuleAlerts:index
+        _controller: PrestaShopBundle:Admin/Improve/Modules/Alerts:index
         _legacy_controller: AdminModulesNotifications
 
 admin_module_notification_count:
     path:     /alerts/count
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin\Improve\Modules\ModuleAlerts:notificationsCount
+        _controller: PrestaShopBundle:Admin\Improve\Modules\Alerts:notificationsCount
         _legacy_controller: AdminModulesNotifications

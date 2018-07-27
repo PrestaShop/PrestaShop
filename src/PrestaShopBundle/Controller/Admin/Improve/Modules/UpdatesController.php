@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible of "Improve > Modules > Modules & Services > Updates" page display
  */
-class ModuleUpdatesController extends ModuleAbstractController
+class UpdatesController extends ModuleAbstractController
 {
     /**
      * @return Response

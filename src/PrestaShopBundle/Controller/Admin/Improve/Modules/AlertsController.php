@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Responsible of "Improve > Modules > Modules & Services > Alerts" page display
  */
-class ModuleAlertsController extends ModuleAbstractController
+class AlertsController extends ModuleAbstractController
 {
     /**
      * @return Response
@@ -50,7 +50,9 @@ class ModuleAlertsController extends ModuleAbstractController
      */
     public function notificationsCountAction()
     {
-        $moduleManager = $this->container->get('prestashop.module.manager');
-        return new JsonResponse($moduleManager->countModulesWithNotificationsDetailed());
+        return new JsonResponse(
+            $this->get('prestashop.module.manager')
+            ->countModulesWithNotificationsDetailed()
+        );
     }
 }
