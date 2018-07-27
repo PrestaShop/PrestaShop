@@ -18,3 +18,10 @@ admin_backup_create:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processBackupCreate'
         _legacy_controller: 'AdminBackup'
+
+admin_backup_view_download:
+    path: /view/{downloadFileName}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:downloadView'
+        _legacy_controller: 'AdminBackup'
