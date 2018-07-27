@@ -8,9 +8,9 @@ module.exports = {
     },
     globals: {
         google: true,
-        document: false,
+        document: true,
         navigator: false,
-        window: false,
+        window: true,
     },
     root: true,
     extends: 'airbnb',
