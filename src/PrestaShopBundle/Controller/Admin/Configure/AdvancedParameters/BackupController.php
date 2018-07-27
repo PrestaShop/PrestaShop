@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
+use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -79,6 +81,43 @@ class BackupController extends FrameworkBundleAdminController
             } else {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             }
+        }
+
+        return $this->redirectToRoute('admin_backup');
+    }
+
+    /**
+     * Create new backup
+     *
+     * @return RedirectResponse
+     */
+    public function processBackupCreateAction()
+    {
+        try {
+            $backupCreator = $this->get('prestashop.adapter.backup.database_creator');
+            $backup = $backupCreator->createBackup();
+
+            $routeParams['download_filename'] = $backup->getFileName();
+
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.',
+                    'Admin.Advparameters.Notification'
+                )
+            );
+
+            return $this->redirectToRoute('admin_backup', ['download_filename' => $backup->getFileName()]);
+        } catch (DirectoryIsNotWritableException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).',
+                    'Admin.Advparameters.Notification'
+                )
+            );
+        } catch (BackupException $e) {
+            $this->addFlash('error', $this->trans('The backup file does not exist', 'Admin.Advparameters.Notification'));
         }
 
         return $this->redirectToRoute('admin_backup');
