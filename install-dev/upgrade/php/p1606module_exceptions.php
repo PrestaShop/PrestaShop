@@ -26,7 +26,7 @@
 
 function p1606module_exceptions()
 {
-    $modules_dir = scandir(_PS_MODULE_DIR_);
+    $modules_dir = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
     $modules_controllers = $core_controllers = array();
     $core_controllers = array();
 
@@ -40,7 +40,7 @@ function p1606module_exceptions()
         if (file_exists($module_path.'/controllers/') && is_dir($module_path.'/controllers/')) {
             $module_path_admin = $module_path.'/controllers/admin/';
             if (file_exists($module_path_admin) && is_dir($module_path_admin)) {
-                $admin = scandir($module_path_admin);
+                $admin = scandir($module_path_admin, SCANDIR_SORT_NONE);
                 foreach ($admin as $a_controller) {
                     if ($a_controller[0] == '.' || $a_controller == 'index.php') {
                         continue;
@@ -55,7 +55,7 @@ function p1606module_exceptions()
 
             $module_path_front = $module_path.'/controllers/front/';
             if (file_exists($module_path_front) && is_dir($module_path_front)) {
-                $front = scandir($module_path_front);
+                $front = scandir($module_path_front, SCANDIR_SORT_NONE);
                 foreach ($front as $f_controller) {
                     if ($f_controller[0] == '.' || $f_controller == 'index.php') {
                         continue;
@@ -73,7 +73,7 @@ function p1606module_exceptions()
     $controller_dir = _PS_ROOT_DIR_.'/controllers/front/';
 
     if (file_exists($controller_dir) && is_dir($controller_dir)) {
-        $front_controllers = scandir($controller_dir);
+        $front_controllers = scandir($controller_dir, SCANDIR_SORT_NONE);
 
         foreach ($front_controllers as $controller) {
             if ($controller[0] == '.' || $controller == 'index.php') {

@@ -45,6 +45,9 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected static $client;
 
+    /** @var Context */
+    protected $oldContext;
+
     /**
      * Symfony\Component\DependencyInjection\ContainerInterface
      */
@@ -59,6 +62,7 @@ abstract class ApiTestCase extends WebTestCase
 
         $this->router = self::$container->get('router');
 
+        $this->oldContext = Context::getContext();
         $legacyContextMock = $this->mockContextAdapter();
         self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
 
@@ -75,6 +79,7 @@ abstract class ApiTestCase extends WebTestCase
         self::$container = null;
         self::$kernel = null;
         self::$client = null;
+        Context::setInstanceForTesting($this->oldContext);
     }
 
     /**

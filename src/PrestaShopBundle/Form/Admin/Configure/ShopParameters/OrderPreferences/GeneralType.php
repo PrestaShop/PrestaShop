@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -43,9 +42,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class GeneralType extends TranslatorAwareType
 {
     /**
-     * @var CurrencyDataProvider
+     * @var string
      */
-    private $currencyDataProvider;
+    private $defaultCurrencyIsoCode;
 
     /**
      * CMS pages choices for Terms Of Service
@@ -57,12 +56,12 @@ class GeneralType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        CurrencyDataProvider $currencyDataProvider,
+        $defaultCurrencyIsoCode,
         array $tosCmsChoices
     ) {
         parent::__construct($translator, $locales);
 
-        $this->currencyDataProvider = $currencyDataProvider;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->tosCmsChoices = $tosCmsChoices;
     }
 
@@ -71,19 +70,17 @@ class GeneralType extends TranslatorAwareType
         /** @var Configuration $configuration */
         $configuration = $this->getConfiguration();
         $isMultishippingEnabled = $configuration->getBoolean('PS_ALLOW_MULTISHIPPING');
-        $defaultCurrencyId = $configuration->getInt('PS_CURRENCY_DEFAULT');
-        $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
+        $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder
             ->add('enable_final_summary', SwitchType::class)
             ->add('enable_guest_checkout', SwitchType::class)
             ->add('disable_reordering_option', SwitchType::class)
             ->add('purchase_minimum_value', MoneyWithSuffixType::class, [
-                'currency' => $defaultCurrency->iso_code,
+                'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
             ])
-            ->add('recalculate_shipping_cost', SwitchType::class)
-        ;
+            ->add('recalculate_shipping_cost', SwitchType::class);
 
         if ($isMultishippingEnabled) {
             $builder->add('allow_multishipping', SwitchType::class);
@@ -94,9 +91,8 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_tos', SwitchType::class)
             ->add('tos_cms_id', ChoiceType::class, [
                 'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices'  => $this->tosCmsChoices,
-            ])
-        ;
+                'choices' => $this->tosCmsChoices,
+            ]);
     }
 
     /**

@@ -1027,7 +1027,7 @@ class AdminCategoriesControllerCore extends AdminController
 
         if (isset($_FILES['thumbnail'])) {
             //Get total of image already present in directory
-            $files = scandir(_PS_CAT_IMG_DIR_);
+            $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
             $assigned_keys = array();
             $allowed_keys  = array(0, 1, 2);
 

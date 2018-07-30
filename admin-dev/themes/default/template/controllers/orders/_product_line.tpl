@@ -161,7 +161,7 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px;">
+	<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px; min-width: 250px;">
 		{if $product['quantity_refundable'] > 0}
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{assign var='amount_refundable' value=$product['amount_refundable']}

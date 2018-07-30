@@ -3,7 +3,9 @@ const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {accountPage} = require('../../selectors/FO/add_account_page');
 const {OrderPage} = require('../../selectors/BO/order');
 const {Menu} = require('../../selectors/BO/menu.js');
+const {ShoppingCarts} = require('../../selectors/BO/order');
 
+let dateFormat = require('dateformat');
 let data = require('../../datas/customer_and_address_data');
 let promise = Promise.resolve();
 
@@ -14,7 +16,11 @@ module.exports = {
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
       test('should select product "size M" ', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
-      test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, "4"));
+      test('should set the product "quantity"', () => {
+        return promise
+          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4"))
+          .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
+      });
       test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
       /**
@@ -23,13 +29,13 @@ module.exports = {
        */
       test('should change quantity to "5" using the keyboard and push "Enter"', () => {
         return promise
-          .then(() => client.waitAndSetValue(CheckoutOrderPage.quantity_input, '5'))
+          .then(() => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '5'))
           .then(() => client.keys('\uE007'))
           .then(() => client.pause(1000));
       });
-      test('should check that the quantity is equal to "5"', () => client.checkAttributeValue(CheckoutOrderPage.quantity_input, 'value', '5', 'equal', 1000));
-      test('should change quantity to "4" using the keyboard without pushing "Enter"', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input, '4'));
-      test('should check that the quantity is equal to "4"', () => client.checkAttributeValue(CheckoutOrderPage.quantity_input, 'value', '4', 'equal', 1000));
+      test('should check that the quantity is equal to "5"', () => client.checkAttributeValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), 'value', '5', 'equal', 1000));
+      test('should change quantity to "4" using the keyboard without pushing "Enter"', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
+      test('should check that the quantity is equal to "4"', () => client.checkAttributeValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), 'value', '4', 'equal', 1000));
       /**** END ****/
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
@@ -89,6 +95,12 @@ module.exports = {
             .then(() => client.getTextInVar(CheckoutOrderPage.shipping_method, "method", true))
             .then(() => client.getTextInVar(CheckoutOrderPage.order_shipping_prince_value, "shipping_price"))
         });
+        /**
+         * This scenario is based on the bug described in this ticket
+         * http://forge.prestashop.com/browse/BOOM-3886
+         */
+        test('should check that the basic price is equal to "22,94 €"', () => client.checkTextValue(CheckoutOrderPage.order_basic_price, global.tab["first_basic_price"]));
+        /**** END ****/
       }, 'common_client');
     }, 'common_client');
   },
@@ -122,15 +134,47 @@ module.exports = {
       }
       test('should status be equal to "Awaiting bank wire payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
       test('should check the shipping price', () => client.checkTextValue(OrderPage.shipping_cost, global.tab['shipping_price']));
-      test('should check the product name', () => client.checkTextValue(OrderPage.product_name, global.tab['product']));
+      test('should check the product name', () => client.checkTextValue(OrderPage.product_name.replace("%NUMBER", 1), global.tab['product']));
       test('should check the order message', () => client.checkTextValue(OrderPage.message_order, 'Order message test'));
       test('should check the total price', () => client.checkTextValue(OrderPage.total_price, global.tab["total_price"]));
       test('should check basic product price', () => {
         return promise
           .then(() => client.scrollWaitForExistAndClick(OrderPage.edit_product_button))
-          .then(() => client.checkAttributeValue(OrderPage.product_basic_price, 'value', global.tab["basic_price"].replace('€', '')))
+          .then(() => client.checkAttributeValue(OrderPage.product_basic_price.replace("%NUMBER", 1), 'value', global.tab["basic_price"].replace('€', '')))
       });
       test('should check shipping method', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
     }, "order");
+  },
+  getShoppingCartsInfo: function () {
+    scenario('Get all informations about the ' + global.shoppingCartsNumber + ' shopping carts', client => {
+      for (let i = 1; i <= global.shoppingCartsNumber; i++) {
+        test('Get the information of the ' + client.stringifyNumber(i) + ' shopping cart', () => {
+          return promise
+            .then(() => client.getTextInVar(ShoppingCarts.id.replace('%NUMBER', i), "id"))
+            .then(() => client.getTextInVar(ShoppingCarts.order_id.replace('%NUMBER', i), "order_id"))
+            .then(() => client.getTextInVar(ShoppingCarts.customer.replace('%NUMBER', i), "customer"))
+            .then(() => client.getTextInVar(ShoppingCarts.total.replace('%NUMBER', i), "total"))
+            .then(() => client.getTextInVar(ShoppingCarts.carrier.replace('%NUMBER', i), "carrier"))
+            .then(() => client.getTextInVar(ShoppingCarts.date.replace('%NUMBER', i), "date"))
+            .then(() => client.getTextInVar(ShoppingCarts.customer_online.replace('%NUMBER', i), "customer_online"))
+            .then(() => {
+              parseInt(global.tab["order_id"]) ? global.tab["order_id"] = parseInt(global.tab["order_id"]) : global.tab["order_id"] = '"' + global.tab["order_id"] + '"';
+              global.tab["carrier"] === '--' ? global.tab["carrier"] = '' : global.tab["carrier"] = '"' + global.tab["carrier"] + '"';
+              global.tab["customer_online"] === 'Yes' ? global.tab["customer_online"] = 1 : global.tab["customer_online"] = 0;
+              global.tab["date"] = dateFormat(global.tab["date"], "yyyy-mm-dd hh:MM:ss");
+              global.orders.push(parseInt(global.tab["id"]) + ';' + global.tab["order_id"] + ';' + '"' + global.tab["customer"] + '"' + ';' + global.tab["total"] + ';' + global.tab["carrier"] + ';' + '"' + global.tab["date"] + '"' + ';' + global.tab["customer_online"]);
+            });
+        });
+      }
+    }, 'order');
+  },
+  checkExportedFile: function () {
+    scenario('Check that the exported shopping carts file contains exactly the same shopping carts information', client => {
+      test('should export carts', () => client.downloadCart(ShoppingCarts.export_carts_button));
+      test('should check the file name', () => client.checkFile(global.downloadsFolderPath, global.exportCartFileName));
+      test('should read the file', () => client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000));
+      test('should compare both informations', () => client.checkExportedFileInfo(1000));
+      test('should reset filter', () => client.waitForExistAndClick(ShoppingCarts.reset_button));
+    }, 'order', true);
   }
 };

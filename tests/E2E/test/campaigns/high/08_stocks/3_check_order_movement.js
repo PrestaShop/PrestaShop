@@ -39,7 +39,7 @@ scenario('Check order movement', client => {
     test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should go to the first order', () => client.waitForExistAndClick(OrderPage.first_order));
     test('should change order state to "Delivered"', () => client.changeOrderState(OrderPage, 'Delivered'));
-    test('should get the order quantity', () => client.getTextInVar(OrderPage.order_quantity, "orderQuantity"));
+    test('should get the order quantity', () => client.getTextInVar(OrderPage.order_quantity.replace("%NUMBER", 1), "orderQuantity"));
   }, 'stocks');
 
   scenario('Check order movement', client => {

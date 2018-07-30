@@ -152,9 +152,11 @@
             {foreach $level_2.sub_tabs as $level_3}
               {if $level_3.current}
                 {foreach $level_3.sub_tabs as $level_4}
-                  <li>
-                    <a href="{$level_4.href}" id="subtab-{$level_4.class_name}" {if $level_4.current}class="current"{/if} data-submenu="{$level_4.id_tab}">{$level_4.name}</a>
-                  </li>
+                  {if $level_4.active}
+                    <li>
+                      <a href="{$level_4.href}" id="subtab-{$level_4.class_name}" {if $level_4.current}class="current"{/if} data-submenu="{$level_4.id_tab}">{$level_4.name}</a>
+                    </li>
+                  {/if}
                 {/foreach}
               {/if}
             {/foreach}

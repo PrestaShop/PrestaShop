@@ -42,11 +42,17 @@ services:
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
 
+    prestashop.adapter.legacy.kpi_configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
+
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
 
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
+
+    prestashop.adapter.validate:
+        class: PrestaShop\PrestaShop\Adapter\Validate
 
     # SSL middleware
     prestashop.adapter.middleware.ssl:

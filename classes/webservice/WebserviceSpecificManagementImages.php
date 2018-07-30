@@ -500,7 +500,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $id, 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
             }
         } else {
-            $nodes = scandir($directory);
+            $nodes = scandir($directory, SCANDIR_SORT_NONE);
             foreach ($nodes as $node) {
                 // avoid too much preg_match...
                 if ($node != '.' && $node != '..' && $node != '.svn') {

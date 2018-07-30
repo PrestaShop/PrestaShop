@@ -208,7 +208,9 @@ CREATE TABLE `PREFIX_cart_rule` (
 	KEY `id_customer` (`id_customer`, `active`, `date_to`),
 	KEY `group_restriction` (`group_restriction`, `active`, `date_to`),
 	KEY `id_customer_2` (`id_customer`,`active`,`highlight`,`date_to`),
-  KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`)
+  KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`),
+  KEY `date_from` (`date_from`),
+  KEY `date_to` (`date_to`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 /* Localized name assocatied with a promo code */

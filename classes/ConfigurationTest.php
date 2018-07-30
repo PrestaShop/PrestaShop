@@ -89,7 +89,6 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
-                'fopen' => false,
             ));
         }
 
@@ -110,6 +109,7 @@ class ConfigurationTestCore
             'mbstring' => false,
             'dom' => false,
             'pdo_mysql' => false,
+            'fopen' => false,
         );
     }
 
@@ -176,7 +176,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return ini_get('allow_url_fopen');
+        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
     }
 
     public static function test_system($funcs)
@@ -405,7 +405,7 @@ class ConfigurationTestCore
         foreach (ConfigurationTest::$test_files as $file) {
             if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file))) {
                 if ($full) {
-                    array_push($return, $file);
+                    $return[] = $file;
                 } else {
                     return false;
                 }

@@ -78,9 +78,9 @@ class CartRuleCalculator
 
         // Free shipping on selected carriers
         if ($cartRule->free_shipping) {
-            $this->calculator->getFees()->subDiscountValueShipping(
-                $this->calculator->getFees()->getInitialShippingFees()
-            );
+            $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
+            $this->calculator->getFees()->subDiscountValueShipping($initialShippingFees);
+            $cartRuleData->addDiscountApplied($initialShippingFees);
         }
 
         // Free gift

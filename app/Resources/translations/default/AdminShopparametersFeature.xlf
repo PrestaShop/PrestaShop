@@ -1,24 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="install-dev/upgrade/php/ps_1730_move_some_aeuc_configuration_to_core.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/ConfigurationLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="69d08bd5f8cf4e228930935c3f13e42f">
         <source>In Stock</source>
         <target>In Stock</target>
         <note>Context:
-File: install-dev/upgrade/php/ps_1730_move_some_aeuc_configuration_to_core.php:38</note>
+File: classes/lang/KeysReference/ConfigurationLang.php:65
+ Comment: PS_LABEL_IN_STOCK_PRODUCTS on configuration_lang table</note>
       </trans-unit>
       <trans-unit id="43f098d58ceefef56f05ded453751319">
         <source>Product available for orders</source>
         <target>Product available for orders</target>
         <note>Context:
-File: install-dev/upgrade/php/ps_1730_move_some_aeuc_configuration_to_core.php:39</note>
+File: classes/lang/KeysReference/ConfigurationLang.php:69
+ Comment: PS_LABEL_OOS_PRODUCTS_BOA on configuration_lang table</note>
       </trans-unit>
       <trans-unit id="2ef464d50f6acd767fb3424910995218">
         <source>Out-of-Stock</source>
         <target>Out-of-Stock</target>
         <note>Context:
-File: install-dev/upgrade/php/ps_1730_move_some_aeuc_configuration_to_core.php:40</note>
+File: classes/lang/KeysReference/ConfigurationLang.php:73
+ Comment: PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="d2faf7873d8849348199df0e47d148ea">
+        <source>Dear Customer,
+
+Regards,
+Customer service</source>
+        <target>Dear Customer,
+
+Regards,
+Customer service</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="5a88dab595c4fe254a5154bd3ee26b7f">
+        <source>We are currently updating our shop and will be back really soon.
+Thanks for your patience.</source>
+        <target>We are currently updating our shop and will be back really soon.
+Thanks for your patience.</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:34</note>
+      </trans-unit>
+      <trans-unit id="d1d2f5672327bcdef75062dc70e875df">
+        <source>#IN</source>
+        <target>#IN</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:41
+ Comment: PS_INVOICE_PREFIX on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="b13c095eb3e41264a7b64504fa8348be">
+        <source>#DE</source>
+        <target>#DE</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:45
+ Comment: PS_DELIVERY_PREFIX on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="a02341e3f02309e6a6c6832870a7e803">
+        <source>#RE</source>
+        <target>#RE</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:49
+ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="4dfefaddceaa53498ee5bd840ac72692">
+        <source>a|about|above|after|again|against|all|am|an|and|any|are|aren|as|at|be|because|been|before|being|below|between|both|but|by|can|cannot|could|couldn|did|didn|do|does|doesn|doing|don|down|during|each|few|for|from|further|had|hadn|has|hasn|have|haven|having|he|ll|her|here|hers|herself|him|himself|his|how|ve|if|in|into|is|isn|it|its|itself|let|me|more|most|mustn|my|myself|no|nor|not|of|off|on|once|only|or|other|ought|our|ours|ourselves|out|over|own|same|shan|she|should|shouldn|so|some|such|than|that|the|their|theirs|them|themselves|then|there|these|they|re|this|those|through|to|too|under|until|up|very|was|wasn|we|were|weren|what|when|where|which|while|who|whom|why|with|won|would|wouldn|you|your|yours|yourself|yourselves</source>
+        <target>a|about|above|after|again|against|all|am|an|and|any|are|aren|as|at|be|because|been|before|being|below|between|both|but|by|can|cannot|could|couldn|did|didn|do|does|doesn|doing|don|down|during|each|few|for|from|further|had|hadn|has|hasn|have|haven|having|he|ll|her|here|hers|herself|him|himself|his|how|ve|if|in|into|is|isn|it|its|itself|let|me|more|most|mustn|my|myself|no|nor|not|of|off|on|once|only|or|other|ought|our|ours|ourselves|out|over|own|same|shan|she|should|shouldn|so|some|such|than|that|the|their|theirs|them|themselves|then|there|these|they|re|this|those|through|to|too|under|until|up|very|was|wasn|we|were|weren|what|when|where|which|while|who|whom|why|with|won|would|wouldn|you|your|yours|yourself|yourselves</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:53
+ Comment: PS_RETURN_PREFIX on configuration_lang table - No translate word per word but adapting for your language</note>
+      </trans-unit>
+      <trans-unit id="c3d67cba349c7ecb5465ae92bdb38970">
+        <source>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</source>
+        <target>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</target>
+        <note>Context:
+File: classes/lang/KeysReference/ConfigurationLang.php:59
+ Comment: NW_CONDITIONS on configuration_lang table - From ps_emailsubscription module</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/GenderLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="127469a6b4253ebb77adccc0dd48461e">
+        <source>Mr.</source>
+        <target>Mr.</target>
+        <note>Context:
+File: classes/lang/KeysReference/GenderLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="773442a125403cbb194c24c5a8d59b88">
+        <source>Mrs.</source>
+        <target>Mrs.</target>
+        <note>Context:
+File: classes/lang/KeysReference/GenderLang.php:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/ContactLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b220f866824d97c12e2eb9b44e3b5e6">
+        <source>Webmaster</source>
+        <target>Webmaster</target>
+        <note>Context:
+File: classes/lang/KeysReference/ContactLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="2273d1167a6212812d95dc8fadbae78e">
+        <source>Customer service</source>
+        <target>Customer service</target>
+        <note>Context:
+File: classes/lang/KeysReference/ContactLang.php:28</note>
+      </trans-unit>
+      <trans-unit id="e335310ef456f61ede772356e5ece2aa">
+        <source>If a technical problem occurs on this website</source>
+        <target>If a technical problem occurs on this website</target>
+        <note>Context:
+File: classes/lang/KeysReference/ContactLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="c41c56aaf2db6aadfcdbe7e46422607d">
+        <source>For any question about a product, an order</source>
+        <target>For any question about a product, an order</target>
+        <note>Context:
+File: classes/lang/KeysReference/ContactLang.php:31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/GroupLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9fb01bb38360f1f3f595b7ccf3d3abe">
+        <source>Visitor</source>
+        <target>Visitor</target>
+        <note>Context:
+File: classes/lang/KeysReference/GroupLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="adb831a7fdd83dd1e2a309ce7591dff8">
+        <source>Guest</source>
+        <target>Guest</target>
+        <note>Context:
+File: classes/lang/KeysReference/GroupLang.php:28</note>
+      </trans-unit>
+      <trans-unit id="ce26601dac0dea138b7295f02b7620a7">
+        <source>Customer</source>
+        <target>Customer</target>
+        <note>Context:
+File: classes/lang/KeysReference/GroupLang.php:29</note>
       </trans-unit>
     </body>
   </file>

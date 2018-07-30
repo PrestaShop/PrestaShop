@@ -25,6 +25,15 @@ const {AddProductPage} = require('../../selectors/BO/add_product_page');
  *      wholesale: "product_wholesale",
  *      type: 'percentage',
  *      discount: 'product_discount'
+ *  },
+ *  categories :{
+ *      0: {
+ *          name:"name category",
+ *          main_category: true/false
+ *      }
+ *  },
+ *  options: {
+ *      filename: "attached_filename"
  *  }
  * };
  */
@@ -99,6 +108,38 @@ module.exports = {
         }, 'product/product');
       }
 
+      if (productData.hasOwnProperty('options')) {
+        scenario('Edit product options', client => {
+          test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
+          test('should select the attached file to the product', () => {
+            return promise
+              .then(() => client.scrollTo(AddProductPage.options_add_new_file_button))
+              .then(() => client.waitForExistAndClick(AddProductPage.attached_file_checkbox.replace('%FileName', productData.options.filename)))
+          });
+        }, 'product/product');
+      }
+
+      if (productData.hasOwnProperty('categories')) {
+        scenario('Add category', client => {
+          test('should search for the category', () => client.waitAndSetValue(AddProductPage.search_categories, productData.categories['1']['name'] + date_time));
+          test('should select the category', () => client.waitForVisibleAndClick(AddProductPage.list_categories));
+          test('should open all categories', () => client.openAllCategory());
+          if(Object.keys(productData.categories).length > 1) {
+            Object.keys(productData.categories).forEach(function (key) {
+              if (productData.categories[key]["main_category"] && productData.categories[key]["name"] !== 'home') {
+                test('should choose the created category as default', () => {
+                  return promise
+                    .then(() => client.scrollTo(AddProductPage.category_radio.replace('%S', productData.categories[key]["name"] + date_time)))
+                    .then(() => client.waitForExistAndClick(AddProductPage.category_radio.replace('%S', productData.categories[key]["name"] + date_time), 4000));
+                });
+              }
+            });
+          } else {
+            test('should delete the home category', () => client.waitForExistAndClick(AddProductPage.default_category));
+          }
+        }, 'product/product');
+      }
+
       scenario('Save the created product', client => {
         test('should switch the product online', () => {
           return promise
@@ -128,7 +169,7 @@ module.exports = {
       test('should check the existence of product price TE', () => client.checkProductPriceTE(productData.price));
       test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, productData.quantity));
       test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
-      test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+      test('should click on "Reset button"', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
   },
 
@@ -218,5 +259,17 @@ module.exports = {
       if (close)
         test('should set the "item per page" to 20 (back to normal)', () => client.waitAndSelectByValue(ProductList.item_per_page, 20));
     }, 'product/product', close);
+  },
+
+  deleteProduct(AddProductPage, productData) {
+    scenario('Delete the created product', client => {
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should search for the created product', () => client.searchProductByName(productData.name + date_time));
+      test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(ProductList.dropdown_button.replace('%POS', '1')));
+      test('should click on "Delete" action', () => client.waitForExistAndClick(ProductList.action_delete_button.replace('%POS', '1')));
+      test('should click on "Delete now" modal button', () => client.waitForVisibleAndClick(ProductList.delete_now_modal_button, 1000));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, 'Product successfully deleted.'));
+      test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+    }, 'product/check_product');
   }
 };

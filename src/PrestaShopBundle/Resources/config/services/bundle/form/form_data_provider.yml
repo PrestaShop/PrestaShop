@@ -2,6 +2,27 @@ services:
     _defaults:
         public: true
 
+    prestashop.admin.shipping_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.shipping_preferences.handling_configuration'
+            - '@prestashop.adapter.shipping_preferences.carrier_options_configuration'
+            - '@translator'
+
+    prestashop.admin.order.invoices.by_date.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.order_invoice'
+
+    prestashop.admin.order.invoices.by_status.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider'
+
+    prestashop.admin.order.invoices.options.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.invoice_options.configuration'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
+
     prestashop.admin.customer_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
         arguments:
@@ -79,3 +100,17 @@ services:
             - '@prestashop.adapter.localization.configuration'
             - '@prestashop.adapter.local_units.configuration'
             - '@prestashop.adapter.localization_advanced.configuration'
+
+    prestashop.admin.geolocation.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.geolocation_by_ip_address.configuration'
+            - '@prestashop.adapter.geolocation_ip_address_whitelist.configuration'
+            - '@prestashop.adapter.geolocation_options.configuration'
+            - '@prestashop.core.geolocation.geo_lite_city.checker'
+            - '@prestashop.core.validation.validator'
+
+    prestashop.admin.payment_preferences.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.payment_module_preferences.configuration'

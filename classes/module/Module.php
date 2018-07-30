@@ -595,7 +595,7 @@ abstract class ModuleCore implements ModuleInterface
         $upgrade_path = _PS_MODULE_DIR_.$module_name.'/upgrade/';
 
         // Check if folder exist and it could be read
-        if (file_exists($upgrade_path) && ($files = scandir($upgrade_path))) {
+        if (file_exists($upgrade_path) && ($files = scandir($upgrade_path, SCANDIR_SORT_NONE))) {
             // Read each file name
             foreach ($files as $file) {
                 if (!in_array($file, array('.', '..', '.svn', 'index.php')) && preg_match('/\.php$/', $file)) {
@@ -1546,7 +1546,7 @@ abstract class ModuleCore implements ModuleInterface
     public static function getModulesDirOnDisk()
     {
         $module_list = array();
-        $modules = scandir(_PS_MODULE_DIR_);
+        $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
         foreach ($modules as $name) {
             if (is_file(_PS_MODULE_DIR_.$name)) {
                 continue;
@@ -2047,6 +2047,34 @@ abstract class ModuleCore implements ModuleInterface
         </div>';
         return $output;
     }
+    
+    /**
+    * Helper displaying information message(s)
+    * @param string|array $information
+    * @return string
+    */
+    public function displayInformation($information)
+    {
+        $output = '
+        <div class="bootstrap">
+        <div class="module_info info alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>';
+
+        if (is_array($information)) {
+            $output .= '<ul>';
+            foreach ($information as $msg) {
+                $output .= '<li>'.$msg.'</li>';
+            }
+            $output .= '</ul>';
+        } else {
+            $output .= $information;
+        }
+
+        // Close div openned previously
+        $output .= '</div></div>';
+
+        return $output;
+    }
 
     /*
      * Return exceptions for module in hook
@@ -2291,7 +2319,10 @@ abstract class ModuleCore implements ModuleInterface
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
         if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id])) {
-            if (false === strpos($template, 'module:')) {
+            if (false === strpos($template, 'module:') &&
+                !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
+                !file_exists($template)
+            ) {
                 $template = $this->getTemplatePath($template);
             }
 
@@ -2341,9 +2372,10 @@ abstract class ModuleCore implements ModuleInterface
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
         Tools::enableCache();
-        if (false === strpos($template, 'module:')) {
+        if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
             $template = $this->getTemplatePath($template);
         }
+
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
         return $is_cached;
@@ -3185,7 +3217,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isSymfonyContext()
     {
-        return !defined('ADMIN_LEGACY_CONTEXT') && $this->context->controller instanceof AdminLegacyLayoutControllerCore;
+        return !$this->isAdminLegacyContext() && defined('_PS_ADMIN_DIR_');
     }
 
     /**

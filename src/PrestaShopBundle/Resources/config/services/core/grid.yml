@@ -1,0 +1,38 @@
+services:
+    _defaults:
+        public: true
+
+    # Grid data providers
+    prestashop.core.grid.data_provider.log:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        arguments:
+            - '@prestashop.core.admin.log.repository'
+
+    # Grid definition factories
+    prestashop.core.grid.definition.factory.abstract_grid_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        abstract: true
+        calls:
+            - [setTranslator, ['@translator']]
+
+    prestashop.core.grid.definition.factory.log_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
+          - "@=service('router').generate('admin_logs')"
+        public: true
+
+    # Grid factories
+    prestashop.core.grid.log_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.log_definition'
+            - '@prestashop.core.grid.data_provider.log'
+            - '@prestashop.hook.dispatcher'
+
+    # Grid presenter
+    prestashop.core.grid.presenter.grid_presenter:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+        arguments:
+            - '@form.factory'

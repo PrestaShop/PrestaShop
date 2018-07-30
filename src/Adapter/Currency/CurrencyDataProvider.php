@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+
 use Currency;
 
 /**
@@ -33,6 +35,22 @@ use Currency;
  */
 class CurrencyDataProvider
 {
+    /**
+     * @var \PrestaShop\PrestaShop\Adapter\Configuration
+     */
+    private $configuration;
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    public function __construct(Configuration $configuration, $shopId)
+    {
+        $this->configuration = $configuration;
+        $this->shopId = $shopId;
+    }
+
     /**
      * Return available currencies
      *
@@ -64,7 +82,7 @@ class CurrencyDataProvider
         }
 
         if (null === $idLang) {
-            $idLang = Configuration::get('PS_LANG_DEFAULT');
+            $idLang = $this->configuration->get('PS_LANG_DEFAULT');
         }
 
         return new Currency($currencyId, $idLang);
@@ -87,7 +105,7 @@ class CurrencyDataProvider
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
         if (null === $idLang) {
-            $idLang = Configuration::get('PS_LANG_DEFAULT');
+            $idLang = $this->configuration->get('PS_LANG_DEFAULT');
         }
 
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
@@ -128,5 +146,15 @@ class CurrencyDataProvider
     public function getCurrencyById($currencyId)
     {
         return new Currency($currencyId);
+    }
+
+    /**
+     * Get Default currency Iso code
+     */
+    public function getDefaultCurrencyIsoCode()
+    {
+        $defaultCurrencyId = $this->configuration->get('PS_CURRENCY_DEFAULT');
+
+        return (new Currency($defaultCurrencyId, null, $this->shopId))->iso_code;
     }
 }

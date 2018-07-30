@@ -4,7 +4,6 @@ module.exports = {
     click_outside: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[1]/th[3]',
     logout: '#header_logout',
     products_subtab: '#subtab-AdminCatalog',
-    //go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
     go_to_catalog_button: '#form > div.product-footer.justify-content-md-center > div.col-sm-5.col-lg-7.text-right > div.btn-group.hide.dropdown.show > div > a.dropdown-item.go-catalog.js-btn-save',
     new_product_dropdown_button: '#form > div.product-footer.justify-content-md-center > div.col-sm-5.col-lg-7.text-right > div.btn-group.hide.dropdown.show > div > a.dropdown-item.new-product.js-btn-save',
     more_option_button: '.btn.btn-primary.dropdown-toggle',
@@ -159,6 +158,7 @@ module.exports = {
     options_file_description: '//*[@id="form_step6_attachment_product_description"]',
     options_file_add_button: '//*[@id="form_step6_attachment_product_add"]',
     options_file_checkbox: '//*[@id="form_step6_attachments_0"]',
+    attached_file_checkbox: '//*[@id="product-attachment-file"]/tbody//label[contains(text(),"%FileName")]/input',
     catalog_product_table: '#product_catalog_list table.product',
     get catalog_product_name() {
       return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a';
@@ -203,6 +203,9 @@ module.exports = {
     created_category: '//*[@id="ps_categoryTags"]/span[2]/span',
     preview_link: '//a',
     continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
+    search_categories: '//*[@id="ps-select-product-category"]',
+    list_categories: '//*[@id="ui-id-1"]/li',
+    default_category: '//*[@id="ps_categoryTags"]/span[1]/a'
   },
 
   ProductList: {
@@ -212,7 +215,7 @@ module.exports = {
     sort_by_icon: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B" and @data-sort-direction="%W"]/span[@role="button"]',
     sort_button: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B"]/span[@role="button"]',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
-    first_product_status: '//*[@id="product_catalog_list"]//tr/td[9]/a/i[contains(@class, "action-%ACTION")]',
+    product_status: '//*[@id="product_catalog_list"]//tr[%I]/td[9]/a/i[contains(@class, "action-%ACTION")]',
     edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
     pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]',
     dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//button[@data-toggle="dropdown"])[%POS]',
@@ -224,6 +227,8 @@ module.exports = {
     pagination_next: '//*[@id="pagination_next_url"]',
     pagination_previous: '//*[@id="product_catalog_list"]//li[@class="page-item previous "]//a',
     page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
-    item_per_page: '//*[@id="paginator_select_page_limit"]'
+    item_per_page: '//*[@id="paginator_select_page_limit"]',
+    product_category: '//*[@id="product_catalog_list"]//div//tr[%I]/td[6]',
+    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]'
   }
 };

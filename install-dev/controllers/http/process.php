@@ -82,42 +82,46 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $this->session->process_validated = array();
         }
 
-        if (Tools::getValue('generateSettingsFile')) {
-            $this->processGenerateSettingsFile();
-        } elseif (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile'])) {
-            $this->processInstallDatabase();
-        } elseif (Tools::getValue('installDefaultData')) {
-            $this->processInstallDefaultData();
-        } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
-            $this->processPopulateDatabase();
-            // download and install language pack
-            Language::downloadAndInstallLanguagePack($this->session->lang);
-        } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
-            Language::getRtlStylesheetProcessor()
-                ->setIsInstall(true)
-                ->setLanguageCode($this->session->lang)
-                ->setProcessFOThemes(array('classic'))
-                ->process();
-            $this->processConfigureShop();
-        } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
-            $this->processInstallFixtures();
-        } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full')) {
-            $this->processInstallModules();
-        } elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules'])) {
-            $this->processInstallAddonsModules();
-        } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
-            $this->processInstallTheme();
-        } else {
-            // With no parameters, we consider that we are doing a new install, so session where the last process step
-            // was stored can be cleaned
-            if (Tools::getValue('restart')) {
-                $this->session->process_validated = array();
-                $this->session->database_clear = true;
-            } elseif (!Tools::getValue('submitNext')) {
-                $this->session->step = 'configure';
-                $this->session->last_step = 'configure';
-                Tools::redirect('index.php');
+        try {
+            if (Tools::getValue('generateSettingsFile')) {
+                $this->processGenerateSettingsFile();
+            } elseif (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile'])) {
+                $this->processInstallDatabase();
+            } elseif (Tools::getValue('installDefaultData')) {
+                $this->processInstallDefaultData();
+            } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
+                $this->processPopulateDatabase();
+                // download and install language pack
+                Language::downloadAndInstallLanguagePack($this->session->lang);
+            } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
+                Language::getRtlStylesheetProcessor()
+                    ->setIsInstall(true)
+                    ->setLanguageCode($this->session->lang)
+                    ->setProcessFOThemes(array('classic'))
+                    ->process();
+                $this->processConfigureShop();
+            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
+                $this->processInstallFixtures();
+            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full')) {
+                $this->processInstallModules();
+            } elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules'])) {
+                $this->processInstallAddonsModules();
+            } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModulesAddons'])) {
+                $this->processInstallTheme();
             }
+        } catch (\Exception $e) {
+            $this->ajaxJsonAnswer(false, $e->getMessage());
+        }
+
+        // With no parameters, we consider that we are doing a new install, so session where the last process step
+        // was stored can be cleaned
+        if (Tools::getValue('restart')) {
+            $this->session->process_validated = array();
+            $this->session->database_clear = true;
+        } elseif (!Tools::getValue('submitNext')) {
+            $this->session->step = 'configure';
+            $this->session->last_step = 'configure';
+            Tools::redirect('index.php');
         }
     }
 
@@ -294,18 +298,25 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function display()
     {
+        $memoryLimit = Tools::getMemoryLimit();
+        // The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
+        $lowMemory = ($memoryLimit != '-1' && $memoryLimit < Tools::getOctets('42M'));
+
         // We fill the process step used for Ajax queries
         $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', array(), 'Install'));
         $this->process_steps[] = array('key' => 'installDefaultData', 'lang' => $this->translator->trans('Create default shop and languages', array(), 'Install'));
 
+        // If low memory or big fixtures, create subtasks for populateDatabase step (entity per entity)
         $populate_step = array('key' => 'populateDatabase', 'lang' => $this->translator->trans('Populate database tables', array(), 'Install'));
-        $populate_step['subtasks'] = array();
-        $xml_loader = new XmlLoader();
-        $xml_loader->setTranslator($this->translator);
+        if ($lowMemory) {
+            $populate_step['subtasks'] = array();
+            $xml_loader = new XmlLoader();
+            $xml_loader->setTranslator($this->translator);
 
-        foreach ($xml_loader->getSortedEntities() as $entity) {
-            $populate_step['subtasks'][] = array('entity' => $entity);
+            foreach ($xml_loader->getSortedEntities() as $entity) {
+                $populate_step['subtasks'][] = array('entity' => $entity);
+            }
         }
 
         $this->process_steps[] = $populate_step;
@@ -313,20 +324,24 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         if ($this->session->install_type == 'full') {
             $fixtures_step = array('key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', array(), 'Install'));
-            $fixtures_step['subtasks'] = array();
-            $xml_loader = new XmlLoader();
-            $xml_loader->setTranslator($this->translator);
-            $xml_loader->setFixturesPath();
+            if ($lowMemory || $this->hasLargeFixtures()) {
+                $fixtures_step['subtasks'] = array();
+                $xml_loader = new XmlLoader();
+                $xml_loader->setTranslator($this->translator);
+                $xml_loader->setFixturesPath();
 
-            foreach ($xml_loader->getSortedEntities() as $entity) {
-                $fixtures_step['subtasks'][] = array('entity' => $entity);
+                foreach ($xml_loader->getSortedEntities() as $entity) {
+                    $fixtures_step['subtasks'][] = array('entity' => $entity);
+                }
             }
             $this->process_steps[] = $fixtures_step;
         }
 
         $install_modules = array('key' => 'installModules', 'lang' => $this->translator->trans('Install modules', array(), 'Install'));
-        foreach ($this->model_install->getModulesList() as $module) {
-            $install_modules['subtasks'][] = array('module' => $module);
+        if ($lowMemory) {
+            foreach ($this->model_install->getModulesList() as $module) {
+                $install_modules['subtasks'][] = array('module' => $module);
+            }
         }
         $this->process_steps[] = $install_modules;
 
@@ -340,8 +355,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             'version' => _PS_INSTALL_VERSION_
         );
 
-        foreach ($this->model_install->getAddonsModulesList($params) as $module) {
-            $install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
+        if ($lowMemory) {
+            foreach ($this->model_install->getAddonsModulesList($params) as $module) {
+                $install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
+            }
         }
 
         $this->process_steps[] = $install_modules;
@@ -351,10 +368,30 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->displayTemplate('process');
     }
 
+    /**
+     * Check if the fixtures directory is large
+     *
+     * return bool
+     */
+    private function hasLargeFixtures()
+    {
+        $size = 0;
+        $fixtureDir = _PS_INSTALL_FIXTURES_PATH_.'fashion/data/';
+        $dh = opendir($fixtureDir);
+        if ($dh) {
+            while (($xmlFile = readdir($dh)) !== false) {
+                $size += filesize($fixtureDir.$xmlFile);
+            }
+            closedir($dh);
+        }
+
+        return $size > Tools::getOctets('10M');
+    }
+
     private function clearConfigXML()
     {
         $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
-        $cacheFiles = scandir($configXMLPath);
+        $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
         foreach ($cacheFiles as $file) {
@@ -368,7 +405,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     private function clearConfigThemes()
     {
         $themesPath = _PS_ROOT_DIR_.'/config/themes/';
-        $cacheFiles = scandir($themesPath);
+        $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach ($cacheFiles as $file) {
             $file = $themesPath.$file;
             if (is_file($file)) {

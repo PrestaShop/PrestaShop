@@ -199,6 +199,7 @@ class TranslateCore
             }
             $translationsMerged[$name][$iso] = true;
         }
+
         $string = preg_replace("/\\\*'/", "\'", $originalString);
         $key = md5($string);
 

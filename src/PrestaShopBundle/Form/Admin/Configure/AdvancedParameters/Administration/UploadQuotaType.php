@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -61,8 +62,7 @@ class UploadQuotaType extends TranslatorAwareType
                     'required' => true,
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
                 ]
-            )
-        ;
+            );
     }
 
     /**
@@ -70,9 +70,9 @@ class UploadQuotaType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ));
+        ]);
     }
 
     /**

@@ -1,0 +1,13 @@
+admin_geolocation:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:index
+        _legacy_controller: AdminGeolocation
+
+admin_geolocation_process_form:
+    path: /process_form
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:processForm
+        _legacy_controller: AdminGeolocation
