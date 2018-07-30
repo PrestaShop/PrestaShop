@@ -316,7 +316,7 @@ $(document).ready(() => {
         if (!args.product_url || !args.id_product_attribute) {
             return;
         }
-        window.history.pushState(
+        window.history.replaceState(
             {
               id_product_attribute: args.id_product_attribute
             },
