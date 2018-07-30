@@ -954,10 +954,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $groups = Tools::getValue('group');
 
             if (!empty($groups)) {
-                $requestedIdProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
-                    $this->product->id,
-                    $groups
-                );
+                try {
+                    $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
+                        $this->product->id,
+                        $groups
+                    );
+                } catch (PrestaShopObjectNotFoundException $e) {
+                    // Don't care just set $requestedIdProductAttribute to null
+                    $requestedIdProductAttribute = null;
+                }
             }
         }
 
