@@ -33,7 +33,7 @@
           {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_logs_grid.html.twig' %}
         {% endif %}
 
-        {{ form_start(emailConfigurationForm) }}
+        {{ form_start(emailConfigurationForm, {'action': path('admin_email_process')}) }}
           {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig' %}
           {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
 
