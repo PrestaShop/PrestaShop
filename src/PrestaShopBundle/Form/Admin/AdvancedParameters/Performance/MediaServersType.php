@@ -23,11 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * This form class generates the "Media servers" form in Performance page
@@ -40,16 +42,18 @@ class MediaServersType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('media_server_one', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('media_server_one', TextType::class, [
                 'required' => false,
-            ))
-            ->add('media_server_two', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+                'empty_data' => '',
+            ])
+            ->add('media_server_two', TextType::class, [
                 'required' => false,
-            ))
-            ->add('media_server_three', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+                'empty_data' => '',
+            ])
+            ->add('media_server_three', TextType::class, [
                 'required' => false,
-            ))
-        ;
+                'empty_data' => '',
+            ]);
     }
 
     /**
@@ -57,9 +61,9 @@ class MediaServersType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature'
-        ));
+        ]);
     }
 
     /**

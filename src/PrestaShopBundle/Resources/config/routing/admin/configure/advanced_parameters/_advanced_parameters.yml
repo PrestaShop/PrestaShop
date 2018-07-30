@@ -1,0 +1,19 @@
+_logs:
+    resource: "logs.yml"
+    prefix: /logs/
+
+_administration:
+    resource: "administration.yml"
+    prefix: /administration/
+
+_import:
+    resource: "import.yml"
+    prefix: /import/
+
+_performance:
+    resource: "performance.yml"
+    prefix: /performance/
+
+_system_information:
+    resource: "system_information.yml"
+    prefix: /system-information/

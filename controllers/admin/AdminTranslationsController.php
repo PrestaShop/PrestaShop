@@ -402,10 +402,10 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $theme_exists = array('from_theme' => false, 'to_theme' => false);
             foreach ($this->themes as $theme) {
-                if ($theme->getDirectory() == $from_theme) {
+                if ($theme->getName() == $from_theme) {
                     $theme_exists['from_theme'] = true;
                 }
-                if ($theme->getDirectory() == $to_theme) {
+                if ($theme->getName() == $to_theme) {
                     $theme_exists['to_theme'] = true;
                 }
             }
@@ -558,7 +558,7 @@ class AdminTranslationsControllerCore extends AdminController
         // 1 - Scan mails files
         $mails = array();
         if (Tools::file_exists_cache(_PS_MAIL_DIR_.$default_language.'/')) {
-            $mails = scandir(_PS_MAIL_DIR_.$default_language.'/');
+            $mails = scandir(_PS_MAIL_DIR_ . $default_language . '/', SCANDIR_SORT_NONE);
         }
 
         $mails_new_lang = array();
@@ -582,14 +582,14 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         // 2 - Scan modules files
-        $modules = scandir(_PS_MODULE_DIR_);
+        $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
 
         $module_mail_en = array();
         $module_mail_iso_code = array();
 
         foreach ($modules as $module) {
             if (!in_array($module, self::$ignore_folder) && Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/'.$default_language.'/')) {
-                $arr_files = scandir(_PS_MODULE_DIR_.$module.'/mails/'.$default_language.'/');
+                $arr_files = scandir(_PS_MODULE_DIR_ . $module . '/mails/' . $default_language . '/', SCANDIR_SORT_NONE);
 
                 foreach ($arr_files as $file) {
                     if (!in_array($file, self::$ignore_folder)) {
@@ -1115,12 +1115,12 @@ class AdminTranslationsControllerCore extends AdminController
         switch ($this->type_selected) {
             case 'front':
                 $directories['php'] = array(
-                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
-                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
+                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE),
                     _PS_CLASS_DIR_.'controller/' => array('FrontController.php'),
                 );
 
-                $directories['tpl'] = array(_PS_ALL_THEMES_DIR_ => scandir(_PS_ALL_THEMES_DIR_));
+                $directories['tpl'] = array(_PS_ALL_THEMES_DIR_ => scandir(_PS_ALL_THEMES_DIR_, SCANDIR_SORT_NONE));
                 self::$ignore_folder[] = 'modules';
                 $directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_SELECTED_DIR_));
                 if (isset($directories['tpl'][_PS_THEME_SELECTED_DIR_.'pdf/'])) {
@@ -1136,9 +1136,9 @@ class AdminTranslationsControllerCore extends AdminController
             case 'back':
                 $directories = array(
                     'php' => array(
-                        _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
-                        _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
-                        _PS_CLASS_DIR_.'helper/' => scandir(_PS_CLASS_DIR_.'helper/'),
+                        _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
+                        _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE),
+                        _PS_CLASS_DIR_.'helper/' => scandir(_PS_CLASS_DIR_ . 'helper/', SCANDIR_SORT_NONE),
                         _PS_CLASS_DIR_.'controller/' => array('AdminController.php'),
                         _PS_CLASS_DIR_ => array('PaymentModule.php'),
                     ),
@@ -1161,12 +1161,12 @@ class AdminTranslationsControllerCore extends AdminController
 
             case 'errors':
                 $directories['php'] = array(
-                    _PS_ROOT_DIR_ => scandir(_PS_ROOT_DIR_),
-                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
-                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
-                    _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
-                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
-                    _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/')
+                    _PS_ROOT_DIR_ => scandir(_PS_ROOT_DIR_, SCANDIR_SORT_NONE),
+                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR, SCANDIR_SORT_NONE),
+                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
+                    _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE)
                 );
 
                 // Get all files for folders classes/ and override/classes/ recursively
@@ -1179,14 +1179,14 @@ class AdminTranslationsControllerCore extends AdminController
                 break;
 
             case 'pdf':
-                $tpl_theme = Tools::file_exists_cache(_PS_THEME_SELECTED_DIR_.'pdf/') ? scandir(_PS_THEME_SELECTED_DIR_.'pdf/') : array();
+                $tpl_theme = Tools::file_exists_cache(_PS_THEME_SELECTED_DIR_.'pdf/') ? scandir(_PS_THEME_SELECTED_DIR_ . 'pdf/', SCANDIR_SORT_NONE) : array();
                 $directories = array(
                     'php' => array(
-                        _PS_CLASS_DIR_.'pdf/' => scandir(_PS_CLASS_DIR_.'pdf/'),
-                        _PS_OVERRIDE_DIR_.'classes/pdf/' => scandir(_PS_OVERRIDE_DIR_.'classes/pdf/')
+                        _PS_CLASS_DIR_.'pdf/' => scandir(_PS_CLASS_DIR_ . 'pdf/', SCANDIR_SORT_NONE),
+                        _PS_OVERRIDE_DIR_.'classes/pdf/' => scandir(_PS_OVERRIDE_DIR_ . 'classes/pdf/', SCANDIR_SORT_NONE)
                     ),
                     'tpl' => array(
-                        _PS_PDF_DIR_ => scandir(_PS_PDF_DIR_),
+                        _PS_PDF_DIR_ => scandir(_PS_PDF_DIR_, SCANDIR_SORT_NONE),
                         _PS_THEME_SELECTED_DIR_.'pdf/' => $tpl_theme
                     )
                 );
@@ -1196,11 +1196,11 @@ class AdminTranslationsControllerCore extends AdminController
 
             case 'mails':
                 $directories['php'] = array(
-                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
-                    _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
-                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
-                    _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
-                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR),
+                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
+                    _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE),
+                    _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR, SCANDIR_SORT_NONE),
                 );
 
                 // Get all files for folders classes/ and override/classes/ recursively
@@ -2383,7 +2383,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         if (Tools::file_exists_cache($dir_en)) {
             // Get all english files to compare with the language to translate
-            foreach (scandir($dir_en) as $email_file) {
+            foreach (scandir($dir_en, SCANDIR_SORT_NONE) as $email_file) {
                 if (strripos($email_file, '.html') > 0 || strripos($email_file, '.txt') > 0) {
                     $email_name = substr($email_file, 0, strripos($email_file, '.'));
                     $type = substr($email_file, strripos($email_file, '.') + 1);
@@ -2647,7 +2647,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $arr_modules = array();
         if (array_key_exists('dir', $this->translations_informations['modules'])) {
-            if ($modules_dir = scandir($this->translations_informations['modules']['dir'])) {
+            if ($modules_dir = scandir($this->translations_informations['modules']['dir'], SCANDIR_SORT_NONE)) {
                 foreach ($modules_dir as $module_dir) {
                     if (!in_array($module_dir, self::$ignore_folder)) {
                         $dir = false;
@@ -2663,7 +2663,7 @@ class AdminTranslationsControllerCore extends AdminController
                                 if ($this->theme_selected) {
                                     $dir = $this->translations_informations['modules']['dir'] . $module_dir . '/';
                                 }
-                                $arr_modules[$dir] = scandir($dir);
+                                $arr_modules[$dir] = scandir($dir, SCANDIR_SORT_NONE);
                             }
                         }
                     }
@@ -2683,7 +2683,7 @@ class AdminTranslationsControllerCore extends AdminController
     public function getModulesHasPDF($classes = false)
     {
         $arr_modules = array();
-        foreach (scandir($this->translations_informations['modules']['dir']) as $module_dir) {
+        foreach (scandir($this->translations_informations['modules']['dir'], SCANDIR_SORT_NONE) as $module_dir) {
             if (!in_array($module_dir, self::$ignore_folder)) {
                 $dir = false;
                 if ($classes) {
@@ -2693,7 +2693,7 @@ class AdminTranslationsControllerCore extends AdminController
                         $dir = $this->translations_informations['modules']['dir'].$module_dir.'/classes/';
                     }
                     if ($dir !== false) {
-                        $arr_modules[$dir] = scandir($dir);
+                        $arr_modules[$dir] = scandir($dir, SCANDIR_SORT_NONE);
                     }
                 } else {
                     if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/pdf/')) {
@@ -2702,7 +2702,7 @@ class AdminTranslationsControllerCore extends AdminController
                         $dir = $this->translations_informations['modules']['dir'].$module_dir.'/pdf/';
                     }
                     if ($dir !== false) {
-                        $arr_modules[$dir] = scandir($dir);
+                        $arr_modules[$dir] = scandir($dir, SCANDIR_SORT_NONE);
                     }
                 }
             }
@@ -2822,7 +2822,7 @@ class AdminTranslationsControllerCore extends AdminController
 
             foreach ($dir_to_copy_iso as $dir) {
                 if (!empty($dir) && is_dir($dir)) {
-                    if ($scanDir = scandir($dir)) {
+                    if ($scanDir = scandir($dir, SCANDIR_SORT_NONE)) {
                         foreach ($scanDir as $file) {
                             if (!in_array($file, self::$ignore_folder)) {
                                 $files_to_copy_iso[] = array(
@@ -2842,7 +2842,7 @@ class AdminTranslationsControllerCore extends AdminController
                     $stack = array();
                     $folder = dirname($file['to']);
                     while (!is_dir($folder)) {
-                        array_push($stack, $folder);
+                        $stack[] = $folder;
                         $folder = dirname($folder);
                     }
                     while ($folder = array_pop($stack)) {
@@ -2897,7 +2897,7 @@ class AdminTranslationsControllerCore extends AdminController
             }
         } elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
             // Or if is folder, we scan folder for check if found in folder and subfolder
-            foreach (scandir($dir.'/'.$file) as $temp) {
+            foreach (scandir($dir . '/' . $file, SCANDIR_SORT_NONE) as $temp) {
                 if ($temp[0] != '.') {
                     $subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
                 }
@@ -2947,7 +2947,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $files_module = array();
         if (Tools::file_exists_cache($path)) {
-            $files_module = scandir($path);
+            $files_module = scandir($path, SCANDIR_SORT_NONE);
         }
         $files_for_module = $this->clearModuleFiles($files_module, 'file');
         if (!empty($files_for_module)) {
@@ -3206,7 +3206,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $dir = rtrim($dir, '/').DIRECTORY_SEPARATOR;
 
-        $to_parse = scandir($dir);
+        $to_parse = scandir($dir, SCANDIR_SORT_NONE);
         // copied (and kind of) adapted from AdminImages.php
         foreach ($to_parse as $file) {
             if (!in_array($file, self::$ignore_folder)) {

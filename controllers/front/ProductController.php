@@ -26,7 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
-use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
@@ -379,10 +379,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'quickview_html' => $this->render('catalog/_partials/quickview', $product_for_template),
             'product' => $product_for_template,
         )));
+
+        return;
     }
 
     public function displayAjaxRefresh()
@@ -393,7 +395,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
@@ -425,6 +427,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
+
+        return;
     }
 
     /**

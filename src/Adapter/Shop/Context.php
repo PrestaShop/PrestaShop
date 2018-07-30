@@ -98,6 +98,20 @@ class Context
     }
 
     /**
+     * Check if shop context is Shop
+     *
+     * @return bool
+     */
+    public function isSingleShopContext()
+    {
+        if (!Shop::isFeatureActive()) {
+            return true;
+        }
+
+        return $this->isShopContext();
+    }
+
+    /**
      * Update Multishop context for only one shop
      *
      * @param int $id Shop id to set in the current context

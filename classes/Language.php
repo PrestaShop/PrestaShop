@@ -363,7 +363,7 @@ class LanguageCore extends ObjectModel
                     $modMailDirFrom = $modDir.'/mails/'.(string) $iso_from;
                     $modMailDirTo = $modDir.'/mails/'.(string) $iso_to;
                     if (file_exists($modMailDirFrom)) {
-                        $dirFiles = scandir($modMailDirFrom);
+                        $dirFiles = scandir($modMailDirFrom, SCANDIR_SORT_NONE);
                         foreach ($dirFiles as $file) {
                             if (file_exists($modMailDirFrom.'/'.$file) && $file != '.' && $file != '..' && $file != '.svn') {
                                 $files_modules[$modMailDirFrom.'/'.$file] = ($copy ? $modMailDirTo.'/'.$file : ++$number);
@@ -389,7 +389,7 @@ class LanguageCore extends ObjectModel
                 $files_theme[$pPath_from.'lang/'.(string) $iso_from.'.php'] = ($copy ? $pPath_to.'lang/'.(string) $iso_to.'.php' : ++$number);
             }
 
-            $module_theme_files = (file_exists($tPath_from.'modules/') ? scandir($tPath_from.'modules/') : array());
+            $module_theme_files = (file_exists($tPath_from.'modules/') ? scandir($tPath_from . 'modules/', SCANDIR_SORT_NONE) : array());
             foreach ($module_theme_files as $module) {
                 if ($module !== '.' && $module != '..' && $module !== '.svn' && file_exists($tPath_from.'modules/'.$module.'/translations/'.(string) $iso_from.'.php')) {
                     $files_theme[$tPath_from.'modules/'.$module.'/translations/'.(string) $iso_from.'.php'] = ($copy ? $tPath_to.'modules/'.$module.'/translations/'.(string) $iso_to.'.php' : ++$number);
@@ -540,17 +540,17 @@ class LanguageCore extends ObjectModel
                 }
             }
 
-            $modList = scandir(_PS_MODULE_DIR_);
+            $modList = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
             foreach ($modList as $mod) {
                 Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
-                $files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
+                $files = @scandir(_PS_MODULE_DIR_ . $mod . '/mails/', SCANDIR_SORT_NONE);
                 if (count($files) <= 2) {
                     Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/');
                 }
 
                 if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php')) {
                     unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
-                    $files = @scandir(_PS_MODULE_DIR_.$mod);
+                    $files = @scandir(_PS_MODULE_DIR_ . $mod, SCANDIR_SORT_NONE);
                     if (count($files) <= 2) {
                         Tools::deleteDirectory(_PS_MODULE_DIR_.$mod);
                     }

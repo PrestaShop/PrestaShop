@@ -29,6 +29,11 @@ $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.reason.cart;
     var getCartViewUrl = $('.js-cart').data('refresh-url');
+    
+    if (!getCartViewUrl) {
+      return;
+    }
+    
     var requestData = {};
 
     if (event && event.reason) {
@@ -105,6 +110,7 @@ $(document).ready(() => {
             reason: {
               idProduct: resp.id_product,
               idProductAttribute: resp.id_product_attribute,
+              idCustomization: resp.id_customization,
               linkAction: 'add-to-cart',
               cart: resp.cart
             },

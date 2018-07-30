@@ -37,7 +37,7 @@ function move_translations_module_file()
 	');
 
     // Get the list of modules
-    $modules = scandir(_PS_MODULE_DIR_);
+    $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
 
     $error_list = array();
     // Scan all modules and check if translation file exists

@@ -1,0 +1,36 @@
+admin_international_translation_overview:
+    path:     /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:overview
+
+admin_international_translations_list:
+    path: /list
+    methods:  [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:list
+        _legacy_controller: AdminTranslations
+    requirements:
+        locale: \w+
+
+admin_international_translations_module:
+    path: /module
+    methods:  [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:module
+    requirements:
+        locale: \w+
+
+admin_international_translations_export_theme:
+    path: /export
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:exportTheme
+        _legacy_controller: AdminTranslations
+
+admin_international_translations_show_settings:
+    path: /settings
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:showSettings
+        _legacy_controller: AdminTranslations

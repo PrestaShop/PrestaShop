@@ -50,6 +50,12 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @param string $type
+     * @return array|bool
+     */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
@@ -66,6 +72,11 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
         );
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @return ProductSearchResult
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query

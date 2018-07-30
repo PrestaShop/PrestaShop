@@ -65,8 +65,8 @@ class UrlGenerator implements UrlGeneratorInterface
         $this->router = $router;
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+    /**
+     * {@inheritdoc}
      */
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
@@ -109,16 +109,16 @@ class UrlGenerator implements UrlGeneratorInterface
         return array($legacyController, $legacyParameters);
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\Routing\RequestContextAwareInterface::setContext()
+    /**
+     * {@inheritdoc}
      */
     public function setContext(RequestContext $context)
     {
         throw new LogicException('Cannot use this UrlGeneratorInterface implementation with a Symfony context. Please call AdminUrlGeneratorFactory::forLegacy() to reach the right instance.');
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\Routing\RequestContextAwareInterface::getContext()
+    /**
+     * {@inheritdoc}
      */
     public function getContext()
     {

@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     prestashop.core.import.file_uploader:
         class: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
         arguments:

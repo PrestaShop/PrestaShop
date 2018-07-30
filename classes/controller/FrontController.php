@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use Symfony\Component\Filesystem\Filesystem;
@@ -370,7 +370,7 @@ class FrontControllerCore extends Controller
                 $cart = new Cart($this->context->cookie->id_cart);
             }
 
-            if (Validate::isLoadedObject($cart) && $cart->OrderExists()) {
+            if (Validate::isLoadedObject($cart) && $cart->orderExists()) {
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
@@ -1745,8 +1745,6 @@ class FrontControllerCore extends Controller
                 }
             }
         }
-
-        ksort($params);
 
         if (null !== $extraParams) {
             foreach ($params as $key => $param) {

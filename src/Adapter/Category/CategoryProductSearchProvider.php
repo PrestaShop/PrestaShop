@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 use Category;
 
+/**
+ * Responsible of getting products for specific category
+ */
 class CategoryProductSearchProvider implements ProductSearchProviderInterface
 {
     private $translator;
@@ -50,6 +53,13 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @param string $type
+     * @return array|false|int
+     * @throws \PrestaShopDatabaseException
+     */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
@@ -79,6 +89,12 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
         }
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @return ProductSearchResult
+     * @throws \PrestaShopDatabaseException
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query

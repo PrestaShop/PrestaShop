@@ -30,9 +30,19 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Module as LegacyModule;
 
+/**
+ * Responsible of managing updates of modules.
+ */
 class ModuleDataUpdater
 {
+    /**
+     * @var AddonsInterface
+     */
     private $addonsDataProvider;
+
+    /**
+     * @var AdminModuleDataProvider
+     */
     private $adminModuleDataProvider;
 
     public function __construct(AddonsInterface $addonsDataProvider, AdminModuleDataProvider $adminModuleDataProvider)
@@ -41,6 +51,10 @@ class ModuleDataUpdater
         $this->adminModuleDataProvider = $adminModuleDataProvider;
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function setModuleOnDiskFromAddons($name)
     {
         // Note : Data caching should be handled by the addons data provider
@@ -54,6 +68,10 @@ class ModuleDataUpdater
         return false;
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function removeModuleFromDisk($name)
     {
         $fs = new FileSystem();
@@ -65,6 +83,10 @@ class ModuleDataUpdater
         }
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function upgrade($name)
     {
         // Calling this function will init legacy module data

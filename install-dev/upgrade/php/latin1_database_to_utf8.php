@@ -107,7 +107,7 @@ function latin1_database_to_utf8()
 				</request>'."\n";
         }
 
-        if (Db::getInstance()->NumRows()) {
+        if (Db::getInstance()->numRows()) {
             /* Utf-8 datas' restitution */
             if (!Db::getInstance()->execute('SET NAMES utf8')) {
                 echo 'Cannot change the sql encoding to utf8!';

@@ -110,7 +110,6 @@ class AdminCurrenciesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'col' => '6',
                     'label' => $this->trans('Exchange rate', array(), 'Admin.International.Feature'),
                     'name' => 'conversion_rate',
                     'maxlength' => 11,

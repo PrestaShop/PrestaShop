@@ -2618,7 +2618,7 @@ class AdminControllerCore extends Controller
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/main.bundle.js');
-            $this->addjQueryPlugin(array('chosen'));
+            $this->addJqueryPlugin(array('chosen'));
         } else {
 
             //Bootstrap
@@ -2627,8 +2627,8 @@ class AdminControllerCore extends Controller
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/theme.css', 'all', 0);
 
             $this->addJquery();
-            $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
-            $this->addjQueryPlugin('growl', null, false);
+            $this->addJqueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
+            $this->addJqueryPlugin('growl', null, false);
             $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/bootstrap.min.js');

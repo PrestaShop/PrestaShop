@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -99,187 +100,187 @@ class ProductSpecificPrice extends CommonAbstractType
             $builder->add(
                 'sp_id_shop',
                 FormType\HiddenType::class,
-                array(
+                [
                     'required' => false,
-                )
+                ]
             );
         } else {
             $builder->add(
                 'sp_id_shop',
                 FormType\ChoiceType::class,
-                array(
+                [
                     'choices' => $this->shops,
                     'required' => false,
                     'label' => false,
-                    'placeholder' => $this->translator->trans('All shops', array(), 'Admin.Global'),
-                )
+                    'placeholder' => $this->translator->trans('All shops', [], 'Admin.Global'),
+                ]
             );
         }
 
         $builder->add(
             'sp_id_currency',
             FormType\ChoiceType::class,
-            array(
+            [
                 'choices' => $this->currencies,
                 'required' => false,
                 'label' => false,
-                'attr' => array(
+                'attr' => [
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
-                ),
-                'placeholder' => $this->translator->trans('All currencies', array(), 'Admin.Global'),
-            )
+                ],
+                'placeholder' => $this->translator->trans('All currencies', [], 'Admin.Global'),
+            ]
         )
-        ->add(
-            'sp_id_country',
-            FormType\ChoiceType::class,
-            array(
-                'choices' => $this->countries,
-                'required' => false,
-                'label' => false,
-                'attr' => array(
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ),
-                'placeholder' => $this->translator->trans('All countries', array(), 'Admin.Global'),
+            ->add(
+                'sp_id_country',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => $this->countries,
+                    'required' => false,
+                    'label' => false,
+                    'attr' => [
+                        'data-toggle' => 'select2',
+                        'data-minimumResultsForSearch' => '7',
+                    ],
+                    'placeholder' => $this->translator->trans('All countries', [], 'Admin.Global'),
+                ]
             )
-        )
-        ->add(
-            'sp_id_group',
-            FormType\ChoiceType::class,
-            array(
-                'choices' => $this->groups,
-                'required' => false,
-                'label' => false,
-                'attr' => array(
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ),
-                'placeholder' => $this->translator->trans('All groups', array(), 'Admin.Global'),
+            ->add(
+                'sp_id_group',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => $this->groups,
+                    'required' => false,
+                    'label' => false,
+                    'attr' => [
+                        'data-toggle' => 'select2',
+                        'data-minimumResultsForSearch' => '7',
+                    ],
+                    'placeholder' => $this->translator->trans('All groups', [], 'Admin.Global'),
+                ]
             )
-        )
-        ->add(
-            'sp_id_customer',
-            TypeaheadCustomerCollectionType::class,
-            array(
-                'remote_url' => $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
-                'mapping_value' => 'id_customer',
-                'mapping_name' => 'fullname_and_email',
-                'placeholder' => $this->translator->trans('All customers', array(), 'Admin.Global'),
-                'template_collection' => '<div class="media-body"><div class="label">%s</div><i class="material-icons delete">clear</i></div>',
-                'limit' => 1,
-                'required' => false,
-                'label' => $this->translator->trans('Add customer', array(), 'Admin.Catalog.Feature'),
+            ->add(
+                'sp_id_customer',
+                TypeaheadCustomerCollectionType::class,
+                [
+                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true) . '&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+                    'mapping_value' => 'id_customer',
+                    'mapping_name' => 'fullname_and_email',
+                    'placeholder' => $this->translator->trans('All customers', [], 'Admin.Global'),
+                    'template_collection' => '<div class="media-body"><div class="label">%s</div><i class="material-icons delete">clear</i></div>',
+                    'limit' => 1,
+                    'required' => false,
+                    'label' => $this->translator->trans('Add customer', [], 'Admin.Catalog.Feature'),
+                ]
             )
-        )
-        ->add(
-            'sp_id_product_attribute',
-            FormType\ChoiceType::class,
-            array(
-                'choices' => array(),
-                'required' => false,
-                'placeholder' => $this->translator->trans('Apply to all combinations', array(), 'Admin.Catalog.Feature'),
-                'label' => $this->translator->trans('Combinations', array(), 'Admin.Catalog.Feature'),
-                'attr' => array('data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => 1])),
+            ->add(
+                'sp_id_product_attribute',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => [],
+                    'required' => false,
+                    'placeholder' => $this->translator->trans('Apply to all combinations', [], 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Combinations', [], 'Admin.Catalog.Feature'),
+                    'attr' => ['data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => 1])],
+                ]
             )
-        )
-        ->add(
-            'sp_from',
-            DatePickerType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Available from', array(), 'Admin.Catalog.Feature'),
-                'attr' => array('placeholder' => 'YYYY-MM-DD'),
+            ->add(
+                'sp_from',
+                DatePickerType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Available from', [], 'Admin.Catalog.Feature'),
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                ]
             )
-        )
-        ->add(
-            'sp_to',
-            DatePickerType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('to', array(), 'Admin.Global'),
-                'attr' => array('placeholder' => 'YYYY-MM-DD'),
+            ->add(
+                'sp_to',
+                DatePickerType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('to', [], 'Admin.Global'),
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                ]
             )
-        )
-        ->add(
-            'sp_from_quantity',
-            FormType\NumberType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Starting at', array(), 'Admin.Catalog.Feature'),
-                'constraints' => array(
-                    new Assert\Type(array('type' => 'numeric')),
-                ),
+            ->add(
+                'sp_from_quantity',
+                FormType\NumberType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Starting at', [], 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'sp_price',
-            FormType\MoneyType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Product price (tax excl.)', array(), 'Admin.Catalog.Feature'),
-                'attr' => array('class' => 'price'),
-                'currency' => $this->currency->iso_code,
-                'disabled' => true,
+            ->add(
+                'sp_price',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Product price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                    'attr' => ['class' => 'price'],
+                    'currency' => $this->currency->iso_code,
+                    'disabled' => true,
+                ]
             )
-        )
-        ->add(
-            'leave_bprice',
-            FormType\CheckboxType::class,
-            array(
-                'label' => $this->translator->trans('Leave initial price', array(), 'Admin.Catalog.Feature'),
-                'required' => false,
+            ->add(
+                'leave_bprice',
+                FormType\CheckboxType::class,
+                [
+                    'label' => $this->translator->trans('Leave initial price', [], 'Admin.Catalog.Feature'),
+                    'required' => false,
+                ]
             )
-        )
-        ->add(
-            'sp_reduction',
-            FormType\MoneyType::class,
-            array(
-                'label' => $this->translator->trans('Reduction', array(), 'Admin.Catalog.Feature'),
-                'required' => false,
-                'currency' => $this->currency->iso_code,
+            ->add(
+                'sp_reduction',
+                FormType\MoneyType::class,
+                [
+                    'label' => $this->translator->trans('Reduction', [], 'Admin.Catalog.Feature'),
+                    'required' => false,
+                    'currency' => $this->currency->iso_code,
+                ]
             )
-        )
-        ->add(
-            'sp_reduction_type',
-            FormType\ChoiceType::class,
-            array(
-                'label' => $this->translator->trans('Reduction type', array(), 'Admin.Catalog.Feature'),
-                'choices' => array(
-                    '€' => 'amount',
-                    $this->translator->trans('%', array(), 'Admin.Global') => 'percentage',
-                ),
-                'required' => true,
+            ->add(
+                'sp_reduction_type',
+                FormType\ChoiceType::class,
+                [
+                    'label' => $this->translator->trans('Reduction type', [], 'Admin.Catalog.Feature'),
+                    'choices' => [
+                        '€' => 'amount',
+                        $this->translator->trans('%', [], 'Admin.Global') => 'percentage',
+                    ],
+                    'required' => true,
+                ]
             )
-        )
-        ->add(
-            'sp_reduction_tax',
-            FormType\ChoiceType::class,
-            array(
-                'label' => $this->translator->trans('Reduction tax', array(), 'Admin.Catalog.Feature'),
-                'choices' => array(
-                    $this->translator->trans('Tax excluded', array(), 'Admin.Catalog.Feature') => '0',
-                    $this->translator->trans('Tax included', array(), 'Admin.Catalog.Feature') => '1',
-                ),
-                'required' => true,
+            ->add(
+                'sp_reduction_tax',
+                FormType\ChoiceType::class,
+                [
+                    'label' => $this->translator->trans('Reduction tax', [], 'Admin.Catalog.Feature'),
+                    'choices' => [
+                        $this->translator->trans('Tax excluded', [], 'Admin.Catalog.Feature') => '0',
+                        $this->translator->trans('Tax included', [], 'Admin.Catalog.Feature') => '1',
+                    ],
+                    'required' => true,
+                ]
             )
-        )
-        ->add(
-            'save',
-            FormType\ButtonType::class,
-            array(
-                'label' => $this->translator->trans('Apply', array(), 'Admin.Actions'),
-                'attr' => array('class' => 'btn-outline-primary js-save'),
+            ->add(
+                'save',
+                FormType\ButtonType::class,
+                [
+                    'label' => $this->translator->trans('Apply', [], 'Admin.Actions'),
+                    'attr' => ['class' => 'btn-outline-primary js-save'],
+                ]
             )
-        )
-        ->add(
-            'cancel',
-            FormType\ButtonType::class,
-            array(
-                'label' => $this->translator->trans('Cancel', array(), 'Admin.Actions'),
-                'attr' => array('class' => 'btn-outline-secondary js-cancel'),
-            )
-        );
+            ->add(
+                'cancel',
+                FormType\ButtonType::class,
+                [
+                    'label' => $this->translator->trans('Cancel', [], 'Admin.Actions'),
+                    'attr' => ['class' => 'btn-outline-secondary js-cancel'],
+                ]
+            );
         //
         // ResetType can't be used because the product page is wrapped
         // inside a big form: reset a specific price form the "right" way
@@ -299,10 +300,10 @@ class ProductSpecificPrice extends CommonAbstractType
             $form->add(
                 'sp_id_product_attribute',
                 FormType\ChoiceType::class,
-                array(
-                    'choices' => array($data['sp_id_product_attribute'] => ''),
+                [
+                    'choices' => [$data['sp_id_product_attribute'] => ''],
                     'required' => false,
-                )
+                ]
             );
         });
     }

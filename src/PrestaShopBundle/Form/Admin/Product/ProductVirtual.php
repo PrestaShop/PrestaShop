@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -32,7 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
-use PrestaShopBundle\Form\Admin\Type as PsFormType;
 
 /**
  * This form class is responsible to generate the virtual product
@@ -66,76 +66,76 @@ class ProductVirtual extends CommonAbstractType
         $builder->add(
             'is_virtual_file',
             FormType\ChoiceType::class,
-            array(
-                'choices'  => array(
+            [
+                'choices' => [
                     $this->translator->trans('Yes', [], 'Admin.Global') => 1,
                     $this->translator->trans('No', [], 'Admin.Global') => 0,
-                ),
+                ],
                 'expanded' => true,
                 'required' => true,
                 'multiple' => false,
-            )
+            ]
         )
-        ->add(
-            'file',
-            FormType\FileType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('File', [], 'Admin.Global'),
-                'constraints' => array(
-                    new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
-                )
+            ->add(
+                'file',
+                FormType\FileType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('File', [], 'Admin.Global'),
+                    'constraints' => [
+                        new Assert\File(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
+                    ]
+                ]
             )
-        )
-        ->add(
-            'name',
-            FormType\TextType::class,
-            array(
-                'label'    => $this->translator->trans('Filename', [], 'Admin.Global'),
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                ),
+            ->add(
+                'name',
+                FormType\TextType::class,
+                [
+                    'label' => $this->translator->trans('Filename', [], 'Admin.Global'),
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'nb_downloadable',
-            FormType\NumberType::class,
-            array(
-                'label'    => $this->translator->trans('Number of allowed downloads', [], 'Admin.Catalog.Feature'),
-                'required' => false,
-                'constraints' => array(
-                    new Assert\Type(array('type' => 'numeric')),
-                ),
+            ->add(
+                'nb_downloadable',
+                FormType\NumberType::class,
+                [
+                    'label' => $this->translator->trans('Number of allowed downloads', [], 'Admin.Catalog.Feature'),
+                    'required' => false,
+                    'constraints' => [
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'expiration_date',
-            DatePickerType::class,
-            array(
-                'label'    => $this->translator->trans('Expiration date', [], 'Admin.Catalog.Feature'),
-                'required' => false,
-                'attr' => ['placeholder' => 'YYYY-MM-DD']
+            ->add(
+                'expiration_date',
+                DatePickerType::class,
+                [
+                    'label' => $this->translator->trans('Expiration date', [], 'Admin.Catalog.Feature'),
+                    'required' => false,
+                    'attr' => ['placeholder' => 'YYYY-MM-DD']
+                ]
             )
-        )
-        ->add(
-            'nb_days',
-            FormType\NumberType::class,
-            array(
-                'label'    => $this->translator->trans('Number of days', [], 'Admin.Catalog.Feature'),
-                'required' => false,
-                'constraints' => array(
-                    new Assert\Type(array('type' => 'numeric')),
-                )
+            ->add(
+                'nb_days',
+                FormType\NumberType::class,
+                [
+                    'label' => $this->translator->trans('Number of days', [], 'Admin.Catalog.Feature'),
+                    'required' => false,
+                    'constraints' => [
+                        new Assert\Type(['type' => 'numeric']),
+                    ]
+                ]
             )
-        )
-        ->add(
-            'save',
-            FormType\ButtonType::class,
-            array(
-                'label' => $this->translator->trans('Save', [], 'Admin.Actions'),
-                'attr' => ['class' => 'btn-primary pull-right']
-            )
-        );
+            ->add(
+                'save',
+                FormType\ButtonType::class,
+                [
+                    'label' => $this->translator->trans('Save', [], 'Admin.Actions'),
+                    'attr' => ['class' => 'btn-primary pull-right']
+                ]
+            );
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
@@ -144,10 +144,10 @@ class ProductVirtual extends CommonAbstractType
             //if this partial form is submit from a parent form, disable it
             if ($form->getParent()) {
                 $event->setData([]);
-                $form->add('name', FormType\TextType::class, array('mapped' => false));
+                $form->add('name', FormType\TextType::class, ['mapped' => false]);
             } elseif ($data['is_virtual_file'] == 0) {
                 //disable name mapping when is virtual not defined to yes
-                $form->add('name', FormType\TextType::class, array('mapped' => false));
+                $form->add('name', FormType\TextType::class, ['mapped' => false]);
             }
         });
     }

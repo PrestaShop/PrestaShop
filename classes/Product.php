@@ -300,7 +300,7 @@ class ProductCore extends ObjectModel
     protected static $_tax_rules_group = array();
     protected static $_cacheFeatures = array();
     protected static $_frontFeaturesCache = array();
-    protected static $producPropertiesCache = array();
+    protected static $productPropertiesCache = array();
 
     /** @var array cache stock data in getStock() method */
     protected static $cacheStock = array();
@@ -4306,7 +4306,7 @@ class ProductCore extends ObjectModel
     public static function duplicateTags($id_product_old, $id_product_new)
     {
         $tags = Db::getInstance()->executeS('SELECT `id_tag`, `id_lang` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
-        if (!Db::getInstance()->NumRows()) {
+        if (!Db::getInstance()->numRows()) {
             return true;
         }
 
@@ -4625,8 +4625,8 @@ class ProductCore extends ObjectModel
             $cache_key .= '-pack'.$row['id_product_pack'];
         }
 
-        if (isset(self::$producPropertiesCache[$cache_key])) {
-            return array_merge($row, self::$producPropertiesCache[$cache_key]);
+        if (isset(self::$productPropertiesCache[$cache_key])) {
+            return array_merge($row, self::$productPropertiesCache[$cache_key]);
         }
 
         // Datas
@@ -4797,8 +4797,8 @@ class ProductCore extends ObjectModel
 
         $row['unit_price'] = ($row['unit_price_ratio'] != 0  ? $row['price'] / $row['unit_price_ratio'] : 0);
 
-        self::$producPropertiesCache[$cache_key] = $row;
-        return self::$producPropertiesCache[$cache_key];
+        self::$productPropertiesCache[$cache_key] = $row;
+        return self::$productPropertiesCache[$cache_key];
     }
 
     public static function getTaxesInformations($row, Context $context = null)
@@ -5368,7 +5368,7 @@ class ProductCore extends ObjectModel
             if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
                 return false;
             }
-            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
+            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->numRows() > 0 ? true : false);
         }
         return self::$_incat[$hash];
     }
@@ -5636,11 +5636,40 @@ class ProductCore extends ObjectModel
         }
         $ids = array_unique($ids);
 
+        $positions = Db::getInstance()->executeS(
+                'SELECT `id_category`, `position`
+                FROM `'._DB_PREFIX_.'category_product`
+                WHERE `id_product` = '.(int)$this->id
+        );
+
+        $max_positions = Db::getInstance()->executeS(
+                'SELECT `id_category`, max(`position`) as maximum
+                FROM `'._DB_PREFIX_.'category_product`
+                GROUP BY id_category'
+        );
+
+        $positions_lookup = array();
+        $max_position_lookup = array();
+
+        foreach ($positions as $row) {
+            $positions_lookup[(int)$row['id_category']] = (int)$row['position'];
+        }
+        foreach ($max_positions as $row) {
+            $max_position_lookup[(int)$row['id_category']] = (int)$row['maximum'];
+        }
+
         $return = true;
         if ($this->deleteCategories() && !empty($ids)) {
             $sql_values = array();
-            foreach ($ids as $position => $id) {
-                $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
+            foreach ($ids as $id) {
+                $pos = 0;
+                if (array_key_exists((int)$id, $positions_lookup)) {
+                    $pos = (int)$positions_lookup[(int) $id] + 1;
+                } elseif (array_key_exists((int)$id, $max_position_lookup)) {
+                    $pos = (int)$max_position_lookup[(int) $id] + 1;
+                }
+				
+                $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.$pos.')';
             }
 
             $return = Db::getInstance()->execute('
@@ -6685,7 +6714,7 @@ class ProductCore extends ObjectModel
 
     /**
      * Return an array of customization fields IDs
-     * 
+     *
      * @return array|false
      */
     public function getUsedCustomizationFieldsIds()

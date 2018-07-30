@@ -1,0 +1,39 @@
+admin_common_pagination:
+    path:     /pagination/{offset}/{limit}/{total}/{view}
+    methods:  [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
+        offset: 0
+        limit: 20
+        total: 0
+        view: full
+    requirements:
+        offset: \d+
+        limit: \d+
+        total: \d+
+        view: full|quicknav
+
+admin_common_recommended_modules:
+    path:     /recommended_modules/{domain}/{limit}/{randomize}
+    methods:  [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::recommendedModulesAction'
+        limit: 0
+        randomize: 0
+    requirements:
+        limit: \d+
+        randomize: 0|1
+
+admin_common_sidebar:
+    path: /sidebar/{url}/{title}/{footer}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::renderSidebarAction'
+        title: ''
+        footer: ''
+
+admin_common_reset_search:
+    path: /reset_search/{controller}/{action}
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
