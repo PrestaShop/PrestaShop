@@ -55,12 +55,15 @@ class EmailController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, EmailLogsFilter $filters)
     {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+
         $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
         $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
 
-        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class);
+        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class, [
+            'send_email_to' => $configuration->get('PS_SHOP_EMAIL'),
+        ]);
 
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
 
         $presentedEmailLogsGrid = null;
@@ -131,7 +134,10 @@ class EmailController extends FrameworkBundleAdminController
             if (!empty($errors)) {
                 $this->flashErrors($errors);
             } else {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
+                );
             }
         }
 
