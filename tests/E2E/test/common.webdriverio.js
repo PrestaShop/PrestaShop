@@ -36,12 +36,12 @@ function initCommands(client) {
 
   client.addCommand('linkAccess', function (link) {
     return client
-      .url('http://' + link);
+      .url(link);
   });
 
   client.addCommand('localhost', function (link) {
     return client
-      .url('http://' + link + '/install-dev');
+      .url(link + '/install-dev');
   });
 
   client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {
@@ -91,20 +91,20 @@ function initCommands(client) {
       .selectByVisibleText(selector, value);
   });
 
-  client.addCommand('signInBO', function (selector, link = URL, login = 'demo@prestashop.com', password = 'prestashop_demo') {
+  client.addCommand('signInBO', function (selector, link = global.URL, login = global.adminEmail, password = global.adminPassword) {
     this.selector = globals.selector;
     return client
-      .url('http://' + link + '/admin-dev')
+      .url(link + '/admin-dev')
       .waitAndSetValue(selector.login_input, login)
       .waitAndSetValue(selector.password_inputBO, password)
       .waitForExistAndClick(selector.login_buttonBO)
       .waitForExist(selector.menuBO, 120000);
   });
 
-  client.addCommand('accessToBO', function (selector, link = URL) {
+  client.addCommand('accessToBO', function (selector, link = global.URL) {
     this.selector = globals.selector;
     return client
-      .url('http://' + link + '/admin-dev')
+      .url(link + '/admin-dev')
       .waitForExist(selector.menuBO, 120000);
   });
 
@@ -115,9 +115,9 @@ function initCommands(client) {
       .pause(pause);
   });
 
-  client.addCommand('signInFO', function (selector, link = URL) {
+  client.addCommand('signInFO', function (selector, link = global.URL) {
     return client
-      .url('http://' + link)
+      .url(link)
       .waitForExistAndClick(selector.sign_in_button)
       .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
       .waitAndSetValue(selector.password_inputFO, '123456789')
@@ -139,7 +139,7 @@ function initCommands(client) {
 
   client.addCommand('accessToFO', function (selector) {
     return client
-      .url('http://' + URL)
+      .url(global.URL)
       .waitForExistAndClick(selector.logo_home_page);
   });
 

@@ -72,5 +72,5 @@ after_failure:
   - sudo cat /var/log/php-fpm.log
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
-  - bash ./travis-scripts/base64-screenshots # As we cannot upload file, we display the base64 encoded content of the screenshots
+  - if [ ! -z "$PRESTASTHOP_SCREENHOST" ]; then bash ./travis-scripts/base64-screenshots; fi # As we cannot upload file, we display the base64 encoded content of the screenshots
   - cat $TRAVIS_BUILD_DIR/var/log/dev.log
