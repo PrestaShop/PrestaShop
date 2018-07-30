@@ -114,13 +114,30 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch(
-            'catalog/listing/category',
-            array(
-                'entity' => 'category',
-                'id' => $this->category->id
-            )
-        );
+        if ($this->category->checkAccess($this->context->customer->id)) {
+            $this->doProductSearch(
+                'catalog/listing/category',
+                [
+                    'entity' => 'category',
+                    'id'     => $this->category->id,
+                ]
+            );
+        }
+    }
+
+    /**
+     * overrides layout if category is not visible
+     *
+     * @return bool|string
+     */
+    public function getLayout()
+    {
+
+        if (!$this->category->checkAccess($this->context->customer->id)) {
+            return 'layouts/layout-full-width.tpl';
+        }
+
+        return parent::getLayout();
     }
 
     protected function getProductSearchQuery()

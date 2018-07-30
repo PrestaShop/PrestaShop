@@ -2357,6 +2357,7 @@
 	    value: function confirm() {
 	      var option = this.getSelectedOption();
 	      if (option) {
+	        (0, _jquery2['default'])(this.confirmationSelector + ' button').prop('disabled', true);
 	        (0, _jquery2['default'])('#pay-with-' + option + '-form form').submit();
 	      }
 	    }
@@ -2415,7 +2416,7 @@
 	function updateResults(data) {
 	    pendingQuery = false;
 	    prestashop.emit('updateProductList', data);
-	    window.history.pushState(data, undefined, data.current_url);
+	    window.history.pushState(data, document.title, data.current_url);
 	    window.scrollTo(0, 0);
 	}
 	
@@ -2616,7 +2617,7 @@
 	    }
 	
 	    // New request only if new value
-	    if (event !== null && event.type === 'keyup' && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')) {
+	    if (event && event.type === 'keyup' && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')) {
 	        return;
 	    }
 	    $quantityWantedInput.data('old-value', $quantityWantedInput.val());
@@ -2797,6 +2798,15 @@
 	                showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
 	            }
 	        });
+	    });
+	
+	    _prestashop2['default'].on('updatedProduct', function (args) {
+	        if (!args.product_url || !args.id_product_attribute) {
+	            return;
+	        }
+	        window.history.pushState({
+	            id_product_attribute: args.id_product_attribute
+	        }, document.title, args.product_url);
 	    });
 	});
 

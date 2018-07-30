@@ -93,7 +93,30 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}\x{
 
 class SearchCore
 {
-    public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false)
+    public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
+    {
+        $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
+        $words = explode(' ', $sanitizedString);
+        if (strpos($string, '-') !== false) {
+            $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
+            $words2          = explode(' ', $sanitizedString);
+            // foreach word containing hyphen, we want to index additional word removing the hyphen
+            // eg: t-shirt => tshirt
+            foreach ($words2 as $word) {
+                if (strpos($word, '-') !== false) {
+                    $word = str_replace('-', '', $word);
+                    if (!empty($word)) {
+                        $words[] = $word;
+                    }
+                }
+            }
+            $words = array_merge($words, $words2);
+        }
+
+        return array_unique($words);
+    }
+
+    public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
     {
         $string = trim($string);
         if (empty($string)) {
@@ -107,7 +130,11 @@ class SearchCore
         $string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
         if ($indexation) {
-            $string = preg_replace('/[._-]+/', ' ', $string);
+            if (!$keepHyphens) {
+                $string = str_replace(['.', '_', '-'], ' ', $string);
+            } else {
+                $string = str_replace(['.', '_'], ' ', $string);
+            }
         } else {
             $words = explode(' ', $string);
             $processed_words = array();
@@ -121,10 +148,10 @@ class SearchCore
                 }
             }
             $string = implode(' ', $processed_words);
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = preg_replace('/[^\s]-+/', '', $string);
+            $string = str_replace(['.', '_'], '', $string);
+            if (!$keepHyphens) {
+                $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' ' . $string));
+            }
         }
 
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
@@ -199,7 +226,7 @@ class SearchCore
 
         $intersect_array = array();
         $score_array = array();
-        $words = explode(' ', Search::sanitize($expr, $id_lang, false, $context->language->iso_code));
+        $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
@@ -560,7 +587,7 @@ class SearchCore
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
         if (strncmp($key, 'id_', 3) && isset($weight_array[$key])) {
-            $words = explode(' ', Search::sanitize($value, (int)$id_lang, true, $iso_code));
+            $words = Search::extractKeyWords($value, (int)$id_lang, true, $iso_code);
             foreach ($words as $word) {
                 if (!empty($word)) {
                     $word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
