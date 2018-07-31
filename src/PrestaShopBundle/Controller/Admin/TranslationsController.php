@@ -190,6 +190,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
         // If route parameters are empty we are redirecting to a legacy route
         return empty($routeParameters) ? $this->redirect($route) : $this->redirectToRoute($route, $routeParameters);
+
     }
 
     /**
