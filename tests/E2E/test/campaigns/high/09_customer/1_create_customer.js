@@ -4,7 +4,7 @@ const common_scenarios = require('../../common_scenarios/customer');
 let customerData = {
   first_name: 'demo',
   last_name: 'demo',
-  email_address: 'demo@prestashop.com',
+  email_address: global.adminEmail,
   password: '123456789',
   birthday: {
     day: '18',
