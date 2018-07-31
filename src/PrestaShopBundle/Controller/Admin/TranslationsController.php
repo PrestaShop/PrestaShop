@@ -180,6 +180,11 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function modifyTranslationsAction(Request $request)
     {
-        //@todo implement
+        $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
+        $route = $routeFinder->findRoute($request->query);
+        $routeParameters = $routeFinder->findRouteParameters($request->query);
+
+        // If route parameters are empty we are redirecting to a legacy route
+        return empty($routeParameters) ? $this->redirect($route) : $this->redirectToRoute($route, $routeParameters);
     }
 }

@@ -105,3 +105,10 @@ services:
             - "@prestashop.adapter.data_provider.pack"
             - "@prestashop.adapter.shop.context"
             - "@prestashop.adapter.data_provider.tax"
+
+    prestashop.adapter.translation_route_finder:
+        class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder
+        arguments:
+            - '@prestashop.service.translation'
+            - '@=service("prestashop.adapter.legacy.context").getContext().link'
+            - '@prestashop.core.admin.module.repository'

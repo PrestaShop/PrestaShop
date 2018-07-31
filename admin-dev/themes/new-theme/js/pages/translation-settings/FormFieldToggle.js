@@ -112,6 +112,7 @@ export default class FormFieldToggle {
     _hide(...$selectors) {
         for (let key in $selectors) {
             $selectors[key].addClass('d-none');
+            $selectors[key].find('select').prop('disabled', 'disabled');
         }
     }
 
@@ -124,6 +125,7 @@ export default class FormFieldToggle {
     _show(...$selectors) {
         for (let key in $selectors) {
             $selectors[key].removeClass('d-none');
+            $selectors[key].find('select').prop('disabled', false);
         }
     }
 }
