@@ -24,6 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Validate input
+ *
+ * Die if input is not valid
+ *
+ * @param array $argv user input
+ */
+function validateInput($argv)
+{
+    $isValid = false;
+
+    if (count($argv) === 2) {
+        $isValid = true;
+    }
+
+    if (!$isValid) {
+        echo 'php compile.php <PS_VERSION>' . PHP_EOL;
+        die(1);
+    }
+}
+
+validateInput($argv);
+
+$psVersion = $argv[1];
+
 $template = file_get_contents(__DIR__.'/index_template.php');
 
 if ($handle = opendir(__DIR__.'/content')) {
@@ -49,5 +74,7 @@ if ($handle = opendir(__DIR__.'/content')) {
     }
   }
 }
+
+$template = str_replace('%ps-version-placeholder%', $psVersion, $template);
 
 file_put_contents(getcwd().'/index.php', $template);

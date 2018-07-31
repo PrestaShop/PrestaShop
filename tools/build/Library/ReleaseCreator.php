@@ -690,7 +690,7 @@ class ReleaseCreator
         exec($cmd);
 
         if ($this->useInstaller) {
-            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
+            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php {$this->version} && cd -");
             $zip = new ZipArchive();
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);
