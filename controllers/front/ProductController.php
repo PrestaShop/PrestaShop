@@ -957,7 +957,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 try {
                     $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
                         $this->product->id,
-                        $groups
+                        $groups,
+                        true
                     );
                 } catch (PrestaShopObjectNotFoundException $e) {
                     // Don't care just set $requestedIdProductAttribute to null

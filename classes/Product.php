@@ -5668,7 +5668,7 @@ class ProductCore extends ObjectModel
                 } elseif (array_key_exists((int)$id, $max_position_lookup)) {
                     $pos = (int)$max_position_lookup[(int) $id] + 1;
                 }
-				
+
                 $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.$pos.')';
             }
 
@@ -6111,8 +6111,14 @@ class ProductCore extends ObjectModel
         }
 
         if (!is_array($idAttributes) || empty($idAttributes)) {
-            throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
+            throw new PrestaShopException(
+                sprintf(
+                    'Invalid parameter $idAttributes with value: "%s"',
+                    print_r($idAttributes, true)
+                )
+            );
         }
+
         $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
         $idProductAttribute =  Db::getInstance()->getValue('
             SELECT
