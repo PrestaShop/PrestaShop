@@ -962,7 +962,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 } catch (PrestaShopObjectNotFoundException $e) {
                     // Don't care just set $requestedIdProductAttribute to null
                     PrestaShopLogger::addLog(
-                        __METHOD__ . ' - Id Product Attribute not found. ' . print_r([$this->product, $groups], true)
+                        sprintf(
+                            '%s - Product attributes not found for %s',
+                            __METHOD__,
+                            $this->product->name
+                        )
                     );
 
                     $requestedIdProductAttribute = null;
