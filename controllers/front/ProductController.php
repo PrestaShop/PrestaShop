@@ -961,6 +961,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     );
                 } catch (PrestaShopObjectNotFoundException $e) {
                     // Don't care just set $requestedIdProductAttribute to null
+                    PrestaShopLogger::addLog(
+                        __METHOD__ . ' - Id Product Attribute not found. ' . print_r([$this->product, $groups], true)
+                    );
+
                     $requestedIdProductAttribute = null;
                 }
             }
