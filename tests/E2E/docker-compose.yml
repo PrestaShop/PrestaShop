@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  tests:
+    build: .docker
+    environment:
+      SELENIUM_HOST: selenium-chrome:4444
+      URL: prestashop-web
+    depends_on:
+      - "prestashop"
+      - "selenium-chrome"
+    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/run-tests.sh"]
+    volumes:
+      - .docker:/tmp/docker
+    networks:
+      - default
+
+  prestashop:
+    build: .docker/prestashop
+    environment:
+      DB_SERVER: db
+      PS_INSTALL_AUTO: 1
+      PS_COUNTRY: fr
+      PS_DEV_MODE: 0
+      PS_DOMAIN: prestashop-web
+      PS_FOLDER_ADMIN: admin-dev
+      PS_FOLDER_INSTALL: install-dev
+      GIT_BRANCH: develop
+    depends_on:
+      - "db"
+    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    volumes:
+      - .docker:/tmp/docker
+    networks:
+      default:
+        aliases:
+          - prestashop-web
+
+  selenium-chrome:
+    image: selenium/standalone-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      default:
+        aliases:
+          - selenium-chrome
+
+  db:
+    image: mysql:5.7.22
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    networks:
+      - default

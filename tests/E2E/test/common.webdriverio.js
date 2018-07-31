@@ -155,11 +155,7 @@ function initCommands(client) {
       .getAttribute(selector + '/..', 'class')
       .then((text) => {
         global.isOpen = text.indexOf('open');
-        if (global.isOpen !== -1) {
-          return global.isOpen = true;
-        } else {
-          return global.isOpen = false;
-        }
+        return global;isOpen = global.isOpen !== -1;
       });
   });
 
@@ -169,19 +165,20 @@ module.exports = {
   getClient: function () {
     if (client) {
       return client;
-    } else {
-      if (typeof headless !== 'undefined' && headless) {
-        options["desiredCapabilities"] = {
-          browserName: 'chrome',
-          chromeOptions: {
-            args: ['--headless', '--disable-gpu', '--window-size=1270,899']
-          }
-        };
-      }
-      client = webdriverio.remote(options);
-      initCommands(client);
-      return client;
     }
+
+    if (typeof headless !== 'undefined' && headless) {
+      options["desiredCapabilities"] = {
+        browserName: 'chrome',
+        chromeOptions: {
+          args: ['--headless', '--disable-gpu', '--window-size=1270,899']
+        }
+      };
+    }
+
+    client = webdriverio.remote(options);
+    initCommands(client);
+    return client;
   },
   getCustomDate: function (numberOfDay) {
     let today = new Date();
@@ -198,8 +195,7 @@ module.exports = {
       mm = '0' + mm;
     }
 
-    today = yyyy + '-' + mm + '-' + dd;
-    return today;
+    return yyyy + '-' + mm + '-' + dd;
   },
   browser: function () {
     return options.desiredCapabilities.browserName;
