@@ -36,8 +36,8 @@ admin_international_translations_show_settings:
         _legacy_controller: AdminTranslations
 
 admin_international_translations_modify:
-    path: /settings
-    methods: [POST]
+    path: /modify
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:modifyTranslations
         _legacy_controller: AdminTranslations

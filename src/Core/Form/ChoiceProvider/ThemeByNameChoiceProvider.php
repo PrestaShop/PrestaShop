@@ -67,7 +67,7 @@ final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
 
         /** @var Theme $theme */
         foreach ($this->themeRepository->getList() as $theme) {
-            $themeChoices[$theme->getName()] = $theme->getDirectory();
+            $themeChoices[$theme->getName()] = $theme->getName();
         }
 
         return $themeChoices;
