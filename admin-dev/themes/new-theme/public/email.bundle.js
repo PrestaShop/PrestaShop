@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 4;
+/******/ 			var chunkId = 3;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(459)(__webpack_require__.s = 459);
+/******/ 	return hotCreateRequire(462)(__webpack_require__.s = 462);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -851,18 +851,24 @@ var TableSorting = function () {
 
 /***/ }),
 
-/***/ 227:
+/***/ 230:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__email_sending_test__ = __webpack_require__(276);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__smtp_configuration_toggler__ = __webpack_require__(277);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_grid__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_reload_list_extension__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_filters_reset_extension__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(268);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(269);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_grid_extension_link_row_action_extension__ = __webpack_require__(267);
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -881,7 +887,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -892,17 +898,768 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-var $ = global.$;
+
+
+
+
+
+
+var $ = window.$;
 
 $(function () {
-  var grid = new __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__["a" /* default */]('logs');
+  var emailLogsGrid = new __WEBPACK_IMPORTED_MODULE_2__components_grid_grid__["a" /* default */]('email_logs');
 
-  grid.addExtension(new __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__["a" /* default */]());
-  grid.addExtension(new __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__["a" /* default */]());
-  grid.addExtension(new __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__["a" /* default */]());
-  grid.addExtension(new __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_reload_list_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_export_to_sql_manager_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_filters_reset_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_bulk_action_checkbox_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_submit_bulk_action_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_submit_grid_action_extension__["a" /* default */]());
+  emailLogsGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_10__components_grid_extension_link_row_action_extension__["a" /* default */]());
+
+  new __WEBPACK_IMPORTED_MODULE_0__email_sending_test__["a" /* default */]();
+  new __WEBPACK_IMPORTED_MODULE_1__smtp_configuration_toggler__["a" /* default */]();
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+
+/***/ }),
+
+/***/ 266:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class BulkActionSelectCheckboxExtension
+ */
+
+var BulkActionCheckboxExtension = function () {
+  function BulkActionCheckboxExtension() {
+    _classCallCheck(this, BulkActionCheckboxExtension);
+  }
+
+  _createClass(BulkActionCheckboxExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid with bulk action checkboxes handling functionality
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      this._handleBulkActionCheckboxSelect(grid);
+      this._handleBulkActionSelectAllCheckbox(grid);
+    }
+
+    /**
+     * Handles "Select all" button in the grid
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionSelectAllCheckbox',
+    value: function _handleBulkActionSelectAllCheckbox(grid) {
+      var _this = this;
+
+      grid.getContainer().on('change', '.js-bulk-action-select-all', function (e) {
+        var $checkbox = $(e.currentTarget);
+
+        var isChecked = $checkbox.is(':checked');
+        if (isChecked) {
+          _this._enableBulkActionsBtn(grid);
+        } else {
+          _this._disableBulkActionsBtn(grid);
+        }
+
+        grid.getContainer().find('.js-bulk-action-checkbox').prop('checked', isChecked);
+      });
+    }
+
+    /**
+     * Handles each bulk action checkbox select in the grid
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionCheckboxSelect',
+    value: function _handleBulkActionCheckboxSelect(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('change', '.js-bulk-action-checkbox', function () {
+        var checkedRowsCount = grid.getContainer().find('.js-bulk-action-checkbox:checked').length;
+
+        if (checkedRowsCount > 0) {
+          _this2._enableBulkActionsBtn(grid);
+        } else {
+          _this2._disableBulkActionsBtn(grid);
+        }
+      });
+    }
+
+    /**
+     * Enable bulk actions button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_enableBulkActionsBtn',
+    value: function _enableBulkActionsBtn(grid) {
+      grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', false);
+    }
+
+    /**
+     * Disable bulk actions button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_disableBulkActionsBtn',
+    value: function _disableBulkActionsBtn(grid) {
+      grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', true);
+    }
+  }]);
+
+  return BulkActionCheckboxExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (BulkActionCheckboxExtension);
+
+/***/ }),
+
+/***/ 267:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class LinkRowActionExtension handles link row actions
+ */
+
+var LinkRowActionExtension = function () {
+  function LinkRowActionExtension() {
+    _classCallCheck(this, LinkRowActionExtension);
+  }
+
+  _createClass(LinkRowActionExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      grid.getContainer().on('click', '.js-link-row-action', function (event) {
+        var confirmMessage = $(event.currentTarget).data('confirm-message');
+
+        if (confirmMessage.length && !confirm(confirmMessage)) {
+          event.preventDefault();
+        }
+      });
+    }
+  }]);
+
+  return LinkRowActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (LinkRowActionExtension);
+
+/***/ }),
+
+/***/ 268:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Handles submit of grid actions
+ */
+
+var SubmitBulkActionExtension = function () {
+  function SubmitBulkActionExtension() {
+    var _this = this;
+
+    _classCallCheck(this, SubmitBulkActionExtension);
+
+    return {
+      extend: function extend(grid) {
+        return _this.extend(grid);
+      }
+    };
+  }
+
+  /**
+   * Extend grid with bulk action submitting
+   *
+   * @param {Grid} grid
+   */
+
+
+  _createClass(SubmitBulkActionExtension, [{
+    key: 'extend',
+    value: function extend(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('click', '.js-bulk-action-submit-btn', function (event) {
+        _this2.submit(event, grid);
+      });
+    }
+
+    /**
+     * Handle bulk action submitting
+     *
+     * @param {Event} event
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: 'submit',
+    value: function submit(event, grid) {
+      var $submitBtn = $(event.currentTarget);
+      var confirmMessage = $submitBtn.data('confirm-message');
+
+      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+        return;
+      }
+
+      var $form = $('#' + grid.getId() + '_filter_form');
+
+      $form.attr('action', $submitBtn.data('form-url'));
+      $form.attr('method', $submitBtn.data('form-method'));
+      $form.submit();
+    }
+  }]);
+
+  return SubmitBulkActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SubmitBulkActionExtension);
+
+/***/ }),
+
+/***/ 269:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class SubmitGridActionExtension handles grid action submits
+ */
+
+var SubmitGridActionExtension = function () {
+  function SubmitGridActionExtension() {
+    var _this = this;
+
+    _classCallCheck(this, SubmitGridActionExtension);
+
+    return {
+      extend: function extend(grid) {
+        return _this.extend(grid);
+      }
+    };
+  }
+
+  _createClass(SubmitGridActionExtension, [{
+    key: 'extend',
+    value: function extend(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('click', '.js-grid-action-submit-btn', function (event) {
+        _this2.handleSubmit(event, grid);
+      });
+    }
+
+    /**
+     * Handle grid action submit.
+     * It uses grid form to submit actions.
+     *
+     * @param {Event} event
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event, grid) {
+      var $submitBtn = $(event.currentTarget);
+      var confirmMessage = $submitBtn.data('confirm-message');
+
+      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+        return;
+      }
+
+      var $form = $('#' + grid.getId() + '_filter_form');
+
+      $form.attr('action', $submitBtn.data('url'));
+      $form.attr('method', $submitBtn.data('method'));
+      $form.find('input[name="' + grid.getId() + '[_token]"]').val($submitBtn.data('csrf'));
+      $form.submit();
+    }
+  }]);
+
+  return SubmitGridActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SubmitGridActionExtension);
+
+/***/ }),
+
+/***/ 276:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class is responsible for managing test email sending
+ */
+
+var EmailSendingTest = function () {
+  function EmailSendingTest() {
+    var _this = this;
+
+    _classCallCheck(this, EmailSendingTest);
+
+    this.$successAlert = $('.js-test-email-success');
+    this.$errorAlert = $('.js-test-email-errors');
+    this.$loader = $('.js-test-email-loader');
+    this.$sendEmailBtn = $('.js-send-test-email-btn');
+
+    this.$sendEmailBtn.on('click', function (event) {
+      _this._handle(event);
+    });
+  }
+
+  /**
+   * Handle test email sending
+   *
+   * @param {Event} event
+   *
+   * @private
+   */
+
+
+  _createClass(EmailSendingTest, [{
+    key: '_handle',
+    value: function _handle(event) {
+      var _this2 = this;
+
+      // fill test email sending form with configured values
+      $('#test_email_sending_mail_method').val($('input[name="form[email_config][mail_method]"]:checked').val());
+      $('#test_email_sending_smtp_server').val($('#form_smtp_config_server').val());
+      $('#test_email_sending_smtp_username').val($('#form_smtp_config_username').val());
+      $('#test_email_sending_smtp_password').val($('#form_smtp_config_password').val());
+      $('#test_email_sending_smtp_port').val($('#form_smtp_config_port').val());
+      $('#test_email_sending_smtp_encryption').val($('#form_smtp_config_encryption').val());
+
+      var $testEmailSendingForm = $(event.currentTarget).closest('form');
+
+      this._resetMessages();
+
+      this._hideSendEmailButton();
+      this._showLoader();
+
+      $.post({
+        url: $testEmailSendingForm.attr('action'),
+        data: $testEmailSendingForm.serialize()
+      }).then(function (response) {
+        _this2._hideLoader();
+        _this2._showSendEmailButton();
+
+        if (0 !== response.errors.length) {
+          _this2._showErrors(response.errors);
+          return;
+        }
+
+        _this2._showSuccess();
+      });
+    }
+
+    /**
+     * Make sure that additional content (alerts, loader) is not visible
+     *
+     * @private
+     */
+
+  }, {
+    key: '_resetMessages',
+    value: function _resetMessages() {
+      this._hideSuccess();
+      this._hideErrors();
+    }
+
+    /**
+     * Show success message
+     *
+     * @private
+     */
+
+  }, {
+    key: '_showSuccess',
+    value: function _showSuccess() {
+      this.$successAlert.removeClass('d-none');
+    }
+
+    /**
+     * Hide success message
+     *
+     * @private
+     */
+
+  }, {
+    key: '_hideSuccess',
+    value: function _hideSuccess() {
+      this.$successAlert.addClass('d-none');
+    }
+
+    /**
+     * Show loader during AJAX call
+     *
+     * @private
+     */
+
+  }, {
+    key: '_showLoader',
+    value: function _showLoader() {
+      this.$loader.removeClass('d-none');
+    }
+
+    /**
+     * Hide loader
+     *
+     * @private
+     */
+
+  }, {
+    key: '_hideLoader',
+    value: function _hideLoader() {
+      this.$loader.addClass('d-none');
+    }
+
+    /**
+     * Show errors
+     *
+     * @param {Array} errors
+     *
+     * @private
+     */
+
+  }, {
+    key: '_showErrors',
+    value: function _showErrors(errors) {
+      var _this3 = this;
+
+      errors.forEach(function (error) {
+        _this3.$errorAlert.append('<p>' + error + '</p>');
+      });
+
+      this.$errorAlert.removeClass('d-none');
+    }
+
+    /**
+     * Hide errors
+     *
+     * @private
+     */
+
+  }, {
+    key: '_hideErrors',
+    value: function _hideErrors() {
+      this.$errorAlert.addClass('d-none').empty();
+    }
+
+    /**
+     * Show send email button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_showSendEmailButton',
+    value: function _showSendEmailButton() {
+      this.$sendEmailBtn.removeClass('d-none');
+    }
+
+    /**
+     * Hide send email button
+     *
+     * @private
+     */
+
+  }, {
+    key: '_hideSendEmailButton',
+    value: function _hideSendEmailButton() {
+      this.$sendEmailBtn.addClass('d-none');
+    }
+  }]);
+
+  return EmailSendingTest;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (EmailSendingTest);
+
+/***/ }),
+
+/***/ 277:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class SmtpConfigurationToggler is responsible for showing/hiding SMTP configuration form
+ */
+
+var SmtpConfigurationToggler = function () {
+  function SmtpConfigurationToggler() {
+    var _this = this;
+
+    _classCallCheck(this, SmtpConfigurationToggler);
+
+    $('.js-email-method').on('change', 'input[type="radio"]', function (event) {
+      var mailMethod = $(event.currentTarget).val();
+
+      _this._getSmtpMailMethodOption() == mailMethod ? _this._showSmtpConfiguration() : _this._hideSmtpConfiguration();
+    });
+  }
+
+  /**
+   * Show SMTP configuration form
+   *
+   * @private
+   */
+
+
+  _createClass(SmtpConfigurationToggler, [{
+    key: '_showSmtpConfiguration',
+    value: function _showSmtpConfiguration() {
+      $('.js-smtp-configuration').removeClass('d-none');
+    }
+
+    /**
+     * Hide SMTP configuration
+     *
+     * @private
+     */
+
+  }, {
+    key: '_hideSmtpConfiguration',
+    value: function _hideSmtpConfiguration() {
+      $('.js-smtp-configuration').addClass('d-none');
+    }
+
+    /**
+     * Get SMTP mail option value
+     *
+     * @private
+     *
+     * @returns {String}
+     */
+
+  }, {
+    key: '_getSmtpMailMethodOption',
+    value: function _getSmtpMailMethodOption() {
+      return $('.js-email-method').data('smtp-mail-method');
+    }
+  }]);
+
+  return SmtpConfigurationToggler;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SmtpConfigurationToggler);
 
 /***/ }),
 
@@ -1389,10 +2146,10 @@ var Grid = function () {
 
 /***/ }),
 
-/***/ 459:
+/***/ 462:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(227);
+module.exports = __webpack_require__(230);
 
 
 /***/ })
