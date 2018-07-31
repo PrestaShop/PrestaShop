@@ -954,24 +954,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $groups = Tools::getValue('group');
 
             if (!empty($groups)) {
-                try {
-                    $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
-                        $this->product->id,
-                        $groups,
-                        true
-                    );
-                } catch (PrestaShopObjectNotFoundException $e) {
-                    // Don't care just set $requestedIdProductAttribute to null
-                    PrestaShopLogger::addLog(
-                        sprintf(
-                            '%s - Product attributes not found for %s',
-                            __METHOD__,
-                            $this->product->name
-                        )
-                    );
-
-                    $requestedIdProductAttribute = null;
-                }
+                $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
+                    $this->product->id,
+                    $groups,
+                    true
+                );
             }
         }
 
