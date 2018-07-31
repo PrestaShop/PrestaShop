@@ -59,6 +59,7 @@ class HookConfigurator
      */
     public function getThemeHooksConfiguration(array $hooks)
     {
+        $hooks = array_filter($hooks, 'is_array');
         $uniqueModuleList = $this->getUniqueModuleToHookList($hooks);
         $currentHooks = $this->hookRepository->getDisplayHooksWithModules();
 

@@ -92,7 +92,7 @@ class Tools
 
     public function refreshCaCertFile()
     {
-        LegacyTools::refreshCaCertFile();
+        LegacyTools::refreshCACertFile();
     }
 
     public function generateHtaccess()

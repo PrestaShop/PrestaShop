@@ -31,13 +31,24 @@ use Tools as ToolsLegacy;
 
 trait AssetUrlGeneratorTrait
 {
+    /**
+     * @var string
+     */
     protected $fqdn;
 
+    /**
+     * @param string $fullPath
+     * @return string
+     */
     protected function getUriFromPath($fullPath)
     {
         return str_replace($this->configuration->get('_PS_ROOT_DIR_'), rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), $fullPath);
     }
 
+    /**
+     * @param string $fullUri
+     * @return string
+     */
     protected function getPathFromUri($fullUri)
     {
         if ('' !== ($trimmedUri = rtrim($this->configuration->get('__PS_BASE_URI__'), '/'))) {
@@ -47,6 +58,9 @@ trait AssetUrlGeneratorTrait
         return $this->configuration->get('_PS_ROOT_DIR_').$fullUri;
     }
 
+    /**
+     * @return string
+     */
     protected function getFQDN()
     {
         if (is_null($this->fqdn)) {

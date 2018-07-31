@@ -186,7 +186,7 @@ class AdminRequestSqlControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             die($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
-        if ($table = Tools::GetValue('table')) {
+        if ($table = Tools::getValue('table')) {
             $request_sql = new RequestSql();
             $attributes = $request_sql->getAttributesByTable($table);
             foreach ($attributes as $key => $attribute) {

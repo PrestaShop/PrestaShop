@@ -41,9 +41,16 @@ abstract class AbstractAdminQueryBuilder
     const FILTERING_EQUAL_NUMERIC = '= %s';
     const FILTERING_EQUAL_STRING = '= \'%s\'';
 
+    /**
+     * @var string|null
+     */
     private $lastCompiledSql = null;
 
-    final private function compileSqlWhere(array $whereArray)
+    /**
+     * @param array $whereArray
+     * @return mixed|string
+     */
+    private function compileSqlWhere(array $whereArray)
     {
         $operator = 'AND';
         $s = array();
@@ -65,7 +72,7 @@ abstract class AbstractAdminQueryBuilder
     /**
      * Compiles a SQL query (SELECT), from a group of associative arrays.
      *
-     * @see PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider::getCatalogProductList() for an example.
+     * @see \PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider::getCatalogProductList() for an example.
      *
      * Format example for $table:
      *   $table = array(

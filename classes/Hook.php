@@ -177,7 +177,7 @@ class HookCore extends ObjectModel
             // Get all hook ID by name and alias
             $hook_ids = array();
             $db = Db::getInstance();
-            $result = $db->ExecuteS('
+            $result = $db->executeS('
 			SELECT `id_hook`, `name`
 			FROM `'._DB_PREFIX_.'hook`
 			UNION
@@ -810,8 +810,14 @@ class HookCore extends ObjectModel
             if ($check_exceptions) {
                 $exceptions = Module::getExceptionsStatic($array['id_module'], $array['id_hook']);
 
-                $controller = Dispatcher::getInstance()->getController();
                 $controller_obj = Context::getContext()->controller;
+                if ($controller_obj === null) {
+                    $controller = null;
+                } else {
+                    $controller = isset($controller_obj->controller_name) ?
+                                $controller_obj->controller_name :
+                                $controller_obj->php_self;
+                }
 
                 //check if current controller is a module controller
                 if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module)) {

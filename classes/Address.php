@@ -291,7 +291,7 @@ class AddressCore extends ObjectModel
 
         $cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
         if (!Cache::isStored($cache_id)) {
-            $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
+            $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT c.`active`
 			FROM `'._DB_PREFIX_.'address` a
 			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`

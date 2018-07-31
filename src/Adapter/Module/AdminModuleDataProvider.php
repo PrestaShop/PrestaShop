@@ -56,17 +56,59 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
 
+    /**
+     * @var int
+     */
     private $languageISO;
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var Router|null
+     */
     private $router = null;
+
+    /**
+     * @var AddonsInterface
+     */
     private $addonsDataProvider;
+
+    /**
+     * @var CategoriesProvider
+     */
     private $categoriesProvider;
+
+    /**
+     * @var ModuleDataProvider
+     */
     private $moduleProvider;
+
+    /**
+     * @var CacheProvider
+     */
     private $cacheProvider;
+
+    /**
+     * @var Employee
+     */
     private $employee;
 
+    /**
+     * @var array
+     */
     protected $catalog_modules = array();
+
+    /**
+     * @var array
+     */
     protected $catalog_modules_names;
+
+    /**
+     * @var bool
+     */
     public $failed = false;
 
     public function __construct(
@@ -88,17 +130,35 @@ class AdminModuleDataProvider implements ModuleInterface
         $this->employee = $employee;
     }
 
+    /**
+     * @param Router $router
+     */
     public function setRouter(Router $router)
     {
         $this->router = $router;
     }
 
+    /**
+     * Clear the modules information from Addons cache
+     */
     public function clearCatalogCache()
     {
         if ($this->cacheProvider) {
             $this->cacheProvider->delete($this->languageISO.self::_CACHEKEY_MODULES_);
         }
         $this->catalog_modules = array();
+    }
+
+    /**
+     * Clears module list cache
+     *
+     * @return void
+     */
+    public function clearModuleListCache()
+    {
+        if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
+            @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+        }
     }
 
     /**
@@ -113,6 +173,10 @@ class AdminModuleDataProvider implements ModuleInterface
         );
     }
 
+    /**
+     * @param array $filters
+     * @return array
+     */
     public function getCatalogModules(array $filters = array())
     {
         if (count($this->catalog_modules) === 0 && !$this->failed) {
@@ -124,6 +188,10 @@ class AdminModuleDataProvider implements ModuleInterface
         );
     }
 
+    /**
+     * @param array $filter
+     * @return array
+     */
     public function getCatalogModulesNames(array $filter = array())
     {
         return array_keys($this->getCatalogModules($filter));
@@ -172,6 +240,13 @@ class AdminModuleDataProvider implements ModuleInterface
         return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
     }
 
+
+
+    /**
+     * @param AddonsCollection $addons
+     * @param null $specific_action
+     * @return array
+     */
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
         $addons = $addons->toArray();
@@ -267,11 +342,20 @@ class AdminModuleDataProvider implements ModuleInterface
         return $addons;
     }
 
+    /**
+     * @param $moduleId
+     * @return array
+     */
     public function getModuleAttributesById($moduleId)
     {
         return (array) $this->addonsDataProvider->request('module', array('id_module' => $moduleId));
     }
 
+    /**
+     * @param array $modules
+     * @param array $filters
+     * @return array
+     */
     protected function applyModuleFilters(array $modules, array $filters)
     {
         if (!count($filters)) {
@@ -318,6 +402,9 @@ class AdminModuleDataProvider implements ModuleInterface
         return $modules;
     }
 
+    /**
+     * Load module catalogue. If not in cache, query Addons API.
+     */
     protected function loadCatalogData()
     {
         if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO.self::_CACHEKEY_MODULES_)) {
@@ -385,6 +472,11 @@ class AdminModuleDataProvider implements ModuleInterface
         }
     }
 
+    /**
+     * If cache exists, get the Catalogue from the cache.
+     *
+     * @return array|false|mixed
+     */
     protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists

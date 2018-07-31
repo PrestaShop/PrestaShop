@@ -170,6 +170,10 @@ class Module implements ModuleInterface
         $this->attributes->set('price', (array) $this->attributes->get('price'));
     }
 
+    /**
+     * @return legacyInstance|void
+     * @throws \Exception
+     */
     public function getInstance()
     {
         if (!$this->hasValidInstance()) {
@@ -206,6 +210,9 @@ class Module implements ModuleInterface
         return $this->disk->get('is_valid');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onInstall()
     {
         if (!$this->hasValidInstance()) {
@@ -223,6 +230,9 @@ class Module implements ModuleInterface
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onUninstall()
     {
         if (!$this->hasValidInstance()) {
@@ -235,10 +245,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Execute up files. You can update configuration, update sql schema.
-     * No file modification.
-     *
-     * @return bool true for success
+     * {@inheritdoc}
      */
     public function onUpgrade($version)
     {
@@ -247,10 +254,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Called when switching the current theme of the selected shop.
-     * You can update configuration, enable/disable modules...
-     *
-     * @return bool true for success
+     * {@inheritdoc}
      */
     public function onEnable()
     {
@@ -264,11 +268,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Not necessarily the opposite of enable. Use this method if
-     * something must be done when switching to another theme (like uninstall
-     * very specific modules for example).
-     *
-     * @return bool true for success
+     * {@inheritdoc}
      */
     public function onDisable()
     {
@@ -281,6 +281,9 @@ class Module implements ModuleInterface
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onMobileEnable()
     {
         if (!$this->hasValidInstance()) {
@@ -292,6 +295,9 @@ class Module implements ModuleInterface
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onMobileDisable()
     {
         if (!$this->hasValidInstance()) {
@@ -303,6 +309,9 @@ class Module implements ModuleInterface
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onReset()
     {
         if (!$this->hasValidInstance()) {
@@ -312,6 +321,9 @@ class Module implements ModuleInterface
         return $this->instance->reset();
     }
 
+    /**
+     * Retrieve an instance of Legacy Module Object model from data.
+     */
     protected function instanciateLegacyModule()
     {
         // Temporary: This test prevents an error when switching branches with the cache. Can be removed at the next release (when we will be sure that it is defined)
@@ -324,16 +336,28 @@ class Module implements ModuleInterface
         $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
 
+    /**
+     * @param $attribute
+     * @return mixed
+     */
     public function get($attribute)
     {
         return $this->attributes->get($attribute, null);
     }
 
+    /**
+     * @param $attribute
+     * @param $value
+     */
     public function set($attribute, $value)
     {
         $this->attributes->set($attribute, $value);
     }
 
+    /**
+     * @param $value
+     * @return mixed|string
+     */
     private function convertType($value)
     {
         $conversionTable = array(
@@ -344,6 +368,9 @@ class Module implements ModuleInterface
         return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
     }
 
+    /**
+     * Set the module logo.
+     */
     public function fillLogo()
     {
         $img = $this->attributes->get('img');
@@ -365,7 +392,7 @@ class Module implements ModuleInterface
     /**
      * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeUpgraded()
     {

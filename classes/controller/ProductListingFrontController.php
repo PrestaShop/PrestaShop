@@ -278,7 +278,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         }
 
         $resultsPerPage = (int) Tools::getValue('resultsPerPage');
-        if ($resultsPerPage <= 0 || $resultsPerPage > 36) {
+        if ($resultsPerPage <= 0) {
             $resultsPerPage = Configuration::get('PS_PRODUCTS_PER_PAGE');
         }
 
@@ -526,7 +526,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         if ($this->ajax) {
             ob_end_clean();
             header('Content-Type: application/json');
-            $this->ajaxDie(json_encode($this->getAjaxProductSearchVariables()));
+            $this->ajaxRender(json_encode($this->getAjaxProductSearchVariables()));
+
+            return;
         } else {
             $variables = $this->getProductSearchVariables();
             $this->context->smarty->assign(array(

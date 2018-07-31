@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use PrestaShop\PrestaShop\Adapter\Entity\Category;
+use AppKernel;
 use InstallSession;
 use Language as LanguageLegacy;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
@@ -430,7 +431,7 @@ class Install extends AbstractInstall
             if (!$all_languages) {
                 $iso_codes_to_install = array($this->language->getLanguageIso());
                 if ($iso_country) {
-                    $version = str_replace('.', '', _PS_VERSION_);
+                    $version = str_replace('.', '', AppKernel::VERSION);
                     $version = substr($version, 0, 2);
                     $localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
 
@@ -692,7 +693,7 @@ class Install extends AbstractInstall
     {
         //clear image cache in tmp folder
         if (file_exists(_PS_TMP_IMG_DIR_)) {
-            foreach (scandir(_PS_TMP_IMG_DIR_) as $file) {
+            foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
                 if ($file[0] != '.' && $file != 'index.php') {
                     Tools::deleteFile(_PS_TMP_IMG_DIR_.$file);
                 }
@@ -797,7 +798,7 @@ class Install extends AbstractInstall
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET active = 0 WHERE id_country != '.(int)$id_country);
 
         // Set localization configuration
-        $version = str_replace('.', '', _PS_VERSION_);
+        $version = str_replace('.', '', AppKernel::VERSION);
         $version = substr($version, 0, 2);
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
@@ -852,7 +853,7 @@ class Install extends AbstractInstall
     {
         $modules = array();
         if (false) {
-            foreach (scandir(_PS_MODULE_DIR_) as $module) {
+            foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
                 if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_.$module) && file_exists(_PS_MODULE_DIR_.$module.'/'.$module.'.php')) {
                     $modules[] = $module;
                 }

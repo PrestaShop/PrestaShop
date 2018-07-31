@@ -55,11 +55,29 @@ let config = {
     logs: [
       './js/app/pages/logs',
     ],
+    order_preferences: [
+      './js/pages/order-preferences',
+    ],
     product_preferences: [
       './js/pages/product-preferences',
     ],
+    order_delivery: [
+      './js/pages/order/delivery',
+    ],
     imports: [
-        './js/pages/import'
+      './js/pages/import'
+    ],
+    localization: [
+      './js/pages/localization'
+    ],
+    invoices: [
+        './js/pages/invoices',
+    ],
+    geolocation: [
+      './js/pages/geolocation',
+    ],
+    payment_preferences: [
+      './js/pages/payment-preferences'
     ]
   },
   output: {

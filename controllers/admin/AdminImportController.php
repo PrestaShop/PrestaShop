@@ -482,10 +482,10 @@ class AdminImportControllerCore extends AdminController
                 );
                 break;
             case $this->entities[$this->trans('Store contacts', array(), 'Admin.Advparameters.Feature')]:
-                unset(self::$validators['name']);
-                self::$validators = array(
-                    'hours' => array('AdminImportController', 'split')
-                );
+                self::$validators['hours'] = array('AdminImportController', 'split');
+                self::$validators['address1'] = array('AdminImportController', 'createMultiLangField');
+                self::$validators['address2'] = array('AdminImportController', 'createMultiLangField');
+                
                 $this->required_fields = array(
                     'address1',
                     'city',
@@ -625,7 +625,7 @@ class AdminImportControllerCore extends AdminController
             $this->displayWarning($this->trans('The import directory must be writable (CHMOD 755 / 777).', array(), 'Admin.Advparameters.Notification'));
         }
 
-        $files_to_import = scandir(AdminImportController::getPath());
+        $files_to_import = scandir(AdminImportController::getPath(), SCANDIR_SORT_NONE);
         uasort($files_to_import, array('AdminImportController', 'usortFiles'));
         foreach ($files_to_import as $k => &$filename) {
             //exclude .  ..  .svn and index.php and all hidden files
@@ -3749,7 +3749,7 @@ class AdminImportControllerCore extends AdminController
         if (isset($store->hours) && is_array($store->hours)) {
             $newHours = array();
             foreach ($store->hours as $hour) {
-                array_push($newHours, array($hour));
+                $newHours[] = array($hour);
             }
             $store->hours = json_encode($newHours);
         }
@@ -3849,7 +3849,8 @@ class AdminImportControllerCore extends AdminController
                 );
             }
         } else {
-            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification').' ('.$store->name.')';
+            $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
+            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification').' ('.$store->name[$id_lang].')';
             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
         }
     }
@@ -4257,7 +4258,7 @@ class AdminImportControllerCore extends AdminController
 					WHERE `id_category` NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
                     ', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
                 Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 3');
-                foreach (scandir(_PS_CAT_IMG_DIR_) as $d) {
+                foreach (scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_CAT_IMG_DIR_.$d);
                     }
@@ -4328,7 +4329,7 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop`');
-                foreach (scandir(_PS_MANU_IMG_DIR_) as $d) {
+                foreach (scandir(_PS_MANU_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_MANU_IMG_DIR_.$d);
                     }
@@ -4338,7 +4339,7 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang`');
                 Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop`');
-                foreach (scandir(_PS_SUPP_IMG_DIR_) as $d) {
+                foreach (scandir(_PS_SUPP_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_SUPP_IMG_DIR_.$d);
                     }

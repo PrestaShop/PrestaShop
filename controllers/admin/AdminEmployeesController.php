@@ -537,7 +537,7 @@ class AdminEmployeesControllerCore extends AdminController
                 return false;
             }
 
-            if (Tools::getvalue('active') == 0) {
+            if (Tools::getValue('active') == 0) {
                 $this->errors[] = $this->trans('You cannot disable or delete the administrator account.', array(), 'Admin.Advparameters.Notification');
                 return false;
             }
@@ -561,7 +561,7 @@ class AdminEmployeesControllerCore extends AdminController
     {
         $employee = new Employee((int)Tools::getValue('id_employee'));
 
-        if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
+        if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getValue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
             return !($this->errors[] = $this->trans('The password must be at least %length% characters long.', array('%length%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Notification'));
         }
 

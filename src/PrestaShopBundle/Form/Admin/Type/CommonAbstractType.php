@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -55,7 +56,7 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = array();
+        $new_list = [];
         foreach ($list as $item) {
             if (array_key_exists($item[$mapping_name], $new_list)) {
                 return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
@@ -76,9 +77,9 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = array();
+        $new_list = [];
         foreach ($list as $item) {
-            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
+            $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
         }
         return $new_list;
     }

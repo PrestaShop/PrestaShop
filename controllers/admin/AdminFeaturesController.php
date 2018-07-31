@@ -540,7 +540,7 @@ class AdminFeaturesControllerCore extends AdminController
 						FROM `'._DB_PREFIX_.'feature`
 						ORDER BY position DESC';
             // set the position of the new feature in $_POST for postProcess() method
-                $_POST['position'] = DB::getInstance()->getValue($sql);
+                $_POST['position'] = Db::getInstance()->getValue($sql);
             }
             // clean \n\r characters
             foreach ($_POST as $key => $value) {

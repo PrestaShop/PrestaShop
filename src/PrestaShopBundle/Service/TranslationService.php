@@ -196,7 +196,7 @@ class TranslationService
                 if (empty($data['xliff']) && empty($data['database'])) {
                     array_unshift($domains['data'], $data);
                 } else {
-                    array_push($domains['data'], $data);
+                    $domains['data'][] = $data;
                 }
             }
         }

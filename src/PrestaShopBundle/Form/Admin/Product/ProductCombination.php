@@ -23,15 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
-use PrestaShopBundle\Form\Admin\Type as PsFormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 
 /**
  * This form class is responsible to generate the product combination form
@@ -65,137 +71,141 @@ class ProductCombination extends CommonAbstractType
     {
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
 
-        $builder->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType', array(
+        $builder->add('id_product_attribute', HiddenType::class, [
             'required' => false,
-        ))
-        ->add('attribute_reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Reference', array(), 'Admin.Global')
-        ))
-        ->add('attribute_ean13', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'required' => false,
-            'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', array(), 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,13}$/"),
-            )
-        ))
-        ->add('attribute_isbn', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'required' => false,
-            'label' => $this->translator->trans('ISBN code', array(), 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9-]{0,32}$/"),
-            ),
-        ))
-        ->add('attribute_upc', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'required' => false,
-            'label' => $this->translator->trans('UPC barcode', array(), 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,12}$/"),
-            )
-        ))
-        ->add('attribute_wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Cost price', array(), 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-            'attr' => ['class' => 'attribute_wholesale_price']
-        ))
-        ->add('attribute_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Impact on price (tax excl.)', array(), 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-            'attr' => ['class' => 'attribute_priceTE']
-        ))
-        ->add('attribute_priceTI', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'mapped' => false,
-            'label' => $this->translator->trans('Impact on price (tax incl.)', array(), 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-            'attr' => ['class' => 'attribute_priceTI']
-        ))
-        ->add('attribute_ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Ecotax', array(), 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
-            )
-        ))
-        ->add('attribute_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Impact on weight', array(), 'Admin.Catalog.Feature')
-        ))
-        ->add('attribute_unity', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Impact on price per unit (tax excl.)', array(), 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-            'attr' => ['class' => 'attribute_unity'],
-        ))
-        ->add('attribute_minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Min. quantity for sale', array(), 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric')),
-            )
-        ))
-        ->add('attribute_low_stock_threshold', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
-            'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Type(array('type' => 'numeric')),
-            ),
-            'attr' => array(
-                'placeholder' => $this->translator->trans(
-                    'Leave empty to disable',
-                    array(),
-                    'Admin.Catalog.Help'
-                ),
-            ),
-        ))
-        ->add('attribute_low_stock_alert', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Type(array('type' => 'bool')),
-            ),
-        ))
-        ->add('available_date_attribute', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
-        ))
-        ->add('attribute_default', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'label'    => $this->translator->trans('Set as default combination', array(), 'Admin.Catalog.Feature'),
-            'required' => false,
-            'attr' => array('class' => 'attribute_default_checkbox'),
-        ));
+        ])
+            ->add('attribute_reference', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Reference', [], 'Admin.Global'),
+                'empty_data' => '',
+            ])
+            ->add('attribute_ean13', TextType::class, [
+                'required' => false,
+                'error_bubbling' => true,
+                'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Regex("/^[0-9]{0,13}$/"),
+                ],
+                'empty_data' => '',
+            ])
+            ->add('attribute_isbn', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Regex("/^[0-9-]{0,32}$/"),
+                ],
+                'empty_data' => '',
+            ])
+            ->add('attribute_upc', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Regex("/^[0-9]{0,12}$/"),
+                ],
+                'empty_data' => '',
+            ])
+            ->add('attribute_wholesale_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
+                'currency' => $this->currency->iso_code,
+                'attr' => ['class' => 'attribute_wholesale_price']
+            ])
+            ->add('attribute_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'currency' => $this->currency->iso_code,
+                'attr' => ['class' => 'attribute_priceTE']
+            ])
+            ->add('attribute_priceTI', MoneyType::class, [
+                'required' => false,
+                'mapped' => false,
+                'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
+                'currency' => $this->currency->iso_code,
+                'attr' => ['class' => 'attribute_priceTI']
+            ])
+            ->add('attribute_ecotax', MoneyType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
+                'currency' => $this->currency->iso_code,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Type(['type' => 'float'])
+                ]
+            ])
+            ->add('attribute_weight', NumberType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature')
+            ])
+            ->add('attribute_unity', MoneyType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'currency' => $this->currency->iso_code,
+                'attr' => ['class' => 'attribute_unity'],
+            ])
+            ->add('attribute_minimal_quantity', NumberType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Min. quantity for sale', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Type(['type' => 'numeric']),
+                ]
+            ])
+            ->add('attribute_low_stock_threshold', NumberType::class, [
+                'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Type(['type' => 'numeric']),
+                ],
+                'attr' => [
+                    'placeholder' => $this->translator->trans(
+                        'Leave empty to disable',
+                        [],
+                        'Admin.Catalog.Help'
+                    ),
+                ],
+            ])
+            ->add('attribute_low_stock_alert', CheckboxType::class, [
+                'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Type(['type' => 'bool']),
+                ],
+            ])
+            ->add('available_date_attribute', DatePickerType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
+                'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
+            ])
+            ->add('attribute_default', CheckboxType::class, [
+                'label' => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
+                'required' => false,
+                'attr' => ['class' => 'attribute_default_checkbox'],
+            ]);
         if ($is_stock_management) {
             $builder->add(
                 'attribute_quantity',
-                'Symfony\Component\Form\Extension\Core\Type\NumberType',
-                array(
-                    'required'    => true,
-                    'label'       => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
-                    'constraints' => array(
+                NumberType::class,
+                [
+                    'required' => true,
+                    'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                    'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(array('type' => 'numeric')),
-                    )
-                )
+                        new Assert\Type(['type' => 'numeric']),
+                    ]
+                ]
             );
         }
-        $builder->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices'  => array(),
+        $builder->add('id_image_attr', ChoiceType::class, [
+            'choices' => [],
             'required' => false,
             'expanded' => true,
             'multiple' => true,
-            'label' => $this->translator->trans('Select images of this combination:', array(), 'Admin.Catalog.Feature'),
-            'attr' => array('class' => 'images'),
-        ))
-        ->add('final_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Final price', array(), 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-        ));
+            'label' => $this->translator->trans('Select images of this combination:', [], 'Admin.Catalog.Feature'),
+            'attr' => ['class' => 'images'],
+        ])
+            ->add('final_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Final price', [], 'Admin.Catalog.Feature'),
+                'currency' => $this->currency->iso_code,
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
@@ -208,12 +218,12 @@ class ProductCombination extends CommonAbstractType
                 }
             }
 
-            $form->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            $form->add('id_image_attr', ChoiceType::class, [
                 'choices' => $choices,
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
-            ));
+            ]);
         });
     }
 

@@ -34,8 +34,14 @@ use ImageType;
 use Image;
 use ImageManager;
 
+/**
+ * This class is mainly responsible of Product images.
+ */
 class ImageRetriever
 {
+    /**
+     * @var Link
+     */
     private $link;
 
     public function __construct(Link $link)
@@ -43,6 +49,11 @@ class ImageRetriever
         $this->link = $link;
     }
 
+    /**
+     * @param array $product
+     * @param Language $language
+     * @return array
+     */
     public function getProductImages(array $product, Language $language)
     {
         $productAttributeId = $product['id_product_attribute'];
@@ -100,6 +111,12 @@ class ImageRetriever
         return (0 === count($filteredImages)) ? $images : $filteredImages;
     }
 
+    /**
+     * @param $object
+     * @param int $id_image
+     * @return array|null
+     * @throws \PrestaShopDatabaseException
+     */
     public function getImage($object, $id_image)
     {
         if (!$id_image) {
@@ -184,6 +201,10 @@ class ImageRetriever
         );
     }
 
+    /**
+     * @param string $imageHash
+     * @return array
+     */
     public function getCustomizationImage($imageHash)
     {
         $large_image_url = rtrim($this->link->getBaseLink(), '/') . '/upload/' . $imageHash;
@@ -212,6 +233,11 @@ class ImageRetriever
         ];
     }
 
+    /**
+     * @param Language $language
+     * @return array
+     * @throws \PrestaShopDatabaseException
+     */
     public function getNoPictureImage(Language $language)
     {
         $urls  = [];

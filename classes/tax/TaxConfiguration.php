@@ -29,6 +29,9 @@ class TaxConfigurationCore
 {
     private $taxCalculationMethod = array();
 
+    /**
+     * @return bool
+     */
     public function includeTaxes()
     {
         if (!Configuration::get('PS_TAX')) {

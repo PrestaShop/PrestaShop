@@ -39,7 +39,14 @@ use Tools;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -49,6 +56,11 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @return ProductSearchResult
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
