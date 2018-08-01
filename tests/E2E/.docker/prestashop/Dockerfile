@@ -1,4 +1,17 @@
-FROM prestashop/prestashop-git:latest
+FROM prestashop/base:7.2-apache
+
+WORKDIR /tmp
+
+# Install dependencies
+RUN apt-get update
+RUN apt install -y \
+     gnupg2 \
+     curl \
+     git \
+     software-properties-common \
+     nodejs
+
+RUN curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
 
 ENV PS_HANDLE_DYNAMIC_DOMAIN 0
 ENV PS_INSTALL_AUTO 1
@@ -11,9 +24,7 @@ COPY /wait-for-it.sh /tmp/wait-for-it.sh
 
 # Repository update
 WORKDIR /var/www/html
-RUN git fetch -p
-RUN git checkout $GIT_BRANCH
-RUN git pull
-RUN /usr/local/bin/composer install
+
+RUN usermod -u 1000 www-data
 
 CMD /tmp/wait-for-it.sh --timeout=600 --strict db:3306 -- /tmp/docker_run.sh

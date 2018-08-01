@@ -4,7 +4,7 @@ services:
   tests:
     build: .docker
     environment:
-      SELENIUM_URL: http://selenium-chrome:4444/wd/hub
+      SELENIUM_HOST: selenium-chrome
       URL: prestashop-web
     depends_on:
       - "prestashop"
@@ -12,6 +12,7 @@ services:
     # command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop-web:80", "--", "/tmp/run-tests.sh"]
     volumes:
       - .docker:/tmp/docker
+      - ../../:/var/www/html
     networks:
       - default
 
@@ -28,12 +29,12 @@ services:
       PS_DOMAIN: prestashop-web
       PS_FOLDER_ADMIN: admin-dev
       PS_FOLDER_INSTALL: install-dev
-      GIT_BRANCH: develop
     depends_on:
       - "db"
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
     volumes:
       - .docker:/tmp/docker
+      - ../../:/var/www/html
     networks:
       default:
         aliases:
