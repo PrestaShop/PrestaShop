@@ -13,27 +13,9 @@ let options = {
   port: 4444,
   deprecationWarnings: false
 };
-if (typeof global.selenium_url !== 'undefined') {
-  options.host = global.selenium_url;
-}
 
-let options2 = {
-  logLevel: 'silent',
-  waitForTimeout: 30000,
-  desiredCapabilities: {
-    browserName: 'chrome',
-    'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-    username: process.env.SAUCE_USERNAME,
-    access_key: process.env.SAUCE_ACCESS_KEY,
-    screenResolution: "1680x1050",
-    platform: "Windows 7"
-  },
-  port: 4445,
-  deprecationWarnings: false
-};
 
 function initCommands(client) {
-
   client.addCommand('linkAccess', function (link) {
     return client
       .url(link);
@@ -167,7 +149,7 @@ module.exports = {
       return client;
     }
 
-    if (typeof headless !== 'undefined' && headless) {
+    if (typeof global.headless !== 'undefined' && global.headless) {
       options["desiredCapabilities"] = {
         browserName: 'chrome',
         chromeOptions: {
@@ -175,6 +157,19 @@ module.exports = {
         }
       };
     }
+
+    if (typeof global.selenium_protocol !== 'undefined') {
+      options.protocol = global.selenium_protocol;
+    }
+
+    if (typeof global.selenium_host !== 'undefined') {
+      options.host = global.selenium_host;
+    }
+
+    if (typeof global.selenium_port !== 'undefined') {
+      options.port = global.selenium_port;
+    }
+
 
     client = webdriverio.remote(options);
     initCommands(client);
