@@ -5,19 +5,19 @@ URL="${URL:-prestashop}"
 MODULE="${MODULE:-}"
 SAUCELABS="${SAUCELABS:-}"
 SCRIPT="${SCRIPT:-index.webdriverio.js}"
-SELENIUM=""${SELENIUM_HOST:-}""
+SELENIUM=""${SELENIUM_URL:-}""
 
 COMMAND="npm run test -- --URL=$URL --HEADLESS"
 
-if [ -n "$MODULE" ]; then
+if [ ! -z "$MODULE" ]; then
     COMMAND="$COMMAND --MODULE=$MODULE"
 fi
 
-if [ -n "$SAUCELABS" ]; then
+if [ ! -z "$SAUCELABS" ]; then
     COMMAND="$COMMAND --SAUCELABS"
 fi
 
-if [ -n "$SELENIUM" ]; then
+if [ ! -z "$SELENIUM" ]; then
     COMMAND="$COMMAND --SELENIUM=$SELENIUM"
 fi
 

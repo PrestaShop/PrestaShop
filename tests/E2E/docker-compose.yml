@@ -4,12 +4,12 @@ services:
   tests:
     build: .docker
     environment:
-      SELENIUM_HOST: selenium-chrome:4444
+      SELENIUM_URL: http://selenium-chrome:4444/wd/hub
       URL: prestashop-web
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/run-tests.sh"]
+    # command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop-web:80", "--", "/tmp/run-tests.sh"]
     volumes:
       - .docker:/tmp/docker
     networks:
@@ -17,11 +17,14 @@ services:
 
   prestashop:
     build: .docker/prestashop
+    ports:
+      - 8089:80
     environment:
       DB_SERVER: db
       PS_INSTALL_AUTO: 1
       PS_COUNTRY: fr
       PS_DEV_MODE: 0
+      PS_ERASE_DB: 1
       PS_DOMAIN: prestashop-web
       PS_FOLDER_ADMIN: admin-dev
       PS_FOLDER_INSTALL: install-dev
@@ -38,6 +41,10 @@ services:
 
   selenium-chrome:
     image: selenium/standalone-chrome
+    depends_on:
+      - "prestashop"
+    ports:
+      - 4444:4444
     volumes:
       - /dev/shm:/dev/shm
     networks:

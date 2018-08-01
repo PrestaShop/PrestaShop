@@ -15,3 +15,5 @@ RUN git fetch -p
 RUN git checkout $GIT_BRANCH
 RUN git pull
 RUN /usr/local/bin/composer install
+
+CMD /tmp/wait-for-it.sh --timeout=600 --strict db:3306 -- /tmp/docker_run.sh
