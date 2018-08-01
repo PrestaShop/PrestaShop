@@ -11,7 +11,7 @@
     "test": "node_modules/mocha/bin/mocha test/campaigns/regular/*",
     "install-upgrade-test": "node_modules/mocha/bin/mocha test/campaigns/install_upgrade/*",
     "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$TEST_PATH",
-    "sanity-check": "curl http://localhost:4444/wd/hub/status | json_pp ",
+    "sanity-check": "curl ${SELENIUM_URL:=http://localhost:4444}/wd/hub/status | json_pp",
     "concat-files-report": "cd email_sender && ../node_modules/gulp-cli/bin/gulp.js"
   },
   "repository": {
