@@ -303,16 +303,16 @@ class FrameworkBundleAdminController extends Controller
      * @return bool
      * @throws \LogicException
      */
-    protected function shouldDenyAction($action, $object = '', $suffix = '')
+    protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && !$this->isGranted(PageVoter::DELETE, $object)
+                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
             ) || (
                 ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                !$this->isGranted(PageVoter::UPDATE, $object)
+                $this->isGranted(PageVoter::UPDATE, $object)
             ) || (
                 ($action === 'duplicate' . $suffix) &&
-                (!$this->isGranted(PageVoter::UPDATE, $object) || !$this->isGranted(PageVoter::CREATE, $object))
+                ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
             )
         ;
     }
