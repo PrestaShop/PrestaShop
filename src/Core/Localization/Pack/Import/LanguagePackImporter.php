@@ -62,6 +62,7 @@ class LanguagePackImporter implements LanguagePackImporterInterface
         }
 
         $result = $this->languagePack->downloadAndInstallLanguagePack($isoCode);
+        return is_array($result) && !empty($result) ? $result : [];
     }
 
 }

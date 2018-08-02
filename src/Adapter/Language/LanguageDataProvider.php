@@ -46,4 +46,16 @@ class LanguageDataProvider
     {
         return Language::getLanguages($active, $shopId, $onlyIds);
     }
+
+    /**
+     * Returns language code by iso code
+     *
+     * @param string $isoCode - ISO 3166-2 alpha-2 format code
+     *
+     * @return false|null|string
+     */
+    public function getLanguageCodeByIso($isoCode)
+    {
+        return Language::getLanguageCodeByIso($isoCode);
+    }
 }

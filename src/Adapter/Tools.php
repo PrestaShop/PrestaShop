@@ -139,4 +139,12 @@ class Tools
     {
         return LegacyTools::getShopDomainSsl($http, $entities);
     }
+
+    /**
+     * Clear both Smarty and Symfony cache
+     */
+    public function clearAllCache()
+    {
+        LegacyTools::clearAllCache();
+    }
 }
