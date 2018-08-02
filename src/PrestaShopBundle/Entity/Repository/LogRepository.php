@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\QueryBuilderHelperTrait;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
@@ -37,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
  */
 class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
+    use QueryBuilderHelperTrait;
+
     private $connection;
     private $databasePrefix;
     private $logTable;
@@ -162,13 +165,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->buildGridQuery($searchCriteria);
-        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
-            ->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            )
-            ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit());
+        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee');
+
+        $this->addPaginationAndSorting($searchCriteria, $qb);
 
         return $qb;
     }
