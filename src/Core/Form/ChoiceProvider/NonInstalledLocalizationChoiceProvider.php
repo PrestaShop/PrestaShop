@@ -46,7 +46,6 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
 
     public function __construct(array $allLocalizationChoices, LanguageValidator $languageValidator)
     {
-
         $this->allLocalizationChoices = $allLocalizationChoices;
         $this->languageValidator = $languageValidator;
     }
