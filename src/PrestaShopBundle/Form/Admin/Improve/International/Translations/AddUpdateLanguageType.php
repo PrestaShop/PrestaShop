@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,20 +38,29 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class AddUpdateLanguageType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $nonInstalledLocalizationChoiceProvider;
+
     public function __construct(
         TranslatorInterface $translator,
-        array $locales
+        array $locales,
+        FormChoiceProviderInterface $nonInstalledLocalizationChoiceProvider
     ) {
         parent::__construct($translator, $locales);
+        $this->nonInstalledLocalizationChoiceProvider = $nonInstalledLocalizationChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $installedLocales = $this->getLocaleChoices();
+        $nonInstalledLocales = $this->nonInstalledLocalizationChoiceProvider->getChoices();
+        
         $builder->add('add_update_language_type', ChoiceType::class, [
             'choices' => [
-                $this->trans('Update a language', 'Admin.International.Feature') => [],
-                $this->trans('Add a language', 'Admin.International.Feature') => []
+                $this->trans('Update a language', 'Admin.International.Feature') => $installedLocales,
+                $this->trans('Add a language', 'Admin.International.Feature') => $nonInstalledLocales
             ]
         ]);
     }
