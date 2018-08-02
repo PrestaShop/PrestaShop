@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -158,6 +159,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
         $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
+        $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
@@ -165,6 +167,7 @@ class TranslationsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'kpiRow' => $kpiRowFactory->build(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
+            'addUpdateLanguageForm' => $addUpdateLanguageForm->createView()
         ];
     }
 
