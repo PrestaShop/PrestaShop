@@ -41,7 +41,7 @@ interface DoctrineQueryBuilderInterface
      *
      * @return QueryBuilder
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria);
 
     /**
      * Get query that counts grid rows
@@ -50,5 +50,5 @@ interface DoctrineQueryBuilderInterface
      *
      * @return QueryBuilder
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria);
 }
