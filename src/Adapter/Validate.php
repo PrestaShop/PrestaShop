@@ -77,6 +77,7 @@ class Validate
     }
 
     /**
+<<<<<<< HEAD
      * Check for module name validity.
      *
      * @param string $name Module name to validate
@@ -98,5 +99,17 @@ class Validate
     public static function isLoadedObject($object)
     {
         return ValidateLegacy::isLoadedObject($object);
+    }
+
+    /**
+     * Check for Language Iso Code
+     *
+     * @param string $isoCode
+     *
+     * @return bool
+     */
+    public function isLangIsoCode($isoCode)
+    {
+        return ValidateLegacy::isLangIsoCode($isoCode);
     }
 }
