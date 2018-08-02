@@ -85,16 +85,14 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('date_add' === $name) {
-                if (isset($value['from'], $value['to'])) {
-                    $qb->andWhere('m.date_add BETWEEN :date_from AND :date_to');
-                    $qb->setParameter('date_from', $value['from']);
-                    $qb->setParameter('date_to', $value['to']);
-                } elseif (isset($value['from'])) {
+                if (isset($value['from'])) {
                     $qb->andWhere('m.date_add >= :date_from');
-                    $qb->setParameter('date_from', $value['from']);
-                } elseif (isset($value['to'])) {
+                    $qb->setParameter('date_from', sprintf('%s %s', $value['from'], '0:0:0'));
+                }
+
+                if (isset($value['to'])) {
                     $qb->andWhere('m.date_add <= :date_to');
-                    $qb->setParameter('date_to', $value['to']);
+                    $qb->setParameter('date_to', sprintf('%s %s', $value['to'], '23:59:59'));
                 }
 
                 continue;
