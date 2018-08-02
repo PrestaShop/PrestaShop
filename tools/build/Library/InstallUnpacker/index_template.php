@@ -214,12 +214,16 @@ if (isset($_GET['element'])) {
             header('Content-Type: image/gif');
             echo getFileContent('installer.gif', true);
             break;
+        case 'png-installer':
+            header('Content-Type: image/png');
+            echo getFileContent('installer-static.png', true);
+            break;
     }
     exit;
 }
 
 $thereIsAMoreRecentPSVersion = false;
-$userHasChosenToIgnoreLatestPSVersion = ((isset($_POST['submit'])) && ($_POST['submit'] === 'Skip Latest'));
+$userHasChosenToIgnoreLatestPSVersion = ((isset($_GET['skipForm'])) && ($_GET['skipForm'] === 'true'));
 if (false === $userHasChosenToIgnoreLatestPSVersion) {
     try {
         if (false === isThisTheLatestAvailableVersion()) {
@@ -235,82 +239,109 @@ $showFormToDownloadLatestPSVersion = ($thereIsAMoreRecentPSVersion && !$userHasC
 
 if ($showFormToDownloadLatestPSVersion):
     ?>
-    <div id="download-latest-version-form">
-
-        This is not the latest version of Prestashop. Do you want to get the latest ?
-
-        <form method="post">
-            <input id="latest" type="button" name="submit" value="Download Latest">
-            <input id="skip" type="submit" name="submit" value="Skip Latest">
-            <div id="waiting"></div>
-            <div id="error"></div>
-            <div id="fallback-after-error" style="display:none;">Cannot download latest Prestashop version. Please click
-                on 'Skip latest' to resume standard installation.
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>PrestaShop installation</title>
+        <link rel="stylesheet" type="text/css" href="<?= $selfUri ?>?element=css">
+    </head>
+    <body id="body-install-form">
+    <div id="content">
+        <div>
+            <img id="puffin" src="<?= $selfUri ?>?element=png-installer"/>
+            <div id="header">
+                The version you’re about to install is not
+                the latest version of PrestaShop
             </div>
-            <script type="text/javascript" src="<?= $selfUri ?>?element=jquery"></script>
-            <script type="text/javascript">
-                $(document).ready(function () {
+            <div id="question">
+                Do you want to install the latest version instead? (recommended)
+            </div>
+            <div id="form-panel">
+                <div id="form">
+                    <a id="skip-button" class="button button-no" href="<?= $selfUri ?>?skipForm=true">No thanks</a>
+                    <a id="latest-button" class="button button-yes" href="#">Yes please!</a>
+                </div>
 
-                    $("#latest").on("click", function (event) {
+                <div id="waiting" class="error-container"></div>
+                <div id="error" class="error-container"></div>
+                <div id="fallback-after-error" style="display:none;" class="error-container">Cannot download latest Prestashop version.<br/>
+                    Please click on 'No thanks' to resume standard installation.
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="<?= $selfUri ?>?element=jquery"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-                        $.ajax({
-                            url: "<?= $selfUri ?>",
-                            method: "POST",
-                            data: {'downloadLatest': true},
-                            beforeSend: function () {
-                                $('#latest').attr('disabled', 'disabled');
-                                $('#waiting').html('Downloading latest version ...');
-                            },
-                            success: function (msg) {
-                                try {
-                                    msg = JSON.parse(msg);
-                                } catch (e) {
-                                    if (String(msg).match("<tittle>PrestaShop")) {
-                                        msg = "Invalid server response";
-                                    }
-                                    msg = {
-                                        message: msg
-                                    };
-                                }
+            $("#skip-button").on("click", function (event) {
+                $.post(
+                    "<?= $selfUri ?>",
+                    {'skipForm': true}
+                );
+            });
 
-                                if (msg.error) {
-                                    $('#error').html('An error has occured: <br />' + msg.message);
+            $("#latest-button").on("click", function (event) {
+
+                $.ajax({
+                    url: "<?= $selfUri ?>",
+                    method: "POST",
+                    data: {'downloadLatest': true},
+                    beforeSend: function () {
+                        $('#latest-button').addClass('inactive-link');
+                        $('#waiting').html('Downloading latest version ...');
+                    },
+                    success: function (msg) {
+                        try {
+                            msg = JSON.parse(msg);
+                        } catch (e) {
+                            if (String(msg).match("<tittle>PrestaShop")) {
+                                msg = "Invalid server response";
+                            }
+                            msg = {
+                                message: msg
+                            };
+                        }
+
+                        if (msg.error) {
+                            $('#error').html('An error has occured: <br />' + msg.message);
+                            $('#waiting').remove();
+                            $('#fallback-after-error').show();
+                        } else {
+                            if (msg.success == true) {
+                                location.reload();
+                            } else {
+                                if (msg.warning == true) {
+                                    var issuesList = 'An error has occured: <br /><ul>';
+
+                                    $.each(msg.issues, function (key, issue) {
+                                        issuesList = issuesList + '<li>' + issue + '</li>';
+                                    });
+
+                                    var issuesList = issuesList + '</ul>';
+
+                                    $('#error').html(issuesList);
                                     $('#waiting').remove();
                                     $('#fallback-after-error').show();
                                 } else {
-                                    if (msg.success == true) {
-                                        location.reload();
-                                    } else {
-                                        if (msg.warning == true) {
-                                            var issuesList = 'An error has occured: <br /><ul>';
-
-                                            $.each(msg.issues, function (key, issue) {
-                                                issuesList = issuesList + '<li>' + issue + '</li>';
-                                            });
-
-                                            var issuesList = issuesList + '</ul>';
-
-                                            $('#error').html(issuesList);
-                                            $('#waiting').remove();
-                                            $('#fallback-after-error').show();
-                                        } else {
-                                            $('#error').html('An error has occured: <br />' + msg.message);
-                                            $('#waiting').remove();
-                                            $('#fallback-after-error').show();
-                                        }
-                                    }
+                                    $('#error').html('An error has occured: <br />' + msg.message);
+                                    $('#waiting').remove();
+                                    $('#fallback-after-error').show();
                                 }
-                            },
-                            fail: function (jqXHR, textStatus, errorThrown) {
-                                $('#error').html('We are sorry, an error has occurred' + textStatus);
-                                $('#waiting').remove();
                             }
-                        });
-                    });
+                        }
+                    },
+                    fail: function (jqXHR, textStatus, errorThrown) {
+                        $('#error').html('We are sorry, an error has occurred ' + textStatus);
+                        $('#waiting').remove();
+                    }
                 });
-            </script>
-        </form>
-    </div>
+            });
+        });
+    </script>
+    </body>
+    </html>
 <?php else: ?>
     <!DOCTYPE html>
     <html>
@@ -319,10 +350,11 @@ if ($showFormToDownloadLatestPSVersion):
         <title>PrestaShop installation</title>
         <link rel="stylesheet" type="text/css" href="<?= $selfUri ?>?element=css">
     </head>
-    <body>
+    <body id="body-install-in-progress">
     <div id="content">
         <div>
             <img id="spinner" src="<?= $selfUri ?>?element=gif"/>
+            <div id="versionPanel">Installing Prestashop <?= _PS_VERSION_ ?></div>
             <div id="progressContainer">
                 <div class="progressNumber">0 %</div>
                 <div class="progress">
