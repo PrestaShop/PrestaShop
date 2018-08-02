@@ -19,8 +19,6 @@ services:
 
   prestashop:
     build: .docker/prestashop
-    ports:
-      - 8089:80
     environment:
       DB_SERVER: db
       PS_INSTALL_AUTO: 1
@@ -45,8 +43,6 @@ services:
     image: selenium/standalone-chrome
     depends_on:
       - "prestashop"
-    ports:
-      - 4444:4444
     volumes:
       - /dev/shm:/dev/shm
     networks:
