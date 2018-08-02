@@ -136,8 +136,8 @@ function initCommands(client) {
     return client
       .getAttribute(selector + '/..', 'class')
       .then((text) => {
-        global.isOpen = text.indexOf('open');
-        return global;isOpen = global.isOpen !== -1;
+        global.isOpen = text.indexOf('open') !== -1;
+        return global.isOpen;
       });
   });
 
