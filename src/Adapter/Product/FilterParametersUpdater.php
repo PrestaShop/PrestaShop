@@ -70,13 +70,12 @@ final class FilterParametersUpdater
         $orderBy,
         $sortOrder
     ) {
-        $filters = array();
-        $filters['offset'] = $this->getOffset($offset, $filterParameters);
-        $filters['limit'] = $this->getLimit($limit, $filterParameters);
-        $filters['orderBy'] = $this->getOrderBy($orderBy, $filterParameters);
-        $filters['sortOrder'] = $this->getSortOrder($sortOrder, $filterParameters);
-
-        return $filters;
+        return [
+            'offset' => $this->getOffset($offset, $filterParameters),
+            'limit' => $this->getLimit($limit, $filterParameters),
+            'orderBy' => $this->getOrderBy($orderBy, $filterParameters),
+            'sortOrder' => $this->getSortOrder($sortOrder, $filterParameters)
+        ];
     }
 
     /**
