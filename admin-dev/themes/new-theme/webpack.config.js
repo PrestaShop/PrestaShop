@@ -190,7 +190,6 @@ let config = {
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
@@ -216,6 +215,9 @@ if (process.env.NODE_ENV === 'production') {
     })
   );
 } else {
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin()
+  );
   config.entry.stock.push('webpack/hot/only-dev-server');
   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
 }
