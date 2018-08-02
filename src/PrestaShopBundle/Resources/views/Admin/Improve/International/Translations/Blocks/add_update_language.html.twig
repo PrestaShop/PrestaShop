@@ -23,38 +23,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
-{% block content %}
-  <div class="container">
-    <div class="card">
-      {% block translations_kpis_row %}
-        <div class="row">
-          {{ render(controller(
-            'PrestaShopBundle:Admin\\Common:renderKpiRow',
-            { 'kpiRow': kpiRow }
-          )) }}
+<div class="card">
+  <div class="card-header">
+    <div class="material-icons">arrow_drop_down_circle</div> {{ 'Add / Update a language'|trans }}
+  </div>
+
+  <div class="card-block">
+    <div class="card-text">
+      <div class="alert alert-info" role="alert">
+        <div class="alert-text">
+          {{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}
         </div>
-      {% endblock %}
-    </div>
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
+      <div class="form-group">
+        <label class="form-control-label">
+          {{ 'Please select the language you want to add or update'|trans }}
+        </label>
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/translation_settings.bundle.js') }}"></script>
-{% endblock %}
+</div>
