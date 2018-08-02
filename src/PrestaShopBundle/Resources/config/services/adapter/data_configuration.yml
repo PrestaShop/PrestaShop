@@ -123,6 +123,9 @@ services:
     prestashop.adapter.language.activator:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
 
+    prestashop.adapter.language.validator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'
+
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
 
