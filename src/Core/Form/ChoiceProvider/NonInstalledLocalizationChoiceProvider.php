@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Adapter\Language\LanguageValidator;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
 
 /**
  * Class NonInstalledLocalizationChoiceProvider is responsible for getting one part of choices to use
@@ -40,11 +40,11 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      */
     private $allLocalizationChoices;
     /**
-     * @var LanguageValidatorInterface
+     * @var LanguageValidator
      */
     private $languageValidator;
 
-    public function __construct(array $allLocalizationChoices, LanguageValidatorInterface $languageValidator)
+    public function __construct(array $allLocalizationChoices, LanguageValidator $languageValidator)
     {
 
         $this->allLocalizationChoices = $allLocalizationChoices;
