@@ -9,10 +9,11 @@ services:
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    # command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop-web:80", "--", "/tmp/run-tests.sh"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop-web:80", "--", "/tmp/prepare-prestashop.sh"]
+    tty: true
     volumes:
       - .docker:/tmp/docker
-      - ../../:/var/www/html
+      - ../../:/tmp/data-ps/prestashop/
     networks:
       - default
 
@@ -34,7 +35,7 @@ services:
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
     volumes:
       - .docker:/tmp/docker
-      - ../../:/var/www/html
+      - ../../:/tmp/data-ps/prestashop/
     networks:
       default:
         aliases:
