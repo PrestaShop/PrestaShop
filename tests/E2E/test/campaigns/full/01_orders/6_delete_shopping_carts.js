@@ -51,7 +51,7 @@ scenario('Delete shopping carts', () => {
       return promise
         .then(() => client.switchWindow(1))
     });
-    commonOrder.createOrderFO();
+    commonOrder.createOrderFO("connected");
   }, 'order');
   scenario('Delete a shopping cart related to an order', client => {
     test('should go back to the Back office', () => {
