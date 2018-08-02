@@ -14,6 +14,9 @@ services:
             - '@translator'
             - '@prestashop.adapter.legacy.configuration'
 
+  prestashop.core.localization.pack.import.language.importer:
+        class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Import\LanguagePackImporter'
+
     prestashop.core.localization.pack.loader.local:
         class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalLocalizationPackLoader'
         arguments:
