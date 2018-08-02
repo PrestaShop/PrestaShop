@@ -497,7 +497,6 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.form.choice_provider.translation_type'
-            - '@prestashop.core.form.choice_provider.email_content_type'
+            - '@prestashop.core.form.choice_provider.non_installed_localization'
         tags:
             - { name: form.type }
