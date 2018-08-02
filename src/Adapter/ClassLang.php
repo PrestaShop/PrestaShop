@@ -25,6 +25,10 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+/**
+ * Not used in PrestaShop
+ * @deprecated since 1.7.5, to be removed in 1.8
+ */
 class ClassLang
 {
     /**

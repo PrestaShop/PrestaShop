@@ -46,6 +46,11 @@ class ProductListingLazyArray extends ProductLazyArray
         return parent::getAddToCartUrl();
     }
 
+    /**
+     * @param array $product
+     * @param ProductPresentationSettings $settings
+     * @return bool
+     */
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
         if (isset($product['attributes'])

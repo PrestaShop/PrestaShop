@@ -29,8 +29,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Product;
 
+/**
+ * Retrieve colors of a Product, if any.
+ */
 class ProductColorsRetriever
 {
+    /**
+     * @param int $id_product
+     * @return mixed|null
+     */
     public function getColoredVariants($id_product)
     {
         return (is_array(Product::getAttributesColorList([$id_product]))) ? current(Product::getAttributesColorList([$id_product])) : null;

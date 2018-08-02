@@ -37,6 +37,7 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use CartRule;
 use Tools;
@@ -44,10 +45,29 @@ use Hook;
 
 class CartPresenter implements PresenterInterface
 {
+    /**
+     * @var PriceFormatter
+     */
     private $priceFormatter;
+
+    /**
+     * @var \Link
+     */
     private $link;
+
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var ImageRetriever
+     */
     private $imageRetriever;
+
+    /**
+     * @var TaxConfiguration
+     */
     private $taxConfiguration;
 
     public function __construct()
@@ -60,11 +80,18 @@ class CartPresenter implements PresenterInterface
         $this->taxConfiguration = new TaxConfiguration();
     }
 
+    /**
+     * @return bool
+     */
     private function includeTaxes()
     {
         return $this->taxConfiguration->includeTaxes();
     }
 
+    /**
+     * @param array $rawProduct
+     * @return \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray|\PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray
+     */
     private function presentProduct(array $rawProduct)
     {
         $settings = new ProductPresentationSettings();
