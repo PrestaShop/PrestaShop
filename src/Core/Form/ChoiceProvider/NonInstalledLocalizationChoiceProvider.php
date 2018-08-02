@@ -26,10 +26,48 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-/**
- * Todo: insert comment
- */
-class NonInstalledLocalizationChoiceProvider
-{
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
 
+/**
+ * Class NonInstalledLocalizationChoiceProvider is responsible for getting one part of choices to use
+ * in 'Improve > International > Translations' page Add / Update a language form type.
+ */
+class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterface
+{
+    /**
+     * @var array
+     */
+    private $allLocalizationChoices;
+    /**
+     * @var LanguageValidatorInterface
+     */
+    private $languageValidator;
+
+    public function __construct(array $allLocalizationChoices, LanguageValidatorInterface $languageValidator)
+    {
+
+        $this->allLocalizationChoices = $allLocalizationChoices;
+        $this->languageValidator = $languageValidator;
+    }
+
+    public function getChoices()
+    {
+        $isEmpty = empty($this->allLocalizationChoices);
+
+        if ($isEmpty) {
+            return [];
+        }
+
+        $choices = [];
+        foreach ($this->allLocalizationChoices as $key => $isoCode) {
+            $isNotInstalled = !$this->languageValidator->isInstalledByIsoCode($isoCode);
+
+            if ($isNotInstalled) {
+                $choices[$key] = $isoCode;
+            }
+        }
+
+        return $choices;
+    }
 }
