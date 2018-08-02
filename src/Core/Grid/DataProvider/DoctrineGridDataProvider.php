@@ -30,6 +30,7 @@ use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
  * Class DoctrineGridDataProvider is responsible for returning grid data using Doctrine query builders
@@ -42,12 +43,28 @@ final class DoctrineGridDataProvider implements GridDataProviderInterface
     private $gridQueryBuilder;
 
     /**
+     * @var HookDispatcher
+     */
+    private $hookDispatcher;
+
+    /**
+     * @var string
+     */
+    private $gridId;
+
+    /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
+     * @param HookDispatcher                $hookDispatcher
+     * @param string                        $gridId
      */
     public function __construct(
-        DoctrineQueryBuilderInterface $gridQueryBuilder
+        DoctrineQueryBuilderInterface $gridQueryBuilder,
+        HookDispatcher $hookDispatcher,
+        $gridId
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
+        $this->hookDispatcher = $hookDispatcher;
+        $this->gridId = $gridId;
     }
 
     /**
@@ -60,6 +77,12 @@ final class DoctrineGridDataProvider implements GridDataProviderInterface
 
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
+
+        $this->hookDispatcher->dispatchForParameters('modifyGridQueryBuilder', [
+            'grid_id' => $this->gridId,
+            'search_query_builder' => $searchQueryBuilder,
+            'count_query_builder' => $countQueryBuilder,
+        ]);
 
         $records = new RecordCollection($records);
 
