@@ -7,6 +7,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.admin.log.repository'
+            - '@prestashop.hook.dispatcher'
+            - 'logs'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
