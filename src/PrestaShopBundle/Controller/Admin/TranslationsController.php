@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
+use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -189,5 +191,55 @@ class TranslationsController extends FrameworkBundleAdminController
 
         // If route parameters are empty we are redirecting to a legacy route
         return empty($routeParameters) ? $this->redirect($route) : $this->redirectToRoute($route, $routeParameters);
+    }
+
+    /**
+     * todo: check available security
+     * todo: add iso code validation if it exists in the given choices
+     * @param Request $request
+     */
+    public function addUpdateLanguageAction(Request $request)
+    {
+        $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
+        $addUpdateLanguageForm->handleRequest($request);
+        $isFormSubmitted = $addUpdateLanguageForm->isSubmitted();
+
+        if ($isFormSubmitted) {
+            $data = $addUpdateLanguageForm->getData();
+            $isoCode = $data['iso_localization_pack'];
+
+            $languageValidator = $this->get('prestashop.adapter.language.validator');
+
+            $isNewLanguage = !$languageValidator->isInstalledByIsoCode($isoCode);
+            $errors = [];
+
+            if ($isNewLanguage) {
+                $localizationImportConfig = new LocalizationPackImportConfig(
+                    $isoCode,
+                    $contentToImport = [
+                        LocalizationPackImportConfigInterface::CONTENT_LANGUAGES
+                    ],
+                    $downloadPackData = true
+                );
+
+                $localizationPackImporter = $this->get('prestashop.core.localization.pack.import.importer');
+                $errors = $localizationPackImporter->import($localizationImportConfig);
+            }
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('The translations have been successfully added.', 'Admin.International.Notification')
+                );
+
+                return $this->redirectToRoute('admin_international_translations_show_settings');
+            }
+
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
+            }
+        }
+
+        return $this->redirectToRoute('admin_international_translations_show_settings');
     }
 }
