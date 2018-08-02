@@ -9,9 +9,10 @@ fi
 # init if empty
 cp -n -R /tmp/data-ps/prestashop/* /var/www/html
 
-if [ -f /var/www/html/config/settings.inc.php ]]]; then
-  rm /var/www/html/config/settings.inc.php
-  echo "\n* Reapplying PrestaShop files for enabled volumes ...";
+if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/parameters.php ]; then
+  echo "\n* Remove PrestaShop configuraiton files...";
+  rm -f /var/www/html/config/settings.inc.php
+  rm -f /var/www/html/app/config/parameters.php
 fi
 
 if [ $PS_DEV_MODE -ne 0 ]; then
@@ -53,12 +54,12 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
   echo "\n* Installing PrestaShop, this may take a while ...";
   if [ $PS_ERASE_DB = 1 ]; then
     echo "\n* Drop & recreate mysql database...";
-    if [ "$DB_PASSWD" = "" ]; then
-      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER drop $DB_NAME --force 2> /dev/null;
-      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER create $DB_NAME --force 2> /dev/null;
+    if [ $DB_PASSWD = "" ]; then
+      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER drop $DB_NAME --force
+      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER create $DB_NAME --force
     else
-      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD drop $DB_NAME --force 2> /dev/null;
-      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD create $DB_NAME --force 2> /dev/null;
+      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD drop $DB_NAME --force
+      mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD create $DB_NAME --force
     fi
   fi
 
@@ -66,6 +67,7 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
     export PS_DOMAIN=$(hostname -i)
   fi
 
+  echo "\n* Install PrestaShop...";
   php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
       --db_password=$DB_PASSWD --prefix="$DB_PREFIX" --firstname="John" --lastname="Doe" \
       --password=$ADMIN_PASSWD --email="$ADMIN_MAIL" --language=$PS_LANGUAGE --country=$PS_COUNTRY \
