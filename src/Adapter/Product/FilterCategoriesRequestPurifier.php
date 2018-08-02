@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class FilterCategoriesRequestPurifier
 {
+    const CATEGORY = 'filter_category';
+
     /**
      * Changes the filter category values in case it is not numeric or signed.
      * @param Request $request
@@ -41,10 +43,9 @@ final class FilterCategoriesRequestPurifier
     public function purify(Request $request)
     {
         if ($request->isMethod('POST')) {
-            foreach ($request->request->all() as $param => $value) {
-                if ($param === 'filter_category' && (!is_numeric($value) || $value < 0)) {
-                    $request->request->set($param, '');
-                }
+            $value = $request->request->get(self::CATEGORY);
+            if (null !== $value && (!is_numeric($value) || $value < 0)) {
+                $request->request->set(self::CATEGORY, '');
             }
         }
         return $request;
