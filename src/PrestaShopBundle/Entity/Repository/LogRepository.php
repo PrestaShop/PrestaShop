@@ -159,7 +159,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @return QueryBuilder
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->buildGridQuery($searchCriteria);
         $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
@@ -180,7 +180,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @return QueryBuilder
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->buildGridQuery($searchCriteria);
         $qb->select('COUNT(*)');
@@ -195,7 +195,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @return QueryBuilder
      */
-    private function buildGridQuery(SearchCriteriaInterface $searchCriteria = null)
+    private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
     {
         $employeeTable = $this->databasePrefix.'employee';
 
