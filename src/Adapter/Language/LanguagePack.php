@@ -55,4 +55,12 @@ class LanguagePack
     ) {
         return Language::downloadAndInstallLanguagePack($iso, $version, $params, $install);
     }
+
+    /**
+     * Load all languages in memory for caching.
+     */
+    public function loadLanguages()
+    {
+        Language::loadLanguages();
+    }
 }
