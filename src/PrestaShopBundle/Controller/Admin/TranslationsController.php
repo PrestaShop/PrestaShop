@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LanguagePackImportConfig;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
@@ -205,23 +206,9 @@ class TranslationsController extends FrameworkBundleAdminController
             $data = $addUpdateLanguageForm->getData();
             $isoCode = $data['iso_localization_pack'];
 
-            $languageValidator = $this->get('prestashop.adapter.language.validator');
-
-            $isNewLanguage = !$languageValidator->isInstalledByIsoCode($isoCode);
-            $errors = [];
-
-            if ($isNewLanguage) {
-                $localizationImportConfig = new LocalizationPackImportConfig(
-                    $isoCode,
-                    $contentToImport = [
-                        LocalizationPackImportConfigInterface::CONTENT_LANGUAGES
-                    ],
-                    $downloadPackData = true
-                );
-
-                $localizationPackImporter = $this->get('prestashop.core.localization.pack.import.importer');
-                $errors = $localizationPackImporter->import($localizationImportConfig);
-            }
+            $languagePackImportConfig = new LanguagePackImportConfig($isoCode);
+            $languagePackImporter = $this->get('prestashop.core.localization.pack.import.language.importer');
+            $errors = $languagePackImporter->import($languagePackImportConfig);
 
             if (empty($errors)) {
                 $this->addFlash(
