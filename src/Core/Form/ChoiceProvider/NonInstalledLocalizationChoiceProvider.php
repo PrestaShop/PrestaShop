@@ -39,6 +39,7 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      * @var array
      */
     private $allLocalizationChoices;
+
     /**
      * @var LanguageValidator
      */
