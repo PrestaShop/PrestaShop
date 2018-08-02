@@ -56,8 +56,8 @@ class AddUpdateLanguageType extends TranslatorAwareType
     {
         $installedLocales = $this->getLocaleChoices();
         $nonInstalledLocales = $this->nonInstalledLocalizationChoiceProvider->getChoices();
-        
-        $builder->add('add_update_language_type', ChoiceType::class, [
+
+        $builder->add('iso_localization_pack', ChoiceType::class, [
             'choices' => [
                 $this->trans('Update a language', 'Admin.International.Feature') => $installedLocales,
                 $this->trans('Add a language', 'Admin.International.Feature') => $nonInstalledLocales

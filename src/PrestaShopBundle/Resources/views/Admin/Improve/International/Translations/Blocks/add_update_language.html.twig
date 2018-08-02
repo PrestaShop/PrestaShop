@@ -25,6 +25,8 @@
 
 {% trans_default_domain 'Admin.International.Feature' %}
 
+{{ form_start(addUpdateLanguageForm, {method: 'post', action: path('admin_international_translations_add_update')}) }}
+
 <div class="card">
   <div class="card-header">
     <div class="material-icons">arrow_drop_down_circle</div> {{ 'Add / Update a language'|trans }}
@@ -42,8 +44,19 @@
         <label class="form-control-label">
           {{ 'Please select the language you want to add or update'|trans }}
         </label>
-        {{ form_widget(addUpdateLanguageForm.add_update_language_type) }}
+        {{ form_widget(addUpdateLanguageForm.iso_localization_pack) }}
       </div>
     </div>
   </div>
+
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary">
+        <i class="material-icons">settings</i>
+        <span>{{ 'Add or update a language'|trans }}</span>
+      </button>
+    </div>
+  </div>
 </div>
+
+{{ form_end(modifyTranslationsForm) }}
