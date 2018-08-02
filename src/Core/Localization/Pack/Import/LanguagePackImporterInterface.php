@@ -36,7 +36,7 @@ interface LanguagePackImporterInterface
      *
      * @param LanguagePackImportConfigInterface $config - all data required for the language pack import
      *
-     * @return mixed //todo: decide about the return type
+     * @return array - returns array with error messages if defined.
      */
     public function import(LanguagePackImportConfigInterface $config);
 }

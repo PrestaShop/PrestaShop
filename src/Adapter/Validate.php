@@ -75,4 +75,16 @@ class Validate
     {
         return ValidateLegacy::isCleanHtml($html, $allowIframe);
     }
+
+    /**
+     * Check for Language Iso Code
+     *
+     * @param string $isoCode
+     *
+     * @return bool
+     */
+    public function isLangIsoCode($isoCode)
+    {
+        return ValidateLegacy::isLangIsoCode($isoCode);
+    }
 }

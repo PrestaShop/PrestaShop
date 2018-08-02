@@ -26,16 +26,42 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
+use PrestaShop\PrestaShop\Adapter\Language\LanguagePack;
+use PrestaShop\PrestaShop\Adapter\Validate;
+
 /**
  * Class LanguagePackImporter is responsible for importing language pack
  */
 class LanguagePackImporter implements LanguagePackImporterInterface
 {
     /**
+     * @var Validate
+     */
+    private $validate;
+    /**
+     * @var LanguagePack
+     */
+    private $languagePack;
+
+    public function __construct(Validate $validate, LanguagePack $languagePack)
+    {
+        $this->validate = $validate;
+        $this->languagePack = $languagePack;
+    }
+
+    /**
      * @inheritDoc
      */
     public function import(LanguagePackImportConfigInterface $config)
     {
-        // TODO: Implement import() method.
+        $isoCode = $config->getIsoCode();
+        $isValidIso = $this->validate->isLangIsoCode($isoCode);
+
+        if (!$isValidIso) {
+            return [];
+        }
+
+        $result = $this->languagePack->downloadAndInstallLanguagePack($isoCode);
     }
+
 }

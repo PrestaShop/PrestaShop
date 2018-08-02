@@ -26,18 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
-use Language;
-
 /**
- * Class LanguageValidator is responsible for supporting validations from legacy Language class part
+ * Class LanguagePack is responsible for the language pack actions
  */
-final class LanguageValidator
+class LanguagePack
 {
     /**
-     * @inheritDoc
+     * Downloads and installs language pack data
+     *
+     * @param string $iso -3166-2 alpha-2 format code
+     * @param string $version - define specific Prestashop version to use
+     * @param null $params - only used if $install is set to true.
+     * Use the values given in parameters to override the data retrieved automatically
+     * @param bool $install - if set to true then it install language relations to database as well.
+     * Otherwise it only executes file/folders modifications
+     *
+     *
+     * @return array|bool - if false is returned then iso code is not valid.
+     * If array is returned then it contains errors. If true then everything went fine
      */
-    public function isInstalledByIsoCode($isoCode)
-    {
-        return (bool) Language::isInstalled($isoCode);
+    public function downloadAndInstallLanguagePack(
+        $iso,
+        $version = _PS_VERSION_,
+        $params = null,
+        $install = true
+    ) {
+        return \Language::downloadAndInstallLanguagePack($iso, $version, $params, $install);
     }
 }
