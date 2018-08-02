@@ -12,6 +12,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.admin.log.repository'
+            - '@prestashop.hook.dispatcher'
+            - 'logs'
 
     prestashop.core.grid.data_provider.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
