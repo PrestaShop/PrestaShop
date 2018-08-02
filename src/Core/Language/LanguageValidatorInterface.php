@@ -24,21 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Language;
-
-use Language;
-use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
+namespace PrestaShop\PrestaShop\Core\Language;
 
 /**
- * Class LanguageValidator is responsible for supporting validations from legacy Language class part
+ * interface LanguageValidatorInterface defines contract for language validator
  */
-final class LanguageValidator implements LanguageValidatorInterface
+interface LanguageValidatorInterface
 {
     /**
-     * @inheritDoc
+     * Checks if language is already installed by iso code
+     *
+     * @param string $isoCode - iso 3166-2 alpha-2 iso code standard string
+     *
+     * @return bool
      */
-    public function isInstalledByIsoCode($isoCode)
-    {
-        return (bool) Language::isInstalled($isoCode);
-    }
+    public function isInstalledByIsoCode($isoCode);
 }
