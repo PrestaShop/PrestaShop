@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #   Use this script to test if a given TCP host/port are available
 
-cmdname=$(basename $0)
+CMD_NAME=$(basename $0)
 
 echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }
 
@@ -9,7 +9,7 @@ usage()
 {
     cat << USAGE >&2
 Usage:
-    $cmdname host:port [-s] [-t timeout] [-- command args]
+    $CMD_NAME host:port [-s] [-t timeout] [-- command args]
     -h HOST | --host=HOST       Host or IP under test
     -p PORT | --port=PORT       TCP port under test
                                 Alternatively, you specify the host and port as host:port
@@ -25,9 +25,9 @@ USAGE
 wait_for()
 {
     if [[ $TIMEOUT -gt 0 ]]; then
-        echoerr "$cmdname: waiting $TIMEOUT seconds for $HOST:$PORT"
+        echoerr "$CMD_NAME: waiting $TIMEOUT seconds for $HOST:$PORT"
     else
-        echoerr "$cmdname: waiting for $HOST:$PORT without a timeout"
+        echoerr "$CMD_NAME: waiting for $HOST:$PORT without a timeout"
     fi
     start_ts=$(date +%s)
     while :
@@ -41,7 +41,7 @@ wait_for()
         fi
         if [[ $result -eq 0 ]]; then
             end_ts=$(date +%s)
-            echoerr "$cmdname: $HOST:$PORT is available after $((end_ts - start_ts)) seconds"
+            echoerr "$CMD_NAME: $HOST:$PORT is available after $((end_ts - start_ts)) seconds"
             break
         fi
         sleep 1
@@ -62,7 +62,7 @@ wait_for_wrapper()
     wait $PID
     RESULT=$?
     if [[ $RESULT -ne 0 ]]; then
-        echoerr "$cmdname: timeout occurred after waiting $TIMEOUT seconds for $HOST:$PORT"
+        echoerr "$CMD_NAME: timeout occurred after waiting $TIMEOUT seconds for $HOST:$PORT"
     fi
     return $RESULT
 }
@@ -168,7 +168,7 @@ fi
 
 if [[ $CLI != "" ]]; then
     if [[ $RESULT -ne 0 && $STRICT -eq 1 ]]; then
-        echoerr "$cmdname: strict mode, refusing to execute subprocess"
+        echoerr "$CMD_NAME: strict mode, refusing to execute subprocess"
         exit $RESULT
     fi
     exec $CLI

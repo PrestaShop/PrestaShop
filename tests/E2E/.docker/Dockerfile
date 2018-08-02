@@ -21,5 +21,7 @@ WORKDIR /var/www/html/tests/E2E
 
 RUN usermod -u 1000 www-data
 
+COPY prepare-prestashop.sh /tmp/prepare-prestashop.sh
+
 COPY /prestashop/wait-for-it.sh /tmp/
 COPY run-tests.sh /tmp/

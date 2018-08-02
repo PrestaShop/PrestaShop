@@ -27,4 +27,6 @@ WORKDIR /var/www/html
 
 RUN usermod -u 1000 www-data
 
-CMD /tmp/wait-for-it.sh --timeout=600 --strict db:3306 -- /tmp/docker_run.sh
+COPY docker_run.sh /tmp/docker_run.sh
+
+CMD /tmp/wait-for-it.sh --timeout=60 --strict db:3306 -- /tmp/docker_run.sh
