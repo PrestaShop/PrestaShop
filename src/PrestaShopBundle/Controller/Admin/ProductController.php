@@ -37,6 +37,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductOptions;
 use PrestaShopBundle\Form\Admin\Product\ProductPrice;
 use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
+use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -59,7 +60,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
 use Tools;
-use PrestaShopBundle\Form\Admin\Product\ProductCombination;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -624,7 +624,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function bulkAction(Request $request, $action)
     {
-        if ($this->shouldDenyAction($action, self::PRODUCT_OBJECT, '_all')) {
+        if (!$this->actionIsAllowed($action, self::PRODUCT_OBJECT, '_all')) {
             $this->addFlash('permission_error', $this->getForbiddenActionMessage($action));
 
             return $this->redirectToRoute('admin_product_catalog');
@@ -835,7 +835,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function unitAction($action, $id)
     {
-        if ($this->shouldDenyAction($action, self::PRODUCT_OBJECT)) {
+        if (!$this->actionIsAllowed($action, self::PRODUCT_OBJECT)) {
             $this->addFlash('permission_error', $this->getForbiddenActionMessage($action));
 
             return $this->redirectToRoute('admin_product_catalog');
@@ -977,6 +977,8 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function renderFieldAction($productId, $step, $fieldName)
     {
+        @trigger_error('This function is deprecated, use CommonController:renderFieldAction instead.', E_USER_DEPRECATED);
+
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($productId);
         $modelMapper = new ProductAdminModelAdapter(
