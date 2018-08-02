@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
+use Language;
+
 /**
  * Class LanguagePack is responsible for the language pack actions
  */
@@ -51,6 +53,14 @@ class LanguagePack
         $params = null,
         $install = true
     ) {
-        return \Language::downloadAndInstallLanguagePack($iso, $version, $params, $install);
+        return Language::downloadAndInstallLanguagePack($iso, $version, $params, $install);
+    }
+
+    /**
+     * Load all languages in memory for caching.
+     */
+    public function loadLanguages()
+    {
+        Language::loadLanguages();
     }
 }
