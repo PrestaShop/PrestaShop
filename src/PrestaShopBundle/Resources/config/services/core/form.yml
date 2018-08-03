@@ -34,7 +34,7 @@ services:
     prestashop.core.form.choice_provider.non_installed_localization:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\NonInstalledLocalizationChoiceProvider'
         arguments:
-            - '@=service("prestashop.core.form.choice_provider.localization_pack_by_iso_code").getChoices()'
+            - '@prestashop.core.language.pack.loader.remote'
             - '@prestashop.adapter.language.validator'
 
     prestashop.core.form.choice_provider.country_by_iso_code:

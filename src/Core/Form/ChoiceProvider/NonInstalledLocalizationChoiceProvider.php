@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Language\LanguageValidator;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
 
 /**
  * Class NonInstalledLocalizationChoiceProvider is responsible for getting one part of choices to use
@@ -44,30 +45,37 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      * @var LanguageValidator
      */
     private $languageValidator;
+    /**
+     * @var LanguagePackLoaderInterface
+     */
+    private $languagePackLoader;
 
-    public function __construct(array $allLocalizationChoices, LanguageValidator $languageValidator)
+    public function __construct(LanguagePackLoaderInterface $languagePackLoader, LanguageValidator $languageValidator)
     {
         $this->allLocalizationChoices = $allLocalizationChoices;
         $this->languageValidator = $languageValidator;
+        $this->languagePackLoader = $languagePackLoader;
     }
 
     public function getChoices()
     {
-        $isEmpty = empty($this->allLocalizationChoices);
-
-        if ($isEmpty) {
-            return [];
-        }
-
-        $choices = [];
-        foreach ($this->allLocalizationChoices as $key => $isoCode) {
-            $isNotInstalled = !$this->languageValidator->isInstalledByIsoCode($isoCode);
-
-            if ($isNotInstalled) {
-                $choices[$key] = $isoCode;
-            }
-        }
-
-        return $choices;
+        $languages = $this->languagePackLoader->getLanguagePackList();
+//        $isEmpty = empty($this->allLocalizationChoices);
+//
+//        if ($isEmpty) {
+//            return [];
+//        }
+//
+//        $choices = [];
+//        foreach ($this->allLocalizationChoices as $key => $isoCode) {
+//            $isNotInstalled = !$this->languageValidator->isInstalledByIsoCode($isoCode);
+//
+//            if ($isNotInstalled) {
+//                $choices[$key] = $isoCode;
+//            }
+//        }
+//
+//        return $choices;
+        return [];
     }
 }
