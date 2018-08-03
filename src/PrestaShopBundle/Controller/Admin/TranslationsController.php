@@ -195,7 +195,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Add language pack for new languages and updates for the existing ones action
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller')~'_')", message="You do not have permission to add this."))
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this."))
      *
      * @param Request $request
      *
