@@ -497,6 +497,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportLanguageType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.theme_by_name'
         tags:
             - { name: form.type }
 
