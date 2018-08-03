@@ -45,7 +45,7 @@
           {{ 'Please select the language you want to add or update'|trans }}
         </label>
         {{ form_errors(addUpdateLanguageForm.iso_localization_pack) }}
-        {{ form_widget(addUpdateLanguageForm.iso_localization_pack) }}
+        {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
       </div>
     </div>
   </div>
