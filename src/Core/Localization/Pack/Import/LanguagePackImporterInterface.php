@@ -34,9 +34,9 @@ interface LanguagePackImporterInterface
     /**
      * Imports language pack
      *
-     * @param LanguagePackImportConfigInterface $config - all data required for the language pack import
+     * @param string $isoCode
      *
-     * @return array - returns array with error messages if defined.
+     * @return array - returns array with error messages or an empty array on success case.
      */
-    public function import(LanguagePackImportConfigInterface $config);
+    public function import($isoCode);
 }
