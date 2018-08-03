@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -62,6 +63,13 @@ class AddUpdateLanguageType extends TranslatorAwareType
                 $this->trans('Update a language', 'Admin.International.Feature') => $installedLocales,
                 $this->trans('Add a language', 'Admin.International.Feature') => $nonInstalledLocales
             ]
+        ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'Admin.International.Feature'
         ]);
     }
 }
