@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportCo
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -201,8 +202,6 @@ class TranslationsController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \Exception
      */
     public function addUpdateLanguageAction(Request $request)
     {
