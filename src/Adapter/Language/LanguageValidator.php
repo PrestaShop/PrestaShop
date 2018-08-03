@@ -34,10 +34,14 @@ use Language;
 final class LanguageValidator
 {
     /**
-     * @inheritDoc
+     * Checks if language is installed by comparing locale
+     *
+     * @param string $locale
+     *
+     * @return bool
      */
-    public function isInstalledByIsoCode($isoCode)
+    public function isInstalledByLocale($locale)
     {
-        return (bool) Language::isInstalled($isoCode);
+        return Language::isInstalledByLocale($locale);
     }
 }
