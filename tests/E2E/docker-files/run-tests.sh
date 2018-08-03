@@ -32,4 +32,4 @@ if [ $? -ne 0 ]; then
     exit 1;
 fi
 
-su -c "cd /var/www/html/tests/E2E ; npm run full-test -- --HEADLESS --MODULE=ps_legalcompliance" - myuser
+su -c "cd /var/www/html/tests/E2E ; npm run $TEST_CAMPAIGN -- --HEADLESS --MODULE=ps_legalcompliance" - myuser

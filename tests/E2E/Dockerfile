@@ -8,18 +8,21 @@ ENV PS_FOLDER_ADMIN admin-dev
 ENV PS_FOLDER_INSTALL install-dev
 ENV DB_SERVER localhost
 ENV TRAVIS_BUILD_DIR /var/www/html
+ENV DB_USER macfly
+ENV TEST_CAMPAIGN full-test
 
 # MySQL installation
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo mysql-server-5.6 mysql-server/root_password password $DB_PASSWD | debconf-set-selections
 RUN echo mysql-server-5.6 mysql-server/root_password_again password $DB_PASSWD | debconf-set-selections
-RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=mariadb-10.1 \
-	&& apt install -y mariadb-server
+RUN apt update \
+	&& apt install -y mysql-server
 # MySQL configuration
-RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
 
 RUN service mysql start \
-	&& mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD create $DB_NAME --force
+        && mysql -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWD'; GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;" mysql \
+        && mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD create $DB_NAME --force
 
 RUN sed -i -e"s/^exec\s*apache2-foreground/#exec apache2-foreground/" /tmp/docker_run.sh
 RUN service mysql start && /tmp/docker_run_git.sh
@@ -28,16 +31,17 @@ RUN sed -i -e"s/^#exec\s*apache2-foreground/exec apache2-foreground/" /tmp/docke
 # .. PrestaShop Installed
 
 # Install npm & node js & Java JRE
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-	&& apt install -y software-properties-common python-software-properties \
+RUN apt install -y software-properties-common gnupg \
+	&& curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 	# nodejs
  	&& apt install -y nodejs \
-  && npm i npm@latest -g \
+	&& npm i npm@latest -g \
 	# java
 	&& add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" \
+	&& apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 \
 	&& apt update \
 	&& echo "oracle-java7-installer  shared/accepted-oracle-license-v1-1 boolean true" > /tmp/oracle-license-debconf \
-  && /usr/bin/debconf-set-selections /tmp/oracle-license-debconf \
+	&& /usr/bin/debconf-set-selections /tmp/oracle-license-debconf \
 	&& rm /tmp/oracle-license-debconf \
 	&& apt install -y oracle-java8-installer \
 		oracle-java8-set-default \
