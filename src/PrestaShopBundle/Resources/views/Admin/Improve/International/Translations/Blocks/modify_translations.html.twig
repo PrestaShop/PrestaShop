@@ -68,7 +68,7 @@
                         {{ 'Select your module'|trans }}
                     </label>
                     {{ form_errors(modifyTranslationsForm.module) }}
-                    {{ form_widget(modifyTranslationsForm.module) }}
+                    {{ form_widget(modifyTranslationsForm.module, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
                 </div>
                 <div class="form-group">
                     <label class="form-control-label">
