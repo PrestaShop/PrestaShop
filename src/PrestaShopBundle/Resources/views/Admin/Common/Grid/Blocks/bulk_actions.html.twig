@@ -23,10 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.actions.bulk|length > 0 %}
+{% if grid.actions.bulk|length > 0 and grid.data.rows_total > 0 %}
     <div class="btn-group">
-      <button id="product_bulk_menu"
-              class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
+      <button class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
               data-toggle="dropdown"
               disabled
       >
@@ -36,15 +35,7 @@
 
       <div class="dropdown-menu">
         {% for action in grid.actions.bulk %}
-          <button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, action.id) }}"
-                  class="dropdown-item"
-                  type="button"
-          >
-            {% if action.icon is not empty %}
-              <i class="material-icons">{{ action.icon }}</i>
-            {% endif %}
-            {{ action.name }}
-          </button>
+          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Bulk/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
         {% endfor %}
       </div>
     </div>

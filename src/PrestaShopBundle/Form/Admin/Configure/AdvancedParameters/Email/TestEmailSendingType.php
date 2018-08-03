@@ -24,38 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Interface RowActionInterface defines contract for grid's row action
+ * Class TestEmailSendingType is responsible for building form type used to send testing emails
  */
-interface RowActionInterface
+class TestEmailSendingType extends AbstractType
 {
     /**
-     * Get unique row identifier for grid row's action
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getIdentifier();
-
-    /**
-     * Get translated row action name
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * Get row action callback
-     *
-     * @return callable
-     */
-    public function getCallback();
-
-    /**
-     * Get row action icon
-     *
-     * @return string
-     */
-    public function getIcon();
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('send_email_to', EmailType::class)
+            ->add('mail_method', HiddenType::class)
+            ->add('smtp_server', HiddenType::class)
+            ->add('smtp_username', HiddenType::class)
+            ->add('smtp_password', HiddenType::class)
+            ->add('smtp_port', HiddenType::class)
+            ->add('smtp_encryption', HiddenType::class)
+        ;
+    }
 }

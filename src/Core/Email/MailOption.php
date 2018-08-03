@@ -24,76 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Email;
 
 /**
- * Class PanelAction is responsible for holding single grid action data
+ * Class MailMethodOption defines available email sending method options
  */
-final class GridAction implements GridActionInterface
+final class MailOption
 {
     /**
-     * @var string
+     * @var int Option defines that emails should be sent using native mail() function
      */
-    private $id;
+    const METHOD_NATIVE = 1;
 
     /**
-     * @var string
+     *  @var int Option defines that emails should be sent using configured SMTP settings
      */
-    private $name;
+    const METHOD_SMTP = 2;
 
     /**
-     * @var string
+     * @var int Option defines that emails should not be sent
      */
-    private $type;
+    const METHOD_NONE = 3;
 
     /**
-     * @var string
+     * @var int Option defines that emails should be sent in HTML format only
      */
-    private $icon;
+    const TYPE_HTML = 1;
 
     /**
-     * @param string $id   Unique action identifier
-     * @param string $name Translated action name
-     * @param string $icon Action icon
-     * @param string $type Type of grid action
+     * @var int Option defines that emails should be sent in TXT format only
      */
-    public function __construct($id, $name, $icon, $type)
+    const TYPE_TXT = 2;
+
+    /**
+     * @var int Option defines that emails should be sent in both HTML and TXT formats
+     */
+    const TYPE_BOTH = 3;
+
+    /**
+     * Class should not be initialized as its responsibility is to hold mail method options
+     */
+    private function __construct()
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->icon = $icon;
-        $this->type = $type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

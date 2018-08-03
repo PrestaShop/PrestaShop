@@ -114,3 +114,9 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.payment_module_preferences.configuration'
+
+    prestashop.admin.email_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.email.email_configurator'
+            - '@prestashop.core.email.smtp_configurator'

@@ -24,61 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Support;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid
+ * Interface ContactRepositoryInterface defines contract for shop contact repository
  */
-final class BulkAction implements BulkActionInterface
+interface ContactRepositoryInterface
 {
     /**
-     * @var string
+     * Get shop contacts
+     *
+     * @param int $langId Language ID in which contacts should be returned
+     *
+     * @return array
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $icon;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @param string $id   Action identifier should be unique between all grid row actions
-     * @param string $name Translated action name
-     * @param string $icon Action icon name
-     */
-    public function __construct($id, $name, $icon)
-    {
-        $this->name = $name;
-        $this->id = $id;
-        $this->icon = $icon;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    public function findAllByLangId($langId);
 }

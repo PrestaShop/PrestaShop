@@ -24,20 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+use Doctrine\DBAL\Connection;
 
 /**
- * Class RowActionCollection defines contract for grid row action collection
+ * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders
  */
-final class RowActionCollection extends AbstractCollection implements RowActionCollectionInterface
+abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var Connection
      */
-    public function add(RowActionInterface $action)
+    protected $connection;
+
+    /**
+     * @var string
+     */
+    protected $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param $dbPrefix
+     */
+    public function __construct(Connection $connection, $dbPrefix)
     {
-        $this->items[$action->getIdentifier()] = $action;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 }

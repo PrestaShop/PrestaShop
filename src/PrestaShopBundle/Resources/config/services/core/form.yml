@@ -60,3 +60,14 @@ services:
         arguments:
             - '@prestashop.core.file.cached_finder.invoice_model'
 
+    prestashop.core.form.choice_provider.mail_method:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
+
+    prestashop.core.form.choice_provider.contact_by_id:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider'
+        arguments:
+            - '@prestashop.adapter.contact.repository'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

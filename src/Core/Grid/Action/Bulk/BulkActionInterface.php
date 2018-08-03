@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,8 +22,58 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{if isset($content)}
-	{$content}
-{/if}
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
+
+/**
+ * Interface BulkActionInterface defines contract for single grid bulk action
+ */
+interface BulkActionInterface
+{
+    /**
+     * Get unique bulk action identifier for grid
+     *
+     * @return string
+     */
+    public function getId();
+
+    /**
+     * Get translated bulk action name
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Get action type
+     *
+     * @return string
+     */
+    public function getType();
+
+    /**
+     * Get action options
+     *
+     * @return array
+     */
+    public function getOptions();
+
+    /**
+     * Set options for bulk action
+     *
+     * @param array $options
+     *
+     * @return self
+     */
+    public function setOptions(array $options);
+
+    /**
+     * Set bulk action name
+     *
+     * @param string $name
+     *
+     * @return self
+     */
+    public function setName($name);
+}

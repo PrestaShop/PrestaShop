@@ -89,6 +89,25 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $columns = [];
+
+        foreach ($this->items as $item) {
+            $columns[] = [
+                'id' => $item->getId(),
+                'name' => $item->getName(),
+                'type' => $item->getType(),
+                'options' => $item->getOptions(),
+            ];
+        }
+
+        return $columns;
+    }
+
+    /**
      * Insert new column into collection at given position
      *
      * @param string          $id        Existing column id
