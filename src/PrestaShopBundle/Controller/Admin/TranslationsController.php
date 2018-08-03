@@ -32,8 +32,10 @@ use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportCo
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -195,9 +197,11 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * todo: check available security
-     * todo: add iso code validation if it exists in the given choices
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller')~'_')", message="You do not have permission to add this."))
+     *
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function addUpdateLanguageAction(Request $request)
     {
