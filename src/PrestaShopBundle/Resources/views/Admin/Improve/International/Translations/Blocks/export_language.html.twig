@@ -25,6 +25,8 @@
 
 {% trans_default_domain 'Admin.International.Feature' %}
 
+{{ form_start(exportLanguageForm, {action: path('admin_international_translations_add_update')}) }}
+
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">cloud_upload</i> {{ 'Export a language'|trans }}
@@ -43,12 +45,20 @@
         <label class="form-control-label">
           {{ 'Language'|trans({}, 'Admin.Global') }}
         </label>
+        {{ form_errors(exportLanguageForm.language) }}
+        {{ form_widget(exportLanguageForm.language) }}
       </div>
+
       <div class="form-group">
         <label class="form-control-label">
           {{ 'Select your theme'|trans }}
         </label>
+        {{ form_errors(exportLanguageForm.theme) }}
+        {{ form_widget(exportLanguageForm.theme) }}
       </div>
     </div>
   </div>
 </div>
+
+{{ form_rest(exportLanguageForm) }}
+{{ form_end(exportLanguageForm) }}

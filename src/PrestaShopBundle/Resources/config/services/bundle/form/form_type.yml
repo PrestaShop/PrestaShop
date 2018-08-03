@@ -503,6 +503,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.translations.export_language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportLanguageType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.translations.copy_language:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
         parent: 'form.type.translatable.aware'
