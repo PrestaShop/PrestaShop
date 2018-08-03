@@ -959,9 +959,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $groups = Tools::getValue('group');
 
             if (!empty($groups)) {
-                $requestedIdProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
+                $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
                     $this->product->id,
-                    $groups
+                    $groups,
+                    true
                 );
             }
         }
