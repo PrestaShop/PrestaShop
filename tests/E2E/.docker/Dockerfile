@@ -1,13 +1,18 @@
 FROM prestashop/base:7.2-apache
 
+WORKDIR /tmp
+
+ENV DEBIAN_FRONTEND noninteractive
+
 # Install dependencies
 RUN apt-get update
+RUN apt-get install -y apt-utils
 RUN apt install -y \
-     gnupg2 \
-     curl \
-     git \
-     software-properties-common \
-     nodejs
+    gnupg2 \
+    curl \
+    git \
+    software-properties-common \
+    nodejs
 
 RUN rm -rf /var/lib/apt/lists/*
 
