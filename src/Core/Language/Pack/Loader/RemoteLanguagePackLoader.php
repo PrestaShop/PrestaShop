@@ -26,16 +26,41 @@
 
 namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
 
+use PrestaShop\PrestaShop\Core\Foundation\Version;
+
 /**
  * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host
  */
 class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
 {
     /**
+     * @var string - the link from which available languages are retrieved
+     */
+    private $packLink = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+
+    /**
+     * @var Version
+     */
+    private $version;
+
+    public function __construct(Version $version)
+    {
+        $this->version = $version;
+    }
+
+    /**
      * @inheritDoc
      */
-    public function loadJson($file)
+    public function getLanguagePackList()
     {
-        // TODO: Implement loadJson() method.
+        $normalizedLink = str_replace('%ps_version%', $this->version->getVersion(), $this->packLink);
+        $jsonResponse = file_get_contents($normalizedLink);
+
+        $result = null;
+        if ($jsonResponse) {
+            $result = json_decode($jsonResponse, true);
+        }
+
+        return $result;
     }
 }

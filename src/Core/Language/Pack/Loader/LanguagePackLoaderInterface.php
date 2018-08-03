@@ -27,16 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
 
 /**
- * Interface LanguagePackLoaderInterface Todo: insert comment
+ * Interface LanguagePackLoaderInterface defines contract for language pack loader
  */
 interface LanguagePackLoaderInterface
 {
     /**
-     * Loads json data from file
+     * Gets language pack data
      *
-     * @param string $file - file which is being scanned
-     *
-     * @return string - json result
+     * @return array|null - array key is the language locale and the value is language name
      */
-    public function loadJson($file);
+    public function getLanguagePackList();
 }
