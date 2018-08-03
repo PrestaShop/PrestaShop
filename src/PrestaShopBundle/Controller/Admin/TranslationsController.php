@@ -26,13 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LanguagePackImportConfig;
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -220,15 +216,6 @@ class TranslationsController extends FrameworkBundleAdminController
             $errors = $languagePackImporter->import($isoCode);
 
             if (empty($errors)) {
-                $languagePack = $this->get('prestashop.adapter.language.language_pack');
-                $languageProvider = $this->get('prestashop.adapter.data_provider.language');
-                $tools = $this->get('prestashop.adapter.tools');
-
-                $languagePack->loadLanguages();
-                $tools->clearAllCache();
-
-                $languageCode = $languageProvider->getLanguageCodeByIso($isoCode); //todo: finish using CLDR to update locale data
-
                 $this->addFlash(
                     'success',
                     $this->trans('The translations have been successfully added.', 'Admin.International.Notification')
