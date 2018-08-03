@@ -611,8 +611,9 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') +
-            (specific_price.can_edit ? '<a href="#js-specific-price-list-edit" data-specific-price-id="'+specific_price.id_specific_price+'" class="specific-price-edit btn tooltip-link edit pl-0 pr-0"><i class="material-icons">edit</i></a>' : '') + '</td>' +
+            '<td>' + specific_price.from_quantity + '</td>' +
+            '<td>' + (specific_price.can_edit ? '<a href="#js-specific-price-list-edit" data-specific-price-id="'+specific_price.id_specific_price+'" class="specific-price-edit btn tooltip-link edit pl-0 pr-0"><i class="material-icons">edit</i></a>' : '') +
+            (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);
