@@ -60,6 +60,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
 
     /**
      * OrderSubtotalLazyArray constructor.
+     * @param Order $order
      */
     public function __construct(Order $order)
     {

@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Preferences;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * This class will provide Shop Preferences configuration.
+ */
 class PreferencesConfiguration implements DataConfigurationInterface
 {
     /**

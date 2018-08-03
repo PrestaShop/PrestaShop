@@ -38,11 +38,6 @@ use Symfony\Component\HttpFoundation\Request;
 class SystemInformationController extends FrameworkBundleAdminController
 {
     /**
-     * @var string The controller name for routing.
-     */
-    const CONTROLLER_NAME = 'AdminInformation';
-
-    /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/system_information.html.twig")
      *
@@ -51,6 +46,7 @@ class SystemInformationController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $legacyController = $request->get('_legacy_controller');
         $requirementsSummary = $this->getRequirementsChecker()->getSummary();
         $systemInformationSummary = $this->getSystemInformation()->getSummary();
 
@@ -61,9 +57,8 @@ class SystemInformationController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminInformation'),
+            'help_link' => $this->generateSidebarLink($legacyController),
             'requireFilterStatus' => false,
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => 'ok',
             'system' => $systemInformationSummary,
             'requirements' => $requirementsSummary,

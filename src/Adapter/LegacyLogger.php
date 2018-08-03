@@ -29,6 +29,9 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use PrestaShopLogger;
 
+/**
+ * Class that bridge the legacy implementation of Logger with Psr Logger interface.
+ */
 class LegacyLogger implements LoggerInterface
 {
     public function emergency($message, array $context = array())

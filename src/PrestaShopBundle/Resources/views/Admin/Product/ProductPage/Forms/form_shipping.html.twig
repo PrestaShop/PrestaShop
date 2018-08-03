@@ -86,7 +86,7 @@
         data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
     </h2>
     <div class="row">
-       <div class="col-md-12" {{ block('widget_container_attributes') }}>
+       <div class="col-md-12" {% if block('widget_container_attributes') is defined %} {{ block('widget_container_attributes') }} {% endif %}>
           {% for child in form.additional_delivery_times %}
             {% if child.vars.value == 1 %}
               <div class="widget-radio-inline">
