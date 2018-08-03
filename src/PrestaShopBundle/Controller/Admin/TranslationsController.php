@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -161,9 +162,12 @@ class TranslationsController extends FrameworkBundleAdminController
     public function showSettingsAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
+
         $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
         $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
+        $copyLanguageForm = $this->createForm(CopyLanguageType::class);
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
@@ -172,6 +176,8 @@ class TranslationsController extends FrameworkBundleAdminController
             'kpiRow' => $kpiRowFactory->build(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
             'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
+            'copyLanguageForm' => $copyLanguageForm->createView(),
+            'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
         ];
     }
 
@@ -181,6 +187,8 @@ class TranslationsController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function modifyTranslationsAction(Request $request)
     {
