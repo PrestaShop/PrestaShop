@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
+use Exception;
 use Language;
 
 /**
@@ -57,5 +58,19 @@ class LanguageDataProvider
     public function getLanguageCodeByIso($isoCode)
     {
         return Language::getLanguageCodeByIso($isoCode);
+    }
+
+    /**
+     * Gets language details from json file
+     *
+     * @param string $locale
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
+    public function getJsonLanguageDetails($locale)
+    {
+        return Language::getJsonLanguageDetails($locale);
     }
 }
