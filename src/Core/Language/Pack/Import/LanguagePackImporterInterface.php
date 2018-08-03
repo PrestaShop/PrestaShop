@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
+namespace PrestaShop\PrestaShop\Core\Language\Pack\Import;
 
 /**
  * Interface LanguagePackImporterInterface contract for language importer
