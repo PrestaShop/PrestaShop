@@ -26,13 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LanguagePackImportConfig;
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfig;
-use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -194,11 +190,15 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
+     * Add language pack for new languages and updates for the existing ones action
+     *
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller')~'_')", message="You do not have permission to add this."))
      *
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws \Exception
      */
     public function addUpdateLanguageAction(Request $request)
     {
@@ -210,20 +210,10 @@ class TranslationsController extends FrameworkBundleAdminController
             $data = $addUpdateLanguageForm->getData();
             $isoCode = $data['iso_localization_pack'];
 
-            $languagePackImportConfig = new LanguagePackImportConfig($isoCode);
             $languagePackImporter = $this->get('prestashop.core.localization.pack.import.language.importer');
-            $errors = $languagePackImporter->import($languagePackImportConfig);
+            $errors = $languagePackImporter->import($isoCode);
 
             if (empty($errors)) {
-                $languagePack = $this->get('prestashop.adapter.language.language_pack');
-                $languageProvider = $this->get('prestashop.adapter.data_provider.language');
-                $tools = $this->get('prestashop.adapter.tools');
-
-                $languagePack->loadLanguages();
-                $tools->clearAllCache();
-
-                $languageCode = $languageProvider->getLanguageCodeByIso($isoCode); //todo: finish using CLDR to update locale data
-
                 $this->addFlash(
                     'success',
                     $this->trans('The translations have been successfully added.', 'Admin.International.Notification')

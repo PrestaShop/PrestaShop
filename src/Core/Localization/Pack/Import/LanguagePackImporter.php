@@ -26,43 +26,95 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
+use Exception;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguagePack;
-use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 
 /**
  * Class LanguagePackImporter is responsible for importing language pack
  */
-class LanguagePackImporter implements LanguagePackImporterInterface
+final class LanguagePackImporter implements LanguagePackImporterInterface
 {
-    /**
-     * @var Validate
-     */
-    private $validate;
     /**
      * @var LanguagePack
      */
     private $languagePack;
+    /**
+     * @var LanguageDataProvider
+     */
+    private $languageProvider;
+    /**
+     * @var CacheClearer
+     */
+    private $cacheClearer;
 
-    public function __construct(Validate $validate, LanguagePack $languagePack)
-    {
-        $this->validate = $validate;
+    public function __construct(
+        LanguagePack $languagePack,
+        LanguageDataProvider $languageProvider,
+        CacheClearer $cacheClearer
+    ) {
         $this->languagePack = $languagePack;
+        $this->languageProvider = $languageProvider;
+        $this->cacheClearer = $cacheClearer;
     }
 
     /**
      * @inheritDoc
+     *
+     * @throws Exception
      */
-    public function import(LanguagePackImportConfigInterface $config)
+    public function import($isoCode)
     {
-        $isoCode = $config->getIsoCode();
-        $isValidIso = $this->validate->isLangIsoCode($isoCode);
+        $result = $this->languagePack->downloadAndInstallLanguagePack($isoCode);
 
-        if (!$isValidIso) {
-            return [];
+        $errors = [];
+        // returns the errors
+        if (is_array($result) && !empty($result)) {
+            $errors = $result;
         }
 
-        $result = $this->languagePack->downloadAndInstallLanguagePack($isoCode);
-        return is_array($result) && !empty($result) ? $result : [];
+        if (empty($errors)) {
+            $this->updateCldr($isoCode);
+        }
+
+        return $errors;
     }
 
+    /**
+     * Fetches CLDR data for currently updated or added language
+     *
+     * @param $isoCode
+     *
+     * @throws Exception
+     */
+    private function updateCldr($isoCode)
+    {
+        $this->cacheClearer->clearAllCaches();
+
+        $languageCode = $this->languageProvider->getLanguageCodeByIso($isoCode);
+        $languageCode = $this->getFormattedLanguageCode($languageCode);
+
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate->fetchLocale($languageCode);
+    }
+
+    /**
+     * Gets formatted two letters language code with the second letter transformed in uppercase
+     *
+     * @param string $languageCode - language code to format
+     *
+     * @return string
+     */
+    private function getFormattedLanguageCode($languageCode)
+    {
+        $explodedLangCode = explode('-', $languageCode);
+
+        return sprintf(
+            '%s-%s',
+            isset($explodedLangCode[0]) ? $explodedLangCode[0] : '',
+            isset($explodedLangCode[1]) ? strtoupper($explodedLangCode[1]) : ''
+        );
+    }
 }
