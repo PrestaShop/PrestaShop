@@ -492,3 +492,12 @@ services:
             - '@prestashop.core.form.choice_provider.email_content_type'
         tags:
             - { name: form.type }
+
+    form.type.translations.copy_language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.theme_by_name'
+        tags:
+            - { name: form.type }
