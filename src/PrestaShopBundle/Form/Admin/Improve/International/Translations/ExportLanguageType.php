@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,19 +38,28 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ExportLanguageType extends TranslatorAwareType
 {
-    public function __construct(TranslatorInterface $translator, array $locales)
-    {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $themeChoiceProvider;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $themeChoiceProvider
+    ) {
         parent::__construct($translator, $locales);
+        $this->themeChoiceProvider = $themeChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('language', ChoiceType::class, [
-            'choices' => [],
-        ]);
-
-        $builder->add('theme', ChoiceType::class, [
-            'choices' => []
-        ]);
+        $builder
+            ->add('language', ChoiceType::class, [
+            'choices' => $this->getLocaleChoices(),
+            ])
+            ->add('theme', ChoiceType::class, [
+                'choices' => $this->themeChoiceProvider->getChoices()
+            ]);
     }
 }
