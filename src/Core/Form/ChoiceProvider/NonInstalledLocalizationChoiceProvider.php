@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageValidator;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
@@ -37,11 +38,6 @@ use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
 class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var array
-     */
-    private $allLocalizationChoices;
-
-    /**
      * @var LanguageValidator
      */
     private $languageValidator;
@@ -49,33 +45,39 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      * @var LanguagePackLoaderInterface
      */
     private $languagePackLoader;
+    /**
+     * @var LanguageDataProvider
+     */
+    private $languageProvider;
 
-    public function __construct(LanguagePackLoaderInterface $languagePackLoader, LanguageValidator $languageValidator)
-    {
-        $this->allLocalizationChoices = $allLocalizationChoices;
+    public function __construct(
+        LanguagePackLoaderInterface $languagePackLoader,
+        LanguageValidator $languageValidator,
+        LanguageDataProvider $languageProvider
+    ) {
         $this->languageValidator = $languageValidator;
         $this->languagePackLoader = $languagePackLoader;
+        $this->languageProvider = $languageProvider;
     }
 
     public function getChoices()
     {
         $languages = $this->languagePackLoader->getLanguagePackList();
-//        $isEmpty = empty($this->allLocalizationChoices);
-//
-//        if ($isEmpty) {
-//            return [];
-//        }
-//
-//        $choices = [];
-//        foreach ($this->allLocalizationChoices as $key => $isoCode) {
-//            $isNotInstalled = !$this->languageValidator->isInstalledByIsoCode($isoCode);
-//
-//            if ($isNotInstalled) {
-//                $choices[$key] = $isoCode;
-//            }
-//        }
-//
-//        return $choices;
-        return [];
+        $choices = [];
+        if (null !== $languages) {
+            foreach ($languages as $locale => $name) {
+                if ($this->languageValidator->isInstalledByLocale($locale)) {
+                    continue;
+                }
+
+                $languageDetails = $this->languageProvider->getJsonLanguageDetails($locale);
+
+                if (isset($languageDetails['iso_code'], $languageDetails['name'])) {
+                    $choices[$languageDetails['name']] = $languageDetails['iso_code'];
+                }
+            }
+        }
+
+        return $choices;
     }
 }
