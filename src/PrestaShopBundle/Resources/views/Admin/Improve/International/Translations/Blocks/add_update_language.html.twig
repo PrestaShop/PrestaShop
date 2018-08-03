@@ -34,19 +34,28 @@
 
   <div class="card-block">
     <div class="card-text">
-      <div class="alert alert-info" role="alert">
-        <div class="alert-text">
-          {{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}
-        </div>
-      </div>
+      {% if isAddUpdateLanguageDisabled %}
+          <div class="alert alert-danger" role="alert">
+            <div class="alert-text">
+              {{ 'Cannot connect to the PrestaShop website to get the language list.'|trans({}, 'Admin.International.Notification') }}
+            </div>
+          </div>
+        {% else %}
+          <div class="alert alert-info" role="alert">
+            <div class="alert-text">
+              {{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label class="form-control-label">
-          {{ 'Please select the language you want to add or update'|trans }}
-        </label>
-        {{ form_errors(addUpdateLanguageForm.iso_localization_pack) }}
-        {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
-      </div>
+          <div class="form-group">
+            <label class="form-control-label">
+              {{ 'Please select the language you want to add or update'|trans }}
+            </label>
+            {{ form_errors(addUpdateLanguageForm.iso_localization_pack) }}
+            {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
+          </div>
+      {% endif %}
+
     </div>
   </div>
 
