@@ -68,7 +68,12 @@ export default function() {
         $jsCombinationsBulkForm.addClass('inactive');
       }
 
-      $.get(getCombinationsUrl()).then(function (resp) {
+      const $combinationsUrl = getCombinationsUrl();
+      if ($combinationsUrl === false) {
+        return;
+      }
+
+      $.get($combinationsUrl).then(function (resp) {
         $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
         currentCount += step;
@@ -87,11 +92,16 @@ export default function() {
      * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
      */
     const getCombinationsUrl = () => {
+      const $numbers = idsProductAttribute.slice(currentCount, currentCount+step).join('-');
+      if ($numbers.length === 0) {
+        return false;
+      }
+
       return $jsCombinationsList
         .data('combinations-url')
         .replace(
           ':numbers',
-          idsProductAttribute.slice(currentCount, currentCount+step).join('-')
+          $numbers
         );
     };
   });
