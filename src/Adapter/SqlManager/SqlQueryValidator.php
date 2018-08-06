@@ -133,7 +133,7 @@ class SqlQueryValidator
             ];
         }
 
-        return $errors[] = [
+        return [
             'key' => 'Undefined "%s" error',
             'parameters' => [
                 'checkedForm',
@@ -332,7 +332,7 @@ class SqlQueryValidator
      */
     private function getLimitKeywordError()
     {
-       return [
+        return [
             'key' => 'The LIMIT clause must contain numeric arguments.',
             'parameters' => [],
             'domain' => 'Admin.Advparameters.Notification',
