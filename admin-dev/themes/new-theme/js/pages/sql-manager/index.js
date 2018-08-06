@@ -23,19 +23,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TableSorting from '../../app/utils/table-sorting';
-import ConfirmationAlert from '../../components/confirmation-alert';
-import Grid from '../../components/grid';
+import Grid from '../../components/grid/grid';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
 class SqlManagerPage {
   constructor() {
-    const $sortableTables = $('table.table');
-
-    new Grid('#request_sql_grid_panel').init();
-    new TableSorting($sortableTables).attach();
-    new ConfirmationAlert().init();
+    const requestSqlGrid = new Grid('request_sql');
+    requestSqlGrid.addExtension(new ReloadListActionExtension());
+    requestSqlGrid.addExtension(new ExportToSqlManagerExtension());
+    requestSqlGrid.addExtension(new FiltersResetExtension());
+    requestSqlGrid.addExtension(new SortingExtension());
+    requestSqlGrid.addExtension(new LinkRowActionExtension());
+    requestSqlGrid.addExtension(new SubmitGridExtension());
+    requestSqlGrid.addExtension(new SubmitBulkExtension());
+    requestSqlGrid.addExtension(new BulkActionCheckboxExtension());
 
     $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns());
     $(document).on('click', '.js-add-db-table-to-query-btn', (event) => this.addDbTableToQuery(event));
