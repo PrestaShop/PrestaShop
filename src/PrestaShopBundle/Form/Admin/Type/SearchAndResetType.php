@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormView;
 /**
  * FormType used in rendering of "Search and Reset" action in Grids.
  */
-class SearchAndResetFormType extends AbstractType
+class SearchAndResetType extends AbstractType
 {
     /**
      * {@inheritdoc}

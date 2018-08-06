@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarC
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
@@ -157,7 +157,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
                         'attr' => [
                             'data-url' => $this->resetActionUrl,
                             'data-redirect' => $this->redirectionUrl,

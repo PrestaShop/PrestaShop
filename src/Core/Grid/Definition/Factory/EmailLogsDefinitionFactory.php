@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
@@ -149,7 +149,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
                         'attr' => [
                             'data-url' => $this->resetActionUrl,
                             'data-redirect' => $this->redirectionUrl,
