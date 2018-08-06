@@ -136,6 +136,9 @@
                     <i class="material-icons">add_circle</i>
                     {{ 'Add a specific price'|trans({}, 'Admin.Catalog.Feature') }}
                   </a>
+                  <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
+                      {{ include('@Product/ProductPage/Forms/form_specific_price.html.twig', {'form': pricingForm.specific_price, 'is_multishop_context': is_multishop_context}) }}
+                  </div>
                   <table id="js-specific-price-list" class="table hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
                     <thead class="thead-default">
                     <tr>
@@ -154,9 +157,6 @@
                     </thead>
                     <tbody></tbody>
                   </table>
-                </div>
-                <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
-                  {{ include('@Product/ProductPage/Forms/form_specific_price.html.twig', {'form': pricingForm.specific_price, 'is_multishop_context': is_multishop_context}) }}
                 </div>
               </div>
             </div>
