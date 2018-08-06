@@ -25,10 +25,18 @@
 
 {% if grid.actions.grid|length > 0 %}
   {% set girdActionsButtonId = grid.id-grid ~ '-actions-button' %}
+
   <div class="dropdown text-right">
-    <button class="btn btn-text dropdown-toggle tool-button" id="{{ girdActionsButtonId }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Settings">
+    <button class="btn btn-text dropdown-toggle tool-button"
+            id="{{ girdActionsButtonId }}"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            title="{{ 'Settings'|trans({}, 'Admin.Global') }}"
+    >
       <span class="sr-only">{{ 'Settings'|trans({}, 'Admin.Global') }}</span>
     </button>
+
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ girdActionsButtonId }}">
       {% for action in grid.actions.grid %}
         {{ include('@PrestaShop/Admin/Common/Grid/Actions/Grid/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}

@@ -50,19 +50,18 @@ final class GridActionCollection extends AbstractCollection implements GridActio
      */
     public function toArray()
     {
-        $panelActions = [];
+        $actionsArray = [];
 
-        foreach ($this->items as $panelAction) {
-            $actionView = [
-                'id' => $panelAction->getId(),
-                'name' => $panelAction->getName(),
-                'icon' => $panelAction->getIcon(),
-                'type' => $panelAction->getType(),
+        foreach ($this->items as $action) {
+            $actionsArray[] = [
+                'id' => $action->getId(),
+                'name' => $action->getName(),
+                'icon' => $action->getIcon(),
+                'type' => $action->getType(),
+                'options' => $action->getOptions(),
             ];
-
-            $panelActions[] = $actionView;
         }
 
-        return $panelActions;
+        return $actionsArray;
     }
 }

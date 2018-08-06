@@ -26,20 +26,24 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-/**
- * Class RowAction holds information related to row action for each row element in grid
- */
-final class RowAction implements RowActionInterface
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+abstract class AbstractGridAction implements GridActionInterface
 {
+    /**
+     * @var string
+     */
+    private $id;
+
     /**
      * @var string
      */
     private $name;
 
     /**
-     * @var callable
+     * @var string
      */
-    private $callback;
+    private $type;
 
     /**
      * @var string
@@ -47,22 +51,24 @@ final class RowAction implements RowActionInterface
     private $icon;
 
     /**
-     * @var string
+     * @var array
      */
-    private $identifier;
+    private $options;
 
     /**
-     * @param string   $identifier Action identifier should be unique between all grid row actions
-     * @param string   $name       Translated action name
-     * @param callable $callback   Action callback
-     * @param string   $icon       Action icon name
+     * @param string $id
      */
-    public function __construct($identifier, $name, callable $callback, $icon)
+    public function __construct($id)
     {
-        $this->name = $name;
-        $this->callback = $callback;
-        $this->icon = $icon;
-        $this->identifier = $identifier;
+        $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -76,9 +82,11 @@ final class RowAction implements RowActionInterface
     /**
      * {@inheritdoc}
      */
-    public function getCallback()
+    public function setName($name)
     {
-        return $this->callback;
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -92,8 +100,54 @@ final class RowAction implements RowActionInterface
     /**
      * {@inheritdoc}
      */
-    public function getIdentifier()
+    public function setIcon($icon)
     {
-        return $this->identifier;
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $this->resolveOptions($options);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        if (null === $this->options) {
+            $this->resolveOptions();
+        }
+
+        return $this->options;
+    }
+
+    /**
+     * Default bulk action options configuration. You can override it if options are needed.
+     *
+     * @param OptionsResolver $resolver
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+    }
+
+    /**
+     * Resolve action options
+     *
+     * @param array $options
+     */
+    private function resolveOptions(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
     }
 }

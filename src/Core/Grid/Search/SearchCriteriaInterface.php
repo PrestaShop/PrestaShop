@@ -32,27 +32,27 @@ namespace PrestaShop\PrestaShop\Core\Grid\Search;
 interface SearchCriteriaInterface
 {
     /**
-     * @return string
+     * @return string|null Return order by or null to disable ordering
      */
     public function getOrderBy();
 
     /**
-     * @return string
+     * @return string|null Return order by or null to disable ordering
      */
     public function getOrderWay();
 
     /**
-     * @return int
+     * @return int|null Return offset or null to disable offset
      */
     public function getOffset();
 
     /**
-     * @return int
+     * @return int|null Return limit or null to disable limiting
      */
     public function getLimit();
 
     /**
-     * @return array
+     * @return array Return filters
      */
     public function getFilters();
 }

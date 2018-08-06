@@ -24,19 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Type;
 
-use Iterator;
+use PrestaShop\PrestaShop\Core\Grid\Action\AbstractGridAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Interface RowActionCollectionInterface defines contract for row actions collection
+ * Class SubmitGridAction represents grid action that can be submitted
  */
-interface RowActionCollectionInterface extends Iterator
+final class SubmitGridAction extends AbstractGridAction
 {
     /**
-     * Add row action to collection
-     *
-     * @param RowActionInterface $action
+     * {@inheritdoc}
      */
-    public function add(RowActionInterface $action);
+    public function getType()
+    {
+        return 'submit';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'submit_route',
+            ])
+            ->setDefaults([
+                'submit_method' => 'POST',
+                'confirm_message'=> null,
+            ])
+            ->setAllowedTypes('submit_route', 'string')
+            ->setAllowedTypes('confirm_message', ['null', 'string'])
+            ->setAllowedValues('submit_method', ['POST', 'GET'])
+        ;
+    }
 }

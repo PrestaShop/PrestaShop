@@ -867,6 +867,7 @@ class Install extends AbstractInstall
                 'dashproducts',
                 'graphnvd3',
                 'gridhtml',
+                'gsitemap',
                 'ps_banner',
                 'ps_categorytree',
                 'ps_checkpayment',

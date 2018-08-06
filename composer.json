@@ -43,6 +43,7 @@
         "prestashop/decimal": "^1.0.0",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
+        "prestashop/gsitemap": "^3",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
