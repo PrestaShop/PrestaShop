@@ -28,13 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
@@ -109,7 +109,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'field' => 'sql',
                 ])
             )
-            ->add((new ActionsColumn('actions'))
+            ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
                 ->setOptions([
                     'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
@@ -120,8 +120,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                     ]),
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('export'))
+                            ->setIcon('cloud_download')
                             ->setOptions([
-                                'icon' => 'cloud_download',
                                 'route' => 'admin_request_sql_export',
                                 'route_param_name' => 'requestSqlId',
                                 'route_param_field' => 'id_request_sql',
@@ -129,8 +129,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         )
                         ->add((new LinkRowAction('view'))
                             ->setName($this->trans('View', [], 'Admin.Global'))
+                            ->setIcon('remove_red_eye')
                             ->setOptions([
-                                'icon' => 'remove_red_eye',
                                 'route' => 'admin_request_sql_view',
                                 'route_param_name' => 'requestSqlId',
                                 'route_param_field' => 'id_request_sql',
@@ -138,8 +138,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         )
                         ->add((new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Global'))
+                            ->setIcon('edit')
                             ->setOptions([
-                                'icon' => 'edit',
                                 'route' => 'admin_request_sql_edit',
                                 'route_param_name' => 'requestSqlId',
                                 'route_param_field' => 'id_request_sql',
@@ -147,8 +147,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         )
                         ->add((new LinkRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
                             ->setOptions([
-                                'icon' => 'delete',
                                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                                 'route' => 'admin_request_sql_delete',
                                 'route_param_name' => 'requestSqlId',
@@ -169,7 +169,6 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add((new SubmitBulkAction('delete_all'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'icon' => 'delete',
                     'submit_route' => 'admin_request_sql_delete_bulk',
                     'submit_method' => 'POST',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
@@ -184,24 +183,18 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add(new GridAction(
-                'common_refresh_list',
-                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
-                'refresh',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_show_query',
-                $this->trans('Show SQL query', [], 'Admin.Actions'),
-                'code',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_export_sql_manager',
-                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
-                'storage',
-                'simple'
-            ))
+            ->add((new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
+            )
         ;
     }
 }
