@@ -116,14 +116,14 @@ class ProductController extends FrameworkBundleAdminController
 
         $language = $this->getContext()->language;
         $request->getSession()->set('_locale', $language->locale);
-        $request = $this->get('prestashop.adapter.filter_categories_request_purifier')->purify($request);
+        $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
 
         /* @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-        $filterParametersUpdater = $this->get('prestashop.adapter.filter_parameters_updater');
+        $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
 
         $filters = $filterParametersUpdater->setValues(
             $persistedFilterParameters,
