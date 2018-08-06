@@ -49,7 +49,7 @@ export default class ExportToSqlManagerExtension {
   _onShowSqlQueryClick(grid) {
     const query = grid.getContainer().find('.js-grid-table').data('query');
 
-    const $sqlManagerForm = $('#' + grid.getId() + '_grid_common_show_query_modal_form');
+    const $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
 
     const $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
@@ -68,7 +68,7 @@ export default class ExportToSqlManagerExtension {
   _onExportSqlManagerClick(grid) {
     const query = grid.getContainer().find('.js-grid-table').data('query');
 
-    const $sqlManagerForm = $('#' + grid.getId() + '_grid_common_show_query_modal_form');
+    const $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
     $sqlManagerForm.submit();
   }
