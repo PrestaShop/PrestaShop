@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b119bf861866232b5148"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7e53425a59e8272a7b7f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,12 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(462)(__webpack_require__.s = 462);
+/******/ 	return hotCreateRequire(464)(__webpack_require__.s = 464);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 22:
+/***/ 14:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -847,26 +847,99 @@ var TableSorting = function () {
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (TableSorting);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 230:
+/***/ 19:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * Send a Post Request to reset search Action.
+ */
+
+var $ = global.$;
+
+var init = function resetSearch(url, redirectUrl) {
+  $.post(url);
+  window.location.assign(redirectUrl);
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (init);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+
+/***/ }),
+
+/***/ 2:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 234:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__email_sending_test__ = __webpack_require__(276);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__smtp_configuration_toggler__ = __webpack_require__(277);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_grid__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_reload_list_extension__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_filters_reset_extension__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(266);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(268);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(269);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_grid_extension_link_row_action_extension__ = __webpack_require__(267);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__email_sending_test__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__smtp_configuration_toggler__ = __webpack_require__(279);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_grid__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_reload_list_extension__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_filters_reset_extension__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_grid_extension_link_row_action_extension__ = __webpack_require__(41);
 /**
  * 2007-2018 PrestaShop
  *
@@ -924,7 +997,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 266:
+/***/ 25:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -960,159 +1033,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var $ = window.$;
 
 /**
- * Class BulkActionSelectCheckboxExtension
+ * Class ExportToSqlManagerExtension extends grid with exporting query to SQL Manager
  */
 
-var BulkActionCheckboxExtension = function () {
-  function BulkActionCheckboxExtension() {
-    _classCallCheck(this, BulkActionCheckboxExtension);
+var ExportToSqlManagerExtension = function () {
+  function ExportToSqlManagerExtension() {
+    _classCallCheck(this, ExportToSqlManagerExtension);
   }
 
-  _createClass(BulkActionCheckboxExtension, [{
-    key: 'extend',
-
-    /**
-     * Extend grid with bulk action checkboxes handling functionality
-     *
-     * @param {Grid} grid
-     */
-    value: function extend(grid) {
-      this._handleBulkActionCheckboxSelect(grid);
-      this._handleBulkActionSelectAllCheckbox(grid);
-    }
-
-    /**
-     * Handles "Select all" button in the grid
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_handleBulkActionSelectAllCheckbox',
-    value: function _handleBulkActionSelectAllCheckbox(grid) {
-      var _this = this;
-
-      grid.getContainer().on('change', '.js-bulk-action-select-all', function (e) {
-        var $checkbox = $(e.currentTarget);
-
-        var isChecked = $checkbox.is(':checked');
-        if (isChecked) {
-          _this._enableBulkActionsBtn(grid);
-        } else {
-          _this._disableBulkActionsBtn(grid);
-        }
-
-        grid.getContainer().find('.js-bulk-action-checkbox').prop('checked', isChecked);
-      });
-    }
-
-    /**
-     * Handles each bulk action checkbox select in the grid
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_handleBulkActionCheckboxSelect',
-    value: function _handleBulkActionCheckboxSelect(grid) {
-      var _this2 = this;
-
-      grid.getContainer().on('change', '.js-bulk-action-checkbox', function () {
-        var checkedRowsCount = grid.getContainer().find('.js-bulk-action-checkbox:checked').length;
-
-        if (checkedRowsCount > 0) {
-          _this2._enableBulkActionsBtn(grid);
-        } else {
-          _this2._disableBulkActionsBtn(grid);
-        }
-      });
-    }
-
-    /**
-     * Enable bulk actions button
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_enableBulkActionsBtn',
-    value: function _enableBulkActionsBtn(grid) {
-      grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', false);
-    }
-
-    /**
-     * Disable bulk actions button
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_disableBulkActionsBtn',
-    value: function _disableBulkActionsBtn(grid) {
-      grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', true);
-    }
-  }]);
-
-  return BulkActionCheckboxExtension;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (BulkActionCheckboxExtension);
-
-/***/ }),
-
-/***/ 267:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Class LinkRowActionExtension handles link row actions
- */
-
-var LinkRowActionExtension = function () {
-  function LinkRowActionExtension() {
-    _classCallCheck(this, LinkRowActionExtension);
-  }
-
-  _createClass(LinkRowActionExtension, [{
+  _createClass(ExportToSqlManagerExtension, [{
     key: 'extend',
 
     /**
@@ -1121,27 +1050,117 @@ var LinkRowActionExtension = function () {
      * @param {Grid} grid
      */
     value: function extend(grid) {
-      grid.getContainer().on('click', '.js-link-row-action', function (event) {
-        var confirmMessage = $(event.currentTarget).data('confirm-message');
+      var _this = this;
 
-        if (confirmMessage.length && !confirm(confirmMessage)) {
-          event.preventDefault();
+      grid.getContainer().on('click', '.js-common_show_query-grid-action', function () {
+        return _this._onShowSqlQueryClick(grid);
+      });
+      grid.getContainer().on('click', '.js-common_export_sql_manager-grid-action', function () {
+        return _this._onExportSqlManagerClick(grid);
+      });
+    }
+
+    /**
+     * Invoked when clicking on the "show sql query" toolbar button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onShowSqlQueryClick',
+    value: function _onShowSqlQueryClick(grid) {
+      var $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+      this._fillExportForm($sqlManagerForm, grid);
+
+      var $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
+      $modal.modal('show');
+
+      console.log(this._getNameFromBreadcrumb());return;
+      $modal.on('click', '.btn-sql-submit', function () {
+        return $sqlManagerForm.submit();
+      });
+    }
+
+    /**
+     * Invoked when clicking on the "export to the sql query" toolbar button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onExportSqlManagerClick',
+    value: function _onExportSqlManagerClick(grid) {
+      var $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+
+      this._fillExportForm($sqlManagerForm, grid);
+
+      $sqlManagerForm.submit();
+    }
+
+    /**
+     * Fill export form with SQL and it's name
+     *
+     * @param {jQuery} $sqlManagerForm
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_fillExportForm',
+    value: function _fillExportForm($sqlManagerForm, grid) {
+      var query = grid.getContainer().find('.js-grid-table').data('query');
+
+      $sqlManagerForm.find('textarea[name="sql"]').val(query);
+      $sqlManagerForm.find('input[name="name"]').val(this._getNameFromBreadcrumb());
+    }
+
+    /**
+     * Get export name from page's breadcrumb
+     *
+     * @return {String}
+     *
+     * @private
+     */
+
+  }, {
+    key: '_getNameFromBreadcrumb',
+    value: function _getNameFromBreadcrumb() {
+      var $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
+      var name = '';
+
+      $breadcrumbs.each(function (i, item) {
+        var $breadcrumb = $(item);
+
+        var breadcrumbTitle = 0 < $breadcrumb.find('a').length ? $breadcrumb.find('a').text() : $breadcrumb.text();
+
+        if (0 < name.length) {
+          name = name.concat(' > ');
         }
+
+        name = name.concat(breadcrumbTitle);
       });
+
+      return name;
     }
   }]);
 
-  return LinkRowActionExtension;
+  return ExportToSqlManagerExtension;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (LinkRowActionExtension);
+/* harmony default export */ __webpack_exports__["a"] = (ExportToSqlManagerExtension);
 
 /***/ }),
 
-/***/ 268:
+/***/ 26:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(19);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1171,77 +1190,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+
+
 var $ = window.$;
 
 /**
- * Handles submit of grid actions
+ * Class FiltersResetExtension extends grid with filters resetting
  */
 
-var SubmitBulkActionExtension = function () {
-  function SubmitBulkActionExtension() {
-    var _this = this;
-
-    _classCallCheck(this, SubmitBulkActionExtension);
-
-    return {
-      extend: function extend(grid) {
-        return _this.extend(grid);
-      }
-    };
+var FiltersResetExtension = function () {
+  function FiltersResetExtension() {
+    _classCallCheck(this, FiltersResetExtension);
   }
 
-  /**
-   * Extend grid with bulk action submitting
-   *
-   * @param {Grid} grid
-   */
-
-
-  _createClass(SubmitBulkActionExtension, [{
+  _createClass(FiltersResetExtension, [{
     key: 'extend',
-    value: function extend(grid) {
-      var _this2 = this;
 
-      grid.getContainer().on('click', '.js-bulk-action-submit-btn', function (event) {
-        _this2.submit(event, grid);
-      });
-    }
 
     /**
-     * Handle bulk action submitting
+     * Extend grid
      *
-     * @param {Event} event
      * @param {Grid} grid
-     *
-     * @private
      */
-
-  }, {
-    key: 'submit',
-    value: function submit(event, grid) {
-      var $submitBtn = $(event.currentTarget);
-      var confirmMessage = $submitBtn.data('confirm-message');
-
-      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
-        return;
-      }
-
-      var $form = $('#' + grid.getId() + '_filter_form');
-
-      $form.attr('action', $submitBtn.data('form-url'));
-      $form.attr('method', $submitBtn.data('form-method'));
-      $form.submit();
+    value: function extend(grid) {
+      grid.getContainer().on('click', '.reset-search', function (event) {
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__["a" /* default */])($(event.currentTarget).data('url'), $(event.currentTarget).data('redirect'));
+      });
     }
   }]);
 
-  return SubmitBulkActionExtension;
+  return FiltersResetExtension;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (SubmitBulkActionExtension);
+/* harmony default export */ __webpack_exports__["a"] = (FiltersResetExtension);
 
 /***/ }),
 
-/***/ 269:
+/***/ 27:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1250,96 +1235,61 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
+* 2007-2018 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* https://opensource.org/licenses/OSL-3.0
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2018 PrestaShop SA
+* @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 /**
- * Class SubmitGridActionExtension handles grid action submits
+ * Class ReloadListExtension extends grid with "List reload" action
  */
-
-var SubmitGridActionExtension = function () {
-  function SubmitGridActionExtension() {
-    var _this = this;
-
-    _classCallCheck(this, SubmitGridActionExtension);
-
-    return {
-      extend: function extend(grid) {
-        return _this.extend(grid);
-      }
-    };
+var ReloadListExtension = function () {
+  function ReloadListExtension() {
+    _classCallCheck(this, ReloadListExtension);
   }
 
-  _createClass(SubmitGridActionExtension, [{
+  _createClass(ReloadListExtension, [{
     key: 'extend',
-    value: function extend(grid) {
-      var _this2 = this;
-
-      grid.getContainer().on('click', '.js-grid-action-submit-btn', function (event) {
-        _this2.handleSubmit(event, grid);
-      });
-    }
 
     /**
-     * Handle grid action submit.
-     * It uses grid form to submit actions.
+     * Extend grid
      *
-     * @param {Event} event
      * @param {Grid} grid
-     *
-     * @private
      */
-
-  }, {
-    key: 'handleSubmit',
-    value: function handleSubmit(event, grid) {
-      var $submitBtn = $(event.currentTarget);
-      var confirmMessage = $submitBtn.data('confirm-message');
-
-      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
-        return;
-      }
-
-      var $form = $('#' + grid.getId() + '_filter_form');
-
-      $form.attr('action', $submitBtn.data('url'));
-      $form.attr('method', $submitBtn.data('method'));
-      $form.find('input[name="' + grid.getId() + '[_token]"]').val($submitBtn.data('csrf'));
-      $form.submit();
+    value: function extend(grid) {
+      grid.getContainer().on('click', '.js-common_refresh_list-grid-action', function () {
+        location.reload();
+      });
     }
   }]);
 
-  return SubmitGridActionExtension;
+  return ReloadListExtension;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (SubmitGridActionExtension);
+/* harmony default export */ __webpack_exports__["a"] = (ReloadListExtension);
 
 /***/ }),
 
-/***/ 276:
+/***/ 278:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1564,7 +1514,7 @@ var EmailSendingTest = function () {
 
 /***/ }),
 
-/***/ 277:
+/***/ 279:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1663,330 +1613,11 @@ var SmtpConfigurationToggler = function () {
 
 /***/ }),
 
-/***/ 3:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 34:
+/***/ 28:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-/**
- * Send a Post Request to reset search Action.
- */
-
-var $ = global.$;
-
-var init = function resetSearch(url, redirectUrl) {
-  $.post(url);
-  window.location.assign(redirectUrl);
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (init);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
-
-/***/ }),
-
-/***/ 35:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Class ExportToSqlManagerExtension extends grid with exporting query to SQL Manager
- */
-
-var ExportToSqlManagerExtension = function () {
-  function ExportToSqlManagerExtension() {
-    _classCallCheck(this, ExportToSqlManagerExtension);
-  }
-
-  _createClass(ExportToSqlManagerExtension, [{
-    key: 'extend',
-
-    /**
-     * Extend grid
-     *
-     * @param {Grid} grid
-     */
-    value: function extend(grid) {
-      var _this = this;
-
-      grid.getContainer().on('click', '.js-common_show_query-grid-action', function () {
-        return _this._onShowSqlQueryClick(grid);
-      });
-      grid.getContainer().on('click', '.js-common_export_sql_manager-grid-action', function () {
-        return _this._onExportSqlManagerClick(grid);
-      });
-    }
-
-    /**
-     * Invoked when clicking on the "show sql query" toolbar button
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onShowSqlQueryClick',
-    value: function _onShowSqlQueryClick(grid) {
-      var query = grid.getContainer().find('.js-grid-table').data('query');
-
-      var $sqlManagerForm = $('#' + grid.getId() + '_grid_common_show_query_modal_form');
-      $sqlManagerForm.find('textarea[name="sql"]').val(query);
-
-      var $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
-      $modal.modal('show');
-
-      $modal.on('click', '.btn-sql-submit', function () {
-        return $sqlManagerForm.submit();
-      });
-    }
-
-    /**
-     * Invoked when clicking on the "export to the sql query" toolbar button
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onExportSqlManagerClick',
-    value: function _onExportSqlManagerClick(grid) {
-      var query = grid.getContainer().find('.js-grid-table').data('query');
-
-      var $sqlManagerForm = $('#' + grid.getId() + '_grid_common_show_query_modal_form');
-      $sqlManagerForm.find('textarea[name="sql"]').val(query);
-      $sqlManagerForm.submit();
-    }
-  }]);
-
-  return ExportToSqlManagerExtension;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (ExportToSqlManagerExtension);
-
-/***/ }),
-
-/***/ 36:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(34);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-
-
-var $ = window.$;
-
-/**
- * Class FiltersResetExtension extends grid with filters resetting
- */
-
-var FiltersResetExtension = function () {
-  function FiltersResetExtension() {
-    _classCallCheck(this, FiltersResetExtension);
-  }
-
-  _createClass(FiltersResetExtension, [{
-    key: 'extend',
-
-
-    /**
-     * Extend grid
-     *
-     * @param {Grid} grid
-     */
-    value: function extend(grid) {
-      grid.getContainer().on('click', '.reset-search', function (event) {
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__["a" /* default */])($(event.currentTarget).data('url'), $(event.currentTarget).data('redirect'));
-      });
-    }
-  }]);
-
-  return FiltersResetExtension;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (FiltersResetExtension);
-
-/***/ }),
-
-/***/ 37:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
-* 2007-2018 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* https://opensource.org/licenses/OSL-3.0
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2018 PrestaShop SA
-* @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*/
-
-/**
- * Class ReloadListExtension extends grid with "List reload" action
- */
-var ReloadListExtension = function () {
-  function ReloadListExtension() {
-    _classCallCheck(this, ReloadListExtension);
-  }
-
-  _createClass(ReloadListExtension, [{
-    key: 'extend',
-
-    /**
-     * Extend grid
-     *
-     * @param {Grid} grid
-     */
-    value: function extend(grid) {
-      grid.getContainer().on('click', '.js-common_refresh_list-grid-action', function () {
-        location.reload();
-      });
-    }
-  }]);
-
-  return ReloadListExtension;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (ReloadListExtension);
-
-/***/ }),
-
-/***/ 38:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(14);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2049,7 +1680,422 @@ var SortingExtension = function () {
 
 /***/ }),
 
-/***/ 39:
+/***/ 40:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class BulkActionSelectCheckboxExtension
+ */
+
+var BulkActionCheckboxExtension = function () {
+  function BulkActionCheckboxExtension() {
+    _classCallCheck(this, BulkActionCheckboxExtension);
+  }
+
+  _createClass(BulkActionCheckboxExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid with bulk action checkboxes handling functionality
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      this._handleBulkActionCheckboxSelect(grid);
+      this._handleBulkActionSelectAllCheckbox(grid);
+    }
+
+    /**
+     * Handles "Select all" button in the grid
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionSelectAllCheckbox',
+    value: function _handleBulkActionSelectAllCheckbox(grid) {
+      var _this = this;
+
+      grid.getContainer().on('change', '.js-bulk-action-select-all', function (e) {
+        var $checkbox = $(e.currentTarget);
+
+        var isChecked = $checkbox.is(':checked');
+        if (isChecked) {
+          _this._enableBulkActionsBtn(grid);
+        } else {
+          _this._disableBulkActionsBtn(grid);
+        }
+
+        grid.getContainer().find('.js-bulk-action-checkbox').prop('checked', isChecked);
+      });
+    }
+
+    /**
+     * Handles each bulk action checkbox select in the grid
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleBulkActionCheckboxSelect',
+    value: function _handleBulkActionCheckboxSelect(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('change', '.js-bulk-action-checkbox', function () {
+        var checkedRowsCount = grid.getContainer().find('.js-bulk-action-checkbox:checked').length;
+
+        if (checkedRowsCount > 0) {
+          _this2._enableBulkActionsBtn(grid);
+        } else {
+          _this2._disableBulkActionsBtn(grid);
+        }
+      });
+    }
+
+    /**
+     * Enable bulk actions button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_enableBulkActionsBtn',
+    value: function _enableBulkActionsBtn(grid) {
+      grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', false);
+    }
+
+    /**
+     * Disable bulk actions button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_disableBulkActionsBtn',
+    value: function _disableBulkActionsBtn(grid) {
+      grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', true);
+    }
+  }]);
+
+  return BulkActionCheckboxExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (BulkActionCheckboxExtension);
+
+/***/ }),
+
+/***/ 41:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class LinkRowActionExtension handles link row actions
+ */
+
+var LinkRowActionExtension = function () {
+  function LinkRowActionExtension() {
+    _classCallCheck(this, LinkRowActionExtension);
+  }
+
+  _createClass(LinkRowActionExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      grid.getContainer().on('click', '.js-link-row-action', function (event) {
+        var confirmMessage = $(event.currentTarget).data('confirm-message');
+
+        if (confirmMessage.length && !confirm(confirmMessage)) {
+          event.preventDefault();
+        }
+      });
+    }
+  }]);
+
+  return LinkRowActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (LinkRowActionExtension);
+
+/***/ }),
+
+/***/ 42:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Handles submit of grid actions
+ */
+
+var SubmitBulkActionExtension = function () {
+  function SubmitBulkActionExtension() {
+    var _this = this;
+
+    _classCallCheck(this, SubmitBulkActionExtension);
+
+    return {
+      extend: function extend(grid) {
+        return _this.extend(grid);
+      }
+    };
+  }
+
+  /**
+   * Extend grid with bulk action submitting
+   *
+   * @param {Grid} grid
+   */
+
+
+  _createClass(SubmitBulkActionExtension, [{
+    key: 'extend',
+    value: function extend(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('click', '.js-bulk-action-submit-btn', function (event) {
+        _this2.submit(event, grid);
+      });
+    }
+
+    /**
+     * Handle bulk action submitting
+     *
+     * @param {Event} event
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: 'submit',
+    value: function submit(event, grid) {
+      var $submitBtn = $(event.currentTarget);
+      var confirmMessage = $submitBtn.data('confirm-message');
+
+      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+        return;
+      }
+
+      var $form = $('#' + grid.getId() + '_filter_form');
+
+      $form.attr('action', $submitBtn.data('form-url'));
+      $form.attr('method', $submitBtn.data('form-method'));
+      $form.submit();
+    }
+  }]);
+
+  return SubmitBulkActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SubmitBulkActionExtension);
+
+/***/ }),
+
+/***/ 43:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class SubmitGridActionExtension handles grid action submits
+ */
+
+var SubmitGridActionExtension = function () {
+  function SubmitGridActionExtension() {
+    var _this = this;
+
+    _classCallCheck(this, SubmitGridActionExtension);
+
+    return {
+      extend: function extend(grid) {
+        return _this.extend(grid);
+      }
+    };
+  }
+
+  _createClass(SubmitGridActionExtension, [{
+    key: 'extend',
+    value: function extend(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('click', '.js-grid-action-submit-btn', function (event) {
+        _this2.handleSubmit(event, grid);
+      });
+    }
+
+    /**
+     * Handle grid action submit.
+     * It uses grid form to submit actions.
+     *
+     * @param {Event} event
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event, grid) {
+      var $submitBtn = $(event.currentTarget);
+      var confirmMessage = $submitBtn.data('confirm-message');
+
+      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+        return;
+      }
+
+      var $form = $('#' + grid.getId() + '_filter_form');
+
+      $form.attr('action', $submitBtn.data('url'));
+      $form.attr('method', $submitBtn.data('method'));
+      $form.find('input[name="' + grid.getId() + '[_token]"]').val($submitBtn.data('csrf'));
+      $form.submit();
+    }
+  }]);
+
+  return SubmitGridActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SubmitGridActionExtension);
+
+/***/ }),
+
+/***/ 44:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2146,10 +2192,10 @@ var Grid = function () {
 
 /***/ }),
 
-/***/ 462:
+/***/ 464:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(230);
+module.exports = __webpack_require__(234);
 
 
 /***/ })
