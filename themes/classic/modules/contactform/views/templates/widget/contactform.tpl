@@ -62,7 +62,7 @@
               class="form-control"
               name="from"
               type="email"
-              value="{$contact.email}"
+              value="{$customer.email}"
               placeholder="{l s='your@email.com' d='Shop.Forms.Help'}"
             >
           </div>
@@ -75,7 +75,7 @@
               <select name="id_order" class="form-control form-control-select">
                 <option value="">{l s='Select reference' d='Shop.Forms.Help'}</option>
                 {foreach from=$contact.orders item=order}
-                  <option value="{$order.id_order}">{$order.reference}</option>
+                  <option value="{$order.id_order}">{$order.reference} - {$order.date_add|date_format} - {$order.order_state}</option>
                 {/foreach}
               </select>
             </div>
