@@ -196,8 +196,12 @@
                         </p>
                         <ul>
                             {% for key, value in requirements.testsRequired %}
-                                {% if 'fail' == value and key in requirements.testsErrors|keys %}
-                                    <li>{{ requirements.testsErrors[key] }}</li>
+                                {% if 'fail' == value %}
+                                        {% if key in requirements.testsErrors|keys %}
+                                            <li>{{ requirements.testsErrors[key] }}</li>
+                                        {% else %}
+                                            <li>{{ '%key% (missing description)'|trans({'%key%': key}, 'Admin.Advparameters.Notification') }}</li>
+                                        {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </ul>
@@ -213,8 +217,12 @@
                             </p>
                             <ul>
                                 {% for key, value in requirements.testsOptional %}
-                                    {% if 'fail' == value and testsErrors[key] is defined %}
-                                        <li>{{ requirements.testsErrors[key] }}</li>
+                                    {% if 'fail' == value %}
+                                        {% if testsErrors[key] is defined %}
+                                            <li>{{ requirements.testsErrors[key] }}</li>
+                                        {% else %}
+                                            <li>{{ '%key% (missing description)'|trans({'%key%': key}, 'Admin.Advparameters.Notification') }}</li>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </ul>
