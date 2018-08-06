@@ -311,19 +311,26 @@
 
 {% block search_and_reset_widget %}
     {% spaceless %}
-        {% set formVars = form.vars.attr %}
-        <div class="input-group">
-            {{ form_widget(form.search) }}
-            {{ form_widget(form.reset,
-                    {
-                        'attr': {
-                            'data-url': formVars['data-url'],
-                            'data-redirect': formVars['data-redirect']
-                        }
-                    }
-                )
-            }}
-        </div>
+        <button type="submit"
+                class="btn btn-primary d-block"
+                title="{{ 'Search'|trans({}, 'Admin.Global') }}"
+                name="{{ full_name }}[search]"
+        >
+          <i class="material-icons">search</i>
+          {{ 'Search'|trans({}, 'Admin.Global') }}
+        </button>
+
+        {% if show_reset_button %}
+            <button type="reset"
+                    name="{{ full_name }}[reset]"
+                    class="btn btn-link reset-search btn d-block"
+                    data-url="{{ form.vars.attr['data-url'] }}"
+                    data-redirect="{{ form.vars.attr['data-redirect'] }}"
+            >
+              <i class="material-icons">clear</i>
+              {{ 'Reset'|trans({}, 'Admin.Global') }}
+            </button>
+        {% endif %}
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
 
