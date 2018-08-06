@@ -70,14 +70,13 @@
 
         <div class="dropdown-menu dropdown-menu-right">
           {% for action in actions|slice(1) %}
-            <div class="dropdown-item">
               {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
                 'grid': grid,
                 'column': column,
                 'row': row,
-                'action': action
+                'action': action,
+                'attributes': {'class': 'dropdown-item'}
               }) }}
-            </div>
           {% endfor %}
         </div>
       {% endif %}
