@@ -27,45 +27,26 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 /**
  * FormType used in rendering of "Search and Reset" action in Grids.
  */
-class SearchAndResetFormType extends AbstractType
+class SearchAndResetType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $builder
-            ->add('search', SubmitType::class, [
-                'label' => 'Search',
-                'attr' => [
-                    'class' => 'btn btn-primary',
-                ],
-            ])
-            ->add('reset', ResetType::class, [
-                'label' => 'Reset',
-                'attr' => [
-                    'class' => 'btn btn-link reset-search',
-                ],
-            ])
-        ;
-    }
+        $showResetButton = true;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Global',
-        ]);
+        if (null !== $form->getParent() && empty($form->getParent()->getData())) {
+            $showResetButton = false;
+        }
+
+        $view->vars['show_reset_button'] = $showResetButton;
     }
 
     /**
