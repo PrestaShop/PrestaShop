@@ -53,7 +53,6 @@ export default class ExportToSqlManagerExtension {
     const $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
     $modal.modal('show');
 
-    console.log(this._getNameFromBreadcrumb());return;
     $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
   }
 
