@@ -90,53 +90,22 @@ class PositionsController extends ApiController
             );
         }
 
-        $modules = $request->request->get('modules');
-        $hooks = $request->request->get('hooks');
-        if (empty($hooks) or empty($modules)) {
-            return $this->jsonResponse(
-                [
-                    'hasError' => true,
-                    'errors' => ['Live Edit: no module on this page.'],
-                ],
-                $request
-            );
+        try {
+            $result = $this->container->get('prestashop.service.improve.design.positions')
+                    ->getHookableList($request);
+        } catch (Exception\HookModuleNotFoundException $e) {
+            $result = [
+                'hasError' => true,
+                'errors' => ['Live Edit: no module on this page.'],
+            ];
+        } catch (Exception\InvalidModuleException $e) {
+            $result = [
+                'hasError' => true,
+                'errors' => ['Live Edit: module is invalid.'],
+            ];
         }
 
-        $hookableList = [];
-        foreach ($modules as $module) {
-            $module = trim($module);
-            if (empty($module)) {
-                continue;
-            }
-
-            if (!Validate::isModuleName($module)) {
-                return $this->jsonResponse(
-                    [
-                        'hasError' => true,
-                        'errors' => ['Live Edit: module is invalid.'],
-                    ],
-                    $request
-                );
-            }
-
-            $moduleInstance = Module::getInstanceByName($module);
-            foreach ($hooks as $hookName) {
-                $hookName = trim($hookName);
-                if (empty($hookName)) {
-                    continue;
-                }
-
-                if (!isset($hookableList[$hookName])) {
-                    $hookableList[$hookName] = [];
-                }
-
-                if ($moduleInstance->isHookableOn($hookName)) {
-                    $hookableList[$hookName][] = str_replace('_', '-', $module);
-                }
-            }
-        }
-
-        return $this->jsonResponse($hookableList, $request);
+        return $this->jsonResponse($result, $request);
     }
 
     /**
@@ -156,27 +125,9 @@ class PositionsController extends ApiController
             );
         }
 
-        $hookName = $request->request->get('hook');
-        $hookableModulesList = [];
-        $modules = Db::getInstance()->executeS('SELECT id_module, name FROM `'._DB_PREFIX_.'module` ');
-        foreach ($modules as $module) {
-            if (!Validate::isModuleName($module['name'])) {
-                continue;
-            }
-
-            $moduleInstance = Module::getInstanceByName($module);
-            if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php')) {
-                include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
-
-                /** @var Module $mod */
-                $mod = new $module['name']();
-                if ($mod->isHookableOn($hook_name)) {
-                    $hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, [], (int)$mod->id));
-                }
-            }
-        }
-        die(json_encode($hookableModulesList));
-
-        return $this->jsonResponse($hookableList, $request);
+        return $this->jsonResponse(
+            $this->container->get('prestashop.service.improve.design.positions')->getHookableModuleList($request),
+            $request
+        );
     }
 }

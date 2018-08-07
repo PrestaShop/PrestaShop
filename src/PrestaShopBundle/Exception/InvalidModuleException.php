@@ -24,46 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Validation;
+namespace PrestaShopBundle\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Validate;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class Validator is responsible for validating data
- */
-final class Validator implements ValidatorInterface
+class InvalidModuleException extends NotFoundHttpException
 {
-    /**
-     * @var Validate
-     */
-    private $validate;
-
-    /**
-     * @param Validate $validate
-     */
-    public function __construct(Validate $validate)
-    {
-        $this->validate = $validate;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isCleanHtml($html, array $options = [])
-    {
-        $defaultOptions = [
-            'allow_iframe' => false,
-        ];
-        $options = array_merge($defaultOptions, $options);
-
-        return $this->validate->isCleanHtml($html, $options['allow_iframe']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isModuleName($name)
-    {
-        return $this->validate->isModuleName($name);
-    }
 }

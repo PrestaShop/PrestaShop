@@ -71,4 +71,15 @@ class Validate
     {
         return ValidateLegacy::isCleanHtml($html, $allowIframe);
     }
+
+    /**
+     * Check for module name validity
+     *
+     * @param string $name Module name to validate
+     * @return bool
+     */
+    public function isModuleName($name)
+    {
+        return ValidateLegacy::isModuleName($name);
+    }
 }

@@ -51,8 +51,12 @@ class PositionsListHandler {
     $('input[name="form[general][enable_tos]"]').on('change', () => self.handle());
   }
 
+  /**
+   * Handle all events for Design -> Positions List
+   */
   handleList() {
     const self = this;
+
     $(window).on('scroll', () => {
       const $scrollTop = $(window).scrollTop();
       self.$panelSelection.css(
@@ -99,15 +103,15 @@ class PositionsListHandler {
 
     self.$showModules.select2();
     self.$showModules.on('change', () => {
-      this.modulesPositionFilterHooks();
+      self.modulesPositionFilterHooks();
     });
 
     self.$hookPosition.on('change', () => {
-      this.modulesPositionFilterHooks();
+      self.modulesPositionFilterHooks();
     });
 
     self.$hookSearch.on('input', () => {
-      this.modulesPositionFilterHooks();
+      self.modulesPositionFilterHooks();
     });
 
     $('.hook-checker').on('click', function() {
@@ -122,6 +126,9 @@ class PositionsListHandler {
     });
   }
 
+  /**
+   * Handle sortable events
+   */
   handleSortable() {
     const self = this;
 
@@ -162,11 +169,14 @@ class PositionsListHandler {
     });
   }
 
+  /**
+   * Filter hooks / modules search and everything
+   * about hooks positions.
+   */
   modulesPositionFilterHooks() {
     const self = this;
     const $hookName = self.$hookSearch.val();
     const $moduleId = self.$showModules.val();
-    const $position = self.$hookPosition.prop('checked');
     const $regex = new RegExp(`(${$hookName})`, 'gi');
 
     for (let $id = 0; $id < self.$hooksList.length; $id++) {
@@ -175,6 +185,7 @@ class PositionsListHandler {
       self.$hooksList[$id].container.find('.module-item').removeClass('highlight');
     }
 
+    // Have select a hook name or a module id
     if ($hookName !== '' || $moduleId !== 'all') {
       // Prepare set of matched elements
       let $hooksToShowFromModule = $();
@@ -183,6 +194,7 @@ class PositionsListHandler {
       let $start;
 
       for (let $id = 0; $id < self.$hooksList.length; $id++) {
+        // Prepare highlight when one module is selected
         if ($moduleId !== 'all') {
           $currentHooks = self.$hooksList[$id].container.find(`.module-position-${$moduleId}`);
           if ($currentHooks.length > 0) {
@@ -191,6 +203,7 @@ class PositionsListHandler {
           }
         }
 
+        // Prepare highlight when there is a hook name
         if ($hookName !== '') {
           $start = self.$hooksList[$id].title.toLowerCase().search($hookName.toLowerCase());
           if ($start !== -1) {
@@ -205,16 +218,17 @@ class PositionsListHandler {
         }
       }
 
+      // Nothing selected
       if ($moduleId === 'all' && $hookName !== '') {
         $hooksToShowFromHookName.show();
-      } else if ($hookName === '' && $moduleId !== 'all') {
+      } else if ($hookName === '' && $moduleId !== 'all') { // Have no hook bug have a module
         $hooksToShowFromModule.show();
-      } else {
+      } else { // Both selected
         $hooksToShowFromHookName.filter($hooksToShowFromModule).show();
       }
     }
 
-    if (!$position) {
+    if (!self.$hookPosition.prop('checked')) {
       for (let $id = 0; $id < self.$hooksList.length; $id++) {
         if (self.$hooksList[$id].container.is('.hook-position')) {
           self.$hooksList[$id].container.hide();

@@ -150,7 +150,7 @@
 
                         <div class="module-column-actions">
                           <div class="btn-group">
-                            <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_modules_positions_edit', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions') }}&amp;id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if showModules %}&amp;show_modules={{ showModules }}{% endif %}">
                               <i class="material-icons">edit</i>
                               {{ 'Edit' | trans({}, 'Admin.Actions') }}
                             </a>

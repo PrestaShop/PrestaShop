@@ -42,6 +42,14 @@ use Shop;
  */
 class PositionsController extends FrameworkBundleAdminController
 {
+    /**
+     * @var int
+     */
+    protected $showModules = null;
+
+    /**
+     * @var int Not Implemented yet
+     */
     protected $selectedModule = null;
 
     /**
@@ -60,6 +68,11 @@ class PositionsController extends FrameworkBundleAdminController
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $admin_dir = basename(_PS_ADMIN_DIR_);
         $installedModules = Module::getModulesInstalled();
+
+        $showModules = $request->get('show_modules');
+        if ($showModules && strval($showModules) != 'all') {
+            $this->showModules = (int) $showModules;
+        }
 
         $modules = [];
         foreach ($installedModules as $installedModule) {
@@ -94,13 +107,17 @@ class PositionsController extends FrameworkBundleAdminController
             $hooks[$key]['position'] = Hook::isDisplayHookName($hook['name']);
         }
 
+        $legacyContextService = $this->get('prestashop.adapter.legacy.context');
+
         return [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
-                    'href' => $this->generateUrl('admin_clear_cache'),
+                    'href' => $legacyContextService->getAdminLink('AdminModulesPositions') .
+                    '&addToHook'.($this->showModules ? '&show_modules='.$this->showModules : ''),
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
                 ]
             ],
+            'showModules' => $this->showModules,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
@@ -108,7 +125,6 @@ class PositionsController extends FrameworkBundleAdminController
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminModulesPositions'),
-
             'selectedModule' => $this->selectedModule,
             'hooks' => $hooks,
             'modules' => $modules,
