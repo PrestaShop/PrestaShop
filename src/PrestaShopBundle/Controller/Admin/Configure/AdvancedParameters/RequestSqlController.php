@@ -356,14 +356,12 @@ class RequestSqlController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_request_sql');
         }
 
-        $legacyController = $request->attributes->get('_legacy_controller');
-
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlResult' => $requestSqlResult,
         ]);
     }
