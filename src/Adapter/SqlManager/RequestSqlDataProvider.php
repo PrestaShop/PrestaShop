@@ -104,13 +104,30 @@ class RequestSqlDataProvider
         $rows = Db::getInstance()->executeS($requestSql['sql']);
         if (!empty($rows)) {
             $columns = array_keys(reset($rows));
+
+            $this->hideSensitiveData($rows);
         }
 
         return [
             'request_sql' => $requestSql,
             'rows' => $rows,
             'columns' => $columns,
-            'attributes' => $this->requestSql->attributes,
         ];
+    }
+
+    /**
+     * Replaces sensitive data with placeholder values
+     *
+     * @param array $rows
+     */
+    private function hideSensitiveData(array &$rows)
+    {
+        foreach ($rows as &$row) {
+            foreach ($this->requestSql->attributes as $sensitiveAttribute => $placeholder) {
+                if (isset($row[$sensitiveAttribute])) {
+                    $row[$sensitiveAttribute] = $placeholder;
+                }
+            }
+        }
     }
 }
