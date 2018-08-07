@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 
 /**
  * Class RequestSqlGridDefinitionFactory is responsible for creating RequestSql grid definition
@@ -112,7 +112,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
                 ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
                         'attr' => [
                             'data-url' => $this->resetSearchUrl,
                             'data-redirect' => $this->redirectionUrl,
