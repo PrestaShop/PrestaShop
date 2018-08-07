@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
 use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter;
 
@@ -363,7 +363,7 @@ class CartControllerCore extends FrontController
         $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
 
         if (Tools::getIsset('group')) {
-            $this->id_product_attribute = (int)Product::getIdProductAttributesByIdAttributes(
+            $this->id_product_attribute = (int)Product::getIdProductAttributeByIdAttributes(
                 $this->id_product,
                 Tools::getValue('group')
             );

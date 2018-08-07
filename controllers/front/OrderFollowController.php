@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderReturnPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter;
 
 class OrderFollowControllerCore extends FrontController
 {
@@ -99,7 +99,7 @@ class OrderFollowControllerCore extends FrontController
 
         $ordersReturn = $this->getTemplateVarOrdersReturns();
         if (count($ordersReturn) <= 0) {
-            $this->errors[] = $this->trans(
+            $this->warning[] = $this->trans(
                 'You have no merchandise return authorizations.', array(), 'Shop.Notifications.Error'
             );
         }

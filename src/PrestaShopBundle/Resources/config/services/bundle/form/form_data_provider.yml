@@ -2,6 +2,27 @@ services:
     _defaults:
         public: true
 
+    prestashop.admin.shipping_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.shipping_preferences.handling_configuration'
+            - '@prestashop.adapter.shipping_preferences.carrier_options_configuration'
+            - '@translator'
+
+    prestashop.admin.order.invoices.by_date.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.order_invoice'
+
+    prestashop.admin.order.invoices.by_status.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider'
+
+    prestashop.admin.order.invoices.options.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.invoice_options.configuration'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
+
     prestashop.admin.customer_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
         arguments:
@@ -99,3 +120,9 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.payment_module_preferences.configuration'
+
+    prestashop.admin.email_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.email.email_configurator'
+            - '@prestashop.core.email.smtp_configurator'

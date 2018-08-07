@@ -122,12 +122,12 @@ class ProductPresenterTest extends UnitTestCase
 
     private function getPresentedProduct($field = null)
     {
-        return $this->_presentProduct('PrestaShop\PrestaShop\Core\Product\ProductPresenter', $field);
+        return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter', $field);
     }
 
     private function getPresentedProductForListing($field = null)
     {
-        return $this->_presentProduct('PrestaShop\PrestaShop\Core\Product\ProductListingPresenter', $field);
+        return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
 
 

@@ -33,8 +33,14 @@ use Combination;
 use Feature;
 use Configuration as ConfigurationLegacy;
 
+/**
+ * Adapter of Configuration ObjectModel.
+ */
 class Configuration extends ParameterBag implements ConfigurationInterface
 {
+    /**
+     * @var Shop
+     */
     private $shop;
 
     public function __construct(array $parameters = array())
@@ -52,7 +58,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     {
         throw new NotImplementedException();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -108,26 +114,31 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Set configuration value
-     * @param $key
-     * @param $value
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @param array  $options Options
+     *
      * @return $this
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function set($key, $value, array $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
-        $shopGroupId = 0;
-        $shopId = 0;
+        $shopGroupId = null;
+        $shopId = null;
 
         if ($this->shop instanceof Shop) {
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
         }
 
+        $html = isset($options['html']) ? (bool) $options['html'] : false;
+
         $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
-            false,
+            $html,
             $shopGroupId,
             $shopId
         );
@@ -149,7 +160,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Removes a configuration key.
-     * 
+     *
      * @param type $key
      * @return type
      */

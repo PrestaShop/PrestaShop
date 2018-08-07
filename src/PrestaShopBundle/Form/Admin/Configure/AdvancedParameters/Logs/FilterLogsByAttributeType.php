@@ -74,9 +74,11 @@ final class FilterLogsByAttributeType extends CommonAbstractType
 
     /**
      * {@inheritdoc}
+     *
+     * This is required for search, and must match Grid name.
      */
     public function getBlockPrefix()
     {
-        return 'logs_filters_block';
+        return 'logs';
     }
 }

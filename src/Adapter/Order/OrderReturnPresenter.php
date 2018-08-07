@@ -26,43 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
-use Exception;
-use Link;
-use Tools;
-
-class OrderReturnPresenter implements PresenterInterface
+/**
+ * @deprecated since 1.7.4.0
+ * @see \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
+ *
+ */
+class OrderReturnPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
 {
-    private $prefix;
-    private $link;
 
-    public function __construct($prefix, Link $link)
-    {
-        $this->prefix = $prefix;
-        $this->link = $link;
-    }
-
-    public function present($orderReturn)
-    {
-        if (!is_array($orderReturn)) {
-            throw new Exception('orderReturnPresenter can only present order_return passed as array');
-        }
-
-        $presentedOrderReturn = $orderReturn;
-        $presentedOrderReturn['id'] = $orderReturn['id_order_return'];
-
-        $presentedOrderReturn['return_number'] = $this->prefix.sprintf('%06d', $orderReturn['id_order_return']);
-        $presentedOrderReturn['return_date'] = Tools::displayDate($orderReturn['date_add'], null, false);
-        $presentedOrderReturn['print_url'] = ($orderReturn['state'] == 2)
-            ? $this->link->getPageLink('pdf-order-return', true, null, 'id_order_return='.(int) $orderReturn['id_order_return'])
-            : '';
-        $presentedOrderReturn['details_url'] = $this->link->getPageLink(
-            'order-detail', true, null, 'id_order='.(int) $orderReturn['id_order']
-        );
-        $presentedOrderReturn['return_url'] = $this->link->getPageLink(
-            'order-return', true, null, 'id_order_return='.(int) $orderReturn['id_order_return']
-        );
-
-        return $presentedOrderReturn;
-    }
 }

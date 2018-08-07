@@ -137,6 +137,7 @@ class WebTestCase extends TestCase
                 'getEmployeeCurrency',
                 'getRootUrl',
                 'getLanguages',
+                'getLanguage',
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()

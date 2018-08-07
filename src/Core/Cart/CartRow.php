@@ -269,7 +269,7 @@ class CartRow
         $stateId   = (int) $address->id_state;
         $zipCode   = $address->postcode;
 
-        $shopId     = (int) $cart->id_shop;
+        $shopId     = (int) $rowData['id_shop'];
         $currencyId = (int) $cart->id_currency;
 
         $groupId = null;

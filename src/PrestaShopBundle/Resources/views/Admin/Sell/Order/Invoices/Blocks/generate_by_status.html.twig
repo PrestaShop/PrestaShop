@@ -1,0 +1,74 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Orderscustomers.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+
+{% form_theme generateByStatusForm _self %}
+
+{% block invoices_generate_by_status %}
+    <div id="by-status-block" class="col">
+        {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
+        <div class="card">
+            <h3 class="card-header">
+                <i class="material-icons">schedule</i> {{ 'By order status'|trans }}
+            </h3>
+            <div class="card-block">
+                <div class="card-text">
+                    {{ ps.label_with_help(('Order statuses'|trans), ('You can also export orders which have not been charged yet.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+                    {{ form_errors(generateByStatusForm.order_states) }}
+                    {{ form_widget(generateByStatusForm.order_states) }}
+                </div>
+                {{ form_rest(generateByStatusForm) }}
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary">{{ 'Generate PDF file by status'|trans }}</button>
+                </div>
+            </div>
+        </div>
+        {{ form_end(generateByStatusForm) }}
+    </div>
+{% endblock %}
+
+{% block _form_generate_by_status_order_states_entry_label %}
+    {# Do not display the label if widget is not defined in order to prevent double label rendering #}
+    {% if widget is defined %}
+        {% if parent_label_class is defined %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+        {% endif %}
+        <div class="md-checkbox">
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                {{- widget|raw -}}
+                <i class="md-checkbox-control"></i>
+                {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
+                <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
+                <span>
+                    {{- label is not same as(false) ? label|raw -}}
+                </span>
+            </label>
+        </div>
+    {% endif %}
+{% endblock %}

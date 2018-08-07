@@ -2,6 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,7 +24,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @var array
      */
-    private $options = [];
+    private $options;
 
     /**
      * @param string $id
@@ -64,7 +65,7 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function setOptions(array $options)
     {
-        $this->options = $options;
+        $this->resolveOptions($options);
 
         return $this;
     }
@@ -74,25 +75,43 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function getOptions()
     {
+        if (null === $this->options) {
+            $this->resolveOptions();
+        }
+
         return $this->options;
     }
 
     /**
-     * {@inheritdoc}
+     * Default column options configuration. You can override or extend it needed options.
+     *
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults([
-                'filter_type' => TextType::class,
-                'filter_type_options' => [
+                'filter' => new ColumnFilterOption(TextType::class, [
                     'required' => false,
-                ],
+                ]),
                 'sortable' => true,
             ])
-            ->setAllowedTypes('filter_type', ['string', 'null'])
-            ->setAllowedTypes('filter_type_options', 'array')
+            ->setAllowedTypes('filter', ColumnFilterOption::class)
             ->setAllowedTypes('sortable', 'bool')
         ;
+    }
+
+
+    /**
+     * Resolve column options
+     *
+     * @param array $options
+     */
+    private function resolveOptions(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
     }
 }

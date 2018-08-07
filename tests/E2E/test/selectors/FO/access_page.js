@@ -8,6 +8,7 @@ module.exports = {
     logo_home_page: '//*[@id="_desktop_logo"]//a',
     product_list_button: '//*[@id="content"]/section/a',
     categories_list: '//*[@id="left-column"]/div[1]/ul/li[2]/ul',
+    category_name: '//*[@id="left-column"]/div[contains(@class, "categories")]//a[text()="%NAME"]',
     shopping_cart_button: '//*[@id="_desktop_cart"]/div',
     top_sellers_block: '//h1[contains(text(), "Best Sellers")]',
     new_products_block: '//h1[contains(text(), "New products")]',

@@ -41,14 +41,29 @@ use PhpEncryption;
  */
 class AddonsDataProvider implements AddonsInterface
 {
+    /**
+     * @var bool
+     */
     protected static $is_addons_up = true;
 
+    /**
+     * @var ApiClient
+     */
     private $marketplaceClient;
 
+    /**
+     * @var ModuleZipManager
+     */
     private $zipManager;
 
+    /**
+     * @var PhpEncryption
+     */
     private $encryption;
 
+    /**
+     * @var string the cache directory location
+     */
     public $cacheDir;
 
     public function __construct(ApiClient $apiClient, ModuleZipManager $zipManager)
@@ -58,6 +73,12 @@ class AddonsDataProvider implements AddonsInterface
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
+    /**
+     * @param $module_id
+     *
+     * @return bool
+     * @throws Exception
+     */
     public function downloadModule($module_id)
     {
         $params = array(
@@ -85,7 +106,11 @@ class AddonsDataProvider implements AddonsInterface
         }
     }
 
-    /** Does this function should be in a User related class ? **/
+    /**
+     * @return bool
+     *
+     * @todo Does this function should be in a User related class ?
+     */
     public function isAddonsAuthenticated()
     {
         $request = Request::createFromGlobals();
@@ -161,6 +186,10 @@ class AddonsDataProvider implements AddonsInterface
         }
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     protected function getAddonsCredentials()
     {
         $request = Request::createFromGlobals();

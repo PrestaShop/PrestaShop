@@ -38,8 +38,19 @@ use Combination;
  */
 class CombinationDataProvider
 {
+    /**
+     * @var LegacyContext
+     */
     private $context;
+
+    /**
+     * @var ProductDataProvider
+     */
     private $productAdapter;
+
+    /**
+     * @var \PrestaShop\PrestaShop\Core\Cldr\Repository
+     */
     private $cldrRepository;
 
     public function __construct()
@@ -98,8 +109,8 @@ class CombinationDataProvider
     }
 
     /**
-     * @param $attributesCombinations
-     * @param $product
+     * @param array $attributesCombinations
+     * @param Product $product
      * @return array
      */
     public function completeCombination($attributesCombinations, $product)
@@ -159,6 +170,10 @@ class CombinationDataProvider
         );
     }
 
+    /**
+     * @param array $attributesCombinations
+     * @return string
+     */
     private function getCombinationName($attributesCombinations)
     {
         $name = array();

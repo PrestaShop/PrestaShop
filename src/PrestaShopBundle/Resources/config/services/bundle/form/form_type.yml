@@ -237,6 +237,33 @@ services:
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
+    form.type.order.invoices.generate_by_date:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
+        parent: 'form.type.common_type'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.invoices.generate_by_status:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
+        parent: 'form.type.common_type'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
+            - '@=service("prestashop.core.api.order_invoice.repository").countByOrderState(service("prestashop.adapter.shop.context").getContextListShopID())'
+        tags:
+            - { name: form.type }
+
+    form.type.order.invoices.invoice_options:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.invoice_model_by_name'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
+        tags:
+            - { name: form.type }
+
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
         tags:
@@ -314,6 +341,26 @@ services:
 
     form.type.common_type:
         abstract: true
+
+    form.type.shipping_preferences.handling:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
+        tags:
+            - { name: form.type }
+
+    form.type.shipping_preferences.carrier_options:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.carrier").getActiveCarriersChoices()'
+            - '@=service("prestashop.adapter.data_provider.carrier").getOrderByChoices()'
+            - '@=service("prestashop.adapter.data_provider.carrier").getOrderWayChoices()'
+        tags:
+            - { name: form.type }
 
     form.type.product_preferences.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
@@ -417,5 +464,15 @@ services:
             - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
             - '@prestashop.adapter.data_provider.country'
+        tags:
+            - { name: form.type }
+
+    form.type.email.email_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.mail_method'
+            - '@prestashop.core.form.choice_provider.contact_by_id'
         tags:
             - { name: form.type }

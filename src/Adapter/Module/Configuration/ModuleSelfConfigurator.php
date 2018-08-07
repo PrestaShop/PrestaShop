@@ -46,11 +46,24 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ModuleSelfConfigurator
 {
+    /**
+     * @var string|null the module name
+     */
     protected $module;
+
+    /**
+     * @var string|null
+     */
     protected $configFile;
 
+    /**
+     * @var array
+     */
     protected $configs = array();
 
+    /**
+     * @var string
+     */
     protected $defaultConfigFile = 'self_config.yml';
 
     /**

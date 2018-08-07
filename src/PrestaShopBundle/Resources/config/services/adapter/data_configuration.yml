@@ -112,9 +112,13 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-
     prestashop.adapter.improve.design.positions.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Improve\Design\PositionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order.invoice_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
@@ -162,3 +166,23 @@ services:
         arguments:
             - '@prestashop.adapter.module.payment_module_provider'
             - '@prestashop.core.module.configuration.payment_restrictions_configurator'
+
+    prestashop.adapter.shipping_preferences.handling_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.shipping_preferences.carrier_options_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.email_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.smtp_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

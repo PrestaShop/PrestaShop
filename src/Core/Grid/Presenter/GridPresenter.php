@@ -26,30 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class GridPresenter is responsible for presenting grid
  */
 final class GridPresenter implements GridPresenterInterface
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @param FormFactoryInterface $formFactory
-     */
-    public function __construct(FormFactoryInterface $formFactory)
-    {
-        $this->formFactory = $formFactory;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -59,16 +42,11 @@ final class GridPresenter implements GridPresenterInterface
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
 
-        list(
-            $columns,
-            $filterForm
-        ) = $this->presentColumns($definition);
-
         return [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $filterForm->createView(),
-            'columns' => $columns,
+            'filter_form' => $grid->getFilterForm()->createView(),
+            'columns' => $definition->getColumns()->toArray(),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),
                 'bulk' => $definition->getBulkActions()->toArray(),
@@ -86,49 +64,7 @@ final class GridPresenter implements GridPresenterInterface
                 'order_by' => $searchCriteria->getOrderBy(),
                 'order_way' => $searchCriteria->getOrderWay(),
             ],
-        ];
-    }
-
-    /**
-     * Get presented columns with filter form
-     *
-     * @param DefinitionInterface $definition
-     *
-     * @return array
-     */
-    private function presentColumns(DefinitionInterface $definition)
-    {
-        $formBuilder = $this->formFactory->createNamedBuilder($definition->getId());
-        $columnsArray = [];
-
-        /** @var ColumnInterface $column */
-        foreach ($definition->getColumns() as $column) {
-            $resolver = new OptionsResolver();
-            $column->configureOptions($resolver);
-            $columnOptions = $resolver->resolve($column->getOptions());
-
-            $columnsArray[] = [
-                'id' => $column->getId(),
-                'name' => $column->getName(),
-                'type' => $column->getType(),
-                'options' => $columnOptions,
-            ];
-
-            if (isset(
-                $columnOptions['filter_type'],
-                $columnOptions['filter_type_options']
-            )) {
-                $formBuilder->add(
-                    $column->getId(),
-                    $columnOptions['filter_type'],
-                    $columnOptions['filter_type_options']
-                );
-            }
-        }
-
-        return [
-            $columnsArray,
-            $formBuilder->getForm(),
+            'filters' => $searchCriteria->getFilters(),
         ];
     }
 }

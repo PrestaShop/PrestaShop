@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Image;
 use ImageManager as LegacyImageManager;
 
+/**
+ * Class responsible of finding images and creating thumbnails.
+ */
 class ImageManager
 {
     /**

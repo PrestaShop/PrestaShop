@@ -20,6 +20,7 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "~2.5.3",
         "geoip2/geoip2": "~2.4.2",
+        "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
         "icanboogie/cldr": "1.3.9",
         "incenteev/composer-parameter-handler": "~2.0",
@@ -42,6 +43,7 @@
         "prestashop/decimal": "^1.0.0",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
+        "prestashop/gsitemap": "^3",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
@@ -109,10 +111,11 @@
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "~5.7",
-        "symfony/phpunit-bridge": "^3.0",
+        "friendsofphp/php-cs-fixer": "^2.12",
+        "johnkary/phpunit-speedtrap": "^1.1",
         "phake/phake": "@stable",
-        "friendsofphp/php-cs-fixer": "^1.10"
+        "phpunit/phpunit": "~5.7",
+        "symfony/phpunit-bridge": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {

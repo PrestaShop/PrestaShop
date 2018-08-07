@@ -36,6 +36,9 @@ use Db;
 use Validate;
 use Module as LegacyModule;
 
+/**
+ * This class will provide data from DB / ORM about Module
+ */
 class ModuleDataProvider
 {
     /**
@@ -69,6 +72,9 @@ class ModuleDataProvider
         $this->employeeID = 0;
     }
 
+    /**
+     * @param $employeeID
+     */
     public function setEmployeeId($employeeID)
     {
         $this->employeeID = (int)$employeeID;

@@ -45,6 +45,9 @@ services:
     prestashop.adapter.legacy.configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration
 
+    prestashop.adapter.legacy.kpi_configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
+
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
 

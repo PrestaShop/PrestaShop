@@ -39,17 +39,26 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class Admin
 {
+    /**
+     * @var LegacyContext
+     */
     private $context;
-    private $legacyContext;
-    private $securityTokenStorage;
-    private $userProvider;
 
     /**
-     * Constructor.
-     *
-     * @param LegacyContext $context
-     * @param TokenStorage $securityTokenStorage
+     * @var \Context
      */
+    private $legacyContext;
+
+    /**
+     * @var TokenStorage
+     */
+    private $securityTokenStorage;
+
+    /**
+     * @var UserProviderInterface
+     */
+    private $userProvider;
+
     public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage, UserProviderInterface $userProvider)
     {
         $this->context = $context;

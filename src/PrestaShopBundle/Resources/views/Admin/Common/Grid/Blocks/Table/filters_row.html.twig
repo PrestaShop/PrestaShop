@@ -24,7 +24,7 @@
  *#}
 
 {% if grid.filter_form|length > 1 %}
-  <tr class="column-filters">
+  <tr class="column-filters {% if 0 == grid.data.rows_total and grid.filters is empty %}d-none{% endif %}">
     {% for column in grid.columns %}
       <th>
         {% if grid.filter_form[column.id] is defined %}

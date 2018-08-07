@@ -210,7 +210,7 @@ ALTER TABLE `PREFIX_tab` ADD `icon` varchar(32) DEFAULT '';
 
 /* Save the new IDs */
 UPDATE `PREFIX_tab_transit` tt SET `id_new_tab` = (
-  SELECT `id_tab` FROM `PREFIX_tab` WHERE CONCAT(`class_name`, COALESCE(`module`, '')) = tt.`key`
+  SELECT `id_tab` FROM `PREFIX_tab` WHERE CONCAT(`class_name`, COALESCE(`module`, '')) = tt.`key` LIMIT 1
 );
 /* Update default tab IDs for employees */
 UPDATE `PREFIX_employee` e SET `default_tab` = (

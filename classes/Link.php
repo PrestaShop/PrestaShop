@@ -747,7 +747,6 @@ class LinkCore
 
             default:
                 $routes = array(
-                    'AdminAddonsCatalog' => 'admin_module_addons_store',
                     'AdminAdminPreferences' => 'admin_administration',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
@@ -764,6 +763,7 @@ class LinkCore
                     'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPerformance' => 'admin_performance',
                     'AdminPreferences' => 'admin_preferences',
+                    'AdminShipping' => 'admin_shipping_preferences',
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
@@ -771,6 +771,8 @@ class LinkCore
                     'AdminLocalization' => 'admin_localization_show_settings',
                     'AdminGeolocation' => 'admin_geolocation',
                     'AdminPaymentPreferences' => 'admin_payment_preferences',
+                    'AdminInvoices' => 'admin_order_invoices',
+                    'AdminEmails' => 'admin_email',
                 );
 
                 if (isset($routes[$controller])) {

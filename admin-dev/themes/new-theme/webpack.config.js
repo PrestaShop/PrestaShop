@@ -73,11 +73,17 @@ let config = {
     localization: [
       './js/pages/localization'
     ],
+    invoices: [
+        './js/pages/invoices',
+    ],
     geolocation: [
-      './js/pages/geolocation'
+      './js/pages/geolocation',
     ],
     payment_preferences: [
       './js/pages/payment-preferences'
+    ],
+    email: [
+      './js/pages/email'
     ]
   },
   output: {
@@ -190,7 +196,6 @@ let config = {
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
@@ -216,6 +221,9 @@ if (process.env.NODE_ENV === 'production') {
     })
   );
 } else {
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin()
+  );
   config.entry.stock.push('webpack/hot/only-dev-server');
   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
 }

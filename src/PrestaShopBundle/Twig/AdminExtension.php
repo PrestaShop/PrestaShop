@@ -31,10 +31,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Twig extension for the Symfony Asset component.
+ * @deprecated since 1.7.5.0 to be removed in 1.8.0.0
  *
  * @author Mlanawo Mbechezi <mlanawo.mbechezi@ikimea.com>
  */
-class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface, \Twig_Extension_InitRuntimeInterface
+class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRuntimeInterface
 {
     /**
      * @var RequestStack

@@ -27,18 +27,33 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Validate as ValidateLegacy;
 
+/**
+ * Adapter for Validate Legacy class.
+ */
 class Validate
 {
+    /**
+     * @param mixed $way
+     * @return bool
+     */
     public static function isOrderWay($way)
     {
         return ValidateLegacy::isOrderWay($way);
     }
 
+    /**
+     * @param mixed $order
+     * @return bool
+     */
     public static function isOrderBy($order)
     {
         return ValidateLegacy::isOrderBy($order);
     }
 
+    /**
+     * @param mixed $date
+     * @return bool
+     */
     public static function isDate($date)
     {
         return ValidateLegacy::isDate($date);
