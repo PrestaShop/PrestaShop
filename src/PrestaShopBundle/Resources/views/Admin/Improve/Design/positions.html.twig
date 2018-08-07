@@ -80,7 +80,7 @@
           </form>
         </div>
 
-        <form id="module-positions-form" method="post" action="" data-update-url="{{ path('api_improve_design_positions_update') }}">
+        <form id="module-positions-form" method="post" action="" data-update-url="{{ getAdminLink('AdminModulesPositions') }}">
           {% for hook in hooks %}
             <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}"{% if not hook['position'] %} style="display:none;"{% endif %}>
               <a name="{{ hook['name'] }}"></a>
