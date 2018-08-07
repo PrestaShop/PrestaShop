@@ -5767,8 +5767,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>dansk krone</displayName>
 				<displayName count="one">dansk krone</displayName>
 				<displayName count="other">danske kroner</displayName>
-				<symbol>kr.</symbol>
-				<symbol alt="narrow" draft="contributed">kr.</symbol>
+				<symbol>DKK</symbol>
+				<symbol alt="narrow" draft="contributed">DKK</symbol>
 			</currency>
 			<currency type="DOP">
 				<displayName>dominikansk peso</displayName>
@@ -6045,7 +6045,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="one">islandsk krone</displayName>
 				<displayName count="other">islandske kroner</displayName>
 				<symbol>ISK</symbol>
-				<symbol alt="narrow" draft="contributed">kr.</symbol>
+				<symbol alt="narrow" draft="contributed">ISK</symbol>
 			</currency>
 			<currency type="ITL">
 				<displayName>Italiensk lire</displayName>
@@ -6404,7 +6404,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="one">norsk krone</displayName>
 				<displayName count="other">norske kroner</displayName>
 				<symbol>NOK</symbol>
-				<symbol alt="narrow" draft="contributed">kr.</symbol>
+				<symbol alt="narrow" draft="contributed">NOK</symbol>
 			</currency>
 			<currency type="NPR">
 				<displayName>nepalesisk rupee</displayName>
@@ -6580,7 +6580,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="one">svensk krone</displayName>
 				<displayName count="other">svenske kroner</displayName>
 				<symbol>SEK</symbol>
-				<symbol alt="narrow" draft="contributed">kr.</symbol>
+				<symbol alt="narrow" draft="contributed">SEK</symbol>
 			</currency>
 			<currency type="SGD">
 				<displayName>singaporeansk dollar</displayName>
