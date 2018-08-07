@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="Denmark" version="1.0">
   <currencies>
-    <currency name="Danish krone" iso_code="DKK" iso_code_num="208" sign="kr" blank="1" conversion_rate="7.45201" format="2" decimals="1"/>
+    <currency name="Danish krone" iso_code="DKK" iso_code_num="208" sign="DKK" blank="1" conversion_rate="7.45201" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="da"/>
@@ -156,8 +156,8 @@
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>
-    <unit type="short_distance" value="in"/>
-    <unit type="base_distance" value="ft"/>
-    <unit type="long_distance" value="mi"/>
+    <unit type="short_distance" value="cm"/>
+    <unit type="base_distance" value="m"/>
+    <unit type="long_distance" value="km"/>
   </units>
 </localizationPack>
