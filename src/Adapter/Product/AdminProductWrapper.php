@@ -424,7 +424,8 @@ class AdminProductWrapper
                         'impact' => $impact,
                         'period' => $period,
                         'from_quantity' => $specific_price['from_quantity'],
-                        'can_delete' => (!$rule->id && $can_delete_specific_prices) ? true : false
+                        'can_delete' => (!$rule->id && $can_delete_specific_prices) ? true : false,
+                        'can_edit' => (!$rule->id && $can_delete_specific_prices) ? true : false,
                     ];
 
                     unset($customer_full_name);
@@ -433,6 +434,22 @@ class AdminProductWrapper
         }
 
         return $content;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return SpecificPrice
+     *
+     * @throws PrestaShopObjectNotFoundException
+     */
+    public function getSpecificPriceDataById($id)
+    {
+        $price = new SpecificPrice($id);
+        if (null === $price->id) {
+            throw new PrestaShopObjectNotFoundException(sprintf('Cannot find specific price with id %d', $id));
+        }
+        return $price;
     }
 
     /**

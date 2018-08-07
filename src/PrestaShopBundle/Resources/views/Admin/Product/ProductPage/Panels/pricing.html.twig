@@ -139,7 +139,12 @@
                   <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
                       {{ include('@Product/ProductPage/Forms/form_specific_price.html.twig', {'form': pricingForm.specific_price, 'is_multishop_context': is_multishop_context}) }}
                   </div>
-                  <table id="js-specific-price-list" class="table hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
+                  <table
+                      id="js-specific-price-list"
+                      class="table hide seo-table"
+                      data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}"
+                      data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}"
+                      data-action-edit="{{ path('admin_get_specific_price_update_form', { 'idSpecificPrice': 1 }) }}">
                     <thead class="thead-default">
                     <tr>
                       <th>{{ 'Rule'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -153,6 +158,7 @@
                       <th>{{ 'Period'|trans({}, 'Admin.Global') }}</th>
                       <th>{{ 'From'|trans({}, 'Admin.Catalog.Feature') }}</th>
                       <th></th>
+                      <th></th>
                     </tr>
                     </thead>
                     <tbody></tbody>
@@ -161,6 +167,11 @@
               </div>
             </div>
           </div>
+
+          <div>
+            {{ include('@Product/ProductPage/Forms/form_edit_specific_price_modal.html.twig') }}
+          </div>
+
 
           <div class="col-md-12">
             <div class="row">

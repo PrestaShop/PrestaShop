@@ -25,8 +25,13 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use DateTime;
+use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice as SpecificPriceFormType;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the attribute / attribute group
@@ -97,6 +102,38 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
+     * Get one specific price list for a product
+     *
+     * @Template("@PrestaShop/Admin/Product/ProductPage\Forms/form_specific_price.html.twig")
+     *
+     * @param int $idSpecificPrice
+     *
+     * @return array
+     */
+    public function getUpdateFormAction($idSpecificPrice)
+    {
+        /** @var AdminProductWrapper $adminProductWrapper */
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        try {
+            $price = $adminProductWrapper->getSpecificPriceDataById($idSpecificPrice);
+        } catch (\PrestaShopObjectNotFoundException $e) {
+            // @todo: translate
+            return new Response(sprintf('Cannot find specific price %d', $idSpecificPrice), Response::HTTP_BAD_REQUEST);
+        }
+        $formData = $this->formatSpecificPriceToPrefillForm($idSpecificPrice, $price);
+
+        $formBuilder = $this->createFormBuilder();
+        $formBuilder->add('modal', SpecificPriceFormType::class);
+        $form = $formBuilder->getForm();
+        $form->setData($formData);
+
+        return [
+            'form' => $form->createView()->offsetGet('modal'),
+            'has_combinations' => ($price->id_product_attribute !== '0')
+        ];
+    }
+
+    /**
      * Delete a specific price
      *
      * @param int $idSpecificPrice The specific price ID
@@ -117,5 +154,69 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         $response->setData($res['message']);
         return $response;
+    }
+
+
+    /**
+     * @param int $id
+     * @param \SpecificPrice $price
+     *
+     * @return array
+     */
+    private function formatSpecificPriceToPrefillForm($id, $price)
+    {
+        if ($price->reduction_type === 'percentage') {
+            $reduction = $price->reduction*100;
+        } else {
+            $reduction = $price->reduction;
+        }
+        $formattedFormData = [
+            'sp_update_id' => $id,
+            'sp_id_shop' => $price->id_shop,
+            'sp_id_currency' => $price->id_currency,
+            'sp_id_country' => $price->id_country,
+            'sp_id_group' => $price->id_group,
+            'sp_id_customer' => null,
+            'sp_id_product_attribute' => $price->id_product_attribute,
+            'sp_from' => self::formatForDatePicker($price->from),
+            'sp_to' => self::formatForDatePicker($price->to),
+            'sp_from_quantity' => $price->from_quantity,
+            'sp_price' => ($price->price !== '-1.000000') ? $price->price : '',
+            'leave_bprice' => ($price->price === '-1.000000'),
+            'sp_reduction' => $reduction,
+            'sp_reduction_type' => $price->reduction_type,
+            'sp_reduction_tax' => $price->reduction_tax,
+        ];
+        if ($price->id_customer !== '0') {
+            $formattedFormData['sp_id_customer'] = ['data' => [$price->id_customer]];
+        }
+        $cleanedFormData = array_map(function ($item) {
+            if (!$item) {
+                return null;
+            } else {
+                return $item;
+            }
+        }, $formattedFormData);
+        return ['modal' => $cleanedFormData];
+    }
+
+    /**
+     * @param string $dateAsString
+     *
+     * @return null|string If date is 0000-00-00 00:00:00, null is returned
+     *
+     * @throws \PrestaShopDatabaseExceptionCore if date is not valid
+     */
+    private static function formatForDatePicker($dateAsString)
+    {
+        if ('0000-00-00 00:00:00' === $dateAsString) {
+            return null;
+        }
+        try {
+            $dateTime = new DateTime($dateAsString);
+        } catch (\Exception $e) {
+            throw new \PrestaShopDatabaseExceptionCore(sprintf('Found bad date for specific price: %s', $dateAsString));
+        }
+        return $dateTime->format('Y-m-d');
     }
 }

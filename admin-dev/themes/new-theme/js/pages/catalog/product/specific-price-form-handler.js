@@ -83,7 +83,7 @@ class SpecificPriceFormHandler {
 
     $.each(specificPrices, (index, specificPrice) => {
       var deleteUrl = $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specificPrice.id_specific_price);
-      var row = self.renderSpecificPriceRow(specificPrice, deleteUrl)
+      var row = self.renderSpecificPriceRow(specificPrice, deleteUrl);
 
       specificPricesList = specificPricesList + row;
     });
@@ -100,6 +100,9 @@ class SpecificPriceFormHandler {
    * @private
    */
   renderSpecificPriceRow(specificPrice, deleteUrl) {
+
+    var specificPriceId = specificPrice.id_specific_price;
+
     var row = '<tr>' +
         '<td>' + specificPrice.rule_name + '</td>' +
         '<td>' + specificPrice.attributes_name + '</td>' +
@@ -112,6 +115,7 @@ class SpecificPriceFormHandler {
         '<td>' + specificPrice.period + '</td>' +
         '<td>' + specificPrice.from_quantity + '</td>' +
         '<td>' + (specificPrice.can_delete ? '<a href="' + deleteUrl + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+        '<td>' + (specificPrice.can_edit ? '<a href="#" data-specific-price-id="' + specificPriceId + '" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>' : '') + '</td>' +
         '</tr>';
 
     return row;
@@ -136,7 +140,14 @@ class SpecificPriceFormHandler {
   }
 
   configureEditPriceModalBehavior() {
-    // to be implemented
+    $(document).on('click', '#js-specific-price-list .js-edit', (event) => {
+      event.preventDefault();
+
+      var specificPriceId = $(event.currentTarget).data('specificPriceId');
+
+      this.openEditPriceModal(specificPriceId);
+    });
+
   }
 
   configureDeletePriceButtonsBehavior() {
@@ -297,6 +308,47 @@ class SpecificPriceFormHandler {
     } else {
       uglySelect2Selector.hide();
     }
+  }
+
+  /**
+   * Open 'edit specific price' form into a modal
+   *
+   * @param integer specificPriceId
+   *
+   * @private
+   */
+  openEditPriceModal(specificPriceId) {
+    const url = $('#js-specific-price-list').data('actionEdit').replace(/get-form\/\d+/, 'get-form/' + specificPriceId);
+
+    $('#edit-specific-price-modal').modal("show");
+
+    $.ajax({
+      type: 'GET',
+      url: url,
+    })
+        .done(response => {
+          this.insertEditSpecificPriceFormIntoModal(response)
+          this.loadJQueryBindersForModal();
+        })
+        .fail(errors => {
+          showErrorMessage(errors.responseJSON);
+        });
+  }
+
+  /**
+   * @param string form: HTML 'edit specific price' form
+   *
+   * @private
+   */
+  insertEditSpecificPriceFormIntoModal(form) {
+    var formLocationHolder = $('#edit-specific-price-modal-form');
+
+    formLocationHolder.empty();
+    formLocationHolder.append(form);
+  }
+
+  loadJQueryBindersForModal() {
+    // to be implemented to reproduce https://github.com/PrestaShop/PrestaShop/pull/9388/files#diff-92ead381d47087dcec5699f591e4e4bbR749 behavior
   }
 }
 
