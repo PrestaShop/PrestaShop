@@ -25,6 +25,8 @@
  */
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
+use Module;
+use Tools;
 use Dispatcher;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,6 +56,7 @@ class PositionsType extends TranslatorAwareType
                 FormType\ChoiceType::class,
                 [
                     'required' => false,
+                    'choices' => $this->getTransplantTo(),
                 ]
             )
             ->add(
@@ -78,7 +81,7 @@ class PositionsType extends TranslatorAwareType
                     'attr' => [
                         'size' => 25,
                     ],
-                    'choices' => $this->formatExceptionsData([]),
+                    'choices' => $this->getExceptionsData(),
                     'choice_attr' => function ($value, $key, $index) {
                         return $value === null ? ['disabled' => 'disabled'] : [];
                     },
@@ -98,10 +101,11 @@ class PositionsType extends TranslatorAwareType
     {
         $hooks = array();
         $moduleInstance = Module::getInstanceById((int)Tools::getValue('id_module'));
-        $hooks = $moduleInstance->getPossibleHooksList();
+        return [];
+        // $hooks = $moduleInstance->getPossibleHooksList();
     }
 
-    protected function formatExceptionsData(array $fileList)
+    protected function getExceptionsData()
     {
         $data = [
             $this->trans('___________ CUSTOM ___________', 'Admin.Design.Feature') => null
@@ -109,12 +113,6 @@ class PositionsType extends TranslatorAwareType
 
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
         ksort($controllers);
-
-        foreach ($fileList as $k => $v) {
-            if (!isset($controllers[$v])) {
-                $data[$v] = false;
-            }
-        }
 
         $data[$this->trans('____________ CORE ____________', 'Admin.Design.Feature')] = null;
         foreach ($controllers as $k => $v) {

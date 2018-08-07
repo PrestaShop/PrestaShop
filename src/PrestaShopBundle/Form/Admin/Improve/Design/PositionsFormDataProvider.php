@@ -88,7 +88,6 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
         $this->data = [
             'exceptions_text' => $exceptionsString,
             'exceptions_list' => $exceptionsList,
-
         ];
     }
 
