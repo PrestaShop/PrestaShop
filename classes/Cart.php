@@ -1340,9 +1340,12 @@ class CartCore extends ObjectModel
         // Hook::exec('actionBeforeCartUpdateQty', $data);
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
+        if ((int) $quantity <= 0) {
+            return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization);
+        }
+
         if (!$product->available_for_order ||
-            Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_') ||
-            (int) $quantity <= 0
+            Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_')
         ) {
             return false;
         }
