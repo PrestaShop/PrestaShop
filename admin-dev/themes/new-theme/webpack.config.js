@@ -84,6 +84,9 @@ let config = {
     ],
     sql_manager: [
       './js/pages/sql-manager',
+    ],
+    catalog_product: [
+        './js/pages/catalog/product'
     ]
   },
   output: {

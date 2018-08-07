@@ -31,7 +31,6 @@ $(document).ready(function() {
   formCategory.init();
   stock.init();
   supplier.init();
-  specificPrices.init();
   warehouseCombinations.init();
   customFieldCollection.init();
   virtualProduct.init();
@@ -183,12 +182,10 @@ var displayFieldsManager = (function() {
       if (showVariationsSelector.find('input:checked').val() === '1' || $('#accordion_combinations tr:not(#loading-attribute)').length > 0) {
         combinationsBlock.show();
 
-        $('#specific-price-combination-selector').removeClass('hide').show();
         $('#form-nav a[href="#step3"]').text(translate_javascripts['Combinations']);
         $('#product_qty_0_shortcut_div, #quantities').hide();
       } else {
         combinationsBlock.hide();
-        $('#specific-price-combination-selector').hide();
         $('#product_qty_0_shortcut_div, #quantities').show();
       }
 
@@ -545,234 +542,9 @@ var nav = (function() {
 
       formNav.find("a").on('shown.bs.tab', function(e) {
         if (e.target.hash) {
-          onTabSwitch(e.target.hash);
           window.location.hash = e.target.hash.replace('#', '#' + prefix);
         }
       });
-
-      /** on tab switch */
-      function onTabSwitch(currentTab) {
-        if (currentTab === '#step2') {
-          /** each switch to price tab, reload combinations into specific price form */
-          specificPrices.refreshCombinationsList();
-        }
-      }
-    }
-  };
-})();
-
-/**
- * Specific prices management
- */
-var specificPrices = (function() {
-  var id_product = $('#form_id_product').val();
-  var elem = $('#js-specific-price-list');
-  var leaveInitialPrice = $('#form_step2_specific_price_leave_bprice');
-  var productPriceField = $('#form_step2_specific_price_sp_price');
-  var discountTypeField = $('#form_step2_specific_price_sp_reduction_type');
-  var discountTaxField = $('#form_step2_specific_price_sp_reduction_tax');
-  var initSpecificPriceForm = new Object();
-
-  /** Get all specific prices */
-  function getInitSpecificPriceForm() {
-    $('#specific_price_form').find('select,input').each(function() {
-        initSpecificPriceForm[$(this).attr('id')] = $(this).val();
-    });
-    $('#specific_price_form').find('input:checkbox').each(function() {
-        initSpecificPriceForm[$(this).attr('id')] = $(this).prop('checked');
-    });
-  }
-
-  /** Get all specific prices */
-  function getAll() {
-    var url = elem.attr('data').replace(/list\/\d+/, 'list/' + id_product);
-
-    $.ajax({
-      type: 'GET',
-      url: url,
-      success: function(specific_prices) {
-        var tbody = elem.find('tbody');
-        tbody.find('tr').remove();
-
-        if (specific_prices.length > 0) {
-          elem.removeClass('hide');
-        } else {
-          elem.addClass('hide');
-        }
-
-        $.each(specific_prices, function(key, specific_price) {
-          var row = '<tr>' +
-            '<td>' + specific_price.rule_name + '</td>' +
-            '<td>' + specific_price.attributes_name + '</td>' +
-            '<td>' + specific_price.currency + '</td>' +
-            '<td>' + specific_price.country + '</td>' +
-            '<td>' + specific_price.group + '</td>' +
-            '<td>' + specific_price.customer + '</td>' +
-            '<td>' + specific_price.fixed_price + '</td>' +
-            '<td>' + specific_price.impact + '</td>' +
-            '<td>' + specific_price.period + '</td>' +
-            '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
-            '</tr>';
-
-          tbody.append(row);
-        });
-      }
-    });
-  }
-
-  /**
-   * Add a specific price
-   * @param {object} elem - The clicked link
-   */
-  function add(elem) {
-    $.ajax({
-      type: 'POST',
-      url: $('#specific_price_form').attr('data-action'),
-      data: $('#specific_price_form input, #specific_price_form select, #form_id_product').serialize(),
-      beforeSend: function() {
-        elem.attr('disabled', 'disabled');
-      },
-      success: function() {
-        showSuccessMessage(translate_javascripts['Form update success']);
-        $('#specific_price_form .js-cancel').click();
-        getAll();
-      },
-      complete: function() {
-        elem.removeAttr('disabled');
-      },
-      error: function(errors) {
-        showErrorMessage(errors.responseJSON);
-      }
-    });
-  }
-
-  /**
-   * Remove a specific price
-   * @param {object} elem - The clicked link
-   */
-  function remove(elem) {
-    modalConfirmation.create(translate_javascripts['This will delete the specific price. Do you wish to proceed?'], null, {
-      onContinue: function() {
-        $.ajax({
-          type: 'GET',
-          url: elem.attr('href'),
-          beforeSend: function() {
-            elem.attr('disabled', 'disabled');
-          },
-          success: function(response) {
-            getAll();
-            resetForm();
-            showSuccessMessage(response);
-          },
-          error: function(response) {
-            showErrorMessage(response.responseJSON);
-          },
-          complete: function() {
-            elem.removeAttr('disabled');
-          }
-        });
-      }
-    }).show();
-  }
-
-  /** refresh combinations list selector for specific price form */
-  function refreshCombinationsList() {
-    var elem = $('#form_step2_specific_price_sp_id_product_attribute');
-    var url = elem.attr('data-action').replace(/product-combinations\/\d+/, 'product-combinations/' + id_product);
-
-    $.ajax({
-      type: 'GET',
-      url: url,
-      success: function(combinations) {
-        /** remove all options except first one */
-        elem.find('option:gt(0)').remove();
-
-        $.each(combinations, function(key, combination) {
-          elem.append('<option value="' + combination.id + '">' + combination.name + '</option>');
-        });
-      }
-    });
-  }
-
-  /**
-   * Because all "forms" are encapsulated in a global form, we just can't use reset button
-   * Reset all subform inputs values
-   */
-  function resetForm() {
-    $('#specific_price_form').find('input').each(function() {
-        $(this).val(initSpecificPriceForm[$(this).attr('id')]);
-    });
-    $('#specific_price_form').find('select').each(function() {
-        $(this).val(initSpecificPriceForm[$(this).attr('id')]).change();
-    });
-    $('#specific_price_form').find('input:checkbox').each(function() {
-        $(this).prop("checked", true);
-    });
-  }
-
-  return {
-    'init': function() {
-      this.getAll();
-
-      $('#specific-price .add').click(function() {
-        $(this).hide();
-      });
-
-      $('#specific_price_form .js-cancel').click(function() {
-        resetForm();
-        $('#specific-price > a').click();
-        $('#specific-price .add').click().show();
-        productPriceField.prop('disabled', true);
-      });
-
-      $('#specific_price_form .js-save').click(function() {
-        add($(this));
-      });
-
-      $(document).on('click', '#js-specific-price-list .js-delete', function(e) {
-        e.preventDefault();
-        remove($(this));
-      });
-
-      $('#form_step2_specific_price_sp_reduction_type').change(function() {
-        if ($(this).val() === 'percentage') {
-          $('#form_step2_specific_price_sp_reduction_tax').hide();
-        } else {
-          $('#form_step2_specific_price_sp_reduction_tax').show();
-        }
-      });
-
-      this.refreshCombinationsList();
-
-      /* enable price field only when needed */
-      leaveInitialPrice.on('click', function togglePriceField() {
-        productPriceField.prop('disabled', $(this).is(':checked'))
-          .val('')
-        ;
-      });
-
-      /* enable tax type field only when reduction by amount is selected */
-      discountTypeField.on('change', function toggleDiscountTaxField() {
-        var uglySelect2Selector = $('#select2-form_step2_specific_price_sp_reduction_tax-container').parent().parent();
-        if ($(this).val() === 'amount') {
-          uglySelect2Selector.show();
-        }else {
-          uglySelect2Selector.hide();
-        }
-      });
-
-      this.getInitSpecificPriceForm();
-
-    },
-    'getAll': function() {
-      getAll();
-    },
-    'refreshCombinationsList': function() {
-      refreshCombinationsList();
-    },
-    'getInitSpecificPriceForm' : function() {
-      getInitSpecificPriceForm();
     }
   };
 })();
