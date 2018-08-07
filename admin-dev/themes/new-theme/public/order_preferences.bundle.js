@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7e53425a59e8272a7b7f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ea4e7e04876fbbf44bf6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(469)(__webpack_require__.s = 469);
+/******/ 	return hotCreateRequire(468)(__webpack_require__.s = 468);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -716,7 +716,7 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(282);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__terms_and_conditions_option_handler__ = __webpack_require__(281);
 /**
  * 2007-2018 PrestaShop
  *
@@ -752,7 +752,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 282:
+/***/ 281:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -830,7 +830,7 @@ var TermsAndConditionsOptionHandler = function () {
 
 /***/ }),
 
-/***/ 469:
+/***/ 468:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(239);

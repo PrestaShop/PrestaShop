@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7e53425a59e8272a7b7f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ea4e7e04876fbbf44bf6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,12 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(473)(__webpack_require__.s = 473);
+/******/ 	return hotCreateRequire(472)(__webpack_require__.s = 472);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
+/***/ 16:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -851,7 +851,35 @@ var TableSorting = function () {
 
 /***/ }),
 
-/***/ 19:
+/***/ 2:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 23:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -896,31 +924,161 @@ var init = function resetSearch(url, redirectUrl) {
 
 /***/ }),
 
-/***/ 2:
-/***/ (function(module, exports) {
+/***/ 24:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var g;
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
+var $ = window.$;
 
-module.exports = g;
+/**
+ * Class ExportToSqlManagerExtension extends grid with exporting query to SQL Manager
+ */
 
+var ExportToSqlManagerExtension = function () {
+  function ExportToSqlManagerExtension() {
+    _classCallCheck(this, ExportToSqlManagerExtension);
+  }
+
+  _createClass(ExportToSqlManagerExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      var _this = this;
+
+      grid.getContainer().on('click', '.js-common_show_query-grid-action', function () {
+        return _this._onShowSqlQueryClick(grid);
+      });
+      grid.getContainer().on('click', '.js-common_export_sql_manager-grid-action', function () {
+        return _this._onExportSqlManagerClick(grid);
+      });
+    }
+
+    /**
+     * Invoked when clicking on the "show sql query" toolbar button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onShowSqlQueryClick',
+    value: function _onShowSqlQueryClick(grid) {
+      var $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+      this._fillExportForm($sqlManagerForm, grid);
+
+      var $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
+      $modal.modal('show');
+
+      $modal.on('click', '.btn-sql-submit', function () {
+        return $sqlManagerForm.submit();
+      });
+    }
+
+    /**
+     * Invoked when clicking on the "export to the sql query" toolbar button
+     *
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_onExportSqlManagerClick',
+    value: function _onExportSqlManagerClick(grid) {
+      var $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+
+      this._fillExportForm($sqlManagerForm, grid);
+
+      $sqlManagerForm.submit();
+    }
+
+    /**
+     * Fill export form with SQL and it's name
+     *
+     * @param {jQuery} $sqlManagerForm
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: '_fillExportForm',
+    value: function _fillExportForm($sqlManagerForm, grid) {
+      var query = grid.getContainer().find('.js-grid-table').data('query');
+
+      $sqlManagerForm.find('textarea[name="sql"]').val(query);
+      $sqlManagerForm.find('input[name="name"]').val(this._getNameFromBreadcrumb());
+    }
+
+    /**
+     * Get export name from page's breadcrumb
+     *
+     * @return {String}
+     *
+     * @private
+     */
+
+  }, {
+    key: '_getNameFromBreadcrumb',
+    value: function _getNameFromBreadcrumb() {
+      var $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
+      var name = '';
+
+      $breadcrumbs.each(function (i, item) {
+        var $breadcrumb = $(item);
+
+        var breadcrumbTitle = 0 < $breadcrumb.find('a').length ? $breadcrumb.find('a').text() : $breadcrumb.text();
+
+        if (0 < name.length) {
+          name = name.concat(' > ');
+        }
+
+        name = name.concat(breadcrumbTitle);
+      });
+
+      return name;
+    }
+  }]);
+
+  return ExportToSqlManagerExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (ExportToSqlManagerExtension);
 
 /***/ }),
 
@@ -929,11 +1087,11 @@ module.exports = g;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(43);
@@ -1092,166 +1250,7 @@ $(document).ready(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Class ExportToSqlManagerExtension extends grid with exporting query to SQL Manager
- */
-
-var ExportToSqlManagerExtension = function () {
-  function ExportToSqlManagerExtension() {
-    _classCallCheck(this, ExportToSqlManagerExtension);
-  }
-
-  _createClass(ExportToSqlManagerExtension, [{
-    key: 'extend',
-
-    /**
-     * Extend grid
-     *
-     * @param {Grid} grid
-     */
-    value: function extend(grid) {
-      var _this = this;
-
-      grid.getContainer().on('click', '.js-common_show_query-grid-action', function () {
-        return _this._onShowSqlQueryClick(grid);
-      });
-      grid.getContainer().on('click', '.js-common_export_sql_manager-grid-action', function () {
-        return _this._onExportSqlManagerClick(grid);
-      });
-    }
-
-    /**
-     * Invoked when clicking on the "show sql query" toolbar button
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onShowSqlQueryClick',
-    value: function _onShowSqlQueryClick(grid) {
-      var $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
-      this._fillExportForm($sqlManagerForm, grid);
-
-      var $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
-      $modal.modal('show');
-
-      console.log(this._getNameFromBreadcrumb());return;
-      $modal.on('click', '.btn-sql-submit', function () {
-        return $sqlManagerForm.submit();
-      });
-    }
-
-    /**
-     * Invoked when clicking on the "export to the sql query" toolbar button
-     *
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_onExportSqlManagerClick',
-    value: function _onExportSqlManagerClick(grid) {
-      var $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
-
-      this._fillExportForm($sqlManagerForm, grid);
-
-      $sqlManagerForm.submit();
-    }
-
-    /**
-     * Fill export form with SQL and it's name
-     *
-     * @param {jQuery} $sqlManagerForm
-     * @param {Grid} grid
-     *
-     * @private
-     */
-
-  }, {
-    key: '_fillExportForm',
-    value: function _fillExportForm($sqlManagerForm, grid) {
-      var query = grid.getContainer().find('.js-grid-table').data('query');
-
-      $sqlManagerForm.find('textarea[name="sql"]').val(query);
-      $sqlManagerForm.find('input[name="name"]').val(this._getNameFromBreadcrumb());
-    }
-
-    /**
-     * Get export name from page's breadcrumb
-     *
-     * @return {String}
-     *
-     * @private
-     */
-
-  }, {
-    key: '_getNameFromBreadcrumb',
-    value: function _getNameFromBreadcrumb() {
-      var $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
-      var name = '';
-
-      $breadcrumbs.each(function (i, item) {
-        var $breadcrumb = $(item);
-
-        var breadcrumbTitle = 0 < $breadcrumb.find('a').length ? $breadcrumb.find('a').text() : $breadcrumb.text();
-
-        if (0 < name.length) {
-          name = name.concat(' > ');
-        }
-
-        name = name.concat(breadcrumbTitle);
-      });
-
-      return name;
-    }
-  }]);
-
-  return ExportToSqlManagerExtension;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (ExportToSqlManagerExtension);
-
-/***/ }),
-
-/***/ 26:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(23);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1317,7 +1316,7 @@ var FiltersResetExtension = function () {
 
 /***/ }),
 
-/***/ 27:
+/***/ 26:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1380,11 +1379,11 @@ var ReloadListExtension = function () {
 
 /***/ }),
 
-/***/ 28:
+/***/ 27:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(16);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1444,6 +1443,103 @@ var SortingExtension = function () {
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (SortingExtension);
+
+/***/ }),
+
+/***/ 28:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class is responsible for handling Grid events
+ */
+
+var Grid = function () {
+  /**
+   * Grid id
+   *
+   * @param {string} id
+   */
+  function Grid(id) {
+    _classCallCheck(this, Grid);
+
+    this.id = id;
+    this.$container = $('#' + this.id + '_grid');
+  }
+
+  /**
+   * Get grid id
+   *
+   * @returns {string}
+   */
+
+
+  _createClass(Grid, [{
+    key: 'getId',
+    value: function getId() {
+      return this.id;
+    }
+
+    /**
+     * Get grid container
+     *
+     * @returns {jQuery}
+     */
+
+  }, {
+    key: 'getContainer',
+    value: function getContainer() {
+      return this.$container;
+    }
+
+    /**
+     * Extend grid with external extensions
+     *
+     * @param {object} extension
+     */
+
+  }, {
+    key: 'addExtension',
+    value: function addExtension(extension) {
+      extension.extend(this);
+    }
+  }]);
+
+  return Grid;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Grid);
 
 /***/ }),
 
@@ -1862,104 +1958,7 @@ var SubmitGridActionExtension = function () {
 
 /***/ }),
 
-/***/ 44:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Class is responsible for handling Grid events
- */
-
-var Grid = function () {
-  /**
-   * Grid id
-   *
-   * @param {string} id
-   */
-  function Grid(id) {
-    _classCallCheck(this, Grid);
-
-    this.id = id;
-    this.$container = $('#' + this.id + '_grid');
-  }
-
-  /**
-   * Get grid id
-   *
-   * @returns {string}
-   */
-
-
-  _createClass(Grid, [{
-    key: 'getId',
-    value: function getId() {
-      return this.id;
-    }
-
-    /**
-     * Get grid container
-     *
-     * @returns {jQuery}
-     */
-
-  }, {
-    key: 'getContainer',
-    value: function getContainer() {
-      return this.$container;
-    }
-
-    /**
-     * Extend grid with external extensions
-     *
-     * @param {object} extension
-     */
-
-  }, {
-    key: 'addExtension',
-    value: function addExtension(extension) {
-      extension.extend(this);
-    }
-  }]);
-
-  return Grid;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Grid);
-
-/***/ }),
-
-/***/ 473:
+/***/ 472:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(243);

@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7e53425a59e8272a7b7f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ea4e7e04876fbbf44bf6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(471)(__webpack_require__.s = 471);
+/******/ 	return hotCreateRequire(470)(__webpack_require__.s = 470);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -716,7 +716,7 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_multiple_choice_table__ = __webpack_require__(272);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_multiple_choice_table__ = __webpack_require__(271);
 /**
  * 2007-2018 PrestaShop
  *
@@ -752,7 +752,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 272:
+/***/ 271:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -834,7 +834,7 @@ var MultipleChoiceTable = function () {
 
 /***/ }),
 
-/***/ 471:
+/***/ 470:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(241);

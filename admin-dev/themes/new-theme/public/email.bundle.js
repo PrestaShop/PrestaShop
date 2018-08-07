@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7e53425a59e8272a7b7f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ea4e7e04876fbbf44bf6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,12 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(464)(__webpack_require__.s = 464);
+/******/ 	return hotCreateRequire(463)(__webpack_require__.s = 463);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
+/***/ 16:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -851,7 +851,35 @@ var TableSorting = function () {
 
 /***/ }),
 
-/***/ 19:
+/***/ 2:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 23:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -896,46 +924,18 @@ var init = function resetSearch(url, redirectUrl) {
 
 /***/ }),
 
-/***/ 2:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
 /***/ 234:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__email_sending_test__ = __webpack_require__(278);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__smtp_configuration_toggler__ = __webpack_require__(279);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_grid__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_reload_list_extension__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_filters_reset_extension__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__email_sending_test__ = __webpack_require__(277);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__smtp_configuration_toggler__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_grid__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_reload_list_extension__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_filters_reset_extension__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(43);
@@ -997,7 +997,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 25:
+/***/ 24:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1077,7 +1077,6 @@ var ExportToSqlManagerExtension = function () {
       var $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
       $modal.modal('show');
 
-      console.log(this._getNameFromBreadcrumb());return;
       $modal.on('click', '.btn-sql-submit', function () {
         return $sqlManagerForm.submit();
       });
@@ -1156,11 +1155,11 @@ var ExportToSqlManagerExtension = function () {
 
 /***/ }),
 
-/***/ 26:
+/***/ 25:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_reset_search__ = __webpack_require__(23);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1226,7 +1225,7 @@ var FiltersResetExtension = function () {
 
 /***/ }),
 
-/***/ 27:
+/***/ 26:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1289,7 +1288,74 @@ var ReloadListExtension = function () {
 
 /***/ }),
 
-/***/ 278:
+/***/ 27:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(16);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+/**
+ * Class ReloadListExtension extends grid with "List reload" action
+ */
+
+var SortingExtension = function () {
+  function SortingExtension() {
+    _classCallCheck(this, SortingExtension);
+  }
+
+  _createClass(SortingExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      var $sortableTable = grid.getContainer().find('table.table');
+
+      new __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__["a" /* default */]($sortableTable).attach();
+    }
+  }]);
+
+  return SortingExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SortingExtension);
+
+/***/ }),
+
+/***/ 277:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1514,7 +1580,7 @@ var EmailSendingTest = function () {
 
 /***/ }),
 
-/***/ 279:
+/***/ 278:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1617,7 +1683,6 @@ var SmtpConfigurationToggler = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__ = __webpack_require__(14);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1647,36 +1712,67 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
+var $ = window.$;
 
 /**
- * Class ReloadListExtension extends grid with "List reload" action
+ * Class is responsible for handling Grid events
  */
 
-var SortingExtension = function () {
-  function SortingExtension() {
-    _classCallCheck(this, SortingExtension);
+var Grid = function () {
+  /**
+   * Grid id
+   *
+   * @param {string} id
+   */
+  function Grid(id) {
+    _classCallCheck(this, Grid);
+
+    this.id = id;
+    this.$container = $('#' + this.id + '_grid');
   }
 
-  _createClass(SortingExtension, [{
-    key: 'extend',
+  /**
+   * Get grid id
+   *
+   * @returns {string}
+   */
+
+
+  _createClass(Grid, [{
+    key: 'getId',
+    value: function getId() {
+      return this.id;
+    }
 
     /**
-     * Extend grid
+     * Get grid container
      *
-     * @param {Grid} grid
+     * @returns {jQuery}
      */
-    value: function extend(grid) {
-      var $sortableTable = grid.getContainer().find('table.table');
 
-      new __WEBPACK_IMPORTED_MODULE_0__app_utils_table_sorting__["a" /* default */]($sortableTable).attach();
+  }, {
+    key: 'getContainer',
+    value: function getContainer() {
+      return this.$container;
+    }
+
+    /**
+     * Extend grid with external extensions
+     *
+     * @param {object} extension
+     */
+
+  }, {
+    key: 'addExtension',
+    value: function addExtension(extension) {
+      extension.extend(this);
     }
   }]);
 
-  return SortingExtension;
+  return Grid;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (SortingExtension);
+/* harmony default export */ __webpack_exports__["a"] = (Grid);
 
 /***/ }),
 
@@ -2095,104 +2191,7 @@ var SubmitGridActionExtension = function () {
 
 /***/ }),
 
-/***/ 44:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-/**
- * Class is responsible for handling Grid events
- */
-
-var Grid = function () {
-  /**
-   * Grid id
-   *
-   * @param {string} id
-   */
-  function Grid(id) {
-    _classCallCheck(this, Grid);
-
-    this.id = id;
-    this.$container = $('#' + this.id + '_grid');
-  }
-
-  /**
-   * Get grid id
-   *
-   * @returns {string}
-   */
-
-
-  _createClass(Grid, [{
-    key: 'getId',
-    value: function getId() {
-      return this.id;
-    }
-
-    /**
-     * Get grid container
-     *
-     * @returns {jQuery}
-     */
-
-  }, {
-    key: 'getContainer',
-    value: function getContainer() {
-      return this.$container;
-    }
-
-    /**
-     * Extend grid with external extensions
-     *
-     * @param {object} extension
-     */
-
-  }, {
-    key: 'addExtension',
-    value: function addExtension(extension) {
-      extension.extend(this);
-    }
-  }]);
-
-  return Grid;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Grid);
-
-/***/ }),
-
-/***/ 464:
+/***/ 463:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(234);
