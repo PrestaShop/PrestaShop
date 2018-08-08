@@ -25,10 +25,10 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 
 class AdminControllerCore extends Controller
 {
@@ -1776,7 +1776,7 @@ class AdminControllerCore extends Controller
         $modal_module_list = file_exists($module_list_dir.'modal.tpl') ? $module_list_dir.'modal.tpl' : 'modal.tpl';
         $tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
-        // Check if action template has been overriden
+        // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
             if (file_exists($template_dir.DIRECTORY_SEPARATOR.$tpl_action) && $this->display != 'view' && $this->display != 'options') {
                 if (method_exists($this, $this->display.Tools::toCamelCase($this->className))) {
@@ -4614,16 +4614,12 @@ class AdminControllerCore extends Controller
         return $this->tabSlug;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function buildContainer()
     {
-        $container = new ContainerBuilder();
-        $container->addCompilerPass(new LegacyCompilerPass());
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
-        $loader->load(_PS_CONFIG_DIR_.'services/admin/services_'. $env .'.yml');
-        $container->compile();
-
-        return $container;
+        return ContainerBuilder::getContainer('admin', _PS_MODE_DEV_);
     }
 
     /**
