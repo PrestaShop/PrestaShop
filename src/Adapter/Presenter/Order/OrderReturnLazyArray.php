@@ -48,9 +48,9 @@ class OrderReturnLazyArray extends AbstractLazyArray
 
     /**
      * OrderReturnLazyArray constructor.
-     * @param $prefix
+     * @param string $prefix
      * @param Link $link
-     * @param $orderReturn
+     * @param array $orderReturn
      * @throws \ReflectionException
      */
     public function __construct($prefix, Link $link, $orderReturn)
@@ -59,6 +59,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
         $this->link = $link;
         $this->orderReturn = $orderReturn;
         parent::__construct();
+        $this->appendArray($orderReturn);
     }
 
     /**
