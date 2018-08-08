@@ -29,6 +29,7 @@ import attributes from './attributes';
 import bulkCombination from './product-bulk-combinations';
 import nestedCategory from './nested-categories';
 import combination from './combination';
+import seoTab from './seo';
 
 $(() => {
   productHeader();
@@ -38,6 +39,7 @@ $(() => {
   combination();
   bulkCombination().init();
   nestedCategory().init();
+  seoTab().init();
 
   // This is the only script for the module page so there is no specific file for it.
   $('.modules-list-select').on("change", (e) => {
