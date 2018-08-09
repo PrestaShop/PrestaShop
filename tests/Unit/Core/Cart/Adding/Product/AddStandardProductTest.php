@@ -83,8 +83,12 @@ class AddStandardProductTest extends AbstractCartTest
     /**
      * @dataProvider updateQuantitiesProvider
      */
-    public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce($quantity, $operator, $expected, $quantityExpected)
-    {
+    public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
+        $quantity,
+        $operator,
+        $expected,
+        $quantityExpected
+    ) {
         $product = $this->getProductFromFixtureId(1);
         $result = $this->cart->updateQty(
             $quantity,
@@ -120,10 +124,20 @@ class AddStandardProductTest extends AbstractCartTest
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityTwice($first, $second)
     {
         list($quantity, $operator, $expected, $quantityExpected) = $first;
-        $this->testUpdateQuantity($quantity, $operator, $expected, $quantityExpected);
+        $this->testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
+            $quantity,
+            $operator,
+            $expected,
+            $quantityExpected
+        );
 
         list($quantity, $operator, $expected, $quantityExpected) = $second;
-        $this->testUpdateQuantity($quantity, $operator, $expected, $quantityExpected);
+        $this->testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
+            $quantity,
+            $operator,
+            $expected,
+            $quantityExpected
+        );
     }
 
     public function multipleUpdateQuantitiesProvider()
