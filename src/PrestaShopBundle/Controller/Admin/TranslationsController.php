@@ -219,7 +219,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $data = $addUpdateLanguageForm->getData();
             $isoCode = $data['iso_localization_pack'];
 
-            $languagePackImporter = $this->get('prestashop.core.language.pack.import.language.importer');
+            $languagePackImporter = $this->get('prestashop.core.language.pack.import.language_importer');
             $errors = $languagePackImporter->import($isoCode);
 
             if (empty($errors)) {
