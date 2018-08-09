@@ -246,6 +246,7 @@ class TranslationsController extends FrameworkBundleAdminController
      * Extract theme using locale and theme name.
      *
      * @param Request $request
+     *
      * @return BinaryFileResponse|RedirectResponse
      */
     public function exportThemeLanguageAction(Request $request)
@@ -266,7 +267,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_.DIRECTORY_SEPARATOR);
 
             $response = new BinaryFileResponse($zipFile);
-            $response->deleteFileAfterSend(true);
+            $response->deleteFileAfterSend($shouldDelete = true);
 
             $themeExporter->cleanArtifacts($themeName);
             return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
