@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
-use function ICanBoogie\exact_array_merge_recursive;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -56,17 +55,12 @@ class AddUpdateLanguageType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $installedLocales = $this->getLocaleChoices();
-        $nonInstalledLocales = $this->nonInstalledLocalizationChoiceProvider->getChoices();
-        
         $builder->add('iso_localization_pack', ChoiceType::class, [
             'choices' => [
-                'Update a language' => $installedLocales,
-                'Add a language' => $nonInstalledLocales,
+                'Update a language' => $this->getLocaleChoices(),
+                'Add a language' => $this->nonInstalledLocalizationChoiceProvider->getChoices()
             ],
         ]);
-
-        $builder->setDisabled(empty($installedLocales) && empty($nonInstalledLocales));
     }
 
     public function configureOptions(OptionsResolver $resolver)
