@@ -237,6 +237,11 @@ $(document).ready(() => {
 
     // There should be a new product quantity in cart
     const qty = targetValue - baseValue;
+    if (qty === 0) {
+      return;
+    }
+
+    $target.attr('value', targetValue);
     sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
   }
 
@@ -248,7 +253,6 @@ $(document).ready(() => {
         if (event.keyCode === 13) {
           updateProductQuantityInCart(event);
         }
-
         return false;
       }
 

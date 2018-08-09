@@ -22,12 +22,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const keepLicense = require('uglify-save-license');
 
-let config = {
+const config = {
   entry: {
     main: [
       'prestakit/dist/js/prestashop-ui-kit.js',

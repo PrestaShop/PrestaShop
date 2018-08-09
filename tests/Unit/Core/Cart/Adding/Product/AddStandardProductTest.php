@@ -80,4 +80,61 @@ class AddStandardProductTest extends AbstractCartTest
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
 
+    /**
+     * @dataProvider updateQuantities
+     */
+    public function testUpdateQuantity($quantity, $operator, $expected, $quantityExpected)
+    {
+        $product = $this->getProductFromFixtureId(1);
+        $result = $this->cart->updateQty(
+            $quantity,
+            $product->id,
+            $id_product_attribute = null,
+            $id_customization = false,
+            $operator
+        );
+        $cartProductQuantity = $this->cart->getProductQuantity(
+            $product->id,
+            $id_product_attribute,
+            (int) $id_customization,
+            $id_address_delivery = 0
+        );
+
+        $this->assertEquals($expected, $result);
+        $this->assertEquals($quantityExpected, $cartProductQuantity['quantity']);
+    }
+
+    public function updateQuantities()
+    {
+        return [
+            [1, 'up', true, 1],
+            [2, 'up', true, 2],
+            [2, 'down', true, 0],
+            [0, 'down', true, 0],
+        ];
+    }
+
+    /**
+     * @dataProvider multipleUpdateQuantities
+     */
+    public function testMultipleUpdateQuantity($first, $second)
+    {
+        list($quantity, $operator, $expected, $quantityExpected) = $first;
+        $this->testUpdateQuantity($quantity, $operator, $expected, $quantityExpected);
+
+        list($quantity, $operator, $expected, $quantityExpected) = $second;
+        $this->testUpdateQuantity($quantity, $operator, $expected, $quantityExpected);
+    }
+
+    public function multipleUpdateQuantities()
+    {
+        return [
+            [[1, 'up', true, 1], [1, 'up', true, 2]],
+            [[2, 'up', true, 2], [2, 'down', true, 0]],
+            [[2, 'down', true, 0], [2, 'up', true, 2]],
+            [[0, 'down', true, 0], [1, 'nothing', true, 0]],
+            [[1, 'down', true, 0], [1, 'nothing', true, 0]],
+            [[1, 'up', true, 1], [10, 'nothing', false, 1]],
+        ];
+    }
 }
