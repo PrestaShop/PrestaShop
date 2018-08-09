@@ -2,7 +2,10 @@ services:
     _defaults:
         public: true
 
-    prestashop.core.language.pack.import.language.importer:
+    prestashop.core.language.export.language_exporter:
+        class: 'PrestaShop\PrestaShop\Core\Language\Export\LanguageExporter'
+
+    prestashop.core.language.pack.import.language_importer:
         class: 'PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporter'
         arguments:
             - '@prestashop.adapter.language.language_pack'
