@@ -22,41 +22,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import Vue from 'vue';
+import serp from './serp';
 
-import serpComponent from '../components/serp-component.js';
-
-/**
- * SEO Tab
- */
 export default function() {
-  var productName = $('#form_step1_name_1');
-  var productMetaTitle = $('#form_step5_meta_title_1');
-  var productDescription = $('#form_step1_description_1');
-  var productMetaDescription = $('#form_step5_meta_description_1');
-  var productUrl = $('#form_step5_meta_title_1');
-  
+  const defaultTitle = $('.serp-default-title');
+  const watchedTitle = $('.serp-watched-title');
+  const defaultDescription = $('.serp-default-description');
+  const watchedDescription = $('.serp-watched-description');
+  const defaultUrl = $('.serp-default-url');
+
   return {
-    'init': function() {
+    'init': function() {  
+        const vm = new Vue({
+          el: '#serp-app',
+          template: '<serp ref="serp" />',
+          components: { serp },
+        });
         
-        const serp = new serpComponent();
-  
+        this.attachEvents(vm.$refs.serp);
+        return vm;
+    },
+    
+    'attachEvents': function(serp) {
         // Specific rules for updating the search result preview
         function updateSerpTitle() {
-            serp.app.setTitle(productMetaTitle.val() || productName.val());
+            serp.setTitle(watchedTitle.val() || defaultTitle.val());
         }
         function updateSerpUrl() {
-            serp.app.setUrl(productUrl.val());
+            serp.setUrl(defaultUrl.val());
         }
         function updateSerpDescription() {
-            serp.app.setDescription(productMetaDescription.val() || $(productDescription.val()).text());
+            serp.setDescription(watchedDescription.val() || $(defaultDescription.val()).text());
         }
-        productMetaTitle.on("keyup", updateSerpTitle);
-        productName.on("keyup", updateSerpTitle);
+        watchedTitle.on("keyup change", updateSerpTitle);
+        defaultTitle.on("keyup change", updateSerpTitle);
         
-        productUrl.on("keyup", updateSerpUrl);
-        
-        productMetaDescription.on("keyup", updateSerpDescription);
-        productDescription.on("keyup", updateSerpDescription);
+        watchedDescription.on("keyup change", updateSerpDescription);
+        defaultDescription.on("keyup change", updateSerpDescription);
         
         updateSerpTitle();
         updateSerpUrl();
