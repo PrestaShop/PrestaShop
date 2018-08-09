@@ -11,8 +11,7 @@ RUN apt install -y \
     gnupg2 \
     curl \
     git \
-    software-properties-common \
-    nodejs
+    software-properties-common
 
 RUN rm -rf /var/lib/apt/lists/*
 
