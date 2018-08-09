@@ -6,3 +6,6 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Export\ExportDirectory'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.export.file_exporter:
+        class: 'PrestaShop\PrestaShop\Core\Export\FileExporter'
