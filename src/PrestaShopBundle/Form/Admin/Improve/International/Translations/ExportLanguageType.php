@@ -55,10 +55,10 @@ class ExportLanguageType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('language', ChoiceType::class, [
-            'choices' => $this->getLocaleChoices(),
+            ->add('iso_code', ChoiceType::class, [
+            'choices' => $this->getLocaleChoices()
             ])
-            ->add('theme', ChoiceType::class, [
+            ->add('theme_name', ChoiceType::class, [
                 'choices' => $this->themeChoiceProvider->getChoices()
             ]);
     }

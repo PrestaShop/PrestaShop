@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -266,6 +265,39 @@ class TranslationsController extends FrameworkBundleAdminController
                     $this->trans('The translation was successfully copied.', 'Admin.International.Notification')
                 );
             }
+        }
+
+        return $this->redirectToRoute('admin_international_translations_show_settings');
+    }
+
+    /**
+     * Extract theme using locale and theme name.
+     *
+     * @param Request $request
+     * @return BinaryFileResponse|RedirectResponse
+     */
+    public function exportThemeLanguageAction(Request $request)
+    {
+        $exportThemeLanguageForm = $this->createForm(ExportLanguageType::class);
+        $exportThemeLanguageForm->handleRequest($request);
+
+        if ($exportThemeLanguageForm->isSubmitted()) {
+            $data = $exportThemeLanguageForm->getData();
+
+            $themeName = $data['theme_name'];
+            $isoCode = $data['iso_code'];
+
+            $langRepository = $this->get('prestashop.core.admin.lang.repository');
+            $locale = $langRepository->getLocaleByIsoCode($isoCode);
+
+            $themeExporter = $this->get('prestashop.translation.theme.exporter');
+            $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_.DIRECTORY_SEPARATOR);
+
+            $response = new BinaryFileResponse($zipFile);
+            $response->deleteFileAfterSend(true);
+
+            $themeExporter->cleanArtifacts($themeName);
+            return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         }
 
         return $this->redirectToRoute('admin_international_translations_show_settings');

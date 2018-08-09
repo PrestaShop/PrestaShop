@@ -21,11 +21,11 @@ admin_international_translations_module:
     requirements:
         locale: \w+
 
-admin_international_translations_export_theme:
+admin_international_translations_export_theme_language:
     path: /export
     methods:  [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Translations:exportTheme
+        _controller: PrestaShopBundle:Admin/Translations:exportThemeLanguage
         _legacy_controller: AdminTranslations
 
 admin_international_translations_show_settings:
@@ -42,8 +42,8 @@ admin_international_translations_modify:
         _controller: PrestaShopBundle:Admin/Translations:modifyTranslations
         _legacy_controller: AdminTranslations
 
-admin_international_translations_add_update:
-    path: /add-update
+admin_international_translations_add_update_language:
+    path: /add-update-language
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:addUpdateLanguage
@@ -54,4 +54,11 @@ admin_international_translations_copy_language:
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:copyLanguage
+        _legacy_controller: AdminTranslations
+
+admin_international_translations_export_language:
+    path: /export-language
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:exportLanguage
         _legacy_controller: AdminTranslations
