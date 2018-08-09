@@ -33,10 +33,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ExportLanguageType is responsible for building export language form
+ * Class ExportThemeLanguageType is responsible for building export language form
  * in 'Improve > International > Translations' page
  */
-class ExportLanguageType extends TranslatorAwareType
+class ExportThemeLanguageType extends TranslatorAwareType
 {
     /**
      * @var FormChoiceProviderInterface

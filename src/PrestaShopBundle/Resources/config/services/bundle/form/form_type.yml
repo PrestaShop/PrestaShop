@@ -494,7 +494,7 @@ services:
             - { name: form.type }
 
     form.type.translations.export_language:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportLanguageType'
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
