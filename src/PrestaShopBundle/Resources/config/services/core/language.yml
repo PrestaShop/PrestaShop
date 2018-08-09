@@ -2,13 +2,6 @@ services:
     _defaults:
         public: true
 
-    prestashop.core.language.export.language_exporter:
-        class: 'PrestaShop\PrestaShop\Core\Language\Export\LanguageExporter'
-        arguments:
-            - '@prestashop.core.export.file_exporter'
-            - '@prestashop.adapter.data_provider.language'
-            - '@prestashop.adapter.archive.tar_archive'
-
     prestashop.core.language.pack.import.language_importer:
         class: 'PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporter'
         arguments:

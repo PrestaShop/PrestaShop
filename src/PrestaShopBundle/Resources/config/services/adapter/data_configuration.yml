@@ -7,9 +7,6 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.archive.tar_archive:
-        class: 'PrestaShop\PrestaShop\Adapter\Archive\TarArchive'
-
     prestashop.adapter.product_pagination.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
         arguments:
