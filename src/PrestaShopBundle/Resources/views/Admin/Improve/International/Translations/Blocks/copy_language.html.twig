@@ -25,8 +25,10 @@
 
 {% trans_default_domain 'Admin.International.Feature' %}
 
+{% set copyLanguage = copyLanguageForm.copy_language %}
+
 {% block copy_language %}
-  {{ form_start(copyLanguageForm, {method: 'get', action: path('admin_international_translations_copy_language')}) }}
+  {{ form_start(copyLanguageForm, {action: path('admin_international_translations_copy_language')}) }}
 
   <div class="card">
     <h3 class="card-header">
@@ -48,11 +50,11 @@
             {{ 'From'|trans({}, 'Admin.Global') }}
           </label>
           <div class="input-group">
-            {{ form_errors(copyLanguageForm.from_language) }}
-            {{ form_widget(copyLanguageForm.from_language) }}
+            {{ form_errors(copyLanguage.from_language) }}
+            {{ form_widget(copyLanguage.from_language) }}
 
-            {{ form_errors(copyLanguageForm.from_theme) }}
-            {{ form_widget(copyLanguageForm.from_theme) }}
+            {{ form_errors(copyLanguage.from_theme) }}
+            {{ form_widget(copyLanguage.from_theme) }}
           </div>
         </div>
 
@@ -61,11 +63,11 @@
             {{ 'To'|trans({}, 'Admin.Global') }}
           </label>
           <div class="input-group">
-            {{ form_errors(copyLanguageForm.to_language) }}
-            {{ form_widget(copyLanguageForm.to_language) }}
+            {{ form_errors(copyLanguage.to_language) }}
+            {{ form_widget(copyLanguage.to_language) }}
 
-            {{ form_errors(copyLanguageForm.to_theme) }}
-            {{ form_widget(copyLanguageForm.to_theme) }}
+            {{ form_errors(copyLanguage.to_theme) }}
+            {{ form_widget(copyLanguage.to_theme) }}
           </div>
         </div>
       </div>
