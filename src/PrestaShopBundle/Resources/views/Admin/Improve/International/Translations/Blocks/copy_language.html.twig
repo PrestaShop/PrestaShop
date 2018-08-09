@@ -26,8 +26,7 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block copy_language %}
-  {#@todo form action#}
-  {{ form_start(copyLanguageForm, {method: 'get', action: path('admin_international_translations_modify')}) }}
+  {{ form_start(copyLanguageForm, {method: 'get', action: path('admin_international_translations_copy_language')}) }}
 
   <div class="card">
     <h3 class="card-header">

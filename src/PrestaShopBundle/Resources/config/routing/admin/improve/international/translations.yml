@@ -48,3 +48,10 @@ admin_international_translations_add_update:
     defaults:
         _controller: PrestaShopBundle:Admin/Translations:addUpdateLanguage
         _legacy_controller: AdminTranslations
+
+admin_international_translations_copy_language:
+    path: /copy
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Translations:copyLanguage
+        _legacy_controller: AdminTranslations
