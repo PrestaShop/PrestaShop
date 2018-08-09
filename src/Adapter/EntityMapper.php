@@ -30,6 +30,10 @@ use Db;
 use Shop;
 use Cache;
 
+/**
+ * Not used in PrestaShop core, only in tests.
+ * @deprecated since 1.7.5, to be removed in 1.8
+ */
 class EntityMapper
 {
     /**

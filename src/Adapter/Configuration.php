@@ -33,8 +33,14 @@ use Combination;
 use Feature;
 use Configuration as ConfigurationLegacy;
 
+/**
+ * Adapter of Configuration ObjectModel.
+ */
 class Configuration extends ParameterBag implements ConfigurationInterface
 {
+    /**
+     * @var Shop
+     */
     private $shop;
 
     public function __construct(array $parameters = array())

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
@@ -52,18 +53,26 @@ final class GridFactory implements GridFactoryInterface
     private $dispatcher;
 
     /**
+     * @var FilterFormFactoryInterface
+     */
+    private $filterFormFactory;
+
+    /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataProviderInterface      $dataProvider
+     * @param FilterFormFactoryInterface     $filterFormFactory
      * @param HookDispatcher                 $dispatcher
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataProviderInterface $dataProvider,
+        FilterFormFactoryInterface $filterFormFactory,
         HookDispatcher $dispatcher
     ) {
         $this->definitionFactory = $definitionFactory;
         $this->dataProvider = $dataProvider;
         $this->dispatcher = $dispatcher;
+        $this->filterFormFactory = $filterFormFactory;
     }
 
     /**
@@ -77,12 +86,16 @@ final class GridFactory implements GridFactoryInterface
             'definition' => $definition,
         ]);
 
+        $filterForm = $this->filterFormFactory->create($definition);
+        $filterForm->setData($searchCriteria->getFilters());
+
         $data = $this->dataProvider->getData($searchCriteria);
 
         return new Grid(
             $definition,
             $data,
-            $searchCriteria
+            $searchCriteria,
+            $filterForm
         );
     }
 }

@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Product;
 use Context;
 
+/**
+ * Access Product price depending on taxes, eco tax, reductions.
+ */
 class PriceCalculator
 {
     /**

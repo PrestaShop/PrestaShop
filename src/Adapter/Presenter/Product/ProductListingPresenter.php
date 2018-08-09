@@ -30,6 +30,13 @@ use Language;
 
 class ProductListingPresenter extends ProductPresenter
 {
+    /**
+     * @param ProductPresentationSettings $settings
+     * @param array $product
+     * @param Language $language
+     * @return ProductLazyArray|ProductListingLazyArray
+     * @throws \ReflectionException
+     */
     public function present(
         ProductPresentationSettings $settings,
         array $product,

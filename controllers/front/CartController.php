@@ -363,7 +363,7 @@ class CartControllerCore extends FrontController
         $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
 
         if (Tools::getIsset('group')) {
-            $this->id_product_attribute = (int)Product::getIdProductAttributesByIdAttributes(
+            $this->id_product_attribute = (int)Product::getIdProductAttributeByIdAttributes(
                 $this->id_product,
                 Tools::getValue('group')
             );

@@ -47,8 +47,8 @@ export default class BulkActionCheckboxExtension {
    * @private
    */
   _handleBulkActionSelectAllCheckbox(grid) {
-    grid.getContainer().on('change', '.js-select-all-bulk-actions-checkbox', (e) => {
-      const $checkbox = $(e.target);
+    grid.getContainer().on('change', '.js-bulk-action-select-all', (e) => {
+      const $checkbox = $(e.currentTarget);
 
       const isChecked = $checkbox.is(':checked');
       if (isChecked) {

@@ -1,14 +1,14 @@
 language: php
 
 addons:
-    chrome: stable
-    apt:
-        packages:
-        - apache2
-        - postfix
-        - libapache2-mod-fastcgi
-        - libappindicator1
-        - fonts-liberation
+  chrome: stable
+  apt:
+    packages:
+      - apache2
+      - postfix
+      - libapache2-mod-fastcgi
+      - libappindicator1
+      - fonts-liberation
 
 cache:
   directories:
@@ -34,8 +34,12 @@ matrix:
   include:
     - php: 7.1
       env: EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=e2e
+    - php: 7.2
+      env: EXTRA_DEPS=phpHigh EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=unit
 
 before_install:
+  # Avoid Composer authentication issues
+  - if [[ $TRAVIS_REPO_SLUG = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
@@ -48,7 +52,12 @@ notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
-  - composer install --prefer-dist --no-interaction --no-progress
+  - if [ $EXTRA_DEPS = "phpHigh" ]; then
+        composer update --ignore-platform-reqs;
+    else
+        composer install --prefer-dist --no-interaction --no-progress;
+    fi
+
   - bash travis-scripts/install-prestashop
   - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
         bash tests/check_file_syntax.sh;

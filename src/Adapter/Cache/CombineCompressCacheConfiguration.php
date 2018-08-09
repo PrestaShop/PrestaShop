@@ -194,9 +194,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         // feature activation
         if (false === $isCurrentlyEnabled && true === $enabled) {
-            if ($this->tools->generateHtaccess()) {
-                $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
-            } else {
+            $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
+            if (!$this->tools->generateHtaccess()) {
                 $errors = array(
                     'key' => 'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
                     'domain' => 'Admin.Advparameters.Notification',
@@ -214,6 +213,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         if (true === $isCurrentlyEnabled && false === $enabled) {
             $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', false);
+            $this->tools->generateHtaccess();
         }
 
         return $errors;

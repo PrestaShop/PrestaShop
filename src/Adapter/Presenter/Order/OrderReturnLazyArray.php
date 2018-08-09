@@ -33,11 +33,26 @@ use Tools;
 
 class OrderReturnLazyArray extends AbstractLazyArray
 {
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * @var Link
+     */
     private $link;
+
     /** @var array */
     private $orderReturn;
 
+    /**
+     * OrderReturnLazyArray constructor.
+     * @param $prefix
+     * @param Link $link
+     * @param $orderReturn
+     * @throws \ReflectionException
+     */
     public function __construct($prefix, Link $link, $orderReturn)
     {
         $this->prefix = $prefix;
