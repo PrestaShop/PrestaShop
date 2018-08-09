@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportLanguageType;
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -167,8 +167,8 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
         $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
-        $exportLanguageForm = $this->createForm(ExportLanguageType::class);
         $copyLanguageForm = $this->get('prestashop.admin.translations.copy_language.form_handler')->getForm();
+        $exportLanguageForm = $this->createForm(ExportThemeLanguageType::class);
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
@@ -278,7 +278,7 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function exportThemeLanguageAction(Request $request)
     {
-        $exportThemeLanguageForm = $this->createForm(ExportLanguageType::class);
+        $exportThemeLanguageForm = $this->createForm(ExportThemeLanguageType::class);
         $exportThemeLanguageForm->handleRequest($request);
 
         if ($exportThemeLanguageForm->isSubmitted()) {
