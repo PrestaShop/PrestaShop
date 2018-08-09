@@ -169,7 +169,7 @@ class ProductInformation extends CommonAbstractType
                     ],
                     'attr' => [
                         'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
-                        'class' => 'edit js-edit'
+                        'class' => 'edit js-edit serp-default-title'
                     ]
                 ],
                 'locales' => $this->locales,
@@ -180,6 +180,9 @@ class ProductInformation extends CommonAbstractType
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'required' => false,
+                    'attr' => [
+                        'class' => 'serp-default-description',
+                    ],
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
