@@ -4,6 +4,8 @@ services:
 
     prestashop.core.language.export.language_exporter:
         class: 'PrestaShop\PrestaShop\Core\Language\Export\LanguageExporter'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
 
     prestashop.core.language.pack.import.language_importer:
         class: 'PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporter'

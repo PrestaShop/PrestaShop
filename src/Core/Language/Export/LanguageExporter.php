@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Language\Export;
 
+use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Language\Export\Config\LanguageExporterConfigInterface;
 
 /**
@@ -34,10 +35,24 @@ use PrestaShop\PrestaShop\Core\Language\Export\Config\LanguageExporterConfigInte
 final class LanguageExporter implements LanguageExporterInterface
 {
     /**
+     * @var LanguageDataProvider
+     */
+    private $languageDataProvider;
+
+    /**
+     * LanguageExporter constructor.
+     *
+     * @param LanguageDataProvider $languageDataProvider
+     */
+    public function __construct(LanguageDataProvider $languageDataProvider)
+    {
+        $this->languageDataProvider = $languageDataProvider;
+    }
+
+    /**
      * @inheritDoc
      */
     public function export(LanguageExporterConfigInterface $config)
     {
-        
     }
 }
