@@ -73,38 +73,4 @@ class LanguageDataProvider
     {
         return Language::getJsonLanguageDetails($locale);
     }
-
-    /**
-     *
-     * Gets the language files list
-     *
-     * @param string $isoFrom
-     * @param string $themeFrom
-     * @param bool $isoTo
-     * @param bool $themeTo
-     * @param bool $select
-     * @param bool $check
-     * @param bool $modules
-     *
-     * @return array
-     */
-    public function getFilesList(
-        $isoFrom,
-        $themeFrom,
-        $isoTo = false,
-        $themeTo = false,
-        $select = false,
-        $check = false,
-        $modules = false
-    ) {
-        return Language::getFilesList(
-            $isoFrom,
-            $themeFrom,
-            $isoTo,
-            $themeTo,
-            $select,
-            $check,
-            $modules
-        );
-    }
 }
