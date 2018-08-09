@@ -81,7 +81,7 @@ class AddStandardProductTest extends AbstractCartTest
     }
 
     /**
-     * @dataProvider updateQuantities
+     * @dataProvider updateQuantitiesProvider
      */
     public function testUpdateQuantity($quantity, $operator, $expected, $quantityExpected)
     {
@@ -104,7 +104,7 @@ class AddStandardProductTest extends AbstractCartTest
         $this->assertEquals($quantityExpected, $cartProductQuantity['quantity']);
     }
 
-    public function updateQuantities()
+    public function updateQuantitiesProvider()
     {
         return [
             [1, 'up', true, 1],
@@ -115,7 +115,7 @@ class AddStandardProductTest extends AbstractCartTest
     }
 
     /**
-     * @dataProvider multipleUpdateQuantities
+     * @dataProvider multipleUpdateQuantitiesProvider
      */
     public function testMultipleUpdateQuantity($first, $second)
     {
@@ -126,7 +126,7 @@ class AddStandardProductTest extends AbstractCartTest
         $this->testUpdateQuantity($quantity, $operator, $expected, $quantityExpected);
     }
 
-    public function multipleUpdateQuantities()
+    public function multipleUpdateQuantitiesProvider()
     {
         return [
             [[1, 'up', true, 1], [1, 'up', true, 2]],
