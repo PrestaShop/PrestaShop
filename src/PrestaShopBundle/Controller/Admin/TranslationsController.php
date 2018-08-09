@@ -238,4 +238,18 @@ class TranslationsController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_international_translations_show_settings');
     }
+
+    /**
+     * Copy language action
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function copyLanguageAction(Request $request)
+    {
+        return $this->redirectToRoute('admin_international_translations_show_settings');
+    }
 }
