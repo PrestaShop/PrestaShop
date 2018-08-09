@@ -41,6 +41,9 @@ final class CopyLanguageDataProvider implements FormDataProviderInterface
      */
     private $themeRepository;
 
+    /**
+     * @param AddonRepositoryInterface $themeRepository
+     */
     public function __construct(AddonRepositoryInterface $themeRepository)
     {
         $this->themeRepository = $themeRepository;
