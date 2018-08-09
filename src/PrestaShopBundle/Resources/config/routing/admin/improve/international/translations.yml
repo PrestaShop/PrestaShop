@@ -21,7 +21,7 @@ admin_international_translations_module:
     requirements:
         locale: \w+
 
-admin_international_translations_export_theme_language:
+admin_international_translations_export_theme:
     path: /export
     methods:  [POST]
     defaults:
