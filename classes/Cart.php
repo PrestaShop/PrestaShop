@@ -1281,14 +1281,16 @@ class CartCore extends ObjectModel
         }
 
         if (Context::getContext()->customer->id) {
-            // The $id_address_delivery is null, use the cart delivery address
             if ($id_address_delivery == 0 && (int)$this->id_address_delivery) {
+                // The $id_address_delivery is null, use the cart delivery address
                 $id_address_delivery = $this->id_address_delivery;
-            } elseif ($id_address_delivery == 0) { // The $id_address_delivery is null, get the default customer address
+            } elseif ($id_address_delivery == 0) {
+                // The $id_address_delivery is null, get the default customer address
                 $id_address_delivery = (int) Address::getFirstCustomerAddressId(
                     (int) Context::getContext()->customer->id
                 );
-            } elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) { // The $id_address_delivery must be linked with customer
+            } elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) {
+                // The $id_address_delivery must be linked with customer
                 $id_address_delivery = 0;
             }
         }
@@ -1344,8 +1346,11 @@ class CartCore extends ObjectModel
             return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization);
         }
 
-        if (!$product->available_for_order ||
-            Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_')
+        if (!$product->available_for_order
+            || (
+                Configuration::isCatalogMode()
+                && !defined('_PS_ADMIN_DIR_')
+            )
         ) {
             return false;
         }
@@ -1379,8 +1384,8 @@ class CartCore extends ObjectModel
                 $updateQuantity = '- ' . $quantity;
                 $newProductQuantity = $productQuantity + $quantity;
 
-                if ($cartFirstLevelProductQuantity['quantity'] <= 1 ||
-                    $cartProductQuantity['quantity'] - $quantity <= 0
+                if ($cartFirstLevelProductQuantity['quantity'] <= 1
+                    || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
                     return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
                 }
