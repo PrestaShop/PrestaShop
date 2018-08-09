@@ -26,7 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Language\Export;
 
+use PrestaShop\PrestaShop\Adapter\Archive\TarArchive;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
+use PrestaShop\PrestaShop\Core\Archive\ArchiveConfig;
+use PrestaShop\PrestaShop\Core\Archive\ArchiveInterface;
+use PrestaShop\PrestaShop\Core\Export\Config\FileExporterConfig;
+use PrestaShop\PrestaShop\Core\Export\FileExporterInterface;
 use PrestaShop\PrestaShop\Core\Language\Export\Config\LanguageExporterConfigInterface;
 
 /**
@@ -35,18 +40,34 @@ use PrestaShop\PrestaShop\Core\Language\Export\Config\LanguageExporterConfigInte
 final class LanguageExporter implements LanguageExporterInterface
 {
     /**
+     * @var FileExporterInterface
+     */
+    private $fileExporter;
+
+    /**
      * @var LanguageDataProvider
      */
     private $languageDataProvider;
+    /**
+     * @var TarArchive
+     */
+    private $archive;
 
     /**
      * LanguageExporter constructor.
      *
+     * @param FileExporterInterface $fileExporter
      * @param LanguageDataProvider $languageDataProvider
+     * @param ArchiveInterface $tarArchive
      */
-    public function __construct(LanguageDataProvider $languageDataProvider)
-    {
+    public function __construct(
+        FileExporterInterface $fileExporter,
+        LanguageDataProvider $languageDataProvider,
+        ArchiveInterface $tarArchive
+    ) {
         $this->languageDataProvider = $languageDataProvider;
+        $this->fileExporter = $fileExporter;
+        $this->archive = $tarArchive;
     }
 
     /**
@@ -54,5 +75,41 @@ final class LanguageExporter implements LanguageExporterInterface
      */
     public function export(LanguageExporterConfigInterface $config)
     {
+        $isoCode = $config->getIsoCode();
+        $archiveName = $this->getArchiveName($isoCode);
+
+        $filesList = $this->languageDataProvider->getFilesList(
+            $isoCode,
+            $config->getThemeName(),
+            $isoTo = false,
+            $themeTo = false,
+            $select = false,
+            $check = false,
+            $modules = true
+        );
+
+        $archiveConfig = new ArchiveConfig($archiveName, $filesList);
+
+        if ($this->archive->create($archiveConfig)) {
+            $exporterConfig = new FileExporterConfig(
+                $archiveName,
+                $isoCode.'.gzip',
+                true
+            );
+
+            $this->fileExporter->export($exporterConfig);
+        }
+    }
+
+    /**
+     * Gets an archive name which is being created during the time of export execution
+     *
+     * @param string $isoCode
+     *
+     * @return string
+     */
+    private function getArchiveName($isoCode)
+    {
+        return _PS_TRANSLATIONS_DIR_.'/export/'.$isoCode.'.gzip';
     }
 }
