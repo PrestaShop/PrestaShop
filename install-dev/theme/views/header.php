@@ -59,7 +59,7 @@
 <div id="leftpannel">
 	<ol id="tabs">
 		<?php foreach ($this->getSteps() as $step): ?>
-			<?php if ($this->step == $step->getName()): ?>
+			<?php if (self::$steps->current()->getName() == $step->getName()): ?>
 				<li class="selected"><?php echo $step; ?></li>
 			<?php elseif ($this->isStepFinished($step->getName())): ?>
 				<li class="finished"><a href="index.php?step=<?php echo $step->getName() ?>"><?php echo $step; ?></a></li>
@@ -72,7 +72,7 @@
 	</ol>
 	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)): ?>
 		<iframe scrolling="no" style="height:210px;width:200px;border:none;margin-top:20px" id="iframe_help"
-			src="https://api.prestashop.com/iframe/install.php?step=<?php echo $this->step ?>&lang=<?php echo $this->language->getLanguageIso() ?><?php if (isset($this->session->shop_country)) echo '&country='.$this->session->shop_country; ?>">
+			src="https://api.prestashop.com/iframe/install.php?step=<?php echo self::$steps->current()->getName() ?>&lang=<?php echo $this->language->getLanguageIso() ?><?php if (isset($this->session->shop_country)) echo '&country='.$this->session->shop_country; ?>">
 			<p><?php echo $this->translator->trans('Contact us!', array(), 'Install') ?><br /><?php echo $this->getPhone() ?></p>
 		</iframe>
 	<?php endif; ?>
@@ -81,7 +81,7 @@
 <!-- Page content -->
 <form id="mainForm" action="index.php" method="post">
 <div id="sheets" class="sheet shown">
-	<div id="sheet_<?php echo $this->step ?>" class="sheet shown clearfix">
+	<div id="sheet_<?php echo self::$steps->current()->getName() ?>" class="sheet shown clearfix">
 	<div class="contentTitle">
 		<h1><?php echo $this->translator->trans('Installation Assistant', array(), 'Install'); ?></h1>
 		<ul id="stepList_1" class="stepList clearfix">
