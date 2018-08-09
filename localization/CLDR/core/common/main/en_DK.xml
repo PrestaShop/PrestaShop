@@ -77,7 +77,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	</dates>
 	<numbers>
 		<symbols numberSystem="latn">
-			<timeSeparator>.</timeSeparator>
+			<timeSeparator>:</timeSeparator>
 		</symbols>
 		<percentFormats numberSystem="latn">
 			<percentFormatLength>
@@ -88,7 +88,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		</percentFormats>
 		<currencies>
 			<currency type="DKK">
-				<symbol>kr.</symbol>
+				<symbol>DKK</symbol>
 			</currency>
 		</currencies>
 	</numbers>

@@ -14,7 +14,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	<numbers>
 		<currencies>
 			<currency type="DKK">
-				<symbol>kr.</symbol>
+				<symbol>DKK</symbol>
 			</currency>
 		</currencies>
 	</numbers>
