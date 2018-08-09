@@ -168,8 +168,8 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
         $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
-        $copyLanguageForm = $this->createForm(CopyLanguageType::class);
         $exportLanguageForm = $this->createForm(ExportLanguageType::class);
+        $copyLanguageForm = $this->get('prestashop.admin.translations.copy_language.form_handler')->getForm();
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
@@ -245,7 +245,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Copy language action
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
      *
      * @param Request $request
      *
@@ -253,6 +253,21 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function copyLanguageAction(Request $request)
     {
+        $formHandler = $this->get('prestashop.admin.translations.copy_language.form_handler');
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($errors = $formHandler->save($form->getData())) {
+                $this->flashErrors($errors);
+            } else {
+                $this->addFlash(
+                    'success',
+                    $this->trans('The translation was successfully copied.', 'Admin.International.Notification')
+                );
+            }
+        }
+
         return $this->redirectToRoute('admin_international_translations_show_settings');
     }
 }
