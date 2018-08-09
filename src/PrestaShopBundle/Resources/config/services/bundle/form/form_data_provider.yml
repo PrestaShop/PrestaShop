@@ -120,3 +120,8 @@ services:
         arguments:
             - '@prestashop.core.email.email_configurator'
             - '@prestashop.core.email.smtp_configurator'
+
+    prestashop.admin.translations.copy_language.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageDataProvider'
+        arguments:
+            - '@prestashop.core.addon.theme.repository'

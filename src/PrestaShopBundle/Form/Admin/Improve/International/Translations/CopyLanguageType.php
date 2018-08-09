@@ -54,8 +54,6 @@ class CopyLanguageType extends TranslatorAwareType
         FormChoiceProviderInterface $themeChoiceProvider
     ) {
         parent::__construct($translator, $locales);
-
-        $this->locales = $locales;
         $this->themeChoiceProvider = $themeChoiceProvider;
     }
 
@@ -65,17 +63,17 @@ class CopyLanguageType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $themeChoices = $this->themeChoiceProvider->getChoices();
+        $localeChoices = $this->getLocaleChoices();
 
         $builder
             ->add('from_language', ChoiceType::class, [
-                'label' => $this->trans('From', 'Admin.Global'),
-                'choices' => $this->getLocaleChoices(),
+                'choices' => $localeChoices,
             ])
             ->add('from_theme', ChoiceType::class, [
                 'choices' => $themeChoices,
             ])
             ->add('to_language', ChoiceType::class, [
-                'choices' => $this->getLocaleChoices(),
+                'choices' => $localeChoices,
             ])
             ->add('to_theme', ChoiceType::class, [
                 'choices' => $themeChoices,

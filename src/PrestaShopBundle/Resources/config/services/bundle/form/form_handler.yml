@@ -220,3 +220,13 @@ services:
               'email_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
               'smtp_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
             - 'EmailConfiguration'
+
+    prestashop.admin.translations.copy_language.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.translations.copy_language.data_provider'
+            -
+              'copy_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
+            - 'CopyLanguage'
