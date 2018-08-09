@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.export.file_exporter:
+        class: 'PrestaShop\PrestaShop\Core\Export\FileExporter'
