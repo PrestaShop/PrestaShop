@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.)
@@ -64,6 +66,11 @@ final class Definition implements DefinitionInterface
     private $bulkActions;
 
     /**
+     * @var FilterCollectionInterface
+     */
+    private $filters;
+
+    /**
      * @param string $id   Unique grid identifier (used as table ID when rendering table)
      */
     public function __construct($id)
@@ -72,6 +79,7 @@ final class Definition implements DefinitionInterface
 
         $this->gridActions = new GridActionCollection();
         $this->bulkActions = new BulkActionCollection();
+        $this->filters = new FilterCollection();
     }
 
     /**
@@ -150,6 +158,24 @@ final class Definition implements DefinitionInterface
     public function setGridActions(GridActionCollectionInterface $gridActions)
     {
         $this->gridActions = $gridActions;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFilters(FilterCollectionInterface $filters)
+    {
+        $this->filters = $filters;
 
         return $this;
     }
