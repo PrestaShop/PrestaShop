@@ -36,12 +36,17 @@ final class Filter implements FilterInterface
     /**
      * @var array Filter type options
      */
-    private $typeOptions;
+    private $typeOptions = [];
 
     /**
-     * @var string
+     * @var string Filter name
      */
     private $name;
+
+    /**
+     * @var string|null Column ID of grid definition
+     */
+    private $column;
 
     /**
      * @param string $name
@@ -85,5 +90,23 @@ final class Filter implements FilterInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setColumn($columnId)
+    {
+        $this->column = $columnId;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getColumn()
+    {
+        return $this->column;
     }
 }

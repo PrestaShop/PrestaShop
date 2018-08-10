@@ -173,16 +173,19 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                 ])
+                ->setColumn('id_mail')
             )
             ->add((new Filter('recipient', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
+                ->setColumn('recipient')
             )
             ->add((new Filter('template', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
+                ->setColumn('template')
             )
             ->add((new Filter('language', ChoiceType::class))
                 ->setTypeOptions([
@@ -190,16 +193,28 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                     'choices' => $this->languageChoiceProvider->getChoices(),
                     'choice_translation_domain' => false,
                 ])
+                ->setColumn('language')
             )
             ->add((new Filter('subject', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
+                ->setColumn('subject')
             )
             ->add((new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
+                ->setColumn('date_add')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
+                ])
+                ->setColumn('actions')
             )
         ;
     }
