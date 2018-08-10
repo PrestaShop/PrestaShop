@@ -26,19 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
-
-final class FilterCollection extends AbstractCollection implements FilterCollectionInterface
+/**
+ * Class FilterCollection manages filters collection for grid
+ */
+final class FilterCollection implements FilterCollectionInterface
 {
+    /**
+     * @var FilterInterface[]
+     */
+    private $filters;
+
     public function add(FilterInterface $filter)
     {
-        $this->items[] = $filter;
+        $this->filters[$filter->getName()] = $filter;
 
         return $this;
     }
 
     public function all()
     {
-        return $this->items;
+        return $this->filters;
     }
 }
