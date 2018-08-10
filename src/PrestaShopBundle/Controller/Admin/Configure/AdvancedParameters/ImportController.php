@@ -127,6 +127,8 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
 
             if (!$errors = $formHandler->save($data)) {
+                //todo: remove legacy request to get the new request available
+                return $this->fowardRequestToLegacyResponse($request);
                 return $this->redirectToRoute('admin_import_show_data');
             }
 
@@ -296,7 +298,8 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Fowards submitted form data to legacy import page.
+     * todo: remove
+     * Fowards submitted form data to legacy import page
      *
      * @param Request $request
      *
@@ -305,10 +308,8 @@ class ImportController extends FrameworkBundleAdminController
     private function fowardRequestToLegacyResponse(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-
+        $legacyContext =  $this->get('prestashop.adapter.legacy.context');
         $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
-
         return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
 }
