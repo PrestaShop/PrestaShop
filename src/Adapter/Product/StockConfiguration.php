@@ -53,7 +53,8 @@ class StockConfiguration implements DataConfigurationInterface
         return [
             'allow_ordering_oos' => $this->configuration->getBoolean('PS_ORDER_OUT_OF_STOCK'),
             'stock_management' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
-            'in_stock_label' => $this->configuration->getInt('PS_LABEL_IN_STOCK_PRODUCTS', false),
+            'in_stock_label' =>
+                $this->configuration->getInternational('PS_LABEL_IN_STOCK_PRODUCTS', false),
             'oos_allowed_backorders' =>
                 $this->configuration->getInternational('PS_LABEL_OOS_PRODUCTS_BOA', false),
             'oos_denied_backorders' =>
