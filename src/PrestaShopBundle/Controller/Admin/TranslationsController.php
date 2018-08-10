@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
+use PrestaShop\PrestaShop\Core\Language\Export\Config\LanguageExporterConfig;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
@@ -214,35 +217,6 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Copy language action
-     *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function copyLanguageAction(Request $request)
-    {
-        $formHandler = $this->get('prestashop.admin.translations.copy_language.form_handler');
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
-            } else {
-                $this->addFlash(
-                    'success',
-                    $this->trans('The translation was successfully copied.', 'Admin.International.Notification')
-                );
-            }
-        }
-
-        return $this->redirectToRoute('admin_international_translations_show_settings');
-    }
-
-    /**
      * Extract theme using locale and theme name.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
@@ -273,6 +247,53 @@ class TranslationsController extends FrameworkBundleAdminController
 
             $themeExporter->cleanArtifacts($themeName);
             return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        }
+
+        return $this->redirectToRoute('admin_international_translations_show_settings');
+    }
+
+    /**
+     * Copy language action
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function copyLanguageAction(Request $request)
+    {
+        $formHandler = $this->get('prestashop.admin.translations.copy_language.form_handler');
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if ($errors = $formHandler->save($data)) {
+                $this->flashErrors($errors);
+            } else {
+                $languageCopier = $this->get('prestashop.adapter.language.copier');
+
+                $languageCopierConfig = new LanguageCopierConfig(
+                    $data['copy_language']['from_theme'],
+                    $data['copy_language']['from_language'],
+                    $data['copy_language']['to_theme'],
+                    $data['copy_language']['to_language']
+                );
+                $languageCopier->copyLanguage($languageCopierConfig);
+
+                if ($errors = $languageCopier->getErrors()) {
+                    foreach ($errors as $error) {
+                        $this->addFlash('error', $error);
+                    }
+                } else {
+                    $this->addFlash(
+                        'success',
+                        $this->trans('The translation was successfully copied.', 'Admin.International.Notification')
+                    );
+                }
+            }
         }
 
         return $this->redirectToRoute('admin_international_translations_show_settings');
