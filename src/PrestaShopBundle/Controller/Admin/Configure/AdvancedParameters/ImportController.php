@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -121,7 +122,7 @@ class ImportController extends FrameworkBundleAdminController
             if (!$errors = $formHandler->save($data)) {
                 //todo: remove legacy request to get the new request available
                 return $this->fowardRequestToLegacyResponse($request);
-                return $this->redirectToRoute('admin_import_show_data');
+                //return $this->redirectToRoute('admin_import_show_data');
             }
 
             $this->flashErrors($errors);
@@ -149,7 +150,10 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function showImportDataAction(Request $request)
     {
-        return [];
+        $importDataConfiguration = $this->createForm(ImportDataConfigurationType::class);
+        return [
+            'importDataConfigurationForm' => $importDataConfiguration->createView()
+        ];
     }
 
     /**
