@@ -1976,7 +1976,7 @@ class AdminControllerCore extends Controller
             'full_language_code' => $this->context->language->language_code,
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'base_url' => $this->context->shop->getBaseURL(),
+            'base_url' => $this->context->shop->getBaseURL(true),
             'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
             'current_parent_id' => (int)Tab::getCurrentParentId(),
             'tabs' => $tabs,
