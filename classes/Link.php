@@ -733,7 +733,12 @@ class LinkCore
             case 'AdminTranslations':
                 // In case of email body translations we want to get a link to legacy controller,
                 // in other cases - it's the migrated controller
-                if (isset($params['selected-emails']) && $params['selected-emails'] == 'body') {
+                if (isset($params['selected-emails']) && $params['selected-emails'] === 'body') {
+                    break;
+                }
+
+                // In case of modules translations get a link to legacy controller
+                if (isset($params['type']) && $params['type'] === 'modules' && isset($params['module'])) {
                     break;
                 }
 
