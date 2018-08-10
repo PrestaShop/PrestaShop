@@ -63,7 +63,7 @@ final class FilterFormFactory implements FilterFormFactoryInterface
         /** @var FilterInterface $filter */
         foreach ($definition->getFilters()->all() as $filter) {
             $formBuilder->add(
-                $filter->getField(),
+                $filter->getName(),
                 $filter->getType(),
                 $filter->getTypeOptions()
             );
