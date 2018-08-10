@@ -50,6 +50,11 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
      */
     private $cacheClearer;
 
+    /**
+     * @param LanguagePack $languagePack
+     * @param LanguageDataProvider $languageProvider
+     * @param CacheClearer $cacheClearer
+     */
     public function __construct(
         LanguagePack $languagePack,
         LanguageDataProvider $languageProvider,

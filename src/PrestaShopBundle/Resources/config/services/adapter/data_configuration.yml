@@ -129,6 +129,12 @@ services:
     prestashop.adapter.language.validator:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'
 
+    prestashop.adapter.language.copier:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageCopier'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
+            - '@translator'
+
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
 
