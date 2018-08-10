@@ -48,7 +48,7 @@ class LogsController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      * @param LogsFilters $filters the list of filters from the request.
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -77,7 +77,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      * @DemoRestricted(redirectRoute="admin_logs")
      * @param Request $request
      * @return RedirectResponse
@@ -98,7 +98,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      * @DemoRestricted(redirectRoute="admin_logs")
      *
      * @param Request $request
@@ -130,7 +130,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      *
      * @return RedirectResponse
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException

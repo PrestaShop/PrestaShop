@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SystemInformationController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/system_information.html.twig")
      *
      * @param Request $request
