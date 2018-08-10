@@ -47,7 +47,7 @@
 
         <div class="form-group">
           <label class="form-control-label">
-            {{ 'From'|trans({}, 'Admin.Global') }}
+            {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification')) }}
           </label>
           <div class="input-group">
             {{ form_errors(copyLanguage.from_language) }}
