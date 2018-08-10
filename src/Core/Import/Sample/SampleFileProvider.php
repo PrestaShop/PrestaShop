@@ -53,11 +53,15 @@ final class SampleFileProvider implements SampleFileProviderInterface
      */
     public function getFile($sampleFileName)
     {
-        $separator = DIRECTORY_SEPARATOR;
-        $path = $this->configuration->get('_PS_ROOT_DIR_').$separator.'docs'.$separator.'csv_import'.$separator;
+        $path = $this->configuration->get('_PS_ROOT_DIR_') .
+              DIRECTORY_SEPARATOR .
+              'docs' .
+              DIRECTORY_SEPARATOR .
+              'csv_import' .
+              DIRECTORY_SEPARATOR;
 
         try {
-            $sampleFile = new File($path.$sampleFileName.'.csv');
+            $sampleFile = new File($path . $sampleFileName . '.csv');
         } catch (FileNotFoundException $e) {
             return null;
         }
