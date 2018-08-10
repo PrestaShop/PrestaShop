@@ -332,7 +332,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
@@ -507,7 +507,6 @@ class CommonClient {
     return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
 
-
   /**
    * This function searches the data in the table in case a filter input exists
    * @param selector
@@ -541,6 +540,11 @@ class CommonClient {
     }
   }
 
+  refresh() {
+    return this.client
+      .refresh();
+  }
+
   deleteCookie() {
     return this.client
       .deleteCookie()
@@ -569,6 +573,23 @@ class CommonClient {
       });
   }
 
+  changeOrderState(selector, state) {
+    return this.client
+      .waitForExist(selector.order_state_select, 90000)
+      .execute(function () {
+        document.querySelector('#id_order_state').style = "";
+      })
+      .selectByVisibleText(selector.order_state_select, state)
+      .waitForExistAndClick(selector.update_status_button)
+  }
+
+  displayHiddenBlock(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementsByClassName(selector).style = '';
+      })
+  }
+
   dragAndDrop(sourceElement, destinationElement) {
     return this.client
       .pause(2000)
@@ -591,7 +612,6 @@ class CommonClient {
         .middleClick(selector)
     }
   }
-
 }
 
 module.exports = CommonClient;
