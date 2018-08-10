@@ -34,7 +34,7 @@ interface LanguagePackLoaderInterface
     /**
      * Gets language pack data
      *
-     * @return array|null - array key is the language locale and the value is language name
+     * @return array - array key is the language locale and the value is language name
      */
     public function getLanguagePackList();
 }
