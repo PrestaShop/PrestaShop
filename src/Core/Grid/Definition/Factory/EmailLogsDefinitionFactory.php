@@ -35,13 +35,15 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class EmailLogsDefinitionFactory is responsible for creating email logs definition
@@ -124,11 +126,6 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Language', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'language',
-                    'filter' => new ColumnFilterOption(ChoiceType::class, [
-                        'required' => false,
-                        'choices' => $this->languageChoiceProvider->getChoices(),
-                        'choice_translation_domain' => false,
-                    ]),
                 ])
             )
             ->add((new DataColumn('subject'))
@@ -141,20 +138,11 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Sent', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'date_add',
-                    'filter' => new ColumnFilterOption(DateRangeType::class, [
-                        'required' => false,
-                    ]),
                 ])
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
-                        ],
-                    ]),
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('delete'))
                             ->setIcon('delete')
@@ -170,6 +158,47 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         )
                     ,
+                ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_mail', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('recipient', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('template', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('language', ChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'choices' => $this->languageChoiceProvider->getChoices(),
+                    'choice_translation_domain' => false,
+                ])
+            )
+            ->add((new Filter('subject', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('date_add', DateRangeType::class))
+                ->setTypeOptions([
+                    'required' => false,
                 ])
             )
         ;
