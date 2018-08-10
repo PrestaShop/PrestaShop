@@ -42,6 +42,7 @@ use Language;
 use Link;
 use Tools;
 
+
 class ProductLazyArray extends AbstractLazyArray
 {
     /**
@@ -83,6 +84,11 @@ class ProductLazyArray extends AbstractLazyArray
      * @var Language
      */
     private $language;
+
+    /**
+     * @var array
+     */
+    private $attachments;
 
     public function __construct(
         ProductPresentationSettings $settings,
@@ -282,6 +288,23 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return null;
+    }
+
+    /**
+     * @arrayAccess
+     * @return ProductAttachmentLazyArray[]
+     * @throws \ReflectionException
+     */
+    public function getAttachments()
+    {
+        if (null === $this->attachments) {
+            $this->attachments = array();
+            foreach ($this->product['attachments'] as $attachment) {
+                $this->attachments[] = new ProductAttachmentLazyArray($attachment);
+            }
+        }
+
+        return $this->attachments;
     }
 
     /**
