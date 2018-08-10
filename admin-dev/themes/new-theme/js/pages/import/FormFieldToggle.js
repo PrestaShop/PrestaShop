@@ -36,7 +36,7 @@ const entityAlias = 7;
 const entityStoreContacts = 8;
 
 export default class FormFieldToggle {
-  init() {
+  constructor() {
     $('.js-entity-select').on('change', this.toggleForm.bind(this));
 
     this.toggleForm();
@@ -92,27 +92,29 @@ export default class FormFieldToggle {
       $matchRefFormGroup.hide();
     }
 
-    if ([entityCategories,
-        entityProducts,
-        entityBrands,
-        entitySuppliers,
-        entityStoreContacts
-      ].includes(selectedEntity)
+    if ([
+      entityCategories,
+      entityProducts,
+      entityBrands,
+      entitySuppliers,
+      entityStoreContacts
+    ].includes(selectedEntity)
     ) {
       $regenerateFormGroup.show();
     } else {
       $regenerateFormGroup.hide();
     }
 
-    if ([entityCategories,
-        entityProducts,
-        entityCustomers,
-        entityAddresses,
-        entityBrands,
-        entitySuppliers,
-        entityStoreContacts,
-        entityAlias
-      ].includes(selectedEntity)
+    if ([
+      entityCategories,
+      entityProducts,
+      entityCustomers,
+      entityAddresses,
+      entityBrands,
+      entitySuppliers,
+      entityStoreContacts,
+      entityAlias
+    ].includes(selectedEntity)
     ) {
       $forceIdsFormGroup.show();
     } else {
