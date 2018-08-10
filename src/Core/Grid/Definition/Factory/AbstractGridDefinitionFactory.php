@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
@@ -55,6 +56,10 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
 
         if (null !== $gridActions = $this->getGridActions()) {
             $definition->setGridActions($gridActions);
+        }
+
+        if (null !== $filters = $this->getFilters()) {
+            $definition->setFilters($filters);
         }
 
         return $definition;
@@ -97,6 +102,16 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      * @return BulkActionCollectionInterface|null
      */
     protected function getBulkActions()
+    {
+        return null;
+    }
+
+    /**
+     * Get defined filters
+     *
+     * @return FilterCollectionInterface|null
+     */
+    protected function getFilters()
     {
         return null;
     }
