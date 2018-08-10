@@ -137,6 +137,20 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
+     * Shows import data page where the configuration of importable data and the final step of import is handled
+     *
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import_data.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function showImportDataAction(Request $request)
+    {
+        return [];
+    }
+
+    /**
      * Handle import file upload via AJAX, sending authorization errors in JSON.
      *
      * @param Request $request
