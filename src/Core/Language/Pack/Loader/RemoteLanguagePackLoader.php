@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Version;
 /**
  * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host
  */
-class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
+final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
 {
     /**
      * @var string - the link from which available languages are retrieved
@@ -56,7 +56,7 @@ class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
         $normalizedLink = str_replace('%ps_version%', $this->version->getVersion(), $this->packLink);
         $jsonResponse = file_get_contents($normalizedLink);
 
-        $result = null;
+        $result = [];
         if ($jsonResponse) {
             $result = json_decode($jsonResponse, true);
         }
