@@ -286,6 +286,22 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getAttachments()
+    {
+        foreach ($this->product['attachments'] as &$attachment) {
+            if (!isset($attachment['file_size_formatted'])) {
+                $attachment['file_size_formatted'] = Tools::formatBytes($attachment['file_size'], 2);
+            }
+        }
+
+        return $this->product['attachments'];
+    }
+
+    /**
+     * @arrayAccess
      * @return array|mixed
      */
     public function getQuantityDiscounts()
