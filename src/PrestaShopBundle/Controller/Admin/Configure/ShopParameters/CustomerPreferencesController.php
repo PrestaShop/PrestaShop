@@ -43,7 +43,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
      * Show customer preferences page
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/customer_preferences.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      * @return array Template parameters
@@ -65,7 +65,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
 
     /**
      * Process the Customer Preferences configuration form.
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_customer_preferences")
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_customer_preferences")
      * @DemoRestricted(redirectRoute="admin_customer_preferences")
      *
      * @param Request $request

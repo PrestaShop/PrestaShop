@@ -44,7 +44,7 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @Template("@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return array Template parameters
      */
@@ -72,7 +72,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return RedirectResponse
      */
@@ -89,7 +89,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
 
      * @return RedirectResponse
      */
@@ -106,7 +106,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return RedirectResponse
      */
