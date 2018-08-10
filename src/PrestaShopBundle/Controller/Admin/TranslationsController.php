@@ -295,7 +295,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_.DIRECTORY_SEPARATOR);
 
             $response = new BinaryFileResponse($zipFile);
-            $response->deleteFileAfterSend($shouldDelete = true);
+            $response->deleteFileAfterSend(true);
 
             $themeExporter->cleanArtifacts($themeName);
             return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
