@@ -64,7 +64,7 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
     {
         $languages = $this->languagePackLoader->getLanguagePackList();
         $choices = [];
-        if (null !== $languages) {
+        if (!empty($languages)) {
             foreach ($languages as $locale => $name) {
                 if ($this->languageValidator->isInstalledByLocale($locale)) {
                     continue;
