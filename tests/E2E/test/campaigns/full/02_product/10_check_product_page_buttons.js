@@ -75,6 +75,10 @@ scenario('Check product page buttons', () => {
       test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
     }, 'product/check_product');
 
+    /**
+     * This scenario is based on the bug described in this ticket
+     * http://forge.prestashop.com/browse/BOOM-4950
+     **/
     scenario('Check when clicking on "Yes" of the delete confirmation modal', client => {
       test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
       test('should click on "Yes" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));

@@ -2,11 +2,21 @@ services:
     _defaults:
         public: true
 
+    prestashop.core.grid.filter.form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactory'
+        arguments:
+            - '@form.factory'
+
     # Grid data providers
     prestashop.core.grid.data_provider.log:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.admin.log.repository'
+
+    prestashop.core.grid.data_provider.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        arguments:
+            - '@prestashop.core.grid.query_builder.email_logs'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -23,16 +33,45 @@ services:
           - "@=service('router').generate('admin_logs')"
         public: true
 
+    prestashop.core.grid.definition.factory.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
+          - "@=service('router').generate('admin_email')"
+          - '@prestashop.core.form.choice_provider.language_by_id'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.log_definition'
             - '@prestashop.core.grid.data_provider.log'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.hook.dispatcher'
+
+    prestashop.core.grid.factory.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.email_logs'
+            - '@prestashop.core.grid.data_provider.email_logs'
+            - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.hook.dispatcher'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+
+    # Query builder
+    prestashop.core.grid.abstract_query_builder:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
+        abstract: true
         arguments:
-            - '@form.factory'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.core.grid.query_builder.email_logs:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\EmailLogsQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true

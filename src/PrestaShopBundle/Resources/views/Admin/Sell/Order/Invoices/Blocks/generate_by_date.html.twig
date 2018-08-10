@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block invoices_generate_by_date %}
     <div class="col">
@@ -45,6 +46,7 @@
                         {{ form_widget(generateByDateForm.date_to) }}
                     </div>
                 </div>
+                {{ form_rest(generateByDateForm) }}
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-end">

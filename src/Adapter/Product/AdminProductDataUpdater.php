@@ -60,8 +60,8 @@ class AdminProductDataUpdater implements ProductInterface
         $this->hookDispatcher = $hookDispatcher;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::activateProductIdList()
+    /**
+     * {@inheritdoc}
      */
     public function activateProductIdList(array $productListId, $activate = true)
     {
@@ -87,8 +87,8 @@ class AdminProductDataUpdater implements ProductInterface
         return true;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::deleteProductIdList()
+    /**
+     * {@inheritdoc}
      */
     public function deleteProductIdList(array $productIdList)
     {
@@ -106,9 +106,9 @@ class AdminProductDataUpdater implements ProductInterface
         return true;
     }
 
-    /* (non-PHPdoc)
-         * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::duplicateProductIdList()
-         */
+    /**
+     * {@inheritdoc}
+     */
     public function duplicateProductIdList(array $productIdList)
     {
         if (count($productIdList) < 1) {
@@ -131,8 +131,8 @@ class AdminProductDataUpdater implements ProductInterface
         return true;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::deleteProduct()
+    /**
+     * {@inheritdoc}
      */
     public function deleteProduct($productId)
     {
@@ -151,8 +151,8 @@ class AdminProductDataUpdater implements ProductInterface
         return true;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::duplicateProduct()
+    /**
+     * {@inheritdoc}
      */
     public function duplicateProduct($productId, $namePattern = 'copy of %s')
     {
@@ -218,8 +218,8 @@ class AdminProductDataUpdater implements ProductInterface
         }
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::sortProductIdList()
+    /**
+     * {@inheritdoc}
      */
     public function sortProductIdList(array $productList, $filterParams)
     {

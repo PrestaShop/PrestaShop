@@ -1,4 +1,9 @@
 services:
+    _defaults:
+        public: true
+
     prestashop.core.configuration.ini_configuration:
         class: 'PrestaShop\PrestaShop\Core\Configuration\IniConfiguration'
-        public: true
+
+    prestashop.core.configuration.php_extension_checker:
+        class: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'

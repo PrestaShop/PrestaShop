@@ -159,7 +159,7 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
-        
+
         $this->container = $this->buildContainer();
     }
 
@@ -724,9 +724,7 @@ abstract class ControllerCore
      *
      * @return ContainerBuilder
      */
-    protected function buildContainer()
-    {
-    }
+    abstract protected function buildContainer();
 
     /**
      * Gets a service from the service container.

@@ -111,9 +111,9 @@ function updateProduct(event, eventType, updateUrl) {
     }
 
     // New request only if new value
-    if (event !== null
-        && event.type === 'keyup'
-        && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+    if (event &&
+        event.type === 'keyup' &&
+        $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
     ) {
         return;
     }
@@ -125,7 +125,7 @@ function updateProduct(event, eventType, updateUrl) {
 
     currentRequestDelayedId = setTimeout(function updateProductRequest() {
         currentRequest = $.ajax({
-            url: updateUrl + '?' + formSerialized + preview,
+            url: updateUrl + ((updateUrl.indexOf('?') === -1) ? '?' : '&') + formSerialized + preview,
             method: 'POST',
             data: {
                 ajax: 1,
@@ -310,5 +310,18 @@ $(document).ready(() => {
                 showError($('#product-availability'), 'An error occurred while processing your request');
             }
         });
+    });
+
+    prestashop.on('updatedProduct', (args) => {
+        if (!args.product_url || !args.id_product_attribute) {
+            return;
+        }
+        window.history.pushState(
+            {
+              id_product_attribute: args.id_product_attribute
+            },
+            document.title,
+            args.product_url
+        );
     });
 });

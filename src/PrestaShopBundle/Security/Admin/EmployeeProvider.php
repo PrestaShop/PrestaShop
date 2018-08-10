@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Security\Admin;
 
 use Access;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -43,29 +44,47 @@ class EmployeeProvider implements UserProviderInterface
     private $legacyContext;
 
     /**
-     * Constructor.
-     *
-     * @param LegacyContext $context
+     * @var CacheItemPoolInterface
      */
-    public function __construct(LegacyContext $context)
+    private $cache;
+
+    public function __construct(LegacyContext $context, CacheItemPoolInterface $cache)
     {
         $this->legacyContext = $context->getContext();
+        $this->cache = $cache;
     }
 
     /**
      * Fetch the Employee entity that matches the given username.
+     * Cache system doesn't supports "@" character, so we rely on a sha1 expression.
      *
      * @param string $username
      * @return Employee
+     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function loadUserByUsername($username)
     {
-        if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
+        $cacheKey = sha1($username);
+        $cachedEmployee = $this->cache->getItem("app.employees_${cacheKey}");
+
+        if ($cachedEmployee->isHit()) {
+            return $cachedEmployee->get();
+        }
+
+        if (
+            null !== $this->legacyContext->employee
+            && $this->legacyContext->employee->email === $username
+        ) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
                 array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
             );
-            return $employee;
+
+            $cachedEmployee->set($employee);
+            $this->cache->save($cachedEmployee);
+
+            return $cachedEmployee->get();
         }
 
         throw new UsernameNotFoundException(

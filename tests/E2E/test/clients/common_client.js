@@ -6,6 +6,7 @@ let pdfUtil = require('pdf-to-text');
 
 global.tab = [];
 global.isOpen = false;
+global.param = [];
 
 class CommonClient {
   constructor() {
@@ -145,8 +146,10 @@ class CommonClient {
       .scrollWaitForExistAndClick(selector, margin, timeout);
   }
 
-  waitForVisibleAndClick(selector, timeout = 90000) {
-    return this.client.waitForVisibleAndClick(selector, timeout);
+  waitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .waitForVisibleAndClick(selector, timeout);
   }
 
   moveToObject(selector, pause = 0) {
@@ -312,11 +315,6 @@ class CommonClient {
     return this.client.waitAndSelectByAttribute(selector, attribute, value, pause, timeout);
   }
 
-  refresh(selector) {
-    return this.client
-      .refresh();
-  }
-
   switchWindow(id) {
     return this.client.switchWindow(id);
   }
@@ -432,13 +430,6 @@ class CommonClient {
     delete object[pos];
   }
 
-  setAttributeById(selector) {
-    return this.client
-      .execute(function (selector) {
-        document.getElementById(selector).style.display = 'none';
-      }, selector);
-  }
-
   stringifyNumber(number) {
     let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
     let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
@@ -446,14 +437,6 @@ class CommonClient {
     if (number%10 === 0) return deca[Math.floor(number/10)-2] + 'ieth';
     return deca[Math.floor(number/10)-2] + 'y-' + special[number%10];
   }
-
-  setAttributeById(selector) {
-    return this.client
-      .execute(function (selector) {
-        document.getElementById(selector).style.display = 'none';
-      }, selector);
-  }
-
 
   /**
    * This function searches the data in the table in case a filter input exists
@@ -491,6 +474,17 @@ class CommonClient {
   refresh() {
     return this.client
       .refresh();
+  }
+
+  getParamFromURL(param, pause = 0) {
+    return this.client
+      .pause(pause)
+      .url()
+      .then((res) => {
+        let current_url = res.value;
+        expect(current_url).to.contain(param);
+        global.param[param] = current_url.split(param + '=')[1].split("&")[0];
+      });
   }
 
 }

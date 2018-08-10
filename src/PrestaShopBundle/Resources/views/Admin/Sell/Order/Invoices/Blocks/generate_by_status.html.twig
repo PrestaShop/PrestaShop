@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% form_theme generateByStatusForm _self %}
 
@@ -40,6 +41,7 @@
                     {{ form_errors(generateByStatusForm.order_states) }}
                     {{ form_widget(generateByStatusForm.order_states) }}
                 </div>
+                {{ form_rest(generateByStatusForm) }}
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
@@ -61,11 +63,7 @@
             <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
                 {{- widget|raw -}}
                 <i class="md-checkbox-control"></i>
-                {% if orders_count > 0 %}
-                    {% set badgeType = 'success' %}
-                {% else %}
-                    {% set badgeType = 'danger' %}
-                {% endif %}
+                {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
                 <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
                 <span>
                     {{- label is not same as(false) ? label|raw -}}

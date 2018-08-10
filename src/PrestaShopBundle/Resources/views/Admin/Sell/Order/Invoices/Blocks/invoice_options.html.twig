@@ -24,6 +24,7 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block invoice_options %}
     <div class="col">
@@ -100,6 +101,7 @@
                         {{ form_errors(invoiceOptionsForm.use_disk_cache) }}
                         {{ form_widget(invoiceOptionsForm.use_disk_cache) }}
                     </div>
+                    {{ form_rest(invoiceOptionsForm) }}
                 </div>
             </div>
             <div class="card-footer">

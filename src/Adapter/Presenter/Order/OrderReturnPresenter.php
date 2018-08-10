@@ -32,9 +32,21 @@ use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
 class OrderReturnPresenter implements PresenterInterface
 {
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * @var Link
+     */
     private $link;
 
+    /**
+     * OrderReturnPresenter constructor.
+     * @param $prefix
+     * @param Link $link
+     */
     public function __construct($prefix, Link $link)
     {
         $this->prefix = $prefix;

@@ -27,6 +27,7 @@
 require_once 'Exception/BuildException.php';
 require_once 'Library/ReleaseCreator.php';
 require_once 'Library/ConsoleWriter.php';
+require_once 'Library/Version.php';
 
 $consoleWrite = new ConsoleWriter();
 $lineSeparator = PHP_EOL;

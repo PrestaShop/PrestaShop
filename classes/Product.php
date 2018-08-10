@@ -5668,7 +5668,7 @@ class ProductCore extends ObjectModel
                 } elseif (array_key_exists((int)$id, $max_position_lookup)) {
                     $pos = (int)$max_position_lookup[(int) $id] + 1;
                 }
-				
+
                 $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.$pos.')';
             }
 
@@ -6111,37 +6111,43 @@ class ProductCore extends ObjectModel
         }
 
         if (!is_array($idAttributes) || empty($idAttributes)) {
-            throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
+            throw new PrestaShopException(
+                sprintf(
+                    'Invalid parameter $idAttributes with value: "%s"',
+                    print_r($idAttributes, true)
+                )
+            );
         }
+
         $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
         $idProductAttribute =  Db::getInstance()->getValue('
-            SELECT 
+            SELECT
                 pac.`id_product_attribute`
-            FROM 
+            FROM
                 `' . _DB_PREFIX_ . 'product_attribute_combination` pac
                 INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-            WHERE 
+            WHERE
                 pa.id_product = ' . $idProduct . '
                 AND pac.id_attribute IN (' . $idAttributesImploded . ')
-            GROUP BY 
+            GROUP BY
                 pac.`id_product_attribute`
-            HAVING 
+            HAVING
                 COUNT(pa.id_product) = ' . count($idAttributes)
         );
 
-        if ($idProductAttribute === false && $find_best) {
+        if ($idProductAttribute === false && $findBest) {
             //find the best possible combination
             //first we order $idAttributes by the group position
             $orderred = array();
             $result = Db::getInstance()->executeS('
-                SELECT 
+                SELECT
                     a.`id_attribute`
-                FROM 
+                FROM
                     `'._DB_PREFIX_.'attribute` a
                     INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
-                WHERE 
+                WHERE
                     a.`id_attribute` IN (' . $idAttributesImploded . ')
-                ORDER BY 
+                ORDER BY
                     g.`position` ASC'
             );
 
@@ -6152,17 +6158,17 @@ class ProductCore extends ObjectModel
             while ($idProductAttribute === false && count($orderred) > 0) {
                 array_pop($orderred);
                 $idProductAttribute =  Db::getInstance()->getValue('
-                    SELECT 
+                    SELECT
                         pac.`id_product_attribute`
-                    FROM 
+                    FROM
                         `'._DB_PREFIX_.'product_attribute_combination` pac
                         INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                    WHERE 
+                    WHERE
                         pa.id_product = '.(int)$idProduct.'
                         AND pac.id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
-                    GROUP BY 
+                    GROUP BY
                         pac.id_product_attribute
-                    HAVING 
+                    HAVING
                         COUNT(pa.id_product) = '.count($orderred)
                 );
             }
@@ -6720,7 +6726,7 @@ class ProductCore extends ObjectModel
     public function getUsedCustomizationFieldsIds()
     {
         return Db::getInstance()->executeS(
-            'SELECT cd.`index` FROM `' . _DB_PREFIX_ . 'customized_data` cd 
+            'SELECT cd.`index` FROM `' . _DB_PREFIX_ . 'customized_data` cd
             LEFT JOIN `' . _DB_PREFIX_ . 'customization_field` cf ON cf.`id_customization_field` = cd.`index`
             WHERE cf.`id_product` = ' . (int)$this->id
         );
@@ -6765,7 +6771,7 @@ class ProductCore extends ObjectModel
         $updateQuery = 'UPDATE `' . _DB_PREFIX_ . 'customization_field` cf
             SET cf.`is_deleted` = 1
             WHERE
-            cf.`id_product` = ' . (int)$this->id . ' 
+            cf.`id_product` = ' . (int)$this->id . '
             AND cf.`is_deleted` = 0 ';
 
         if (is_array($customizationIds) && !empty($customizationIds)) {

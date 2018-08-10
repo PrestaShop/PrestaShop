@@ -99,7 +99,7 @@ class OrderFollowControllerCore extends FrontController
 
         $ordersReturn = $this->getTemplateVarOrdersReturns();
         if (count($ordersReturn) <= 0) {
-            $this->errors[] = $this->trans(
+            $this->warning[] = $this->trans(
                 'You have no merchandise return authorizations.', array(), 'Shop.Notifications.Error'
             );
         }

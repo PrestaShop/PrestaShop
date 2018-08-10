@@ -271,6 +271,7 @@ GitHub contributors:
 - Jaume
 - Javsmile
 - J. Danse
+- jbroutier
 - JEAN
 - jeanbe
 - jeckyl
@@ -334,6 +335,7 @@ GitHub contributors:
 - Luc
 - LucasC
 - Lucas CERDAN
+- Lucas Rolff
 - Luca T.
 - Luc Vandesype
 - LyoNick
@@ -448,6 +450,7 @@ GitHub contributors:
 - Patrick Weinstein
 - Pavel Novitsky
 - pbirnzain
+- Pedro Câmara
 - Pedro J. Parra
 - Per Lejontand
 - peterept
@@ -493,7 +496,7 @@ GitHub contributors:
 - raulgundin
 - rav88
 - rdy4ever
-- Remi Gaillard
+- Rémi Gaillard
 - Remigiusz Jackowski
 - Renaud Sanchez - ChouetteWeb.fr
 - rGaillard

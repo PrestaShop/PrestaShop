@@ -85,16 +85,29 @@ class Tools
         return (string) $result->toPrecision($scale);
     }
 
+    /**
+     * @param string $html
+     * @param string|null $uri_unescape
+     * @param bool $allow_style
+     * @return string
+     */
     public function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
         return LegacyTools::purifyHTML($html, $uri_unescape, $allow_style);
     }
 
+    /**
+     * @see LegacyTools::refreshCACertFile()
+     */
     public function refreshCaCertFile()
     {
         LegacyTools::refreshCACertFile();
     }
 
+    /**
+     * @see LegacyTools::generateRobotsFile()
+     * @return bool
+     */
     public function generateHtaccess()
     {
         return LegacyTools::generateHtaccess();

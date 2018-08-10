@@ -30,9 +30,19 @@ use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
 
 /**
  * @group demo
+ *
+ * To execute these tests: use "./vendor/bin/phpunit -c tests/phpunit-admin.xml --filter=SurvivalTest" command.
  */
 class SurvivalTest extends WebTestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        // Do not reset the Database.
+    }
+
     /**
      * @dataProvider getDataProvider
      * @param $pageName
@@ -80,7 +90,20 @@ class SurvivalTest extends WebTestCase
             'admin_order_preferences' => ['Order Preferences', 'admin_order_preferences'],
             'admin_maintenance' => ['Maintenance', 'admin_maintenance'],
             'admin_product_preferences' => ['Product Preferences', 'admin_product_preferences'],
-            'admin_customer_preferences' => ['Customer preferences', 'admin_customer_preferences'],
+            'admin_customer_preferences' => ['Customer Preferences', 'admin_customer_preferences'],
+            'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
+            // @todo: why these tests are failing when pages are available?
+            // 'admin_system_information' => ['Information', 'admin_system_information'],
+            // 'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
+            // 'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
+            'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],
+            'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
+            'admin_module_manage' => ['Manage installed modules', 'admin_module_manage'],
+            'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
+            'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],
+            'admin_geolocation' => ['Geolocation', 'admin_geolocation'],
+            'admin_localization_show_settings' => ['Localization', 'admin_localization_show_settings'],
+            'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
         ];
     }
 }

@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
+/**
+ * Gift Settings configuration available in ShopParameters > Order Preferences.
+ */
 class GiftOptionsConfiguration implements DataConfigurationInterface
 {
     /**
