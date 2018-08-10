@@ -25,9 +25,29 @@
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-<div class="form-group">
-
+<div class="col-xs-12 col-md-6">
+  <div class="form-group">
+    {{ form_errors(importDataConfigurationForm.data_matching_configuration) }}
+    <label class="form-control-label">
+      {{ 'Save your data matching configuration'|trans }}
+    </label>
+    <div class="form-row">
+      <div class="col-xs-12 col-md-8">
+        {{ form_widget(importDataConfigurationForm.data_matching_configuration) }}
+      </div>
+      <div class="col">
+        <button class="btn btn-primary-reverse btn-outline-primary light-button">
+          <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    {{ form_errors(importDataConfigurationForm.rows_skip) }}
+    <label class="form-control-label">
+      {{ 'Rows to skip'|trans }}
+    </label>
+    {{ form_widget(importDataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4', 'min': 0}}) }}
+  </div>
 </div>
-<div class="form-group">
 
-</div>
