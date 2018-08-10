@@ -43,6 +43,9 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     private $version;
 
+    /**
+     * @param Version $version
+     */
     public function __construct(Version $version)
     {
         $this->version = $version;

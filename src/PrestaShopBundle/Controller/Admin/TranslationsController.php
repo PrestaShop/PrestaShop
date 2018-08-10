@@ -245,6 +245,8 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract theme using locale and theme name.
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
+     *
      * @param Request $request
      *
      * @return BinaryFileResponse|RedirectResponse
