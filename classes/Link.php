@@ -738,6 +738,17 @@ class LinkCore
                 }
                 break;
 
+            case 'AdminTranslations':
+                // In case of email body translations we want to get a link to legacy controller,
+                // in other cases - it's the migrated controller
+                if (isset($params['selected-emails']) && $params['selected-emails'] == 'body') {
+                    break;
+                }
+
+                $routeName = 'admin_international_translation_overview';
+
+                break;
+
             default:
                 $routes = array(
                     'AdminAdminPreferences' => 'admin_administration',
