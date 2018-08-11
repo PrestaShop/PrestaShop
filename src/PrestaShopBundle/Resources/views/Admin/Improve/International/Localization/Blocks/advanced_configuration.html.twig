@@ -32,18 +32,22 @@
       <i class="material-icons">settings</i> {{ 'Advanced'|trans({}, 'Admin.Global') }}
     </h3>
 
-    <div class="card-block">
+    <div class="card-block row">
       <div class="card-text">
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Language identifier'|trans), ('The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(advancedForm.language_identifier) }}
-          {{ form_widget(advancedForm.language_identifier) }}
+          <div class="col-sm">
+            {{ form_errors(advancedForm.language_identifier) }}
+            {{ form_widget(advancedForm.language_identifier) }}
+          </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Country identifier'|trans), ('The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(advancedForm.country_identifier) }}
-          {{ form_widget(advancedForm.country_identifier) }}
+          <div class="col-sm">
+            {{ form_errors(advancedForm.country_identifier) }}
+            {{ form_widget(advancedForm.country_identifier) }}
+          </div>
         </div>
       </div>
     </div>
