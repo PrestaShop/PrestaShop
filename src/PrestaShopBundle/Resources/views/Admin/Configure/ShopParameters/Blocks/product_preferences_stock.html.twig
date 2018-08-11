@@ -26,6 +26,7 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
+{% block product_preferences_stock %}
 <div class="col-xl-10">
   <div class="card" id="configuration_fieldset_stock">
     <h3 class="card-header">
@@ -108,3 +109,4 @@
     </div>
   </div>
 </div>
+{% endblock %}
