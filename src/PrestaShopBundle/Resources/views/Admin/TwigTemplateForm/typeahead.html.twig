@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -34,8 +34,10 @@
     >
         {{ form_errors(form) }}
 
-        <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
-        <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-xs-12 product-list">
+        <div class="search search-with-icon">
+            <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+        </div>
+        <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-sm-12 product-list">
             {% if collection is defined and collection|length > 0 %}
                 {% for item in collection %}
                     <li class="media">
@@ -66,7 +68,7 @@
     <ul id="{{ form.vars.id }}-data" class="typeahead-list pack nostyle row">
         {% if collection is defined and collection|length > 0 %}
             {% for item in collection %}
-                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}" class="col-xl-3 col-lg-6 m-b-1">
+                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}" class="col-xl-3 col-lg-6 mb-1">
                     <div class="pack-product">
                         <img class="cover" src="{{ item.image }}" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
                         <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
@@ -79,19 +81,21 @@
 
     <h2>{{ form.vars.label }}</h2>
 
-    <div class="row m-b-2">
+    <div class="row mb-2">
         <div class="col-md-6">
             <input type="text" id="{{ form.vars.id }}" class="form-control typeahead search {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
         </div>
         <div class="col-md-3">
             <div class="input-group">
-                <span class="input-group-addon">×</span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">×</span>
+                </div>
                 <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
             </div>
         </div>
         <div class="col-md-3">
             <div class="input-group">
-                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn btn-action btn-block">
+                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn btn-secondary btn-block">
                     <i class="material-icons">add</i>
                     {{ "Add"|trans({}, "Admin.Actions") }}
                 </button>
@@ -123,7 +127,7 @@
                         var data = $(this).data('currentItem');
                         var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
 
-                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-xl-3 col-lg-6 m-b-1">';
+                        var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-xl-3 col-lg-6 mb-1">';
                         html += '<div class="pack-product">';
                         html += '<img class="cover" src="' + data.image +'" />';
                         html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', data.{{ mapping_name }}, data.ref, number);
@@ -207,7 +211,7 @@
 {% block typeahead_customer_collection_widget %}
     {{ form_errors(form) }}
     <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-xs-12"></ul>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-sm-12"></ul>
     <script>
         $( document ).ready(function() {
             //remove collection item

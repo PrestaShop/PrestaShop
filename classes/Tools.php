@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShopBundle\Service\Cache\Refresh;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\Filesystem\Filesystem;
+use PHPSQLParser\PHPSQLParser;
 use Composer\CaBundle\CaBundle;
 
 class ToolsCore
@@ -48,6 +48,14 @@ class ToolsCore
         if ($request) {
             self::$request = $request;
         }
+    }
+
+    /**
+     * Reset the request set during the first new Tools($request) call
+     */
+    public static function resetRequest()
+    {
+        self::$request = null;
     }
 
     /**
@@ -120,9 +128,22 @@ class ToolsCore
         return false;
     }
 
+    /**
+     * Replace text within a portion of a string
+     *
+     * Replaces a string matching a search, (optionally) string from a certain position
+     *
+     * @param  string  $search  The string to search in the input string
+     * @param  string  $replace The replacement string
+     * @param  string  $subject The input string
+     * @param  integer $cur     Starting position cursor for the search
+     * @return string  The result string is returned.
+     */
     public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
     {
-        return (strpos($subject, $search, $cur))?substr_replace($subject, $replace, (int)strpos($subject, $search, $cur), strlen($search)):$subject;
+        $strPos = strpos($subject, $search, $cur);
+
+        return $strPos !== false ? substr_replace($subject, $replace, (int)$strPos, strlen($search)) : $subject;
     }
 
     /**
@@ -391,17 +412,69 @@ class ToolsCore
     }
 
     /**
-    * Secure an URL referrer
-    *
-    * @param string $referrer URL referrer
-    * @return string secured referrer
-    */
+     * Returns a safe URL referrer
+     *
+     * @param string $referrer URL referrer
+     * @return string secured referrer
+     */
     public static function secureReferrer($referrer)
     {
-        if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer)) {
+        if (static::urlBelongsToShop($referrer)) {
             return $referrer;
         }
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Indicates if the provided URL belongs to this shop (relative urls count as belonging to the shop)
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function urlBelongsToShop($url)
+    {
+        $urlHost = Tools::extractHost($url);
+
+        return (empty($urlHost) || $urlHost === Tools::getServerName());
+    }
+
+    /**
+     * Safely extracts the host part from an URL
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function extractHost($url)
+    {
+        if (PHP_VERSION_ID >= 50628) {
+            $parsed = parse_url($url);
+            if (!is_array($parsed)) {
+                return $url;
+            }
+            if (empty($parsed['host']) || empty($parsed['scheme'])) {
+                return '';
+            }
+            return $parsed['host'];
+        }
+
+        // big workaround needed
+        // @see: https://bugs.php.net/bug.php?id=73192
+        // @see: https://3v4l.org/nFYJh
+
+        $matches = [];
+        if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
+            // relative url
+            return '';
+        }
+        $authority = $matches['authority'];
+
+        if (!preg_match('/(?:(?<user>.+):(?<pass>.+)@)?(?<domain>[\w.-]+)(?::(?<port>\d+))?/ui', $authority, $matches)) {
+            return '';
+        }
+
+        return $matches['domain'];
     }
 
     /**
@@ -672,6 +745,8 @@ class ToolsCore
     /**
     * Return price converted
     *
+    * @deprecated since 1.7.4 use convertPriceToCurrency()
+    *
     * @param float $price Product price
     * @param object|array $currency Current currency object
     * @param bool $to_currency convert to currency or from currency to default currency
@@ -680,11 +755,7 @@ class ToolsCore
     */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
-        static $default_currency = null;
-
-        if ($default_currency === null) {
-            $default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
-        }
+        $default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 
         if (!$context) {
             $context = Context::getContext();
@@ -1942,7 +2013,7 @@ class ToolsCore
         $url,
         $use_include_path = false,
         $stream_context = null,
-        $curl_timeout = 60,
+        $curl_timeout = 5,
         $fallback = false
     ) {
         $is_local_file = !preg_match('/^https?:\/\//', $url);
@@ -2037,14 +2108,19 @@ class ToolsCore
     /**
     * Translates a string with underscores into camel case (e.g. first_name -> firstName)
     * @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
-    */
-    public static function toCamelCase($str, $catapitalise_first_char = false)
+     *
+     * @param string $str Source string to convert in camel case
+     * @param bool $capitaliseFirstChar Optionnal parameters to transform the first letter in upper case
+     * @return string The string in camel case
+     */
+    public static function toCamelCase($str, $capitaliseFirstChar = false)
     {
         $str = Tools::strtolower($str);
-        if ($catapitalise_first_char) {
-            $str = Tools::ucfirst($str);
+        $str = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)) );
+        if (!$capitaliseFirstChar) {
+            $str = lcfirst($str);
         }
-        return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
+        return $str;
     }
 
     /**
@@ -2092,7 +2168,6 @@ class ToolsCore
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
-            require_once(_PS_TOOL_DIR_.'parser_sql/PHPSQLParser.php');
             $parser = new PHPSQLParser($sql);
             return $parser->parsed;
         }
@@ -2130,7 +2205,9 @@ class ToolsCore
 
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
-        if (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null) {
+        if (defined('_PS_IN_TEST_')
+            || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
+        ) {
             return true;
         }
 
@@ -2273,21 +2350,15 @@ class ToolsCore
                 if ($uri['virtual']) {
                     if (!$rewrite_settings) {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
                     } else {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']." [L,R]\n");
                     }
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
+                    fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
                 }
 
@@ -2296,14 +2367,10 @@ class ToolsCore
                     fwrite($write_fd, "# Images\n");
                     if (Configuration::get('PS_LEGACY_IMAGES')) {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]'."\n");
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]'."\n");
                     }
 
@@ -2316,20 +2383,14 @@ class ToolsCore
                         }
                         $img_name .= '$'.$j;
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
+                        fwrite($write_fd, $domain_rewrite_cond);
                         fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/'.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
                     }
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
+                    fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]'."\n");
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
+                    fwrite($write_fd, $domain_rewrite_cond);
                     fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
                 }
 
@@ -2531,6 +2592,9 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/themes/*/assets/cache/*.js',
+            '*/themes/*/assets/cache/*.css',
+            '*/themes/*/assets/css/*',
         );
 
         // Directories
@@ -2562,8 +2626,8 @@ FileETag none
         }
 
         $tab['GB'] = array(
-            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
-            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
+            '?order=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+            '&order=','&tag=','&id_currency=','&search_query=','&back=','&n='
         );
 
         foreach ($disallow_controllers as $controller) {
@@ -2622,6 +2686,64 @@ header("Pragma: no-cache");
 header("Location: ../");
 exit;
 ';
+    }
+
+    /**
+     * Return the directory list from the given $path
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectories($path)
+    {
+        if (function_exists('glob')) {
+            return self::getDirectoriesWithGlob($path);
+        }
+
+        return self::getDirectoriesWithReaddir($path);
+    }
+
+    /**
+     * Return the directory list from the given $path using php glob function
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectoriesWithGlob($path)
+    {
+        $directoryList = glob($path.'/*', GLOB_ONLYDIR | GLOB_NOSORT);
+        array_walk($directoryList,
+            function (&$absolutePath, $key) {
+                $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
+            }
+        );
+
+        return $directoryList;
+    }
+
+    /**
+     * Return the directory list from the given $path using php readdir function
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectoriesWithReaddir($path)
+    {
+        $directoryList = [];
+        $dh = @opendir($path);
+        if ($dh) {
+            while (($file = @readdir($dh)) !== false) {
+                if (is_dir($path . DIRECTORY_SEPARATOR . $file) && $file[0] != '.') {
+                    $directoryList[] = $file;
+                }
+            }
+            @closedir($dh);
+        }
+
+        return $directoryList;
     }
 
     /**
@@ -2701,7 +2823,7 @@ exit;
     protected static function throwDeprecated($error, $message, $class)
     {
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
-            trigger_error($error, E_USER_WARNING);
+            @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
         }
     }
@@ -3032,17 +3154,17 @@ exit;
      */
     public static function clearSf2Cache($env = null)
     {
-        if (!$env) {
+        if (is_null($env)) {
             $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
         }
 
-        $sf2Refresh = new Refresh($env);
-        $sf2Refresh->addCacheClear();
-        $ret = $sf2Refresh->execute();
+        $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
 
-        Hook::exec('actionClearSf2Cache');
-
-        return $ret;
+        register_shutdown_function(function() use ($dir) {
+            $fs = new Filesystem();
+            $fs->remove($dir);
+            Hook::exec('actionClearSf2Cache');
+        });
     }
 
     /**
@@ -3757,7 +3879,7 @@ exit;
             return;
         }
 
-        $sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
+        $sort_function = function($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
 
         uasort($rows, $sort_function);
 

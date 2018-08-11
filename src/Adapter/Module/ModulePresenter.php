@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,6 +57,7 @@ class ModulePresenter implements PresenterInterface
         }
 
         $attributes = $module->attributes->all();
+        $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
         return array(
@@ -77,5 +78,33 @@ class ModulePresenter implements PresenterInterface
             $prices['raw'] = $prices['USD'];
         }
         return $prices;
+    }
+
+    /**
+     * Generate the list of small icons to be displayed near the module name
+     * 
+     * @param array $attributes Attributes of presented module
+     * @return array
+     */
+    private function addPicos(array $attributes)
+    {
+        $picos = array();
+
+        // PrestaTrust display
+        if (!empty($attributes['prestatrust']) && !empty($attributes['prestatrust']->pico)) {
+            $text = '';
+            $class = '';
+            if (isset($attributes['prestatrust']->status)) {
+                $text = $attributes['prestatrust']->status ? 'OK' : 'KO';
+                $class = $attributes['prestatrust']->status ? 'text-success' : 'text-warning';
+            }
+            $picos['prestatrust'] = array(
+                'img' => $attributes['prestatrust']->pico,
+                'label' => 'prestatrust',
+                'text' => $text,
+                'class' => $class,
+            );
+        }
+        return $picos;
     }
 }

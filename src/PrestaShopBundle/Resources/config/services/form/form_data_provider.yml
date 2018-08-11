@@ -1,0 +1,56 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.admin.customer_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
+        arguments:
+            - '@prestashop.adapter.customer.customer_configuration'
+            - '@translator'
+
+    prestashop.admin.product_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.product_general.configuration'
+            - '@prestashop.adapter.product_pagination.configuration'
+            - '@prestashop.adapter.product_page.configuration'
+            - '@prestashop.adapter.product_stock.configuration'
+            - '@translator'
+
+    prestashop.adapter.performance.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.smarty_cache.configuration'
+            - '@prestashop.adapter.debug_mode.configuration'
+            - '@prestashop.adapter.optional_features.configuration'
+            - '@prestashop.adapter.ccc.configuration'
+            - '@prestashop.adapter.media_servers.configuration'
+            - '@prestashop.adapter.caching.configuration'
+
+    prestashop.adapter.maintenance.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.maintenance.configuration'
+
+    prestashop.adapter.administration.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
+        arguments:
+            - '@prestashop.adapter.general.configuration'
+            - '@prestashop.adapter.upload_quota.configuration'
+            - '@prestashop.adapter.notifications.configuration'
+
+    prestashop.adapter.preferences.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.preferences.configuration'
+
+    prestashop.adapter.logs.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.logs.configuration'
+
+    prestashop.admin.import.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
+        arguments:
+            - '@session'
+            - '@prestashop.core.import.file_finder'

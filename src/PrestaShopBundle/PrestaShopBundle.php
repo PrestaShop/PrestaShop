@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle;
 
+use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
+use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -34,9 +36,6 @@ use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 
-/**
- * Symfony entry point: adds Extension, that will add other stuff.
- */
 class PrestaShopBundle extends Bundle
 {
     /**
@@ -54,8 +53,9 @@ class PrestaShopBundle extends Bundle
     {
         $container->addCompilerPass(new DynamicRolePass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
+        $container->addCompilerPass(new LoadServicesFromModulesPass(), PassConfig::TYPE_BEFORE_REMOVING);
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
-        $container->addCompilerPass(new DependencyInjection\Compiler\OverrideServiceCompilerPass());
+        $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
     }
 }

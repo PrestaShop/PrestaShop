@@ -417,7 +417,7 @@
     <value>0</value>
   </configuration>
   <configuration id="PS_CUSTOMIZATION_FEATURE_ACTIVE" name="PS_CUSTOMIZATION_FEATURE_ACTIVE">
-    <value>0</value>
+    <value>1</value>
   </configuration>
   <configuration id="PS_CART_RULE_FEATURE_ACTIVE" name="PS_CART_RULE_FEATURE_ACTIVE">
     <value>0</value>
@@ -831,6 +831,15 @@ Country</value>
     </configuration>
     <configuration id="PS_PRODUCT_SHORT_DESC_LIMIT" name="PS_PRODUCT_SHORT_DESC_LIMIT">
       <value>800</value>
+    </configuration>
+    <configuration id="PS_LABEL_IN_STOCK_PRODUCTS" name="PS_LABEL_IN_STOCK_PRODUCTS">
+      <value>In Stock</value>
+    </configuration>
+    <configuration id="PS_LABEL_OOS_PRODUCTS_BOA" name="PS_LABEL_OOS_PRODUCTS_BOA">
+      <value>Product available for orders</value>
+    </configuration>
+    <configuration id="PS_LABEL_OOS_PRODUCTS_BOD" name="PS_LABEL_OOS_PRODUCTS_BOD">
+      <value>Out-of-Stock</value>
     </configuration>
   </entities>
 </entity_configuration>

@@ -18,7 +18,7 @@
     <field name="grade"/>
   </fields>
   <entities>
-    <carrier id="My_carrier" id_reference="2" active="1" shipping_handling="1" range_behavior="0" is_free="0" shipping_external="0" need_range="0" shipping_method="0" max_width="0" max_height="0" max_depth="0" max_weight="0" grade="0">
+    <carrier id="My_carrier" id_reference="2" active="1" shipping_handling="1" range_behavior="0" is_free="0" shipping_external="0" need_range="0" shipping_method="0" max_width="0" max_height="0" max_depth="0" max_weight="0.000000" grade="0">
       <name>My carrier</name>
       <url/>
     </carrier>

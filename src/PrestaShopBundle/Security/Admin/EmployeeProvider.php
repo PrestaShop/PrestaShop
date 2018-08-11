@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
  */
 class EmployeeProvider implements UserProviderInterface
 {
+    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+
     private $legacyContext;
 
     /**
@@ -61,7 +63,7 @@ class EmployeeProvider implements UserProviderInterface
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
-                Access::getRoles($this->legacyContext->employee->id_profile)
+                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
             );
             return $employee;
         }

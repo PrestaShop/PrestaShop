@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,17 +32,4 @@ class OrderMessageLangCore extends DataLangCore
     protected $keys = array('id_order_message');
 
     protected $fieldsToUpdate = array('name', 'message');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Delay') => $this->translator->trans('Delay', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-            ),
-            'message' => array(
-                md5("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,")
-                    => $this->translator->trans("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,", array(), 'Admin.Orderscustomers.Feature', $this->locale),
-            ),
-        );
-    }
 }

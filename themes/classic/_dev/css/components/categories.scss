@@ -337,6 +337,13 @@
   }
 }
 
+.advertising-block {
+  margin-bottom: 1.563rem;
+  img {
+    width: 100%;
+  }
+}
+
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   #category {

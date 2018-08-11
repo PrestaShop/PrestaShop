@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -230,8 +230,7 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getCustomerMessagesOrder($id_customer, $id_order)
     {
-        $sql = 
-            'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
+        $sql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
                 e.`firstname` AS efirstname, e.`lastname` AS elastname
 			FROM '._DB_PREFIX_.'customer_thread ct
 			LEFT JOIN '._DB_PREFIX_.'customer_message cm
@@ -245,7 +244,7 @@ class CustomerThreadCore extends ObjectModel
             GROUP BY cm.id_customer_message
 		 	ORDER BY cm.date_add DESC
             LIMIT 2';
-         
+
         return Db::getInstance()->executeS($sql);
     }
 }

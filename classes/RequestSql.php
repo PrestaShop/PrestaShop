@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -129,7 +129,7 @@ class RequestSqlCore extends ObjectModel
      *
      * @return bool
      */
-    public function validateParser($tab, $in = false, $sql)
+    public function validateParser($tab, $in, $sql)
     {
         if (!$tab) {
             return false;
@@ -289,7 +289,7 @@ class RequestSqlCore extends ObjectModel
      *
      * @return array|bool
      */
-    public function returnNameTable($alias = false, $tables, $attr = null)
+    public function returnNameTable($alias, $tables, $attr = null)
     {
         if ($alias) {
             foreach ($tables as $table) {

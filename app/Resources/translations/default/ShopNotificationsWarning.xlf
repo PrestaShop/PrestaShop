@@ -6,7 +6,53 @@
         <source>You cannot place a new order from your country (%s).</source>
         <target>You cannot place a new order from your country (%s).</target>
         <note>Context:
-File: classes/controller/FrontController.php:862</note>
+File: classes/controller/FrontController.php:883</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/DiscountController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3f5baf7537ec2a40ade00599a8da8c6">
+        <source>You do not have any vouchers.</source>
+        <target>You do not have any vouchers.</target>
+        <note>Context:
+File: controllers/front/DiscountController.php:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/HistoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="116cb47fe026f7a3679486e086426a64">
+        <source>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</source>
+        <target>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</target>
+        <note>Context:
+File: controllers/front/HistoryController.php:52</note>
+      </trans-unit>
+      <trans-unit id="5acc2ceeb883ba07cef2d02ea382f242">
+        <source>You have not placed any orders.</source>
+        <target>You have not placed any orders.</target>
+        <note>Context:
+File: controllers/front/HistoryController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f9ddd507fdf437437efdcb333a0f4ff0">
+        <source>This product is not visible to your customers.</source>
+        <target>This product is not visible to your customers.</target>
+        <note>Context:
+File: controllers/front/ProductController.php:167</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d22c170769e81d2229b17003553b6d57">
+        <source>You cannot return merchandise with a guest account.</source>
+        <target>You cannot return merchandise with a guest account.</target>
+        <note>Context:
+File: controllers/front/GuestTrackingController.php:131</note>
       </trans-unit>
     </body>
   </file>
@@ -27,52 +73,6 @@ File: controllers/front/OrderReturnController.php:56</note>
         <target>You have not received any credit slips.</target>
         <note>Context:
 File: controllers/front/OrderSlipController.php:47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d22c170769e81d2229b17003553b6d57">
-        <source>You cannot return merchandise with a guest account.</source>
-        <target>You cannot return merchandise with a guest account.</target>
-        <note>Context:
-File: controllers/front/GuestTrackingController.php:131</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/DiscountController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d3f5baf7537ec2a40ade00599a8da8c6">
-        <source>You do not have any vouchers.</source>
-        <target>You do not have any vouchers.</target>
-        <note>Context:
-File: controllers/front/DiscountController.php:47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f9ddd507fdf437437efdcb333a0f4ff0">
-        <source>This product is not visible to your customers.</source>
-        <target>This product is not visible to your customers.</target>
-        <note>Context:
-File: controllers/front/ProductController.php:109</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/front/HistoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="116cb47fe026f7a3679486e086426a64">
-        <source>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</source>
-        <target>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</target>
-        <note>Context:
-File: controllers/front/HistoryController.php:50</note>
-      </trans-unit>
-      <trans-unit id="5acc2ceeb883ba07cef2d02ea382f242">
-        <source>You have not placed any orders.</source>
-        <target>You have not placed any orders.</target>
-        <note>Context:
-File: controllers/front/HistoryController.php:56</note>
       </trans-unit>
     </body>
   </file>

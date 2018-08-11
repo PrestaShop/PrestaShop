@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -43,7 +43,7 @@
               </strong>
             </div>
             {if $order.details.reorder_url}
-              <div class="col-xs-3 text-xsright">
+              <div class="col-xs-3 text-xs-right">
                 <a href="{$order.details.reorder_url}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
               </div>
             {/if}
@@ -175,7 +175,7 @@
                 <td>{$line.carrier_name}</td>
                 <td>{$line.shipping_weight}</td>
                 <td>{$line.shipping_cost}</td>
-                <td>{$line.tracking}</td>
+                <td>{$line.tracking nofilter}</td>
               </tr>
             {/foreach}
           </tbody>
@@ -197,7 +197,7 @@
                   <strong>{l s='Shipping cost' d='Shop.Theme.Checkout'}</strong> {$line.shipping_cost}
                 </li>
                 <li>
-                  <strong>{l s='Tracking number' d='Shop.Theme.Checkout'}</strong> {$line.tracking}
+                  <strong>{l s='Tracking number' d='Shop.Theme.Checkout'}</strong> {$line.tracking nofilter}
                 </li>
               </ul>
             </div>

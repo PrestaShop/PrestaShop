@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -85,9 +85,9 @@
           </div>
           <div class="col-sm-6 col-xs-12 qty">
             <div class="row">
-              <div class="col-xs-5 text-smright text-xsleft">{$product.price}</div>
+              <div class="col-xs-5 text-sm-right text-xs-left">{$product.price}</div>
               <div class="col-xs-2">{$product.quantity}</div>
-              <div class="col-xs-5 text-xsright bold">{$product.total}</div>
+              <div class="col-xs-5 text-xs-right bold">{$product.total}</div>
             </div>
           </div>
         </div>

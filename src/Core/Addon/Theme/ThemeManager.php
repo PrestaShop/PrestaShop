@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -40,9 +43,13 @@ use Shop;
 use Employee;
 use Exception;
 use PrestaShopException;
+use PrestaShopLogger;
+use Language;
 
 class ThemeManager implements AddonManagerInterface
 {
+    use TranslationFinderTrait;
+
     private $hookConfigurator;
     private $shop;
     private $employee;
@@ -62,8 +69,8 @@ class ThemeManager implements AddonManagerInterface
         Finder $finder,
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
-        ImageTypeRepository $imageTypeRepository)
-    {
+        ImageTypeRepository $imageTypeRepository
+    ) {
         $this->shop = $shop;
         $this->appConfiguration = $configuration;
         $this->themeValidator = $themeValidator;
@@ -154,7 +161,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         /* if file exits, remove it and use YAML configuration file instead */
-        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
@@ -167,6 +174,7 @@ class ThemeManager implements AddonManagerInterface
                 ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
                 ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
                 ->doEnableModules($theme->getModulesToEnable())
+                ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
@@ -194,7 +202,7 @@ class ThemeManager implements AddonManagerInterface
 
         $this->doDisableModules($theme->getModulesToDisable());
 
-        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         return true;
     }
@@ -273,14 +281,45 @@ class ThemeManager implements AddonManagerInterface
     private function doEnableModules(array $modules)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
+        $moduleManager = $moduleManagerBuilder->build()->setActionParams(['confirmPrestaTrust' => true]);
 
         foreach ($modules as $key => $moduleName) {
-            if (!$moduleManager->isInstalled($moduleName)) {
-                $moduleManager->install($moduleName);
+            if (!$moduleManager->isInstalled($moduleName)
+                && !$moduleManager->install($moduleName)
+            ) {
+                throw new PrestaShopException(
+                    $this->translator->trans(
+                        'Cannot %action% module %module%. %error_details%',
+                        array(
+                            '%action%' => 'install',
+                            '%module%' => $moduleName,
+                            '%error_details%' => $moduleManager->getError($moduleName),
+                        ),
+                        'Admin.Modules.Notification')
+                );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
                 $moduleManager->enable($moduleName);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Reset the modules received in parameters if they are installed and enabled
+     *
+     * @param string[] $modules
+     * @return $this
+     */
+    private function doResetModules(array $modules)
+    {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
+        foreach ($modules as $moduleName) {
+            if ($moduleManager->isInstalled($moduleName)) {
+                $moduleManager->reset($moduleName);
             }
         }
 
@@ -348,8 +387,12 @@ class ThemeManager implements AddonManagerInterface
                 )
             );
         }
+
         $this->filesystem->mkdir($themePath);
         $this->filesystem->mirror($sandboxPath, $themePath);
+
+        $this->importTranslationToDatabase($theme);
+
         $this->filesystem->remove($sandboxPath);
     }
 
@@ -363,13 +406,129 @@ class ThemeManager implements AddonManagerInterface
         return $this->sandbox;
     }
 
+    /**
+     * @param Theme $theme
+     */
     public function saveTheme($theme)
     {
-        $jsonConfigFolder = $this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$theme->getName();
+        $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
         if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
             mkdir($jsonConfigFolder, 0777, true);
         }
 
-        file_put_contents($jsonConfigFolder.'/shop'.$this->shop->id.'.json', json_encode($theme->get(null)));
+        file_put_contents(
+            $jsonConfigFolder.'/shop'.$this->shop->id.'.json',
+            json_encode($theme->get(null))
+        );
+    }
+
+    /**
+     * Import translation from Theme to Database
+     *
+     * @param Theme $theme
+     */
+    private function importTranslationToDatabase(Theme $theme)
+    {
+        global $kernel; // sf kernel
+
+        if (!(!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+            return;
+        }
+
+        $translationService = $kernel->getContainer()->get('prestashop.service.translation');
+        $themeProvider = $kernel->getContainer()->get('prestashop.translation.theme_provider');
+
+        $themeName = $theme->getName();
+        $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$themeName;
+        $translationFolder = $themePath.DIRECTORY_SEPARATOR.'translations'.DIRECTORY_SEPARATOR;
+
+        $languages = Language::getLanguages();
+        foreach ($languages as $language) {
+            $locale = $language['locale'];
+
+            // retrieve Lang doctrine entity
+            try {
+                $lang = $translationService->findLanguageByLocale($locale);
+            } catch (Exception $exception) {
+                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+                continue;
+            }
+
+            // check if translation dir for this lang exists
+            if (!is_dir($translationFolder . $locale)) {
+                continue;
+            }
+
+            // construct a new catalog for this lang and import in database if key and message are different
+            $messageCatalog = $this->getCatalogueFromPaths($translationFolder . $locale, $locale);
+
+            // get all default domain from catalog
+            $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+
+            // do the import
+            $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+        }
+    }
+
+    /**
+     * Get all default domain from catalog
+     *
+     * @param string $locale
+     * @param \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider
+     *
+     * @return array
+     */
+    private function getDefaultDomains($locale, $themeProvider)
+    {
+        $allDomains = array();
+
+        $defaultCatalogue = $themeProvider
+            ->setLocale($locale)
+            ->getDefaultCatalogue()
+        ;
+
+        if (empty($defaultCatalogue)) {
+            return $allDomains;
+        }
+
+        $defaultCatalogue = $defaultCatalogue->all();
+
+        if (empty($defaultCatalogue)) {
+            return $allDomains;
+        }
+
+        foreach (array_keys($defaultCatalogue) as $domain) {
+            // AdminCatalogFeature.fr-FR to AdminCatalogFeature
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            $allDomains[] = $domain;
+        }
+
+        return $allDomains;
+    }
+
+    /**
+     * @param TranslationService $translationService
+     * @param MessageCatalogue $messageCatalog
+     * @param array $allDomains
+     * @param \PrestaShopBundle\Entity\Lang $lang
+     * @param string $locale
+     * @param string $themeName
+     */
+    private function handleImport(TranslationService $translationService, MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
+    {
+        foreach ($messageCatalog->all() as $domain => $messages) {
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            if (in_array($domain, $allDomains)) {
+                continue;
+            }
+
+            foreach ($messages as $key => $message) {
+                if ($key !== $message) {
+                    $translationService->saveTranslationMessage($lang, $domain, $key, $message, $themeName);
+                }
+            }
+        }
     }
 }

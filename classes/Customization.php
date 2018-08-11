@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -391,5 +391,26 @@ class CustomizationCore extends ObjectModel
         }
 
         return true;
+    }
+
+    /**
+     * Delete the current context shops langs
+     * 
+     * @param int $idCustomizationField
+     * @param int[] $shopList
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     */
+    public static function deleteCustomizationFieldLangByShop($idCustomizationField, $shopList)
+    {
+        $return = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang` 
+                WHERE `id_customization_field` = ' . (int)$idCustomizationField . ' 
+                AND `id_shop` IN (' . implode(',', $shopList) . ')');
+
+        if (!$return) {
+            throw new PrestaShopDatabaseException('An error occurred while deletion the customization fields lang');
+        }
+
+        return $return;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 
+use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
+use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
@@ -372,6 +374,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         }
 
         $searchVariables = array(
+            'result' => $result,
             'label' => $this->getListingLabel(),
             'products' => $products,
             'sort_orders' => $sort_orders,
@@ -478,17 +481,34 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $rendered_products = $this->render('catalog/_partials/products', array('listing' => $search));
         $rendered_products_bottom = $this->render('catalog/_partials/products-bottom', array('listing' => $search));
 
-        $data = array(
-            'rendered_products_top' => $rendered_products_top,
-            'rendered_products' => $rendered_products,
-            'rendered_products_bottom' => $rendered_products_bottom,
+        $data = array_merge(
+            array(
+                'rendered_products_top' => $rendered_products_top,
+                'rendered_products' => $rendered_products,
+                'rendered_products_bottom' => $rendered_products_bottom,
+            ),
+            $search
         );
 
-        foreach ($search as $key => $value) {
-            $data[$key] = $value;
+        if (!empty($data['products']) && is_array($data['products'])) {
+            $data['products'] = $this->prepareProductArrayForAjaxReturn($data['products']);
         }
 
         return $data;
+    }
+
+    /**
+     * Cleans the products array with only whitelisted properties.
+     *
+     * @param array[] $products
+     *
+     * @return array[] Filtered product list
+     */
+    protected function prepareProductArrayForAjaxReturn(array $products)
+    {
+        $filter = $this->get('prestashop.core.filter.front_end_object.search_result_product_collection');
+
+        return $filter->filter($products);
     }
 
     /**
@@ -500,8 +520,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * If we're not doing AJAX, then render the whole page with the given template.
      *
      * @param string $template the template for this page
-     *
-     * @return no return
      */
     protected function doProductSearch($template, $params = array(), $locale = null)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,19 +32,4 @@ class FeatureLangCore extends DataLangCore
     protected $keys = array('id_feature');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Height') => $this->translator->trans('Height', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Width') => $this->translator->trans('Width', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Depth') => $this->translator->trans('Depth', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Weight') => $this->translator->trans('Weight', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Compositions') => $this->translator->trans('Compositions', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Styles') => $this->translator->trans('Styles', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Properties') => $this->translator->trans('Properties', array(), 'Shop.Demo.Catalog', $this->locale),
-            ),
-        );
-    }
 }

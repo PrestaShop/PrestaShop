@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -301,8 +301,8 @@ class AdminCmsControllerCore extends AdminController
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=1&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
-        }/* Delete multiple objects */
-        elseif (Tools::getValue('submitDel'.$this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table)) {
+            // Delete multiple objects
             if ($this->access('delete')) {
                 if (Tools::isSubmit($this->table.'Box')) {
                     $cms = new CMS();
@@ -361,9 +361,8 @@ class AdminCmsControllerCore extends AdminController
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4&id_cms_category='.(int)$object->id_cms_category.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
-        }
-        /* Change object statuts (active, inactive) */
-        elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier)) {
+        } elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier)) {
+            // Change object status (active, inactive)
             if ($this->access('edit')) {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var CMS $object */
@@ -379,9 +378,8 @@ class AdminCmsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        /* Delete multiple CMS content */
-        elseif (Tools::isSubmit('submitBulkdeletecms')) {
+        } elseif (Tools::isSubmit('submitBulkdeletecms')) {
+            // Delete multiple CMS content
             if ($this->access('delete')) {
                 $this->action = 'bulkdelete';
                 $this->boxes = Tools::getValue($this->table.'Box');

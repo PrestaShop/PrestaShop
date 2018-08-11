@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -292,12 +292,10 @@ var formCategory = (function() {
         var html = '<li>' +
           '<div class="checkbox js-checkbox">' +
             '<label>' +
-              '<input type="checkbox" name="form[step1][categories][tree][]" checked value="'+response.category.id+'">' +
+              '<input type="checkbox" name="form[step1][categories][tree][]" checked value="'+response.category.id+'"> ' +
                 response.category.name[1] +
+                '<input type="radio" value="'+response.category.id+'" name="ignore" class="default-category">' +
             '</label>' +
-            '<div class="radio pull-right">' +
-              '<input type="radio" value="'+response.category.id+'" name="ignore" class="default-category">' +
-            '</div>' +
           '</div>' +
           '</li>';
 
@@ -390,7 +388,7 @@ var featuresCollection = (function() {
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
           onContinue: function() {
-            _this.parent().parent().parent().remove();
+            _this.closest('.product-feature').remove();
           }
         }).show();
       });
@@ -614,7 +612,7 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);
@@ -791,7 +789,7 @@ var warehouseCombinations = (function() {
       // toggle all button action
       $(document).on('click', 'div[id^="warehouse_combination_"] button.check_all_warehouse', function() {
         var checkboxes = $(this).closest('div[id^="warehouse_combination_"]').find('input[type="checkbox"][id$="_activated"]');
-        checkboxes.prop('checked', checkboxes.filter(':checked').size() === 0);
+        checkboxes.prop('checked', checkboxes.filter(':checked').length === 0);
       });
       // location disablation depending on 'stored' checkbox
       $(document).on('change', 'div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', function() {
@@ -812,7 +810,7 @@ var warehouseCombinations = (function() {
       });
     },
     'refresh': function() {
-      var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
+      var show = $('input#form_step3_advanced_stock_management:checked').length > 0;
       if (show) {
         var url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, '/' + id_product);
         $.ajax({
@@ -836,7 +834,7 @@ var warehouseCombinations = (function() {
 var form = (function() {
   var elem = $('#form');
 
-  function send(redirect, target) {
+  function send(redirect, target, callBack) {
     // target value by default
     if (typeof(target) == 'undefined') {
       target = false;
@@ -866,6 +864,9 @@ var form = (function() {
         $('#form-nav li.has-error').removeClass('has-error');
       },
       success: function(response) {
+        if (callBack) {
+          callBack();
+        }
         showSuccessMessage(translate_javascripts['Form update success']);
         //update the customization ids
         if (typeof response.customization_fields_ids != "undefined") {
@@ -961,8 +962,8 @@ var form = (function() {
   }
 
   function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-' + iso_code + ')').removeClass('active');
-    $('div.translations.tabbable > div > div.tab-pane.translation-label-' + iso_code).addClass('active');
+    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
+    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('show active');
   }
 
   function updateMissingTranslatedNames() {
@@ -1035,14 +1036,14 @@ var form = (function() {
       });
 
       /** on save with duplicate|new|preview */
-      $('.btn-submit', elem).click(function(event) {
+      $('.btn-submit, .preview', elem).click(function(event) {
         event.preventDefault();
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
 
       $('.js-btn-save').on('click', function (event) {
         event.preventDefault();
-        $('.js-spinner').show();
+        $('.js-spinner').css('display', 'inline-block');
         send($(this).attr('href'));
       });
 
@@ -1052,10 +1053,11 @@ var form = (function() {
         $('.for-switch.online-title').toggle(active);
         $('.for-switch.offline-title').toggle(!active);
         // update link preview
-        var urlActive = $('#product_form_preview_btn').attr('data-redirect');
-        var urlDeactive = $('#product_form_preview_btn').attr('data-url_deactive');
-        $('#product_form_preview_btn').attr('data-redirect', urlDeactive);
-        $('#product_form_preview_btn').attr('data-url_deactive', urlActive);
+        var previewButton = $('#product_form_preview_btn');
+        var urlActive = previewButton.attr('data-redirect');
+        var urlDeactive = previewButton.attr('data-url-deactive');
+        previewButton.attr('data-redirect', urlDeactive);
+        previewButton.attr('data-url-deactive', urlActive);
         // update product
         send();
       });
@@ -1071,77 +1073,73 @@ var form = (function() {
         }).show();
       });
 
-      /** show rendered form after page load */
-      $(window).load(function() {
-        $('#form-loading').fadeIn(function() {
-          /** Create Bloodhound engine */
-          var engine = new Bloodhound({
-            datumTokenizer: function(d) {
-              return Bloodhound.tokenizers.whitespace(d.label);
-            },
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {
-              url: $('#form_step3_attributes').attr('data-prefetch'),
-              cache: false
-            }
-          });
-
-          /** init input typeahead */
-          $('#form_step3_attributes').tokenfield({
-            typeahead: [{
-              hint: false,
-              cache: false
-            }, {
-              source: function(query, syncResults) {
-                engine.search(query, function(suggestions) {
-                  syncResults(filter(suggestions));
-                });
-              },
-              display: 'label'
-            }],
-            minWidth: '768px'
-          });
-
-          /** Filter suggestion with selected tokens */
-          var filter = function(suggestions) {
-            var selected = [];
-            $('#attributes-generator input.attribute-generator').each(function() {
-              selected.push($(this).val());
-            });
-
-            return $.grep(suggestions, function(suggestion) {
-              return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
-            });
-          };
-
-          /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
-          $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-            if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
-              return false;
-            }
-          });
-
-          /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
-          $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
-            if (e.attrs.data) {
-              $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
-            } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
-              $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
-            }
-          });
-
-          /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
-          $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-            $('#attribute-generator-' + e.attrs.value).remove();
-          });
-        });
-        imagesProduct.initExpander();
+      $('#form-loading').fadeIn(function() {
+      /** Create Bloodhound engine */
+      var engine = new Bloodhound({
+        datumTokenizer: function(d) {
+          return Bloodhound.tokenizers.whitespace(d.label);
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+          url: $('#form_step3_attributes').attr('data-prefetch'),
+          cache: false
+        }
       });
+
+      /** init input typeahead */
+      $('#form_step3_attributes').tokenfield({
+        typeahead: [{
+          hint: false,
+          cache: false
+        }, {
+          source: function(query, syncResults) {
+            engine.search(query, function(suggestions) {
+              syncResults(filter(suggestions));
+            });
+          },
+          display: 'label'
+        }],
+        minWidth: '768px'
+      });
+
+      /** Filter suggestion with selected tokens */
+      var filter = function(suggestions) {
+        var selected = [];
+        $('#attributes-generator input.attribute-generator').each(function() {
+          selected.push($(this).val());
+        });
+
+        return $.grep(suggestions, function(suggestion) {
+          return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
+        });
+      };
+
+      /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
+      $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
+        if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
+          return false;
+        }
+      });
+
+      /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
+      $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
+        if (e.attrs.data) {
+          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
+        } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
+          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
+        }
+      });
+
+      /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
+      $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
+        $('#attribute-generator-' + e.attrs.value).remove();
+      });
+    });
     },
-    'send': function() {
-      send();
+      'send': function(redirect, target, callBack) {
+      send(redirect, target, callBack);
     },
-    'switchLanguage': function(iso_code) {
+      'switchLanguage': function(iso_code) {
       switchLanguage(iso_code);
     }
   };
@@ -1601,6 +1599,7 @@ var imagesProduct = (function() {
           });
 
           dropZoneElem.disableSelection();
+          imagesProduct.initExpander();
         }
       };
 

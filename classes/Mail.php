@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,21 +49,62 @@ class MailCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'mail',
         'primary' => 'id_mail',
-        'fields' => array(
-            'recipient' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'copy_post' => false, 'required' => true, 'size' => 126),
-            'template' => array('type' => self::TYPE_STRING, 'validate' => 'isTplName', 'copy_post' => false, 'required' => true, 'size' => 62),
-            'subject' => array('type' => self::TYPE_STRING, 'validate' => 'isMailSubject', 'copy_post' => false, 'required' => true, 'size' => 254),
-            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false, 'required' => true),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false, 'required' => true),
-        ),
-    );
+        'fields' => [
+            'recipient' => [
+                'type' => self::TYPE_STRING,
+                'validate' => 'isEmail',
+                'copy_post' => false,
+                'required' => true,
+                'size' => 126
+            ],
+            'template' => [
+                'type' => self::TYPE_STRING,
+                'validate' => 'isTplName',
+                'copy_post' => false,
+                'required' => true,
+                'size' => 62
+            ],
+            'subject' => [
+                'type' => self::TYPE_STRING,
+                'validate' => 'isMailSubject',
+                'copy_post' => false,
+                'required' => true,
+                'size' => 254
+            ],
+            'id_lang' => [
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+                'copy_post' => false,
+                'required' => true
+            ],
+            'date_add' => [
+                'type' => self::TYPE_DATE,
+                'validate' => 'isDate',
+                'copy_post' => false,
+                'required' => true
+            ],
+        ],
+    ];
 
+    /**
+     * Mail content type
+     */
     const TYPE_HTML = 1;
     const TYPE_TEXT = 2;
     const TYPE_BOTH = 3;
+
+    /**
+     * Send mail under SMTP server
+     */
+    const METHOD_SMTP = 2;
+
+    /**
+     * Disable mail, will return immediately after calling send method
+     */
+    const METHOD_DISABLE = 3;
 
     /**
      * Send Email
@@ -76,7 +117,8 @@ class MailCore extends ObjectModel
      * @param string $toName         To name
      * @param string $from           From email
      * @param string $fromName       To email
-     * @param array  $fileAttachment Array with three parameters (content, mime and name). You can use an array of array to attach multiple files
+     * @param array  $fileAttachment Array with three parameters (content, mime and name).
+     *                               You can use an array of array to attach multiple files
      * @param bool   $mode_smtp      SMTP mode (deprecated)
      * @param string $templatePath   Template path
      * @param bool   $die            Die after error
@@ -87,7 +129,7 @@ class MailCore extends ObjectModel
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
-    public static function Send(
+    public static function send(
         $idLang,
         $template,
         $subject,
@@ -103,39 +145,43 @@ class MailCore extends ObjectModel
         $idShop = null,
         $bcc = null,
         $replyTo = null,
-        $replyToName = null)
-    {
+        $replyToName = null
+    ) {
         if (!$idShop) {
             $idShop = Context::getContext()->shop->id;
         }
 
-        $skip = array_reduce(Hook::exec(
-           'actionEmailSendBefore',
-            array(
-                'idLang' => &$idLang,
-                'template' => &$template,
-                'subject' => &$subject,
-                'templateVars' => &$templateVars,
-                'to' => &$to,
-                'toName' => &$toName,
-                'from' => &$from,
-                'fromName' => &$fromName,
-                'fileAttachment' => &$fileAttachment,
-                'mode_smtp' => &$mode_smtp,
-                'templatePath' => &$templatePath,
-                'die' => &$die,
-                'idShop' => &$idShop,
-                'bcc' => &$bcc,
-                'replyTo' => &$replyTo
+        $keepGoing = array_reduce(
+            Hook::exec(
+                'actionEmailSendBefore',
+                [
+                    'idLang' => &$idLang,
+                    'template' => &$template,
+                    'subject' => &$subject,
+                    'templateVars' => &$templateVars,
+                    'to' => &$to,
+                    'toName' => &$toName,
+                    'from' => &$from,
+                    'fromName' => &$fromName,
+                    'fileAttachment' => &$fileAttachment,
+                    'mode_smtp' => &$mode_smtp,
+                    'templatePath' => &$templatePath,
+                    'die' => &$die,
+                    'idShop' => &$idShop,
+                    'bcc' => &$bcc,
+                    'replyTo' => &$replyTo
+                ],
+                null,
+                true
             ),
-            null,
+            function ($carry, $item) {
+                return ($item === false) ? false : $carry;
+            },
             true
-        ), function ($carry, $item) {
-            return $carry && $item;
-        }, true);
+        );
 
-        if (!$skip) {
-	        return true;
+        if (!$keepGoing) {
+            return true;
         }
 
         if (is_numeric($idShop) && $idShop) {
@@ -143,7 +189,7 @@ class MailCore extends ObjectModel
         }
 
         $configuration = Configuration::getMultiple(
-            array(
+            [
                 'PS_SHOP_EMAIL',
                 'PS_MAIL_METHOD',
                 'PS_MAIL_SERVER',
@@ -153,35 +199,40 @@ class MailCore extends ObjectModel
                 'PS_MAIL_SMTP_ENCRYPTION',
                 'PS_MAIL_SMTP_PORT',
                 'PS_MAIL_TYPE'
-            ),
+            ],
             null,
             null,
             $idShop
         );
 
         // Returns immediately if emails are deactivated
-        if ($configuration['PS_MAIL_METHOD'] == 3) {
+        if ($configuration['PS_MAIL_METHOD'] == self::METHOD_DISABLE) {
             return true;
         }
 
         // Hook to alter template vars
         Hook::exec(
             'sendMailAlterTemplateVars',
-            array(
+            [
                 'template' => $template,
                 'template_vars' => &$templateVars,
-            )
+            ]
         );
 
-        if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off') {
+        if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) ||
+            Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off'
+        ) {
             $configuration['PS_MAIL_SMTP_ENCRYPTION'] = false;
         }
+
         if (!isset($configuration['PS_MAIL_SMTP_PORT'])) {
             $configuration['PS_MAIL_SMTP_PORT'] = 'default';
         }
 
-        // Sending an e-mail can be of vital importance for the merchant, when his password is lost for example, so we must not die but do our best to send the e-mail
-
+        /**
+         * Sending an e-mail can be of vital importance for the merchant, when his password
+         * is lost for example, so we must not die but do our best to send the e-mail.
+         */
         if (!isset($from) || !Validate::isEmail($from)) {
             $from = $configuration['PS_SHOP_EMAIL'];
         }
@@ -194,25 +245,29 @@ class MailCore extends ObjectModel
         if (!isset($fromName) || !Validate::isMailName($fromName)) {
             $fromName = $configuration['PS_SHOP_NAME'];
         }
+
         if (!Validate::isMailName($fromName)) {
             $fromName = null;
         }
 
-        // It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
+        /**
+         * It would be difficult to send an e-mail if the e-mail is not valid,
+         * so this time we can die if there is a problem.
+         */
         if (!is_array($to) && !Validate::isEmail($to)) {
-            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "to" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
+            self::dieOrLog($die, 'Error: parameter "to" is corrupted');
 
             return false;
         }
 
         // if bcc is not null, make sure it's a vaild e-mail
         if (!is_null($bcc) && !is_array($bcc) && !Validate::isEmail($bcc)) {
-            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: parameter "bcc" is corrupted', array(), 'Admin.Advparameters.Notification'), $die);
+            self::dieOrLog($die, 'Error: parameter "bcc" is corrupted');
             $bcc = null;
         }
 
         if (!is_array($templateVars)) {
-            $templateVars = array();
+            $templateVars = [];
         }
 
         // Do not crash for this error, that may be a complicated customer name
@@ -221,13 +276,13 @@ class MailCore extends ObjectModel
         }
 
         if (!Validate::isTplName($template)) {
-            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail template', array(), 'Admin.Advparameters.Notification'), $die);
+            self::dieOrLog($die, 'Error: invalid e-mail template');
 
             return false;
         }
 
         if (!Validate::isMailSubject($subject)) {
-            Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail subject', array(), 'Admin.Advparameters.Notification'), $die);
+            self::dieOrLog($die, 'Error: invalid e-mail subject');
 
             return false;
         }
@@ -238,7 +293,7 @@ class MailCore extends ObjectModel
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
+                    self::dieOrLog($die, 'Error: invalid e-mail address');
 
                     return false;
                 }
@@ -249,40 +304,48 @@ class MailCore extends ObjectModel
                     $addrName = $toName;
                 }
 
-                $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
-                $message->addTo($addr, $addrName);
+                $addrName = ($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ?
+                          '' :
+                          self::mimeEncode($addrName);
+                $message->addTo(self::toPunycode($addr), $addrName);
             }
             $toPlugin = $to[0];
         } else {
             /* Simple recipient, one address */
             $toPlugin = $to;
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
-            $message->addTo($to, $toName);
+            $message->addTo(self::toPunycode($to), $toName);
         }
 
         if (isset($bcc) && is_array($bcc)) {
             foreach ($bcc as $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid e-mail address', array(), 'Admin.Advparameters.Notification'), $die);
+                    self::dieOrLog($die, 'Error: invalid e-mail address');
+
                     return false;
                 }
-                $message->addBcc($addr);
+
+                $message->addBcc(self::toPunycode($addr));
             }
         } elseif (isset($bcc)) {
-            $message->addBcc($bcc);
+            $message->addBcc(self::toPunycode($bcc));
         }
 
         try {
             /* Connect with the appropriate configuration */
-            if ($configuration['PS_MAIL_METHOD'] == 2) {
+            if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 if (empty($configuration['PS_MAIL_SERVER']) || empty($configuration['PS_MAIL_SMTP_PORT'])) {
-                    Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error: invalid SMTP server or SMTP port', array(), 'Admin.Advparameters.Notification'), $die);
+                    self::dieOrLog($die, 'Error: invalid SMTP server or SMTP port');
 
                     return false;
                 }
 
-                $connection = \Swift_SmtpTransport::newInstance($configuration['PS_MAIL_SERVER'], $configuration['PS_MAIL_SMTP_PORT'], $configuration['PS_MAIL_SMTP_ENCRYPTION'])
+                $connection = \Swift_SmtpTransport::newInstance(
+                    $configuration['PS_MAIL_SERVER'],
+                    $configuration['PS_MAIL_SMTP_PORT'],
+                    $configuration['PS_MAIL_SMTP_ENCRYPTION']
+                )
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
             } else {
@@ -292,17 +355,20 @@ class MailCore extends ObjectModel
             if (!$connection) {
                 return false;
             }
+
             $swift = \Swift_Mailer::newInstance($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
-            $isoArray = array();
+            $isoArray = [];
             if ($iso) {
                 $isoArray[] = $iso;
             }
+
             if ($isoDefault && $iso !== $isoDefault) {
                 $isoArray[] = $isoDefault;
             }
+
             if (!in_array('en', $isoArray)) {
                 $isoArray[] = 'en';
             }
@@ -310,17 +376,42 @@ class MailCore extends ObjectModel
             $moduleName = false;
 
             // get templatePath
-            if (preg_match('#'.$shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)) {
+            if (preg_match('#'.$shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
+                preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)
+            ) {
                 $moduleName = $res[1];
             }
+
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode.'/'.$template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
 
-                if (!file_exists($templatePath.$isoTemplate.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)) {
-                    PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.txt'), 'Admin.Advparameters.Notification'));
-                } elseif (!file_exists($templatePath.$isoTemplate.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)) {
-                    PrestaShopLogger::addLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($templatePath.$isoTemplate.'.html'), 'Admin.Advparameters.Notification'));
+                if (!file_exists($templatePath.$isoTemplate.'.txt') &&
+                    (
+                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
+                        $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
+                    )
+                ) {
+                    PrestaShopLogger::addLog(
+                        Context::getContext()->getTranslator()->trans(
+                            'Error - The following e-mail template is missing: %s',
+                            [$templatePath.$isoTemplate.'.txt'],
+                            'Admin.Advparameters.Notification'
+                        )
+                    );
+                } elseif (!file_exists($templatePath.$isoTemplate.'.html') &&
+                          (
+                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
+                              $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
+                          )
+                ) {
+                    PrestaShopLogger::addLog(
+                        Context::getContext()->getTranslator()->trans(
+                            'Error - The following e-mail template is missing: %s',
+                            [$templatePath.$isoTemplate.'.html'],
+                            'Admin.Advparameters.Notification'
+                        )
+                    );
                 } else {
                     $templatePathExists = true;
                     break;
@@ -328,7 +419,7 @@ class MailCore extends ObjectModel
             }
 
             if (empty($templatePathExists)) {
-                Tools::dieOrLog(Context::getContext()->getTranslator()->trans('Error - The following e-mail template is missing: %s', array($template), 'Admin.Advparameters.Notification'), $die);
+                self::dieOrLog($die, 'Error - The following e-mail template is missing: %s', [$template]);
 
                 return false;
             }
@@ -337,25 +428,31 @@ class MailCore extends ObjectModel
             $templateTxt = '';
             Hook::exec(
                 'actionEmailAddBeforeContent',
-                array(
+                [
                     'template' => $template,
                     'template_html' => &$templateHtml,
                     'template_txt' => &$templateTxt,
                     'id_lang' => (int) $idLang,
-                ),
+                ],
                 null,
                 true
             );
             $templateHtml .= Tools::file_get_contents($templatePath.$isoTemplate.'.html');
-            $templateTxt .= strip_tags(html_entity_decode(Tools::file_get_contents($templatePath.$isoTemplate.'.txt'), null, 'utf-8'));
+            $templateTxt .= strip_tags(
+                html_entity_decode(
+                    Tools::file_get_contents($templatePath.$isoTemplate.'.txt'),
+                    null,
+                    'utf-8'
+                )
+            );
             Hook::exec(
                 'actionEmailAddAfterContent',
-                array(
+                [
                     'template' => $template,
                     'template_html' => &$templateHtml,
                     'template_txt' => &$templateTxt,
                     'id_lang' => (int) $idLang,
-                ),
+                ],
                 null,
                 true
             );
@@ -377,10 +474,12 @@ class MailCore extends ObjectModel
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
-            $templateVars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $templateVars);
-            $templateVars = array_map(array('Tools', 'stripslashes'), $templateVars);
+            $templateVars = array_map(['Tools', 'htmlentitiesDecodeUTF8'], $templateVars);
+            $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
 
-            if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop))) {
+            if (false !== Configuration::get('PS_LOGO_MAIL') &&
+                file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
+            ) {
                 $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
             } else {
                 if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $idShop))) {
@@ -399,34 +498,66 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
-            if (!is_null(Context::getContext()->cart) && !is_null(Context::getContext()->cart->id_lang)) {
-                $templateLangId = Context::getContext()->cart->id_lang;
-            } else {
-                $templateLangId = Context::getContext()->language->id;
-            }
-
             $templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $idShop));
-            $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, $templateLangId, null, false, $idShop);
-            $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, $templateLangId, null, false, $idShop);
-            $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, $templateLangId, null, false, $idShop);
-            $templateVars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, $templateLangId, null, false, $idShop);
+            $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
+                'index',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
+            $templateVars['{my_account_url}'] = Context::getContext()->link->getPageLink(
+                'my-account',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
+            $templateVars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink(
+                'guest-tracking',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
+            $templateVars['{history_url}'] = Context::getContext()->link->getPageLink(
+                'history',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
-            $extraTemplateVars = array();
-            Hook::exec('actionGetExtraMailTemplateVars', array(
-                'template' => $template,
-                'template_vars' => $templateVars,
-                'extra_template_vars' => &$extraTemplateVars,
-                'id_lang' => (int) $idLang
-            ), null, true);
+            $extraTemplateVars = [];
+            Hook::exec(
+                'actionGetExtraMailTemplateVars',
+                [
+                    'template' => $template,
+                    'template_vars' => $templateVars,
+                    'extra_template_vars' => &$extraTemplateVars,
+                    'id_lang' => (int) $idLang,
+                ],
+                null,
+                true
+            );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
             $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array($toPlugin => $templateVars)));
-            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT) {
+            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
+                $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
+            ) {
                 $message->addPart($templateTxt, 'text/plain', 'utf-8');
             }
-            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML) {
+            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
+                $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
+            ) {
                 $message->addPart($templateHtml, 'text/html', 'utf-8');
             }
+
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
@@ -435,7 +566,12 @@ class MailCore extends ObjectModel
 
                 foreach ($fileAttachment as $attachment) {
                     if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime'])) {
-                        $message->attach(\Swift_Attachment::newInstance()->setFilename($attachment['name'])->setContentType($attachment['mime'])->setBody($attachment['content']));
+                        $message->attach(
+                            \Swift_Attachment::newInstance()->setFilename(
+                                $attachment['name']
+                            )->setContentType($attachment['mime'])
+                            ->setBody($attachment['content'])
+                        );
                     }
                 }
             }
@@ -449,18 +585,18 @@ class MailCore extends ObjectModel
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
                 $mail->subject = Tools::substr($subject, 0, 254);
-                $mail->id_lang = (int)$idLang;
+                $mail->id_lang = (int) $idLang;
                 $recipientsTo = $message->getTo();
                 $recipientsCc = $message->getCc();
                 $recipientsBcc = $message->getBcc();
                 if (!is_array($recipientsTo)) {
-                    $recipientsTo = array();
+                    $recipientsTo = [];
                 }
                 if (!is_array($recipientsCc)) {
-                    $recipientsCc = array();
+                    $recipientsCc = [];
                 }
                 if (!is_array($recipientsBcc)) {
-                    $recipientsBcc = array();
+                    $recipientsBcc = [];
                 }
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
                     /** @var Swift_Address $recipient */
@@ -510,7 +646,7 @@ class MailCore extends ObjectModel
     /**
      * @param $idMail Mail ID
      *
-*@return bool Whether removal succeeded
+     * @return bool Whether removal succeeded
      */
     public static function eraseLog($idMail)
     {
@@ -526,9 +662,9 @@ class MailCore extends ObjectModel
     }
 
     /**
-     * Send a test email
+     * Send a test email.
      *
-     * @param bool        $smtpChecked     Is SMTP checked?
+     * @param bool        $smtpChecked    Is SMTP checked?
      * @param string      $smtp_server    SMTP Server hostname
      * @param string      $content        Content of the email
      * @param string      $subject        Subject of the email
@@ -552,7 +688,7 @@ class MailCore extends ObjectModel
         $from,
         $smtpLogin,
         $smtpPassword,
-        $smtpPort = 25,
+        $smtpPort,
         $smtpEncryption
     ) {
         $result = false;
@@ -593,6 +729,7 @@ class MailCore extends ObjectModel
      * we have to return a sentence with accents.
      *
      * @param string $string raw sentence (write directly in file)
+     *
      * @return mixed
      */
     public static function l($string, $idLang = null, Context $context = null)
@@ -602,47 +739,58 @@ class MailCore extends ObjectModel
         if (!$context) {
             $context = Context::getContext();
         }
-        if ($idLang == null) {
-            $idLang = (!isset($context->language) || !is_object($context->language)) ? (int)Configuration::get('PS_LANG_DEFAULT') : (int)$context->language->id;
+
+        if ($idLang === null) {
+            $idLang = (!isset($context->language) || !is_object($context->language)) ?
+                    (int)Configuration::get('PS_LANG_DEFAULT') :
+                    (int)$context->language->id;
         }
+
         $isoCode = Language::getIsoById((int) $idLang);
 
         $file_core = _PS_ROOT_DIR_.'/mails/'.$isoCode.'/lang.php';
         if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL)) {
-            include($file_core);
+            include $file_core;
         }
 
         $fileTheme = _PS_THEME_DIR_.'mails/'.$isoCode.'/lang.php';
         if (Tools::file_exists_cache($fileTheme)) {
-            include($fileTheme);
+            include $fileTheme;
         }
 
         if (!is_array($_LANGMAIL)) {
-            return (str_replace('"', '&quot;', $string));
+            return str_replace('"', '&quot;', $string);
         }
 
         $key = str_replace('\'', '\\\'', $string);
 
-        return str_replace('"', '&quot;', Tools::stripslashes((array_key_exists($key, $_LANGMAIL) && !empty($_LANGMAIL[$key])) ? $_LANGMAIL[$key] : $string));
+        return str_replace(
+            '"',
+            '&quot;',
+            Tools::stripslashes(
+                (array_key_exists($key, $_LANGMAIL) && !empty($_LANGMAIL[$key])) ? $_LANGMAIL[$key] : $string
+            )
+        );
     }
 
     /* Rewrite of Swift_Message::generateId() without getmypid() */
     protected static function generateId($idstring = null)
     {
-        $midparams = array(
+        $midparams = [
             'utctime' => gmstrftime('%Y%m%d%H%M%S'),
             'randint' => mt_rand(),
-            'customstr' => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
-            'hostname' => ((isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : php_uname('n')),
-        );
+            'customstr' => (preg_match('/^(?<!\\.)[a-z0-9\\.]+(?!\\.)$/iD', $idstring) ? $idstring : 'swift'),
+            'hostname' => !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n'),
+        ];
 
-        return vsprintf("%s.%d.%s@%s", $midparams);
+        return vsprintf('%s.%d.%s@%s', $midparams);
     }
 
     /**
-     * Check if a multibyte character set is used for the data
+     * Check if a multibyte character set is used for the data.
      *
      * @param string $data Data
+     *
      * @return bool Whether the string uses a multibyte character set
      */
     public static function isMultibyte($data)
@@ -658,7 +806,7 @@ class MailCore extends ObjectModel
     }
 
     /**
-     * MIME encode the string
+     * MIME encode the string.
      *
      * @param string $string  The string to encode
      * @param string $charset The character set to use
@@ -680,7 +828,7 @@ class MailCore extends ObjectModel
         $length = $length - ($length % 4);
 
         if ($charset === 'UTF-8') {
-            $parts = array();
+            $parts = [];
             $maxchars = floor(($length * 3) / 4);
             $stringLength = Tools::strlen($string);
 
@@ -705,5 +853,46 @@ class MailCore extends ObjectModel
         }
 
         return $start.$string.$end;
+    }
+
+    /**
+     * Automatically convert email to Punycode.
+     *
+     * @param string $to Email address
+     *
+     * @return string
+     */
+    public static function toPunycode($to)
+    {
+        $address = explode('@', $to);
+        if (empty($address[0]) || empty($address[1])) {
+            return $to;
+        }
+
+        return $address[0].'@'.idn_to_ascii($address[1]);
+    }
+
+    /**
+     * Generic function to dieOrLog with translations.
+     *
+     * @param boolean $die       Should die
+     * @param string  $message   Message
+     * @param array   $templates Templates list
+     * @param string  $domain    Translation domain
+     */
+    protected static function dieOrLog(
+        $die,
+        $message,
+        $templates = [],
+        $domain = 'Admin.Advparameters.Notification'
+    ) {
+        Tools::dieOrLog(
+            Context::getContext()->getTranslator()->trans(
+                $message,
+                $templates,
+                $domain
+            ),
+            $die
+        );
     }
 }

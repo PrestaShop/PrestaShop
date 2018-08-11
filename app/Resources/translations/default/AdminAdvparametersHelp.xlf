@@ -1,128 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0c2afe3d3eb02183ee182aa447608bc4">
-        <source>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</source>
-        <target>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</target>
+      <trans-unit id="11cd708df7411da4546d8580356e711a">
+        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
+        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:180</note>
+File: controllers/admin/AdminImportController.php:517</note>
       </trans-unit>
-      <trans-unit id="ee5d0efc6b5d41f7ee2ac5ea831f2a7f">
-        <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
-        <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
+      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:206</note>
+File: controllers/admin/AdminImportController.php:157</note>
       </trans-unit>
-      <trans-unit id="dace58c348a19d7bddb7a3fe4fd3ebfa">
-        <source>Warning: you will not be able to disable this option once you have registered customers.</source>
-        <target>Warning: you will not be able to disable this option once you have registered customers.</target>
+      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
+        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
+        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:206</note>
+File: controllers/admin/AdminImportController.php:319</note>
       </trans-unit>
-      <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
-        <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
-        <target>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</target>
+      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
+        <source>ID of the warehouse to set as storage.</source>
+        <target>ID of the warehouse to set as storage.</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:245</note>
+File: controllers/admin/AdminImportController.php:323</note>
       </trans-unit>
-      <trans-unit id="697ce708715d1f771177623968e8c6a4">
-        <source>Warning: You will not be able to disable this option once you've started to accept orders.</source>
-        <target>Warning: You will not be able to disable this option once you've started to accept orders.</target>
+      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
+        <source>A category root is where a category tree can begin. This is used with multistore.</source>
+        <target>A category root is where a category tree can begin. This is used with multistore.</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:245</note>
+File: controllers/admin/AdminImportController.php:198</note>
       </trans-unit>
-      <trans-unit id="e667b16af30e0820218ad32242e284dc">
-        <source>Enable or disable this shop group?</source>
-        <target>Enable or disable this shop group?</target>
+      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
         <note>Context:
-File: controllers/admin/AdminShopGroupController.php:264</note>
+File: controllers/admin/AdminImportController.php:315</note>
+      </trans-unit>
+      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
+        <source>or</source>
+        <target>or</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1002
+ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/logs.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="99059a2047f475cdc6428076e3360134">
-        <source>New modules and updates are displayed on the modules page.</source>
-        <target>New modules and updates are displayed on the modules page.</target>
+      <trans-unit id="25047dda7ccdbdb758df436ada087c4e">
+        <source>Enter "5" if you do not want to receive any emails.</source>
+        <target>Enter "5" if you do not want to receive any emails.</target>
         <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:53</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/logs.html.twig:51</note>
       </trans-unit>
-      <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
-        <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
-        <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
+      <trans-unit id="0250518090d13c807ece595694bffa98">
+        <source>Emails will be sent to the shop owner.</source>
+        <target>Emails will be sent to the shop owner.</target>
         <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:61</note>
-      </trans-unit>
-      <trans-unit id="a676520f8296be0319ad6268657471ea">
-        <source>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</source>
-        <target>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:80</note>
-      </trans-unit>
-      <trans-unit id="e78f32f514dbd49e570066db36343d13">
-        <source>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</source>
-        <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:97</note>
-      </trans-unit>
-      <trans-unit id="cabcb35221054c8ad296eb4e406e2cd7">
-        <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</source>
-        <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:106</note>
-      </trans-unit>
-      <trans-unit id="694c63d4a2b60499f7ba524fb639811f">
-        <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</source>
-        <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:115</note>
-      </trans-unit>
-      <trans-unit id="2566fed9ede40ae26636b773594094cf">
-        <source>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</source>
-        <target>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:128</note>
-      </trans-unit>
-      <trans-unit id="e0853b619fbd24fdabc3ae78beb81193">
-        <source>This will display notifications when new orders are made in your shop.</source>
-        <target>This will display notifications when new orders are made in your shop.</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:132</note>
-      </trans-unit>
-      <trans-unit id="11b3df1e92b11e2d899494d3cdf4dd13">
-        <source>This will display notifications every time a new customer registers in your shop.</source>
-        <target>This will display notifications every time a new customer registers in your shop.</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:139</note>
-      </trans-unit>
-      <trans-unit id="b8a8fa662505e278031049e4990e428a">
-        <source>This will display notifications when new messages are posted in your shop.</source>
-        <target>This will display notifications when new messages are posted in your shop.</target>
-        <note>Context:
-File: controllers/admin/AdminAdminPreferencesController.php:146</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/logs.html.twig:51</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1589ac76f2f88749f51028f09b23f9d4">
-        <source>Drop existing tables during import.</source>
-        <target>Drop existing tables during import.</target>
+      <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
+        <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
+        <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
         <note>Context:
-File: controllers/admin/AdminBackupController.php:62</note>
+File: controllers/admin/AdminShopController.php:596</note>
       </trans-unit>
-      <trans-unit id="b07ccf1ffff29007509d45dbcc13f923">
-        <source>If enabled, the backup script will drop your tables prior to restoring data.</source>
-        <target>If enabled, the backup script will drop your tables prior to restoring data.</target>
+      <trans-unit id="41ff4b3ea277bdc597fce74850a85510">
+        <source>Click here to display the shops in the %name% shop group</source>
+        <target>Click here to display the shops in the %name% shop group</target>
         <note>Context:
-File: controllers/admin/AdminBackupController.php:71</note>
+File: controllers/admin/AdminShopController.php:772</note>
       </trans-unit>
-      <trans-unit id="2e25562aa49c13b17e979d826fecc25f">
-        <source>(ie. "DROP TABLE IF EXISTS")</source>
-        <target>(ie. "DROP TABLE IF EXISTS")</target>
+      <trans-unit id="d916f5b0696f10712fad55220707fab9">
+        <source>Click here to display the URLs of the %name% shop</source>
+        <target>Click here to display the URLs of the %name% shop</target>
         <note>Context:
-File: controllers/admin/AdminBackupController.php:72</note>
+File: controllers/admin/AdminShopController.php:794</note>
+      </trans-unit>
+      <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
+        <source>Click here to display the list of shop groups</source>
+        <target>Click here to display the list of shop groups</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:846</note>
       </trans-unit>
     </body>
   </file>
@@ -157,6 +122,40 @@ File: controllers/admin/AdminEmailsController.php:158</note>
         <target>Use an encrypt protocol</target>
         <note>Context:
 File: controllers/admin/AdminEmailsController.php:165</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="68db67219aa1fd6e5f8820e20fd78b25">
+        <source>How do I create a new SQL query?</source>
+        <target>How do I create a new SQL query?</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:117</note>
+      </trans-unit>
+      <trans-unit id="555f1c93c6aa30a9b28e5cb37eaade53">
+        <source>Click "Add New".</source>
+        <target>Click "Add New".</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:119</note>
+      </trans-unit>
+      <trans-unit id="b7ccdf6ab58f5514acc520721ddc9f08">
+        <source>Fill in the fields and click "Save".</source>
+        <target>Fill in the fields and click "Save".</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:120</note>
+      </trans-unit>
+      <trans-unit id="64427cd6d9efe12b779a1e3bb2fafc06">
+        <source>You can then view the query results by clicking on the Edit action in the dropdown menu</source>
+        <target>You can then view the query results by clicking on the Edit action in the dropdown menu</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:121</note>
+      </trans-unit>
+      <trans-unit id="29147406190a86209d5f4b3080cc7fa9">
+        <source>You can also export the query results as a CSV file by clicking on the Export button</source>
+        <target>You can also export the query results as a CSV file by clicking on the Export button</target>
+        <note>Context:
+File: controllers/admin/AdminRequestSqlController.php:122</note>
       </trans-unit>
     </body>
   </file>
@@ -212,159 +211,43 @@ File: controllers/admin/AdminShopUrlController.php:256</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminPerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="46ff0a5d9d334079e1dcbded5e6a3efd">
-        <source>This option should be used in a production environment.</source>
-        <target>This option should be used in a production environment.</target>
+      <trans-unit id="0c2afe3d3eb02183ee182aa447608bc4">
+        <source>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</source>
+        <target>Warning: Enabling the "share customers" and "share orders" options is not recommended. Once activated and orders are created, you will not be able to disable these options. If you need these options, we recommend using several categories rather than several shops.</target>
         <note>Context:
-File: controllers/admin/AdminPerformanceController.php:72</note>
+File: controllers/admin/AdminShopGroupController.php:180</note>
       </trans-unit>
-      <trans-unit id="7ada791b1c737a0403d84bdb7a531a53">
-        <source>Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.</source>
-        <target>Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.</target>
+      <trans-unit id="ee5d0efc6b5d41f7ee2ac5ea831f2a7f">
+        <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
+        <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
         <note>Context:
-File: controllers/admin/AdminPerformanceController.php:78</note>
+File: controllers/admin/AdminShopGroupController.php:206</note>
       </trans-unit>
-      <trans-unit id="9292defc45344b60a5f0f5a7b2613079">
-        <source>This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.</source>
-        <target>This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. Note: This should never be used in a production environment.</target>
+      <trans-unit id="dace58c348a19d7bddb7a3fe4fd3ebfa">
+        <source>Warning: you will not be able to disable this option once you have registered customers.</source>
+        <target>Warning: you will not be able to disable this option once you have registered customers.</target>
         <note>Context:
-File: controllers/admin/AdminPerformanceController.php:84</note>
+File: controllers/admin/AdminShopGroupController.php:206</note>
       </trans-unit>
-      <trans-unit id="30c802194b54f04e24a2abdc774c2f7e">
-        <source>Should be enabled if you want to avoid to store the smarty cache on NFS.</source>
-        <target>Should be enabled if you want to avoid to store the smarty cache on NFS.</target>
+      <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
+        <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
+        <target>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</target>
         <note>Context:
-File: controllers/admin/AdminPerformanceController.php:124</note>
+File: controllers/admin/AdminShopGroupController.php:245</note>
       </trans-unit>
-      <trans-unit id="853f64470ff7bb429d4d1febf19a2d58">
-        <source>Enable or disable debug mode.</source>
-        <target>Enable or disable debug mode.</target>
+      <trans-unit id="697ce708715d1f771177623968e8c6a4">
+        <source>Warning: You will not be able to disable this option once you've started to accept orders.</source>
+        <target>Warning: You will not be able to disable this option once you've started to accept orders.</target>
         <note>Context:
-File: controllers/admin/AdminPerformanceController.php:241</note>
+File: controllers/admin/AdminShopGroupController.php:245</note>
       </trans-unit>
-      <trans-unit id="bb3656a5447418f8f2644f3ac91b5c6f">
-        <source>Some features can be disabled in order to improve performance.</source>
-        <target>Some features can be disabled in order to improve performance.</target>
+      <trans-unit id="e667b16af30e0820218ad32242e284dc">
+        <source>Enable or disable this shop group?</source>
+        <target>Enable or disable this shop group?</target>
         <note>Context:
-File: controllers/admin/AdminPerformanceController.php:261</note>
-      </trans-unit>
-      <trans-unit id="dadb7368382c41e65db131dde4acbddd">
-        <source>Choose "No" to disable Product Combinations.</source>
-        <target>Choose "No" to disable Product Combinations.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:285</note>
-      </trans-unit>
-      <trans-unit id="31d21c53f8b07a3adcac80c8fab067db">
-        <source>You cannot set this parameter to No when combinations are already used by some of your products</source>
-        <target>You cannot set this parameter to No when combinations are already used by some of your products</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:286</note>
-      </trans-unit>
-      <trans-unit id="755b5f88357c721918923199f02a127d">
-        <source>Choose "No" to disable Product Features.</source>
-        <target>Choose "No" to disable Product Features.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:305</note>
-      </trans-unit>
-      <trans-unit id="07e451f21d83658a364e0548c86926b3">
-        <source>Choose "No" to disable Customer Groups.</source>
-        <target>Choose "No" to disable Customer Groups.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:325</note>
-      </trans-unit>
-      <trans-unit id="ecffc19cb5ada347980c0fd06ca337f4">
-        <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</source>
-        <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:345</note>
-      </trans-unit>
-      <trans-unit id="021007c7da195ab112330b846e0b1cbb">
-        <source>This will add directives to your .htaccess file, which should improve caching and compression.</source>
-        <target>This will add directives to your .htaccess file, which should improve caching and compression.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:397</note>
-      </trans-unit>
-      <trans-unit id="7d7364eb90dcf245641e4139c6ab1a7c">
-        <source>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</source>
-        <target>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:436</note>
-      </trans-unit>
-      <trans-unit id="80ca4dd5f99b6572c93cec540caff504">
-        <source>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</source>
-        <target>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:442</note>
-      </trans-unit>
-      <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
-        <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
-        <target>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:448</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLogsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="25047dda7ccdbdb758df436ada087c4e">
-        <source>Enter "5" if you do not want to receive any emails.</source>
-        <target>Enter "5" if you do not want to receive any emails.</target>
-        <note>Context:
-File: controllers/admin/AdminLogsController.php:92</note>
-      </trans-unit>
-      <trans-unit id="0250518090d13c807ece595694bffa98">
-        <source>Emails will be sent to the shop owner.</source>
-        <target>Emails will be sent to the shop owner.</target>
-        <note>Context:
-File: controllers/admin/AdminLogsController.php:94</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="14a966a005ea5262cd09332f4e50b7b1">
-        <source>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</source>
-        <target>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:263</note>
-      </trans-unit>
-      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
-        <source>Password should be at least %num% characters long.</source>
-        <target>Password should be at least %num% characters long.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:302</note>
-      </trans-unit>
-      <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
-        <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
-        <target>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:326</note>
-      </trans-unit>
-      <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
-        <source>This page will be displayed just after login.</source>
-        <target>This page will be displayed just after login.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:332</note>
-      </trans-unit>
-      <trans-unit id="d970370797ba19bba5524b480d3526fb">
-        <source>Allow or disallow this employee to log in to the Admin panel.</source>
-        <target>Allow or disallow this employee to log in to the Admin panel.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:367</note>
-      </trans-unit>
-      <trans-unit id="7bc873cba11f035df692c3549366c722">
-        <source>-- Choose --</source>
-        <target>-- Choose --</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:390</note>
-      </trans-unit>
-      <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
-        <source>Select the shops the employee is allowed to access.</source>
-        <target>Select the shops the employee is allowed to access.</target>
-        <note>Context:
-File: controllers/admin/AdminEmployeesController.php:400</note>
+File: controllers/admin/AdminShopGroupController.php:264</note>
       </trans-unit>
     </body>
   </file>
@@ -402,198 +285,71 @@ File: controllers/admin/AdminWebserviceController.php:151</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c127560c7252928dc38d9a0ebf312ba4">
-        <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
-        <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
+      <trans-unit id="1589ac76f2f88749f51028f09b23f9d4">
+        <source>Drop existing tables during import.</source>
+        <target>Drop existing tables during import.</target>
         <note>Context:
-File: controllers/admin/AdminShopController.php:589</note>
+File: controllers/admin/AdminBackupController.php:62</note>
       </trans-unit>
-      <trans-unit id="ff679f8027304451c9561c09dafdb57e">
-        <source>Click here to display the shops in the %s shop group</source>
-        <target>Click here to display the shops in the %s shop group</target>
+      <trans-unit id="b07ccf1ffff29007509d45dbcc13f923">
+        <source>If enabled, the backup script will drop your tables prior to restoring data.</source>
+        <target>If enabled, the backup script will drop your tables prior to restoring data.</target>
         <note>Context:
-File: controllers/admin/AdminShopController.php:766</note>
+File: controllers/admin/AdminBackupController.php:71</note>
       </trans-unit>
-      <trans-unit id="7dd4fd272f9f2a1d6425cae183777579">
-        <source>Click here to display the URLs of the %s shop</source>
-        <target>Click here to display the URLs of the %s shop</target>
+      <trans-unit id="2e25562aa49c13b17e979d826fecc25f">
+        <source>(ie. "DROP TABLE IF EXISTS")</source>
+        <target>(ie. "DROP TABLE IF EXISTS")</target>
         <note>Context:
-File: controllers/admin/AdminShopController.php:788</note>
-      </trans-unit>
-      <trans-unit id="01af4d9c4808ce3ccd662c0e5ef7f203">
-        <source>Click here to display the list of shop groups</source>
-        <target>Click here to display the list of shop groups</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:840</note>
+File: controllers/admin/AdminBackupController.php:72</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminEmployeesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="68db67219aa1fd6e5f8820e20fd78b25">
-        <source>How do I create a new SQL query?</source>
-        <target>How do I create a new SQL query?</target>
+      <trans-unit id="14a966a005ea5262cd09332f4e50b7b1">
+        <source>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</source>
+        <target>Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:117</note>
+File: controllers/admin/AdminEmployeesController.php:242</note>
       </trans-unit>
-      <trans-unit id="555f1c93c6aa30a9b28e5cb37eaade53">
-        <source>Click "Add New".</source>
-        <target>Click "Add New".</target>
+      <trans-unit id="d222c4d0463bd3f146536ac89c0d7c77">
+        <source>Password should be at least %num% characters long.</source>
+        <target>Password should be at least %num% characters long.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:119</note>
+File: controllers/admin/AdminEmployeesController.php:281</note>
       </trans-unit>
-      <trans-unit id="b7ccdf6ab58f5514acc520721ddc9f08">
-        <source>Fill in the fields and click "Save".</source>
-        <target>Fill in the fields and click "Save".</target>
+      <trans-unit id="0b2827832fff3d973ee0ed2e6c7d4b23">
+        <source>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</source>
+        <target>PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:120</note>
+File: controllers/admin/AdminEmployeesController.php:305</note>
       </trans-unit>
-      <trans-unit id="64427cd6d9efe12b779a1e3bb2fafc06">
-        <source>You can then view the query results by clicking on the Edit action in the dropdown menu</source>
-        <target>You can then view the query results by clicking on the Edit action in the dropdown menu</target>
+      <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
+        <source>This page will be displayed just after login.</source>
+        <target>This page will be displayed just after login.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:121</note>
+File: controllers/admin/AdminEmployeesController.php:311</note>
       </trans-unit>
-      <trans-unit id="29147406190a86209d5f4b3080cc7fa9">
-        <source>You can also export the query results as a CSV file by clicking on the Export button</source>
-        <target>You can also export the query results as a CSV file by clicking on the Export button</target>
+      <trans-unit id="d970370797ba19bba5524b480d3526fb">
+        <source>Allow or disallow this employee to log in to the Admin panel.</source>
+        <target>Allow or disallow this employee to log in to the Admin panel.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:122</note>
+File: controllers/admin/AdminEmployeesController.php:346</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="11cd708df7411da4546d8580356e711a">
-        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
-        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
+      <trans-unit id="7bc873cba11f035df692c3549366c722">
+        <source>-- Choose --</source>
+        <target>-- Choose --</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:493</note>
+File: controllers/admin/AdminEmployeesController.php:369</note>
       </trans-unit>
-      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
+      <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
+        <source>Select the shops the employee is allowed to access.</source>
+        <target>Select the shops the employee is allowed to access.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:153</note>
-      </trans-unit>
-      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
-        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
-        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:297</note>
-      </trans-unit>
-      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
-        <source>ID of the warehouse to set as storage.</source>
-        <target>ID of the warehouse to set as storage.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:301</note>
-      </trans-unit>
-      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
-        <source>A category root is where a category tree can begin. This is used with multistore.</source>
-        <target>A category root is where a category tree can begin. This is used with multistore.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:192</note>
-      </trans-unit>
-      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:293</note>
-      </trans-unit>
-      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
-        <source>or</source>
-        <target>or</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:972
- Comment: Special case for Product : either one or the other. Not both.</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="20fbc8f64351875f498d7d6f8c91810b">
-        <source>How to restore a database backup in 10 easy steps</source>
-        <target>How to restore a database backup in 10 easy steps</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:82</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/backup/download/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7bf215c957e661c3bd8ad7f6221675c9">
-        <source>Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.</source>
-        <target>Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:71</note>
-      </trans-unit>
-      <trans-unit id="2dc09c116021fe75dd928d368a35e9d7">
-        <source>Download the backup from the list below or from your FTP server (in the folder "admin/backups").</source>
-        <target>Download the backup from the list below or from your FTP server (in the folder "admin/backups").</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:72</note>
-      </trans-unit>
-      <trans-unit id="3a86c87939c6bbaba4cb2e44e4734146">
-        <source>Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.</source>
-        <target>Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:73</note>
-      </trans-unit>
-      <trans-unit id="0ba394816eab81959ea7c442801b0819">
-        <source>Please ask your hosting provider for "phpMyAdmin" access to your database.</source>
-        <target>Please ask your hosting provider for "phpMyAdmin" access to your database.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:74</note>
-      </trans-unit>
-      <trans-unit id="04abc58df1575dd465a28c86d859d302">
-        <source>Connect to "phpMyAdmin" and select your current database.</source>
-        <target>Connect to "phpMyAdmin" and select your current database.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:75</note>
-      </trans-unit>
-      <trans-unit id="197ebd1d022def92dd1c64aae3320d6a">
-        <source>Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.</source>
-        <target>Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:76</note>
-      </trans-unit>
-      <trans-unit id="7d6044f9c5ec3bb7b89ac9328a871b2f">
-        <source>At the top of the screen, please select the "Import" tab</source>
-        <target>At the top of the screen, please select the "Import" tab</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:77</note>
-      </trans-unit>
-      <trans-unit id="6463499cc4522ee5cef415d727f543a3">
-        <source>Click on the "Browse" button and select the backup file from your hard drive.</source>
-        <target>Click on the "Browse" button and select the backup file from your hard drive.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:78</note>
-      </trans-unit>
-      <trans-unit id="d24e59c4885823395588f1b480876da5">
-        <source>If your backup file exceeds this limit, contact your hosting provider for assistance. </source>
-        <target>If your backup file exceeds this limit, contact your hosting provider for assistance. </target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:79</note>
-      </trans-unit>
-      <trans-unit id="44b2f277fe0d0365bbc168e617387c73">
-        <source>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</source>
-        <target>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:80</note>
-      </trans-unit>
-      <trans-unit id="0869c85782ee2481b83a9f580a09e963">
-        <source>PrestaShop is not responsible for your database, its backups and/or recovery.</source>
-        <target>PrestaShop is not responsible for your database, its backups and/or recovery.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:48</note>
-      </trans-unit>
-      <trans-unit id="35fc59a69cdc61281d4ac5780212911d">
-        <source>How to restore a database backup in 10 easy steps:</source>
-        <target>How to restore a database backup in 10 easy steps:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:69</note>
+File: controllers/admin/AdminEmployeesController.php:379</note>
       </trans-unit>
     </body>
   </file>
@@ -611,9 +367,9 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:42</note>
       </trans-unit>
-      <trans-unit id="18b28335d15dcd62f8af153c4c137af5">
-        <source>http://en.wikipedia.org/wiki/Comma-separated_values</source>
-        <target>http://en.wikipedia.org/wiki/Comma-separated_values</target>
+      <trans-unit id="9d23c31f2dcc1ace9296037f327563a4">
+        <source>https://en.wikipedia.org/wiki/Comma-separated_values</source>
+        <target>https://en.wikipedia.org/wiki/Comma-separated_values</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:45</note>
       </trans-unit>
@@ -647,9 +403,9 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:236</note>
       </trans-unit>
-      <trans-unit id="423347880e13d3bf4a0e37ef28ace1b8">
-        <source>If you enable this option, your imported items' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</source>
-        <target>If you enable this option, your imported items' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</target>
+      <trans-unit id="f66963da2d51d637afa80ff8edf8d734">
+        <source>If you enable this option, your imported items' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</source>
+        <target>If you enable this option, your imported items' ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:266</note>
       </trans-unit>
@@ -658,6 +414,16 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
         <target>Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:283</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3bb4a695db0c87a3d70a2deffddeb743">
+        <source>Read more about the CSV format at:</source>
+        <target>Read more about the CSV format at:</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig:42</note>
       </trans-unit>
     </body>
   </file>
@@ -692,6 +458,238 @@ File: admin-dev/themes/default/template/controllers/logs/helpers/list/list_heade
         <target>Major issue (crash)!</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/logs/helpers/list/list_header.tpl:40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="30c802194b54f04e24a2abdc774c2f7e">
+        <source>Should be enabled if you want to avoid to store the smarty cache on NFS.</source>
+        <target>Should be enabled if you want to avoid to store the smarty cache on NFS.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:56</note>
+      </trans-unit>
+      <trans-unit id="853f64470ff7bb429d4d1febf19a2d58">
+        <source>Enable or disable debug mode.</source>
+        <target>Enable or disable debug mode.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:101</note>
+      </trans-unit>
+      <trans-unit id="bb3656a5447418f8f2644f3ac91b5c6f">
+        <source>Some features can be disabled in order to improve performance.</source>
+        <target>Some features can be disabled in order to improve performance.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:128</note>
+      </trans-unit>
+      <trans-unit id="dadb7368382c41e65db131dde4acbddd">
+        <source>Choose "No" to disable Product Combinations.</source>
+        <target>Choose "No" to disable Product Combinations.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:131</note>
+      </trans-unit>
+      <trans-unit id="31d21c53f8b07a3adcac80c8fab067db">
+        <source>You cannot set this parameter to No when combinations are already used by some of your products</source>
+        <target>You cannot set this parameter to No when combinations are already used by some of your products</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:137</note>
+      </trans-unit>
+      <trans-unit id="755b5f88357c721918923199f02a127d">
+        <source>Choose "No" to disable Product Features.</source>
+        <target>Choose "No" to disable Product Features.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:141</note>
+      </trans-unit>
+      <trans-unit id="07e451f21d83658a364e0548c86926b3">
+        <source>Choose "No" to disable Customer Groups.</source>
+        <target>Choose "No" to disable Customer Groups.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:146</note>
+      </trans-unit>
+      <trans-unit id="ecffc19cb5ada347980c0fd06ca337f4">
+        <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</source>
+        <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:171</note>
+      </trans-unit>
+      <trans-unit id="021007c7da195ab112330b846e0b1cbb">
+        <source>This will add directives to your .htaccess file, which should improve caching and compression.</source>
+        <target>This will add directives to your .htaccess file, which should improve caching and compression.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:184</note>
+      </trans-unit>
+      <trans-unit id="7d7364eb90dcf245641e4139c6ab1a7c">
+        <source>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:214</note>
+      </trans-unit>
+      <trans-unit id="80ca4dd5f99b6572c93cec540caff504">
+        <source>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:219</note>
+      </trans-unit>
+      <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
+        <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:224</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="99059a2047f475cdc6428076e3360134">
+        <source>New modules and updates are displayed on the modules page.</source>
+        <target>New modules and updates are displayed on the modules page.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:43</note>
+      </trans-unit>
+      <trans-unit id="0f81567617bb8ebc23f48e74d8ae8acf">
+        <source>Check the IP address of the cookie in order to prevent your cookie from being stolen.</source>
+        <target>Check the IP address of the cookie in order to prevent your cookie from being stolen.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:48</note>
+      </trans-unit>
+      <trans-unit id="20d6b6498eab9f749d55c9b53151e00a">
+        <source>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</source>
+        <target>Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:53</note>
+      </trans-unit>
+      <trans-unit id="a676520f8296be0319ad6268657471ea">
+        <source>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</source>
+        <target>Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:58</note>
+      </trans-unit>
+      <trans-unit id="a067e61c044ba333fae23b61c83d87c4">
+        <source>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
+        <target>Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:83</note>
+      </trans-unit>
+      <trans-unit id="dae623d110235f2837ca0a6e753305b8">
+        <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
+        <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:88</note>
+      </trans-unit>
+      <trans-unit id="2a59c5a630e01a9a88e9bcb2863fd69f">
+        <source>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
+        <target>Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:93</note>
+      </trans-unit>
+      <trans-unit id="2566fed9ede40ae26636b773594094cf">
+        <source>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</source>
+        <target>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:119</note>
+      </trans-unit>
+      <trans-unit id="e0853b619fbd24fdabc3ae78beb81193">
+        <source>This will display notifications when new orders are made in your shop.</source>
+        <target>This will display notifications when new orders are made in your shop.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:122</note>
+      </trans-unit>
+      <trans-unit id="11b3df1e92b11e2d899494d3cdf4dd13">
+        <source>This will display notifications every time a new customer registers in your shop.</source>
+        <target>This will display notifications every time a new customer registers in your shop.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:127</note>
+      </trans-unit>
+      <trans-unit id="b8a8fa662505e278031049e4990e428a">
+        <source>This will display notifications when new messages are posted in your shop.</source>
+        <target>This will display notifications when new messages are posted in your shop.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig:132</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/backup/download/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0869c85782ee2481b83a9f580a09e963">
+        <source>PrestaShop is not responsible for your database, its backups and/or recovery.</source>
+        <target>PrestaShop is not responsible for your database, its backups and/or recovery.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:48</note>
+      </trans-unit>
+      <trans-unit id="35fc59a69cdc61281d4ac5780212911d">
+        <source>How to restore a database backup in 10 easy steps:</source>
+        <target>How to restore a database backup in 10 easy steps:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7bf215c957e661c3bd8ad7f6221675c9">
+        <source>Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.</source>
+        <target>Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:84</note>
+      </trans-unit>
+      <trans-unit id="2dc09c116021fe75dd928d368a35e9d7">
+        <source>Download the backup from the list below or from your FTP server (in the folder "admin/backups").</source>
+        <target>Download the backup from the list below or from your FTP server (in the folder "admin/backups").</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:85</note>
+      </trans-unit>
+      <trans-unit id="3a86c87939c6bbaba4cb2e44e4734146">
+        <source>Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.</source>
+        <target>Check the backup integrity: Look for errors, incomplete file, etc... Be sure to verify all of your data.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:86</note>
+      </trans-unit>
+      <trans-unit id="0ba394816eab81959ea7c442801b0819">
+        <source>Please ask your hosting provider for "phpMyAdmin" access to your database.</source>
+        <target>Please ask your hosting provider for "phpMyAdmin" access to your database.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:87</note>
+      </trans-unit>
+      <trans-unit id="04abc58df1575dd465a28c86d859d302">
+        <source>Connect to "phpMyAdmin" and select your current database.</source>
+        <target>Connect to "phpMyAdmin" and select your current database.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:88</note>
+      </trans-unit>
+      <trans-unit id="197ebd1d022def92dd1c64aae3320d6a">
+        <source>Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.</source>
+        <target>Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:89</note>
+      </trans-unit>
+      <trans-unit id="7d6044f9c5ec3bb7b89ac9328a871b2f">
+        <source>At the top of the screen, please select the "Import" tab</source>
+        <target>At the top of the screen, please select the "Import" tab</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:90</note>
+      </trans-unit>
+      <trans-unit id="6463499cc4522ee5cef415d727f543a3">
+        <source>Click on the "Browse" button and select the backup file from your hard drive.</source>
+        <target>Click on the "Browse" button and select the backup file from your hard drive.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:91</note>
+      </trans-unit>
+      <trans-unit id="d24e59c4885823395588f1b480876da5">
+        <source>If your backup file exceeds this limit, contact your hosting provider for assistance. </source>
+        <target>If your backup file exceeds this limit, contact your hosting provider for assistance. </target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:92</note>
+      </trans-unit>
+      <trans-unit id="44b2f277fe0d0365bbc168e617387c73">
+        <source>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</source>
+        <target>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:93</note>
+      </trans-unit>
+      <trans-unit id="20fbc8f64351875f498d7d6f8c91810b">
+        <source>How to restore a database backup in 10 easy steps</source>
+        <target>How to restore a database backup in 10 easy steps</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:82</note>
       </trans-unit>
     </body>
   </file>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 class LinkCore
 {
@@ -493,10 +495,10 @@ class LinkCore
     /**
      * Create a link to a CMS page.
      *
-     * @param CMS    $cms     CMS object
-     * @param string $alias
-     * @param bool   $ssl
-     * @param int    $idLang
+     * @param CMS|int $cms     CMS object
+     * @param string  $alias
+     * @param bool    $ssl
+     * @param int     $idLang
      *
      * @return string
      */
@@ -637,7 +639,8 @@ class LinkCore
      *
      * @return string
      */
-    public function getModuleLink($module,
+    public function getModuleLink(
+        $module,
         $controller = 'default',
         array $params = array(),
         $ssl = null,
@@ -666,11 +669,12 @@ class LinkCore
     /**
      * Use controller name to create a link.
      *
-     * @param string        $controller
-     * @param bool          $withToken     include or not the token in the url
+     * @param string $controller
+     * @param bool $withToken include or not the token in the url
      * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
-     *
+     * @param array $params Optional
      * @return string url
+     * @throws PrestaShopException
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = array(), $params = array())
     {
@@ -679,21 +683,22 @@ class LinkCore
             return '';
         }
 
-        if ($withToken) {
+        if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
 
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
-        global $kernel; // sf kernel
-        if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
-            $sfRouter = $kernel->getContainer()->get('router');
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer)) {
+            $sfRouter = $sfContainer->get('router');
         }
 
+        $routeName = null;
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = $sfContainer->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
@@ -725,20 +730,40 @@ class LinkCore
                 }
                 break;
 
-            case 'AdminModulesSf':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_module_catalog';
+            default:
+                $routes = array(
+                    'AdminModulesSf' => 'admin_module_manage',
+                    'AdminModulesCatalog' => 'admin_module_catalog',
+                    'AdminModulesManage' => 'admin_module_manage',
+                    'AdminModulesNotifications' => 'admin_module_notification',
+                    'AdminStockManagement' => 'admin_stock_overview',
+                    'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminInformation' => 'admin_system_information',
+                    'AdminAddonsCatalog' => 'admin_module_addons_store',
+                    // 'AdminLogs' => 'admin_logs', @todo: uncomment when search feature is done.
+                    'AdminPerformance' => 'admin_performance',
+                    'AdminAdminPreferences' => 'admin_administration',
+                    'AdminMaintenance' => 'admin_maintenance',
+                    'AdminPPreferences' => 'admin_product_preferences',
+                    'AdminPreferences' => 'admin_preferences',
+                    'AdminCustomerPreferences' => 'admin_customer_preferences',
+                    'AdminImport' => 'admin_import',
+                );
 
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                if (isset($routes[$controller])) {
+                    $routeName = $routes[$controller];
+                }
+        }
 
-            case 'AdminStockManagement':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_stock_overview';
+        if (!is_null($routeName)) {
+            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
 
-        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params, false);
+        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
     }
 
     /**
@@ -952,8 +977,10 @@ class LinkCore
      * Create link after language change, for the change language block.
      *
      * @param int $idLang Language ID
+     * @param Context $context the context if needed
      *
      * @return string link
+     * @throws PrestaShopException
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
@@ -1022,6 +1049,8 @@ class LinkCore
      * @param bool   $sort       Show sort attribute
      * @param bool   $pagination Show page number attribute
      * @param bool   $array      If false return an url, if true return an array
+     *
+     * @return string|array
      */
     public function getPaginationLink($type, $idObject, $nb = false, $sort = false, $pagination = false, $array = false)
     {
@@ -1181,7 +1210,7 @@ class LinkCore
 
         $patterns = array(
             '#'.Context::getContext()->link->getBaseLink().'#',
-            '#'.basename(_PS_ADMIN_DIR_).'#',
+            '#'.basename(_PS_ADMIN_DIR_).'/#',
             '/index.php/',
             '/_?token=[a-zA-Z0-9\_]+/'
         );
@@ -1305,9 +1334,10 @@ class LinkCore
                 if (!array_key_exists('route', $params)) {
                     throw new \InvalidArgumentException('You need to setup a `route` attribute.');
                 }
-                global $kernel; // sf kernel
-                if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
-                    $sfRouter = $kernel->getContainer()->get('router');
+
+                $sfContainer = SymfonyContainer::getInstance();
+                if (!is_null($sfContainer)) {
+                    $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {
                         return $sfRouter->generate($params['route'], $params['sf-params'], UrlGeneratorInterface::ABSOLUTE_URL);

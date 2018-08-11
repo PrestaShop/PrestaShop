@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,22 +19,22 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
- use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
- use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
- use PrestaShop\PrestaShop\Adapter\Search\SearchProductSearchProvider;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Adapter\Search\SearchProductSearchProvider;
 
- class SearchControllerCore extends ProductListingFrontController
- {
-     public $php_self = 'search';
-     public $instant_search;
-     public $ajax_search;
+class SearchControllerCore extends ProductListingFrontController
+{
+    public $php_self = 'search';
+    public $instant_search;
+    public $ajax_search;
 
-     private $search_string;
-     private $search_tag;
+    private $search_string;
+    private $search_tag;
 
     /**
      * Assign template vars related to page content.
@@ -52,35 +52,44 @@
 
         $this->search_tag = Tools::getValue('tag');
 
-        $this->context->smarty->assign(array(
-            'search_string' => $this->search_string,
-            'search_tag' => $this->search_tag,
-        ));
+        $this->context->smarty->assign(
+            array(
+                'search_string' => $this->search_string,
+                'search_tag'    => $this->search_tag,
+            )
+        );
+    }
+
+    /**
+     * Performs the search
+     */
+    public function initContent()
+    {
+        parent::initContent();
 
         $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
     }
 
-     protected function getProductSearchQuery()
-     {
-         $query = new ProductSearchQuery();
-         $query
-           ->setSortOrder(new SortOrder('product', Tools::getProductsOrder('by'), Tools::getProductsOrder('way')))
-           ->setSearchString($this->search_string)
-           ->setSearchTag($this->search_tag)
-        ;
+    protected function getProductSearchQuery()
+    {
+        $query = new ProductSearchQuery();
+        $query
+            ->setSortOrder(new SortOrder('product', 'position', 'desc'))
+            ->setSearchString($this->search_string)
+            ->setSearchTag($this->search_tag);
 
-         return $query;
-     }
+        return $query;
+    }
 
-     protected function getDefaultProductSearchProvider()
-     {
-         return new SearchProductSearchProvider(
+    protected function getDefaultProductSearchProvider()
+    {
+        return new SearchProductSearchProvider(
             $this->getTranslator()
-       );
-     }
+        );
+    }
 
-     public function getListingLabel()
-     {
-         return $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog');
-     }
- }
+    public function getListingLabel()
+    {
+        return $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog');
+    }
+}

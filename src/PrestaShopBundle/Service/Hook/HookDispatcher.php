@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,7 +94,6 @@ class HookDispatcher extends EventDispatcher
                 $this->renderingContent[$listenerName] = (!is_string($eventContent) || strlen($eventContent) > strlen($obContent))
                     ? $eventContent
                     : $obContent;
-
             }
             if ($event->isPropagationStopped()) {
                 $this->propagationStoppedCalledBy = $listener;
@@ -109,7 +108,7 @@ class HookDispatcher extends EventDispatcher
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.
      *
-     * @param $eventName The hook name.
+     * @param $eventName string The hook name.
      * @param array $parameters Hook parameters
      * @return Event The event that has been passed to each listener.
      * @throws \Exception

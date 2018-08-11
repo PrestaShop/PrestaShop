@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -251,7 +251,7 @@ class AdminFeaturesControllerCore extends AdminController
                     'href' => $back,
                     'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help')
                 );
-            break;
+                break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
                     'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,
@@ -288,7 +288,7 @@ class AdminFeaturesControllerCore extends AdminController
                 break;
 
             case 'editFeatureValue':
-                if (($id_feature_value = Tools::getValue('id_feature_value'))) {
+                if (Tools::getValue('id_feature_value')) {
                     if (($id = Tools::getValue('id_feature'))) {
                         if (Validate::isLoadedObject($obj = new Feature((int)$id))) {
                             $bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminFeatures').'&id_feature='.$id.'&viewfeature">'.$obj->name[$this->context->employee->id_lang].'</a>';
@@ -430,8 +430,9 @@ class AdminFeaturesControllerCore extends AdminController
                 $this->content .= $this->renderList();
             }
         } else {
-            $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
-            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array(), 'Admin.Catalog.Notification'), $url));
+            $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
+            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %url%.', array('%url%' => $url), 'Admin.Catalog.Notification'));
         }
 
         $this->context->smarty->assign(array(
@@ -597,7 +598,7 @@ class AdminFeaturesControllerCore extends AdminController
             $positions = Tools::getValue('feature');
 
             $new_positions = array();
-            foreach ($positions as $k => $v) {
+            foreach ($positions as $v) {
                 if (!empty($v)) {
                     $new_positions[] = $v;
                 }

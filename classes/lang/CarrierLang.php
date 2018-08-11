@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,14 +32,4 @@ class CarrierLangCore extends DataLangCore
     protected $keys = array('id_carrier', 'id_shop');
 
     protected $fieldsToUpdate = array('delay');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'delay' => array(
-                md5('Pick up in-store') => $this->translator->trans('Pick up in-store', array(), 'Admin.Shipping.Feature', $this->locale),
-                md5('Delivery next day!') => $this->translator->trans('Delivery next day!', array(), 'Admin.Shipping.Feature', $this->locale),
-            ),
-        );
-    }
 }

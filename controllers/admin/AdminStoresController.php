@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -116,13 +116,16 @@ class AdminStoresControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        $this->_select = 'cl.`name` country, st.`name` state';
+        $this->_select = 'cl.`name` country, st.`name` state, sl.*';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
-				ON (cl.`id_country` = a.`id_country`
-				AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'state` st
-				ON (st.`id_state` = a.`id_state`)';
+            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
+                ON (cl.`id_country` = a.`id_country`
+                AND cl.`id_lang` = ' . (int)$this->context->language->id . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'state` st
+                ON (st.`id_state` = a.`id_state`)
+            LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
+                ON (sl.`id_store` = a.`id_store`
+                AND sl.`id_lang` = ' . (int)$this->context->language->id . ') ';
 
         return parent::renderList();
     }
@@ -155,6 +158,7 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
+                    'lang' => true,
                     'required' => false,
                     'hint' => array(
                         $this->trans('Store name (e.g. City Center Mall Store).', array(), 'Admin.Shopparameters.Feature'),
@@ -165,12 +169,14 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Address', array(), 'Admin.Global'),
                     'name' => 'address1',
+                    'lang' => true,
                     'required' => true
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Address (2)', array(), 'Admin.Global'),
-                    'name' => 'address2'
+                    'name' => 'address2',
+                    'lang' => true,
                 ),
                 array(
                     'type' => 'text',
@@ -234,6 +240,7 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'textarea',
                     'label' => $this->trans('Note', array(), 'Admin.Global'),
                     'name' => 'note',
+                    'lang' => true,
                     'cols' => 42,
                     'rows' => 4
                 ),
@@ -293,11 +300,15 @@ class AdminStoresControllerCore extends AdminController
 
         $hours = array();
 
-        $hours_temp = json_decode($this->getFieldValue($obj, 'hours'));
-        if (!empty($hours_temp)) {
-            foreach ($hours_temp as $h) {
-                $hours[] = implode(' | ', $h);
-            }
+        $hours_temp = ($this->getFieldValue($obj, 'hours'));
+        if (is_array($hours_temp) && !empty($hours_temp)) {
+            $langs = Language::getLanguages(false);
+            $hours_temp = array_map('json_decode', $hours_temp);
+            $hours = array_map(
+                array($this, 'adaptHoursFormat'),
+                $hours_temp
+            );
+            $hours = (count($langs) > 1) ? $hours : $hours[reset($langs)['id_lang']];
         }
 
         $this->fields_value = array(
@@ -313,10 +324,16 @@ class AdminStoresControllerCore extends AdminController
     public function postProcess()
     {
         if (isset($_POST['submitAdd'.$this->table])) {
+            $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store'))) {
+                if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'))) {
                     $_POST[$kp] = trim($vp);
+                }
+                if ('hours' === $kp) {
+                    foreach ($vp as $day => $value) {
+                        $_POST['hours'][$day] = is_array($value) ? array_map('trim', $_POST['hours'][$day]) : trim($value);
+                    }
                 }
             }
 
@@ -355,12 +372,20 @@ class AdminStoresControllerCore extends AdminController
                 $this->errors[] = $this->trans('The Zip/postal code is invalid.', array(), 'Admin.Notifications.Error');
             }
             /* Store hours */
-            $_POST['hours'] = array();
-            $hours = [];
-            for ($i = 1; $i < 8; $i++) {
-                $hours[] = explode(' | ', Tools::getValue('hours_'.(int)$i));
+            foreach ($langs as $lang) {
+                $hours = array();
+                for ($i = 1; $i < 8; $i++) {
+                    if (1 < count($langs)) {
+                        $hours[] = explode(' | ', $_POST['hours'][$i][$lang['id_lang']]);
+                        unset($_POST['hours'][$i][$lang['id_lang']]);
+                    } else {
+                        $hours[] = explode(' | ', $_POST['hours'][$i]);
+                        unset($_POST['hours'][$i]);
+                    }
+                }
+                $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = json_encode($hours);
+            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
         }
 
         if (!count($this->errors)) {
@@ -377,7 +402,7 @@ class AdminStoresControllerCore extends AdminController
 
         if (($id_store = (int)Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_.$id_store.'.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 ImageManager::resize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
                     _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
                     (int)$image_type['width'], (int)$image_type['height']
@@ -550,5 +575,18 @@ class AdminStoresControllerCore extends AdminController
                 Configuration::updateValue('PS_SHOP_STATE', pSQL($state->name));
             }
         }
+    }
+
+    /**
+     * Adapt the format of hours
+     * 
+     * @param array $value
+     * @return array
+     */
+    private function adaptHoursFormat($value)
+    {
+        $separator = array_fill(0, count($value), ' | ');
+        
+        return array_map('implode', $value, $separator);
     }
 }

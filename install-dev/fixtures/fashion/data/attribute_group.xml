@@ -6,7 +6,8 @@
   </fields>
   <entities>
     <attribute_group id="Size" is_color_group="0" group_type="select"/>
-    <attribute_group id="Shoes_Size" is_color_group="0" group_type="select"/>
     <attribute_group id="Color" is_color_group="1" group_type="color"/>
+    <attribute_group id="Dimension" is_color_group="0" group_type="select"/>
+    <attribute_group id="Paper_Type" is_color_group="0" group_type="select"/>
   </entities>
 </entity_attribute_group>

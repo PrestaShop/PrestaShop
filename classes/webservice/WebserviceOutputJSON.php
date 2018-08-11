@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -158,16 +158,8 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
     public function overrideContent($content)
     {
-        $content = '';
-        $content .= json_encode($this->content);
-        $content = preg_replace_callback(
-            "/\\\\u([a-f0-9]{4})/",
-            function ($matches) {
-                return iconv('UCS-4LE', 'UTF-8', pack('V', hexdec('U' . $matches[1])));
-            },
-            $content
-        );
-        return $content;
+        $content = json_encode($this->content, JSON_UNESCAPED_UNICODE);
+        return (false !== $content) ? $content : '';
     }
 
     public function setLanguages($languages)

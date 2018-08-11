@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -28,15 +28,19 @@
       <div class="pack-product-container">
         <div class="thumb-mask">
           <div class="mask">
-            <img
-              src="{$product.cover.medium.url}"
-              alt="{$product.cover.legend}"
-              data-full-size-image-url="{$product.cover.large.url}"
-            >
+            <a href="{$product.url}" title="{$product.name}">
+              <img
+                src="{$product.cover.medium.url}"
+                alt="{$product.cover.legend}"
+                data-full-size-image-url="{$product.cover.large.url}"
+              >
+            </a>
           </div>
         </div>
         <div class="pack-product-name">
-          {$product.name}
+          <a href="{$product.url}" title="{$product.name}">
+            {$product.name}
+          </a>
         </div>
         <div class="pack-product-price">
           <strong>{$product.price}</strong>

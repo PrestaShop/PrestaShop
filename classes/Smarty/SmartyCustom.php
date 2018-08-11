@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ class SmartyCustomCore extends Smarty
     public function __construct()
     {
         parent::__construct();
-        $this->template_class = 'Smarty_Custom_Template';
+        $this->template_class = 'SmartyCustomTemplate';
     }
 
     /**
@@ -46,9 +46,9 @@ class SmartyCustomCore extends Smarty
         if ($resource_name == null) {
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', FROM_UNIXTIME('.time().'))');
             return 0;
-        } else {
-            return parent::clearCompiledTemplate($resource_name, $compile_id, $exp_time);
         }
+
+        return parent::clearCompiledTemplate($resource_name, $compile_id, $exp_time);
     }
 
     /**
@@ -118,10 +118,9 @@ class SmartyCustomCore extends Smarty
         $this->check_compile_cache_invalidation();
         if ($this->caching) {
             $this->check_template_invalidation($template, $cache_id, $compile_id);
-            return parent::createTemplate($template, $cache_id, $compile_id, $parent, $do_clone);
-        } else {
-            return parent::createTemplate($template, $cache_id, $compile_id, $parent, $do_clone);
         }
+
+        return parent::createTemplate($template, $cache_id, $compile_id, $parent, $do_clone);
     }
 
     /**
@@ -294,27 +293,5 @@ class SmartyCustomCore extends Smarty
         }
         Db::getInstance()->execute($sql, false);
         return Db::getInstance()->Affected_Rows();
-    }
-}
-
-class Smarty_Custom_Template extends Smarty_Internal_Template
-{
-    /** @var SmartyCustom|null */
-    public $smarty = null;
-
-    public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
-    {
-        if ($this->smarty->caching) {
-            $tpl = parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
-            if (property_exists($this, 'cached')) {
-                $filepath = str_replace($this->smarty->getCacheDir(), '', $this->cached->filepath);
-                if ($this->smarty->is_in_lazy_cache($this->template_resource, $this->cache_id, $this->compile_id) != $filepath) {
-                    $this->smarty->update_filepath($filepath, $this->template_resource, $this->cache_id, $this->compile_id);
-                }
-            }
-            return $tpl;
-        } else {
-            return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
-        }
     }
 }

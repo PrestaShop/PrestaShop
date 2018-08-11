@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
+use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use SpecificPrice;
 use Customer;
 use Combination;
@@ -117,6 +118,12 @@ class AdminProductWrapper
             $combination = new Combination($id_product_attribute);
             $combination->setImages(array());
         }
+        if (!isset($combinationValues['attribute_low_stock_threshold'])) {
+            $combinationValues['attribute_low_stock_threshold'] = null;
+        }
+        if (!isset($combinationValues['attribute_low_stock_alert'])) {
+            $combinationValues['attribute_low_stock_alert'] = false;
+        }
 
         $product->updateAttribute(
             $id_product_attribute,
@@ -135,7 +142,9 @@ class AdminProductWrapper
             $combinationValues['available_date_attribute'],
             false,
             array(),
-            $combinationValues['attribute_isbn']
+            $combinationValues['attribute_isbn'],
+            $combinationValues['attribute_low_stock_threshold'],
+            $combinationValues['attribute_low_stock_alert']
         );
 
         StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
@@ -159,10 +168,9 @@ class AdminProductWrapper
             }
         }
 
-        if(isset($combinationValues['attribute_quantity'])){
+        if (isset($combinationValues['attribute_quantity'])) {
             $this->processQuantityUpdate($product, $combinationValues['attribute_quantity'], $id_product_attribute);
         }
-
     }
 
     /**
@@ -493,20 +501,29 @@ class AdminProductWrapper
 
         $shopList = Shop::getContextListShopID();
 
+        /** Update the customization fields to be deleted in the next step if not used */
+        $product->softDeleteCustomizationFields($customization_ids);
+
+        $usedCustomizationIds = $product->getUsedCustomizationFieldsIds();
+        $usedCustomizationIds = array_column($usedCustomizationIds, 'index');
+        $usedCustomizationIds = array_map('intval', $usedCustomizationIds);
+        $usedCustomizationIds = array_unique(array_merge($usedCustomizationIds, $customization_ids), SORT_REGULAR);
+
         //remove customization field langs for current context shops
-        foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
+        $productCustomization = $product->getCustomizationFieldIds();
+        $toDeleteCustomizationIds = array();
+        foreach ($productCustomization as $customizationFiled) {
+            if (!in_array((int)$customizationFiled['id_customization_field'], $usedCustomizationIds)) {
+                $toDeleteCustomizationIds[] = (int)$customizationFiled['id_customization_field'];
+            }
             //if the customization_field is still in use, only delete the current context shops langs,
-            //else delete all the langs
-            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE
-			`id_customization_field` = '.(int)$customizationFiled['id_customization_field'].
-            (in_array((int)$customizationFiled['id_customization_field'], $customization_ids) ? ' AND `id_shop` IN ('.implode(',', $shopList).')' : ''));
+            if (in_array((int)$customizationFiled['id_customization_field'], $customization_ids)) {
+                Customization::deleteCustomizationFieldLangByShop($customizationFiled['id_customization_field'], $shopList);
+            }
         }
 
         //remove unused customization for the product
-        if (!empty($customization_ids)) {
-            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE
-            `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
-        }
+        $product->deleteUnusedCustomizationFields($toDeleteCustomizationIds);
 
         //create new customizations
         $countFieldText = 0;
@@ -529,9 +546,15 @@ class AdminProductWrapper
 					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int)$customization['type'] . '
 					WHERE `id_customization_field` = '.$id_customization_field);
                 } else {
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
-                    	VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
-			$id_customization_field = (int)Db::getInstance()->Insert_ID();
+                    Db::getInstance()->execute(
+                        'INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+                    	VALUES ('
+                            .(int) $product->id.', '
+                            .(int) $customization['type'].', '
+                            .($customization['require'] ? 1 : 0)
+                        .')'
+                    );
+                    $id_customization_field = (int) Db::getInstance()->Insert_ID();
                 }
 
                 $new_customization_fields_ids[$key] = $id_customization_field;
@@ -541,10 +564,21 @@ class AdminProductWrapper
                 foreach (Language::getLanguages() as $language) {
                     $name = $customization['label'][$language['id_lang']];
                     foreach ($shopList as $id_shop) {
-                        $langValues .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.(int)$id_shop .',\''.pSQL($name).'\'), ';
+                        $langValues .= '('
+                            .(int) $id_customization_field.', '
+                            .(int) $language['id_lang'].', '
+                            .(int) $id_shop.',\''
+                            .pSQL($name)
+                            .'\'), ';
                     }
                 }
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '.rtrim($langValues, ', '));
+                Db::getInstance()->execute(
+                    'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '
+                    .rtrim(
+                        $langValues,
+                        ', '
+                    )
+                );
 
                 if ($customization['type'] == 0) {
                     $countFieldFile++;
@@ -742,7 +776,7 @@ class AdminProductWrapper
      *
      * @return string preview url
      */
-    public function getPreviewUrl($product, $preview=true)
+    public function getPreviewUrl($product, $preview = true)
     {
         $context = Context::getContext();
         $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
@@ -784,7 +818,7 @@ class AdminProductWrapper
 
         $admin_dir = dirname($_SERVER['PHP_SELF']);
         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-        $preview_url_deactivate = $preview_url . ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int)$context->employee->id;
+        $preview_url_deactivate = $preview_url . ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $token . '&ad=' . $admin_dir . '&id_employee=' . (int)$context->employee->id . '&preview=1';
 
         return $preview_url_deactivate;
     }

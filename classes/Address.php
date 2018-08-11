@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -197,6 +197,11 @@ class AddressCore extends ObjectModel
 
         if (Validate::isUnsignedId($this->id_customer)) {
             Customer::resetAddressCache($this->id_customer, $this->id);
+        }
+
+        /* Skip the required fields */
+        if ($this->isUsed()) {
+            self::$fieldsRequiredDatabase['Address'] = array();
         }
 
         return parent::update($null_values);
@@ -519,11 +524,6 @@ class AddressCore extends ObjectModel
      */
     public function getFieldsRequiredDB()
     {
-        $this->cacheFieldsRequiredDatabase(false);
-        if (isset(self::$fieldsRequiredDatabase['Address'])) {
-            return self::$fieldsRequiredDatabase['Address'];
-        }
-
-        return array();
+        return parent::getCachedFieldsRequiredDatabase();
     }
 }

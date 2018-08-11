@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -279,12 +279,12 @@ class CountryCore extends ObjectModel
     /**
      * Get a country id with its name
      *
-     * @param int    $idLang  Language ID
+     * @param int|null $idLang Language ID
      * @param string $country Country Name
      *
-*@return int Country ID
+     * @return int Country ID
      */
-    public static function getIdByName($idLang = null, $country)
+    public static function getIdByName($idLang, $country)
     {
         $sql = '
 		SELECT `id_country`

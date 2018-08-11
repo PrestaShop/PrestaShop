@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -378,7 +378,7 @@ class AdminTrackingControllerCore extends AdminController
         return $this->_helper_list->displayEnableLink($this->_list_token, $id, $value, $active, $id_category, $id_product);
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         $this->_helper_list->currentIndex = $this->_list_index;
         $this->_helper_list->identifier = $this->identifier;
@@ -387,7 +387,7 @@ class AdminTrackingControllerCore extends AdminController
         return $this->_helper_list->displayDeleteLink($this->_list_token, $id, $name);
     }
 
-    public function displayEditLink($token = null, $id, $name = null)
+    public function displayEditLink($token, $id, $name = null)
     {
         $this->_helper_list->currentIndex = $this->_list_index;
         $this->_helper_list->identifier = $this->identifier;

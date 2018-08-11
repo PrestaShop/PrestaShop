@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,15 +45,22 @@ use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\Cache;
+use PrestaShop\PrestaShop\Adapter\Entity\Cookie;
+use PrestaShop\PrestaShop\Adapter\Entity\Currency;
+use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShop\PrestaShop\Adapter\Entity\Cart;
+use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use InstallSession;
 use Language as LanguageLegacy;
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestashopInstallerException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
 use PhpEncryption;
-use PrestaShopBundle\Service\Database\Upgrade;
+use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 
 class Install extends AbstractInstall
 {
@@ -62,12 +69,40 @@ class Install extends AbstractInstall
 
     protected $logger;
 
+    /**
+     * The path of the bootsrap file we want to use for the installation
+     * @var string
+     */
+    protected $bootstrapFile = null;
+
+    /**
+     * The path of the settings file we want to use for the installation
+     *
+     * @var string
+     */
+    protected $settingsFile = null;
+
+    public function __construct($settingsFile = null, $bootstrapFile = null)
+    {
+        if ($bootstrapFile === null) {
+            $bootstrapFile = self::BOOTSTRAP_FILE;
+        }
+
+        if ($settingsFile === null) {
+            $settingsFile = self::SETTINGS_FILE;
+        }
+
+        $this->settingsFile = $settingsFile;
+        $this->bootstrapFile = $bootstrapFile;
+        parent::__construct();
+    }
+
     public function setError($errors)
     {
         static $logger = null;
 
         if (null === $logger) {
-            $cacheDir = _PS_ROOT_DIR_.'/app/logs/';
+            $cacheDir = _PS_ROOT_DIR_.'/var/logs/';
             $file = $cacheDir .(_PS_MODE_DEV_ ? 'dev' : 'prod').'_'.@date('Ymd').'_installation.log';
             $logger = new FileLogger();
             $logger->setFilename($file);
@@ -98,18 +133,18 @@ class Install extends AbstractInstall
     ) {
         // Check permissions for settings file
         if (
-            file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
-            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
+            file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->settingsFile)
+            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->settingsFile)
         ) {
-            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file%' => self::SETTINGS_FILE), 'Install'));
+            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file%' => $this->settingsFile), 'Install'));
             return false;
         } elseif (
-            !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
-            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))
+            !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->settingsFile)
+            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname($this->settingsFile))
         ) {
             $this->setError($this->translator->trans(
                 '%folder% folder is not writable (check permissions)',
-                array('%folder%' => dirname(self::SETTINGS_FILE)), 'Install')
+                array('%folder%' => dirname($this->settingsFile)), 'Install')
             );
             return false;
         }
@@ -159,7 +194,7 @@ class Install extends AbstractInstall
         $settings_content = "<?php\n";
         $settings_content .= "//@deprecated 1.7";
 
-        if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content)) {
+        if (!file_put_contents(_PS_ROOT_DIR_.'/'.$this->settingsFile, $settings_content)) {
             $this->setError($this->translator->trans('Cannot write settings file', array(), 'Install'));
             return false;
         }
@@ -205,20 +240,17 @@ class Install extends AbstractInstall
 
     protected function clearCache()
     {
-        $output = Tools::clearSf2Cache('prod');
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
-            return false;
+        if (defined('_PS_IN_TEST_')) {
+            return true;
         }
 
-        $output = Tools::clearSf2Cache();
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
+        try {
+            Tools::clearSf2Cache('prod');
+            Tools::clearSf2Cache('dev');
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage());
             return false;
         }
-
         return true;
     }
 
@@ -229,7 +261,7 @@ class Install extends AbstractInstall
     public function installDatabase($clear_database = false)
     {
         // Clear database (only tables with same prefix)
-        require_once _PS_ROOT_DIR_.'/'.self::BOOTSTRAP_FILE;
+        require_once _PS_ROOT_DIR_.'/'.$this->bootstrapFile;
         if ($clear_database) {
             $this->clearDatabase();
         }
@@ -271,7 +303,10 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new Upgrade();
+        if (defined('_PS_IN_TEST_')) {
+            return true;
+        }
+        $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 
@@ -293,15 +328,86 @@ class Install extends AbstractInstall
     {
         $instance = Db::getInstance();
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
-        $sqlRequest = (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
-            if (!_DB_PREFIX_ || preg_match('#^'._DB_PREFIX_.'#i', $table)) {
-                $sqlRequest .= ' `'.$table.'`,';
+            if (!_DB_PREFIX_ || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
+                $instance->execute((($truncate) ? 'TRUNCATE TABLE ' : 'DROP TABLE ').'`' . $table . '`');
             }
         }
-        $instance->execute(rtrim($sqlRequest, ','));
+
         $instance->execute('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+    /**
+     * Install Cldr Datas
+     */
+    public function installCldrDatas()
+    {
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate->init();
+
+        //get each defined languages and fetch cldr datas
+        $langs = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+        foreach ($langs as $lang) {
+            $cldrRepository = Tools::getCldr(null, $lang['locale']);
+            $language_code = explode('-', $cldrRepository->getCulture());
+            if (count($language_code) == 1) {
+                $cldrUpdate->fetchLocale($language_code['0']);
+            } else {
+                $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+            }
+        }
+    }
+
+    /**
+     * Initialize the prestashop context with default values during tests
+     */
+    public function initializeTestContext()
+    {
+        $smarty = null;
+        // Clean all cache values
+        Cache::clean('*');
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $this->language->setLanguage('en');
+        $context = Context::getContext();
+        $context->shop = new Shop(1);
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Configuration::loadConfiguration();
+        if (!isset($context->language) || !Validate::isLoadedObject($context->language)) {
+            $context->language = new Language('en');
+        }
+
+        if (!isset($context->country) || !Validate::isLoadedObject($context->country)) {
+            if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT')) {
+                $context->country = new Country((int)$id_country);
+            }
+        }
+        if (!isset($context->currency) || !Validate::isLoadedObject($context->currency)) {
+            if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT')) {
+                $context->currency = new Currency((int)$id_currency);
+            }
+        }
+
+        /* Instantiate cookie */
+        $cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : (int)Configuration::get('PS_COOKIE_LIFETIME_FO');
+        if ($cookie_lifetime > 0) {
+            $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+        }
+
+        $cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, 'localhost', false, false);
+
+        $context->cookie = $cookie;
+
+        $context->cart = new Cart();
+        $context->employee = new Employee(1);
+        if (!defined('_PS_SMARTY_FAST_LOAD_')) {
+            define('_PS_SMARTY_FAST_LOAD_', true);
+        }
+        require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+
+        $context->smarty = $smarty;
     }
 
     /**
@@ -334,10 +440,10 @@ class Install extends AbstractInstall
                         }
                     }
                 }
+                $iso_codes_to_install = array_unique($iso_codes_to_install);
             } else {
                 $iso_codes_to_install = null;
             }
-            $iso_codes_to_install = array_flip(array_flip($iso_codes_to_install));
             $languages = $this->installLanguages($iso_codes_to_install);
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
@@ -372,39 +478,46 @@ class Install extends AbstractInstall
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
-        if ($entity) {
-            $xml_loader->populateEntity($entity);
-        } else {
-            $xml_loader->populateFromXmlFiles();
-        }
-        if ($errors = $xml_loader->getErrors()) {
-            $this->setError($errors);
-            return false;
-        }
-
-        // IDS from xmlLoader are stored in order to use them for fixtures
-        $this->xml_loader_ids = $xml_loader->getIds();
-        unset($xml_loader);
-
-        // Install custom SQL data (db_data.sql file)
-        if (file_exists(_PS_INSTALL_DATA_PATH_.'db_data.sql')) {
-            $sql_loader = new SqlLoader();
-            $sql_loader->setMetaData(array(
-                'PREFIX_' => _DB_PREFIX_,
-                'ENGINE_TYPE' => _MYSQL_ENGINE_,
-            ));
-
-            $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_data.sql', false);
-            if ($errors = $sql_loader->getErrors()) {
+        try {
+            if ($entity) {
+                $xml_loader->populateEntity($entity);
+            } else {
+                $xml_loader->populateFromXmlFiles();
+            }
+            if ($errors = $xml_loader->getErrors()) {
                 $this->setError($errors);
                 return false;
             }
+
+            // IDS from xmlLoader are stored in order to use them for fixtures
+            $this->xml_loader_ids = $xml_loader->getIds();
+            unset($xml_loader);
+
+            // Install custom SQL data (db_data.sql file)
+            if (file_exists(_PS_INSTALL_DATA_PATH_.'db_data.sql')) {
+                $sql_loader = new SqlLoader();
+                $sql_loader->setMetaData(array(
+                    'PREFIX_' => _DB_PREFIX_,
+                    'ENGINE_TYPE' => _MYSQL_ENGINE_,
+                ));
+
+                $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_data.sql', false);
+                if ($errors = $sql_loader->getErrors()) {
+                    $this->setError($errors);
+                    return false;
+                }
+            }
+
+            // Copy language default images (we do this action after database in populated because we need image types information)
+            foreach ($languages as $iso) {
+                $this->copyLanguageImages($iso);
+            }
+
+        } catch (PrestashopInstallerException $e) {
+            $this->setError($e->getMessage());
+            return false;
         }
 
-        // Copy language default images (we do this action after database in populated because we need image types information)
-        foreach ($languages as $iso) {
-            $this->copyLanguageImages($iso);
-        }
 
         return true;
     }
@@ -431,6 +544,7 @@ class Install extends AbstractInstall
             $this->setError($this->translator->trans('Cannot create shop', array(), 'Install').' / '.Db::getInstance()->getMsgError());
             return false;
         }
+        $shop->setTheme();
         Context::getContext()->shop = $shop;
 
         // Create default shop URL
@@ -470,6 +584,7 @@ class Install extends AbstractInstall
                 EntityLanguage::downloadAndInstallLanguagePack($iso);
                 continue;
             }
+
             if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml')) {
                 throw new PrestashopInstallerException($this->translator->trans('File "language.xml" not found for language iso "%iso%"', array('%iso%' => $iso), 'Install'));
             }
@@ -593,6 +708,7 @@ class Install extends AbstractInstall
             'smtp_encryption' => 'off',
             'smtp_port' => 25,
             'rewrite_engine' => false,
+            'enable_ssl' => false,
         );
 
         foreach ($default_data as $k => $v) {
@@ -617,6 +733,10 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', $data['shop_country']);
         Configuration::updateGlobalValue('PS_TIMEZONE', $data['shop_timezone']);
         Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT', (int)$data['configuration_agrement']);
+
+        // Set SSL configuration
+        Configuration::updateGlobalValue('PS_SSL_ENABLED', (int)$data['enable_ssl']);
+        Configuration::updateGlobalValue('PS_SSL_ENABLED_EVERYWHERE', (int)$data['enable_ssl']);
 
         // Set mails configuration
         Configuration::updateGlobalValue('PS_MAIL_METHOD', ($data['use_smtp']) ? 2 : 1);
@@ -739,6 +859,7 @@ class Install extends AbstractInstall
             }
         } else {
             $modules = array(
+                'contactform',
                 'dashactivity',
                 'dashtrends',
                 'dashgoals',
@@ -764,6 +885,7 @@ class Install extends AbstractInstall
                 'ps_sharebuttons',
                 'ps_shoppingcart',
                 'ps_socialfollow',
+                'ps_themecusto',
                 'ps_wirepayment',
                 'pagesnotfound',
                 'sekeywords',
@@ -986,7 +1108,13 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        Search::indexation(true);
+        if ($entity === 'category' || $entity === null) {
+            Category::regenerateEntireNtree();
+        }
+
+        if ($entity === null) {
+            Search::indexation(true);
+        }
 
         // Update fixtures lang
         foreach ($languages as $lang) {

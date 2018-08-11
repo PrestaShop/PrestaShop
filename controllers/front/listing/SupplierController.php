@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -73,10 +73,16 @@ class SupplierControllerCore extends ProductListingFrontController
     public function initContent()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            parent::initContent();
+
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
                 $this->label = $this->trans(
-                    'List of products by supplier %s', array($this->supplier->name), 'Shop.Theme.Catalog'
+                    'List of products by supplier %supplier_name%',
+                    array(
+                        '%supplier_name%' => $this->supplier->name
+                    ),
+                    'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
                     'catalog/listing/supplier',
@@ -89,7 +95,6 @@ class SupplierControllerCore extends ProductListingFrontController
                 );
                 $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }
-            parent::initContent();
         } else {
             $this->redirect_after = '404';
             $this->redirect();

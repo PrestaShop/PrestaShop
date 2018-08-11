@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -140,7 +140,11 @@ class StockAvailableCore extends ObjectModel
         //if product is pack sync recursivly product in pack
         if (Pack::isPack($id_product)) {
             if (Validate::isLoadedObject($product = new Product((int)$id_product))) {
-                if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
+                    || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                    || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                        && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
+                ) {
                     $products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
                     foreach ($products_pack as $product_pack) {
                         StockAvailable::synchronize($product_pack->id, $order_id_shop);
@@ -200,9 +204,8 @@ class StockAvailableCore extends ObjectModel
                                         'id_shop' => $id_shop
                                         )
                     );
-                }
-                // else this product has attributes, hence loops on $ids_product_attribute
-                else {
+                } else {
+                    // else this product has attributes, hence loops on $ids_product_attribute
                     foreach ($ids_product_attribute as $id_product_attribute) {
                         $allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
                         $allowed_warehouse_for_combination_clean = array();

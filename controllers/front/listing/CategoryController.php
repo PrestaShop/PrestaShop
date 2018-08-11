@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,9 @@ class CategoryControllerCore extends ProductListingFrontController
     /** @var bool If set to false, customer cannot view the current category. */
     public $customer_access = true;
 
+    /**
+     * @var Category
+     */
     protected $category;
 
     public function canonicalRedirection($canonicalURL = '')
@@ -84,7 +87,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
         $categoryVar = $this->getTemplateVarCategory();
 
-        $filteredCategory= Hook::exec(
+        $filteredCategory = Hook::exec(
             'filterCategoryContent',
             array('object' => $categoryVar),
             $id_module = null,
@@ -102,8 +105,39 @@ class CategoryControllerCore extends ProductListingFrontController
             'category' => $categoryVar,
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
+    }
 
-        $this->doProductSearch('catalog/listing/category', array('entity' => 'category', 'id' => $id_category));
+    /**
+     * @inheritdoc
+     */
+    public function initContent()
+    {
+        parent::initContent();
+
+        if ($this->category->checkAccess($this->context->customer->id)) {
+            $this->doProductSearch(
+                'catalog/listing/category',
+                [
+                    'entity' => 'category',
+                    'id'     => $this->category->id,
+                ]
+            );
+        }
+    }
+
+    /**
+     * overrides layout if category is not visible
+     *
+     * @return bool|string
+     */
+    public function getLayout()
+    {
+
+        if (!$this->category->checkAccess($this->context->customer->id)) {
+            return 'layouts/layout-full-width.tpl';
+        }
+
+        return parent::getLayout();
     }
 
     protected function getProductSearchQuery()

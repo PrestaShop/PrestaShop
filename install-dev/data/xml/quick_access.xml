@@ -20,5 +20,8 @@
     <quick_access id="Installed_modules" new_window="0">
       <link>index.php/module/manage</link>
     </quick_access>
+    <quick_access id="Catalog_evaluation" new_window="0">
+      <link>index.php?controller=AdminStats&amp;module=statscheckup</link>
+    </quick_access>
   </entities>
 </entity_quick_access>

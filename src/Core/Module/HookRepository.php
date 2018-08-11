@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -104,25 +104,23 @@ class HookRepository
      * Saves hook settings for a list of hooks.
      * The $hooks array should have this format:
      * [
-     * 		"hookName" => [
-     * 			"module1",
-     * 			"module2",
-     * 			"module3" => [
-     * 				"except_pages" => [
-     * 					"page1",
-     * 					"page2",
-     * 					"page3"
-     * 				]
-     * 			]
-     * 		]
+     *     "hookName" => [
+     *         "module1",
+     *         "module2",
+     *         "module3" => [
+     *             "except_pages" => [
+     *                 "page1",
+     *                 "page2",
+     *                 "page3"
+     *             ]
+     *         ]
+     *     ]
      * ]
      * Only hooks present as keys in the $hooks array are affected and all changes
      * are only done for the shop this Repository belongs to.
      */
     public function persistHooksConfiguration(array $hooks)
     {
-        $hook_module = [];
-
         foreach ($hooks as $hook_name => $module_names) {
             $id_hook = $this->getIdByName($hook_name);
             if (!$id_hook) {

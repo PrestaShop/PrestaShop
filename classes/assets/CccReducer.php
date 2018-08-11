@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,8 +55,9 @@ class CccReducerCore
                 unset($cssFileList['external'][$key]);
             }
         }
-
-        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).'.css';
+        
+        $version = Configuration::get('PS_CCCCSS_VERSION');
+        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).$version.'.css';
         $destinationPath = $this->cacheDir.$cccFilename;
 
         if (!$this->filesystem->exists($destinationPath)) {
@@ -91,8 +92,9 @@ class CccReducerCore
                 // No file to CCC
                 continue;
             }
-
-            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).'.js';
+            
+            $version = Configuration::get('PS_CCCJS_VERSION');
+            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).$version.'.js';
             $destinationPath = $this->cacheDir.$cccFilename;
 
             if (!$this->filesystem->exists($destinationPath)) {

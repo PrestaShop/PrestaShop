@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="module-top-menu">
     <div class="row">
-        <div class="col-md-8 module-menu-item">
+        <div class="col-md-8">
+            <div class="input-group" id="search-input-group">
+                <input type="text" id="module-search-bar" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-primary float-right search-button" id="module-search-button">
+                        <i class="material-icons">search</i>
+                        {{ 'Search'|trans({}, 'Admin.Actions') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 module-menu-item">
             {% if topMenuData is defined %}
                 {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
             {% endif %}
@@ -32,16 +44,6 @@
                 {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_status.html.twig' %}
             {% endif %}
         </div>
-
-        <div class="col-md-4">
-            <div class="input-group module-search-block">
-                <span class="input-group-addon module-search-icon">
-                    <i class="material-icons">search</i>
-                </span>
-                <input id="module-search-bar" class="module-search-bar form-control" type="text">
-            </div>
-        </div>
-
     </div>
 </div>
 

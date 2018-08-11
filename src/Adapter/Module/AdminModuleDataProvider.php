@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
@@ -35,6 +36,8 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
 use Module as LegacyModule;
 use Context;
+use Employee;
+use Tools;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -48,12 +51,19 @@ class AdminModuleDataProvider implements ModuleInterface
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
+    /**
+     * @var array of defined and callable module actions
+     */
+    protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
+
     private $languageISO;
     private $logger;
     private $router = null;
     private $addonsDataProvider;
     private $categoriesProvider;
+    private $moduleProvider;
     private $cacheProvider;
+    private $employee;
 
     protected $catalog_modules = array();
     protected $catalog_modules_names;
@@ -64,14 +74,18 @@ class AdminModuleDataProvider implements ModuleInterface
         LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
-        CacheProvider $cacheProvider = null
+        ModuleDataProvider $modulesProvider,
+        CacheProvider $cacheProvider = null,
+        Employee $employee = null
     ) {
         list($this->languageISO) = explode('-', $translator->getLocale());
 
         $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
+        $this->moduleProvider = $modulesProvider;
         $this->cacheProvider = $cacheProvider;
+        $this->employee = $employee;
     }
 
     public function setRouter(Router $router)
@@ -87,6 +101,10 @@ class AdminModuleDataProvider implements ModuleInterface
         $this->catalog_modules = array();
     }
 
+    /**
+     * @deprecated since version 1.7.3.0
+     * @return array
+     */
     public function getAllModules()
     {
         return LegacyModule::getModulesOnDisk(true,
@@ -111,11 +129,55 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
-    public function generateAddonsUrls(array $addons, $specific_action = null)
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a module
+     *
+     * @param array $actions Actions to check
+     * @param string $name The module name
+     * @return array of allowed actions
+     */
+    protected function filterAllowedActions(array $actions, $name = '')
     {
+        $allowedActions = array();
+        foreach (array_keys($actions) as $actionName) {
+            if ($this->isAllowedAccess($actionName, $name)) {
+                $allowedActions[$actionName] = $actions[$actionName];
+            }
+        }
+        return $allowedActions;
+    }
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a specified action
+     *
+     * @param string $action The action called in the module
+     * @param string $name (Optionnal for 'install') The module name to check
+     * @return boolean
+     */
+    public function isAllowedAccess($action, $name = '')
+    {
+        if (Tools::isPHPCLI()) {
+            return true;
+        }
+
+        if (in_array($action, array('install', 'upgrade'))) {
+            return $this->employee->can('add', 'AdminModulessf');
+        }
+
+        if ('uninstall' === $action) {
+            return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
+        }
+
+        return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
+    }
+
+    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
+    {
+        $addons = $addons->toArray();
         foreach ($addons as &$addon) {
             $urls = array();
-            foreach (array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade') as $action) {
+            foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -125,14 +187,14 @@ class AdminModuleDataProvider implements ModuleInterface
                 'module_name' => $addon->attributes->get('name'),
             ));
 
-            if ($addon->database->has('installed') && $addon->database->get('installed') == 1) {
-                if ($addon->database->get('active') == 0) {
+            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
+                if (!$addon->database->getBoolean('active')) {
                     $url_active = 'enable';
                     unset(
                         $urls['install'],
                         $urls['disable']
                     );
-                } elseif ($addon->attributes->get('is_configurable') == 1) {
+                } elseif ($addon->attributes->getBoolean('is_configurable')) {
                     $url_active = 'configure';
                     unset(
                         $urls['enable'],
@@ -147,7 +209,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     );
                 }
 
-                if ($addon->attributes->get('is_configurable') == 0) {
+                if (!$addon->attributes->getBoolean('is_configurable')) {
                     unset($urls['configure']);
                 }
 
@@ -158,7 +220,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $urls['upgrade']
                     );
                 }
-                if ($addon->database->get('active_on_mobile') == 0) {
+                if (!$addon->database->getBoolean('active_on_mobile')) {
                     unset($urls['disable_mobile']);
                 } else {
                     unset($urls['enable_mobile']);
@@ -170,8 +232,8 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
             } elseif (
                 !$addon->attributes->has('origin') ||
-                $addon->disk->get('is_present') == true ||
-                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))
+                $addon->disk->getBoolean('is_present') ||
+                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'), true)
             ) {
                 $url_active = 'install';
                 unset(
@@ -187,13 +249,15 @@ class AdminModuleDataProvider implements ModuleInterface
             } else {
                 $url_active = 'buy';
             }
-            if (count($urls)) {
-                $addon->attributes->set('urls', $urls);
-            }
+
+            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
+            $addon->attributes->set('urls', $urls);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
-            } else {
+            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
                 $addon->attributes->set('url_active', $url_active);
+            } else {
+                $addon->attributes->set('url_active', key($urls));
             }
 
             $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
@@ -284,6 +348,12 @@ class AdminModuleDataProvider implements ModuleInterface
 
                     $addons = $this->addonsDataProvider->request($action, $params);
                     foreach ($addons as $addonsType => $addon) {
+                        if (empty($addon->name)) {
+                            $this->logger->error(sprintf("The addon with id %s does not have name.", $addon->id));
+
+                            continue;
+                        }
+
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider

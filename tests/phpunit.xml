@@ -1,12 +1,15 @@
 <phpunit bootstrap="bootstrap.php">
     <php>
-        <server name="KERNEL_DIR" value="../app/" />
+        <server name="KERNEL_CLASS" value="AppKernel" />
+        <env name="SYMFONY_ENV" value="test"/>
+        <env name="kernel.environment" value="test" />
     </php>
     <groups>
         <exclude>
             <group>admin</group>
             <group>demo</group>
             <group>api</group>
+            <group>sf</group>
         </exclude>
     </groups>
     <testsuites>

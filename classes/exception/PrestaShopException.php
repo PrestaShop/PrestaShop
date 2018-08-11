@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,7 +39,10 @@ class PrestaShopExceptionCore extends Exception
         }
 
         header('HTTP/1.1 500 Internal Server Error');
-        if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
+        if (ToolsCore::isPHPCLI()) { 
+            echo get_class($this).' in '. $this->getFile() .' line '. $this->getLine()."\n";
+            echo $this->getTraceAsString()."\n";
+        } elseif (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
@@ -149,7 +152,7 @@ class PrestaShopExceptionCore extends Exception
     protected function logError()
     {
         $logger = new FileLogger();
-        $logger->setFilename(_PS_ROOT_DIR_.'/app/logs/'.date('Ymd').'_exception.log');
+        $logger->setFilename(_PS_ROOT_DIR_.'/var/logs/'.date('Ymd').'_exception.log');
         $logger->logError($this->getExtendedMessage(false));
     }
 

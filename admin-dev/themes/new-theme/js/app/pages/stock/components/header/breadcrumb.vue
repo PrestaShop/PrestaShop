@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,25 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="m-b-1">
-    <small>
-      <a :href="catalogLink">{{trans('link_catalog')}}</a> /
-      <a :href="stockLink">{{trans('link_stock')}}</a> /
-      <span v-if="isOverview">{{trans('link_overview')}}</span>
-      <span v-else>{{trans('link_movements')}}</span>
-    </small>
-  </div>
+  <nav aria-label="Breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a :href="catalogLink">{{trans('link_catalog')}}</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a :href="stockLink">{{trans('link_stock')}}</a>
+      </li>
+      <li class="breadcrumb-item active">
+        <span v-if="isOverview">{{trans('link_overview')}}</span>
+        <span v-else>{{trans('link_movements')}}</span>
+      </li>
+    </ol>
+  </nav>
 </template>
 
 <script>

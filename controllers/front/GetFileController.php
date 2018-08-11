@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -85,8 +85,9 @@ class GetFileControllerCore extends FrontController
             /* check whether order has been paid, which is required to download the product */
             $order = new Order((int)$info['id_order']);
             $state = $order->getCurrentOrderState();
-            if (!$state || !$state->paid)
+            if (!$state || !$state->paid) {
                 $this->displayCustomError('This order has not been paid.');
+            }
 
             /* Product no more present in catalog */
             if (!isset($info['id_product_download']) || empty($info['id_product_download'])) {
@@ -315,24 +316,25 @@ class GetFileControllerCore extends FrontController
     protected function displayCustomError($msg)
     {
         $translations = array(
-        'Invalid key.' => $this->trans('Invalid key.', array(), 'Shop.Notifications.Error'),
-        'This product does not exist in our store.' => $this->trans('This product does not exist in our store.', array(), 'Shop.Notifications.Error'),
-        'This product has been deleted.' => $this->trans('This product has been deleted.', array(), 'Shop.Notifications.Error'),
-        'This file no longer exists.'    => $this->trans('This file no longer exists.', array(), 'Shop.Notifications.Error'),
-        'This product has been refunded.' => $this->trans('This product has been refunded.', array(), 'Shop.Notifications.Error'),
-        'The product deadline is in the past.' => $this->trans('The product deadline is in the past.', array(), 'Shop.Notifications.Error'),
-        'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', array(), 'Shop.Notifications.Error'),
-        'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', array(), 'Shop.Notifications.Error'),
-        'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', array(), 'Shop.Notifications.Error'));
+            'Invalid key.' => $this->trans('Invalid key.', array(), 'Shop.Notifications.Error'),
+            'This product does not exist in our store.' => $this->trans('This product does not exist in our store.', array(), 'Shop.Notifications.Error'),
+            'This product has been deleted.' => $this->trans('This product has been deleted.', array(), 'Shop.Notifications.Error'),
+            'This file no longer exists.'    => $this->trans('This file no longer exists.', array(), 'Shop.Notifications.Error'),
+            'This product has been refunded.' => $this->trans('This product has been refunded.', array(), 'Shop.Notifications.Error'),
+            'The product deadline is in the past.' => $this->trans('The product deadline is in the past.', array(), 'Shop.Notifications.Error'),
+            'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', array(), 'Shop.Notifications.Error'),
+            'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', array(), 'Shop.Notifications.Error'),
+            'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', array(), 'Shop.Notifications.Error')
+        );
         ?>
-		<script type="text/javascript">
-		//<![CDATA[
-		alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8');
+        <script type="text/javascript">
+        //<![CDATA[
+        alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8');
         ?>");
-		window.location.href = '<?php echo __PS_BASE_URI__ ?>';
-		//]]>
-		</script>
-		<?php
+        window.location.href = '<?php echo __PS_BASE_URI__ ?>';
+        //]]>
+        </script>
+        <?php
         exit();
     }
 }

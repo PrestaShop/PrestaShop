@@ -1,80 +1,213 @@
-<?xml version='1.0'?>
+<?xml version="1.0"?>
 <entity_product>
-  <product id='Faded_Short_Sleeve_T-shirts' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Camiseta de manga curta desbotada com decote alto. Material macio e elástico para um ajuste confortável. Adicione um chapéu de palha e estará pronta para o verão!&lt;/p&gt;</description_short>
-    <link_rewrite>camisetas-de-manga-curta-desbotadas</link_rewrite>
+  <product id="Hummingbird_printed_t-shirt" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;color:#efefef;"&gt;Symbol of lightness and delicacy, the hummingbird evokes curiosity and joy.&lt;/span&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt; Studio Design' PolyFaune collection features classic products with colorful patterns, inspired by the traditional japanese origamis. To wear with a chino or jeans. The sublimation textile printing process provides an exceptional color rendering and a color, guaranteed overtime.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Regular fit, round neckline, short sleeves. Made of extra long staple pima cotton. &lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>hummingbird-printed-t-shirt</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Camisetas de manga curta desbotadas</name>
-    <available_now>Em estoque</available_now>
+    <name>Hummingbird printed t-shirt</name>
+    <available_now/>
     <available_later/>
   </product>
-  <product id='Blouse' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Blusa de manga curta com detalhe drapeado e feminino na manga.&lt;/p&gt;</description_short>
-    <link_rewrite>blusa</link_rewrite>
+  <product id="Hummingbird_printed_sweater" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Studio Design' PolyFaune collection features classic products with colorful patterns, inspired by the traditional japanese origamis. To wear with a chino or jeans. The sublimation textile printing process provides an exceptional color rendering and a color, guaranteed overtime.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Regular fit, round neckline, long sleeves. 100% cotton, brushed inner side for extra comfort. &lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>brown-bear-printed-sweater</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Blusa</name>
-    <available_now>Em estoque</available_now>
+    <name>Hummingbird printed sweater</name>
+    <available_now/>
     <available_later/>
   </product>
-  <product id='Printed_Dress' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Vestido estampado 100% algodão duplo. Parte de cima listrada em preto e branco e saia de patinadora cintura alta laranja.&lt;/p&gt;</description_short>
-    <link_rewrite>vestido-estampado</link_rewrite>
+  <product id="The_best_is_yet_to_come_Framed_poster" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The best is yet to come! Give your walls a voice with a framed poster. This aesthethic, optimistic poster will look great in your desk or in an open-space office. Painted wooden frame with passe-partout for more depth.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;Printed on rigid matt paper and smooth surface.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>the-best-is-yet-to-come-framed-poster</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Vestido estampado</name>
-    <available_now>Em estoque</available_now>
+    <name>The best is yet to come' Framed poster</name>
+    <available_now/>
     <available_later/>
   </product>
-  <product id='Printed_Dress_1' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Vestido de noite estampado com mangas retas, cinto fino preto e babados forrados.&lt;/p&gt;</description_short>
-    <link_rewrite>vestido-estampado</link_rewrite>
+  <product id="The_adventure_begins_Framed_poster" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The best is yet to come! Give your walls a voice with a framed poster. This aesthethic, optimistic poster will look great in your desk or in an open-space office. Painted wooden frame with passe-partout for more depth.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;Printed on rigid matt finish and smooth surface.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>the-adventure-begins-framed-poster</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Vestido estampado</name>
-    <available_now>Em estoque</available_now>
+    <name>The adventure begins Framed poster</name>
+    <available_now/>
     <available_later/>
   </product>
-  <product id='Printed_Summer_Dress' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Vestido longo estampado com alças finas reguláveis. Decote em V e filamentos sob o busto com babados na parte de baixo.&lt;/p&gt;</description_short>
-    <link_rewrite>vestido-estampado-de-verao</link_rewrite>
+  <product id="Today_is_a_good_day_Framed_poster" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The best is yet to come! Give your walls a voice with a framed poster. This aesthethic, optimistic poster will look great in your desk or in an open-space office. Painted wooden frame with passe-partout for more depth.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;Printed on rigid paper with matt finish and smooth surface.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>today-is-a-good-day-framed-poster</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Vestido estampado de verão</name>
-    <available_now>Em estoque</available_now>
+    <name>Today is a good day Framed poster</name>
+    <available_now/>
     <available_later/>
   </product>
-  <product id='Printed_Summer_Dress_1' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Vestido chiffon sem mangas na altura do joelho. Decote em V com elástico sob o forro do peito.&lt;/p&gt;</description_short>
-    <link_rewrite>vestido-estampado-de-verao</link_rewrite>
+  <product id="Mug_The_best_is_yet_to_come" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The best is yet to come! Start the day off right with a positive thought. 8,2cm diameter / 9,5cm height / 0.43kg. Dishwasher-proof.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;White Ceramic Mug, 325ml.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mug-the-best-is-yet-to-come</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Vestido estampado de verão</name>
-    <available_now>Em estoque</available_now>
+    <name>Mug The best is yet to come</name>
+    <available_now/>
     <available_later/>
   </product>
-  <product id='Printed_Chiffon_Dress' id_shop='1'>
-    <description>&lt;p&gt;Desde 2010, a Fashion cria coleções de belas peças. No início, a marca propunha vestidos com design feminino elegantes e formais. Depois, eles transformaram-se em uma coleção completa de ready-to-wear, cada item sendo uma parte vital no guarda-roupa de uma mulher. O resultado? Looks &quot;cool&quot;, fáceis, chiques, com elegância jovem e um estilo inconfundível. Todas as peças são confeccionadas na Itália e fabricadas com a maior atenção. Agora, a Fashion foi ampliada e também oferece uma gama de acessórios que incluem calçados, chapéus, cintos e muito mais!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Vestido chiffon de alça estampado na altura do joelho. Decote em V.&lt;/p&gt;</description_short>
-    <link_rewrite>vestido-de-chiffon-estampado</link_rewrite>
+  <product id="Mug_The_adventure_begins" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The adventure begins with a cup of coffee. Set out to conquer the day! 8,2cm diameter / 9,5cm height / 0.43kg. Dishwasher-proof.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;White Ceramic Mug. 325ml&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mug-the-adventure-begins</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Vestido de chiffon estampado</name>
-    <available_now>Em estoque</available_now>
+    <name>Mug The adventure begins</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Mug_Today_is_a_good_day" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Add an optimistic touch to your morning coffee and start the day in a good mood! 8,2cm diameter / 9,5cm height / 0.43kg. Dishwasher-proof.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;White Ceramic Mug. 325ml&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mug-today-is-a-good-day</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Mug Today is a good day</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Mountain_fox_cushion" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;The mountain fox cushion will add a graphic and colorful touch to your sofa, armchair or bed. Create a modern and zen atmosphere that inspires relaxation. Cover 100% cotton, machine washable at 60&#xB0; / Filling 100% hypoallergenic polyester.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Cushion with removable cover and invisible zip on the back. 32x32cm&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mountain-fox-cushion</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Mountain fox cushion</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Brown_bear_cushion" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;The brown bear cushion will add a graphic and colorful touch to your sofa, armchair or bed. Create a modern and zen atmosphere that inspires relaxation. Cover 100% cotton, machine washable at 60&#xB0; / Filling 100% hypoallergenic polyester.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Cushion with removable cover and invisible zip on the back. 32x32cm&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>brown-bear-cushion</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Brown bear cushion</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Hummingbird_cushion" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;The hummingbird cushion will add a graphic and colorful touch to your sofa, armchair or bed. Create a modern and zen atmosphere that inspires relaxation. Cover 100% cotton, machine washable at 60&#xB0; / Filling 100% hypoallergenic polyester.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Cushion with removable cover and invisible zip on the back. 32x32cm&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>hummingbird-cushion</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Hummingbird cushion</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Mountain_fox_-_Vector_graphics" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;You have a custom printing creative project? The vector graphic Mountain fox illustration can be used for printing purpose on any support, without size limitation. &lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Vector graphic, format: svg. Download for personal, private and non-commercial use.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mountain-fox-vector-graphics</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Mountain fox - Vector graphics</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Brown_bear_-_Vector_graphics" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;You have a custom printing creative project? The vector graphic Mountain fox illustration can be used for printing purpose on any support, without size limitation. &lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Vector graphic, format: svg. Download for personal, private and non-commercial use.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>brown-bear-vector-graphics</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Brown bear - Vector graphics</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Hummingbird_-_Vector_graphics" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;You have a custom printing creative project? The vector graphic Mountain fox illustration can be used for printing purpose on any support, without size limitation. &lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Vector graphic, format: svg. Download for personal, private and non-commercial use.&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>hummingbird-vector-graphics</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Hummingbird - Vector graphics</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Pack_Mug_Framed_poster" id_shop="1">
+    <description/>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Mug The Adventure Begins + Framed poster Today is a good day 40x60cm &lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>pack-mug-framed-poster</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Pack Mug + Framed poster</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Mountain_fox_notebook" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The Mountain fox notebook is the best option to write down your most ingenious ideas. At work, at home or when traveling, its endearing design and manufacturing quality will make you feel like writing! 90 gsm paper / double spiral binding.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;120 sheets notebook with hard cover made of recycled cardboard. 16x22cm&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mountain-fox-notebook</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Mountain fox notebook</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Brown_bear_notebook" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The Mountain fox notebook is the best option to write down your most ingenious ideas. At work, at home or when traveling, its endearing design and manufacturing quality will make you feel like writing! 90 gsm paper / double spiral binding.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;120 sheets notebook with hard cover made of recycled cardboard. 16x22cm&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mountain-fox-notebook</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Brown bear notebook</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Hummingbird_notebook" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;The Mountain fox notebook is the best option to write down your most ingenious ideas. At work, at home or when traveling, its endearing design and manufacturing quality will make you feel like writing! 90 gsm paper / double spiral binding.&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;120 sheets notebook with hard cover made of recycled cardboard. 16x22cm&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>mountain-fox-notebook</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Hummingbird notebook</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Customizable_mug" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Customize your mug with the text of your choice. A mood, a message, a quote... It's up to you! Maximum number of characters:&lt;/span&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;color:#ff9900;"&gt; ---&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;White Ceramic Mug. 325ml&lt;/span&gt;&lt;/p&gt;</description_short>
+    <link_rewrite>customizable-mug</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Customizable mug</name>
+    <available_now/>
     <available_later/>
   </product>
 </entity_product>

@@ -97,12 +97,6 @@ File: classes/form/CustomerFormatter.php:133</note>
 File: classes/form/CustomerFormatter.php:140
  Comment: Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.</note>
       </trans-unit>
-      <trans-unit id="dc647eb65e6711e155375218212b3964">
-        <source>Password</source>
-        <target>Password</target>
-        <note>Context:
-File: classes/form/CustomerFormatter.php:161</note>
-      </trans-unit>
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
         <target>Social title</target>
@@ -127,46 +121,76 @@ File: themes/StarterTheme/templates/customer/password-email.tpl:46</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/form/CustomerLoginFormatter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dc647eb65e6711e155375218212b3964">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Context:
+File: classes/form/CustomerLoginFormatter.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-new.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3544848f820b9d94a3f3871a382cf138">
         <source>New password</source>
         <target>New password</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/password-new.tpl:45</note>
+File: themes/classic/templates/customer/password-new.tpl:56</note>
       </trans-unit>
       <trans-unit id="f4d1ea475eaa85102e2b4e6d95da84bd">
         <source>Confirmation</source>
         <target>Confirmation</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/password-new.tpl:50</note>
+File: themes/classic/templates/customer/password-new.tpl:63</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/guest-tracking.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
+        <source>-- please choose --</source>
+        <target>-- please choose --</target>
+        <note>Context:
+File: themes/classic/templates/customer/_partials/order-messages.tpl:59</note>
+      </trans-unit>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Context:
+File: themes/classic/templates/customer/_partials/order-messages.tpl:56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="63c193f613dd3d9d6c16da7678efda2a">
+        <source>Order Reference:</source>
+        <target>Order Reference:</target>
+        <note>Context:
+File: themes/classic/templates/customer/guest-login.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
+        <source>Email:</source>
+        <target>Email:</target>
+        <note>Context:
+File: themes/classic/templates/customer/guest-login.tpl:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/guest-tracking.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3b6bf3c0c07b89dc86f415117a1f0b80">
         <source>Set your password:</source>
         <target>Set your password:</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/guest-tracking.tpl:53</note>
+File: themes/classic/templates/customer/guest-tracking.tpl:53</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/StarterTheme/templates/customer/_partials/order-messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="deb10517653c255364175796ace3553f">
-        <source>Product</source>
-        <target>Product</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:62</note>
-      </trans-unit>
-      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
-        <source>Message</source>
-        <target>Message</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:32</note>
-      </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
@@ -181,18 +205,14 @@ File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:64</no
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/_partials/form-fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
-        <source>-- please choose --</source>
-        <target>-- please choose --</target>
-        <note>Context:
-File: themes/StarterTheme/templates/_partials/form-fields.tpl:45</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Message</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:101</note>
+      </trans-unit>
       <trans-unit id="b357b524e740bc85b9790a0712d84a30">
         <source>Email address</source>
         <target>Email address</target>
@@ -216,22 +236,6 @@ File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:
         <target>Attachment</target>
         <note>Context:
 File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/guest-login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="63c193f613dd3d9d6c16da7678efda2a">
-        <source>Order Reference:</source>
-        <target>Order Reference:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
-        <source>Email:</source>
-        <target>Email:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/guest-login.tpl:48</note>
       </trans-unit>
     </body>
   </file>

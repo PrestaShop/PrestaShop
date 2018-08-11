@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,15 +44,15 @@ class SpecificPriceController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
 
-        $contextAdapter = $this->container->get('prestashop.adapter.legacy.context');
+        $contextAdapter = $this->get('prestashop.adapter.legacy.context');
         $locales = $contextAdapter->getLanguages();
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
-        $shopContextAdapter = $this->container->get('prestashop.adapter.shop.context');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $shopContextAdapter = $this->get('prestashop.adapter.shop.context');
         $shops = $shopContextAdapter->getShops();
-        $countries = $this->container->get('prestashop.adapter.data_provider.country')->getCountries($locales[0]['id_lang']);
-        $currencies = $this->container->get('prestashop.adapter.data_provider.currency')->getCurrencies();
-        $groups = $this->container->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
+        $countries = $this->get('prestashop.adapter.data_provider.country')->getCountries($locales[0]['id_lang']);
+        $currencies = $this->get('prestashop.adapter.data_provider.currency')->getCurrencies();
+        $groups = $this->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
 
         //get product
         $product = $productAdapter->getProduct((int)$idProduct);
@@ -85,7 +85,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $response = new JsonResponse();
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $errors = $adminProductWrapper->processProductSpecificPrice($idProduct, $request->get('form')['step2']['specific_price']);
 
         if (!empty($errors)) {
@@ -108,7 +108,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
 
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);
 
         if ($res['status'] == 'error') {

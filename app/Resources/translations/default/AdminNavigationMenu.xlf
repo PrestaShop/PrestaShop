@@ -1,673 +1,723 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/lang/TabLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/TabLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0b8d92bc19b720bb1065649535463409">
-        <source>Translations</source>
-        <target>Translations</target>
+      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
+        <source>Stock</source>
+        <target>Stock</target>
         <note>Context:
-File: classes/lang/TabLang.php:144</note>
-      </trans-unit>
-      <trans-unit id="8189ecf686157db0c0274c1f49373318">
-        <source>International</source>
-        <target>International</target>
-        <note>Context:
-File: classes/lang/TabLang.php:85</note>
-      </trans-unit>
-      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
-        <source>Catalog</source>
-        <target>Catalog</target>
-        <note>Context:
-File: classes/lang/TabLang.php:55</note>
+File: classes/lang/KeysReference/TabLang.php:120</note>
       </trans-unit>
       <trans-unit id="3068c5a98c003498f1fec0c489212e8b">
         <source>Sell</source>
         <target>Sell</target>
         <note>Context:
-File: classes/lang/TabLang.php:40</note>
+File: classes/lang/KeysReference/TabLang.php:27</note>
       </trans-unit>
       <trans-unit id="10ac42c4d7dca450a66e8efbe8b00799">
         <source>Improve</source>
         <target>Improve</target>
         <note>Context:
-File: classes/lang/TabLang.php:41</note>
+File: classes/lang/KeysReference/TabLang.php:28</note>
       </trans-unit>
       <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
         <source>Configure</source>
         <target>Configure</target>
         <note>Context:
-File: classes/lang/TabLang.php:42</note>
+File: classes/lang/KeysReference/TabLang.php:29</note>
       </trans-unit>
       <trans-unit id="d3da97e2d9aee5c8fbe03156ad051c99">
         <source>More</source>
         <target>More</target>
         <note>Context:
-File: classes/lang/TabLang.php:43</note>
+File: classes/lang/KeysReference/TabLang.php:30</note>
       </trans-unit>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
         <note>Context:
-File: classes/lang/TabLang.php:44</note>
-      </trans-unit>
-      <trans-unit id="7258e7251413465e0a3eb58094430bde">
-        <source>Administration</source>
-        <target>Administration</target>
-        <note>Context:
-File: classes/lang/TabLang.php:45</note>
+File: classes/lang/KeysReference/TabLang.php:31</note>
       </trans-unit>
       <trans-unit id="d5f0ba6e06dd63bcb2b101779a024f97">
         <source><![CDATA[Modules & Services]]></source>
         <target><![CDATA[Modules & Services]]></target>
         <note>Context:
-File: classes/lang/TabLang.php:46</note>
+File: classes/lang/KeysReference/TabLang.php:33</note>
       </trans-unit>
       <trans-unit id="c9d7eedc8be4380c02106619824b8449">
         <source>Advanced Parameters</source>
         <target>Advanced Parameters</target>
         <note>Context:
-File: classes/lang/TabLang.php:47</note>
+File: classes/lang/KeysReference/TabLang.php:34</note>
       </trans-unit>
       <trans-unit id="91f3a2c0e4424c87689525da44c4db11">
         <source>Files</source>
         <target>Files</target>
         <note>Context:
-File: classes/lang/TabLang.php:48</note>
+File: classes/lang/KeysReference/TabLang.php:35</note>
       </trans-unit>
       <trans-unit id="20ad345341cfd791c1a3f9ef20c35577">
         <source><![CDATA[Attributes & Features]]></source>
         <target><![CDATA[Attributes & Features]]></target>
         <note>Context:
-File: classes/lang/TabLang.php:49</note>
+File: classes/lang/KeysReference/TabLang.php:36</note>
       </trans-unit>
       <trans-unit id="287234a1ff35a314b5b6bc4e5828e745">
         <source>Attributes</source>
         <target>Attributes</target>
         <note>Context:
-File: classes/lang/TabLang.php:50</note>
+File: classes/lang/KeysReference/TabLang.php:37</note>
       </trans-unit>
       <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
         <source>Carriers</source>
         <target>Carriers</target>
         <note>Context:
-File: classes/lang/TabLang.php:51</note>
+File: classes/lang/KeysReference/TabLang.php:38</note>
       </trans-unit>
       <trans-unit id="914419aa32f04011357d3b604a86d7eb">
         <source>Carrier</source>
         <target>Carrier</target>
         <note>Context:
-File: classes/lang/TabLang.php:52</note>
+File: classes/lang/KeysReference/TabLang.php:39</note>
       </trans-unit>
       <trans-unit id="65b7eaeb9ba4e9903f82297face9f7cd">
         <source>Cart Rules</source>
         <target>Cart Rules</target>
         <note>Context:
-File: classes/lang/TabLang.php:53</note>
+File: classes/lang/KeysReference/TabLang.php:40</note>
       </trans-unit>
       <trans-unit id="8540df06444445760abd0583233b6367">
         <source>Catalog Price Rules</source>
         <target>Catalog Price Rules</target>
         <note>Context:
-File: classes/lang/TabLang.php:54</note>
+File: classes/lang/KeysReference/TabLang.php:41</note>
       </trans-unit>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
         <source>Categories</source>
         <target>Categories</target>
         <note>Context:
-File: classes/lang/TabLang.php:56</note>
+File: classes/lang/KeysReference/TabLang.php:43</note>
       </trans-unit>
       <trans-unit id="efcf628091b527cc576784186ac97de9">
         <source>Page Categories</source>
         <target>Page Categories</target>
         <note>Context:
-File: classes/lang/TabLang.php:57</note>
+File: classes/lang/KeysReference/TabLang.php:44</note>
       </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
         <target>Pages</target>
         <note>Context:
-File: classes/lang/TabLang.php:58</note>
+File: classes/lang/KeysReference/TabLang.php:45</note>
       </trans-unit>
       <trans-unit id="f647e3f65d2df0358ad2eff6a6d85c15">
         <source>Combinations Generator</source>
         <target>Combinations Generator</target>
         <note>Context:
-File: classes/lang/TabLang.php:59</note>
+File: classes/lang/KeysReference/TabLang.php:46</note>
       </trans-unit>
       <trans-unit id="254f642527b45bc260048e30704edb39">
         <source>Configuration</source>
         <target>Configuration</target>
         <note>Context:
-File: classes/lang/TabLang.php:60</note>
+File: classes/lang/KeysReference/TabLang.php:47</note>
       </trans-unit>
       <trans-unit id="bbaff12800505b22a853e8b7f4eb6a22">
         <source>Contact</source>
         <target>Contact</target>
         <note>Context:
-File: classes/lang/TabLang.php:61</note>
+File: classes/lang/KeysReference/TabLang.php:48</note>
       </trans-unit>
       <trans-unit id="9aa698f602b1e5694855cee73a683488">
         <source>Contacts</source>
         <target>Contacts</target>
         <note>Context:
-File: classes/lang/TabLang.php:62</note>
+File: classes/lang/KeysReference/TabLang.php:49</note>
       </trans-unit>
       <trans-unit id="790d59ef178acbc75d233bf4211763c6">
         <source>Countries</source>
         <target>Countries</target>
         <note>Context:
-File: classes/lang/TabLang.php:63</note>
+File: classes/lang/KeysReference/TabLang.php:50</note>
       </trans-unit>
       <trans-unit id="33f595542d01643570908b6ecac7b521">
         <source>Credit Slips</source>
         <target>Credit Slips</target>
         <note>Context:
-File: classes/lang/TabLang.php:64</note>
-      </trans-unit>
-      <trans-unit id="72d6d7a1885885bb55a565fd1070581a">
-        <source>Import</source>
-        <target>Import</target>
-        <note>Context:
-File: classes/lang/TabLang.php:65</note>
+File: classes/lang/KeysReference/TabLang.php:51</note>
       </trans-unit>
       <trans-unit id="dfcfc43722eef1eab1e4a12e50a068b1">
         <source>Currencies</source>
         <target>Currencies</target>
         <note>Context:
-File: classes/lang/TabLang.php:66</note>
+File: classes/lang/KeysReference/TabLang.php:53</note>
       </trans-unit>
       <trans-unit id="d5552e0564007d93ff5937a9cb3bc491">
         <source>Customer Service</source>
         <target>Customer Service</target>
         <note>Context:
-File: classes/lang/TabLang.php:67</note>
+File: classes/lang/KeysReference/TabLang.php:54</note>
       </trans-unit>
       <trans-unit id="e693ba8db5bd43c8b27cf2eca19215ab">
         <source>Customer Settings</source>
         <target>Customer Settings</target>
         <note>Context:
-File: classes/lang/TabLang.php:68</note>
-      </trans-unit>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
-        <source>Customers</source>
-        <target>Customers</target>
-        <note>Context:
-File: classes/lang/TabLang.php:69</note>
+File: classes/lang/KeysReference/TabLang.php:55</note>
       </trans-unit>
       <trans-unit id="2938c7f7e560ed972f8a4f68e80ff834">
         <source>Dashboard</source>
         <target>Dashboard</target>
         <note>Context:
-File: classes/lang/TabLang.php:70</note>
+File: classes/lang/KeysReference/TabLang.php:57</note>
       </trans-unit>
       <trans-unit id="e307db07b3975fef922a80d07455ee5e">
         <source>Database</source>
         <target>Database</target>
         <note>Context:
-File: classes/lang/TabLang.php:71</note>
+File: classes/lang/KeysReference/TabLang.php:58</note>
       </trans-unit>
       <trans-unit id="eb5782af6c84c44ab4147000928cbb78">
         <source>DB Backup</source>
         <target>DB Backup</target>
         <note>Context:
-File: classes/lang/TabLang.php:72</note>
+File: classes/lang/KeysReference/TabLang.php:59</note>
       </trans-unit>
       <trans-unit id="8fddfc8225dcf89be0e15709c671af4e">
         <source>Delivery Slips</source>
         <target>Delivery Slips</target>
         <note>Context:
-File: classes/lang/TabLang.php:73</note>
+File: classes/lang/KeysReference/TabLang.php:60</note>
       </trans-unit>
       <trans-unit id="1e884e3078d9978e216a027ecd57fb34">
         <source>E-mail</source>
         <target>E-mail</target>
         <note>Context:
-File: classes/lang/TabLang.php:74</note>
+File: classes/lang/KeysReference/TabLang.php:61</note>
       </trans-unit>
       <trans-unit id="eb626c94531ec554f93b2b78a77c8b1b">
         <source>Employees</source>
         <target>Employees</target>
         <note>Context:
-File: classes/lang/TabLang.php:75</note>
+File: classes/lang/KeysReference/TabLang.php:62</note>
       </trans-unit>
       <trans-unit id="ac848fa228f49ba2b8a5fbd76596817d">
         <source>Team</source>
         <target>Team</target>
         <note>Context:
-File: classes/lang/TabLang.php:76</note>
+File: classes/lang/KeysReference/TabLang.php:63</note>
       </trans-unit>
       <trans-unit id="98f770b0af18ca763421bac22b4b6805">
         <source>Features</source>
         <target>Features</target>
         <note>Context:
-File: classes/lang/TabLang.php:77</note>
+File: classes/lang/KeysReference/TabLang.php:64</note>
       </trans-unit>
       <trans-unit id="0db377921f4ce762c62526131097968f">
         <source>General</source>
         <target>General</target>
         <note>Context:
-File: classes/lang/TabLang.php:78</note>
+File: classes/lang/KeysReference/TabLang.php:65</note>
       </trans-unit>
       <trans-unit id="323d4eb70b252acb4a04eaf9e0882597">
         <source>Geolocation</source>
         <target>Geolocation</target>
         <note>Context:
-File: classes/lang/TabLang.php:79</note>
+File: classes/lang/KeysReference/TabLang.php:66</note>
       </trans-unit>
       <trans-unit id="a37ede293936e29279ed543129451ec3">
         <source>Groups</source>
         <target>Groups</target>
         <note>Context:
-File: classes/lang/TabLang.php:80</note>
+File: classes/lang/KeysReference/TabLang.php:67</note>
       </trans-unit>
       <trans-unit id="4c99c66c65d5cc7f1c5ef76302aa9988">
         <source>Image Settings</source>
         <target>Image Settings</target>
         <note>Context:
-File: classes/lang/TabLang.php:81</note>
+File: classes/lang/KeysReference/TabLang.php:68</note>
       </trans-unit>
       <trans-unit id="fff0d600f8a0b5e19e88bfb821dd1157">
         <source>Images</source>
         <target>Images</target>
         <note>Context:
-File: classes/lang/TabLang.php:82</note>
-      </trans-unit>
-      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
-        <source>Information</source>
-        <target>Information</target>
-        <note>Context:
-File: classes/lang/TabLang.php:83</note>
+File: classes/lang/KeysReference/TabLang.php:69</note>
       </trans-unit>
       <trans-unit id="b9c1c003e8bf1de207824b5766413840">
         <source>Instant Stock Status</source>
         <target>Instant Stock Status</target>
         <note>Context:
-File: classes/lang/TabLang.php:84</note>
-      </trans-unit>
-      <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
-        <source>Invoices</source>
-        <target>Invoices</target>
-        <note>Context:
-File: classes/lang/TabLang.php:86</note>
+File: classes/lang/KeysReference/TabLang.php:71</note>
       </trans-unit>
       <trans-unit id="3a08e2e340ab29fd9263af48193cbf8e">
         <source>Languages</source>
         <target>Languages</target>
         <note>Context:
-File: classes/lang/TabLang.php:87</note>
+File: classes/lang/KeysReference/TabLang.php:74</note>
       </trans-unit>
       <trans-unit id="369686331c93d55e587441143ccdf427">
         <source>Localization</source>
         <target>Localization</target>
         <note>Context:
-File: classes/lang/TabLang.php:88</note>
+File: classes/lang/KeysReference/TabLang.php:75</note>
       </trans-unit>
       <trans-unit id="eebd338ddbd547e41e4a1296de82963a">
         <source>Locations</source>
         <target>Locations</target>
         <note>Context:
-File: classes/lang/TabLang.php:89</note>
+File: classes/lang/KeysReference/TabLang.php:76</note>
       </trans-unit>
       <trans-unit id="99dea78007133396a7b8ed70578ac6ae">
         <source>Login</source>
         <target>Login</target>
         <note>Context:
-File: classes/lang/TabLang.php:90</note>
-      </trans-unit>
-      <trans-unit id="b2d37ae1cedf42ff874289b721860af2">
-        <source>Logs</source>
-        <target>Logs</target>
-        <note>Context:
-File: classes/lang/TabLang.php:91</note>
+File: classes/lang/KeysReference/TabLang.php:77</note>
       </trans-unit>
       <trans-unit id="1afa74da05ca145d3418aad9af510109">
         <source>Design</source>
         <target>Design</target>
         <note>Context:
-File: classes/lang/TabLang.php:92</note>
-      </trans-unit>
-      <trans-unit id="10d0de28911c5f66463b9c8783f8148a">
-        <source>Maintenance</source>
-        <target>Maintenance</target>
-        <note>Context:
-File: classes/lang/TabLang.php:93</note>
+File: classes/lang/KeysReference/TabLang.php:79</note>
       </trans-unit>
       <trans-unit id="aa1550e5c6de2f5e7867edbf0f019118">
         <source><![CDATA[Brands & Suppliers]]></source>
         <target><![CDATA[Brands & Suppliers]]></target>
         <note>Context:
-File: classes/lang/TabLang.php:94</note>
+File: classes/lang/KeysReference/TabLang.php:81</note>
       </trans-unit>
       <trans-unit id="84be54bb4bd1b755a27d86388700d097">
         <source>Brands</source>
         <target>Brands</target>
         <note>Context:
-File: classes/lang/TabLang.php:95</note>
+File: classes/lang/KeysReference/TabLang.php:82</note>
       </trans-unit>
       <trans-unit id="7cb15e416d62919b1b40298324fbe30b">
         <source>Marketing</source>
         <target>Marketing</target>
         <note>Context:
-File: classes/lang/TabLang.php:96</note>
+File: classes/lang/KeysReference/TabLang.php:83</note>
       </trans-unit>
       <trans-unit id="06145a21dcec7395085b033e6e169b61">
         <source>Menus</source>
         <target>Menus</target>
         <note>Context:
-File: classes/lang/TabLang.php:97</note>
+File: classes/lang/KeysReference/TabLang.php:84</note>
       </trans-unit>
       <trans-unit id="979640f579db842e61902ca061153965">
         <source>Merchandise Returns</source>
         <target>Merchandise Returns</target>
         <note>Context:
-File: classes/lang/TabLang.php:98</note>
+File: classes/lang/KeysReference/TabLang.php:85</note>
       </trans-unit>
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
         <note>Context:
-File: classes/lang/TabLang.php:99</note>
+File: classes/lang/KeysReference/TabLang.php:86</note>
       </trans-unit>
       <trans-unit id="423e555c5ec3885f2bb5d9d2d6627f63">
         <source>Monitoring</source>
         <target>Monitoring</target>
         <note>Context:
-File: classes/lang/TabLang.php:100</note>
+File: classes/lang/KeysReference/TabLang.php:87</note>
       </trans-unit>
       <trans-unit id="c103bafd6451f1f08200bebff539606f">
         <source>Multistore</source>
         <target>Multistore</target>
         <note>Context:
-File: classes/lang/TabLang.php:101</note>
+File: classes/lang/KeysReference/TabLang.php:88</note>
       </trans-unit>
       <trans-unit id="127458a6096e6f3224228922cfd45c49">
         <source>Order Messages</source>
         <target>Order Messages</target>
         <note>Context:
-File: classes/lang/TabLang.php:102</note>
+File: classes/lang/KeysReference/TabLang.php:89</note>
       </trans-unit>
       <trans-unit id="d72eaa592e6b1b6f30787d67a70422b7">
         <source>Order Settings</source>
         <target>Order Settings</target>
         <note>Context:
-File: classes/lang/TabLang.php:103</note>
+File: classes/lang/KeysReference/TabLang.php:90</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
         <note>Context:
-File: classes/lang/TabLang.php:104</note>
+File: classes/lang/KeysReference/TabLang.php:91</note>
       </trans-unit>
       <trans-unit id="a860ed9926b241b7d4dca2d00610ab2c">
         <source>Outstanding</source>
         <target>Outstanding</target>
         <note>Context:
-File: classes/lang/TabLang.php:105</note>
+File: classes/lang/KeysReference/TabLang.php:92</note>
       </trans-unit>
       <trans-unit id="af01f8c298aa063d9c7490f00eddd2df">
         <source>Payment Methods</source>
         <target>Payment Methods</target>
         <note>Context:
-File: classes/lang/TabLang.php:106</note>
-      </trans-unit>
-      <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
-        <source>Preferences</source>
-        <target>Preferences</target>
-        <note>Context:
-File: classes/lang/TabLang.php:107</note>
+File: classes/lang/KeysReference/TabLang.php:93</note>
       </trans-unit>
       <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
         <source>Payment</source>
         <target>Payment</target>
         <note>Context:
-File: classes/lang/TabLang.php:108</note>
-      </trans-unit>
-      <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
-        <source>Performance</source>
-        <target>Performance</target>
-        <note>Context:
-File: classes/lang/TabLang.php:109</note>
+File: classes/lang/KeysReference/TabLang.php:95</note>
       </trans-unit>
       <trans-unit id="d08ccf52b4cdd08e41cfb99ec42e0b29">
         <source>Permissions</source>
         <target>Permissions</target>
         <note>Context:
-File: classes/lang/TabLang.php:110</note>
+File: classes/lang/KeysReference/TabLang.php:97</note>
       </trans-unit>
       <trans-unit id="3160eb21973806e4291c3979d4aa242e">
         <source>Positions</source>
         <target>Positions</target>
         <note>Context:
-File: classes/lang/TabLang.php:111</note>
+File: classes/lang/KeysReference/TabLang.php:98</note>
       </trans-unit>
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
         <note>Context:
-File: classes/lang/TabLang.php:112</note>
-      </trans-unit>
-      <trans-unit id="3821c92eff2643b0d1ccdce26d2e8e48">
-        <source>Product Settings</source>
-        <target>Product Settings</target>
-        <note>Context:
-File: classes/lang/TabLang.php:113</note>
+File: classes/lang/KeysReference/TabLang.php:99</note>
       </trans-unit>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
         <target>Products</target>
         <note>Context:
-File: classes/lang/TabLang.php:114</note>
+File: classes/lang/KeysReference/TabLang.php:101</note>
       </trans-unit>
       <trans-unit id="d0f25115288c15321ecf672f0d6a83ea">
         <source>Profiles</source>
         <target>Profiles</target>
         <note>Context:
-File: classes/lang/TabLang.php:115</note>
+File: classes/lang/KeysReference/TabLang.php:102</note>
       </trans-unit>
       <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
         <source>Quick Access</source>
         <target>Quick Access</target>
         <note>Context:
-File: classes/lang/TabLang.php:116</note>
+File: classes/lang/KeysReference/TabLang.php:103</note>
       </trans-unit>
       <trans-unit id="ff398a1c3434e160c655aa1613e0eace">
         <source>Referrers</source>
         <target>Referrers</target>
         <note>Context:
-File: classes/lang/TabLang.php:117</note>
+File: classes/lang/KeysReference/TabLang.php:104</note>
       </trans-unit>
       <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
         <source>Search</source>
         <target>Search</target>
         <note>Context:
-File: classes/lang/TabLang.php:118</note>
+File: classes/lang/KeysReference/TabLang.php:105</note>
       </trans-unit>
       <trans-unit id="60d744a6a3775f721ca67718b9c38295">
         <source>Search Engines</source>
         <target>Search Engines</target>
         <note>Context:
-File: classes/lang/TabLang.php:119</note>
+File: classes/lang/KeysReference/TabLang.php:106</note>
       </trans-unit>
       <trans-unit id="194506bb3f2a5aea2ced4ea98cb22fb4">
         <source><![CDATA[SEO & URLs]]></source>
         <target><![CDATA[SEO & URLs]]></target>
         <note>Context:
-File: classes/lang/TabLang.php:120</note>
+File: classes/lang/KeysReference/TabLang.php:107</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
         <note>Context:
-File: classes/lang/TabLang.php:121</note>
+File: classes/lang/KeysReference/TabLang.php:108</note>
       </trans-unit>
       <trans-unit id="cf39aaa3dadb081e301236a4abf5e5f4">
         <source>Shop Parameters</source>
         <target>Shop Parameters</target>
         <note>Context:
-File: classes/lang/TabLang.php:122</note>
+File: classes/lang/KeysReference/TabLang.php:109</note>
       </trans-unit>
       <trans-unit id="ae92e4c41ccb386880cda8880c64c6f5">
         <source>Shop URLs</source>
         <target>Shop URLs</target>
         <note>Context:
-File: classes/lang/TabLang.php:123</note>
+File: classes/lang/KeysReference/TabLang.php:110</note>
       </trans-unit>
       <trans-unit id="2c3a8560142d9921c9de12d0a9403fa4">
         <source>Shopping Carts</source>
         <target>Shopping Carts</target>
         <note>Context:
-File: classes/lang/TabLang.php:124</note>
+File: classes/lang/KeysReference/TabLang.php:111</note>
       </trans-unit>
       <trans-unit id="12a521af593422cd508f7707662c9eb2">
         <source>Shops</source>
         <target>Shops</target>
         <note>Context:
-File: classes/lang/TabLang.php:125</note>
+File: classes/lang/KeysReference/TabLang.php:112</note>
       </trans-unit>
       <trans-unit id="e836c2a96e7ef38a39afe4be2beddddd">
         <source>SQL Manager</source>
         <target>SQL Manager</target>
         <note>Context:
-File: classes/lang/TabLang.php:126</note>
+File: classes/lang/KeysReference/TabLang.php:113</note>
       </trans-unit>
       <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
         <source>States</source>
         <target>States</target>
         <note>Context:
-File: classes/lang/TabLang.php:127</note>
+File: classes/lang/KeysReference/TabLang.php:114</note>
       </trans-unit>
       <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
         <source>Stats</source>
         <target>Stats</target>
         <note>Context:
-File: classes/lang/TabLang.php:128</note>
+File: classes/lang/KeysReference/TabLang.php:115</note>
       </trans-unit>
       <trans-unit id="61fe9018991004014d12b8d81568df90">
         <source>Statuses</source>
         <target>Statuses</target>
         <note>Context:
-File: classes/lang/TabLang.php:129</note>
+File: classes/lang/KeysReference/TabLang.php:116</note>
       </trans-unit>
       <trans-unit id="89de17fb747c585a81e444f70312de3f">
         <source>Stock Coverage</source>
         <target>Stock Coverage</target>
         <note>Context:
-File: classes/lang/TabLang.php:130</note>
+File: classes/lang/KeysReference/TabLang.php:117</note>
       </trans-unit>
       <trans-unit id="491b992b9b809f4b8797ad1d5e89c93f">
         <source>Stock Management</source>
         <target>Stock Management</target>
         <note>Context:
-File: classes/lang/TabLang.php:131</note>
+File: classes/lang/KeysReference/TabLang.php:118</note>
       </trans-unit>
       <trans-unit id="7a88c0e00abd9ea4220cc8fd00892306">
         <source>Stock Movement</source>
         <target>Stock Movement</target>
         <note>Context:
-File: classes/lang/TabLang.php:132</note>
+File: classes/lang/KeysReference/TabLang.php:119</note>
       </trans-unit>
       <trans-unit id="821b8ee6937cec96c30fdafbfe836d68">
         <source>Stores</source>
         <target>Stores</target>
         <note>Context:
-File: classes/lang/TabLang.php:134</note>
+File: classes/lang/KeysReference/TabLang.php:121</note>
       </trans-unit>
       <trans-unit id="1814d65a76028fdfbadab64a5a8076df">
         <source>Suppliers</source>
         <target>Suppliers</target>
         <note>Context:
-File: classes/lang/TabLang.php:135</note>
+File: classes/lang/KeysReference/TabLang.php:122</note>
       </trans-unit>
       <trans-unit id="570f64eae55bf16de04f20757969d5cf">
         <source>Supply orders</source>
         <target>Supply orders</target>
         <note>Context:
-File: classes/lang/TabLang.php:136</note>
+File: classes/lang/KeysReference/TabLang.php:123</note>
       </trans-unit>
       <trans-unit id="189f63f277cd73395561651753563065">
         <source>Tags</source>
         <target>Tags</target>
         <note>Context:
-File: classes/lang/TabLang.php:137</note>
+File: classes/lang/KeysReference/TabLang.php:124</note>
       </trans-unit>
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
         <note>Context:
-File: classes/lang/TabLang.php:138</note>
+File: classes/lang/KeysReference/TabLang.php:125</note>
       </trans-unit>
       <trans-unit id="8d4ae51b8b5831db49a6dcde1b83e175">
         <source>Tax Rules</source>
         <target>Tax Rules</target>
         <note>Context:
-File: classes/lang/TabLang.php:139</note>
+File: classes/lang/KeysReference/TabLang.php:126</note>
       </trans-unit>
       <trans-unit id="6ab9fb0c40f36bc078afaacf74c91215">
         <source>Theme Catalog</source>
         <target>Theme Catalog</target>
         <note>Context:
-File: classes/lang/TabLang.php:140</note>
+File: classes/lang/KeysReference/TabLang.php:127</note>
       </trans-unit>
       <trans-unit id="fcf3b725bb6ebb0e635b0f0902ade451">
         <source><![CDATA[Theme & Logo]]></source>
         <target><![CDATA[Theme & Logo]]></target>
         <note>Context:
-File: classes/lang/TabLang.php:141</note>
+File: classes/lang/KeysReference/TabLang.php:128</note>
       </trans-unit>
       <trans-unit id="8612579044efe457f11398b5a2377226">
         <source>Titles</source>
         <target>Titles</target>
         <note>Context:
-File: classes/lang/TabLang.php:142</note>
+File: classes/lang/KeysReference/TabLang.php:129</note>
       </trans-unit>
       <trans-unit id="c11004c9bfd6ca3b95f052f0df3e8f21">
         <source><![CDATA[Traffic & SEO]]></source>
         <target><![CDATA[Traffic & SEO]]></target>
         <note>Context:
-File: classes/lang/TabLang.php:143</note>
+File: classes/lang/KeysReference/TabLang.php:130</note>
       </trans-unit>
       <trans-unit id="3020c78ae45aff9a35b95856af076765">
         <source>Warehouses</source>
         <target>Warehouses</target>
         <note>Context:
-File: classes/lang/TabLang.php:145</note>
+File: classes/lang/KeysReference/TabLang.php:132</note>
       </trans-unit>
       <trans-unit id="a80d5e18649d829bda78450f7c862711">
         <source>Webservice</source>
         <target>Webservice</target>
         <note>Context:
-File: classes/lang/TabLang.php:146</note>
+File: classes/lang/KeysReference/TabLang.php:133</note>
       </trans-unit>
       <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
         <source>Zones</source>
         <target>Zones</target>
         <note>Context:
-File: classes/lang/TabLang.php:147</note>
+File: classes/lang/KeysReference/TabLang.php:134</note>
       </trans-unit>
       <trans-unit id="58366edba8b92e2955f237fe5897dad5">
         <source>Modules Catalog</source>
         <target>Modules Catalog</target>
         <note>Context:
-File: classes/lang/TabLang.php:148</note>
+File: classes/lang/KeysReference/TabLang.php:135</note>
       </trans-unit>
       <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
         <source>Selection</source>
         <target>Selection</target>
         <note>Context:
-File: classes/lang/TabLang.php:151
+File: classes/lang/KeysReference/TabLang.php:138
  Comment: subtab</note>
       </trans-unit>
       <trans-unit id="f388bc3eaa4b9f72756a75693a12559d">
         <source>Installed modules</source>
         <target>Installed modules</target>
         <note>Context:
-File: classes/lang/TabLang.php:152</note>
+File: classes/lang/KeysReference/TabLang.php:139</note>
       </trans-unit>
       <trans-unit id="a274f4d4670213a9045ce258c6c56b80">
         <source>Notifications</source>
         <target>Notifications</target>
         <note>Context:
-File: classes/lang/TabLang.php:153</note>
+File: classes/lang/KeysReference/TabLang.php:140</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7258e7251413465e0a3eb58094430bde">
+        <source>Administration</source>
+        <target>Administration</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdministrationController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
+        <source>Catalog</source>
+        <target>Catalog</target>
+        <note>Context:
+File: admin-dev/themes/default/template/search_form.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
+        <source>Invoices</source>
+        <target>Invoices</target>
+        <note>Context:
+File: admin-dev/themes/default/template/search_form.tpl:60</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="72d6d7a1885885bb55a565fd1070581a">
+        <source>Import</source>
+        <target>Import</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ImportController.php:218</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerPreferencesController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SystemInformationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SystemInformationController.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8189ecf686157db0c0274c1f49373318">
+        <source>International</source>
+        <target>International</target>
+        <note>Context:
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:50</note>
+      </trans-unit>
+      <trans-unit id="0b8d92bc19b720bb1065649535463409">
+        <source>Translations</source>
+        <target>Translations</target>
+        <note>Context:
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/LogsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b2d37ae1cedf42ff874289b721860af2">
+        <source>Logs</source>
+        <target>Logs</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/LogsController.php:68</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MaintenanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="10d0de28911c5f66463b9c8783f8148a">
+        <source>Maintenance</source>
+        <target>Maintenance</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/MaintenanceController.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
+        <source>Preferences</source>
+        <target>Preferences</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php:70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
+        <source>Performance</source>
+        <target>Performance</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:66</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3821c92eff2643b0d1ccdce26d2e8e48">
+        <source>Product Settings</source>
+        <target>Product Settings</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php:70</note>
       </trans-unit>
     </body>
   </file>
@@ -677,17 +727,27 @@ File: classes/lang/TabLang.php:153</note>
         <source>Module selection</source>
         <target>Module selection</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:80</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:84</note>
       </trans-unit>
     </body>
   </file>
-  <file original="install-dev/upgrade/php/add_new_status_stock.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/AddonsStoreController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
-        <source>Stock</source>
-        <target>Stock</target>
+      <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
+        <source>Modules catalog</source>
+        <target>Modules catalog</target>
         <note>Context:
-File: install-dev/upgrade/php/add_new_status_stock.php:68</note>
+File: src/PrestaShopBundle/Controller/Admin/Improve/AddonsStoreController.php:52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/page_header_toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b61541208db7fa7dba42c85224405911">
+        <source>Menu</source>
+        <target>Menu</target>
+        <note>Context:
+File: admin-dev/themes/default/template/page_header_toolbar.tpl:81</note>
       </trans-unit>
     </body>
   </file>

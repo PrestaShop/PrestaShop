@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,9 +56,9 @@ class AdminCarrierWizardControllerCore extends AdminController
         $this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminCarriers'));
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('smartWizard');
         $this->addJqueryPlugin('typewatch');
         $this->addJs(_PS_JS_DIR_.'admin/carrier_wizard.js');
@@ -185,7 +185,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'name' => 'name',
                         'required' => true,
                         'hint' => array(
-                            sprintf($this->trans('Allowed characters: letters, spaces and "%s".', array(), 'Admin.Shipping.Help'), '().-'),
+                            $this->trans('Allowed characters: letters, spaces and "%special_chars%".', array('%special_chars%' => '().-'), 'Admin.Shipping.Help'),
                             $this->trans('The carrier\'s name will be displayed during checkout.', array(), 'Admin.Shipping.Help'),
                             $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', array(), 'Admin.Shipping.Help')
                         )

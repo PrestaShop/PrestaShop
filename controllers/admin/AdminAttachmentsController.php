@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -83,9 +83,9 @@ class AdminAttachmentsControllerCore extends AdminController
         );
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJs(_PS_JS_DIR_.'/admin/attachments.js');
         Media::addJsDefL('confirm_text', $this->trans('This file is associated with the following products, do you really want to  delete it?', array(), 'Admin.Catalog.Notification'));
@@ -241,14 +241,9 @@ class AdminAttachmentsControllerCore extends AdminController
                     $max_upload = (int)ini_get('upload_max_filesize');
                     $max_post = (int)ini_get('post_max_size');
                     $upload_mb = min($max_upload, $max_post);
-                    $this->errors[] = sprintf(
-                        $this->trans(
-                            'The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.',
-                            array(),
-                            'Admin.Catalog.Notification'),
-                        '<b>'.$_FILES['file']['name'].'</b> ',
-                        '<b>'.$upload_mb.'</b>'
-                    );
+                    $this->errors[] = $this->trans('The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
+                        array('%file%' => '<b>'.$_FILES['file']['name'].'</b> ', '%size%' => '<b>'.$upload_mb.'</b>'),
+                        'Admin.Catalog.Notification');
                 } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file))) {
                     $this->errors[] = $this->trans('Upload error. Please check your server configurations for the maximum upload size allowed.', array(), 'Admin.Catalog.Notification');
                 }

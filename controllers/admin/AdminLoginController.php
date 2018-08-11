@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,12 +44,12 @@ class AdminLoginControllerCore extends AdminController
         }
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         $this->addJquery();
         $this->addjqueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/public/theme.css', 'all', 0);
         $this->addJS(_PS_JS_DIR_.'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
         Media::addJsDef(array('img_dir' => _PS_IMG_));
@@ -142,7 +142,7 @@ class AdminLoginControllerCore extends AdminController
             }
         }
 
-        $this->setMedia();
+        $this->setMedia($isNewTheme = false);
         $this->initHeader();
         parent::initContent();
         $this->initFooter();
@@ -161,7 +161,7 @@ class AdminLoginControllerCore extends AdminController
      *
      * @return bool
      */
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
@@ -206,7 +206,7 @@ class AdminLoginControllerCore extends AdminController
                 $this->errors[] = $this->trans('This employee does not manage the shop anymore (either the shop has been deleted or permissions have been revoked).', array(), 'Admin.Login.Notification');
                 $this->context->employee->logout();
             } else {
-                PrestaShopLogger::addLog(sprintf($this->trans('Back office connection from %s', array(), 'Admin.Advparameters.Feature'), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+                PrestaShopLogger::addLog($this->trans('Back office connection from %ip%', array('%ip%' => Tools::getRemoteAddr()), 'Admin.Advparameters.Feature'), 1, null, '', 0, true, (int)$this->context->employee->id);
 
                 $this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
                 // Update cookie
@@ -256,10 +256,7 @@ class AdminLoginControllerCore extends AdminController
             if (!$employee->getByEmail($email) || !$employee) {
                 $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
-                $this->errors[] = sprintf(
-                    $this->trans('You can reset your password every %d minute(s) only. Please try again later.', array(), 'Admin.Login.Notification'),
-                    Configuration::get('PS_PASSWD_TIME_BACK')
-                );
+                $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', array('%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')), 'Admin.Login.Notification');
             }
         }
 
@@ -336,10 +333,7 @@ class AdminLoginControllerCore extends AdminController
             if (!$employee->getByEmail($reset_email) || !$employee || $employee->id != $id_employee) { // check matching employee id with its email
                 $this->errors[] = $this->trans('This account does not exist.', array(), 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
-                $this->errors[] = sprintf(
-                    $this->trans('You can reset your password every %d minute(s) only. Please try again later.', array(), 'Admin.Login.Notification'),
-                    Configuration::get('PS_PASSWD_TIME_BACK')
-                );
+                $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', array('%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')), 'Admin.Login.Notification');
             } elseif ($employee->getValidResetPasswordToken() !== $reset_token_value) {
                 // To update password, we must have the temporary reset token that matches.
                 $this->errors[] = $this->trans('Your password reset request expired. Please start again.', array(), 'Admin.Login.Notification');

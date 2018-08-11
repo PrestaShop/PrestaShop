@@ -1,54 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/lang/ThemeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/ThemeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="24e61dc70866cb84d375a6270035c7cf">
         <source>Full width</source>
         <target>Full width</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:40</note>
+File: classes/lang/KeysReference/ThemeLang.php:27</note>
       </trans-unit>
       <trans-unit id="63bd7d20cb7d515fe705bcda029ea776">
         <source>Three columns</source>
         <target>Three columns</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:41</note>
+File: classes/lang/KeysReference/ThemeLang.php:28</note>
       </trans-unit>
       <trans-unit id="710c71f05157207e5c47015fc032564d">
         <source>Two columns, small left column</source>
         <target>Two columns, small left column</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:42</note>
+File: classes/lang/KeysReference/ThemeLang.php:29</note>
       </trans-unit>
       <trans-unit id="4c318832b92e5f7b818aba037e1ed5ac">
         <source>Two columns, small right column</source>
         <target>Two columns, small right column</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:43</note>
+File: classes/lang/KeysReference/ThemeLang.php:30</note>
       </trans-unit>
       <trans-unit id="05559f48f0ea41ebb03f6d08b95e1e25">
         <source>No side columns, ideal for distraction-free pages such as product pages.</source>
         <target>No side columns, ideal for distraction-free pages such as product pages.</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:47</note>
+File: classes/lang/KeysReference/ThemeLang.php:32</note>
       </trans-unit>
       <trans-unit id="387bf9bbb8c3c3fd021aa85970554839">
         <source>One large central column and 2 side columns.</source>
         <target>One large central column and 2 side columns.</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:49</note>
+File: classes/lang/KeysReference/ThemeLang.php:34</note>
       </trans-unit>
       <trans-unit id="74266ad9cb6f32c9da66592ca748ef8d">
         <source>Two columns with a small left column.</source>
         <target>Two columns with a small left column.</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:51</note>
+File: classes/lang/KeysReference/ThemeLang.php:36</note>
       </trans-unit>
       <trans-unit id="fefe6a1aca554473c855e076d0376b52">
         <source>Two columns with a small right column.</source>
         <target>Two columns with a small right column.</target>
         <note>Context:
-File: classes/lang/ThemeLang.php:53</note>
+File: classes/lang/KeysReference/ThemeLang.php:38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
+        <source>Theme</source>
+        <target>Theme</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:175</note>
+      </trans-unit>
+      <trans-unit id="36866999eeb441da24edc6fd075e1765">
+        <source>Add new theme</source>
+        <target>Add new theme</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:157</note>
+      </trans-unit>
+      <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
+        <source>Export current theme</source>
+        <target>Export current theme</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:162</note>
+      </trans-unit>
+      <trans-unit id="b5c941eace89787ab475237451189eac">
+        <source>Import theme</source>
+        <target>Import theme</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:173</note>
+      </trans-unit>
+      <trans-unit id="f5ad3d3e217e4b7ea1729eb997dfbe1e">
+        <source>Your current theme</source>
+        <target>Your current theme</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:400</note>
+      </trans-unit>
+      <trans-unit id="410901e83305e49595778896745950a9">
+        <source><![CDATA[Invoice & Email Logos]]></source>
+        <target><![CDATA[Invoice & Email Logos]]></target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:404</note>
+      </trans-unit>
+      <trans-unit id="90dafb1cce6579655041476ab07fab90">
+        <source>Favicons</source>
+        <target>Favicons</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:405</note>
+      </trans-unit>
+      <trans-unit id="49824ed511fd64f33f2f8a1818ee8fe1">
+        <source>Header logo</source>
+        <target>Header logo</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:409</note>
+      </trans-unit>
+      <trans-unit id="358b0205fd07c94c16a82d8278bc5b76">
+        <source>Mail logo</source>
+        <target>Mail logo</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:422</note>
+      </trans-unit>
+      <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
+        <source>Invoice logo</source>
+        <target>Invoice logo</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:431</note>
+      </trans-unit>
+      <trans-unit id="49e95301d8fcdbc23f623e0f2d1ed1e6">
+        <source>Favicon</source>
+        <target>Favicon</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:440</note>
+      </trans-unit>
+      <trans-unit id="859a82ffb385f9227c656960996025eb">
+        <source>Visit the theme catalog</source>
+        <target>Visit the theme catalog</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:455</note>
+      </trans-unit>
+      <trans-unit id="d1c54fe762697b168dee820490655563">
+        <source>Adaptation to Right-to-Left languages</source>
+        <target>Adaptation to Right-to-Left languages</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:475</note>
+      </trans-unit>
+      <trans-unit id="8ed22009aa8884b512b3e3a85d1aeb87">
+        <source>Theme to adapt</source>
+        <target>Theme to adapt</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:479</note>
+      </trans-unit>
+      <trans-unit id="fb3f98de7e392f98c02ba257e6c46f9a">
+        <source>Generate RTL stylesheet</source>
+        <target>Generate RTL stylesheet</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:485</note>
+      </trans-unit>
+      <trans-unit id="3388a09e80639f10038e6725fb32f444">
+        <source>Select a theme for the "%name%" shop</source>
+        <target>Select a theme for the "%name%" shop</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:502</note>
+      </trans-unit>
+      <trans-unit id="8d5cc12b0e7ecbe4e624baa345323035">
+        <source>Theme appearance</source>
+        <target>Theme appearance</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:523</note>
+      </trans-unit>
+      <trans-unit id="7961c4434751797a383d52d647e044d6">
+        <source>Import from your computer</source>
+        <target>Import from your computer</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:560</note>
+      </trans-unit>
+      <trans-unit id="6966bbbcdeb44c019201ede70e7b74b8">
+        <source>Zip file</source>
+        <target>Zip file</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:566</note>
+      </trans-unit>
+      <trans-unit id="dec0faa6eb19bd9120d12c5a876bd1cf">
+        <source>Import from the web</source>
+        <target>Import from the web</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:582</note>
+      </trans-unit>
+      <trans-unit id="a33388a338ee2b199d66112369279558">
+        <source>Archive URL</source>
+        <target>Archive URL</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:588</note>
+      </trans-unit>
+      <trans-unit id="cd8d9cc19984ccf9d314eee5eebfc2cc">
+        <source>Import from FTP</source>
+        <target>Import from FTP</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:616</note>
+      </trans-unit>
+      <trans-unit id="a5a23094873852f0c0a9e55be4f1cf1d">
+        <source>Select the archive</source>
+        <target>Select the archive</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:622</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
+        <source>Pages</source>
+        <target>Pages</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:536</note>
       </trans-unit>
     </body>
   </file>
@@ -58,13 +210,103 @@ File: classes/lang/ThemeLang.php:53</note>
         <source>CMS Category</source>
         <target>CMS Category</target>
         <note>Context:
-File: controllers/admin/AdminCmsCategoriesController.php:214</note>
+File: controllers/admin/AdminCmsCategoriesController.php:211</note>
       </trans-unit>
       <trans-unit id="52b68aaa602d202c340d9e4e9157f276">
         <source>Parent category</source>
         <target>Parent category</target>
         <note>Context:
-File: controllers/admin/AdminCmsCategoriesController.php:249</note>
+File: controllers/admin/AdminCmsCategoriesController.php:246</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
+        <source>Pages in category "%name%"</source>
+        <target>Pages in category "%name%"</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:75</note>
+      </trans-unit>
+      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
+        <source>Page Category</source>
+        <target>Page Category</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:130</note>
+      </trans-unit>
+      <trans-unit id="21f93401134586a6c481422bf01fccfd">
+        <source>Only letters and the hyphen (-) character are allowed.</source>
+        <target>Only letters and the hyphen (-) character are allowed.</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:169</note>
+      </trans-unit>
+      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
+        <source>Page content</source>
+        <target>Page content</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:173</note>
+      </trans-unit>
+      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
+        <source>Indexation by search engines</source>
+        <target>Indexation by search engines</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:183</note>
+      </trans-unit>
+      <trans-unit id="cc4fbd30d676ea2f9994b7063a8ada15">
+        <source>Pages in this category</source>
+        <target>Pages in this category</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:260</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules_positions/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="51a8b3a61ad63d4e5df2ce86870e39b8">
+        <source>Transplant a module</source>
+        <target>Transplant a module</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="97e34811d05eb0ee902aa3e190ea5efd">
+        <source>Transplant to</source>
+        <target>Transplant to</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="d5f1381c5f97f928df4ef8d18c2a27c0">
+        <source>Exceptions</source>
+        <target>Exceptions</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="700e2c3b7b442c597c781eac801408b6">
+        <source>___________ CUSTOM ___________</source>
+        <target>___________ CUSTOM ___________</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:435</note>
+      </trans-unit>
+      <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
+        <source>____________ CORE ____________</source>
+        <target>____________ CORE ____________</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:448</note>
+      </trans-unit>
+      <trans-unit id="1cc06efffbc5252916c871f45098a50f">
+        <source>Admin modules controller</source>
+        <target>Admin modules controller</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:454</note>
+      </trans-unit>
+      <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
+        <source>Front modules controller</source>
+        <target>Front modules controller</target>
+        <note>Context:
+File: controllers/admin/AdminModulesPositionsController.php:454</note>
       </trans-unit>
     </body>
   </file>
@@ -99,56 +341,6 @@ File: controllers/admin/AdminCmsContentController.php:191</note>
         <target>Category: %category%</target>
         <note>Context:
 File: controllers/admin/AdminCmsContentController.php:194</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules_positions/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="51a8b3a61ad63d4e5df2ce86870e39b8">
-        <source>Transplant a module</source>
-        <target>Transplant a module</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="97e34811d05eb0ee902aa3e190ea5efd">
-        <source>Transplant to</source>
-        <target>Transplant to</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:51</note>
-      </trans-unit>
-      <trans-unit id="d5f1381c5f97f928df4ef8d18c2a27c0">
-        <source>Exceptions</source>
-        <target>Exceptions</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:65</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminModulesPositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="700e2c3b7b442c597c781eac801408b6">
-        <source>___________ CUSTOM ___________</source>
-        <target>___________ CUSTOM ___________</target>
-        <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:441</note>
-      </trans-unit>
-      <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
-        <source>____________ CORE ____________</source>
-        <target>____________ CORE ____________</target>
-        <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:453</note>
-      </trans-unit>
-      <trans-unit id="1cc06efffbc5252916c871f45098a50f">
-        <source>Admin modules controller</source>
-        <target>Admin modules controller</target>
-        <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:459</note>
-      </trans-unit>
-      <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
-        <source>Front modules controller</source>
-        <target>Front modules controller</target>
-        <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:459</note>
       </trans-unit>
     </body>
   </file>
@@ -270,214 +462,6 @@ File: controllers/admin/AdminImagesController.php:697</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="36866999eeb441da24edc6fd075e1765">
-        <source>Add new theme</source>
-        <target>Add new theme</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:145</note>
-      </trans-unit>
-      <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
-        <source>Export current theme</source>
-        <target>Export current theme</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:150</note>
-      </trans-unit>
-      <trans-unit id="b5c941eace89787ab475237451189eac">
-        <source>Import theme</source>
-        <target>Import theme</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:161</note>
-      </trans-unit>
-      <trans-unit id="f5ad3d3e217e4b7ea1729eb997dfbe1e">
-        <source>Your current theme</source>
-        <target>Your current theme</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:471</note>
-      </trans-unit>
-      <trans-unit id="410901e83305e49595778896745950a9">
-        <source><![CDATA[Invoice & Email Logos]]></source>
-        <target><![CDATA[Invoice & Email Logos]]></target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:475</note>
-      </trans-unit>
-      <trans-unit id="90dafb1cce6579655041476ab07fab90">
-        <source>Favicons</source>
-        <target>Favicons</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:476</note>
-      </trans-unit>
-      <trans-unit id="49824ed511fd64f33f2f8a1818ee8fe1">
-        <source>Header logo</source>
-        <target>Header logo</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:480</note>
-      </trans-unit>
-      <trans-unit id="358b0205fd07c94c16a82d8278bc5b76">
-        <source>Mail logo</source>
-        <target>Mail logo</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:493</note>
-      </trans-unit>
-      <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
-        <source>Invoice logo</source>
-        <target>Invoice logo</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:502</note>
-      </trans-unit>
-      <trans-unit id="49e95301d8fcdbc23f623e0f2d1ed1e6">
-        <source>Favicon</source>
-        <target>Favicon</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:511</note>
-      </trans-unit>
-      <trans-unit id="859a82ffb385f9227c656960996025eb">
-        <source>Visit the theme catalog</source>
-        <target>Visit the theme catalog</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:526</note>
-      </trans-unit>
-      <trans-unit id="43fd51971b1d2354c7ecf6366f44b88d">
-        <source>Select a theme for the "%s" shop</source>
-        <target>Select a theme for the "%s" shop</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:541</note>
-      </trans-unit>
-      <trans-unit id="8d5cc12b0e7ecbe4e624baa345323035">
-        <source>Theme appearance</source>
-        <target>Theme appearance</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:562</note>
-      </trans-unit>
-      <trans-unit id="7961c4434751797a383d52d647e044d6">
-        <source>Import from your computer</source>
-        <target>Import from your computer</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:596</note>
-      </trans-unit>
-      <trans-unit id="6966bbbcdeb44c019201ede70e7b74b8">
-        <source>Zip file</source>
-        <target>Zip file</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:602</note>
-      </trans-unit>
-      <trans-unit id="dec0faa6eb19bd9120d12c5a876bd1cf">
-        <source>Import from the web</source>
-        <target>Import from the web</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:618</note>
-      </trans-unit>
-      <trans-unit id="a33388a338ee2b199d66112369279558">
-        <source>Archive URL</source>
-        <target>Archive URL</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:624</note>
-      </trans-unit>
-      <trans-unit id="cd8d9cc19984ccf9d314eee5eebfc2cc">
-        <source>Import from FTP</source>
-        <target>Import from FTP</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:652</note>
-      </trans-unit>
-      <trans-unit id="a5a23094873852f0c0a9e55be4f1cf1d">
-        <source>Select the archive</source>
-        <target>Select the archive</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:658</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
-        <source>Theme</source>
-        <target>Theme</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:512</note>
-      </trans-unit>
-      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
-        <source>Pages</source>
-        <target>Pages</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:529</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f6162e1430a8d5020bf4c20dc02499f">
-        <source>Pages in category "%name%"</source>
-        <target>Pages in category "%name%"</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:75</note>
-      </trans-unit>
-      <trans-unit id="897b3f9a5dc0ebb8ab90e033e7ce61f3">
-        <source>Page Category</source>
-        <target>Page Category</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:130</note>
-      </trans-unit>
-      <trans-unit id="21f93401134586a6c481422bf01fccfd">
-        <source>Only letters and the hyphen (-) character are allowed.</source>
-        <target>Only letters and the hyphen (-) character are allowed.</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:169</note>
-      </trans-unit>
-      <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
-        <source>Page content</source>
-        <target>Page content</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:173</note>
-      </trans-unit>
-      <trans-unit id="ce1e51212c9df52777620dc9de246da0">
-        <source>Indexation by search engines</source>
-        <target>Indexation by search engines</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:183</note>
-      </trans-unit>
-      <trans-unit id="cc4fbd30d676ea2f9994b7063a8ada15">
-        <source>Pages in this category</source>
-        <target>Pages in this category</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:260</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="874d3deed67e503cac1d8bc00417794a">
-        <source>Move images</source>
-        <target>Move images</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
-        <source>Regenerate thumbnails</source>
-        <target>Regenerate thumbnails</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:123</note>
-      </trans-unit>
-      <trans-unit id="79750ba11832a44ccf92e15eb0e84ae4">
-        <source>Select an image</source>
-        <target>Select an image</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:68</note>
-      </trans-unit>
-      <trans-unit id="26e687808eb656fb38bd6e98f592e4f7">
-        <source>Select a format</source>
-        <target>Select a format</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:81</note>
-      </trans-unit>
-      <trans-unit id="d379cadd41b68efe7c945b4d85c72085">
-        <source>Erase previous images</source>
-        <target>Erase previous images</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:102</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4ba24d91566786f5315acf453418dbb6">
@@ -521,6 +505,40 @@ File: admin-dev/themes/default/template/controllers/modules_positions/list_modul
         <target>modules selected</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:177</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="874d3deed67e503cac1d8bc00417794a">
+        <source>Move images</source>
+        <target>Move images</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="258606ef5a3ed5cd7e39da08435adec0">
+        <source>Regenerate thumbnails</source>
+        <target>Regenerate thumbnails</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:128</note>
+      </trans-unit>
+      <trans-unit id="79750ba11832a44ccf92e15eb0e84ae4">
+        <source>Select an image</source>
+        <target>Select an image</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="26e687808eb656fb38bd6e98f592e4f7">
+        <source>Select a format</source>
+        <target>Select a format</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:86</note>
+      </trans-unit>
+      <trans-unit id="d379cadd41b68efe7c945b4d85c72085">
+        <source>Erase previous images</source>
+        <target>Erase previous images</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/images/content.tpl:107</note>
       </trans-unit>
     </body>
   </file>

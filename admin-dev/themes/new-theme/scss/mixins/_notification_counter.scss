@@ -1,12 +1,13 @@
 @mixin notification_counter() {
   display: inline-block;
-  @include single-line-block(0.875rem);
   position: absolute;
-  top: 0.125rem;
-  right: 0.125rem;
-  color: $white;
-  background: $secondary;
-  font-size: 0.5625rem;
-  padding: 0 0.25rem;
-  border-radius: 0.625rem;
+  top: 0.25rem;
+  right: 0;
+  color: #fff;
+  background: #f1b746;
+  font-size: 0.625rem;
+  line-height: .75rem;
+  padding: 0 .1875rem;
+  border-radius: 1rem;
+  border: .125rem solid #fff;
 }

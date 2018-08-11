@@ -8,7 +8,7 @@
     <attribute id="S" id_attribute_group="Size" color=""/>
     <attribute id="M" id_attribute_group="Size" color=""/>
     <attribute id="L" id_attribute_group="Size" color=""/>
-    <attribute id="One_size" id_attribute_group="Size" color=""/>
+    <attribute id="XL" id_attribute_group="Size" color=""/>
     <attribute id="Grey" id_attribute_group="Color" color="#AAB2BD"/>
     <attribute id="Taupe" id_attribute_group="Color" color="#CFC4A6"/>
     <attribute id="Beige" id_attribute_group="Color" color="#f5f5dc"/>
@@ -22,12 +22,13 @@
     <attribute id="Green" id_attribute_group="Color" color="#A0D468"/>
     <attribute id="Yellow" id_attribute_group="Color" color="#F1C40F"/>
     <attribute id="Brown" id_attribute_group="Color" color="#964B00"/>
-    <attribute id="35" id_attribute_group="Shoes_Size" color=""/>
-    <attribute id="36" id_attribute_group="Shoes_Size" color=""/>
-    <attribute id="37" id_attribute_group="Shoes_Size" color=""/>
-    <attribute id="38" id_attribute_group="Shoes_Size" color=""/>
-    <attribute id="39" id_attribute_group="Shoes_Size" color=""/>
-    <attribute id="40" id_attribute_group="Shoes_Size" color=""/>
     <attribute id="Pink" id_attribute_group="Color" color="#FCCACD"/>
+    <attribute id="40x60cm" id_attribute_group="Dimension" color=""/>
+    <attribute id="60x90cm" id_attribute_group="Dimension" color=""/>
+    <attribute id="80x120cm" id_attribute_group="Dimension" color=""/>
+    <attribute id="Ruled" id_attribute_group="Paper_Type" color=""/>
+    <attribute id="Plain" id_attribute_group="Paper_Type" color=""/>
+    <attribute id="Squarred" id_attribute_group="Paper_Type" color=""/>
+    <attribute id="Doted" id_attribute_group="Paper_Type" color=""/>
   </entities>
 </entity_attribute>

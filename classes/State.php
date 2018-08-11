@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -200,10 +200,10 @@ class StateCore extends ObjectModel
      * Get states by Country ID
      *
      * @param int $idCountry Country ID
-     *
+     * @param bool $active true if the state must be active
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
-    public static function getStatesByIdCountry($idCountry)
+    public static function getStatesByIdCountry($idCountry, $active = false)
     {
         if (empty($idCountry)) {
             die(Tools::displayError());
@@ -212,7 +212,7 @@ class StateCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'state` s
-			WHERE s.`id_country` = '.(int) $idCountry
+			WHERE s.`id_country` = '.(int) $idCountry . ($active ?  ' AND s.active = 1' : "")
         );
     }
 

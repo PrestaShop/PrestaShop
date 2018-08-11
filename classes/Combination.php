@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,6 +55,12 @@ class CombinationCore extends ObjectModel
 
     public $minimal_quantity = 1;
 
+    /** @var int|null Low stock for mail alert */
+    public $low_stock_threshold = null;
+
+    /** @var bool Low stock mail alert activated */
+    public $low_stock_alert = false;
+
     public $quantity;
 
     public $weight;
@@ -70,24 +76,26 @@ class CombinationCore extends ObjectModel
         'table' => 'product_attribute',
         'primary' => 'id_product_attribute',
         'fields' => array(
-            'id_product' =>        array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
-            'location' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
-            'ean13' =>                array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
-            'isbn' =>                array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
+            'id_product' =>         array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
+            'location' =>           array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+            'ean13' =>              array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
+            'isbn' =>               array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' =>                array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
-            'quantity' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
-            'reference' =>            array('type' => self::TYPE_STRING, 'size' => 32),
+            'quantity' =>           array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
+            'reference' =>          array('type' => self::TYPE_STRING, 'size' => 32),
             'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
 
             /* Shop fields */
-            'wholesale_price' =>    array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
-            'price' =>                array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
-            'ecotax' =>            array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
-            'weight' =>            array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'),
-            'unit_price_impact' =>    array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
+            'wholesale_price' =>     array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
+            'price' =>               array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
+            'ecotax' =>              array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
+            'weight' =>              array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'),
+            'unit_price_impact' =>   array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
             'minimal_quantity' =>    array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
-            'default_on' =>        array('type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'),
-            'available_date' =>    array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+            'low_stock_threshold' => array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
+            'low_stock_alert' =>     array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
+            'default_on' =>          array('type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'),
+            'available_date' =>      array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
         ),
     );
 
@@ -361,7 +369,7 @@ class CombinationCore extends ObjectModel
         static $feature_active = null;
 
         if ($feature_active === null) {
-            $feature_active = Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
+            $feature_active = (bool) Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
         }
         return $feature_active;
     }

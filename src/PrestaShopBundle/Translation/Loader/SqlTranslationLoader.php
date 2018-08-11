@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,21 +57,25 @@ class SqlTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        $locale = Db::getInstance()->escape($locale, false, true);
-        $localeResult = Db::getInstance()->getRow('
-            SELECT `id_lang`
-            FROM `'._DB_PREFIX_.'lang`
-            WHERE `locale` = "'.$locale.'"'
-        );
+        static $localeResults = array();
 
-        if (empty($localeResult)) {
+        if (!array_key_exists($locale, $localeResults)) {
+            $locale = Db::getInstance()->escape($locale, false, true);
+
+            $localeResults[$locale] = Db::getInstance()->getRow('SELECT `id_lang`
+                FROM `'._DB_PREFIX_.'lang`
+                WHERE `locale` = "'.$locale.'"'
+            );
+        }
+
+        if (empty($localeResults[$locale])) {
             throw new Exception(sprintf('Language not found in database: %s', $locale));
         }
 
         $selectTranslationsQuery = '
             SELECT `key`, `translation`, `domain`
             FROM `'._DB_PREFIX_.'translation`
-            WHERE `id_lang` = '.$localeResult['id_lang']
+            WHERE `id_lang` = '.$localeResults[$locale]['id_lang']
         ;
         $translations = Db::getInstance()->executeS($selectTranslationsQuery);
 

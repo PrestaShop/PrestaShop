@@ -12,54 +12,58 @@ File: classes/PaymentModule.php:53</note>
         <source>The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart</source>
         <target>The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart</target>
         <note>Context:
-File: classes/PaymentModule.php:285</note>
+File: classes/PaymentModule.php:293</note>
       </trans-unit>
       <trans-unit id="3a1048f8aa3a9f6b604fcf7982811752">
         <source>Warning: the secure key is empty, check your payment account before validation</source>
         <target>Warning: the secure key is empty, check your payment account before validation</target>
         <note>Context:
-File: classes/PaymentModule.php:458</note>
+File: classes/PaymentModule.php:466</note>
       </trans-unit>
       <trans-unit id="26beb437d3323bd4bfb0811b3e891315">
         <source>%d image(s)</source>
         <target>%d image(s)</target>
         <note>Context:
-File: classes/PaymentModule.php:521</note>
+File: classes/PaymentModule.php:529</note>
       </trans-unit>
       <trans-unit id="0791970c961c09eb8caaa61aba6a3ca4">
         <source>An error occurred while saving message</source>
         <target>An error occurred while saving message</target>
         <note>Context:
-File: classes/PaymentModule.php:696</note>
+File: classes/PaymentModule.php:707</note>
       </trans-unit>
       <trans-unit id="ed13b3693357ebed3751cb71cb639e65">
         <source>No carrier</source>
         <target>No carrier</target>
         <note>Context:
-File: classes/PaymentModule.php:788</note>
+File: classes/PaymentModule.php:801</note>
       </trans-unit>
       <trans-unit id="b08d3867be98e6fff3233cd40ab8134a">
         <source>Order creation failed</source>
         <target>Order creation failed</target>
         <note>Context:
-File: classes/PaymentModule.php:865</note>
+File: classes/PaymentModule.php:880</note>
       </trans-unit>
       <trans-unit id="43423b4056880b08f2c9aa50d8670531">
         <source>Cart cannot be loaded or an order has already been placed using this cart</source>
         <target>Cart cannot be loaded or an order has already been placed using this cart</target>
         <note>Context:
-File: classes/PaymentModule.php:882</note>
+File: classes/PaymentModule.php:897</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/payment_preferences/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/payment/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6fc908ba63932d2ea0c58d994b9b6312">
         <source>You have more than one shop and must select one to configure payment.</source>
         <target>You have more than one shop and must select one to configure payment.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/payment_preferences/helpers/view/view.tpl:29</note>
+File: admin-dev/themes/default/template/controllers/payment/helpers/view/view.tpl:29</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/payment_preferences/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="cf7da676516ac041a93fd91755fa40f9">
         <source>No payment module installed</source>
         <target>No payment module installed</target>

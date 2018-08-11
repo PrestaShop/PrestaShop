@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,42 +18,48 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const keepLicense = require('uglify-save-license');
 
 let config = {
   entry: {
     main: [
-      'tether/dist/js/tether.js',
-      'jquery/dist/jquery.js',
-      'jquery-ui/jquery-ui.js',
-      'bootstrap/dist/js/npm.js',
+      'prestakit/dist/js/prestashop-ui-kit.js',
+      'jquery-ui-dist/jquery-ui.js',
       'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
       'jwerty/jwerty.js',
       'magnific-popup/dist/jquery.magnific-popup.js',
       'dropzone/dist/dropzone.js',
-      'typeahead.js/dist/typeahead.jquery.min.js',
+      'typeahead.js/dist/typeahead.jquery.js',
       'typeahead.js/dist/bloodhound.min.js',
-      'PrestaKit/dist/js/select2.min.js',
-      'PrestaKit/dist/js/bootstrap-switch.min.js',
-      'PrestaKit/dist/js/jquery.pstagger.min.js',
-      'PrestaKit/dist/js/prestashop-ui-kit.js',
-      'PrestaKit/dist/js/jquery.growl.js',
-      'bootstrap-slider/dist/bootstrap-slider.js',
+      // 'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
+    ],
+    catalog: [
+      './js/app/pages/catalog',
     ],
     stock: [
       './js/app/pages/stock',
     ],
     translations: [
       './js/app/pages/translations',
+    ],
+    logs: [
+      './js/app/pages/logs',
+    ],
+    product_preferences: [
+      './js/pages/product-preferences',
+    ],
+    imports: [
+        './js/pages/import'
     ]
   },
   output: {
@@ -65,6 +71,7 @@ let config = {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/'
   },
+  //devtool: 'source-map', // uncomment me to build source maps (really slow)
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
@@ -75,27 +82,23 @@ let config = {
   module: {
     rules: [
       {
-        test: /jquery\/dist\/jquery\.js/,
-        use: [
-          {
-            loader: 'expose-loader',
-            query: 'jQuery',
-          }, {
-            loader: 'expose-loader',
-            query: 'jquery',
-          }, {
-            loader: 'expose-loader',
-            query: '$',
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'js'),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['es2015', { modules: false }]
+            ]
           }
-        ]
+        }]
+      },
+      {
+        test: /jquery-ui\.js/,
+        use: "imports-loader?define=>false&this=>window"
       }, {
-        test: require.resolve('tether'),
-        use: [
-          {
-            loader: 'expose-loader',
-            query: 'Tether'
-          }
-        ]
+        test: /jquery\.magnific-popup\.js/,
+        use: "imports-loader?define=>false&exports=>false&this=>window"
       }, {
         test: /bloodhound\.min\.js/,
         use: [
@@ -105,19 +108,24 @@ let config = {
           }
         ]
       }, {
+        test: /dropzone\/dist\/dropzone\.js/,
+        loader: 'imports-loader?this=>window&module=>null'
+      }, {
+        test: require.resolve('moment'),
+        loader: 'imports-loader?define=>false&this=>window',
+      }, {
+        test: /typeahead\.jquery\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
+        test: /bootstrap-tokenfield\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
+        test: /bootstrap-datetimepicker\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
         test: /jwerty\/jwerty\.js/,
         loader: 'imports-loader?this=>window&module=>false'
       }, {
-        test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports-loader=>false&this=>window'
-      }, {
-        test: /bloodhound\.js/,
-        loader: 'exports-loader?Bloodhound!imports-loader?define=>false&exports-loader=>false&this=>window'
-      }, {
-        test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null'
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
@@ -126,22 +134,38 @@ let config = {
             css: 'postcss-loader'
           },
         }
-      },
-      {
+      }, {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader']
         })
-      },
-      {
+      }, {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader', 'sass-loader']
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            }
+          ]
         })
-      },
-      {
+      }, {
         test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
         use: 'file-loader?name=[hash].[ext]'
       }
@@ -149,7 +173,10 @@ let config = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('theme.css')
+    new ExtractTextPlugin('theme.css'),
+    new webpack.ProvidePlugin({
+      moment: 'moment', // needed for bootstrap datetime picker
+    })
   ]
 };
 
@@ -166,7 +193,7 @@ if (process.env.NODE_ENV === 'production') {
         drop_console: true
       },
       output: {
-        comments: false
+        comments: keepLicense
       }
     })
   );

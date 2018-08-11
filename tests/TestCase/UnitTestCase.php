@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,28 +19,27 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\TestCase;
+namespace Tests\TestCase;
 
 use Cache;
 use Configuration;
 use Context;
 use Db;
-use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeEntityMapper;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
+use Tests\TestCase\FakeEntityMapper;
+use Tests\TestCase\FakeConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
-class UnitTestCase extends PHPUnit_Framework_TestCase
+class UnitTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Container
@@ -98,7 +97,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         return $this->database;
     }
 
-    public function setup()
+    protected function setUp()
     {
         $this->container = new Container();
         ServiceLocator::setServiceContainerInstance($this->container);
@@ -125,9 +124,14 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
         $this->setupContextualTemplateEngineMock();
         $this->setupContextualLanguageMock();
+        $this->setupContextualLinkMock();
         $this->setupContextualEmployeeMock();
         $this->setupContextualCookieMock();
+        $this->setupContextualCurrencyMock();
         $this->setupRequestMock();
+        if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
+            define('_PS_TAB_MODULE_LIST_URL_', '');
+        }
     }
 
     protected function setupContextualTemplateEngineMock()
@@ -135,6 +139,13 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
        $this->context->smarty = Phake::mock('Smarty');
 
        return $this->context->smarty;
+    }
+
+    protected function setupContextualCurrencyMock()
+    {
+        $this->context->currency = Phake::mock('Currency');
+
+        return $this->context->currency;
     }
 
     protected function setupContextualEmployeeMock()
@@ -149,6 +160,13 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->context->language = Phake::mock('Language');
 
         return $this->context->language;
+    }
+
+    protected function setupContextualLinkMock()
+    {
+        $this->context->link = Phake::mock('Link');
+
+        return $this->context->link;
     }
 
     protected function setupContextualCookieMock() {
@@ -175,7 +193,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setupSfKernel()
     {
-        require_once __DIR__.'/../../app/autoload.php';
+        require_once __DIR__.'/../../vendor/autoload.php';
         require_once __DIR__.'/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
         $this->sfKernel->boot();
@@ -198,5 +216,24 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $container_builder = new ContainerBuilder();
         $container = $container_builder->build();
         ServiceLocator::setServiceContainerInstance($container);
+    }
+
+    /**
+    * Call protected/private method of a class.
+    *
+    * @param object &$object    Instantiated object that we will run method on.
+    * @param string $methodName Method name to call
+    * @param array  $parameters Array of parameters to pass into method.
+    *
+    * @return mixed Method return.
+    * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
+    */
+    protected function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -344,12 +344,12 @@ class AdminShopUrlControllerCore extends AdminController
         $this->addJqueryPlugin('cooki-plugin');
         $data = Shop::getTree();
 
-        foreach ($data as $key_group => &$group) {
-            foreach ($group['shops'] as $key_shop => &$shop) {
+        foreach ($data as &$group) {
+            foreach ($group['shops'] as &$shop) {
                 $current_shop = new Shop($shop['id_shop']);
                 $urls = $current_shop->getUrls();
 
-                foreach ($urls as $key_url => &$url) {
+                foreach ($urls as &$url) {
                     $title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
                     if (strlen($title) > 23) {
                         $title = substr($title, 0, 23).'...';
@@ -531,7 +531,7 @@ class AdminShopUrlControllerCore extends AdminController
      * @param string $name
      * @return mixed
      */
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 

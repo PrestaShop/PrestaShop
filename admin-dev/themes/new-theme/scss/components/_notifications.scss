@@ -1,10 +1,12 @@
 .notification-center {
   > .notification {
-    @include notification_container();
-    position: relative;
+    padding: 9px 5px;
+    border: none;
+    color: $medium-gray;
+    background: transparent;
 
     > .material-icons {
-      font-size: 1.5rem;
+      font-size: 1.375rem;
       line-height: 1.375rem;
       vertical-align: middle;
     }
@@ -30,7 +32,36 @@
   }
 
   .notifications {
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    min-width: 25rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    top: 42px;
+    right: 5px !important;
+    &:before, &:after {
+      bottom: 100%;
+      right: 9px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    &:after {
+      border-color: transparent;
+      border-bottom-color: white;
+      border-width: 7px;
+      margin-right: 1px;
+    }
+    &:before {
+      border-color: transparent;
+      border-bottom-color: #bbcdd2;
+      border-width: 8px;
+      margin-left: -8px;
+    }
 
     .nav {
       .nav-item {
@@ -40,14 +71,14 @@
       }
 
       .nav-link {
-        color: $font-color-secondary;
+        color: $gray-medium;
         font-weight: $font-weight-normal;
         padding: 0.9375rem 0.9375rem 0.625rem 0.9375rem;
 
         &.active {
           border-top: 0;
           border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
-          color: $font-color-primary;
+          color: $gray-dark;
         }
 
         &:hover {
@@ -57,7 +88,7 @@
     }
 
     .tab-content {
-      border-top: 0.125rem solid $navbar-bottom-separtor-color;
+      border-top: 0.125rem solid $gray-light;
       padding: 0;
       margin-top: -0.0625rem;
 
@@ -96,7 +127,7 @@
       .notif {
         display: block;
         padding: 0.625rem 0.9375rem;
-        color: $font-color-secondary;
+        color: $gray-medium;
 
         .material-icons {
           vertical-align: top;
@@ -117,7 +148,7 @@
         }
 
         strong {
-          color: $font-color-primary;
+          color: $gray-dark;
         }
 
         &:hover {

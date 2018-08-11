@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,32 +18,37 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 // Plugins CSS
-
 import 'dropzone/dist/min/dropzone.min.css';
-
 import 'magnific-popup/dist/magnific-popup.css';
-import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-import 'PrestaKit/dist/css/jquery.growl.css';
-import 'PrestaKit/dist/css/bootstrap-switch.min.css';
 
 // Theme SCSS
-
 import '../scss/theme.scss';
 
 // Theme Javascript
-
+Dropzone.autoDiscover = false;
 import NavBar from './nav_bar.js';
 
+// this needs to be ported into the UI kit
+import './clickable-dropdown';
+
+import './maintenance-page';
 import './product-page/index';
 import './translation-page/index';
 
 import Header from './header.js';
+import initDatePickers from './app/utils/datepicker';
+
+const $ = global.$;
 
 new NavBar();
 new Header();
+
+$(() => {
+  initDatePickers();
+});

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,7 +50,13 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
-		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', co.`date_add`)) < 1800)';
+		LEFT JOIN (
+            SELECT `id_guest`
+            FROM `'._DB_PREFIX_.'connections`
+            WHERE
+                TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', `date_add`)) < 1800
+            LIMIT 1
+       ) AS co ON co.`id_guest` = a.`id_guest`';
 
         if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
             $this->_having = 'status = \''.$this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature').'\'';
@@ -242,7 +248,7 @@ class AdminCartsControllerCore extends AdminController
             $total_price = $summary['total_price'];
             $total_shipping = $summary['total_shipping'];
         }
-        foreach ($products as $k => &$product) {
+        foreach ($products as &$product) {
             if ($tax_calculation_method == PS_TAX_EXC) {
                 $product['product_price'] = $product['price'];
                 $product['product_total'] = $product['total'];
@@ -428,7 +434,7 @@ class AdminCartsControllerCore extends AdminController
                     }
                 }
             }
-            $this->setMedia();
+            $this->setMedia(false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
                                                             'css_files' => $this->css_files));
@@ -741,15 +747,15 @@ class AdminCartsControllerCore extends AdminController
     public function displayAjaxSearchCarts()
     {
         $id_customer = (int)Tools::getValue('id_customer');
-        $carts = Cart::getCustomerCarts((int)$id_customer);
+        $carts = Cart::getCustomerCarts((int)$id_customer, false);
         $orders = Order::getCustomerOrders((int)$id_customer);
-        $customer = new Customer((int)$id_customer);
 
         if (count($carts)) {
             foreach ($carts as $key => &$cart) {
                 $cart_obj = new Cart((int)$cart['id_cart']);
-                if ($cart['id_cart'] == $this->context->cart->id || !Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists()) {
+                if ($cart['id_cart'] == $this->context->cart->id) {
                     unset($carts[$key]);
+                    continue;
                 }
                 $currency = new Currency((int)$cart['id_currency']);
                 $cart['total_price'] = Tools::displayPrice($cart_obj->getOrderTotal(), $currency);
@@ -762,9 +768,12 @@ class AdminCartsControllerCore extends AdminController
         }
         if ($orders || $carts) {
             $to_return = array_merge($this->ajaxReturnVars(),
-                                            array('carts' => $carts,
-                                                     'orders' => $orders,
-                                                     'found' => true));
+                array(
+                    'carts' => $carts,
+                    'orders' => $orders,
+                    'found' => true
+                )
+            );
         } else {
             $to_return = array_merge($this->ajaxReturnVars(), array('found' => false));
         }
@@ -865,7 +874,7 @@ class AdminCartsControllerCore extends AdminController
         return ($echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo);
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         // don't display ordered carts
         foreach ($this->_list as $row) {

@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,33 +18,40 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-{if isset($is_multishop) && $is_multishop && $shop_list &&
-  (isset($multishop_context) &&
-  $multishop_context & Shop::CONTEXT_GROUP ||
-  $multishop_context & Shop::CONTEXT_SHOP ||
-  $multishop_context & Shop::CONTEXT_ALL
-)}
+{if isset($is_multishop)
+  && $is_multishop
+  && $shop_list
+  && (
+    isset($multishop_context)
+    && $multishop_context & Shop::CONTEXT_GROUP
+    || $multishop_context & Shop::CONTEXT_SHOP
+    || $multishop_context & Shop::CONTEXT_ALL
+  )}
   <div id="shop-list" class="shop-list dropdown ps-dropdown stores">
-    <span class="link" data-toggle="dropdown">
+    <button class="btn btn-link" type="button" data-toggle="dropdown">
       <span class="selected-item">
+        <i class="material-icons visibility">visibility</i>
         {if !isset($current_shop_name) || $current_shop_name == ''}
           {l s='All shops'}
         {else}
           {$current_shop_name}
         {/if}
-        <i class="material-icons arrow-down">keyboard_arrow_down</i>
+        <i class="material-icons arrow-down">arrow_drop_down</i>
       </span>
-    </span>
-    <div class="dropdown-menu ps-dropdown-menu">
+    </button>
+    <div class="dropdown-menu dropdown-menu-right ps-dropdown-menu">
       {$shop_list}
     </div>
   </div>
 {else}
   <div class="shop-list">
-    <a class="link" href="{$base_url|escape:'html':'UTF-8'}" target= "_blank">{$shop_name}</a>
+    <a class="link" id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target= "_blank">
+      <i class="material-icons">visibility</i>
+      {l s='View my shop'}
+    </a>
   </div>
 {/if}

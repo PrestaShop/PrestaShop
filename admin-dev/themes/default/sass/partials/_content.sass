@@ -7,6 +7,18 @@ body
 	color: $text-color
 	background-color: $body-bg
 	-webkit-tap-highlight-color: rgba(0,0,0,0)
+	&.mobile
+		#content.bootstrap
+			@media (max-width: $screen-lg)
+				padding-left: $paddingLeftMobile
+
+			.page-head
+				h2.page-title
+					padding-left: $paddingLeftMobile
+				h4.page-subtitle
+					@include left($paddingLeftMobile)
+				ul.page-breadcrumb
+					@include left($paddingLeftMobile)
 
 #main
 	z-index: 10
@@ -16,9 +28,9 @@ body
 	@include float(left)
 
 #content.bootstrap
-	padding: 120px 10px 0
+	padding: 120px 10px 0 225px
 	&.with-tabs
-		padding: 150px 10px 0
+		padding-top: 160px
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
@@ -112,8 +124,8 @@ body
 		background-color: $badge-notif-color!important
 	form .alert
 		clear: both
-	@media (max-width: $screen-phone)
-		padding: 120px 5px 0
+	.mobile &
+		padding: 140px 5px 0
 		@include margin-left(0!important)
 	.help-block
 		font-style: italic
@@ -210,3 +222,11 @@ body.display-modal
 .page-topbar
 	#help-container
 		margin-top: 140px
+
+.page-sidebar-closed
+	&:not(.mobile)
+		#content
+			padding-left: $paddingLeftPageClosed
+
+			.page-head
+				padding-left: $paddingLeftPageClosed - .9375rem

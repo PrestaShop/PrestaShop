@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,7 +60,12 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = include(__DIR__.'/../../../app/config/parameters.php');
-        $this->dbName = $config['parameters']['database_name'];
+        if ($input->getOption('env') === 'test') {
+            $this->dbName = 'test_'.$config['parameters']['database_name'];
+        } else {
+            $this->dbName = $config['parameters']['database_name'];
+        }
+
         $this->dbPrefix = $config['parameters']['database_prefix'];
 
         $this->em = $this->getContainer()->get('doctrine')->getManager();

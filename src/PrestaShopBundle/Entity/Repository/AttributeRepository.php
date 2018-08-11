@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,7 +42,8 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('a')
             ->addSelect('ag.id AS attributeGroupId')
             ->addSelect('ag.position AS attributeGroupPosition')
-            ->addSelect('agl.publicName AS attributeGroupName')
+            ->addSelect('agl.name AS attributeGroupName')
+            ->addSelect('agl.publicName AS attributeGroupPublicName')
             ->addSelect('a.id')
             ->addSelect('a.color')
             ->addSelect('a.position as attributePosition')
@@ -71,6 +72,7 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
                 $attributeGroups[$attribute['attributeGroupPosition']] = array(
                     'id' => $attribute['attributeGroupId'],
                     'name' => $attribute['attributeGroupName'],
+                    'publicName' => $attribute['attributeGroupPublicName'],
                     'position' => $attribute['attributeGroupPosition'],
                     'attributes' => array(
                         $attribute['attributePosition'] => $this->getAttributeRow($attribute),
@@ -84,11 +86,17 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
 
     private function getAttributeRow($attribute)
     {
-        return array(
+        $attributes = array(
             'id' => $attribute['id'],
             'color' => $attribute['color'],
             'position' => $attribute['attributePosition'],
             'name' => $attribute['attributeName'],
+            'texture' => '',
         );
+        if (@file_exists(_PS_COL_IMG_DIR_ . $attribute['id'] . '.jpg')) {
+            $attributes['texture'] = _THEME_COL_DIR_ . $attribute['id'] . '.jpg';
+        }
+
+        return $attributes;
     }
 }

@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -40,7 +40,7 @@
 	</p>
 	<p>
 		{l s='If you are unsure about this module, you can look for similar modules on the official marketplace.'}
-		<a class="_blank" href="http://addons.prestashop.com/">{l s='Click here to browse PrestaShop Addons.'}</a>
+		<a class="_blank" href="https://addons.prestashop.com/">{l s='Click here to browse PrestaShop Addons.'}</a>
 	</p>
 </div>
 

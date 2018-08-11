@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -72,6 +72,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public function initContent()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            parent::initContent();
+
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
@@ -91,7 +93,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 );
                 $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
             }
-            parent::initContent();
         } else {
             $this->redirect_after = '404';
             $this->redirect();
@@ -183,7 +184,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = $this->context->link->getManufacturerImageLink($manufacturer['id_manufacturer'], 'small_default');
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getmanufacturerLink($manufacturer['id_manufacturer']);
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog')) : sprintf($this->trans('%number% product', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog'));
+            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog')) : $this->trans('%number% product', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog');
         }
 
         return $manufacturers_for_display;

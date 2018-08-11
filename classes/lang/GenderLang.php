@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,14 +32,4 @@ class GenderLangCore extends DataLangCore
     protected $keys = array('id_gender');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Mr.') => $this->translator->trans('Mr.', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Mrs.') => $this->translator->trans('Mrs.', array(), 'Admin.Shopparameters.Feature', $this->locale),
-            ),
-        );
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -139,9 +139,9 @@ class AdminGroupsControllerCore extends AdminController
         }
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('fancybox');
         $this->addJqueryUi('ui.sortable');
     }
@@ -568,18 +568,9 @@ class AdminGroupsControllerCore extends AdminController
         $guest = new Group(Configuration::get('PS_GUEST_GROUP'));
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-        $unidentified_group_information = sprintf(
-            $this->trans('%s - All persons without a customer account or customers that are not logged in.', array(), 'Admin.Shopparameters.Help'),
-            '<b>'.$unidentified->name[$this->context->language->id].'</b>'
-        );
-        $guest_group_information = sprintf(
-            $this->trans('%s - All persons who placed an order through Guest Checkout.', array(), 'Admin.Shopparameters.Help'),
-            '<b>'.$guest->name[$this->context->language->id].'</b>'
-        );
-        $default_group_information = sprintf(
-            $this->trans('%s - All persons who created an account on this site.', array(), 'Admin.Shopparameters.Help'),
-            '<b>'.$default->name[$this->context->language->id].'</b>'
-        );
+        $unidentified_group_information = $this->trans('%group_name% - All persons without a customer account or customers that are not logged in.', array('%group_name%' => '<b>'.$unidentified->name[$this->context->language->id].'</b>'), 'Admin.Shopparameters.Help');
+        $guest_group_information = $this->trans('%group_name% - All persons who placed an order through Guest Checkout.', array('%group_name%' => '<b>'.$guest->name[$this->context->language->id].'</b>'), 'Admin.Shopparameters.Help');
+        $default_group_information = $this->trans('%group_name% - All persons who created an account on this site.', array('%group_name%' => '<b>'.$default->name[$this->context->language->id].'</b>'), 'Admin.Shopparameters.Help');
 
         $this->displayInformation($this->trans('PrestaShop has three default customer groups:', array(), 'Admin.Shopparameters.Help'));
         $this->displayInformation($unidentified_group_information);
@@ -588,7 +579,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderList();
     }
 
-    public function displayEditLink($token = null, $id)
+    public function displayEditLink($token, $id)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {

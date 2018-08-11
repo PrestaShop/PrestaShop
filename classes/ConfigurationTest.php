@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,8 +55,8 @@ class ConfigurationTestCore
     {
         $tests = array(
             'upload' => false,
-            'cache_dir' => 'app/cache',
-            'log_dir' => 'app/logs',
+            'cache_dir' => 'var/cache',
+            'log_dir' => 'var/logs',
             'img_dir' => 'img',
             'module_dir' => 'modules',
             'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
@@ -66,6 +66,7 @@ class ConfigurationTestCore
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
+            'translations_sf2' => 'app/Resources/translations',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -88,7 +89,6 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
-                'fopen' => false,
             ));
         }
 
@@ -109,6 +109,7 @@ class ConfigurationTestCore
             'mbstring' => false,
             'dom' => false,
             'pdo_mysql' => false,
+            'fopen' => false,
         );
     }
 
@@ -140,12 +141,13 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.4.0', '>=');
+        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
     }
 
     public static function test_apache_mod_rewrite()
     {
-        if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
+        if (isset($_SERVER['SERVER_SOFTWARE'])
+            && strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
             return true;
         }
 
@@ -154,7 +156,7 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.4.0', '>=');
+        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
     }
 
     public static function test_mysql_support()
@@ -174,7 +176,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return ini_get('allow_url_fopen');
+        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
     }
 
     public static function test_system($funcs)
@@ -234,12 +236,11 @@ class ConfigurationTestCore
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
             return false;
         }
+        closedir($dh);
         $dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
         if (@file_put_contents($dummy, 'test')) {
             @unlink($dummy);
             if (!$recursive) {
-                closedir($dh);
-
                 return true;
             }
         } elseif (!is_writable($dir)) {
@@ -248,16 +249,12 @@ class ConfigurationTestCore
         }
 
         if ($recursive) {
-            while (($file = readdir($dh)) !== false) {
-                if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn') {
-                    if (!ConfigurationTest::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, $recursive, $full_report)) {
-                        return false;
-                    }
+            foreach (Tools::getDirectories($dir) as $file) {
+                if (!ConfigurationTest::test_dir($relative_dir . DIRECTORY_SEPARATOR . $file, $recursive, $full_report)) {
+                    return false;
                 }
             }
         }
-
-        closedir($dh);
 
         return true;
     }
@@ -420,5 +417,10 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+
+    public static function test_translations_sf2($dir)
+    {
+        return ConfigurationTest::test_dir($dir);
     }
 }

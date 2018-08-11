@@ -18,73 +18,73 @@ File: modules/ps_facetedsearch/ps_facetedsearch.php:58</note>
         <source>"%s" is not a valid url</source>
         <target>"%s" is not a valid url</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:603</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:618</note>
       </trans-unit>
       <trans-unit id="ccc12c5568381293a27db0232877937b">
         <source>Filter template name required (cannot be empty)</source>
         <target>Filter template name required (cannot be empty)</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:981</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1043</note>
       </trans-unit>
       <trans-unit id="8c97e587c1b4e519bec26f3903561da3">
         <source>You must select at least one category.</source>
         <target>You must select at least one category.</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:983</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1045</note>
       </trans-unit>
       <trans-unit id="817c37b9c1f5cd4a450dad384e63e6c7">
         <source>Your filter</source>
         <target>Your filter</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1091</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1153</note>
       </trans-unit>
       <trans-unit id="3185cefd67b575e582063148e4f15860">
         <source>was updated successfully.</source>
         <target>was updated successfully.</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1092</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1154</note>
       </trans-unit>
       <trans-unit id="7ccab4d8de5d6b9bb61e99c7bba343ab">
         <source>was added successfully.</source>
         <target>was added successfully.</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1092</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1154</note>
       </trans-unit>
       <trans-unit id="fe016d3b990c2a9dd72ab6b45892f2ae">
         <source>Settings saved successfully</source>
         <target>Settings saved successfully</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1107</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1169</note>
       </trans-unit>
       <trans-unit id="0d07af70081a2421e2b2972609d699db">
         <source>Filter template deleted, categories updated (reverted to default Filter template).</source>
         <target>Filter template deleted, categories updated (reverted to default Filter template).</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1122</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1184</note>
       </trans-unit>
       <trans-unit id="491f46aa6101560e9f1e0d55a063231b">
         <source>Filter template not found</source>
         <target>Filter template not found</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1124</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1186</note>
       </trans-unit>
       <trans-unit id="fa03eb688ad8aa1db593d33dabd89bad">
         <source>Root</source>
         <target>Root</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1163</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1225</note>
       </trans-unit>
       <trans-unit id="a3868119dc6858db57127fd26e6f9656">
         <source>My template - %s</source>
         <target>My template - %s</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1190</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1252</note>
       </trans-unit>
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2615</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2675</note>
       </trans-unit>
     </body>
   </file>
@@ -492,64 +492,26 @@ File: modules/ps_facetedsearch/views/templates/admin/view.tpl:205</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="28034a200e932f22b324a4dda1bb9f64">
         <source><![CDATA[Invalid characters: <>;=#{}_]]></source>
         <target><![CDATA[Invalid characters: <>;=#{}_]]></target>
         <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
-        <source>URL</source>
-        <target>URL</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="b0aefa9a5ca20f89372b37c2c35c1d4b">
-        <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</source>
-        <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl:50</note>
-      </trans-unit>
-      <trans-unit id="0e6de50c32b9b10fd375ee52090b7f3e">
-        <source>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</source>
-        <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl:78</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e919c0dcca631198a18993158182c96b">
-        <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
-        <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl:50</note>
-      </trans-unit>
-      <trans-unit id="988d04f25d03c7753f5e4752a9397e79">
-        <source>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
-        <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
-        <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl:78</note>
+File: modules/ps_facetedsearch/views/templates/hook/feature_form.tpl:27</note>
       </trans-unit>
       <trans-unit id="0bcff42b5aed2b0e4501ed178e4f2510">
         <source>Indexable</source>
         <target>Indexable</target>
         <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl:84</note>
+File: modules/ps_facetedsearch/views/templates/hook/feature_form.tpl:84</note>
       </trans-unit>
       <trans-unit id="4e495bf87859dbd3914919cccea139e2">
         <source>Use this attribute in URL generated by the Faceted Search module.</source>
         <target>Use this attribute in URL generated by the Faceted Search module.</target>
         <note>Context:
-File: modules/ps_facetedsearch/views/templates/hook/attribute_group_form.tpl:99</note>
+File: modules/ps_facetedsearch/views/templates/hook/feature_form.tpl:99</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/views/templates/hook/feature_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="81e6451dad5734120899da86f7da4e4e">
         <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</source>
         <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</target>
@@ -561,6 +523,44 @@ File: modules/ps_facetedsearch/views/templates/hook/feature_form.tpl:50</note>
         <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this feature. By default, PrestaShop uses the feature's name, but you can change that setting using this field.</target>
         <note>Context:
 File: modules/ps_facetedsearch/views/templates/hook/feature_form.tpl:78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e919c0dcca631198a18993158182c96b">
+        <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
+        <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="988d04f25d03c7753f5e4752a9397e79">
+        <source>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</source>
+        <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this attribute. By default, PrestaShop uses the attribute's name, but you can change that setting using this field.</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:78</note>
+      </trans-unit>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/hook/attribute_form.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b0aefa9a5ca20f89372b37c2c35c1d4b">
+        <source>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</source>
+        <target>When the Faceted Search module is enabled, you can get more detailed URLs by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="0e6de50c32b9b10fd375ee52090b7f3e">
+        <source>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</source>
+        <target>When the Faceted Search module is enabled, you can get more detailed page titles by choosing the word that best represent this feature's value. By default, PrestaShop uses the value's name, but you can change that setting using this field.</target>
+        <note>Context:
+File: modules/ps_facetedsearch/views/templates/hook/feature_value_form.tpl:78</note>
       </trans-unit>
     </body>
   </file>

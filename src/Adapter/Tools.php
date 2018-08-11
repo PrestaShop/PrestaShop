@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\Decimal\Number;
 use Tools as LegacyTools;
 
 /**
@@ -38,14 +39,29 @@ class Tools
     /**
      * Return the friendly url from the provided string.
      *
+     * @deprecated use linkRewrite.
+     *
      * @param string $str
-     * @param bool   $utf8_decode (deprecated)
+     * @param bool   $utf8Decode (deprecated)
      *
      * @return string
      */
-    public function link_rewrite($str, $utf8_decode = null)
+    public function link_rewrite($str, $utf8Decode = null)
     {
-        if ($utf8_decode !== null) {
+        return $this->linkRewrite($str, $utf8Decode);
+    }
+
+    /**
+     * Return the friendly url from the provided string.
+     *
+     * @param string $str
+     * @param bool   $utf8Decode (deprecated)
+     *
+     * @return string
+     */
+    public function linkRewrite($str, $utf8Decode = null)
+    {
+        if ($utf8Decode !== null) {
             LegacyTools::displayParameterAsDeprecated('utf8_decode');
         }
 
@@ -54,69 +70,19 @@ class Tools
 
     /**
      * Polyfill for bcadd if BC Math extension is not installed.
+     *
+     * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
-        if (function_exists('bcadd')) {
-            return bcadd($left_operand, $right_operand, $scale);
+        $result = (new Number((string) $left_operand))
+            ->plus(new Number((string) $right_operand));
+
+        if (null === $scale) {
+            return (string) $result;
         }
 
-        // from http://php.net/manual/en/function.bcadd.php#92252
-        // check if they're valid positive numbers, extract the whole numbers and decimals
-        if (!preg_match("/^\+?(\d+)(\.\d+)?$/", $left_operand, $Tmp1) ||
-            !preg_match("/^\+?(\d+)(\.\d+)?$/", $right_operand, $Tmp2)) {
-            return '0';
-        }
-
-        // this is where the result is stored
-        $Output = array();
-
-        // remove ending zeroes from decimals and remove point
-        $Dec1 = isset($Tmp1[2]) ? rtrim(substr($Tmp1[2], 1), '0') : '';
-        $Dec2 = isset($Tmp2[2]) ? rtrim(substr($Tmp2[2], 1), '0') : '';
-
-        // calculate the longest length of decimals
-        $DLen = max(strlen($Dec1), strlen($Dec2));
-
-        // if $Scale is null, automatically set it to the amount of decimal places for accuracy
-        if ($scale == null) {
-            $Scale = $DLen;
-        }
-
-        // remove leading zeroes and reverse the whole numbers, then append padded decimals on the end
-        $Num1 = strrev(ltrim($Tmp1[1], '0').str_pad($Dec1, $DLen, '0'));
-        $Num2 = strrev(ltrim($Tmp2[1], '0').str_pad($Dec2, $DLen, '0'));
-
-        // calculate the longest length we need to process
-        $MLen = max(strlen($Num1), strlen($Num2));
-
-        // pad the two numbers so they are of equal length (both equal to $MLen)
-        $Num1 = str_pad($Num1, $MLen, '0');
-        $Num2 = str_pad($Num2, $MLen, '0');
-
-        // process each digit, keep the ones, carry the tens (remainders)
-        for ($i = 0;$i < $MLen;++$i) {
-            $Sum = ((int) $Num1{$i} + (int) $Num2{$i});
-            if (isset($Output[$i])) {
-                $Sum += $Output[$i];
-            }
-            $Output[$i] = $Sum % 10;
-            if ($Sum > 9) {
-                $Output[$i + 1] = 1;
-            }
-        }
-
-        // convert the array to string and reverse it
-        $Output = strrev(implode($Output));
-
-        // substring the decimal digits from the result, pad if necessary (if $Scale > amount of actual decimals)
-        // next, since actual zero values can cause a problem with the substring values, if so, just simply give '0'
-        // next, append the decimal value, if $Scale is defined, and return result
-        $Decimal = str_pad(substr($Output, -$DLen, $scale), $scale, '0');
-        $Output = (($MLen - $DLen < 1) ? '0' : substr($Output, 0, -$DLen));
-        $Output .= (($scale > 0) ? ".{$Decimal}" : '');
-
-        return $Output;
+        return (string) $result->toPrecision($scale);
     }
 
     public function purifyHTML($html, $uri_unescape = null, $allow_style = false)
@@ -127,5 +93,37 @@ class Tools
     public function refreshCaCertFile()
     {
         LegacyTools::refreshCaCertFile();
+    }
+
+    public function generateHtaccess()
+    {
+        return LegacyTools::generateHtaccess();
+    }
+
+    /**
+     * returns the rounded value of $value to specified precision, according to your configuration;
+     *
+     * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
+     *
+     * @param float $value
+     * @param int $precision
+     * @return float
+     */
+    public function round($value, $precision = 0, $round_mode = null)
+    {
+        return LegacyTools::ps_round($value, $precision, $round_mode);
+    }
+
+    /**
+     * Return domain name according to configuration and depending on ssl activation
+     *
+     * @param bool $http if true, return domain name with protocol
+     * @param bool $entities if true, convert special chars to HTML entities
+     *
+     * @return string domain
+     */
+    public function getShopDomainSsl($http = false, $entities = false)
+    {
+        return LegacyTools::getShopDomainSsl($http, $entities);
     }
 }

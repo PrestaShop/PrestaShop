@@ -3,5 +3,5 @@ files:
     - source: "../modules/ganalytics/ganalytics.php"
       dest: "../modules/ganalytics/ganalytics_copy.php"
       
-    - source: "https://avatars0.githubusercontent.com/u/2815696?v=3&u=5e6a82beeff1d799c28bf31e25540d334ae40435&s=400"
-      dest: "../modules/ganalytics/avatar.jpg"
+    - source: "http://localhost/img/logo.png"
+      dest: "../modules/ganalytics/another-logo.png"

@@ -172,6 +172,15 @@
                 <tab id="Module_Page" id_parent="Modules" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminModulesSf</class_name>
                 </tab>
+                    <tab id="Module_Page_Manage" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesManage</class_name>
+                    </tab>
+                    <tab id="Module_Page_Catalog" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesCatalog</class_name>
+                    </tab>
+                    <tab id="Module_Page_Notifications" id_parent="Module_Page" active="1" hide_host_mode="0" icon="">
+                        <class_name>AdminModulesNotifications</class_name>
+                    </tab>
                 <tab id="Module_Page_old" id_parent="Modules" active="0" hide_host_mode="0" icon="">
                     <class_name>AdminModules</class_name>
                 </tab>
@@ -247,12 +256,11 @@
                 <tab id="Locations" id_parent="International" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminParentCountries</class_name>
                 </tab>
-
+                    <tab id="Zones" id_parent="Locations" active="1" hide_host_mode="0" icon="">
+                      <class_name>AdminZones</class_name>
+                    </tab>
                     <tab id="Countries" id_parent="Locations" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminCountries</class_name>
-                    </tab>
-                    <tab id="Zones" id_parent="Locations" active="1" hide_host_mode="0" icon="">
-                        <class_name>AdminZones</class_name>
                     </tab>
                     <tab id="States" id_parent="Locations" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminStates</class_name>

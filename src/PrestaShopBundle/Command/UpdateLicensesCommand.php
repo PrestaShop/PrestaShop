@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -128,8 +128,7 @@ class UpdateLicensesCommand extends Command
         $progress->start();
         $progress->setRedrawFrequency(20);
 
-        foreach ($finder as $file)
-        {
+        foreach ($finder as $file) {
             $this->license = $this->text;
             $this->makeGoodLicense($file);
 
@@ -259,7 +258,7 @@ class UpdateLicensesCommand extends Command
             $pos = strpos($haystack, $needle);
             // Important, if the <?php is in the middle of the file, continue
             if ($pos === 0) {
-                $newstring = substr_replace($haystack,$replace,$pos,strlen($needle));
+                $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
                 file_put_contents($file->getRelativePathname(), $newstring);
             }
 

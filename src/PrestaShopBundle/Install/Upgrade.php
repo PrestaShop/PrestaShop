@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -439,7 +439,7 @@ namespace PrestaShopBundle\Install {
             if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
                 $msgErrors = explode("\n", $output['prestashop:schema:update-without-foreign']['output']);
                 $this->logError('Error upgrading doctrine schema', 43);
-                foreach($msgErrors as $msgError) {
+                foreach ($msgErrors as $msgError) {
                     $this->logError('Doctrine SQL Error : '.$msgError, 43);
                 }
             }
@@ -593,7 +593,7 @@ namespace PrestaShopBundle\Install {
 
             $list = $moduleManagerRepository->getFilteredList($filters, true);
             foreach ($list as $moduleName => $module) {
-                if ('PrestaShop' === $module->attributes->get('author')){
+                if ('PrestaShop' === $module->attributes->get('author')) {
                     if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
                         $this->logInfo("Installing native module ".$moduleName);
                         $module = $moduleManagerRepository->getModule($moduleName);
@@ -641,11 +641,11 @@ namespace PrestaShopBundle\Install {
                 }
             }
 
-            if (file_exists(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php')) {
+                unlink(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php')) {
+                unlink(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php');
             }
 
             // Clear XML files
@@ -945,8 +945,7 @@ namespace PrestaShopBundle\Install {
             return $this->translator;
         }
 
-        public function logInfo($quickInfo, $id = null,
-                                $transVariables = array(), $dbInfo = false)
+        public function logInfo($quickInfo, $id = null, $transVariables = array(), $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
@@ -971,8 +970,7 @@ namespace PrestaShopBundle\Install {
             }
         }
 
-        public function logWarning($quickInfo, $id,
-                                   $transVariables = array(), $dbInfo = false)
+        public function logWarning($quickInfo, $id, $transVariables = array(), $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
@@ -1001,8 +999,7 @@ namespace PrestaShopBundle\Install {
             }
         }
 
-        public function logError($quickInfo, $id,
-                                 $transVariables = array(), $dbInfo = false)
+        public function logError($quickInfo, $id, $transVariables = array(), $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
@@ -1232,4 +1229,3 @@ namespace PrestaShopBundle\Install {
         }
     }
 }
-

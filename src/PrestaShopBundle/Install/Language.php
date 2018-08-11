@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,7 @@ class Language
     public $id;
     public $name;
     public $locale;
+    public $iso_code;
     public $language_code;
     public $is_rtl;
     public $date_format_lite;
@@ -39,6 +40,7 @@ class Language
 
     public function __construct($iso)
     {
+        $this->iso_code = strtolower($iso);
         $xmlPath = _PS_INSTALL_LANGS_PATH_.$iso.'/';
         $this->setPropertiesFromXml($xmlPath);
         $this->is_rtl = ($this->is_rtl === 'true') ? true : false;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -207,7 +207,7 @@ class StockMvtCore extends ObjectModel
         $query->orderBy('date_add DESC');
 
         // gets the result
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($query);
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query, false);
 
         // fills the movements array
         while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res)) {

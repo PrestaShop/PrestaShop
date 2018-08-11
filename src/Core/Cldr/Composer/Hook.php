@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Cldr\Composer;
 
 use Composer\Script\Event;
-use PrestaShop\PrestaShop\Core\Cldr\Update;
-use Db;
 
 /**
  * Class Hook used to download CLDR data during composer install/update
@@ -36,6 +34,9 @@ use Db;
  */
 class Hook
 {
+    /** @var string */
+    const ZIP_CORE_URL = 'https://i18n.prestashop.com/cldr/cldr.zip';
+
     /**
      * Triggers CLDR download
      *
@@ -48,29 +49,28 @@ class Hook
         if ($event) {
             $event->getIO()->write("Init CLDR data download...");
         }
-        $root_dir = realpath(__DIR__.'/../../../../');
+        $root_dir = realpath(__DIR__ . '/../../../../');
+        $cldrFolder = "$root_dir/translations/cldr";
+        $cldrFilePath = "$cldrFolder/cldr.zip";
+        $zipUrl = self::ZIP_CORE_URL;
 
-        $cldr_update = new Update($root_dir.'/translations/');
-        $cldr_update->init();
+        if (!file_exists($cldrFilePath)) {
+            $fp = fopen($cldrFilePath, "w");
+            $ch = curl_init($zipUrl);
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+            fclose($fp);
 
-        // If settings file exist
-        if (file_exists($root_dir.'/app/config/parameters.php')) {
-            //load prestashop config to get locale env
-            if (!defined('_PS_ROOT_DIR_')) {
-                require_once($root_dir.'/config/config.inc.php');
-            }
-
-            //get each defined languages and fetch cldr datas
-            $langs = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
-
-            foreach ($langs as $lang) {
-                $language_code = explode('-', $lang['language_code']);
-                if (empty($language_code[1])) {
-                    $language_code[1] = $language_code[0];
-                }
-                $cldr_update->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
-            }
+            if (!empty($error)) {
+                throw new \Exception("Failed to download '$zipUrl', error: '$error'.");
+            };
+            exec("cd $cldrFolder && unzip -oqq $cldrFilePath -d .. && cd -");
+            unlink($cldrFilePath);
         }
+
         if ($event) {
             $event->getIO()->write("Finished...");
         }

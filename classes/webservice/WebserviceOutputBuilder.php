@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -211,40 +211,40 @@ class WebserviceOutputBuilderCore
     {
         $this->statusInt = (int)$num;
         switch ($num) {
-            case 200 :
+            case 200:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 200 OK';
                 break;
-            case 201 :
+            case 201:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 201 Created';
                 break;
-            case 204 :
+            case 204:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 204 No Content';
                 break;
-            case 304 :
+            case 304:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
                 break;
-            case 400 :
+            case 400:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request';
                 break;
-            case 401 :
+            case 401:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized';
                 break;
-            case 403 :
+            case 403:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 403 Forbidden';
                 break;
-            case 404 :
+            case 404:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 404 Not Found';
                 break;
-            case 405 :
+            case 405:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 405 Method Not Allowed';
                 break;
-            case 500 :
+            case 500:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error';
                 break;
-            case 501 :
+            case 501:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 501 Not Implemented';
                 break;
-            case 503 :
+            case 503:
                 $this->status = $_SERVER['SERVER_PROTOCOL'].' 503 Service Unavailable';
                 break;
         }
@@ -334,12 +334,12 @@ class WebserviceOutputBuilderCore
     /**
      * Method is used for each content type
      * Different content types are :
-     * 		- list of entities,
-     * 		- tree diagram of entity details (full or minimum),
-     * 		- schema (synopsis & blank),
+     * - list of entities,
+     * - tree diagram of entity details (full or minimum),
+     * - schema (synopsis & blank),
      *
      * @param array $objects each object created by entity asked
-     * 		  @see WebserviceOutputBuilder::executeEntityGetAndHead
+     *        @see WebserviceOutputBuilder::executeEntityGetAndHead
      * @param null|string $schema_to_display if null display the entities list or entity details.
      * @param string|array $fields_to_display the fields allow for the output
      * @param int $depth depth for the tree diagram output.

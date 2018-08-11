@@ -1,0 +1,201 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div class="table-responsive">
+  <table
+    class="table product mt-3"
+    redirecturl="{{ path('admin_product_catalog', {
+        'limit': limit,
+        'offset': offset,
+        'orderBy': orderBy,
+        'sortOrder': sortOrder
+      })
+    }}"
+  >
+    <thead class="with-filters">
+      {% block product_catalog_form_table_header %}
+        <tr class="column-headers">
+          <th scope="col" style="width: 2rem"></th>
+          <th scope="col" style="width: 5rem">
+            {{ ps.sortable_column_header("ID"|trans({}, 'Admin.Global'), 'id_product', orderBy, sortOrder) }}
+          </th>
+          <th scope="col">
+            {{ "Image"|trans({}, 'Admin.Global') }}
+          </th>
+          <th scope="col">
+            {{ ps.sortable_column_header("Name"|trans({}, 'Admin.Global'), 'name', orderBy, sortOrder) }}
+          </th>
+          <th scope="col" style="width: 9%">
+            {{ ps.sortable_column_header("Reference"|trans({}, 'Admin.Global'), 'reference', orderBy, sortOrder) }}
+          </th>
+          <th scope="col">
+            {{ ps.sortable_column_header("Category"|trans({}, 'Admin.Catalog.Feature'), 'name_category', orderBy, sortOrder) }}
+          </th>
+          <th scope="col" class="text-center" style="width: 9%">
+            {{ ps.sortable_column_header("Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature'), 'price', orderBy, sortOrder) }}
+          </th>
+
+          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+          <th scope="col" class="text-center" style="width: 9%">
+            {{ ps.sortable_column_header("Quantity"|trans({}, 'Admin.Catalog.Feature'), 'sav_quantity', orderBy, sortOrder) }}
+          </th>
+          {% else %}
+            <th></th>
+          {% endif %}
+
+          <th scope="col" class="text-center">
+            {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
+          </th>
+          {% if has_category_filter == true %}
+            <th scope="col">
+              {{ ps.sortable_column_header("Position"|trans({}, 'Admin.Global'), 'position') }}
+            </th>
+          {% endif %}
+          <th scope="col" class="text-right" style="width: 3rem; padding-right: 2rem">
+              {{ "Actions"|trans({}, 'Admin.Global') }}
+          </th>
+        </tr>
+      {% endblock %}
+
+      {% block product_catalog_form_table_filters %}
+        <tr class="column-filters">
+          <th colspan="2">
+            {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+              'input_name': "filter_column_id_product",
+              'min': '0',
+              'max': '1000000',
+              'minLabel': "Min"|trans({}, 'Admin.Global'),
+              'maxLabel': "Max"|trans({}, 'Admin.Global'),
+              'value': filter_column_id_product,
+            } %}
+          </th>
+          <th>&nbsp;</th>
+          <th>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ "Search name"|trans({}, 'Admin.Catalog.Help') }}"
+              name="filter_column_name"
+              value="{{ filter_column_name }}"
+            />
+          </th>
+          <th>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ "Search ref."|trans({}, 'Admin.Catalog.Help') }}"
+              name="filter_column_reference"
+              value="{{ filter_column_reference }}"
+            />
+          </th>
+          <th>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="{{ "Search category"|trans({}, 'Admin.Catalog.Help') }}"
+              name="filter_column_name_category"
+              value="{{ filter_column_name_category }}"
+            />
+          </th>
+          <th class="text-center">
+            {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+              'input_name': "filter_column_price",
+              'min': '0',
+              'max': '1000000',
+              'minLabel': "Min"|trans({}, 'Admin.Global'),
+              'maxLabel': "Max"|trans({}, 'Admin.Global'),
+              'value': filter_column_price,
+            } %}
+          </th>
+
+          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+          <th class="text-center">
+            {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+              'input_name': "filter_column_sav_quantity",
+              'min': '-1000000',
+              'max': '1000000',
+              'minLabel': "Min"|trans({}, 'Admin.Global'),
+              'maxLabel': "Max"|trans({}, 'Admin.Global'),
+              'value': filter_column_sav_quantity,
+            } %}
+          </th>
+          {% else %}
+            <th></th>
+          {% endif %}
+
+          <th id="product_filter_column_active" class="text-center">
+            <div class="form-select">
+              <select class="custom-select"  name="filter_column_active">
+                <option value=""></option>
+                <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
+                <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
+              </select>
+            </div>
+          </th>
+          {% if has_category_filter == true %}
+            <th>
+              {% if not(activate_drag_and_drop) %}
+                <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                {% else %}
+                <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
+            {% endif %}
+
+            </th>
+          {% endif %}
+          <th class="text-right" style="width: 5rem">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="products_filter_submit"
+              title="{{ "Search"|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons">search</i>
+              {{ "Search"|trans({}, 'Admin.Actions') }}
+            </button>
+            <button
+              type="reset"
+              class="btn btn-link"
+              name="products_filter_reset"
+              onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
+              title="{{ "Reset"|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons">clear</i>
+              {{ "Reset"|trans({}, 'Admin.Actions') }}
+            </button>
+          </th>
+        </tr>
+      {% endblock %}
+    </thead>
+    {% block product_catalog_form_table_items %}
+      {{ render(controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction', {
+        'limit': limit,
+        'offset': offset,
+        'orderBy': orderBy,
+        'sortOrder': sortOrder,
+        'products': products,
+        'last_sql': last_sql
+      })) }}
+    {% endblock %}
+  </table>
+</div>

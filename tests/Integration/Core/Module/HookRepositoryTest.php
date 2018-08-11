@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,26 +19,35 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 
-namespace PrestaShop\PrestaShop\tests\Integration\Core\Module;
+namespace Tests\Integration\Core\Module;
 
 use Context;
 use Db;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use Tests\Unit\ContextMocker;
 
 class HookRepositoryTest extends IntegrationTestCase
 {
     private $hookRepository;
 
-    public function setup()
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setUp()
     {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
         $this->hookRepository = new HookRepository(
             new HookInformationProvider,
             Context::getContext()->shop,
@@ -47,11 +56,17 @@ class HookRepositoryTest extends IntegrationTestCase
         );
     }
 
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
     public function test_persist_and_retrieve()
     {
         $modules = [
             'ps_emailsubscription',
-            'ps_shoppingcart'
+            'ps_featuredproducts'
         ];
 
         $this->hookRepository->persistHooksConfiguration([
@@ -67,14 +82,14 @@ class HookRepositoryTest extends IntegrationTestCase
     public function test_only_display_hooks_are_retrieved()
     {
         $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookName' => ['ps_emailsubscription', 'ps_shoppingcart'],
+            'displayTestHookName' => ['ps_emailsubscription', 'ps_featuredproducts'],
             'notADisplayTestHookName' => ['ps_languageselector', 'ps_currencyselector']
         ]);
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
 
         $this->assertEquals(
-            ['ps_emailsubscription', 'ps_shoppingcart'],
+            ['ps_emailsubscription', 'ps_featuredproducts'],
             $actual['displayTestHookName']
         );
 

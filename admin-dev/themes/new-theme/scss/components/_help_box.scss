@@ -1,0 +1,18 @@
+.help-box {
+  display: inline-block;
+  box-sizing: border-box;
+  color: $brand-primary;
+  background-color: $notice;
+  height: 1rem;
+  width: 1rem;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+  vertical-align: middle;
+  text-align: center;
+  border: 2px solid $brand-primary;
+
+  &:after {
+    content: '?'
+  }
+}

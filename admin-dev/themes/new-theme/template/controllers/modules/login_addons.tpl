@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -50,16 +50,20 @@
 						<h4>{l s='Connect to PrestaShop Addons'}</h4>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon"><i class="icon-user"></i></span>
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="icon-user"></i></span>
+								</div>
 								<input id="username_addons" name="username_addons" type="text" value="" autocomplete="off" class="form-control ac_input">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<span class="input-group-addon"><i class="icon-key"></i></span>
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="icon-key"></i></span>
+								</div>
 								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
-							<a class="btn btn-link pull-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
+							<a class="btn btn-link float-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
 							<br>
 						</div>
 					</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -105,12 +105,15 @@ class AccessCore extends ObjectModel
         $result =  Db::getInstance()->executeS('
             SELECT r.`slug`
             FROM `'._DB_PREFIX_.'authorization_role` r
-            LEFT JOIN `'._DB_PREFIX_.'access` a
-            ON r.`id_authorization_role` = a.`id_authorization_role`
-            AND a.`id_profile` = "'.$idProfile.'"
-            LEFT JOIN `'._DB_PREFIX_.'module_access` ma
-            ON r.`id_authorization_role` = ma.`id_authorization_role`
-            AND ma.`id_profile` = "'.$idProfile.'"
+            WHERE r.`id_authorization_role` IN (
+                SELECT a.`id_authorization_role`
+                FROM `'._DB_PREFIX_.'access` a
+                WHERE a.`id_profile` = "'.$idProfile.'"
+                union all
+                SELECT ma.`id_authorization_role`
+                FROM `'._DB_PREFIX_.'module_access` ma 
+                WHERE ma.`id_profile` = "'.$idProfile.'"
+            )
         ');
 
         foreach ((array) $result as $key => $role) {
@@ -347,13 +350,13 @@ class AccessCore extends ObjectModel
         }
 
         if ($addFromParent == 1) {
-           foreach (self::findSlugByIdParentTab($idTab) as $child) {
-               $child = self::sluggifyTab($child);
-               foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
+            foreach (self::findSlugByIdParentTab($idTab) as $child) {
+                $child = self::sluggifyTab($child);
+                foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
                     $slugLike = Db::getInstance()->escape($child.$auth);
                     $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
-               }
-           }
+                }
+            }
         }
 
         $roles = Db::getInstance()->executeS('

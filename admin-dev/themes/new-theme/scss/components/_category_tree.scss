@@ -4,36 +4,45 @@ ul.category-tree {
   .more {
     background: none;
     position: relative;
-    > .checkbox {
+    > .checkbox,
+    > .radio {
       cursor: pointer;
-    }
-    &::before {
-      position: absolute;
-      font-family: 'Material Icons';
-      cursor: pointer;
-      font-size: 1.25rem;
-      color: $gray-medium;
-      top: -0.25rem;
+      &::before {
+        position: absolute;
+        font-family: 'Material Icons';
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: $gray-medium;
+        top: -0.25rem;
+        left: -0.1rem;
+      }
     }
   }
   .less {
-    &::before {
-      content: "\E313";
+    > .checkbox,
+    > .radio {
+      &::before {
+        content: "\E313";
+      }
     }
   }
   .more {
-    &::before {
-      content: "\E5CC";
+    > .checkbox,
+    > .radio {
+      &::before {
+        content: "\E5CC";
+      }
     }
   }
   .category-label {
     display: block;
     padding-left: 0;
+    position: relative;
     .category {
       cursor: pointer;
       position: absolute;
-      top: 0;
-      right: -9px;
+      top: .4em; // relative to the current font size, so "em" and not "rem"
+      right: .4em;
     }
   }
   ul {
@@ -54,17 +63,40 @@ ul.category-tree {
     }
   }
 }
+
+// category tree on the catalog page
 #tree-categories {
   padding: 0.625rem;
-  border: $gray-light 1px solid;
-  border-radius: 0.1875rem;
+
   .categories-tree-actions {
-    display: inline-block;
-    margin-left: 0.9375rem;
-    i.material-icons {
-      font-size: 1.25rem;
-      vertical-align: bottom;
+    border-bottom: .063rem solid $gray-light;
+    margin-bottom: .625rem;
+    white-space: nowrap; // prevent buttons from collapsing
+
+    > a {
+      display: inline-block;
+
+      margin-bottom: .625rem;
+
+      + a {
+        margin-left: 0.9375rem;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      i.material-icons {
+        font-size: 1.25rem;
+        vertical-align: bottom;
+      }
+      color: $gray-medium;
     }
-    color: $gray-medium;
+  }
+
+  #choice_tree {
+    .category-tree {
+      margin-bottom: 0;
+    }
   }
 }

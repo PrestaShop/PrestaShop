@@ -18,14 +18,22 @@ sudo: required
 dist: trusty
 
 php:
-  - 5.4
   - 5.6
   - 7.0
-  - 7.1
-  
+  - 7.2
+
 env:
-    global:
-        - SYMFONY_DEPRECATIONS_HELPER=disabled
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER=disabled
+  matrix:
+    - PRESTASHOP_TEST_TYPE=lint
+    - PRESTASHOP_TEST_TYPE=unit
+    - PRESTASHOP_TEST_TYPE=e2e
+
+matrix:
+  include:
+    - php: 7.1
+      env: EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=e2e
 
 before_install:
   # Apache & php-fpm configuration
@@ -35,19 +43,24 @@ before_install:
   # PrestaShop configuration
   - cp tests/parameters.yml.travis app/config/parameters.yml
 
+
 notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
   - composer install --prefer-dist --no-interaction --no-progress
-  - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
-  - php bin/phpunit -c tests/
-  - php bin/phpunit -c tests/phpunit-admin.xml
-  - composer phpunit-sf
-  - composer phpunit-controllers
-  - bash ./travis-scripts/run-selenium-tests
-  - bash ./travis-scripts/test-startertheme
+  - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
+        bash tests/check_file_syntax.sh;
+    fi
+
+  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
+        bash tests/check_phpunit.sh;
+    fi
+
+  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
+        bash tests/check_e2e.sh;
+    fi
 
 after_script:
   - sudo cat /var/log/apache2/error.log
@@ -59,3 +72,5 @@ after_failure:
   - sudo cat /var/log/php-fpm.log
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
+  - bash ./travis-scripts/base64-screenshots # As we cannot upload file, we display the base64 encoded content of the screenshots
+  - cat $TRAVIS_BUILD_DIR/var/log/dev.log

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,8 @@ class IdentityControllerCore extends FrontController
     public $authRedirection = 'identity';
     public $ssl = true;
 
+    public $passwordRequired = true;
+
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -39,12 +41,13 @@ class IdentityControllerCore extends FrontController
     {
         $should_redirect = false;
 
-        $customer_form = $this->makeCustomerForm();
+        $customer_form = $this->makeCustomerForm()->setPasswordRequired($this->passwordRequired);
         $customer = new Customer();
 
         $customer_form->getFormatter()
             ->setAskForNewPassword(true)
-            ->setPasswordRequired(true)
+            ->setAskForPassword($this->passwordRequired)
+            ->setPasswordRequired($this->passwordRequired)
             ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
         ;
 

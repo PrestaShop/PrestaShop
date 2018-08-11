@@ -2,6 +2,32 @@
 
   padding-bottom: 80px;
 
+  .widget-radio-inline {
+    div.radio {
+      display:inline;
+    }
+    label {
+      display:inline-block;
+    }
+    a.btn {
+      height: 29px;
+      display:inline;
+    }
+  }
+
+  h2 {
+    padding-top: 20px;
+  }
+
+  .widget-checkbox-inline {
+    div.checkbox {
+      display:inline;
+    }
+    label {
+      display:inline;
+    }
+  }
+
   .table-fixed {
     table-layout: fixed;
     border: 0;
@@ -37,7 +63,7 @@
     display: block;
     position: fixed;
     top: $size-header-height - 0.0625rem;
-    left: $size-navbar-width;
+    left: 0;
     right: 0;
     box-shadow: $gray-dark 0 0 10px;
     z-index: 400;
@@ -47,7 +73,7 @@
   // Resets
   ul.nostyle {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
   }
   .tab-content {
     padding: 0;
@@ -59,13 +85,11 @@
 
   // Components
   .product-header {
-    background: $white;
+    background: #ffffff;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
-    padding: 1.25rem 0;
-    .select2 {
-      margin-top: 0.5rem;
-    }
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
     .edit {
       background-size: 4%;
     }
@@ -74,7 +98,8 @@
       margin-top: 0.625rem;
     }
     .form_step1_type_product,
-    .form_switch_language {
+    .form_switch_language,
+    .toolbar {
       display: flex;
       align-items: center;
     }
@@ -90,16 +115,16 @@
   }
 
   #bulk-combinations-container {
-    border: solid 1px $gray-light;
-    margin: -1.063rem 0.9375rem 0.9375rem;
-    padding: 0.9375rem;
+    margin: -1.063rem 0 0.9375rem;
+    padding: 0 0.9375rem;
     width: 97%;
     font-size: 0.75rem;
     font-weight: 600;
-  }
 
-  #delete-combinations {
-    max-width: 13.13rem;
+    #bulk-combinations-container-fields > div {
+      @extend .px-3;
+      @extend .py-2;
+    }
   }
 
   .product-footer {
@@ -110,34 +135,17 @@
       bottom: $grid-gutter-width / 2;
     }
     z-index: 10;
-    background: $white;
+    background: #ffffff;
     bottom: 0;
     left: $size-navbar-width;
     right: 0;
+    display: flex;
+    align-items: center;
     .for-switch {
       display: inline-block;
       margin-left: 1.25rem;
       margin-right: 0.25rem;
       font-size: 0.875rem;
-    }
-    .duplicate,
-    .go-catalog,
-    .new-product {
-      margin-right: 0.625rem;
-      margin-top: 0.625rem;
-    }
-    .preview,
-    .save {
-      padding: 0.625rem $btn-padding-x-lg;
-    }
-    .save {
-      margin-top: 0.5rem;
-    }
-    .delete {
-      > .material-icons {
-        font-size: 1.563rem;
-        opacity: 0.8;
-      }
     }
   }
 
@@ -164,23 +172,36 @@
   }
 
   .token {
-    background: $brand-primary;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 0;
-    font-weight: lighter;
     display: inline-block;
-    margin: 2px;
-    min-height: 25px;
+    padding: .4rem;
+    margin: .1rem;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    vertical-align: baseline;
+    background-color: $brand-primary;
+
+    > .token-label {
+      white-space: nowrap;
+    }
+
     .close {
-      padding-left: 3px;
+      margin: 0 .4rem;
+      color: $gray-dark;
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 400;
+      text-shadow: none;
+
+      &:hover {
+        color: $gray-dark;
+      }
     }
   }
 
   // Combination generator
   .tokenfield {
     height: auto;
-    padding-bottom: 0;
     input.token-input[type="text"] {
       display: inline-block;
       border: 0;
@@ -188,6 +209,33 @@
       background-color: transparent;
       max-width: 100%;
     }
+  }
+
+  .summary-description-container {
+    overflow: hidden; // fixes horizontal scrolling on the product page
+    .nav-tabs {
+      overflow: hidden; // fixes tab borders bleeding into the tab content
+
+      &.bordered {
+        .nav-link {
+          &.active {
+            border-left: 1px solid $gray-light;
+            border-right: 1px solid $gray-light;
+          }
+        }
+      }
+    }
+
+    .tab-content {
+      &.bordered {
+        border: 1px solid $gray-light;
+      }
+    }
+  }
+
+  .product-feature {
+    align-items: flex-end;
+    margin-bottom: 1rem;
   }
 
   // Combination details form
@@ -202,7 +250,7 @@
   .product-combination-image {
     display: inline-block;
     border: 1px solid $gray-light;
-    outline: solid 4px $white;
+    outline: solid 4px #ffffff;
     margin: 0 0.625rem 0 0;
     border-radius: 0.1875rem;
   }
@@ -231,6 +279,9 @@
       cursor: pointer;
       display: inline-block;
       margin-bottom: 0.625rem;
+    }
+    .panel {
+      background: #fff;
     }
   }
 
@@ -308,7 +359,7 @@
         .iscover {
           background: $gray-medium;
           font-size: 12px;
-          color: $white;
+          color: #ffffff;
           text-align: center;
           padding: 5px;
           position: absolute;
@@ -426,7 +477,7 @@
     .tt-menu {
       width: 100%;
       border: 1px solid $gray-medium;
-      background: $white;
+      background: #ffffff;
       padding: 0.3125rem 0;
       max-height: 19.5rem;
       overflow: auto;
@@ -434,10 +485,10 @@
     .tt-suggestion {
       cursor: pointer;
       padding: 0.3125rem 0.625rem;
-      color: $gray-light;
+      color: $gray-medium;
       &:hover {
         background-color: $primary-hover;
-        color: $white;
+        color: #ffffff;
       }
     }
   }
@@ -505,26 +556,33 @@
         font-size: 0.75rem;
       }
     }
-    > .pstaggerTagsWrapper {
-      border: none;
-      padding: 0;
-      > .pstaggerTag {
-        font-size: 0.75rem;
-        font-weight: 400;
-        padding-top: 0.125rem;
-        margin-bottom: 0.3125rem;
-        > .pstaggerClosingCross {
-          font-size: 0;
-          &::after {
-            font-size: 1rem;
-            font-family: 'Material Icons';
-            content: "\E5CD";
-            text-decoration: none;
-            vertical-align: middle;
-            position: relative;
-            bottom: 0.25rem;
-          }
+  }
+
+  .category-tree-overflow {
+    white-space: nowrap;
+    overflow: auto;
+    ul.category-tree {
+      display: inline-block;
+      min-width: 100%;
+      padding-top: .625rem;
+      .main-category {
+        font-size: .625rem;
+        font-weight: 600;
+      }
+      label {
+        position: relative;
+        padding-right: 1.5rem;
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 0;
+        .default-category {
+          position: absolute;
+          top: 5px;
+          right: 3px;
         }
+      }
+      ul {
+        padding-left: 0.75rem;
       }
     }
   }
@@ -534,10 +592,13 @@
     border: $gray-light 1px solid;
     border-radius: 0.1875rem;
     .categories-tree-actions {
+      display: flex;
+      align-items: center;
       text-transform: uppercase;
       font-size: 0.625rem;
       font-weight: 600;
-      clear: both;
+      border-bottom: .063rem solid $gray-light;
+
       [data-action="expand"],
       [data-action="reduce"] {
         cursor: pointer;
@@ -550,7 +611,7 @@
       }
       .material-icons {
         font-size: 1.25rem;
-        vertical-align: bottom;
+        vertical-align: middle;
       }
     }
   }
@@ -573,18 +634,7 @@
     }
   }
 
-  .seo-table thead th {
-    text-transform: uppercase;
-  }
-  .seo-table tbody tr:nth-of-type(odd) {
-    background: $gray-light;
-  }
-  .seo-table tbody tr td:last-child {
-    box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
-  }
-
-  .customFieldCollection .delete,
-  .seo-table .delete {
+  .customFieldCollection .delete {
     color: $gray-medium;
     .material-icons {
       font-size: 1.25rem;
@@ -613,16 +663,19 @@
     tbody {
       max-height: 450px;
       overflow-y: auto;
-      display: block;
-
-      tr {
-        display: block;
-        overflow: hidden;
-      }
     }
 
     .checkbox {
       margin: 0;
+      > label {
+        margin: 0;
+      }
+    }
+
+    td.file-name {
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -637,35 +690,9 @@
     }
   }
 
-  #supplier_combination_collection, #product-attachments, #supplier_collection {
-    .panel-body {
-      padding: 0;
-    }
-    .table-striped {
-      thead, th, tbody {
-        border:none;
-      }
-      td{
-        color: $gray-medium;
-      }
-    }
-  }
-
   .combinations-list {
-    td,
     th {
-      color: $gray-medium;
-      vertical-align: middle;
-    }
-    .uppercase th {
-      text-transform: uppercase;
-      font-weight: $font-weight-normal;
       font-size: $font-size-xs;
-    }
-    .table-striped {
-      tbody tr:nth-of-type(odd) {
-        background-color: $notice;
-      }
     }
     .combination {
       &.loaded {
@@ -790,7 +817,7 @@
       background: $primary-hover;
       cursor: pointer;
       a {
-        color: $white;
+        color: #ffffff;
         text-decoration: none;
       }
     }
@@ -840,7 +867,7 @@
           display: none;
           +.attribute-label {
             display: inline-block;
-            font-size: $font-size-sm;
+            font-size: $font-size-base;
             color: $gray-light;
             margin: 0;
             .pretty-checkbox {
@@ -850,6 +877,12 @@
               width: 1rem;
               margin-right: 0.4375rem;
               border: 0.0625rem solid $gray-light;
+              &.not-color:before {
+                color: #fff;
+                display: block;
+                text-align: center;
+                line-height: 1rem;
+              }
             }
           }
           &:checked {
@@ -857,12 +890,10 @@
               font-weight: $font-weight-semibold;
               color: $gray-medium;
               .pretty-checkbox {
-                border-color: $gray-medium;
-                border-width: 0.125rem;
                 &.not-color:before {
                   content: "\E5CA";
                   font-family: "Material Icons";
-                  line-height: 0.75rem;
+                  background: $primary;
                 }
               }
             }
@@ -874,59 +905,53 @@
 }
 
 .table {
-  &.table-no-bordered {
-    tbody,
-    th,
-    thead {
-      border: 0;
+  th {
+    padding: {
+      top: 0.625rem;
+      bottom: 0.625rem;
     }
-  }
-  th{
-    padding: 1.25rem 0.625rem;
   }
   td {
     vertical-align: middle;
   }
 }
-#product_catalog_list {
-  .table{
-    thead, th, tbody {
-      border:none;
-      font-weight: lighter;
-       tr:nth-of-type(odd){
-         background: $gray-soft;
-       }
-    }
-    th{
-      text-transform: uppercase;
-      font-size: 0.65rem;
-    }
-    .column-filters{
-      background: $notice;
-    }
-    .sortable tr:hover {
-      border: $brand-primary 1px solid;
-      cursor: move;
-    }
-  }
-  .product-edit {
-    color: $gray-medium;
-    cursor: pointer;
-    .material-icons{
-      font-size: 1.25rem;
-    }
-  }
-  .pagination {
-    list-style: none;
-  }
-  .select2-selection{
-      font-size: 0.875rem;
-      text-transform: none;
-  }
-}
 
 #product_reference_field {
   margin-top: 7px;
+}
+
+#related-product {
+  // list of added related products
+  .typeahead-list {
+    li {
+      @extend .p-1;
+      @extend .mt-1;
+      @extend .d-flex;
+      @extend .align-items-center;
+      border: 1px solid $gray-light;
+
+      // thumbnail
+      > .media-left {
+        img {
+          max-width: 50px;
+          max-height: 50px;
+        }
+      }
+
+      // text
+      > .media-body {
+        .label {
+          @extend .mx-1;
+        }
+
+        // delete button
+        i.delete {
+          cursor: pointer;
+          float: right;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
@@ -955,7 +980,6 @@
     .tabs {
       overflow: hidden;
       width: auto;
-      background: white;
       .material-icons {
         display: inline-block;
       }
@@ -965,26 +989,24 @@
         position: relative;
         height: 3rem;
         z-index: 2;
-        visibility: hidden;
         background: $brand-primary;
         color: white;
-        display: none;
+        position: absolute;
+        left: 15px;
+        top: 0;
         &.visible {
           visibility: visible;
         }
       }
       .right-arrow {
-        margin-top: 3.125rem;
+        right: 15px;
+        left: auto;
       }
     }
     .nav-tabs {
       height: 3.125rem;
       width: 125rem;
       position: relative;
-      .nav-link.active:not(.description-tab) {
-        border-top: transparent;
-        border-bottom: 3px solid $brand-primary;
-      }
     }
     .right-column {
       width: 30%;
@@ -1029,9 +1051,6 @@
         width: auto;
         float: right;
       }
-    }
-    .category-hr {
-      width: 100%;
     }
     .checkbox label {
       max-width: 80%;

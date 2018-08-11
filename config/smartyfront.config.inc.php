@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,7 +79,7 @@ function withWidget($params, callable $cb)
 function smartyWidget($params, &$smarty)
 {
     return withWidget($params, function ($widget, $params) {
-        return $widget->renderWidget(null, $params);
+        return $widget->renderWidget(isset($params['hook']) ? $params['hook'] : null, $params);
     });
 }
 
@@ -94,7 +94,7 @@ function smartyRender($params, &$smarty)
     return $ui->render($params);
 }
 
-function smartyFormField($params, &$smarty)
+function smartyFormField($params, $smarty)
 {
     $scope = $smarty->createData(
         $smarty
@@ -113,7 +113,7 @@ function smartyFormField($params, &$smarty)
     return $tpl->fetch();
 }
 
-function smartyWidgetBlock($params, $content, &$smarty)
+function smartyWidgetBlock($params, $content, $smarty)
 {
     static $backedUpVariablesStack = array();
 
@@ -124,7 +124,7 @@ function smartyWidgetBlock($params, $content, &$smarty)
         withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
             // Assign widget variables and backup all the variables they override
             $currentVariables = $smarty->getTemplateVars();
-            $scopedVariables = $widget->getWidgetVariables(null, $params);
+            $scopedVariables = $widget->getWidgetVariables(isset($params['hook']) ? $params['hook'] : null, $params);
             $backedUpVariables = array();
             foreach ($scopedVariables as $key => $value) {
                 if (array_key_exists($key, $currentVariables)) {
@@ -151,7 +151,7 @@ function smartyWidgetBlock($params, $content, &$smarty)
     }
 }
 
-function smartyTranslate($params, &$smarty)
+function smartyTranslate($params, $smarty)
 {
     global $_LANG;
 
@@ -213,9 +213,7 @@ function smartyTranslate($params, &$smarty)
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-    $filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
-
-    $basename = basename($filename, '.tpl');
+    $basename = basename($smarty->source->name, '.tpl');
     $key = $basename.'_'.md5($string);
 
     if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
@@ -223,9 +221,24 @@ function smartyTranslate($params, &$smarty)
     }
 
     if ($params['mod']) {
-        return Translate::smartyPostProcessTranslation(Translate::getModuleTranslation($params['mod'], $params['s'], $basename, $params['sprintf'], $params['js']), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getModuleTranslation(
+                $params['mod'],
+                $params['s'],
+                $basename,
+                $params['sprintf'],
+                $params['js']
+            ),
+            $params
+        );
     } elseif ($params['pdf']) {
-        return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $params['sprintf']), $params);
+        return Translate::smartyPostProcessTranslation(
+            Translate::getPdfTranslation(
+                $params['s'],
+                $params['sprintf']
+            ),
+            $params
+        );
     }
 
     if ($_LANG != null && isset($_LANG[$key])) {

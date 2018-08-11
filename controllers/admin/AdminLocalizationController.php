@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -239,7 +239,7 @@ class AdminLocalizationControllerCore extends AdminController
 
         $i = 0;
         if ($xml_localization) {
-            foreach ($xml_localization->pack as $key => $pack) {
+            foreach ($xml_localization->pack as $pack) {
                 $remote_isos[(string)$pack->iso] = true;
                 $localizations_pack[$i]['iso_localization_pack'] = (string)$pack->iso;
                 $localizations_pack[$i]['name'] = (string)$pack->name;
@@ -261,7 +261,9 @@ class AdminLocalizationControllerCore extends AdminController
 
                     $xml_pack = @simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
                     if (!$xml_pack) {
-                        return $this->displayWarning($this->trans('%language% could not be loaded', array('%language%' => $entry),  'Admin.International.Notification'));
+                        return $this->displayWarning(
+                            $this->trans('%language% could not be loaded', array('%language%' => $entry), 'Admin.International.Notification')
+                        );
                     }
                     $localizations_pack[$i]['iso_localization_pack'] = $iso;
                     $localizations_pack[$i]['name'] = $this->trans('%s (local)', array((string)$xml_pack['name']), 'Admin.International.Feature');

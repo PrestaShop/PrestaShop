@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -290,7 +290,7 @@ class AdminProductDataUpdater implements ProductInterface
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE cp.`id_category` = '.(int)$categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
 
-        Db::getInstance()->query($updatePositions);
+        Db::getInstance()->execute($updatePositions);
 
         // Fixes duplicates on all pages
         Db::getInstance()->query('SET @i := 0');
@@ -298,7 +298,7 @@ class AdminProductDataUpdater implements ProductInterface
             SET cp.`position` = (SELECT @i := @i + 1)
             WHERE cp.`id_category` = '.(int)$categoryId.'
             ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
-        Db::getInstance()->query($selectPositions);
+        Db::getInstance()->execute($selectPositions);
 
         return true;
     }

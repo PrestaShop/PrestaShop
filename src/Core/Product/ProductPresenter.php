@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
+use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -145,6 +147,7 @@ class ProductPresenter
         $presentedProduct['discount_percentage'] = null;
         $presentedProduct['discount_percentage_absolute'] = null;
         $presentedProduct['discount_amount'] = null;
+        $presentedProduct['discount_amount_to_display'] = null;
 
         if ($settings->include_taxes) {
             $price = $regular_price = $product['price'];
@@ -153,15 +156,23 @@ class ProductPresenter
         }
 
         if ($product['specific_prices']) {
-            $presentedProduct['has_discount'] = (0 != $product['reduction']);
+            $presentedProduct['has_discount']  = (0 != $product['reduction']);
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
-            // TODO: format according to locale preferences
-            $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
-            $presentedProduct['discount_percentage_absolute'] = round(100 * $product['specific_prices']['reduction']).'%';
+
+            $absoluteReduction     = new Number($product['specific_prices']['reduction']);
+            $absoluteReduction     = $absoluteReduction->times(new Number('100'));
+            $negativeReduction     = $absoluteReduction->toNegative();
+            $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
+            $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
+
+            // TODO: add percent sign according to locale preferences
+            $presentedProduct['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
+            $presentedProduct['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             // TODO: Fix issue with tax calculation
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
                 $product['reduction']
             );
+            $presentedProduct['discount_amount_to_display'] = '-' . $presentedProduct['discount_amount'];
             $regular_price = $product['price_without_reduction'];
         }
 
@@ -229,8 +240,11 @@ class ProductPresenter
 
         $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
 
-        if ($settings->stock_management_enabled && !$product['allow_oosp'] && isset($product['quantity_wanted']) &&
-            ($product['quantity'] <= 0 || $product['quantity'] < $product['quantity_wanted'])) {
+        if ($settings->stock_management_enabled
+            && !$product['allow_oosp']
+            && ($product['quantity'] <= 0
+            || $product['quantity'] - $this->getQuantityWanted() < 0)
+        ) {
             $shouldEnable = false;
         }
 
@@ -245,6 +259,13 @@ class ProductPresenter
         );
     }
 
+    /**
+     * @inheritdoc
+     * @param array $product
+     * @param Language $language
+     * @param bool $canonical
+     * @return string
+     */
     private function getProductURL(
         array $product,
         Language $language,
@@ -266,6 +287,14 @@ class ProductPresenter
             false,
             true
         );
+    }
+
+    /**
+     * @return int Quantity of product requested by the customer
+     */
+    private function getQuantityWanted()
+    {
+        return (int) Tools::getValue('quantity_wanted', 1);
     }
 
     private function addMainVariantsInformation(
@@ -390,51 +419,73 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    /**
+     * @param array $presentedProduct
+     * @param array $product
+     * @param Language $language
+     * @return array
+     */
+    private function addDeliveryInformation(
+        array $presentedProduct,
+        array $product,
+        Language $language
+    ) {
+        $presentedProduct['delivery_information'] = null;
+
+        if ($product['quantity'] > 0) {
+            $presentedProduct['delivery_information'] = Configuration::get('PS_LABEL_DELIVERY_TIME_AVAILABLE', $language->id);
+        } elseif ($product['allow_oosp']) {
+            $presentedProduct['delivery_information'] = Configuration::get('PS_LABEL_DELIVERY_TIME_OOSBOA', $language->id);
+        }
+
+        return $presentedProduct;
+    }
+
+    /**
+     * @param array $presentedProduct
+     * @param ProductPresentationSettings $settings
+     * @param array $product
+     * @param Language $language
+     * @return array
+     */
     public function addQuantityInformation(
         array $presentedProduct,
         ProductPresentationSettings $settings,
-        array $product
+        array $product,
+        Language $language
     ) {
         $show_price = $this->shouldShowPrice($settings, $product);
-
         $show_availability = $show_price && $settings->stock_management_enabled;
-
         $presentedProduct['show_availability'] = $show_availability;
+        $product['quantity_wanted'] = $this->getQuantityWanted();
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;
         }
 
         if ($show_availability) {
-            if ($product['quantity'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
                 $presentedProduct['availability_date'] = $product['available_date'];
+
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity']) {
-                        $presentedProduct['availability_message'] = $this->translator->trans(
-                            'There are not enough products in stock',
-                            array(),
-                            'Shop.Notifications.Error'
-                        );
-                        $presentedProduct['availability'] = 'unavailable';
-                    } else {
-                        $presentedProduct['availability_message'] = $product['available_now'];
-                        $presentedProduct['availability'] = 'available';
-                    }
+                    $presentedProduct['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
+                    $presentedProduct['availability'] = 'available';
                 }
             } elseif ($product['allow_oosp']) {
-                if ($product['available_later']) {
-                    $presentedProduct['availability_message'] = $product['available_later'];
-                    $presentedProduct['availability_date'] = $product['available_date'];
-                    $presentedProduct['availability'] = 'available';
-                } else {
-                    // no default message when allow_oosp (out of stock) is enabled & available_later is empty
-                    $presentedProduct['availability_message'] = null;
-                    $presentedProduct['availability_date'] = $product['available_date'];
-                    $presentedProduct['availability'] = 'unavailable';
-                }
-            } elseif ($product['quantity_all_versions']) {
+                $presentedProduct['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
+                $presentedProduct['availability_date'] = $product['available_date'];
+                $presentedProduct['availability'] = 'available';
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] >= 0) {
+                $presentedProduct['availability_message'] = $this->translator->trans(
+                    'There are not enough products in stock',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
+                $presentedProduct['availability'] = 'unavailable';
+                $presentedProduct['availability_date'] = null;
+            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),
@@ -443,11 +494,7 @@ class ProductPresenter
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             } else {
-                $presentedProduct['availability_message'] = $this->translator->trans(
-                    'Out of stock',
-                    array(),
-                    'Shop.Theme.Catalog'
-                );
+                $presentedProduct['availability_message'] = Configuration::get('PS_LABEL_OOS_PRODUCTS_BOD', $language->id);
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             }
@@ -616,7 +663,14 @@ class ProductPresenter
         $presentedProduct = $this->addQuantityInformation(
             $presentedProduct,
             $settings,
-            $product
+            $product,
+            $language
+        );
+
+        $presentedProduct = $this->addDeliveryInformation(
+            $presentedProduct,
+            $product,
+            $language
         );
 
         if (isset($product['ecotax'])) {
@@ -645,6 +699,21 @@ class ProductPresenter
         }
 
         $presentedProduct['embedded_attributes'] = $this->getProductEmbeddedAttributes($product);
+
+        // if product has features
+        if (isset($presentedProduct['features'])) {
+            $presentedProduct['grouped_features'] = $this->buildGroupedFeatures($presentedProduct['features']);
+        }
+
+        //microdata availability
+        $presentedProduct['seo_availability'] = 'https://schema.org/';
+        if ($product['quantity'] > 0) {
+            $presentedProduct['seo_availability'] .= 'InStock';
+        } elseif ($product['quantity'] <= 0 && $product['allow_oosp']) {
+            $presentedProduct['seo_availability'] .= 'PreOrder';
+        } else {
+            $presentedProduct['seo_availability'] .= 'OutOfStock';
+        }
 
         return $presentedProduct;
     }
@@ -691,6 +760,8 @@ class ProductPresenter
             "online_only",
             "ecotax",
             "minimal_quantity",
+            "low_stock_threshold",
+            "low_stock_alert",
             "price",
             "unity",
             "unit_price_ratio",
@@ -766,6 +837,7 @@ class ProductPresenter
             "discount_percentage",
             "discount_percentage_absolute",
             "discount_amount",
+            "discount_amount_to_display",
             "price_amount",
             "unit_price_full",
             "add_to_cart_url",
@@ -777,6 +849,8 @@ class ProductPresenter
             "availability_message",
             "availability",
             "reference_to_display",
+            "delivery_in_stock",
+            "delivery_out_stock",
         );
     }
 
@@ -795,5 +869,43 @@ class ProductPresenter
         }
 
         return $embeddedProductAttributes;
+    }
+
+    /**
+     * Assemble the same features in one array
+     *
+     * @param  array $productFeatures
+     *
+     * @return array
+     */
+    protected function buildGroupedFeatures(array $productFeatures)
+    {
+        $valuesByFeatureName = array();
+        $groupedFeatures = array();
+
+        // features can either be "raw" (id_feature, id_product_id_feature_value)
+        // or "full" (id_feature, name, value)
+        // grouping can only be performed if they are "full"
+        if (empty($productFeatures) || !array_key_exists('name', reset($productFeatures))) {
+            return array();
+        }
+
+        foreach ($productFeatures as $feature) {
+            $featureName = $feature['name'];
+            // build an array of unique features
+            $groupedFeatures[$featureName] = $feature;
+            // aggregate feature values separately
+            $valuesByFeatureName[$featureName][] = $feature['value'];
+        }
+
+        // replace value from features that have multiple values with the ones we aggregated earlier
+        foreach ($valuesByFeatureName as $featureName => $values) {
+            if (count($values) > 1) {
+                sort($values, SORT_NATURAL);
+                $groupedFeatures[$featureName]['value'] = implode("\n", $values);
+            }
+        }
+
+        return $groupedFeatures;
     }
 }

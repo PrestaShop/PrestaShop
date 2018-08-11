@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -72,16 +72,20 @@ class ModuleSelfConfigurator
      * @var Filesystem
      */
     protected $filesystem;
-    
-    public function __construct(ModuleRepository $moduleRepository, Configuration $configuration, Connection $connection)
-    {
+
+    public function __construct(
+        ModuleRepository $moduleRepository,
+        Configuration $configuration,
+        Connection $connection,
+        Filesystem $filesystem
+    ) {
         $this->module = null;
         $this->configFile = null;
 
         $this->moduleRepository = $moduleRepository;
         $this->configuration = $configuration;
         $this->connection = $connection;
-        $this->filesystem = new Filesystem;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -113,7 +117,7 @@ class ModuleSelfConfigurator
 
     /**
      * If defined, get the config file path or if possible, guess it.
-     * 
+     *
      * @return string|null
      * @throws InvalidArgumentException
      */
@@ -144,7 +148,7 @@ class ModuleSelfConfigurator
 
     /**
      *  Alias for config file setter
-     * 
+     *
      * @param string $filepath
      * @return $this
      */
@@ -155,7 +159,7 @@ class ModuleSelfConfigurator
 
     /**
      * Set the config file to parse
-     * 
+     *
      * @param string $filepath
      * @return $this
      * @throws UnexpectedTypeException
@@ -165,7 +169,7 @@ class ModuleSelfConfigurator
         if (!is_string($filepath)) {
             throw new UnexpectedTypeException($filepath, 'string');
         }
-        
+
         $this->configFile = $filepath;
         return $this;
     }
@@ -209,13 +213,13 @@ class ModuleSelfConfigurator
         if (!$this->module || !$this->moduleRepository->getModule($this->module)->hasValidInstance()) {
             $errors[] = 'The module specified is invalid';
         }
-        
+
         return $errors;
     }
 
     /**
      * Launch the self configuration with all the context previously set!
-     * 
+     *
      * @return boolean
      */
     public function configure()
@@ -253,7 +257,7 @@ class ModuleSelfConfigurator
     /**
      * Finds and returns filepath from a config key in the YML config file.
      * Can be a string of a value of "file" key.
-     * 
+     *
      * @param array $data
      * @return string
      * @throws Exception if file data not provided
@@ -273,7 +277,7 @@ class ModuleSelfConfigurator
 
     /**
      * Require a PHP file and instanciate the class of the same name in it.
-     * 
+     *
      * @param string $file
      * @return stdClass
      */
@@ -304,7 +308,7 @@ class ModuleSelfConfigurator
 
     /**
      * Run configuration for "configuration" step
-     * 
+     *
      * @param array $config
      * @return void
      */
@@ -313,7 +317,7 @@ class ModuleSelfConfigurator
         if (empty($config['configuration'])) {
             return;
         }
-        
+
         if (array_key_exists('update', $config['configuration'])) {
             $this->runConfigurationUpdate($config['configuration']['update']);
         }
@@ -369,7 +373,7 @@ class ModuleSelfConfigurator
 
         foreach($config['php'] as $data) {
             $file = $this->extractFilePath($data);
-            
+
             $module = $this->moduleRepository->getModule($this->module);
             $params = !empty($data['params'])?$data['params']:array();
 
@@ -410,7 +414,7 @@ class ModuleSelfConfigurator
     protected function runSqlFile($data)
     {
         $content = file_get_contents($this->extractFilePath($data));
-        
+
         foreach(explode(';', $content) as $sql) {
             $sql = trim($sql);
             if (empty($sql)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,7 +76,7 @@ class HelperShopCore extends Helper
         } elseif ($shop_context == Shop::CONTEXT_GROUP) {
             $current_shop_name = sprintf(Translate::getAdminTranslation('%s group'), $tree[Shop::getContextShopGroupID()]['name']);
         } else {
-            foreach ($tree as $group_id => $group_data) {
+            foreach ($tree as $group_data) {
                 foreach ($group_data['shops'] as $shop_id => $shop_data) {
                     if ($shop_id == Shop::getContextShopID()) {
                         $current_shop_name = $shop_data['name'];

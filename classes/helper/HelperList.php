@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @since 1.5.0
@@ -201,7 +203,7 @@ class HelperListCore extends Helper
                 $position_group_identifier = Category::getRootCategory()->id;
             }
 
-            $positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
+            $positions = array_map(function($elem) { return (int)($elem['position']); }, $this->_list);
             sort($positions);
         }
 
@@ -376,7 +378,7 @@ class HelperListCore extends Helper
     /**
      * Display duplicate action link
      */
-    public function displayDuplicateLink($token = null, $id, $name = null)
+    public function displayDuplicateLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_duplicate.tpl');
         if (!array_key_exists('Bad SQL query', self::$cache_lang)) {
@@ -425,7 +427,7 @@ class HelperListCore extends Helper
      *     fields_display: // attribute $fields_list of the admin controller
      *   }
      */
-    public function displayDetailsLink($token = null, $id, $name = null)
+    public function displayDetailsLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_details.tpl');
         if (!array_key_exists('Details', self::$cache_lang)) {
@@ -452,7 +454,7 @@ class HelperListCore extends Helper
     /**
      * Display view action link
      */
-    public function displayViewLink($token = null, $id, $name = null)
+    public function displayViewLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_view.tpl');
         if (!array_key_exists('View', self::$cache_lang)) {
@@ -470,7 +472,7 @@ class HelperListCore extends Helper
     /**
      * Display edit action link
      */
-    public function displayEditLink($token = null, $id, $name = null)
+    public function displayEditLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {
@@ -483,8 +485,7 @@ class HelperListCore extends Helper
             case 'index.php?controller=AdminProducts':
             case 'index.php?tab=AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                global $kernel; // sf kernel
-                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
@@ -505,7 +506,7 @@ class HelperListCore extends Helper
     /**
      * Display delete action link
      */
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_delete.tpl');
 
@@ -531,8 +532,7 @@ class HelperListCore extends Helper
             case 'index.php?controller=AdminProducts':
             case 'index.php?tab=AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                global $kernel; // sf kernel
-                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
@@ -559,7 +559,7 @@ class HelperListCore extends Helper
     /**
      * Display default action link
      */
-    public function displayDefaultLink($token = null, $id, $name = null)
+    public function displayDefaultLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_default.tpl');
         if (!array_key_exists('Default', self::$cache_lang)) {
@@ -662,7 +662,7 @@ class HelperListCore extends Helper
                 case 'date':
                 case 'datetime':
                     if (is_string($value)) {
-                        $value = Tools::unSerialize($value);
+                        $value = json_decode($value, true);
                     }
                     if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
                         $value = '';

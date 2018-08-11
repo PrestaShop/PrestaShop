@@ -1,0 +1,60 @@
+.ps-number {
+  position: relative;
+  display: inline-block;
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+  .danger {
+    border: 1px solid $danger;
+    background-color: #fff;
+    color: $gray-dark;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .ps-number-spinner {
+    position: absolute;
+    top: 1px;
+    flex-direction: column;
+    right: 0;
+    cursor: pointer;
+    line-height: 17px;
+  }
+
+  &.hover-buttons {
+    .ps-number-spinner {
+      display: none;
+      opacity: 0;
+    }
+
+    &:hover .ps-number-spinner {
+      opacity: 1;
+      display: inline-block;
+    }
+  }
+
+  .ps-number-up::before {
+    font-family: 'Material Icons';
+    content: "\E5C7";
+    font-size: 20px;
+    color: $gray-dark;
+    position: relative;
+  }
+
+  .ps-number-down::before {
+    font-family: 'Material Icons';
+    content: "\E5C5";
+    font-size: 20px;
+    color: $gray-dark;
+    bottom: 6px;
+    position: relative;
+  }
+}

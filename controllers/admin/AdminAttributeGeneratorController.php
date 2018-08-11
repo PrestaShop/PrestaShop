@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,9 +46,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJS(_PS_JS_DIR_.'admin/attributes.js');
     }
 
@@ -76,7 +76,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
     public static function createCombinations($list)
     {
         if (count($list) <= 1) {
-            return count($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;
+            return count($list) ? array_map(function ($v) { return (array($v)); }, $list[0]) : $list;
         }
         $res = array();
         $first = array_pop($list);
@@ -228,10 +228,13 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     public function initContent()
     {
+
         if (!Combination::isFeatureActive()) {
-            $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
+            $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
+
+            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.
                     $this->trans('Performance', array(), 'Admin.Global').'</a>';
-            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array('%s' => $url), 'Admin.Catalog.Notification')));
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
             return;
         }
 

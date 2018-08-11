@@ -1,0 +1,231 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% form_theme categories 'PrestaShopBundle:Admin/Product/Themes:categories_theme.html.twig' %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/default/js/bundle/product/catalog.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
+  <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/catalog.bundle.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="products-catalog">
+
+    {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
+
+    <div class="content container-fluid">
+
+      {% if permission_error|length %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+              <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
+            <p class="alert-text">
+              {{ permission_error }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="row align-items-start">
+        {% block product_catalog_tools %}
+          {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
+        {% endblock %}
+
+        {% block product_catalog_filters %}
+          {{ include('@Product/CatalogPage/Blocks/filters.html.twig', {
+              'limit': limit,
+              'offset': offset,
+              'orderBy': orderBy,
+              'sortOrder': sortOrder
+            })
+          }}
+        {% endblock %}
+      </div>
+
+      {% block product_catalog_form %}
+        {{ include('@Product/CatalogPage/Forms/form_products.html.twig', {
+            'limit': limit,
+            'orderBy': orderBy,
+            'offset': offset,
+            'sortOrder': sortOrder,
+            'filter_category': filter_category,
+            'filter_column_id_product': filter_column_id_product,
+            'filter_column_name': filter_column_name,
+            'filter_column_reference': filter_column_reference,
+            'filter_column_name_category': filter_column_name_category,
+            'filter_column_price': filter_column_price,
+            'filter_column_sav_quantity': filter_column_sav_quantity,
+            'filter_column_active': filter_column_active,
+            'has_category_filter': has_category_filter,
+            'activate_drag_and_drop': activate_drag_and_drop,
+            'products': products,
+            'last_sql': last_sql,
+            'product_count_filtered': product_count_filtered,
+            'pagination_parameters': pagination_parameters,
+            'pagination_limit_choices': pagination_limit_choices
+          })
+        }}
+      {% endblock %}
+
+    </div>
+  </div>
+
+  {# Duplication product modal #}
+  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+    'id': "catalog_duplicate_all_modal",
+    'title': "Duplicating products"|trans({}, 'Admin.Catalog.Notification'),
+    'closable': true,
+    'progressbar': {
+    'id': "catalog_duplicate_all_progression",
+    'label': "Duplicating..."|trans({}, 'Admin.Catalog.Notification')
+  },
+    'actions': [],
+  }%}
+    {% block content %}
+      <div class="modal-body">
+        {{ 'Duplication in progress...'|trans({}, 'Admin.Catalog.Notification') }}
+        <span id="catalog_duplicate_all_failure" style="display: none;color: darkred;">
+          {{ 'Duplication failed.'|trans({}, 'Admin.Catalog.Notification') }}
+        </span>
+      </div>
+    {% endblock %}
+  {% endembed %}
+
+
+  {# Activation product modal #}
+  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': "catalog_activate_all_modal",
+  'title': "Activating products"|trans({}, 'Admin.Catalog.Notification'),
+  'closable': true,
+  'progressbar': {
+  'id': "catalog_activate_all_progression",
+  'label': "Activating..."|trans({}, 'Admin.Catalog.Notification')
+  },
+  'actions': [],
+  }%}
+    {% block content %}
+      <div class="modal-body">
+        {{ 'Activation in progress...'|trans({}, 'Admin.Catalog.Notification') }}
+        <span id="catalog_activate_all_failure" style="display: none;color: darkred;">
+          {{ 'Activation failed.'|trans({}, 'Admin.Catalog.Notification') }}
+        </span>
+      </div>
+    {% endblock %}
+  {% endembed %}
+
+
+  {# Desactivation product modal #}
+  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': "catalog_deactivate_all_modal",
+  'title': "Deactivating products"|trans({}, 'Admin.Catalog.Notification'),
+  'closable': true,
+  'progressbar': {
+  'id': "catalog_deactivate_all_progression",
+  'label': "Deactivating..."|trans({}, 'Admin.Catalog.Notification')
+  },
+  'actions': [],
+  }%}
+    {% block content %}
+      <div class="modal-body">
+        {{ 'Deactivation in progress...'|trans({}, 'Admin.Catalog.Notification') }}
+        <span id="catalog_deactivate_all_failure" style="display: none;color: darkred;">
+          {{ 'Deactivation failed.'|trans({}, 'Admin.Catalog.Notification') }}
+        </span>
+      </div>
+    {% endblock %}
+  {% endembed %}
+
+
+  {# Deletion product modal #}
+  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': "catalog_delete_all_modal",
+  'title': "Deleting products"|trans({}, 'Admin.Catalog.Notification'),
+  'closable': true,
+  'progressbar': {
+  'id': "catalog_delete_all_progression",
+  'label': "Deleting..."|trans({}, 'Admin.Catalog.Notification')
+  },
+  'actions': [],
+  }%}
+    {% block content %}
+      <div class="modal-body">
+        {{ 'Deletion in progress...'|trans({}, 'Admin.Catalog.Notification') }}
+        <span id="catalog_delete_all_failure" style="display: none;color: darkred;">
+          {{ 'Deletion failed.'|trans({}, 'Admin.Catalog.Notification') }}
+        </span>
+      </div>
+    {% endblock %}
+  {% endembed %}
+
+
+  {# Confirmation deletion product modal #}
+  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+    'id': "catalog_deletion_modal",
+    'title': "Delete products?"|trans({}, 'Admin.Catalog.Feature'),
+    'closable': true,
+    'actions': [{
+      'type': 'button',
+      'label': "Delete now"|trans({}, 'Admin.Actions'),
+      'value': 'confirm',
+      'class': 'btn btn-primary btn-lg',
+    }],
+  }%}
+    {% block content %}
+      <div class="modal-body">
+        {{ 'These products will be deleted for good. Please confirm.'|trans({}, 'Admin.Catalog.Feature') }}
+      </div>
+    {% endblock %}
+  {% endembed %}
+
+  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+    'id': "catalog_sql_query_modal",
+    'title': "SQL query"|trans({}, 'Admin.Global'),
+    'closable': true,
+    'actions': [{
+      'type': 'button',
+      'label': "Export to SQL Manager"|trans({}, 'Admin.Actions'),
+      'value': 'sql_manager',
+      'class': 'btn btn-primary btn-lg',
+    }],
+  } %}
+    {% block content %}
+      <form method="post" action="{{ sql_manager_add_link }}" id="catalog_sql_query_modal_content">
+        <div class="modal-body">
+          <textarea name="sql" rows="20" cols="65"></textarea>
+          <input type="hidden" name="name" value="" />
+        </div>
+      </form>
+    {% endblock %}
+  {% endembed %}
+
+{% endblock %}

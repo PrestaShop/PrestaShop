@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -137,7 +137,7 @@ class AdminTaxesControllerCore extends AdminController
      * @throws Exception
      * @throws SmartyException
      */
-    public function displayDeleteLink($token = null, $id)
+    public function displayDeleteLink($token, $id)
     {
         if (!array_key_exists('Delete', self::$cache_lang)) {
             self::$cache_lang['Delete'] = $this->trans('Delete', array(), 'Admin.Actions');
@@ -262,10 +262,8 @@ class AdminTaxesControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                     }
-                }
-
-                /* Object creation */
-                else {
+                } else {
+                    // Object creation
                     /** @var Tax $object */
                     $object = new $this->className();
                     $this->copyFromPost($object, $this->table);

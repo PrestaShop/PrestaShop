@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -393,7 +393,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedForm'), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'checkedSelect':
                     if (isset($e[$key]['table'])) {
@@ -418,7 +418,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedSelect'), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'checkedWhere':
                     if (isset($e[$key]['operator'])) {
@@ -441,7 +441,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedWhere'), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'checkedHaving':
                     if (isset($e[$key]['operator'])) {
@@ -464,7 +464,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedHaving'), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'checkedOrder':
                     if (isset($e[$key]['attribut'])) {
@@ -479,7 +479,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedOrder'), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'checkedGroupBy':
                     if (isset($e[$key]['attribut'])) {
@@ -494,11 +494,11 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedGroupBy'), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'checkedLimit':
                     $this->errors[] = $this->trans('The LIMIT clause must contain numeric arguments.', array(), 'Admin.Advparameters.Notification');
-                break;
+                    break;
 
                 case 'returnNameTable':
                     if (isset($e[$key]['reference'])) {
@@ -513,15 +513,15 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('When multiple tables are used, each attribute must refer back to a table.', array(), 'Admin.Advparameters.Notification');
                     }
-                break;
+                    break;
 
                 case 'testedRequired':
-                    $this->errors[] = sprintf($this->trans('"%s" does not exist.', array(), 'Admin.Notifications.Error'), $e[$key]);
-                break;
+                    $this->errors[] = $this->trans('"%key%" does not exist.', array('%key%' => $e[$key]), 'Admin.Notifications.Error');
+                    break;
 
                 case 'testedUnauthorized':
-                    $this->errors[] = sprintf($this->trans('"%s" is an unauthorized keyword.', array(), 'Admin.Advparameters.Notification'), $e[$key]);
-                break;
+                    $this->errors[] = $this->trans('"%key%" is an unauthorized keyword.', array('%key%' => $e[$key]), 'Admin.Advparameters.Notification');
+                    break;
             }
         }
     }

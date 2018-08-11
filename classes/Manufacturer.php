@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -236,13 +236,11 @@ class ManufacturerCore extends ObjectModel
                 $counts[(int) $result['id_manufacturer']] = (int) $result['nb_products'];
             }
 
-            if (count($counts)) {
-                foreach ($manufacturers as $key => $manufacturer) {
-                    if (array_key_exists((int) $manufacturer['id_manufacturer'], $counts)) {
-                        $manufacturers[$key]['nb_products'] = $counts[(int) $manufacturer['id_manufacturer']];
-                    } else {
-                        $manufacturers[$key]['nb_products'] = 0;
-                    }
+            foreach ($manufacturers as $key => $manufacturer) {
+                if (array_key_exists((int) $manufacturer['id_manufacturer'], $counts)) {
+                    $manufacturers[$key]['nb_products'] = $counts[(int) $manufacturer['id_manufacturer']];
+                } else {
+                    $manufacturers[$key]['nb_products'] = 0;
                 }
             }
         }

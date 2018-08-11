@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,17 +44,17 @@ class HookConfigurator
      * as found in theme.yml,
      * it has a format like:
      * [
-     * 		"someHookName" => [
-     * 			null,
-     * 			"blockstuff",
-     * 			"othermodule"
-     * 		],
-     * 		"someOtherHookName" => [
-     * 			null,
-     * 			"blockmenu" => [
-     * 				"except_pages" => ["category", "product"]
-     * 			]
-     * 		]
+     *     "someHookName" => [
+     *        null,
+     *        "blockstuff",
+     *        "othermodule"
+     *     ],
+     *     "someOtherHookName" => [
+     *         null,
+     *         "blockmenu" => [
+     *             "except_pages" => ["category", "product"]
+     *         ]
+     *     ]
      * ]
      */
     public function getThemeHooksConfiguration(array $hooks)
@@ -111,7 +111,7 @@ class HookConfigurator
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];
-        foreach ($hooks as $hookName => $modules) {
+        foreach ($hooks as $modules) {
             $list = array_merge($list, $modules);
         }
 

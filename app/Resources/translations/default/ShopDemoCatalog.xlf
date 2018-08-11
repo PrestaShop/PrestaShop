@@ -1,420 +1,420 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/lang/FeatureValueLang.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f6937723663d9c11f1ee4edf9f935fa8">
-        <source>Polyester</source>
-        <target>Polyester</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:41</note>
-      </trans-unit>
-      <trans-unit id="11c69b2a8ff1502a44e350ace6f172e4">
-        <source>Wool</source>
-        <target>Wool</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:44</note>
-      </trans-unit>
-      <trans-unit id="5344e5ae58a454f75268240cff5ae1be">
-        <source>Viscose</source>
-        <target>Viscose</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:47</note>
-      </trans-unit>
-      <trans-unit id="b3de5045d4f335597ac9a23fd225e3e7">
-        <source>Elastane</source>
-        <target>Elastane</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:50</note>
-      </trans-unit>
-      <trans-unit id="db547a9a5b84991c24ec850ac0749c0b">
-        <source>Cotton</source>
-        <target>Cotton</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:53</note>
-      </trans-unit>
-      <trans-unit id="a2a3a0347f0f001a4473dd54dca2462e">
-        <source>Silk</source>
-        <target>Silk</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:56</note>
-      </trans-unit>
-      <trans-unit id="e8a3cb6a854cbfffd958d5bc73303806">
-        <source>Suede</source>
-        <target>Suede</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:59</note>
-      </trans-unit>
-      <trans-unit id="be181575a12020428018676dedd91f9d">
-        <source>Straw</source>
-        <target>Straw</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:62</note>
-      </trans-unit>
-      <trans-unit id="bdf7ad23e89b55f904bca0304819309e">
-        <source>Leather</source>
-        <target>Leather</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:65</note>
-      </trans-unit>
-      <trans-unit id="d35b51b639528d580362ca7042de6a0e">
-        <source>Classic</source>
-        <target>Classic</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:68</note>
-      </trans-unit>
-      <trans-unit id="28d5d53226be8aa8da42d9cbdd312e62">
-        <source>Casual</source>
-        <target>Casual</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:71</note>
-      </trans-unit>
-      <trans-unit id="7d2957dfd3b888fc4087f60c3c650953">
-        <source>Military</source>
-        <target>Military</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:74</note>
-      </trans-unit>
-      <trans-unit id="3e80e32cdcfb5cf850b1340241c30412">
-        <source>Girly</source>
-        <target>Girly</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:77</note>
-      </trans-unit>
-      <trans-unit id="4cfbb125e9878528bab91d12421134d8">
-        <source>Rock</source>
-        <target>Rock</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:80</note>
-      </trans-unit>
-      <trans-unit id="972e73b7a882d0802a4e3a16946a2f94">
-        <source>Basic</source>
-        <target>Basic</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:83</note>
-      </trans-unit>
-      <trans-unit id="8a19a741babf557d260bd74b2474a940">
-        <source>Dressy</source>
-        <target>Dressy</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:86</note>
-      </trans-unit>
-      <trans-unit id="818c50db4c174e9a0c972f343c21cdd5">
-        <source>Short Sleeve</source>
-        <target>Short Sleeve</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:89</note>
-      </trans-unit>
-      <trans-unit id="50085b52dafa67ba14e1d07a65bf3698">
-        <source>Colorful Dress</source>
-        <target>Colorful Dress</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:92</note>
-      </trans-unit>
-      <trans-unit id="6447ac704069175c7bee940fbefdc6c6">
-        <source>Short Dress</source>
-        <target>Short Dress</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:95</note>
-      </trans-unit>
-      <trans-unit id="a12f6cb35c8c69fd5c18d6c54e0c0dae">
-        <source>Midi Dress</source>
-        <target>Midi Dress</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:98</note>
-      </trans-unit>
-      <trans-unit id="c2558f658f49ff9beb46ee7f8e293736">
-        <source>Maxi Dress</source>
-        <target>Maxi Dress</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:101</note>
-      </trans-unit>
-      <trans-unit id="e9be07c8edbe075469d06124d1c59763">
-        <source>2.75 in</source>
-        <target>2.75 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:104</note>
-      </trans-unit>
-      <trans-unit id="a7ec73b7953e85fcb250232e25d63114">
-        <source>2.06 in</source>
-        <target>2.06 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:107</note>
-      </trans-unit>
-      <trans-unit id="8b8d3719bda5725283d96edf1eb81e8a">
-        <source>49.2 g</source>
-        <target>49.2 g</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:110</note>
-      </trans-unit>
-      <trans-unit id="9ac8a61ab67a9d5c70f7f89aec726837">
-        <source>0.26 in</source>
-        <target>0.26 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:113</note>
-      </trans-unit>
-      <trans-unit id="7bb46ed88a0439d1dc46432d047367c4">
-        <source>1.07 in</source>
-        <target>1.07 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:116</note>
-      </trans-unit>
-      <trans-unit id="20d5fb144977705f933bdfbbc832ea6a">
-        <source>1.62 in</source>
-        <target>1.62 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:119</note>
-      </trans-unit>
-      <trans-unit id="e606cdfdbf6f1ab12a689d95dc8567c8">
-        <source>15.5 g</source>
-        <target>15.5 g</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:122</note>
-      </trans-unit>
-      <trans-unit id="da8eb48d87659a6068406e900f812df8">
-        <source>0.41 in (clip included)</source>
-        <target>0.41 in (clip included)</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:125</note>
-      </trans-unit>
-      <trans-unit id="2f7853c84bd333ea5eb933cb0e0c2b1c">
-        <source>4.33 in</source>
-        <target>4.33 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:128</note>
-      </trans-unit>
-      <trans-unit id="ae33ac014a46da7bd584dc7d85cdb67e">
-        <source>2.76 in</source>
-        <target>2.76 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:131</note>
-      </trans-unit>
-      <trans-unit id="6b35230c6696a94f05785003d8c6ce85">
-        <source>120g</source>
-        <target>120g</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:134</note>
-      </trans-unit>
-      <trans-unit id="ed931dce45aac99e09664dff538648d3">
-        <source>0.31 in</source>
-        <target>0.31 in</target>
-        <note>Context:
-File: classes/lang/FeatureValueLang.php:137</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/lang/AttributeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/AttributeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5dbc98dcc983a70728bd082d1a47546e">
         <source>S</source>
         <target>S</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:40</note>
+File: classes/lang/KeysReference/AttributeLang.php:27</note>
       </trans-unit>
       <trans-unit id="69691c7bdcc3ce6d5d8a1361f22d04ac">
         <source>M</source>
         <target>M</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:41</note>
+File: classes/lang/KeysReference/AttributeLang.php:28</note>
       </trans-unit>
       <trans-unit id="d20caec3b48a1eef164cb4ca81ba2587">
         <source>L</source>
         <target>L</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:42</note>
+File: classes/lang/KeysReference/AttributeLang.php:29</note>
       </trans-unit>
       <trans-unit id="f4320e291600fe9ba803755db65adfb3">
         <source>One size</source>
         <target>One size</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:43</note>
+File: classes/lang/KeysReference/AttributeLang.php:30</note>
       </trans-unit>
       <trans-unit id="caf3a042a037c064b7513ed640c22f77">
         <source>Grey</source>
         <target>Grey</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:44</note>
+File: classes/lang/KeysReference/AttributeLang.php:31</note>
       </trans-unit>
       <trans-unit id="dc0743b5858f9665cf21f549d860965f">
         <source>Taupe</source>
         <target>Taupe</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:45</note>
+File: classes/lang/KeysReference/AttributeLang.php:32</note>
       </trans-unit>
       <trans-unit id="2bd8c63b2fe3e8e3b4f933b6130f49e6">
         <source>Beige</source>
         <target>Beige</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:46</note>
+File: classes/lang/KeysReference/AttributeLang.php:33</note>
       </trans-unit>
       <trans-unit id="25a81701fbfa4a1efdf660a950c1d006">
         <source>White</source>
         <target>White</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:47</note>
+File: classes/lang/KeysReference/AttributeLang.php:34</note>
       </trans-unit>
       <trans-unit id="dc0560539854a760a8e545a52e51d506">
         <source>Off White</source>
         <target>Off White</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:48</note>
+File: classes/lang/KeysReference/AttributeLang.php:35</note>
       </trans-unit>
       <trans-unit id="ee38e4d5dd68c4e440825018d549cb47">
         <source>Red</source>
         <target>Red</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:49</note>
+File: classes/lang/KeysReference/AttributeLang.php:36</note>
       </trans-unit>
       <trans-unit id="e90dfb84e30edf611e326eeb04d680de">
         <source>Black</source>
         <target>Black</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:50</note>
+File: classes/lang/KeysReference/AttributeLang.php:37</note>
       </trans-unit>
       <trans-unit id="1690f30fd60771c4db1aec13248b39b2">
         <source>Camel</source>
         <target>Camel</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:51</note>
+File: classes/lang/KeysReference/AttributeLang.php:38</note>
       </trans-unit>
       <trans-unit id="909cea0c97058cfe2e3ea8d675cb08e1">
         <source>Orange</source>
         <target>Orange</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:52</note>
+File: classes/lang/KeysReference/AttributeLang.php:39</note>
       </trans-unit>
       <trans-unit id="9594eec95be70e7b1710f730fdda33d9">
         <source>Blue</source>
         <target>Blue</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:53</note>
+File: classes/lang/KeysReference/AttributeLang.php:40</note>
       </trans-unit>
       <trans-unit id="d382816a3cbeed082c9e216e7392eed1">
         <source>Green</source>
         <target>Green</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:54</note>
+File: classes/lang/KeysReference/AttributeLang.php:41</note>
       </trans-unit>
       <trans-unit id="51e6cd92b6c45f9affdc158ecca2b8b8">
         <source>Yellow</source>
         <target>Yellow</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:55</note>
+File: classes/lang/KeysReference/AttributeLang.php:42</note>
       </trans-unit>
       <trans-unit id="ed63fc91500594c3086714f86b3001e4">
         <source>Brown</source>
         <target>Brown</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:56</note>
+File: classes/lang/KeysReference/AttributeLang.php:43</note>
       </trans-unit>
       <trans-unit id="1c383cd30b7c298ab50293adfecb7b18">
         <source>35</source>
         <target>35</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:57</note>
+File: classes/lang/KeysReference/AttributeLang.php:44</note>
       </trans-unit>
       <trans-unit id="19ca14e7ea6328a42e0eb13d585e4c22">
         <source>36</source>
         <target>36</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:58</note>
+File: classes/lang/KeysReference/AttributeLang.php:45</note>
       </trans-unit>
       <trans-unit id="a5bfc9e07964f8dddeb95fc584cd965d">
         <source>37</source>
         <target>37</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:59</note>
+File: classes/lang/KeysReference/AttributeLang.php:46</note>
       </trans-unit>
       <trans-unit id="a5771bce93e200c36f7cd9dfd0e5deaa">
         <source>38</source>
         <target>38</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:60</note>
+File: classes/lang/KeysReference/AttributeLang.php:47</note>
       </trans-unit>
       <trans-unit id="d67d8ab4f4c10bf22aa353e27879133c">
         <source>39</source>
         <target>39</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:61</note>
+File: classes/lang/KeysReference/AttributeLang.php:48</note>
       </trans-unit>
       <trans-unit id="d645920e395fedad7bbbed0eca3fe2e0">
         <source>40</source>
         <target>40</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:62</note>
+File: classes/lang/KeysReference/AttributeLang.php:49</note>
       </trans-unit>
       <trans-unit id="8dc5344bc0746e1cc5abf896ca03bbdf">
         <source>Pink</source>
         <target>Pink</target>
         <note>Context:
-File: classes/lang/AttributeLang.php:63</note>
+File: classes/lang/KeysReference/AttributeLang.php:50</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/lang/AttributeGroupLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/FeatureValueLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f6937723663d9c11f1ee4edf9f935fa8">
+        <source>Polyester</source>
+        <target>Polyester</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:27</note>
+      </trans-unit>
+      <trans-unit id="11c69b2a8ff1502a44e350ace6f172e4">
+        <source>Wool</source>
+        <target>Wool</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:29</note>
+      </trans-unit>
+      <trans-unit id="5344e5ae58a454f75268240cff5ae1be">
+        <source>Viscose</source>
+        <target>Viscose</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:31</note>
+      </trans-unit>
+      <trans-unit id="b3de5045d4f335597ac9a23fd225e3e7">
+        <source>Elastane</source>
+        <target>Elastane</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:33</note>
+      </trans-unit>
+      <trans-unit id="db547a9a5b84991c24ec850ac0749c0b">
+        <source>Cotton</source>
+        <target>Cotton</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:35</note>
+      </trans-unit>
+      <trans-unit id="a2a3a0347f0f001a4473dd54dca2462e">
+        <source>Silk</source>
+        <target>Silk</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:37</note>
+      </trans-unit>
+      <trans-unit id="e8a3cb6a854cbfffd958d5bc73303806">
+        <source>Suede</source>
+        <target>Suede</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:39</note>
+      </trans-unit>
+      <trans-unit id="be181575a12020428018676dedd91f9d">
+        <source>Straw</source>
+        <target>Straw</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="bdf7ad23e89b55f904bca0304819309e">
+        <source>Leather</source>
+        <target>Leather</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:43</note>
+      </trans-unit>
+      <trans-unit id="d35b51b639528d580362ca7042de6a0e">
+        <source>Classic</source>
+        <target>Classic</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:45</note>
+      </trans-unit>
+      <trans-unit id="28d5d53226be8aa8da42d9cbdd312e62">
+        <source>Casual</source>
+        <target>Casual</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:47</note>
+      </trans-unit>
+      <trans-unit id="7d2957dfd3b888fc4087f60c3c650953">
+        <source>Military</source>
+        <target>Military</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:49</note>
+      </trans-unit>
+      <trans-unit id="3e80e32cdcfb5cf850b1340241c30412">
+        <source>Girly</source>
+        <target>Girly</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:51</note>
+      </trans-unit>
+      <trans-unit id="4cfbb125e9878528bab91d12421134d8">
+        <source>Rock</source>
+        <target>Rock</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:53</note>
+      </trans-unit>
+      <trans-unit id="972e73b7a882d0802a4e3a16946a2f94">
+        <source>Basic</source>
+        <target>Basic</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:55</note>
+      </trans-unit>
+      <trans-unit id="8a19a741babf557d260bd74b2474a940">
+        <source>Dressy</source>
+        <target>Dressy</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:57</note>
+      </trans-unit>
+      <trans-unit id="818c50db4c174e9a0c972f343c21cdd5">
+        <source>Short Sleeve</source>
+        <target>Short Sleeve</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:59</note>
+      </trans-unit>
+      <trans-unit id="50085b52dafa67ba14e1d07a65bf3698">
+        <source>Colorful Dress</source>
+        <target>Colorful Dress</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:61</note>
+      </trans-unit>
+      <trans-unit id="6447ac704069175c7bee940fbefdc6c6">
+        <source>Short Dress</source>
+        <target>Short Dress</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:63</note>
+      </trans-unit>
+      <trans-unit id="a12f6cb35c8c69fd5c18d6c54e0c0dae">
+        <source>Midi Dress</source>
+        <target>Midi Dress</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:65</note>
+      </trans-unit>
+      <trans-unit id="c2558f658f49ff9beb46ee7f8e293736">
+        <source>Maxi Dress</source>
+        <target>Maxi Dress</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:67</note>
+      </trans-unit>
+      <trans-unit id="e9be07c8edbe075469d06124d1c59763">
+        <source>2.75 in</source>
+        <target>2.75 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:69</note>
+      </trans-unit>
+      <trans-unit id="a7ec73b7953e85fcb250232e25d63114">
+        <source>2.06 in</source>
+        <target>2.06 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:71</note>
+      </trans-unit>
+      <trans-unit id="8b8d3719bda5725283d96edf1eb81e8a">
+        <source>49.2 g</source>
+        <target>49.2 g</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:73</note>
+      </trans-unit>
+      <trans-unit id="9ac8a61ab67a9d5c70f7f89aec726837">
+        <source>0.26 in</source>
+        <target>0.26 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:75</note>
+      </trans-unit>
+      <trans-unit id="7bb46ed88a0439d1dc46432d047367c4">
+        <source>1.07 in</source>
+        <target>1.07 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:77</note>
+      </trans-unit>
+      <trans-unit id="20d5fb144977705f933bdfbbc832ea6a">
+        <source>1.62 in</source>
+        <target>1.62 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:79</note>
+      </trans-unit>
+      <trans-unit id="e606cdfdbf6f1ab12a689d95dc8567c8">
+        <source>15.5 g</source>
+        <target>15.5 g</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:81</note>
+      </trans-unit>
+      <trans-unit id="da8eb48d87659a6068406e900f812df8">
+        <source>0.41 in (clip included)</source>
+        <target>0.41 in (clip included)</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:83</note>
+      </trans-unit>
+      <trans-unit id="2f7853c84bd333ea5eb933cb0e0c2b1c">
+        <source>4.33 in</source>
+        <target>4.33 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:85</note>
+      </trans-unit>
+      <trans-unit id="ae33ac014a46da7bd584dc7d85cdb67e">
+        <source>2.76 in</source>
+        <target>2.76 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:87</note>
+      </trans-unit>
+      <trans-unit id="6b35230c6696a94f05785003d8c6ce85">
+        <source>120g</source>
+        <target>120g</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:89</note>
+      </trans-unit>
+      <trans-unit id="ed931dce45aac99e09664dff538648d3">
+        <source>0.31 in</source>
+        <target>0.31 in</target>
+        <note>Context:
+File: classes/lang/KeysReference/FeatureValueLang.php:91</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/KeysReference/AttributeGroupLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6f6cb72d544962fa333e2e34ce64f719">
         <source>Size</source>
         <target>Size</target>
         <note>Context:
-File: classes/lang/AttributeGroupLang.php:45</note>
+File: classes/lang/KeysReference/AttributeGroupLang.php:27</note>
       </trans-unit>
       <trans-unit id="e696b64a5c32e901115dea05abd75afc">
         <source>Shoe size</source>
         <target>Shoe size</target>
         <note>Context:
-File: classes/lang/AttributeGroupLang.php:41</note>
+File: classes/lang/KeysReference/AttributeGroupLang.php:28</note>
       </trans-unit>
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
         <note>Context:
-File: classes/lang/AttributeGroupLang.php:46</note>
+File: classes/lang/KeysReference/AttributeGroupLang.php:29</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/lang/FeatureLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/FeatureLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="eec6c4bdbd339edf8cbea68becb85244">
         <source>Height</source>
         <target>Height</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:40</note>
+File: classes/lang/KeysReference/FeatureLang.php:27</note>
       </trans-unit>
       <trans-unit id="32954654ac8fe66a1d09be19001de2d4">
         <source>Width</source>
         <target>Width</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:41</note>
+File: classes/lang/KeysReference/FeatureLang.php:28</note>
       </trans-unit>
       <trans-unit id="675056ad1441b6375b2c5abd48c27ef1">
         <source>Depth</source>
         <target>Depth</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:42</note>
+File: classes/lang/KeysReference/FeatureLang.php:29</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:43</note>
+File: classes/lang/KeysReference/FeatureLang.php:30</note>
       </trans-unit>
       <trans-unit id="8153d35af624d7f0355fc6b54c9a3e32">
         <source>Compositions</source>
         <target>Compositions</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:44</note>
+File: classes/lang/KeysReference/FeatureLang.php:31</note>
       </trans-unit>
       <trans-unit id="4c1c7d945fcd04d68bd3b3f1d99a55a1">
         <source>Styles</source>
         <target>Styles</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:45</note>
+File: classes/lang/KeysReference/FeatureLang.php:32</note>
       </trans-unit>
       <trans-unit id="9fc2d28c05ed9eb1d75ba4465abf15a9">
         <source>Properties</source>
         <target>Properties</target>
         <note>Context:
-File: classes/lang/FeatureLang.php:46</note>
+File: classes/lang/KeysReference/FeatureLang.php:33</note>
       </trans-unit>
     </body>
   </file>

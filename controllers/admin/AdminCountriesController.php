@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -133,9 +133,9 @@ class AdminCountriesControllerCore extends AdminController
      * AdminController::setMedia() override
      * @see AdminController::setMedia()
      */
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJqueryPlugin('fieldselection');
     }
@@ -425,7 +425,7 @@ class AdminCountriesControllerCore extends AdminController
 
         if (!$tmp_addr_format->checkFormatFields()) {
             $error_list = $tmp_addr_format->getErrorList();
-            foreach ($error_list as $num_error => $error) {
+            foreach ($error_list as $error) {
                 $this->errors[] = $error;
             }
         }
@@ -516,7 +516,7 @@ class AdminCountriesControllerCore extends AdminController
         }
         $html_tabnav .= '</ul>';
         $html_tabcontent .= '</div>';
-        return $html = $html_tabnav.$html_tabcontent;
+        return $html_tabnav.$html_tabcontent;
     }
 
     public static function displayCallPrefix($prefix)

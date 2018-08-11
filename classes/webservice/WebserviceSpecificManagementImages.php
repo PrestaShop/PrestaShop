@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -124,9 +124,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         if ($this->output != '') {
             return $this->objOutput->getObjectRender()->overrideContent($this->output);
-        }
-        // display image content if needed
-        elseif ($this->imgToDisplay) {
+        } elseif ($this->imgToDisplay) {
+            // display image content if needed
             if (empty($this->imgExtension)) {
                 $imginfo = getimagesize($this->imgToDisplay);
                 $this->imgExtension = image_type_to_extension($imginfo[2], false);
@@ -417,7 +416,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return true;
                 break;
             case 'PUT':
-
                 if ($this->writePostedImageOnDisk($path, null, null)) {
                     if ($this->wsObject->urlSegment[2] == 'header') {
                         $logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
@@ -570,9 +568,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $filename = $directory.$object_id.'-'.$image_id.'-'.$image_size.'.jpg';
                     }
                 }
-            }
-            // display the list of declinated images
-            elseif ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD') {
+            } elseif ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD') {
+                // display the list of declinated images
                 if ($available_image_ids) {
                     $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id'=>$object_id));
                     foreach ($available_image_ids as $available_image_id) {
@@ -584,9 +581,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $this->wsObject->setOutputEnabled(false);
                 }
             }
-        }
-        // for all other cases
-        else {
+        } else {
+            // for all other cases
             $orig_filename = $directory.$object_id.'.jpg';
             $image_size = $this->wsObject->urlSegment[3];
             $filename = $directory.$object_id.'-'.$image_size.'.jpg';
@@ -595,10 +591,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         // in case of declinated images list of a product is get
         if ($this->output != '') {
             return true;
-        }
-
-        // If a size was given try to display it
-        elseif (isset($image_size) && $image_size != '') {
+        } elseif (isset($image_size) && $image_size != '') {
+            // If a size was given try to display it
 
             // Check the given size
             if ($this->imageType == 'products' && $image_size == 'bin') {
@@ -614,9 +608,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // Display the resized specific image
             $this->imgToDisplay = $filename;
             return true;
-        }
-        // Management of the original image (GET, PUT, POST, DELETE)
-        elseif (isset($orig_filename)) {
+        } elseif (isset($orig_filename)) {
+            // Management of the original image (GET, PUT, POST, DELETE)
             $orig_filename_exists = file_exists($orig_filename);
             return $this->manageDeclinatedImagesCRUD($orig_filename_exists, $orig_filename, $normal_image_sizes, $directory);
         } else {
@@ -676,6 +669,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
         if (empty($this->wsObject->urlSegment[2])) {
             $results = Db::getInstance()->executeS('SELECT DISTINCT `id_cart` FROM `'._DB_PREFIX_.'customization`');
+            $ids = array();
             foreach ($results as $result) {
                 $ids[] = $result['id_cart'];
             }
@@ -816,7 +810,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 break;
             // Add the image
             case 'POST':
-
                 if ($filename_exists) {
                     throw new WebserviceException('This image already exists. To modify it, please use the PUT method', array(65, 400));
                 } else {
@@ -827,13 +820,13 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     }
                 }
                 break;
-            default :
+            default:
                 throw new WebserviceException('This method is not allowed', array(67, 405));
         }
     }
 
     /**
-     * 	Delete the image on disk
+     * Delete the image on disk
      *
      * @param string $file_path the image file path
      * @param array $image_types The different sizes
@@ -1030,18 +1023,16 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 // Check mime content type
                 if (!$mime_type || !in_array($mime_type, $this->acceptedImgMimeTypes)) {
                     throw new WebserviceException('This type of image format is not recognized, allowed formats are: '.implode('", "', $this->acceptedImgMimeTypes), array(73, 400));
-                }
-                // Check error while uploading
-                elseif ($file['error']) {
+                } elseif ($file['error']) {
+                    // Check error while uploading
                     throw new WebserviceException('Error while uploading image. Please change your server\'s settings', array(74, 400));
                 }
 
                 // Try to copy image file to a temporary file
                 if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image']['tmp_name'], $tmp_name)) {
                     throw new WebserviceException('Error while copying image to the temporary directory', array(75, 400));
-                }
-                // Try to copy image file to the image directory
-                else {
+                } else {
+                    // Try to copy image file to the image directory
                     $result = $this->writeImageOnDisk($tmp_name, $reception_path, $dest_width, $dest_height, $image_types, $parent_path);
                 }
 
@@ -1114,7 +1105,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         @unlink($tmp_name);
 
                         Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $image->id_product));
-                        
+
                         $this->imgToDisplay = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format;
                         $this->objOutput->setFieldsToDisplay('full');
                         $this->output = $this->objOutput->renderEntity($image, 1);

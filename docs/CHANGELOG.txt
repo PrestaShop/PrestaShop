@@ -24,6 +24,802 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.4.2 - (2018-07-27)
+####################################
+- Back Office:
+  - Bug fix:
+    - #9358: AdminSearchController.php : Parameter must be an array or an object that implements Countable
+    - #9359: Allow configuration to save html data
+    - #9330: It is impossible to create a SQL query "SELECT"  - SQL Manager page
+    - #9326: Module translations aren't working when using Smarty Extend into TPL
+    - #9327: Fixed Product form when stock management is disabled
+    - #9322: Backward compatibility of  $this->isCached() in modules
+    - #9279: Fix detection of APCu on Performance page
+- Front Office:
+  - Bug fix:
+    - #9378: Generate core.js
+    - #9374: Fix multishop price calculation
+    - #9364: Fix JS error after add to cart
+    - #9365: Wrong generated template path when using getCurrentSubTemplate with a full path name.
+    - #9357: Core.js typeerror after updatecart
+    - #9335: Url does not update when changing product attributes
+- Core:
+  - Bug fix:
+    - #9348: Fixed a misnamed variable
+    - #9345: Can't install prestashop in dev mode with open_basedir
+    - #9339: Fix bug extra space: htaccess directive order
+- Installer:
+  - Improvement:
+    - #9361: Set allow_url_fopen optional in the system step
+  - Bug fix:
+    - #9371: Ntree regeneration should be done also if the entity arg is empty during install
+    - #9355: Allow to install PrestaShop without allow_url_fopen enabled
+- Tests:
+  - Improvement:
+    - #9321: Add some fixes to the script and update scenario of onboarding
+
+####################################
+#   v1.7.4.1 - (2018-07-16)
+####################################
+- Back Office:
+  - Improvement:
+    - #9311: Apply shop context in configuration
+  - Bug fix:
+    - #9299: Fix error while duplicating a product when catalog specific price rules are stored
+    - #9297: Fix display when a module uses $this->bootstrap = false;
+    - #9261: Update Controller name for link generation to modules catalog
+    - #9268: Added .htaccess to var folder
+- Front Office:
+  - Bug fix:
+    - #9315: Fix not visible category display
+    - #9295: Fix free shipping display on cart
+    - #9270: Apache 2.4 configuration
+    - #9252: Add combinations in cart summary
+- Core:
+  - Bug fix:
+    - #9288: Fix Cart::isVirtualCart() method when cart is empty
+    - #9298: Fix/remove mbo from tests
+    - #9220: Ability to use widget block from specific hook
+    - #9269: Update ps_themecusto to version 1.0.6
+    - #9237: Fixed bug with friendly URLs and Media Servers
+    - #9101: Fix have cart rule today
+- Installer:
+  - Improvement:
+    - #9302: Reduce the number of ajax calls if the fixtures are not too larges and if there's enough memory available
+  - Bug fix:
+    - #9271: Catch more exceptions during install & display the error intead of a JS error
+    - #9258: Limit subquery results in upgrade sql 1.7.0.0
+
+####################################
+#   v1.7.4.0 - (2018-07-03)
+####################################
+- Back Office:
+  - New feature:
+    - #9117: Add theme custo
+    - #8920: Migrate Shop Parameters -> Customer Settings
+    - #8680: Migration of page Shop Parameters > Product Settings
+    - #8705: Introduce switch type in forms
+    - #8604: Migration of page Shop Parameters > General > Maintenance
+  - Improvement:
+    - #9189: Hide disabled level 3 tabs in the BO
+    - #8914: Improve header BO design
+    - #9102: Update BO theme to Bootstrap 4 final
+    - #5102: Select not ordered cart directly in SQL instead of excluding ordered cart in PHP
+    - #9008: Use getBoolean() instead of get() when configuration is bool in Product Settings page
+    - #8927: Remove default theme schemes (no longer used)
+    - #8947: Hooks for recommended modules & themes
+    - #8908: Refactored Form Handling management
+    - #8916: Add tips in the back office to improve user experience
+    - #8637: Update back-office menu style
+    - #8837: Replace Open Sans font with Vazir font for Farsi (BO new theme)
+    - #8836: Replace Open Sans font with Vazir font for Farsi (BO default theme)
+    - #8896: Optimize breadcrumb computation performances
+    - #8814: Module tab new subtree
+    - #8523: Migrate Logs page to Symfony
+    - #8924: Refactored Back Office controllers
+    - #8368: Implement dynamic form customization
+    - #8859: Passing language ID for Store object instance
+    - #8899: Optimize stock queries
+    - #8790: Optimize reserved product quantity update
+    - #8515: Upgrade Symfony to 3.4 LTS
+    - #8645: Modify string for product page
+    - #8489: Improved Product pages templates management
+    - #8547: Better performance in order template
+    - #8557: Added more informations from args in Hooks profiler
+    - #8365: Migrate Administration Page to Symfony
+    - #8244: Show installed modules by default instead of the modules selection
+    - #8479: Removed old emailing category
+  - Bug fix:
+    - #9223: SSL field is only available is accessed using HTTPS protocol
+    - #9221: We should be able to activate SSL
+    - #9212: Fix position of PrestaShop logo when in RTL
+    - #9194: Handle 1.7 method in update function 'add_new_tab'
+    - #9183: restore missing translation keys
+    - #9173: Registered all namespaces in ModuleTemplateLoader class
+    - #9181: Use CustomerPreferencesFormHandler to handle specific tabs toggling for B2B mode
+    - #9175: Missing requirement message
+    - #9169: Fix product attachment list
+    - #9160: Fix 500 while getting order total
+    - #9133: Regression with DatePicker and checkboxes on stock page (catalogue > stock)
+    - #9157: State filter in catalog page doesn't work
+    - #9151: Fix undefined method trans() when loggin on the marketplace from the module page
+    - #9143: Fix unknown key route error in customer settings page
+    - #9082:  Error while searching for a product
+    - #9089: Catch module theme installation error, add error message for invalid module
+    - #9028: Introduced re-usable authorization system
+    - #9118: Fix BO login icons
+    - #9113: Fix wrong css file on BO login page
+    - #9106: Add a product removal confirmation
+    - #9077: Update welcome module version
+    - #9076: Fixed duplicate carts in back office
+    - #9084: Saved confirmation message isn't displayed anymore in translation page
+    - #9074: Ordering product in BO doesn't work
+    - #9086: Fix template on attachment delete
+    - #9081: Can't enable maintenance mode
+    - #9046: Reduced permission levels for theme edition
+    - #9051: Bad link in breadcrumbs in symfony pages
+    - #9044: Fix delivery time labels not displayed
+    - #9040: Fix Smarty.class.php class not found
+    - #8938: Display tabs on the module page with the generic method
+    - #9023: Avoid infinite redirects if unhandled exception during BO authentication
+    - #8838: Fix tinymce RTL text direction
+    - #9004: Fixed search on manufacturer's name
+    - #8995: Display the notification count on the proper tab
+    - #8932: Fix display error on module selection list
+    - #8830: Fix uninitialized $moreStepLabels in AdminImportController
+    - #8945: Return default values when api is unavailable
+    - #8933: Fix bug on saving store hours
+    - #8895: Allow override of every modern template
+    - #8918: Add unlimited timeout to dropzone configuration
+    - #8700: Admin permission detection of Role classe name
+    - #8909: Allow autoloading in modules for services use in BO
+    - #8944: Hide Logs page
+    - #8923: Fixed url redirection on Administration page
+    - #8912: Fixed template path
+    - #8910: Collect all hooks for the debugger
+    - #8890: Fix display of image form in product page
+    - #8864: Removed almost all deprecations on Product page
+    - #8863: Fixed misuse of magic routing
+    - #8529: Fix bug alignment sidebar menuCollapse Admin theme
+    - #8865: Fixed CCC settings
+    - #8872: Validator:validateValue is not available in Symfony3
+    - #8613: Fixes AdminController's processDeleteImage() redirect after URL
+    - #8672: Move submit button to the right in sf forms
+    - #8580: Added Back Office missing roles
+    - #8611: Fixed bad display manufacturer when multishop
+    - #8617: Fix/suppliers block refresh
+    - #8588: Add parameter to setMedia
+    - #8599: Move Advanced Parameters section to Configure section (Cherry pick)
+    - #8524: Fixed forms deprecation (Symfony3) on performance page
+    - #8481: Don't display error if AdminShopGroup doesn't exist
+
+- Front Office:
+  - Improvement:
+    - #8774: Ajax calls for product availability status in front refactored
+    - #8833: Hide empty list if all variations are out of stock
+    - #8469: Add a few optimisations to speed up the display of the order history page and to allow potential override to skip unneeded costly informations
+    - #8792: Update url in Readme :)
+    - #8741: Improve SEO - Hn tags in Classic Theme
+    - #8652: SEO - Add hreflang links for multilang pages
+    - #8563: Add FORCE INDEX to workaround bug in MySQL
+    - #8474: Allow developers to add items to breadcrumb from tpl
+  - Bug fix:
+    - #9172: Fix auto-remove carrier-specific voucher when changing carrier
+    - #9138: [FO] Fix notice on brands page
+    - #9227: Add alt tag for images categories
+    - #9134: Fix undefined index on supplier page in FO
+    - #9080:  Fix Punycode problem when register
+    - #9055: The special offers are disappearing suddenly
+    - #9036: Fix infinite loop on multiple vouchers
+    - #9073: Fix gift wrapping fees added even if not checked
+    - #9027: Fix wrong schema of "InStock" for Out of stock products
+    - #8972: Discount / Wrong variable use in loop for mobile
+    - #9017: Fix wrong parameter verification, allowing redirection to arbitrary URL
+    - #9016: Corrected email subscription form input type
+    - #8411: Refactor Cart getOrderTotal
+    - #8902: Display the "No Image" image for Products with no image
+    - #8884: QUERY_STRING is not set on all environments
+    - #8866: Fixed breadcrumb links in ProductController
+    - #8823: Fixed broken search after #8741
+    - #8636: An error on servers with PHP 7+
+    - #8548: Remove useless die in StoresController
+
+- Core:
+  - New feature:
+    - #8781: Getting Currency data from Currency data layers middleware stack
+    - #8888: New Locale integration tests
+    - #8935: CLDR : Replace legacy number and price formatting
+    - #8246: Make PS compatible with PHP 7.2
+    - #8882: Migrate import page
+    - #8883: Migrate ShopParameters->General page
+    - #8732: CLDR reference data (files) reader
+    - #8722: CLDR Locale Cache data layer
+    - #8718: Renamed locale and currency data objects (no more use of "bag")
+    - #8698: CLDR Data layers
+    - #8693: Number specification Repository, Locale Repository
+    - #8683: Locale entity needs to aggregate Price Specifications (one by installed currency)
+    - #8667: CLDR currency (interface, entity and repository)
+    - #8662: Moved CLDR to Core
+    - #8597: CLDR number formatter
+    - #8581: CLDR specification entities
+  - Improvement:
+    - #9167: Update native module versions
+    - #9079: Added $result (from facet) in hook filterProductSearch
+    - #9048: Removed if statment
+    - #9038: Update pull request template
+    - #9022: Make bin/console executable
+    - #8996: New doc block for method, reduced code of method
+    - #9020: Update to right name, markdown with links and more
+    - #9021: Create LICENCE.md
+    - #9018: Add copyright information to the license.
+    - #8979: Move administration page to proper location
+    - #8980: Remove deprecated message for DataCollectorInterface
+    - #8970: Improved readability
+    - #8959: Able to pass hook as a parameter
+    - #7944: Call getPackageShippingCost of modules even if carrier is free
+    - #8929: Merge 1.7.3.1 into develop
+    - #8853: Make override of object models easy
+    - #8876: Disable Symfony tokenization in routing
+    - #8270: Allow modifying IdentityController to save personal information without password
+    - #8514: Added GroupBy option for actionAdminProductsListingFieldsModifier hook
+    - #8885: Improve PrestaShopBundle config structure
+    - #8811: Merge 1.7.3.x
+    - #8764: Change all links to PrestaShop Help/Addons/Developers from http to https
+    - #8756: Update license headers for 2018
+    - #8709: OrderDetailsController should use Tools::getRemoteAddr() function instead of instead of $_SERVER['REMOTE_ADDR']
+    - #8656: Fix services naming
+    - #8663: Merge 1.7.3.x into develop
+    - #8623: Merge 1.7.3.x into develop
+    - #8625: Update README.md
+    - #8583: Add help for upgrade file
+    - #8566: Use official Smarty lib
+    - #8606: Fixed newsletter registration date doc
+    - #8561: Make Symfony form management more robust
+    - #8602: Handle form request after authorization check in PerformanceController
+    - #8546: Add some missing Phpdoc in SpecificPrice
+    - #8405: Update PrestaShop deps: Symfony3, PHP 5.6 and PHPUnit 5.7
+    - #8486: Refactor code in ControllerCore and AbstractFormCore
+    - #8483: Module name in order details data
+  - Bug fix:
+    - #9233: Updated dependencies
+    - #9226: Fixed access to Front Office container from modules
+    - #9216: Make deprecation warnings opt-in
+    - #9188: Fix wrong test in left join condition
+    - #9064: Fixed list of activated modules
+    - #9054: Added missing use statment in AddonsCollection class
+    - #9024: Merge 1.7.3.2 into develop
+    - #9029: Revert CLDR integration
+    - #8985: Fixed order gets wrong status when ordered all qty of the product.
+    - #9010: Check if template_vars if an array before merge in OrderHistory::sendEmail()
+    - #8767: Show prices within a tax if it's needed
+    - #8998: Create missing subfolders in folder override/classes
+    - #8954: Allowed robots access to assets requierd to be mobile-friendly
+    - #8976: Set cache driver in container instead of env var CACHE_DRIVER
+    - #8982: Merge 1.7.3.x into develop
+    - #8831: Better handling of invalid modules from Addons API
+    - #8962: Properly handle set of the PK value in the EntityMapper
+    - #8960: Fixed undefined class constant
+    - #8600: Fix fatal on array_merge if query in addMissingProductFields returns no result
+    - #8757: Prevent using "¤" and "|" as customer name
+    - #8928: Change php version in server configuration
+    - #8926: Fix deprecation message
+    - #8754: Fix non-filtered meta by filterHtmlContent hook
+    - #8743: Fix the links sent in the mails (multilingualism)
+    - #8685: Fixed link_rewrite argument for getImageLink().
+    - #8689: Fix translator in prod mode
+    - #8674: Rename old paths of cache and logs for SF 3
+    - #8694: Product name error if not english
+    - #8399: Fix search relevance wrong sort order
+    - #8458: Default AJAX Relevance search sort order is wrong
+    - #8577: Synced 1.7.3 into develop
+    - #8582: On CLI, display simple information on PrestaShopException
+    - #8576: Added new gitignore directives about translation packs
+    - #8573: Added docs about CSV import samples
+    - #8558: Merge 1.7 into develop
+    - #8530: Merge 1.7.3 into develop
+    - #8511: Fix array declaration
+    - #8488: Fix robots.txt, exclude order param
+
+- Installer:
+  - New feature:
+    - #7721: Add docker compose
+  - Improvement:
+    - #8889: Add tests for getDirectories
+    - #8788: Speed up test_dir with a lot of files present in a directory
+    - #8789: Do not call search::indexation at each entity creation
+    - #8668: Allow to setup the shop with SSL by default using CLI installer
+  - Bug fix:
+    - #9052: Fix error populating tables when installing in Greek
+    - #8981: Set explicit version of MySQL in docker-compose.yml
+    - #8020: Fix not handled new tab ID during migration
+    - #8556: Fix store hours migration
+
+- Localization:
+  - Improvement:
+    - #8997: Fix TVA rate in Tunisia
+  - Bug fix:
+    - #9200: Fix duplicate wording
+    - #9196: Fix wrong translation domain
+    - #9197: Fix duplicate wording
+
+
+####################################
+#   v1.7.3.4 - (2018-06-27)
+####################################
+- Core:
+  - Improvement:
+    - #9222: Improve cookie encryption
+
+####################################
+#   v1.7.3.3 - (2018-05-24)
+####################################
+- Back Office:
+  - Bug fix:
+    - #9026: Fixed display error on back office module selection list
+- Front Office:
+  - New feature:
+    - #9099: Follow-up to: display GDPR consent checkbox in contactform
+  - Improvement:
+    - #9104: Add compliance to GDPR law for ps_emailsubscription module
+
+####################################
+#   v1.7.3.2 - (2018-05-03)
+####################################
+- Back Office:
+  - Improvement:
+    - #8834: Adds missing Persian translations for data and samples
+  - Bug fix:
+    - #8752: Check product availability before validating orders
+    - #8975: Fix broken "you must first create a new language" link in BO Translations
+    - #8965: Fix theme install with prestatrust modules
+    - #8517: Fixed bug when using 2 swap in 1 form
+    - #8948: Fixed update of combinations
+    - #8762: Specific price created for a cart is displayed in the front end as the product price
+- Front Office:
+  - Improvement:
+    - #8835: Replace Noto Sans font with Vazir font for Farsi in Classic theme
+  - Bug fix:
+    - #9005: Fix cannot order oos product even if it's allowed
+    - #8951: Fix error display on cart quantity edition
+    - #8946: Fix button show password height on Safari
+    - #8940: Check product availability in order step
+    - #8931: Out of stock message display only if customer can order the product
+- Core:
+  - Bug fix:
+    - #8973: Fixed undefined class constant
+    - #8850: Fix profile permission array construction
+    - #8679: Catch Throwable errors on CLI install and check Theme instance in context
+- Installer:
+  - Improvement:
+    - #8843: Minor install improvements
+  - Bug fix:
+    - #8949: Remove addition of . folder in release archives
+- Localization:
+  - Improvement:
+    - #8832: Update Iran tax rate
+
+####################################
+#   v1.7.3.1 - (2018-04-09)
+####################################
+- Back Office:
+  - New feature:
+    - #8849: Add User club and UserVoice on BO link footer
+  - Improvement:
+    - #8664: Change employee icon
+    - #8500: Make sure shop list in header is scrollable with lot of items
+    - #8780: Improve BO speed by removing menu images
+    - #8725: Replace Google+ link on BO footer by Youtube link
+  - Bug fix:
+    - #8925: Stop generating RTL css file for the default theme using SASS
+    - #8921: Fixed CDN management in Performance page
+    - #8871: Improved rendering of combinations in Product page
+    - #8779: Little css override for modal title
+    - #8631: Request module zip for upgrade ONLY when the version available is higher
+    - #8714: Update loaded details from database on module action
+    - #8696: Fix translation issue during language install
+    - #8648: Fix modal backdrop not removed when uninstalling a module
+    - #8618: Fix type warning in order detail
+    - #8525: "No tax" price option is now well saved in admin product page
+    - #8476: Fix customer search in new order form
+    - #8234: Fixed bug on save specific price priority for specific product
+- Front Office:
+  - Bug fix:
+    - #8873: Fix contactform module issues
+    - #8856: Fixed undefined variables when an url is called in ajax
+    - #8847: Override advertising module on classic template to fix image width
+    - #8845: Fix search bar on header when it moves from hook and improve header structure #2
+    - #7775: Resolve incompatibility between canonical redirections, attributes and product route not only containing rewrite
+    - #8846: Fix menu width and submenu hover on header
+    - #8522: Fixed specific price percentage rounding on front product page
+- Core:
+  - Improvement:
+    - #8867: Rely on the right legacy container if available on modules
+    - #8584: Update toCamelCase
+    - #8795: Minor improvements during install
+  - Bug fix:
+    - #8922: Fixed access to Front Office container from modules
+    - #8766: Show unit price within a tax in order confirmation e-mail
+    - #8607: Fix pack stock issues
+    - #8711: Default AJAX Relevance search sort order is wrong
+    - #8803: Stop full object exposure on the front end
+    - #8708: Debug of Tools::strReplaceFirst that do not correctly compare the return of strpos + PhpDoc
+    - #8498: Fixed bug on reorder with free gift in the cart
+    - #8543: Layout broken by cache clear
+    - #8669: Make sure all adresses are reset on cart
+    - #8462: Fix empty module return on actionEmailSendBefore breaks all email send
+    - #8277: CustomerAddressFormatter states were queried without the status (active) check causing disabling states in BO useless
+- Installer:
+  - Improvement:
+    - #8860: Make the dezipper great again
+    - #8806: Sample products in FA
+  - Bug fix:
+    - #8913: Fix issue with pack in fixtures (installer)
+    - #8891: Fix dezipper redirect
+    - #8858: Include docs when creating zip build
+- Tests:
+  - New feature:
+    - #8812: Delete product
+    - #8829: Add script for screenshot display on Travis
+  - Improvement:
+    - #8881: Check the pagination of product in the Front Office
+    - #8898: Check generated combinations table
+    - #8903: Add some fixes to the script
+    - #8813: Check the product discount in the Front Office
+    - #8805: Reset module Welcome if the RESUME button does not exist
+    - #8878: Check the appearance of tinymce field on the product page
+    - #8854: Check the change of the default combination from the edition page
+    - #8819: Fix sort product script
+    - #8810: Check the total price in the shopping cart
+    - #8815: Re-enable functional tests
+  - Bug fix:
+    - #8842: Fixed Travis build (update Chrome browser version)
+    - #8746: Make file copy on ModuleSelfConfiguration mockable
+
+####################################
+#   v1.7.3.0 - (2018-02-28)
+####################################
+- Back Office:
+  - New feature:
+    - #8378: Integration of PrestaTrust in module management
+    - #8419: Product Page - Shipping: delivery times
+    - #8396: Send an email on low stock
+    - #8390: Add Icelandic as supported language
+    - #8249: Display "Generate RTL stylesheets" section
+    - #8218: Add bulk edition in stocks
+    - #8293: Low-stock alert configuration in the Product Page
+  - Improvement:
+    - #8796: Update theme preview image
+    - #8659: Re-enable uglify on the new theme
+    - #8559: Fix search bar style on symfony pages
+    - #8502: Unavailable product message is now the same for any action in cart page
+    - #8495: Improved how to detect if a module is a payment module
+    - #8401: Add a new hook on AdminCutomers view > Addresses actions
+    - #8472: Customized Debug toolbar with PrestaShop application information
+    - #8271: Add multiple feature with the same type but different values to product
+    - #8326: Fix stock design
+    - #8026: Translate store schedules, name and address from BO
+    - #8372: Migrate Modules Catalogue page to Symfony
+    - #8385: Wording for 1.7.3
+    - #8395: Add translation domains to legacy templates
+    - #8254: Migrate System information page to Symfony
+    - #8318: Fix translations page new ui kit
+    - #8311: Fix module page new ui kit
+    - #8297: Fix product page new ui kit
+    - #8284: Catalog page with new ui kit
+    - #8278: Use the brand new UI Kit
+    - #8260: Remove CSS included directly in twig files
+    - #8202: Add caching for theme yaml file
+    - #8208: Add active filter in stock management
+    - #8204: Fix str2url js with new chars
+    - #8127: Do not throw exception on API request error for module categories
+  - Bug fix:
+    - #8777: Fix directory listing
+    - #8761: use json_encode instead of serialize
+    - #8737: Fixed combination images selection
+    - #8704: Support Arabic numbers in the Product page
+    - #8702: Fix RTL visual glitches
+    - #8671: Fix visual regressions on Firefox
+    - #8697: Added Back Office missing roles
+    - #8616: Fix dropdown buttons space
+    - #8610: Fixed undefined function .size using jQuery 3
+    - #8574: Moved Advanced Parameters section to Configure section
+    - #8569: Fix category filter dropdown glitches
+    - #8550: Introduced a consistent method to get route name if Hooks dispatched in modern pages
+    - #8562: Fix alert boxes using bulleted lists
+    - #8565: Fixed mass action fields positioning in admin catalog page
+    - #8545: Urlencode to prevent some XSS injection
+    - #8526: Fixed display of Category tree on Product page
+    - #8555: Restore tooltips on performance symfony page
+    - #8552: Notifs dropdown open/close is bugged on SF pages
+    - #8553: Fix UI kit problems
+    - #8549: Fixed Hooks data collector display
+    - #8520: Fix modal display on product page
+    - #8521: Update style of product combination tokens
+    - #8496: Fixed category tree arrows behavior
+    - #8509: Update the default product order with ID desc
+    - #8512: Fix menu collapse button alignment
+    - #8507: Avoid null as caching system in shop params
+    - #8501: Fixed PrestaShop version on Addons Store url iframe
+    - #8506: Fix smtp undefined in system information
+    - #8503: Fix/undefined none cache option
+    - #8494: Reduce javascript execution time on product pages
+    - #8491: Fixed admin category tree radio buttons positioning
+    - #8265: Remove duplicate call to trans for modules
+    - #8480: Fixed PrestaShop docs link in debug toolbar
+    - #8477: Added displayDashboardToolbarTopMenu and displayDashboardToolbarIcons hooks
+    - #8442: Fixed duplication of hooks in pages migrated to Symfony
+    - #8468: Fix wrong typehinting on attribute prices
+    - #8461: Fixing data duplication when using 1-click upgrade multiple times
+    - #8456: Fix JS error on Performance page
+    - #8440: Invalid path to look at config.defines.inc file permissions
+    - #8451: Fix several UI problems
+    - #8452: Catalog controler wrongly use by default desc sorting instead of "last"
+    - #8436: Fixed invalid selector on feature removal (Product page)
+    - #8438: Fixed product url preview
+    - #8421: Module page quicks
+    - #7986: Fixed bug where address required fields were required for any address type (customer, brand...)
+    - #8391: Fixed missing translations of Information System page
+    - #8097: Fix save carrier with invalid ranges
+    - #8413: Empty default label for product configuration
+    - #8414: Fix the button of add a new customization field in the product page
+    - #8406: Fix low-stock display
+    - #8269: Refacto of module permission checks
+    - #8255: Fix import products without Force all ID numbers
+    - #8388: RTL fixtures and improvements in BO
+    - #8370: Fixed silenced error
+    - #8375: Fix product page blocks spacing
+    - #8377: Fixed minor visual issue in Information page
+    - #8355: Fix product pages tabs
+    - #8359: Fix module dropdown
+    - #8322: Fix stock alert
+    - #8147: Display transporter block in RTL
+    - #8148: Fix bug employee thumbnail
+    - #8253: Add class to fix input style bug in AdminOrders controller
+    - #8163: Fix encoded back URL
+    - #8066: Allow admin folder name inside quick access link
+    - #8203: Fix width of column too small of pdf invoice
+    - #8149: Change attribute groupe name with not public name for BO
+
+- Front Office:
+  - Improvement:
+    - #8739: Demo products
+    - #8264: Improve performance of subselect query when fetching attributes of current group
+    - #7924: Add amount discount on product thumbnails
+    - #8060: Make the store email clickable in the footer
+  - Bug fix:
+    - #8490: Fix undefined offset on new products
+    - #8478: Fix shopping cart when allow checkout with wrongly product
+    - #8447: Add cover to allowed properties in ajax requests
+    - #7873: Fix bug after removing product customization
+    - #8435: Fixed bug where invalid address message is displayed only for billing address even if both are invalid
+    - #8348: Fix SQL error when product search starts with an hyphen
+    - #8416: Display properly ps_linklist on classic with widgets
+    - #8425: Use regexp instead of simple explode for complex attributes in CartPresenter
+    - #7975: Fix checkout exception when adding required field to address
+    - #8408: Missing name attribute form date fields
+    - #8382: Remove mistake ltr directions in rtl css files
+    - #8351: Add id_product_attribute to productLink
+    - #8331: Display errors on change password (lost)
+    - #8314: Fix the except_pages in theme.yml
+    - #8281: Fixes wrong images on order confirmation page with simple products
+    - #8225: Use PS_GUEST_CHECKOUT_ENABLED ... only in checkout
+    - #8195: Reintroduced the guest allowance check in FrontController.
+    - #8207: Fixed bug in the link tracking number for the detail order
+
+- Core:
+  - New feature:
+    - #8513: Add the possibility to build a release version
+    - #8342: Make modules act like Symfony Bundles
+    - #8467: RTL - Merge conflict
+    - #8347: Added methods to check in which context module is executed
+    - #8327: Added a new collector for Hooks
+    - #8300: Import / Export features from the Stock Overview page
+    - #8248: Change CSS files path to RTL stylesheets if needed
+    - #8243: Add new method to generate RTL stylesheets
+    - #8128: Sample config file for Nginx server
+  - Improvement:
+    - #8713: String to translate for 1.7.3
+    - #8691: Add RTL generation for modules and some rtl fixtures
+    - #8657: Integrate RTL CSS generation in the core
+    - #8605: Specify version for all PS native modules
+    - #8570: Set version on prestashop/translationtools-bundle
+    - #8527: Enable the Symfony serializer service
+    - #8402: Optimize cart rule performances
+    - #8455: Make urls available on maintenance & restricted country templates
+    - #8465: Remove useless method from Customer class
+    - #8403: Optimise shipping cost computation
+    - #8381: Remove risky and useless sprintf() calls
+    - #8409: Improve cache
+    - #8453: Improve order presenter performance
+    - #8441: Use DISTINCT in query to improve uninstall() method in Module class
+    - #8279: Migrate Performance page to Symfony
+    - #8415: Remove product description length limit
+    - #8209: Remove useless call to addRoute for multilanguages shops
+    - #8410: Improve getContextualValue performances by reducing the number of calls to getOrderTotal
+    - #8392: Improved loading of translations
+    - #8339: Array-check in additional form fields from modules
+    - #8317: CSS fixtures for Right-to-Left languages
+    - #8268: Add possibility to reset modules in theme.yml
+    - #8289: Add export folder to the file .gitignore
+    - #8220: Product settings: availabilty label and delivery time configuration
+    - #8252: Add context in legacy module translation function
+    - #8242: RTL fix: Add a library to composer.json file
+    - #8241: Fix json file and some translation for Persian language
+    - #8188: Clean some variables/code
+    - #8217: Make SymfonyContainer available from 1 location
+    - #8183: Clean some variables/code
+    - #7997: Fix coding standards issues
+    - #8048: Pass param content_only param to overrideLayoutTemplate call
+    - #8117: Improve database connection character set declaration
+    - #8083: Remove confusion about cart rule code check
+  - Bug fix:
+    - #8794: Fix customizable demo product without customizable field
+    - #8719: Fix missing CLDR supplemental directory
+    - #8643: Removed duplicate line in upgrade file
+    - #8608: Missing japanese lang flag
+    - #8589: Fix issue with tmp dir
+    - #8586: Fix release creation
+    - #8572: Change default file_get_content default timeout
+    - #8460: Validate::isDateOrNull() should accept '0000-00-00'
+    - #8470: Be able to identify a modern page in modules
+    - #8471: Allow to sort bestsellers by sales
+    - #8459: Force query build arg_separator to &
+    - #8362: Fixed bug in Access::getRoles()
+    - #8432: Fix fatal $sql_values string to array
+    - #8417: Fix missing cache invalidation in the backoffice
+    - #8407: Fixing missing employee in ModuleManagerBuilder
+    - #8307: Fix bug js and css cache file name don't change
+    - #8261: CustomerAddressFormCore validation was not working fine with hook…
+    - #8386: Rebuild all assets with UI kit beta
+    - #8354: Update composer dependencies
+    - #8352: Fix already defined class during upgrade process from 1.6 to 1.7
+    - #8328: Add DB prefix in delete() method all time $add_prefix is set to true
+    - #8302: Change version phpExcel for PHP7
+    - #8291: Fix merge problem
+    - #8247: Fixed issue with empty locale
+    - #8134: Fixed bug in addMissingProductFields that gives array_merge the p…
+    - #8198: The t must be capital in namespace
+    - #8181: Change visibility of properties in class CheckoutSession
+    - #8214: Fixed foreach warning on empty hook return
+    - #7799: searchTag now uses product_shop.visibility
+
+- Installer:
+  - New feature:
+    - #8336: More Japanese for installer
+    - #8299: Adding Japanese to the installer
+    - #8245: Generate RTL stylsheets when installation language is RTL
+  - Improvement:
+    - #8306: Add a new quick access
+    - #8219: Updating the PrestaShop images for installer last step
+    - #8189: Change order for Countries/Zones/States tabs
+  - Bug fix:
+    - #8670: Fix store hours migration
+    - #8484: Display generic exception message when error occurs on cli installation
+    - #8257: Change installation tutorial link to 1.7 version
+    - #8192: Write permission must be check for app/Resources/translations
+    - #8193: Use proper folder for theme templates
+
+- Web Services:
+  - Bug fix:
+    - #8393: Remove obsolete unescaping on JSON output
+
+####################################
+#   v1.7.2.5 - (2018-02-21)
+####################################
+- Back Office:
+  - Bug fix:
+    - #8755: Fix directory listing
+    - #8772: Replace serialize with json_encode
+
+- Core:
+  - Bug fix:
+    - #8591: Update Translation Bundle version in composer
+
+####################################
+#   v1.7.2.4 - (2017-10-24)
+####################################
+- Front Office:
+  - Bug fix:
+    - #8433: Fix product information leak on the front office
+
+####################################
+#   v1.7.2.3 - (2017-10-05)
+####################################
+- Back Office:
+  - Improvement:
+    - #7810: Add a loading spinner into product page
+  - Bug fix:
+    - #8366: Use default country instead of translator locale for marketplace API
+    - #7938: Update bulk action combinations number after delete or add combination
+    - #8232: Fixed bug in AdminCartRulesController when limiting the validity …
+    - #8346: Fix the currency display in supply order
+    - #8287: Fix the category search in the product page
+    - #8288: Fix displaying empty zip code of tax rule
+
+- Front Office:
+  - Bug fix:
+    - #7848: Fix switching combination when the product is offline
+    - #7781: Add error message when updating quantity wanted input
+    - #8283: Currency exchange fixes on product page
+
+- Core:
+  - Improvement:
+    - #8360: Fixing the version for core modules ps_legalcompliance ps_linklist ps_customtext ps_customeraccountlinks
+  - Bug fix:
+    - #8380: Fix Context::getTranslator() cache
+    - #8361: Fix conflict between two cart rules and a single product cart
+    - #8213: Voucher issue fix
+
+- Web Services:
+  - Bug fix:
+    - #8275: Fix update product with WS
+
+####################################
+#   v1.7.2.2 - (2017-08-31)
+####################################
+- Back Office:
+  - Bug fix:
+    - #8238: Fix wrong final combination price if BC Math is not available
+    - #8063: Display texture image in combination form
+    - #8057: Save before generate combinations
+    - #8266: Fix error while reaching AdminModules
+
+- Front Office:
+  - Improvement:
+    - #8082: Scroll top to product list when paginate
+
+- Core:
+  - Improvement:
+    - #8212: Optimize specific price computing by executing the query only when needed
+  - Bug fix:
+    - #8210: Fix missing product limit/offset when ordering by price on Sale page
+    - #8138: Fix tax calculation when vat number is used
+
+####################################
+#   v1.7.2.1 - (2017-08-16)
+####################################
+- Back Office:
+  - Improvement:
+    - #8140: Update modules page design
+  - Bug fix:
+    - #8236: Fix module modal layout
+    - #8046: Fix legacy submenu laptop
+    - #8141: Fix the module "translate" button with the new link of translation page
+    - #8173: Fix the search error with white spaces in stock page
+    - #8160: Fix the style of product reference in the stock management page
+    - #8166: Fix the misalignment of the search button in the stock page
+    - #8167: Fix the search tags in the stock management
+
+- Front Office:
+  - Improvement:
+    - #8205: Fix custom content link opening in the same page
+    - #8145: Fix custom content link opening in the same page
+    - #7855: Add link to products for Pack
+  - Bug fix:
+    - #8206: Fix flags on products front-office
+    - #8152: Make the slider appears on Mobile view
+    - #8191: Fix flags on products front-office
+    - #8155: Fix the style of forgotten password page
+    - #8169: Fix typo in bootstrap class
+    - #7716: Fix displaying product thumbnails
+    - #8111: Fix unclosed tag
+    - #8170: Limit the description's image by the size of description's frame
+
+- Core:
+  - Improvement:
+    - #8201: Speed up search queries (17)
+  - Bug fix:
+    - #8228: Optimise synchronization stock sql
+    - #8215: Add translations in database when importing theme
+    - #8165: Use MessageCatalog function to get all message
+    - #8186: Improve stock sql performance
+
+- Installer:
+  - Bug fix:
+    - #8021: Use correct module name column for authorization role
+
+
+####################################
 #   v1.7.2.0 - (2017-07-20)
 ####################################
 - Back Office:
