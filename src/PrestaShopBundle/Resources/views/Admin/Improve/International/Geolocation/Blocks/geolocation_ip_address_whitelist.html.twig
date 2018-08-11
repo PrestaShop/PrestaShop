@@ -30,20 +30,26 @@
     <h3 class="card-header">
       {{ 'IP address whitelist'|trans }}
     </h3>
-    <div class="card-block">
-      <div class="alert alert-info" role="alert">
-          <span class="alert-text">
-            {{ 'You can add IP addresses that will always be allowed to access your shop (e.g. Google bots\' IP).'|trans({}, 'Admin.International.Help') }}
-          </span>
-      </div>
-
+    <div class="card-block row">
       <div class="card-text">
-        <div class="form-group">
+        <div class="row">
+          <div class="col">
+            <div class="alert alert-info" role="alert">
+              <span class="alert-text">
+                {{ 'You can add IP addresses that will always be allowed to access your shop (e.g. Google bots\' IP).'|trans({}, 'Admin.International.Help') }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
           <label class="form-control-label">
             {{ 'Whitelisted IP addresses'|trans }}
           </label>
-          {{ form_errors(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
-          {{ form_widget(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
+          <div class="col-sm">
+            {{ form_errors(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
+            {{ form_widget(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
+          </div>
         </div>
       </div>
     </div>
