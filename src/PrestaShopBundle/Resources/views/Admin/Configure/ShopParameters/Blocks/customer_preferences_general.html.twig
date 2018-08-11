@@ -27,12 +27,12 @@
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block customer_preferences_general %}
-<div class="col">
+<div class="col-xl-10">
     <div class="card">
         <h3 class="card-header">
             <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
         </h3>
-        <div class="card-block">
+        <div class="card-block row">
             <div class="card-text">
                 <div class="form-group row">
                     {{ ps.label_with_help(('Re-display cart at login'|trans), ('After a customer logs in, you can recall and display the content of his/her last shopping cart.'|trans({}, 'Admin.Shopparameters.Help'))) }}
