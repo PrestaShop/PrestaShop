@@ -26,46 +26,58 @@
 {% trans_default_domain "Admin.Shipping.Feature" %}
 
 {% block shipping_preferences_handling %}
-<div class="col">
+  <div class="col-xl-10">
     <div class="card">
-        <h3 class="card-header">
-            <i class="material-icons">filter_none</i> {{ 'Handling'|trans }}
-        </h3>
-        <div class="card-block">
-            <div class="alert alert-info" role="alert">
+      <h3 class="card-header">
+        <i class="material-icons">filter_none</i> {{ 'Handling'|trans }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="row">
+            <div class="col">
+              <div class="alert alert-info" role="alert">
                 <ul>
-                    <li>
-                        {{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }}
-                    </li>
-                    <li>
-                        {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}
-                    </li>
+                  <li>
+                    {{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }}
+                  </li>
+                  <li>
+                    {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}
+                  </li>
                 </ul>
+              </div>
             </div>
+          </div>
 
-            <div class="card-text">
-                <div class="form-group">
-                    <label class="form-control-label">{{ 'Handling charges'|trans }}</label>
-                    {{ form_errors(handlingForm.shipping_handling_charges) }}
-                    {{ form_widget(handlingForm.shipping_handling_charges) }}
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
-                    {{ form_errors(handlingForm.free_shipping_price) }}
-                    {{ form_widget(handlingForm.free_shipping_price) }}
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
-                    {{ form_errors(handlingForm.free_shipping_weight) }}
-                    {{ form_widget(handlingForm.free_shipping_weight) }}
-                </div>
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Handling charges'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(handlingForm.shipping_handling_charges) }}
+              {{ form_widget(handlingForm.shipping_handling_charges) }}
             </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(handlingForm.free_shipping_price) }}
+              {{ form_widget(handlingForm.free_shipping_price) }}
             </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(handlingForm.free_shipping_weight) }}
+              {{ form_widget(handlingForm.free_shipping_weight) }}
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}
