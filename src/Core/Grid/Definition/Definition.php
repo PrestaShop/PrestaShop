@@ -71,15 +71,27 @@ final class Definition implements DefinitionInterface
     private $filters;
 
     /**
-     * @param string $id   Unique grid identifier (used as table ID when rendering table)
+     * @param string $id Unique grid identifier (used as table ID when rendering table)
+     * @param string $name
+     * @param ColumnCollectionInterface $columns
+     * @param FilterCollectionInterface $filters
+     * @param GridActionCollectionInterface $gridActions
+     * @param BulkActionCollectionInterface $bulkActions
      */
-    public function __construct($id)
-    {
+    public function __construct(
+        $id,
+        $name,
+        ColumnCollectionInterface $columns,
+        FilterCollectionInterface $filters,
+        GridActionCollectionInterface $gridActions,
+        BulkActionCollectionInterface $bulkActions
+    ) {
         $this->id = $id;
-
-        $this->gridActions = new GridActionCollection();
-        $this->bulkActions = new BulkActionCollection();
-        $this->filters = new FilterCollection();
+        $this->name = $name;
+        $this->columns = $columns;
+        $this->filters = $filters;
+        $this->gridActions = $gridActions;
+        $this->bulkActions = $bulkActions;
     }
 
     /**
@@ -101,29 +113,9 @@ final class Definition implements DefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getColumns()
     {
         return $this->columns;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setColumns(ColumnCollectionInterface $columns)
-    {
-        $this->columns = $columns;
-
-        return $this;
     }
 
     /**
@@ -137,16 +129,6 @@ final class Definition implements DefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function setBulkActions(BulkActionCollectionInterface $bulkActions)
-    {
-        $this->bulkActions = $bulkActions;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getGridActions()
     {
         return $this->gridActions;
@@ -155,28 +137,8 @@ final class Definition implements DefinitionInterface
     /**
      * {@inheritdoc}
      */
-    public function setGridActions(GridActionCollectionInterface $gridActions)
-    {
-        $this->gridActions = $gridActions;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters()
     {
         return $this->filters;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFilters(FilterCollectionInterface $filters)
-    {
-        $this->filters = $filters;
-
-        return $this;
     }
 }
