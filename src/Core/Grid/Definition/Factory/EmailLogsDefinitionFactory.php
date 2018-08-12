@@ -125,7 +125,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('language'))
                 ->setName($this->trans('Language', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'language',
+                    'field' => 'lang_name',
                 ])
             )
             ->add((new DataColumn('subject'))
@@ -173,39 +173,39 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setColumn('id_mail')
+                ->setAssociatedColumn('id_mail')
             )
             ->add((new Filter('recipient', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setColumn('recipient')
+                ->setAssociatedColumn('recipient')
             )
             ->add((new Filter('template', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setColumn('template')
+                ->setAssociatedColumn('template')
             )
-            ->add((new Filter('language', ChoiceType::class))
+            ->add((new Filter('id_lang', ChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'choices' => $this->languageChoiceProvider->getChoices(),
                     'choice_translation_domain' => false,
                 ])
-                ->setColumn('language')
+                ->setAssociatedColumn('language')
             )
             ->add((new Filter('subject', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setColumn('subject')
+                ->setAssociatedColumn('subject')
             )
             ->add((new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setColumn('date_add')
+                ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
@@ -214,7 +214,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                         'data-redirect' => $this->redirectionUrl,
                     ],
                 ])
-                ->setColumn('actions')
+                ->setAssociatedColumn('actions')
             )
         ;
     }

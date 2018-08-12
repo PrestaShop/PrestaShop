@@ -36,6 +36,9 @@ final class FilterCollection implements FilterCollectionInterface
      */
     private $filters;
 
+    /**
+     * {@inheritdoc}
+     */
     public function add(FilterInterface $filter)
     {
         $this->filters[$filter->getName()] = $filter;
@@ -43,6 +46,21 @@ final class FilterCollection implements FilterCollectionInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function remove($filterName)
+    {
+        if (isset($this->filters[$filterName])) {
+            unset($this->filters[$filterName]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function all()
     {
         return $this->filters;
