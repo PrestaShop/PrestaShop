@@ -84,8 +84,8 @@ final class GridPresenter implements GridPresenterInterface
 
         /** @var FilterInterface $filter */
         foreach ($definition->getFilters()->all() as $filter) {
-            if (null !== $column = $filter->getColumn()) {
-                $columnFiltersMapping[$column][] = $filter->getName();
+            if (null !== $associatedColumn = $filter->getAssociatedColumn()) {
+                $columnFiltersMapping[$associatedColumn][] = $filter->getName();
             }
         }
 

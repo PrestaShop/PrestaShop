@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
+/**
+ * Class Filter defines single filter for grid
+ */
 final class Filter implements FilterInterface
 {
     /**
@@ -44,7 +47,7 @@ final class Filter implements FilterInterface
     private $name;
 
     /**
-     * @var string|null Column ID of grid definition
+     * @var string|null Column ID if filter is associated with columns
      */
     private $column;
 
@@ -95,7 +98,7 @@ final class Filter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function setColumn($columnId)
+    public function setAssociatedColumn($columnId)
     {
         $this->column = $columnId;
 
@@ -105,7 +108,7 @@ final class Filter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function getColumn()
+    public function getAssociatedColumn()
     {
         return $this->column;
     }
