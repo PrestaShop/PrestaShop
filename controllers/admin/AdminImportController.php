@@ -2068,6 +2068,8 @@ class AdminImportControllerCore extends AdminController
                 ', false);
                 if (isset($datas['id_product']) && $datas['id_product']) {
                     $product = new Product((int)$datas['id_product'], false, $default_language);
+                } else {
+                    continue;
                 }
             } else {
                 continue;
