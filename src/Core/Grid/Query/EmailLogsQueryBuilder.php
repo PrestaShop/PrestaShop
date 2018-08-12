@@ -40,7 +40,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('m.*, l.name AS language')
+        $qb->select('m.*, l.name AS lang_name')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()
@@ -77,7 +77,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin('m', $this->dbPrefix.'lang', 'l', 'm.id_lang = l.id_lang');
 
         foreach ($filters as $name => $value) {
-            if ('language' === $name) {
+            if ('id_lang' === $name) {
                 $qb->andWhere("l.id_lang = :$name");
                 $qb->setParameter($name, $value);
 
