@@ -51,15 +51,6 @@ interface DefinitionInterface
     public function getName();
 
     /**
-     * Set grid name
-     *
-     * @param string $name
-     *
-     * @return self
-     */
-    public function setName($name);
-
-    /**
      * Get grid columns
      *
      * @return ColumnCollectionInterface
@@ -67,25 +58,9 @@ interface DefinitionInterface
     public function getColumns();
 
     /**
-     * Set grid columns
-     *
-     * @param ColumnCollectionInterface $columns
-     *
-     * @return self
-     */
-    public function setColumns(ColumnCollectionInterface $columns);
-
-    /**
      * @return BulkActionCollectionInterface
      */
     public function getBulkActions();
-
-    /**
-     * @param BulkActionCollectionInterface $bulkActions
-     *
-     * @return self
-     */
-    public function setBulkActions(BulkActionCollectionInterface $bulkActions);
 
     /**
      * Get grid actions
@@ -93,24 +68,6 @@ interface DefinitionInterface
      * @return GridActionCollectionInterface
      */
     public function getGridActions();
-
-    /**
-     * Set grid actions
-     *
-     * @param GridActionCollectionInterface $gridActions
-     *
-     * @return self
-     */
-    public function setGridActions(GridActionCollectionInterface $gridActions);
-
-    /**
-     * Set grid actions
-     *
-     * @param FilterCollectionInterface $filters
-     *
-     * @return self
-     */
-    public function setFilters(FilterCollectionInterface $filters);
 
     /**
      * Get filters
