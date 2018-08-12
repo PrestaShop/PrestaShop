@@ -35,6 +35,8 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * If the event is a RenderingHookEvent, then the final result is
  * an array of contents accessed from $event->getContent().
+ *
+ * @deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Core\Hook\HookDispatcher instead.
  */
 class HookDispatcher extends EventDispatcher
 {
