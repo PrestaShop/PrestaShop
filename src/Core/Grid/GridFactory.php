@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
  * Class GridFactory is responsible for creating final Grid instance
@@ -48,11 +47,6 @@ final class GridFactory implements GridFactoryInterface
     private $dataProvider;
 
     /**
-     * @var HookDispatcher
-     */
-    private $dispatcher;
-
-    /**
      * @var FilterFormFactoryInterface
      */
     private $filterFormFactory;
@@ -61,17 +55,14 @@ final class GridFactory implements GridFactoryInterface
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataProviderInterface      $dataProvider
      * @param FilterFormFactoryInterface     $filterFormFactory
-     * @param HookDispatcher                 $dispatcher
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataProviderInterface $dataProvider,
-        FilterFormFactoryInterface $filterFormFactory,
-        HookDispatcher $dispatcher
+        FilterFormFactoryInterface $filterFormFactory
     ) {
         $this->definitionFactory = $definitionFactory;
         $this->dataProvider = $dataProvider;
-        $this->dispatcher = $dispatcher;
         $this->filterFormFactory = $filterFormFactory;
     }
 
@@ -81,10 +72,6 @@ final class GridFactory implements GridFactoryInterface
     public function createUsingSearchCriteria(SearchCriteriaInterface $searchCriteria)
     {
         $definition = $this->definitionFactory->create();
-
-        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
-            'definition' => $definition,
-        ]);
 
         $filterForm = $this->filterFormFactory->create($definition);
         $filterForm->setData($searchCriteria->getFilters());

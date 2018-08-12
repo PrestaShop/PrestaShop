@@ -24,41 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Translation;
+namespace PrestaShop\PrestaShop\Core\Hook;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
- * Trait TranslatorAwareTrait is used for services that depends on translator
+ * Trait EventDispatcherAwareTrait
  */
-trait TranslatorAwareTrait
+trait HookDispatcherAwareTrait
 {
     /**
-     * @var TranslatorInterface
+     * @todo: replace attribute & setter parameter with interface
+     *
+     * @var HookDispatcher
      */
-    protected $translator;
+    protected $dispatcher;
 
     /**
-     * Set translator instance
+     * Set hook dispatcher
      *
-     * @param TranslatorInterface $translator
+     * @param HookDispatcher $dispatcher
      */
-    public function setTranslator(TranslatorInterface $translator)
+    public function setDispatcher(HookDispatcher $dispatcher)
     {
-        $this->translator = $translator;
-    }
-
-    /**
-     * Shortcut method to translate text
-     *
-     * @param string $id
-     * @param array $options
-     * @param string $domain
-     *
-     * @return string
-     */
-    protected function trans($id, array $options, $domain)
-    {
-        return $this->translator->trans($id, $options, $domain);
+        $this->dispatcher = $dispatcher;
     }
 }
