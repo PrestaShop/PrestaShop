@@ -29,7 +29,7 @@ import attributes from './attributes';
 import bulkCombination from './product-bulk-combinations';
 import nestedCategory from './nested-categories';
 import combination from './combination';
-import serp from '../app/utils/serp/index';
+import Serp from '../app/utils/serp/index';
 
 $(() => {
   productHeader();
@@ -39,7 +39,9 @@ $(() => {
   combination();
   bulkCombination().init();
   nestedCategory().init();
-  serp().init();
+
+  const serpComp = new Serp();
+  serpComp.vm.$refs.serp.setUrl($('#product_form_preview_btn').data('redirect'));
 
   // This is the only script for the module page so there is no specific file for it.
   $('.modules-list-select').on("change", (e) => {
