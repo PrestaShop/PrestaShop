@@ -263,6 +263,9 @@
   }
 
   .combination-form {
+    .nav {
+      justify-content: space-between;
+    }
     .combination-label {
       color: $gray-medium;
       &.vcenter {
@@ -990,7 +993,6 @@
       .arrow {
         padding: 0.9375rem 0.3125rem;
         background: white;
-        position: relative;
         height: 3rem;
         z-index: 2;
         background: $brand-primary;
@@ -998,6 +1000,7 @@
         position: absolute;
         left: 15px;
         top: 0;
+        cursor: pointer;
         &.visible {
           visibility: visible;
         }
@@ -1011,6 +1014,7 @@
       height: 3.125rem;
       width: 125rem;
       position: relative;
+      left: 35px;
     }
     .right-column {
       width: 30%;
