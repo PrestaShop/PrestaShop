@@ -11,3 +11,5 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Backup\BackupGridDataProvider'
         arguments:
             - '@prestashop.adapter.backup.backup_provider'
+            - '@translator'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
