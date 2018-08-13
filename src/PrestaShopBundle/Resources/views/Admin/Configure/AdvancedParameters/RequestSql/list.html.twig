@@ -54,11 +54,19 @@
     {% endblock %}
 
     {% block sql_manager_list_panel %}
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': requestSqlGrid} %}
+        <div class="row">
+            <div class="col">
+                {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': requestSqlGrid} %}
+            </div>
+        </div>
     {% endblock %}
 
     {% block sql_manager_settings_panel %}
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/settings_panel.html.twig' %}
+        <div class="row">
+            <div class="col">
+                {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/settings_panel.html.twig' %}
+            </div>
+        </div>
     {% endblock %}
 {% endblock %}
 
