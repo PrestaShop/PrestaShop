@@ -48,7 +48,7 @@ interface BackupInterface
     public function getUrl();
 
     /**
-     * Get backup file size in MB
+     * Get backup file size in bytes
      *
      * @return string
      */

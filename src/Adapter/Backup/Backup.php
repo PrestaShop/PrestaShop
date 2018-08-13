@@ -77,7 +77,7 @@ final class Backup implements BackupInterface
      */
     public function getSize()
     {
-        return number_format(filesize($this->legacyBackup->id) * 0.000001, 2, '.', '');
+        return filesize($this->legacyBackup->id);
     }
 
     /**
@@ -95,6 +95,6 @@ final class Backup implements BackupInterface
     {
         list($timestamp) = explode('-', $this->fileName);
 
-        return new DateTimeImmutable('@'.$timestamp);
+        return new DateTimeImmutable('@'.$timestamp, new \DateTimeZone('Europe/London'));
     }
 }
