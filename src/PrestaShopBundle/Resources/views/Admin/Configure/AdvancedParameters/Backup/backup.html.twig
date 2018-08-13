@@ -49,9 +49,16 @@
     </div>
   </div>
 
-  <div class="row justify-content-center">
-    <div class="col-xl-10">
+  <div class="row">
+    <div class="col">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
     </div>
   </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/backup.bundle.js') }}"></script>
 {% endblock %}
