@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Backup;
 
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
@@ -77,5 +78,23 @@ final class Backup implements BackupInterface
     public function getSize()
     {
         return number_format(filesize($this->legacyBackup->id) * 0.000001, 2, '.', '');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAge()
+    {
+        return time() - $this->getDate()->getTimestamp();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDate()
+    {
+        list($timestamp) = explode('-', $this->fileName);
+
+        return new DateTimeImmutable('@'.$timestamp);
     }
 }

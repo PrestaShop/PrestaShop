@@ -24,47 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Backup;
+namespace PrestaShop\PrestaShop\Adapter\Backup;
 
-use DateTimeInterface;
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
+use PrestaShop\PrestaShop\Core\Backup\BackupProviderInterface;
 
 /**
- * Interface BackupInterface defines contract for backup
+ * Class BackupProvider is responsible for providing available backups
+ *
+ * @internal
  */
-interface BackupInterface
+final class BackupProvider implements BackupProviderInterface
 {
     /**
-     * Get backup filename
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getFileName();
+    public function getBackups()
+    {
+        $backupPath = @opendir(PrestaShopBackup::getBackupPath());
 
-    /**
-     * Get URL to backup
-     *
-     * @return string
-     */
-    public function getUrl();
+        if (false === $backupPath) {
+            return null;
+        }
 
-    /**
-     * Get backup file size in MB
-     *
-     * @return string
-     */
-    public function getSize();
+        $backups = [];
 
-    /**
-     * Get backup age in seconds
-     *
-     * @return int
-     */
-    public function getAge();
+        while (false !== $file = readdir($backupPath)) {
+            if (0 === preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches)) {
+                continue;
+            }
 
-    /**
-     * Get backup creation date
-     *
-     * @return DateTimeInterface
-     */
-    public function getDate();
+            $backups[] = new Backup($file);
+        }
+
+        closedir($backupPath);
+
+        return $backups;
+    }
 }
