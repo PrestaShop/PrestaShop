@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Backup;
 
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -59,8 +60,21 @@ final class BackupGridDataProvider implements GridDataProviderInterface
             array_slice($backups, $searchCriteria->getOffset(), $searchCriteria->getLimit()) :
             $backups;
 
+        $backupsArray = [];
+
+        foreach ($paginatedBackups as $backup) {
+            $backupsArray[] = [
+                'file_name' => $backup->getFileName(),
+                'file_size' => $backup->getSize(),
+                'date' => $backup->getDate(),
+                'age' => $backup->getAge(),
+            ];
+        }
+
+        $records = new RowCollection($backupsArray);
+
         return new GridData(
-            $paginatedBackups,
+            $records,
             count($backups)
         );
     }
