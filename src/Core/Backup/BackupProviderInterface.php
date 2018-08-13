@@ -26,45 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup;
 
-use DateTimeInterface;
-
-/**
- * Interface BackupInterface defines contract for backup
- */
-interface BackupInterface
+interface BackupProviderInterface
 {
     /**
-     * Get backup filename
+     * Get available backups
      *
-     * @return string
+     * @return BackupInterface[]
      */
-    public function getFileName();
-
-    /**
-     * Get URL to backup
-     *
-     * @return string
-     */
-    public function getUrl();
-
-    /**
-     * Get backup file size in MB
-     *
-     * @return string
-     */
-    public function getSize();
-
-    /**
-     * Get backup age in seconds
-     *
-     * @return int
-     */
-    public function getAge();
-
-    /**
-     * Get backup creation date
-     *
-     * @return DateTimeInterface
-     */
-    public function getDate();
+    public function getBackups();
 }

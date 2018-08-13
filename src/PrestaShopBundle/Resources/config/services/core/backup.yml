@@ -6,3 +6,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Backup\BackupOptionsConfigurator'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.backup.grid_data_provider:
+        class: 'PrestaShop\PrestaShop\Core\Backup\BackupGridDataProvider'
+        arguments:
+            - '@prestashop.adapter.backup.backup_provider'
