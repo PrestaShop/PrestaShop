@@ -63,7 +63,7 @@ class BackupController extends FrameworkBundleAdminController
             $backup = new Backup($request->query->get('download_filename'));
             $downloadFile = [
                 'url' => $backup->getUrl(),
-                'size' => $backup->getSize(),
+                'size' => number_format($backup->getSize() * 0.000001, 2, '.', ''),
             ];
         }
 
