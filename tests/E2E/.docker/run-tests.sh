@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 PS_VERSION="${PS_VERSION:-1.7}"
 URL="${URL:-prestashop}"
