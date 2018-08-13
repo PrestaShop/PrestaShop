@@ -32,3 +32,10 @@ admin_backup_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processDelete'
         _legacy_controller: 'AdminBackup'
+
+admin_backup_bulk_delete:
+    path: /bulk-delete/
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processBulkDelete'
+        _legacy_controller: 'AdminBackup'

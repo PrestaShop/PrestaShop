@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Backup\Backup;
 use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
+use PrestaShop\PrestaShop\Core\Backup\Exception\BackupNotFoundException;
 use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\BackupFilters;
@@ -195,6 +196,61 @@ class BackupController extends FrameworkBundleAdminController
         }
 
         $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_backup');
+    }
+
+    /**
+     * Process bulk backup deletion
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processBulkDeleteAction(Request $request)
+    {
+        $backupsToDelete = $request->request->get('backup_backup_bulk_file_names', []);
+
+        if (empty($backupsToDelete)) {
+            $this->addFlash(
+                'error',
+                $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_backup');
+        }
+
+        $backupRemover = $this->get('prestashop.adapter.backup.backup_remover');
+        $failedBackups = [];
+
+        foreach ($backupsToDelete as $backupFileName) {
+            $backup = new Backup($backupFileName);
+
+            if (!$backupRemover->remove($backup)) {
+                $failedBackups[] = $backup->getFileName();
+            }
+        }
+
+        if (!empty($failedBackups)) {
+            $this->addFlash(
+                'error',
+                $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error')
+            );
+
+            foreach ($failedBackups as $backupFileName) {
+                $this->addFlash(
+                    'error',
+                    $this->trans('Can\'t delete #%id%', 'Admin.Notifications.Error', ['%id%' => $backupFileName])
+                );
+            }
+
+            return $this->redirectToRoute('admin_backup');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+        );
 
         return $this->redirectToRoute('admin_backup');
     }
