@@ -758,6 +758,7 @@ class LinkCore
                     'AdminInvoices' => 'admin_order_invoices',
                     'AdminEmails' => 'admin_email',
                     'AdminRequestSql' => 'admin_request_sql',
+                    'AdminBackup' => 'admin_backup',
                 );
 
                 if (isset($routes[$controller])) {
