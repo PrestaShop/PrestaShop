@@ -95,25 +95,25 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                     'sortable' => false,
                 ])
             )
-//            ->add((new ActionColumn('actions'))
-//                ->setOptions([
-//                    'actions' => (new RowActionCollection())
-//                        ->add((new LinkRowAction('delete'))
-//                            ->setIcon('delete')
-//                            ->setOptions([
-//                                'route' => 'admin_delete_single_email_log',
-//                                'route_param_name' => 'mailId',
-//                                'route_param_field' => 'id_mail',
-//                                'confirm_message' => $this->trans(
-//                                    'Delete selected item?',
-//                                    [],
-//                                    'Admin.Notifications.Warning'
-//                                ),
-//                            ])
-//                        )
-//                    ,
-//                ])
-//            )
+            ->add((new ActionColumn('actions'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('delete'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'route' => 'admin_backup_delete',
+                                'route_param_name' => 'deleteFileName',
+                                'route_param_field' => 'file_name',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        )
+                    ,
+                ])
+            )
         ;
     }
 

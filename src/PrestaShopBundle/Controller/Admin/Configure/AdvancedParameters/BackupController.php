@@ -170,6 +170,36 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process backup file deletion
+     *
+     * @param string $deleteFileName
+     *
+     * @return RedirectResponse
+     */
+    public function processDeleteAction($deleteFileName)
+    {
+        $backup = new Backup($deleteFileName);
+        $backupRemover = $this->get('prestashop.adapter.backup.backup_remover');
+
+        if (!$backupRemover->remove($backup)) {
+            $this->addFlash(
+                'error',
+                sprintf(
+                    '%s "%s"',
+                    $this->trans('Error deleting', 'Admin.Advparameters.Notification'),
+                    $backup->getFileName()
+                )
+            );
+
+            return $this->redirectToRoute('admin_backup');
+        }
+
+        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_backup');
+    }
+
+    /**
      * Get backup form handler
      *
      * @return FormHandlerInterface
