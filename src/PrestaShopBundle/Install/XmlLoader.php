@@ -867,7 +867,7 @@ class XmlLoader
         }
 
         $classes = array();
-        foreach (scandir($dir) as $file) {
+        foreach (scandir($dir, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.' && $file != 'index.php') {
                 if (is_dir($dir.$file)) {
                     $classes = array_merge($classes, $this->getClasses($dir.$file.'/'));
@@ -910,7 +910,7 @@ class XmlLoader
     public function getEntitiesList()
     {
         $entities = array();
-        foreach (scandir($this->data_path) as $file) {
+        foreach (scandir($this->data_path, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.' && preg_match('#^(.+)\.xml$#', $file, $m)) {
                 $entities[] = $m[1];
             }
@@ -1357,7 +1357,7 @@ class XmlLoader
                 $this->setError(sprintf('Cannot create directory <i>%s</i>', $backup_path));
             }
 
-            foreach (scandir($from_path) as $file) {
+            foreach (scandir($from_path, SCANDIR_SORT_NONE) as $file) {
                 if ($file[0] != '.' && preg_match('#^(([0-9]+)(-('.implode('|', $types).'))?)\.(gif|jpg|jpeg|png)$#i', $file, $m)) {
                     $file_id = $m[2];
                     $file_type = $m[3];

@@ -1,4 +1,5 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const {Menu} = require('../../../../selectors/BO/menu.js');
 const common_scenarios = require('../../../common_scenarios/pages');
 
 let categoryDataWithoutSubCategory = {
@@ -43,7 +44,15 @@ let newCategoryData = {
   }
 };
 
-scenario('Create, edit, delete and delete with bulk actions page category', () => {
+let pageData = {
+  page_category: 'editCategory',
+  meta_title: 'page1',
+  meta_description: 'page meta description',
+  meta_keyword: ["keyword", "page"],
+  page_content: 'page content'
+};
+
+scenario('Create, edit and delete "CATEGORIES"', () => {
 
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -53,6 +62,12 @@ scenario('Create, edit, delete and delete with bulk actions page category', () =
   common_scenarios.createCategory(categoryDataWithSubCategory);
   common_scenarios.checkCategoryBO(categoryDataWithSubCategory);
   common_scenarios.editCategory(categoryDataWithSubCategory, newCategoryData);
+
+  scenario('go to "Design > Pages" page', client => {
+    test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+  }, 'design');
+
+  common_scenarios.createAndPreviewPage(pageData);
   common_scenarios.deleteCategory(newCategoryData.name);
   common_scenarios.deleteCategory(newCategoryData.sub_category.name);
   common_scenarios.createCategory(categoryDataWithoutSubCategory);

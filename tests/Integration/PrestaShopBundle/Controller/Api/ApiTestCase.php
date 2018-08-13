@@ -27,6 +27,7 @@
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
+use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -44,6 +45,9 @@ abstract class ApiTestCase extends WebTestCase
      */
     protected static $client;
 
+    /** @var Context */
+    protected $oldContext;
+
     /**
      * Symfony\Component\DependencyInjection\ContainerInterface
      */
@@ -58,6 +62,7 @@ abstract class ApiTestCase extends WebTestCase
 
         $this->router = self::$container->get('router');
 
+        $this->oldContext = Context::getContext();
         $legacyContextMock = $this->mockContextAdapter();
         self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
 
@@ -74,6 +79,7 @@ abstract class ApiTestCase extends WebTestCase
         self::$container = null;
         self::$kernel = null;
         self::$client = null;
+        Context::setInstanceForTesting($this->oldContext);
     }
 
     /**
@@ -98,7 +104,7 @@ abstract class ApiTestCase extends WebTestCase
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
         $legacyContextMock->method('getRootUrl')->willReturn(null);
-        $legacyContextMock->method('getLanguage')->willReturn(new \Language());
+        $legacyContextMock->method('getLanguage')->willReturn(new Language());
 
         return $legacyContextMock;
     }

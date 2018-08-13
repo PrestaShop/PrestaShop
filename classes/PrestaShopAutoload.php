@@ -166,6 +166,15 @@ class PrestaShopAutoload
      */
     public function generateIndex()
     {
+        if (class_exists('Configuration') && defined('_PS_CREATION_DATE_')) {
+            $creationDate = _PS_CREATION_DATE_;
+            if (!empty($creationDate) && Configuration::get('PS_DISABLE_OVERRIDES')) {
+                $this->_include_override_path = false;
+            } else {
+                $this->_include_override_path = true;
+            }
+        }
+
         $coreClasses = $this->getClassesFromDir('classes/');
 
         $classes = array_merge(
@@ -270,7 +279,7 @@ class PrestaShopAutoload
         $classes = array();
         $rootDir = $hostMode ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
-        foreach (scandir($rootDir.$path) as $file) {
+        foreach (scandir($rootDir . $path, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.') {
                 if (is_dir($rootDir.$path.$file)) {
                     $classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $hostMode));

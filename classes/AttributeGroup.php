@@ -401,7 +401,7 @@ class AttributeGroupCore extends ObjectModel
     {
         $sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'attribute_group`';
-        $position = DB::getInstance()->getValue($sql);
+        $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? $position : -1;
     }

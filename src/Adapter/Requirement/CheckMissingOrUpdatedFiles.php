@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
 
+use AppKernel;
+
 /**
  * Part of requirements for a PrestaShop website
  * Check if all required files exists.
@@ -33,6 +35,8 @@ namespace PrestaShop\PrestaShop\Adapter\Requirement;
 class CheckMissingOrUpdatedFiles
 {
     /**
+     * @param string|null $dir
+     * @param string $path
      * @return array
      */
     public function getListOfUpdatedFiles($dir = null, $path = '')
@@ -43,7 +47,7 @@ class CheckMissingOrUpdatedFiles
         );
         
         if (is_null($dir)) {
-            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
+            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5-'.AppKernel::MAJOR_VERSION.'/'.AppKernel::VERSION.'.xml');
             if (!$xml) {
                 return $fileList;
             }

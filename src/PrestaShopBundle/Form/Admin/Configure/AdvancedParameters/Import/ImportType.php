@@ -82,8 +82,7 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('sendemail', SwitchType::class, [
                 'data' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

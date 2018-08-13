@@ -29,8 +29,15 @@ namespace PrestaShop\PrestaShop\Adapter\Hook;
 
 use Hook;
 
+/**
+ * Give information about the hooks
+ */
 class HookInformationProvider
 {
+    /**
+     * @param $hook_name
+     * @return bool
+     */
     public function isDisplayHookName($hook_name)
     {
         return Hook::isDisplayHookName($hook_name);

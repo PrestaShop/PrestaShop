@@ -525,7 +525,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         $hookableList[$hook_name] = array();
                     }
                     if ($moduleInstance->isHookableOn($hook_name)) {
-                        array_push($hookableList[$hook_name], str_replace('_', '-', $module));
+                        $hookableList[$hook_name][] = str_replace('_', '-', $module);
                     }
                 }
             }

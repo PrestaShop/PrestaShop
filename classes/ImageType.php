@@ -141,7 +141,7 @@ class ImageTypeCore extends ObjectModel
         static $is_passed = false;
 
         if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]) && !$is_passed) {
-            $results = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'image_type`');
+            $results = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'image_type`');
 
             $types = array('products', 'categories', 'manufacturers', 'suppliers', 'stores');
             $total = count($types);

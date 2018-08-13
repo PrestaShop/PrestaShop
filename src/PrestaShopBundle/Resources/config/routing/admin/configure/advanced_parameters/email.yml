@@ -1,0 +1,51 @@
+admin_email:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:index'
+        _legacy_controller: AdminEmails
+
+admin_email_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:search'
+        _legacy_controller: AdminEmails
+
+admin_email_process:
+    path: /settings
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processForm'
+        _legacy_controller: AdminEmails
+
+admin_send_test_email:
+    path: /send-testing-email
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processTestEmailSending'
+        _legacy_controller: AdminEmails
+    condition: 'request.isXmlHttpRequest()'
+
+admin_delete_selected_email_logs:
+    path: /delete/selected
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processDeleteSelectedEmailLogs'
+        _legacy_controller: AdminEmails
+
+admin_delete_all_email_logs:
+    path: /delete/all
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processDeleteAllEmailLogs'
+        _legacy_controller: AdminEmails
+
+admin_delete_single_email_log:
+    path: /delete/{mailId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:processSingleEmailLog'
+        _legacy_controller: AdminEmails
+    requirements:
+        mailId: \d+

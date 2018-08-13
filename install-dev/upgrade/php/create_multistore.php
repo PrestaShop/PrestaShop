@@ -42,7 +42,7 @@ function create_multistore()
         return false;
     }
     $all_themes_dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
-    $themes = scandir($all_themes_dir);
+    $themes = scandir($all_themes_dir, SCANDIR_SORT_NONE);
     foreach ($themes as $theme) {
         if (!is_file($all_themes_dir.DIRECTORY_SEPARATOR.$theme) && is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) && $theme[0] != '.' && $theme != 'prestashop'  && $theme != 'default-bootstrap' && $theme != _THEME_NAME_) {
             $res &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'theme (name) VALUES("'.Db::getInstance()->escape($theme).'")');

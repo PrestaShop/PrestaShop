@@ -23,12 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
  * This form class is responsible to create a product, with or without attribute field
@@ -67,7 +70,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
 
         //if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
-            $collection = array();
+            $collection = [];
 
             $i = 0;
             foreach ($view->vars['value']['data'] as $id) {
@@ -78,20 +81,20 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                 switch ($view->vars['mapping_type']) {
                     case 'category':
                         $category = $this->categoryAdapter->getCategory($id);
-                        $collection[] = array(
+                        $collection[] = [
                             'id' => $id,
                             'name' => $this->categoryAdapter->getBreadCrumb($category->id),
                             'image' => $category->image,
-                        );
+                        ];
                         break;
 
                     default:
                         $product = $this->productAdapter->getProduct($id);
-                        $collection[] = array(
+                        $collection[] = [
                             'id' => $id,
-                            'name' => reset($product->name).' (ref:'.$product->reference.')',
+                            'name' => reset($product->name) . ' (ref:' . $product->reference . ')',
                             'image' => $product->image,
-                        );
+                        ];
                         break;
                 }
                 $i++;
@@ -112,14 +115,14 @@ class TypeaheadProductCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+        $builder->add('data', CollectionType::class, [
+            'entry_type' => HiddenType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
             'required' => false,
             'prototype' => true,
-        ));
+        ]);
     }
 
     /**
@@ -127,7 +130,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'remote_url' => '',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
@@ -135,7 +138,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
             'placeholder' => '',
             'template_collection' => '',
             'limit' => 0,
-        ));
+        ]);
     }
 
     /**

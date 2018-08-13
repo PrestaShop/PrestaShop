@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Translation\TranslatorInterface;
@@ -58,7 +59,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
      *
      * @returns string
      */
-    protected function trans($key, $domain, $parameters = array())
+    protected function trans($key, $domain, $parameters = [])
     {
         return $this->translator->trans($key, $parameters, $domain);
     }

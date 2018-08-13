@@ -1,0 +1,93 @@
+_addons:
+    resource: "addons.yml"
+    prefix: /addons/
+
+admin_module_cart:
+    path: /cart/{moduleId}
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:getModuleCart
+    requirements:
+        moduleId: \d+
+
+admin_module_catalog:
+    path:     /catalog
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:catalog
+        _legacy_controller: AdminModulesCatalog
+
+admin_module_catalog_refresh:
+    path:     /catalog/refresh/{category}/{keyword}
+    methods:  [GET]
+    defaults:
+        category:
+        keyword:
+        _controller: PrestaShopBundle:Admin/Module:refreshCatalog
+        _legacy_controller: AdminModulesCatalog
+
+admin_module_catalog_post:
+    path:     /catalog/recommended
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:getPreferredModules
+        _legacy_controller: AdminModulesCatalog
+
+admin_module_manage:
+    path:     /manage/{category}/{keyword}
+    methods:  [GET]
+    defaults:
+        category:
+        keyword:
+        _controller: PrestaShopBundle:Admin/Module:manage
+        _legacy_controller: AdminModulesManage
+
+admin_module_manage_action:
+    path:     /manage/action/{action}/{module_name}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:module
+    requirements:
+        action: install|uninstall|enable|disable|enable_mobile|disable_mobile|reset|upgrade
+
+admin_module_configure_action:
+    path:     /manage/action/configure/{module_name}
+    methods:  [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:configureModule
+        _legacy_controller: AdminModules
+
+admin_module_manage_action_bulk:
+    path:     /manage/bulk/{action}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:module
+    requirements:
+        action: install|uninstall|configure|enable|disable|reset|upgrade
+
+admin_module_manage_update_all:
+    path:     /manage/update/all
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:module
+
+admin_module_import:
+    path:     /import
+    methods:  [POST]
+    defaults:
+        module_name:
+        _controller: PrestaShopBundle:Admin/Module:importModule
+
+admin_module_notification:
+    path:     /notifications
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:notification
+        _legacy_controller: AdminModulesNotifications
+        
+admin_module_notification_count:
+    path:     /notifications/count
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:notificationsCount
+        _legacy_controller: AdminModulesNotifications

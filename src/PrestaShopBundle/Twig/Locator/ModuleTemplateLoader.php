@@ -34,38 +34,28 @@ use Twig\Loader\FilesystemLoader;
 class ModuleTemplateLoader extends FilesystemLoader
 {
     /**
-     * {@inheritdoc}
+     * @param array $namespaces  A collection of path namespaces with namespace names.
+     * @param array $modulePaths A path or an array of paths where to look for module templates
      */
-    private $rootPath;
-
-    /**
-     * @param array  $namespaces A collection of path namespaces with namespace names.
-     * @param string|array $paths    A path or an array of paths where to look for templates
-     * @param string|null  $rootPath The root path common to all relative paths (null for getcwd())
-     */
-    public function __construct(array $namespaces, $paths = array(), $rootPath = null)
+    public function __construct(array $namespaces, array $modulePaths = array())
     {
-        $this->rootPath = (null === $rootPath ? getcwd() : $rootPath).DIRECTORY_SEPARATOR;
-        if (false !== $realPath = realpath($rootPath)) {
-            $this->rootPath = $realPath.DIRECTORY_SEPARATOR;
-        }
-
-        if ($paths) {
-            $this->registerNamespacesFromConfig($paths, $namespaces);
+        if (!empty($modulePaths)) {
+            $this->registerNamespacesFromConfig($modulePaths, $namespaces);
         }
     }
 
     /**
      * Register namespaces in module and link them to the right paths.
-     * @param $paths
+     *
+     * @param array $modulePaths
      * @param array $namespaces
      */
-    private function registerNamespacesFromConfig($paths, array $namespaces)
+    private function registerNamespacesFromConfig(array $modulePaths, array $namespaces)
     {
         foreach ($namespaces as $namespace => $namespacePath) {
             $templatePaths = array();
 
-            foreach ($paths as $path) {
+            foreach ($modulePaths as $path) {
                 if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {
                     $templatePaths[] = $dir;
                 }

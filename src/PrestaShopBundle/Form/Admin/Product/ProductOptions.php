@@ -101,130 +101,134 @@ class ProductOptions extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('visibility', FormType\ChoiceType::class, array(
-            'choices'  => array(
+        $builder->add('visibility', FormType\ChoiceType::class, [
+            'choices' => [
                 $this->translator->trans('Everywhere', [], 'Admin.Catalog.Feature') => 'both',
                 $this->translator->trans('Catalog only', [], 'Admin.Catalog.Feature') => 'catalog',
                 $this->translator->trans('Search only', [], 'Admin.Catalog.Feature') => 'search',
                 $this->translator->trans('Nowhere', [], 'Admin.Catalog.Feature') => 'none',
-            ),
-            'attr' => array(
+            ],
+            'attr' => [
                 'class' => 'custom-select',
-            ),
+            ],
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'Admin.Catalog.Feature'),
-        ))
-        ->add('tags', TranslateType::class, array(
-            'type' => FormType\TextType::class,
-            'options' => [
+        ])
+            ->add('tags', TranslateType::class, [
+                'type' => FormType\TextType::class,
+                'options' => [
+                    'attr' => [
+                        'class' => 'tokenfield',
+                        'placeholder' => $this->translator->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', [], 'Admin.Catalog.Help')
+                    ]
+                ],
+                'locales' => $this->locales,
+                'label' => $this->translator->trans('Tags', [], 'Admin.Catalog.Feature')
+            ])
+            ->add(
+                $builder->create(
+                    'display_options',
+                    FormType\FormType::class,
+                    [
+                        'required' => false,
+                        'label' => $this->translator->trans('Display options', [], 'Admin.Catalog.Feature')
+                    ]
+                )
+                    ->add(
+                        'available_for_order',
+                        FormType\CheckboxType::class,
+                        [
+                            'label' => $this->translator->trans('Available for order', [], 'Admin.Catalog.Feature'),
+                            'required' => false,
+                        ]
+                    )
+                    ->add(
+                        'show_price',
+                        FormType\CheckboxType::class,
+                        [
+                            'label' => $this->translator->trans('Show price', [], 'Admin.Catalog.Feature'),
+                            'required' => false,
+                        ]
+                    )
+                    ->add(
+                        'online_only',
+                        FormType\CheckboxType::class,
+                        [
+                            'label' => $this->translator->trans(
+                                'Web only (not sold in your retail store)',
+                                [],
+                                'Admin.Catalog.Feature'
+                            ),
+                            'required' => false,
+                        ]
+                    )
+            )
+            ->add('upc', FormType\TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Regex("/^[0-9]{0,12}$/"),
+                ],
+                'empty_data' => '',
+            ])
+            ->add('ean13', FormType\TextType::class, [
+                'required' => false,
+                'error_bubbling' => true,
+                'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Regex("/^[0-9]{0,13}$/"),
+                ],
+                'empty_data' => '',
+            ])
+            ->add('isbn', FormType\TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Regex("/^[0-9-]{0,32}$/"),
+                ],
+                'empty_data' => '',
+            ])
+            ->add('reference', FormType\TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Reference', [], 'Admin.Global'),
+                'empty_data' => '',
+            ])
+            ->add('show_condition', FormType\CheckboxType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Display condition on product page', [], 'Admin.Catalog.Feature'),
+            ])
+            ->add('condition', FormType\ChoiceType::class, [
+                'choices' => [
+                    $this->translator->trans('New', [], 'Shop.Theme.Catalog') => 'new',
+                    $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => 'used',
+                    $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => 'refurbished'
+                ],
                 'attr' => [
-                    'class' => 'tokenfield',
-                    'placeholder' => $this->translator->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', [], 'Admin.Catalog.Help')
-                ]
-            ],
-            'locales' => $this->locales,
-            'label' => $this->translator->trans('Tags', [], 'Admin.Catalog.Feature')
-        ))
-        ->add(
-            $builder->create(
-                'display_options',
-                FormType\FormType::class,
-                [
-                    'required' => false,
-                    'label' => $this->translator->trans('Display options', [], 'Admin.Catalog.Feature')
-                ]
-            )
-            ->add(
-                'available_for_order',
-                FormType\CheckboxType::class,
-                array(
-                    'label'    => $this->translator->trans('Available for order', [], 'Admin.Catalog.Feature'),
-                    'required' => false,
-                )
-            )
-            ->add(
-                'show_price',
-                FormType\CheckboxType::class,
-                array(
-                    'label'    => $this->translator->trans('Show price', [], 'Admin.Catalog.Feature'),
-                    'required' => false,
-                )
-            )
-            ->add(
-                'online_only',
-                FormType\CheckboxType::class,
-                array(
-                    'label'    => $this->translator->trans(
-                        'Web only (not sold in your retail store)',
-                        [],
-                        'Admin.Catalog.Feature'
-                    ),
-                    'required' => false,
-                )
-            )
-        )
-        ->add('upc', FormType\TextType::class, array(
-            'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,12}$/"),
-            )
-        ))
-        ->add('ean13', FormType\TextType::class, array(
-            'required' => false,
-            'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,13}$/"),
-            )
-        ))
-        ->add('isbn', FormType\TextType::class, array(
-            'required' => false,
-            'label' => $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9-]{0,32}$/"),
-            ),
-        ))
-        ->add('reference', FormType\TextType::class, array(
-            'required' => false,
-            'label' => $this->translator->trans('Reference', [], 'Admin.Global')
-        ))
-        ->add('show_condition', FormType\CheckboxType::class, array(
-            'required' => false,
-            'label' => $this->translator->trans('Display condition on product page', [], 'Admin.Catalog.Feature'),
-        ))
-        ->add('condition', FormType\ChoiceType::class, array(
-            'choices'  => array(
-                 $this->translator->trans('New', [], 'Shop.Theme.Catalog') => 'new',
-                 $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => 'used',
-                 $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => 'refurbished'
-            ),
-            'attr' => array(
-                'class' => 'custom-select',
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Condition', [], 'Admin.Catalog.Feature')
-        ))
-        ->add('suppliers', FormType\ChoiceType::class, array(
-            'choices' =>  $this->suppliers,
-            'expanded' =>  true,
-            'multiple' =>  true,
-            'required' =>  false,
-            'attr' => array(
-                'class' => 'custom-select',
-            ),
-            'label' => $this->translator->trans('Suppliers', [], 'Admin.Global')
-        ))
-        ->add('default_supplier', FormType\ChoiceType::class, array(
-            'choices' =>  $this->suppliers,
-            'expanded' =>  true,
-            'multiple' =>  false,
-            'required' =>  true,
-            'attr' => array(
-                'class' => 'custom-select',
-            ),
-            'label' => $this->translator->trans('Default suppliers', [], 'Admin.Catalog.Feature')
-        ));
+                    'class' => 'custom-select',
+                ],
+                'required' => true,
+                'label' => $this->translator->trans('Condition', [], 'Admin.Catalog.Feature')
+            ])
+            ->add('suppliers', FormType\ChoiceType::class, [
+                'choices' => $this->suppliers,
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+                'attr' => [
+                    'class' => 'custom-select',
+                ],
+                'label' => $this->translator->trans('Suppliers', [], 'Admin.Global')
+            ])
+            ->add('default_supplier', FormType\ChoiceType::class, [
+                'choices' => $this->suppliers,
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                'attr' => [
+                    'class' => 'custom-select',
+                ],
+                'label' => $this->translator->trans('Default suppliers', [], 'Admin.Catalog.Feature')
+            ]);
 
         foreach ($this->suppliers as $supplier => $id) {
             $builder->add(
@@ -232,9 +236,9 @@ class ProductOptions extends CommonAbstractType
                 FormType\CollectionType::class,
                 [
                     'entry_type' => ProductSupplierCombination::class,
-                    'entry_options'  => array(
+                    'entry_options' => [
                         'id_supplier' => $id,
-                    ),
+                    ],
                     'prototype' => true,
                     'allow_add' => true,
                     'required' => false,
@@ -243,37 +247,37 @@ class ProductOptions extends CommonAbstractType
             );
         }
 
-        $builder->add('custom_fields', FormType\CollectionType::class, array(
+        $builder->add('custom_fields', FormType\CollectionType::class, [
             'entry_type' => ProductCustomField::class,
             'label' => $this->translator->trans('Customization', [], 'Admin.Catalog.Feature'),
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
-        ));
+        ]);
 
         //Add product attachment form
-        $builder->add('attachment_product', ProductAttachement::class, array(
+        $builder->add('attachment_product', ProductAttachement::class, [
             'required' => false,
             'label' => $this->translator->trans('Attachment', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action', array('idProduct' => 1))]
-        ));
+            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action', ['idProduct' => 1])]
+        ]);
 
         //Add attachment selectors
-        $builder->add('attachments', FormType\ChoiceType::class, array(
-            'expanded'  => true,
-            'multiple'  => true,
-            'choices'  => $this->attachmentList,
+        $builder->add('attachments', FormType\ChoiceType::class, [
+            'expanded' => true,
+            'multiple' => true,
+            'choices' => $this->attachmentList,
             'choice_label' => function ($choice, $key, $value) {
                 $attachmentKey = array_search($key, array_column($this->fullAttachmentList, 'file'));
                 return $this->fullAttachmentList[$attachmentKey]['name'];
             },
             'required' => false,
-            'attr' => array(
+            'attr' => [
                 'class' => 'custom-select',
                 'data' => $this->fullAttachmentList
-            ),
+            ],
             'label' => $this->translator->trans('Attachments for this product:', [], 'Admin.Catalog.Feature')
-        ));
+        ]);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
@@ -282,7 +286,7 @@ class ProductOptions extends CommonAbstractType
             if (!isset($data['suppliers']) || count($data['suppliers']) == 0) {
                 $form = $event->getForm();
                 foreach ($this->suppliers as $supplier => $id) {
-                    $form->remove('supplier_combination_'.$id);
+                    $form->remove('supplier_combination_' . $id);
                 }
             }
         });

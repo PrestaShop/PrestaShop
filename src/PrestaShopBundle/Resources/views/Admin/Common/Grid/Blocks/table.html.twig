@@ -1,0 +1,51 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form'}}) }}
+<table class="js-grid-table table"
+       id="{{ grid.id }}_grid_table"
+       data-query="{{ grid.data.query }}"
+>
+  <thead class="thead-default">
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+  </thead>
+  <tbody>
+  {% if grid.data.rows is not empty %}
+    {% for row in grid.data.rows %}
+      <tr>
+        {% for column in grid.columns %}
+          <td>
+            {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'grid': grid, 'column': column, 'row': row}) }}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  {% else %}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/empty_row.html.twig', {'grid': grid}) }}
+  {% endif %}
+  </tbody>
+</table>
+{{ form_end(grid.filter_form) }}

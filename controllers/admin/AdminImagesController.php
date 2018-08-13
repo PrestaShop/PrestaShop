@@ -428,7 +428,7 @@ class AdminImagesControllerCore extends AdminController
         if (!is_dir($dir)) {
             return false;
         }
-        $toDel = scandir($dir);
+        $toDel = scandir($dir, SCANDIR_SORT_NONE);
 
         foreach ($toDel as $d) {
             foreach ($type as $imageType) {
@@ -449,7 +449,7 @@ class AdminImagesControllerCore extends AdminController
                 $imageObj = new Image($image['id_image']);
                 $imageObj->id_product = $image['id_product'];
                 if (file_exists($dir.$imageObj->getImgFolder())) {
-                    $toDel = scandir($dir.$imageObj->getImgFolder());
+                    $toDel = scandir($dir . $imageObj->getImgFolder(), SCANDIR_SORT_NONE);
                     foreach ($toDel as $d) {
                         foreach ($type as $imageType) {
                             if (preg_match('/^[0-9]+\-'.$imageType['name'].'\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
@@ -482,7 +482,7 @@ class AdminImagesControllerCore extends AdminController
 
         if (!$productsImages) {
             $formated_medium = ImageType::getFormattedName('medium');
-            foreach (scandir($dir) as $image) {
+            foreach (scandir($dir, SCANDIR_SORT_NONE) as $image) {
                 if (preg_match('/^[0-9]*\.jpg$/', $image)) {
                     foreach ($type as $k => $imageType) {
                         // Customizable writing dir

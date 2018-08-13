@@ -38,11 +38,18 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 use TabCore as Tab;
 
+/**
+ * Class responsible of register new tab in Back Office's menu.
+ */
 class ModuleTabRegister
 {
     const SUFFIX = '_MTR';
 
+    /**
+     * @var string
+     */
     private $defaultParent = 'DEFAULT';
+
     /**
      * @var LangRepository
      */
@@ -54,12 +61,12 @@ class ModuleTabRegister
     protected $tabRepository;
 
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     /**
-     * @var Symfony\Component\Translation\TranslatorInterface
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
 

@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -64,36 +65,37 @@ class ProductSupplierCombination extends CommonAbstractType
         $builder->add(
             'supplier_reference',
             FormType\TextType::class,
-            array(
+            [
                 'required' => false,
-                'label' => null
-            )
+                'label' => null,
+                'empty_data' => '',
+            ]
         )
-        ->add(
-            'product_price',
-            FormType\MoneyType::class,
-            array(
-                'required' => false,
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'float'))
-                )
+            ->add(
+                'product_price',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'float'])
+                    ]
+                ]
             )
-        )
-        ->add(
-            'product_price_currency',
-            FormType\ChoiceType::class,
-            array(
-                'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
-                'required' => true,
-                'attr' => array(
-                    'class' => 'custom-select',
-                ),
+            ->add(
+                'product_price_currency',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
+                    'required' => true,
+                    'attr' => [
+                        'class' => 'custom-select',
+                    ],
+                ]
             )
-        )
-        ->add('id_product_attribute', FormType\HiddenType::class)
-        ->add('product_id', FormType\HiddenType::class)
-        ->add('supplier_id', FormType\HiddenType::class);
+            ->add('id_product_attribute', FormType\HiddenType::class)
+            ->add('product_id', FormType\HiddenType::class)
+            ->add('supplier_id', FormType\HiddenType::class);
 
         //set default minimal values for collection prototype
         $builder->setData([
@@ -102,14 +104,15 @@ class ProductSupplierCombination extends CommonAbstractType
             'product_price_currency' => $this->contextLegacy->currency->id,
         ]);
     }
+
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'id_supplier' => null,
-        ));
+        ]);
     }
 
     /**

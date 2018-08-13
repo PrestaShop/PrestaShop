@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -41,10 +42,9 @@ final class LogsByEmailType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('logs_by_email', TextType::class, array(
+            ->add('logs_by_email', TextType::class, [
                 'required' => true,
-            ))
-        ;
+            ]);
     }
 
     /**
@@ -52,9 +52,9 @@ final class LogsByEmailType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature'
-        ));
+        ]);
     }
 
     /**

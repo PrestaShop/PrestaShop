@@ -27,13 +27,16 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Address;
 
+/**
+ * Class responsible of creation of Address ObjectModel
+ */
 class AddressFactory
 {
     /**
      * Initialize an address corresponding to the specified id address or if empty to the
      * default shop configuration
      *
-     * @param null $id_address
+     * @param int|null $id_address
      * @param bool $with_geoloc
      * @return Address
      */

@@ -159,7 +159,7 @@ class Update extends Repository
     private function generateSupplementalDatas()
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'supplemental');
+        $files = @scandir($rootPath . 'supplemental', SCANDIR_SORT_NONE);
 
         foreach ($files as $file) {
             if (is_file($file)) {
@@ -182,7 +182,7 @@ class Update extends Repository
     private function generateMainDatas($locale)
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);
+        $files = @scandir($rootPath . 'main' . DIRECTORY_SEPARATOR . $locale, SCANDIR_SORT_NONE);
 
         if (!$files) {
             return;

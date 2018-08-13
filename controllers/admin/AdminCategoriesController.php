@@ -107,7 +107,7 @@ class AdminCategoriesControllerCore extends AdminController
         parent::init();
 
         // context->shop is set in the init() function, so we move the _category instanciation after that
-        if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete') {
+        if (($id_category = Tools::getValue('id_category')) && $this->action != 'select_delete') {
             $this->_category = new Category($id_category);
         } else {
             if (Shop::getContext() == Shop::CONTEXT_SHOP) {
@@ -1027,7 +1027,7 @@ class AdminCategoriesControllerCore extends AdminController
 
         if (isset($_FILES['thumbnail'])) {
             //Get total of image already present in directory
-            $files = scandir(_PS_CAT_IMG_DIR_);
+            $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
             $assigned_keys = array();
             $allowed_keys  = array(0, 1, 2);
 

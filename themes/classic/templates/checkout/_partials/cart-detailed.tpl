@@ -32,7 +32,7 @@
             {include file='checkout/_partials/cart-detailed-product-line.tpl' product=$product}
           {/block}
         </li>
-        {if $product.customizations|count >1}<hr>{/if}
+        {if is_array($product.customizations) && $product.customizations|count >1}<hr>{/if}
       {/foreach}
     </ul>
     {else}

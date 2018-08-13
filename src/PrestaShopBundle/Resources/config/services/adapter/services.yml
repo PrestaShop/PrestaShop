@@ -1,0 +1,93 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.hosting_information:
+            class: 'PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
+
+    prestashop.adapter.shop_information:
+        class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopInformation'
+        arguments: ['@prestashop.adapter.legacy.context']
+
+    prestashop.adapter.mailing_information:
+        class: 'PrestaShop\PrestaShop\Adapter\Mail\MailingInformation'
+
+    prestashop.adapter.check_requirements:
+        class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements'
+        arguments: ['@translator']
+
+    prestashop.adapter.system_information:
+        class: 'PrestaShop\PrestaShop\Adapter\System\SystemInformation'
+        arguments:
+            - '@prestashop.adapter.hosting_information'
+            - '@prestashop.adapter.mailing_information'
+            - '@prestashop.adapter.shop_information'
+
+    prestashop.adapter.check_missing_files:
+        class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
+    prestashop.adapter.cache_clearer:
+        class: 'PrestaShop\PrestaShop\Adapter\Cache\CacheClearer'
+
+    prestashop.adapter.debug_mode:
+        class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
+
+    prestashop.adapter.memcache_server.manager:
+        class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
+        arguments: ['@database_connection', '%database_prefix%']
+
+    prestashop.adapter.php_parameters:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
+        arguments: ['%kernel.root_dir%/config/parameters.php']
+
+    prestashop.adapter.legacy.configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration
+
+    prestashop.adapter.legacy.kpi_configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
+
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\LegacyContext
+
+    prestashop.adapter.legacy.logger:
+        class: PrestaShop\PrestaShop\Adapter\LegacyLogger
+
+    prestashop.adapter.validate:
+        class: PrestaShop\PrestaShop\Adapter\Validate
+
+    # SSL middleware
+    prestashop.adapter.middleware.ssl:
+        class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    # Legacy Hooks registrator
+    prestashop.adapter.legacy.hook.subscriber:
+        class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+
+    prestashop.adapter.legacy.block.helper.subscriber:
+            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+
+    prestashop.adapter.stock_manager:
+        class: PrestaShop\PrestaShop\Adapter\StockManager
+        decorates: prestashop.core.data_provider.stock_interface
+        public: false
+
+    prestashop.adapter.formatter.price:
+        class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
+
+    # Other adapters
+    prestashop.adapter.shop.context:
+        class: PrestaShop\PrestaShop\Adapter\Shop\Context
+
+    prestashop.adapter.tools:
+        class: PrestaShop\PrestaShop\Adapter\Tools
+
+    prestashop.adapter.image_manager:
+        class: PrestaShop\PrestaShop\Adapter\ImageManager
+        arguments: ["@prestashop.adapter.legacy.context"]
+
+    prestashop.core.module.updater:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+        arguments:
+            - "@prestashop.core.admin.data_provider.addons_interface"
+            - "@prestashop.adapter.admin.data_provider.module"

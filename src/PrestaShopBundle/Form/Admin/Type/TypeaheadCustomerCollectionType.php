@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,7 +65,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
 
         //if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
-            $collection = array();
+            $collection = [];
 
             $i = 0;
             foreach ($view->vars['value']['data'] as $id) {
@@ -72,10 +73,10 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                     continue;
                 }
                 $customer = $this->customerAdapter->getCustomer($id);
-                $collection[] = array(
+                $collection[] = [
                     'id' => $id,
-                    'name' => $customer->firstname.' '.$customer->lastname.' - '.$customer->email,
-                );
+                    'name' => $customer->firstname . ' ' . $customer->lastname . ' - ' . $customer->email,
+                ];
                 $i++;
 
                 //if collection length is up to limit, break
@@ -94,14 +95,14 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
+            'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
             'required' => false,
             'prototype' => true,
-        ));
+        ]);
     }
 
     /**
@@ -109,14 +110,14 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'remote_url' => '',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => '',
             'template_collection' => '',
             'limit' => 0,
-        ));
+        ]);
     }
 
     /**

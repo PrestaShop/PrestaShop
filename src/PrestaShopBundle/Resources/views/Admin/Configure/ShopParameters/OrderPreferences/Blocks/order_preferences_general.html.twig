@@ -1,0 +1,93 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+
+{% block order_preferences_general %}
+<div class="col">
+    <div class="card">
+        <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
+        </h3>
+        <div class="card-block">
+            <div class="card-text">
+                <div class="form-group">
+                    {{ ps.label_with_help(('Enable final summary'|trans), ('Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.enable_final_summary) }}
+                    {{ form_widget(generalForm.enable_final_summary) }}
+                </div>
+                <div class="form-group">
+                    {{ ps.label_with_help(('Enable guest checkout'|trans), ('Allow guest visitors to place an order without registering.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.enable_guest_checkout) }}
+                    {{ form_widget(generalForm.enable_guest_checkout) }}
+                </div>
+                <div class="form-group">
+                    {{ ps.label_with_help(('Disable Reordering Option'|trans), ('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.disable_reordering_option) }}
+                    {{ form_widget(generalForm.disable_reordering_option) }}
+                </div>
+                <div class="form-group">
+                    {{ ps.label_with_help(('Minimum purchase total required in order to validate the order'|trans), ('Set to 0 to disable this feature.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.purchase_minimum_value) }}
+                    {{ form_widget(generalForm.purchase_minimum_value) }}
+                </div>
+                <div class="form-group">
+                    {{ ps.label_with_help(('Recalculate shipping costs after editing the order'|trans), ('Automatically updates the shipping costs when you edit an order.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.recalculate_shipping_cost) }}
+                    {{ form_widget(generalForm.recalculate_shipping_cost) }}
+                </div>
+                {% if isMultishippingEnabled %}
+                    <div class="form-group">
+                        {{ ps.label_with_help(('Allow multishipping'|trans), ('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                        {{ form_errors(generalForm.allow_multishipping) }}
+                        {{ form_widget(generalForm.allow_multishipping) }}
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    {{ ps.label_with_help(('Delayed shipping'|trans), ('Allows you to delay shipping at your customers\' request.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.allow_delayed_shipping) }}
+                    {{ form_widget(generalForm.allow_delayed_shipping) }}
+                </div>
+                <div class="form-group">
+                    {{ ps.label_with_help(('Terms of service'|trans), ('Require customers to accept or decline terms of service before processing an order.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.enable_tos) }}
+                    {{ form_widget(generalForm.enable_tos) }}
+                </div>
+                <div class="form-group">
+                    {{ ps.label_with_help(('Page for the Terms and conditions'|trans), ('Choose the page which contains your store\'s terms and conditions of use.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ form_errors(generalForm.tos_cms_id) }}
+                    {{ form_widget(generalForm.tos_cms_id) }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

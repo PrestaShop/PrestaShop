@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 
 /**
  * Class MetaCore
@@ -373,7 +373,7 @@ class MetaCore extends ObjectModel
         if (!empty($title)) {
             $title = ' - '.$title;
         }
-        $pageNumber = (int)Tools::getValue('p');
+        $pageNumber = (int)Tools::getValue('page');
         $category = new Category($idCategory, $idLang);
 
         $cacheId = 'Meta::getCategoryMetas'.(int) $idCategory.'-'.(int) $idLang;
@@ -421,7 +421,7 @@ class MetaCore extends ObjectModel
      */
     public static function getManufacturerMetas($idManufacturer, $idLang, $pageName)
     {
-        $pageNumber = (int)Tools::getValue('p');
+        $pageNumber = (int)Tools::getValue('page');
         $manufacturer = new Manufacturer($idManufacturer, $idLang);
         if (Validate::isLoadedObject($manufacturer)) {
             $row = Meta::getPresentedObject($manufacturer);
@@ -479,7 +479,6 @@ class MetaCore extends ObjectModel
         $cms = new CMS($idCms, $idLang);
         if (Validate::isLoadedObject($cms)) {
             $row = Meta::getPresentedObject($cms);
-            $row['meta_title'] = $row['meta_title'];
 
             return Meta::completeMetaTags($row, $row['meta_title']);
         }

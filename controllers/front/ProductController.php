@@ -23,12 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
-use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -375,14 +376,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function displayAjaxQuickview()
     {
-        $product_for_template = $this->getTemplateVarProduct();
-
+        $productForTemplate = $this->getTemplateVarProduct();
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
-            'quickview_html' => $this->render('catalog/_partials/quickview', $product_for_template),
-            'product' => $product_for_template,
+        $this->ajaxRender(Tools::jsonEncode(array(
+            'quickview_html' => $this->render(
+                'catalog/_partials/quickview',
+                $productForTemplate instanceof AbstractLazyArray ?
+                $productForTemplate->jsonSerialize() :
+                $productForTemplate
+            ),
+            'product' => $productForTemplate,
         )));
+
+        return;
     }
 
     public function displayAjaxRefresh()
@@ -393,7 +400,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
@@ -425,6 +432,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
         )));
+
+        return;
     }
 
     /**
@@ -950,9 +959,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $groups = Tools::getValue('group');
 
             if (!empty($groups)) {
-                $requestedIdProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
+                $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
                     $this->product->id,
-                    $groups
+                    $groups,
+                    true
                 );
             }
         }
