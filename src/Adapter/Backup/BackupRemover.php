@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Backup\BackupRemoverInterface;
 
 /**
  * Class BackupRemover deletes given backup
+ *
+ * @internal
  */
 final class BackupRemover implements BackupRemoverInterface
 {

@@ -28,11 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Backup\Backup;
 use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
-use PrestaShop\PrestaShop\Core\Backup\Exception\BackupNotFoundException;
 use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\BackupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +45,8 @@ class BackupController extends FrameworkBundleAdminController
 {
     /**
      * Show backup page
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      * @param BackupFilters $filters
@@ -86,6 +89,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show file download view
      *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
+     *      message="Access denied."
+     * )
+     * @DemoRestricted(redirectRoute="admin_backup")
+     *
      * @param Request $request
      * @param string  $downloadFileName
      *
@@ -108,6 +117,12 @@ class BackupController extends FrameworkBundleAdminController
 
     /**
      * Process backup options saving
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')",
+     *      message="Access denied."
+     * )
+     * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param Request $request
      *
@@ -135,6 +150,12 @@ class BackupController extends FrameworkBundleAdminController
 
     /**
      * Create new backup
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller')~'_')",
+     *      message="Access denied."
+     * )
+     * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @return RedirectResponse
      */
@@ -173,6 +194,12 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup file deletion
      *
+     * @AdminSecurity(
+     *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
+     *      message="Access denied."
+     * )
+     * @DemoRestricted(redirectRoute="admin_backup")
+     *
      * @param string $deleteFileName
      *
      * @return RedirectResponse
@@ -202,6 +229,12 @@ class BackupController extends FrameworkBundleAdminController
 
     /**
      * Process bulk backup deletion
+     *
+     * @AdminSecurity(
+     *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
+     *      message="Access denied."
+     * )
+     * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param Request $request
      *
