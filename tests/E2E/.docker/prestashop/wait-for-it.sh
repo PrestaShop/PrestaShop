@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #   Use this script to test if a given TCP host/port are available
 
 CMD_NAME=$(basename $0)

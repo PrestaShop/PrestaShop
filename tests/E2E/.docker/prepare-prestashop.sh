@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$DB_SERVER" = "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
 	echo >&2 'error: You requested automatic PrestaShop installation but MySQL server address is not provided '
