@@ -64,48 +64,56 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk_action'))
                 ->setOptions([
-                    'bulk_field' => '',
+                    'bulk_field' => 'file_name',
                 ])
             )
             ->add((new DataColumn('date'))
+                ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'date',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('age'))
+                ->setName($this->trans('Age', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'age',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('file_name'))
+                ->setName($this->trans('Filename', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'file_name',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('file_size'))
+                ->setName($this->trans('File size', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'file_size',
+                    'sortable' => false,
                 ])
             )
-            ->add((new ActionColumn('actions'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('delete'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'route' => 'admin_delete_single_email_log',
-                                'route_param_name' => 'mailId',
-                                'route_param_field' => 'id_mail',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
-                        )
-                    ,
-                ])
-            )
+//            ->add((new ActionColumn('actions'))
+//                ->setOptions([
+//                    'actions' => (new RowActionCollection())
+//                        ->add((new LinkRowAction('delete'))
+//                            ->setIcon('delete')
+//                            ->setOptions([
+//                                'route' => 'admin_delete_single_email_log',
+//                                'route_param_name' => 'mailId',
+//                                'route_param_field' => 'id_mail',
+//                                'confirm_message' => $this->trans(
+//                                    'Delete selected item?',
+//                                    [],
+//                                    'Admin.Notifications.Warning'
+//                                ),
+//                            ])
+//                        )
+//                    ,
+//                ])
+//            )
         ;
     }
 

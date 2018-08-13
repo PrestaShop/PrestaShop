@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,22 +22,25 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
-  {% block grid_header %}
-    <h3 class="card-header">
-        {{ grid.name }} ({{ grid.data.rows_total }})
-    </h3>
-  {% endblock %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-  {% block grid_body %}
-    <div class="card-body">
-      {% block grid_view_block %}
-        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
-      {% endblock %}
-    </div>
-  {% endblock %}
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-  {% block grid_footer %}{% endblock %}
-</div>
+final class BackupFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 20,
+            'offset' => 0,
+            'orderBy' => null,
+            'sortOrder' => null,
+            'filters' => [],
+        ];
+    }
+}
