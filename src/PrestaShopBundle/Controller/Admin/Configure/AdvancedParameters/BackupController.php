@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Backup\Backup;
 use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
 use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\BackupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,10 +45,11 @@ class BackupController extends FrameworkBundleAdminController
      * Show backup page
      *
      * @param Request $request
+     * @param BackupFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, BackupFilters $filters)
     {
         $backupForm = $this->getBackupFormHandler()->getForm();
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
@@ -64,7 +66,13 @@ class BackupController extends FrameworkBundleAdminController
             ];
         }
 
+        $backupsGridFactory = $this->get('prestashop.core.grid.factory.backup');
+        $backupGrid = $backupsGridFactory->createUsingSearchCriteria($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/backup.html.twig', [
+            'backupGrid' => $gridPresenter->present($backupGrid),
             'backupForm' => $backupForm->createView(),
             'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
             'hasDownloadFile' => $hasDownloadFile,

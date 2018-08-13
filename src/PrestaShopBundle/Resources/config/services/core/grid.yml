@@ -56,6 +56,11 @@ services:
             - "@=service('router').generate('admin_request_sql')"
         public: true
 
+    prestashop.core.grid.definition.factory.backup:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BackupDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -78,6 +83,14 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.request_sql'
             - '@prestashop.core.grid.data_provider.request_sql'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.hook.dispatcher'
+
+    prestashop.core.grid.factory.backup:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.backup'
+            - '@prestashop.core.backup.grid_data_provider'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.hook.dispatcher'
 

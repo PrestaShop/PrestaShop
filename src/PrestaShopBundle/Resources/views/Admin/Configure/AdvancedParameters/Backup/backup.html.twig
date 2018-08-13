@@ -43,6 +43,12 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': backupGrid} %}
+    </div>
+  </div>
+
   <div class="row justify-content-center">
     <div class="col-xl-10">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
