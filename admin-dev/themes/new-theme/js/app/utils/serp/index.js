@@ -25,45 +25,63 @@
 import Vue from 'vue';
 import serp from './serp';
 
-export default function() {
-  const defaultTitle = $('.serp-default-title');
-  const watchedTitle = $('.serp-watched-title');
-  const defaultDescription = $('.serp-default-description');
-  const watchedDescription = $('.serp-watched-description');
-  const defaultUrl = $('.serp-default-url');
+/**
+ * Vue component displaying a search page result, Google style.
+ * Requires a tag with the id "#serp-app" to be present in the DOM to run it.
+ * 
+ * The component is automatically updated by watching several inputs.
+ * Set the proper class to link a input to a part of the panel.
+ * 
+ * @returns {serpUtil.indexAnonym$0}
+ */
+class SerpApp {
+    constructor() {
+        // Stop if ID not found
+        if (0 === $("#serp-app").length) {
+            return;
+        }
 
-  return {
-    'init': function() {  
-        const vm = new Vue({
+        this.defaultTitle = $('.serp-default-title:input');
+        this.watchedTitle = $('.serp-watched-title:input');
+        this.defaultDescription = $('.serp-default-description:input');
+        this.watchedDescription = $('.serp-watched-description:input');
+        this.defaultUrl = $('.serp-default-url:input');
+
+        this.vm = new Vue({
           el: '#serp-app',
           template: '<serp ref="serp" />',
           components: { serp },
         });
-        
-        this.attachEvents(vm.$refs.serp);
-        return vm;
-    },
+
+        this.attachEvents(this.vm.$refs.serp);
+    }
     
-    'attachEvents': function(serp) {
+    attachEvents(serp) {
         // Specific rules for updating the search result preview
-        function updateSerpTitle() {
-            serp.setTitle(watchedTitle.val() || defaultTitle.val());
+        const updateSerpTitle = () => {
+            const title1 = this.watchedTitle.length ? this.watchedTitle.val() : "";
+            const title2 = this.defaultTitle.length ? this.defaultTitle.val() : "";
+            serp.setTitle(title1 || title2);
         }
-        function updateSerpUrl() {
-            serp.setUrl(defaultUrl.val());
+        const updateSerpUrl = () => {
+            const url = this.defaultUrl.length ? this.defaultUrl.val() : "";
+            serp.setUrl(url);
         }
-        function updateSerpDescription() {
-            serp.setDescription(watchedDescription.val() || $(defaultDescription.val()).text());
+        const updateSerpDescription = () => {
+            const desc1 = this.watchedDescription.length ? $(this.watchedDescription.val()).text() : "";
+            const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() : "";
+            serp.setDescription(desc1 || desc2);
         }
-        watchedTitle.on("keyup change", updateSerpTitle);
-        defaultTitle.on("keyup change", updateSerpTitle);
+        this.watchedTitle.on("keyup change", updateSerpTitle);
+        this.defaultTitle.on("keyup change", updateSerpTitle);
         
-        watchedDescription.on("keyup change", updateSerpDescription);
-        defaultDescription.on("keyup change", updateSerpDescription);
+        this.watchedDescription.on("keyup change", updateSerpDescription);
+        this.defaultDescription.on("keyup change", updateSerpDescription);
         
         updateSerpTitle();
         updateSerpUrl();
         updateSerpDescription();
-    }
-  };
-}
+  }
+};
+
+export default SerpApp;

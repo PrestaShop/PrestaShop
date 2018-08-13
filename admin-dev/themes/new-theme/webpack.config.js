@@ -81,7 +81,7 @@ let config = {
     ],
     email: [
       './js/pages/email'
-    ]
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
