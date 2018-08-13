@@ -53,7 +53,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Backup', [], 'Admin.Navigation.Menu');
+        return $this->trans('DB Backup', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -62,7 +62,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk_action'))
+            ->add((new BulkActionColumn('backup_bulk_file_names'))
                 ->setOptions([
                     'bulk_field' => 'file_name',
                 ])
@@ -126,7 +126,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_backups'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_delete_selected_email_logs',
+                    'submit_route' => 'admin_backup_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
                 ])
             )
