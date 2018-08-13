@@ -24,64 +24,63 @@
  */
 import Vue from 'vue';
 import serp from './serp';
+const $ = window.$;
 
 /**
  * Vue component displaying a search page result, Google style.
  * Requires a tag with the id "#serp-app" to be present in the DOM to run it.
- * 
  * The component is automatically updated by watching several inputs.
  * Set the proper class to link a input to a part of the panel.
- * 
- * @returns {serpUtil.indexAnonym$0}
  */
 class SerpApp {
-    constructor() {
-        // Stop if ID not found
-        if (0 === $("#serp-app").length) {
-            return;
-        }
-
-        this.defaultTitle = $('.serp-default-title:input');
-        this.watchedTitle = $('.serp-watched-title:input');
-        this.defaultDescription = $('.serp-default-description:input');
-        this.watchedDescription = $('.serp-watched-description:input');
-        this.defaultUrl = $('.serp-default-url:input');
-
-        this.vm = new Vue({
-          el: '#serp-app',
-          template: '<serp ref="serp" />',
-          components: { serp },
-        });
-
-        this.attachEvents(this.vm.$refs.serp);
+  constructor() {
+    // If the selector cannot be found, we do not load the Vue app
+    if (0 === $('#serp-app').length) {
+      return;
     }
-    
-    attachEvents(serp) {
-        // Specific rules for updating the search result preview
-        const updateSerpTitle = () => {
-            const title1 = this.watchedTitle.length ? this.watchedTitle.val() : "";
-            const title2 = this.defaultTitle.length ? this.defaultTitle.val() : "";
-            serp.setTitle(title1 || title2);
-        }
-        const updateSerpUrl = () => {
-            const url = this.defaultUrl.length ? this.defaultUrl.val() : "";
-            serp.setUrl(url);
-        }
-        const updateSerpDescription = () => {
-            const desc1 = this.watchedDescription.length ? $(this.watchedDescription.val()).text() : "";
-            const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() : "";
-            serp.setDescription(desc1 || desc2);
-        }
-        this.watchedTitle.on("keyup change", updateSerpTitle);
-        this.defaultTitle.on("keyup change", updateSerpTitle);
-        
-        this.watchedDescription.on("keyup change", updateSerpDescription);
-        this.defaultDescription.on("keyup change", updateSerpDescription);
-        
-        updateSerpTitle();
-        updateSerpUrl();
-        updateSerpDescription();
+
+    this.defaultTitle = $('.serp-default-title:input');
+    this.watchedTitle = $('.serp-watched-title:input');
+    this.defaultDescription = $('.serp-default-description:input');
+    this.watchedDescription = $('.serp-watched-description:input');
+    this.defaultUrl = $('.serp-default-url:input');
+
+    this.vm = new Vue({
+      el: '#serp-app',
+      template: '<serp ref="serp" />',
+      components: { serp },
+    });
+
+    this.attachEvents(this.vm.$refs.serp);
   }
-};
+    
+  attachEvents(app) {
+    // Specific rules for updating the search result preview
+    const updateSerpTitle = () => {
+      const title1 = this.watchedTitle.length ? this.watchedTitle.val() : '';
+      const title2 = this.defaultTitle.length ? this.defaultTitle.val() : '';
+      app.setTitle(title1 || title2);
+    };
+    const updateSerpUrl = () => {
+      if (this.defaultUrl.length) {
+        app.setUrl(this.defaultUrl.val());
+      }
+    };
+    const updateSerpDescription = () => {
+      const desc1 = this.watchedDescription.length ? $(this.watchedDescription.val()).text() : '';
+      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() : '';
+      app.setDescription(desc1 || desc2);
+    };
+    this.watchedTitle.on('keyup change', updateSerpTitle);
+    this.defaultTitle.on('keyup change', updateSerpTitle);
+
+    this.watchedDescription.on('keyup change', updateSerpDescription);
+    this.defaultDescription.on('keyup change', updateSerpDescription);
+
+    updateSerpTitle();
+    updateSerpUrl();
+    updateSerpDescription();
+  }
+}
 
 export default SerpApp;

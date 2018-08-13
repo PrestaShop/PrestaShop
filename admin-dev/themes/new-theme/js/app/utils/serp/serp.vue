@@ -36,12 +36,20 @@
 <script>
   export default {
     name: 'serp',
-    data: () => ({
-        title: '',
-        url: '',
-        description: '',
-        defaultUrl: 'http://example.com/',
-    }),
+    props: {
+        title: {
+          type: String,
+          default: '',
+        },
+        url: {
+          type: String,
+          default: 'http://example.com/',
+        },
+        description: {
+          type: String,
+          default: '',
+        },
+    },
     methods: {
         setTitle(title) {
             if(title.length > 70) {
@@ -50,7 +58,7 @@
             this.title = title;
         },
         setUrl(url) {
-            this.url = url || this.defaultUrl;
+            this.url = url;
         },
         setDescription(description) {
             if(description.length > 150) {
@@ -62,7 +70,7 @@
   };
 </script>
 
-<style lang="sass" type="text/scss">
+<style lang="sass" type="text/scss" scoped>
     .serp-preview {
         margin-top: 15px;
         margin-bottom: 15px;
