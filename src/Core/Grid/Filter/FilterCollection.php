@@ -34,7 +34,7 @@ final class FilterCollection implements FilterCollectionInterface
     /**
      * @var FilterInterface[]
      */
-    private $filters;
+    private $filters = [];
 
     /**
      * {@inheritdoc}
