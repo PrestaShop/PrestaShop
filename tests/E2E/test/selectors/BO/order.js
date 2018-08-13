@@ -44,7 +44,13 @@ module.exports = {
     total: '//*[@id="total_order"]/td[2]/strong',
     total_tax: '//*[@id="total_taxes"]/td[2]',
     carrier: '//*[@id="shipping_table"]/tbody/tr/td[3]',
-    payment_method: '//*[@id="formAddPayment"]/div/table/tbody/tr[1]/td[2]'
+    payment_method: '//*[@id="formAddPayment"]/div/table/tbody/tr[1]/td[2]',
+    documents_tab: '//*[@id="tabOrder"]/li[2]/a',
+    generate_invoice_button: '//*[@id="documents_table"]/tbody/tr/td/a',
+    success_msg: '(//*[@id="content"]//div[contains(@class,"alert alert-success")])[1]',
+    awaiting_bank_wire_payment_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Awaiting bank wire payment")]',
+    awaiting_check_payment: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Awaiting check payment")]',
+    canceled_option: '//*[@id="form_generate_by_status_order_states"]//label/span[contains(text(),"Canceled")]'
   },
 
   CreateOrder: {
@@ -92,8 +98,9 @@ module.exports = {
 
   Invoices: {
     generate_pdf_button: '//*[@id="main-div"]//button[contains(text(),"Generate PDF file by date")]',
+    generate_pdf_by_status_button: '//*[@id="main-div"]//button[contains(text(),"Generate PDF file by status")]',
     from_input: '//*[@id="form_generate_by_date_date_from"]',
     to_input: '//*[@id="form_generate_by_date_date_to"]',
-    no_invoice_alert:'//*[@id="main-div"]//div[@class="alert-text"]/p'
+    no_invoice_alert: '//*[@id="main-div"]//div[@class="alert-text"]/p'
   }
 };

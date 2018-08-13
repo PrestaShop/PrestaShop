@@ -590,6 +590,13 @@ class CommonClient {
       })
   }
 
+  deleteFile(folderPath, fileName, pause = 0) {
+    fs.unlinkSync(folderPath+fileName);
+
+    return this.client
+      .pause(pause)
+  }
+
   dragAndDrop(sourceElement, destinationElement) {
     return this.client
       .pause(2000)
