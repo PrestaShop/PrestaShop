@@ -26,45 +26,42 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup;
 
-use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
+use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Interface BackupInterface defines contract for backup
+ * Class BackupGridDataProvider provides backups for listing in grid
  */
-interface BackupInterface
+final class BackupGridDataProvider implements GridDataProviderInterface
 {
     /**
-     * Get backup filename
-     *
-     * @return string
+     * @var BackupProviderInterface
      */
-    public function getFileName();
+    private $backupProvider;
 
     /**
-     * Get URL to backup
-     *
-     * @return string
+     * @param BackupProviderInterface $backupProvider
      */
-    public function getUrl();
+    public function __construct(BackupProviderInterface $backupProvider)
+    {
+        $this->backupProvider = $backupProvider;
+    }
 
     /**
-     * Get backup file size in MB
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getSize();
+    public function getData(SearchCriteriaInterface $searchCriteria)
+    {
+        $backups = $this->backupProvider->getBackups();
 
-    /**
-     * Get backup age in seconds
-     *
-     * @return int
-     */
-    public function getAge();
+        $paginatedBackups = null !== $searchCriteria->getOffset() && null !== $searchCriteria->getLimit() ?
+            array_slice($backups, $searchCriteria->getOffset(), $searchCriteria->getLimit()) :
+            $backups;
 
-    /**
-     * Get backup creation date
-     *
-     * @return DateTimeInterface
-     */
-    public function getDate();
+        return new GridData(
+            $paginatedBackups,
+            count($backups)
+        );
+    }
 }
