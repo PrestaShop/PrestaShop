@@ -27,27 +27,25 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  <div class="container-fluid">
-    {% if hasDownloadFile %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig' %}
-    {% endif %}
+  {% if hasDownloadFile %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig' %}
+  {% endif %}
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
-      </div>
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
-      </div>
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
-      </div>
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
     </div>
   </div>
 {% endblock %}
