@@ -81,7 +81,10 @@ let config = {
     ],
     email: [
       './js/pages/email'
-    ]
+    ],
+    backup: [
+      './js/pages/backup'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
