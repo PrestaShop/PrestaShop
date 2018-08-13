@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImportConfigInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -46,15 +47,15 @@ class ImportLocalizationPackType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
+     * @param ContextLanguageDataProvider $languageDataProvider
      * @param array $localizationPackChoices
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         array $localizationPackChoices
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
 
         $this->localizationPackChoices = $localizationPackChoices;
     }

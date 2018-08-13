@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -49,10 +50,10 @@ class HandlingType extends TranslatorAwareType
 
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         CurrencyDataProvider $currencyDataProvider
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
 
         $this->currencyDataProvider = $currencyDataProvider;
     }

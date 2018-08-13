@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,12 +56,12 @@ class CarrierOptionsType extends TranslatorAwareType
 
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         array $carriers,
         array $orderByChoices,
         array $orderWayChoices
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
 
         $this->carriers = $carriers;
         $this->orderByChoices = $orderByChoices;

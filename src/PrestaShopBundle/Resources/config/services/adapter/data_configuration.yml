@@ -117,6 +117,11 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
+    prestashop.adapter.data_provider.context_language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+
     prestashop.adapter.data_provider.language:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
 

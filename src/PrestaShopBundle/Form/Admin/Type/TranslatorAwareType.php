@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -54,12 +54,11 @@ abstract class TranslatorAwareType extends CommonAbstractType
 
     public function __construct(
         TranslatorInterface $translator,
-        array $activeLocales,
-        array $allLocales
+        ContextLanguageDataProvider $languageDataProvider
     ) {
         $this->translator = $translator;
-        $this->locales = $activeLocales;
-        $this->allLocales = $allLocales;
+        $this->locales = $languageDataProvider->getActiveLocales();
+        $this->allLocales = $languageDataProvider->getIncludingInactiveLocales();
     }
 
     /**

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -53,17 +54,17 @@ class EmailConfigurationType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
+     * @param ContextLanguageDataProvider $languageDataProvider
      * @param FormChoiceProviderInterface $mailMethodChoiceProvider
      * @param FormChoiceProviderInterface $contactsChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         FormChoiceProviderInterface $mailMethodChoiceProvider,
         FormChoiceProviderInterface $contactsChoiceProvider
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
 
         $this->mailMethodChoiceProvider = $mailMethodChoiceProvider;
         $this->contactsChoiceProvider = $contactsChoiceProvider;

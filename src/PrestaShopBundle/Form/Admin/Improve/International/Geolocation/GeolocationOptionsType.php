@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -52,17 +53,17 @@ class GeolocationOptionsType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
+     * @param ContextLanguageDataProvider $languageDataProvider
      * @param array $countryChoices
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         array $countryChoices,
         ConfigurationInterface $configuration
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
 
         $this->countryChoices = $countryChoices;
         $this->configuration = $configuration;

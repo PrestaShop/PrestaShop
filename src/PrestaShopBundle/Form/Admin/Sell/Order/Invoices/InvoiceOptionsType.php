@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
@@ -58,17 +59,17 @@ class InvoiceOptionsType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
+     * @param ContextLanguageDataProvider $languageDataProvider
      * @param FormChoiceProviderInterface $invoiceModelChoiceProvider
      * @param int $nextInvoiceNumber the next available invoice number
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         FormChoiceProviderInterface $invoiceModelChoiceProvider,
         $nextInvoiceNumber
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
         $this->invoiceModelChoiceProvider = $invoiceModelChoiceProvider;
         $this->nextInvoiceNumber = $nextInvoiceNumber;
     }

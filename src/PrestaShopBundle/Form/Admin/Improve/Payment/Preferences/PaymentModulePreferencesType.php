@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -69,7 +70,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
+     * @param ContextLanguageDataProvider $languageDataProvider
      * @param array $paymentModules
      * @param array $countryChoices
      * @param array $groupChoices
@@ -79,7 +80,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
+        ContextLanguageDataProvider $languageDataProvider,
         array $paymentModules,
         array $countryChoices,
         array $groupChoices,
@@ -87,7 +88,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         array $currencyChoices,
         CountryDataProvider $countryDataProvider
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $languageDataProvider);
 
         $this->countryChoices = $countryChoices;
         $this->groupChoices = $groupChoices;
