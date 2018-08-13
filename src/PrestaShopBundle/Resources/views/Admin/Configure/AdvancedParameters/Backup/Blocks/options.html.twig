@@ -30,24 +30,30 @@
   <h3 class="card-header">
     <i class="material-icons">settings</i> {{ 'Backup options'|trans({}, 'Admin.Advparameters.Feature') }}
   </h3>
-  <div class="card-body">
-    <div class="form-group">
-      <label>{{ 'Ignore statistics tables'|trans }}</label>
-      {{ form_errors(backupForm.backup_options.backup_all) }}
-      {{ form_widget(backupForm.backup_options.backup_all) }}
+  <div class="card-block row">
+    <div class="card-text">
+      <div class="form-group row">
+        <label class="form-control-label">{{ 'Ignore statistics tables'|trans }}</label>
+        <div class="col-sm">
+            {{ form_errors(backupForm.backup_options.backup_all) }}
+            {{ form_widget(backupForm.backup_options.backup_all) }}
 
-      <small class="form-text">
-        {{ 'Drop existing tables during import.'|trans({}, 'Admin.Advparameters.Help') }}
-      </small>
-    </div>
+          <small class="form-text">
+              {{ 'Drop existing tables during import.'|trans({}, 'Admin.Advparameters.Help') }}
+          </small>
+        </div>
+      </div>
 
-    <div class="form-group">
-      {% set helpMessage = 'If enabled, the backup script will drop your tables prior to restoring data.'|trans({}, 'Admin.Advparameters.Help') %}
-      {% set helpMessage = helpMessage ~ ' ' ~ '(ie. "DROP TABLE IF EXISTS")'|trans({}, 'Admin.Advparameters.Help') %}
+      <div class="form-group row">
+          {% set helpMessage = 'If enabled, the backup script will drop your tables prior to restoring data.'|trans({}, 'Admin.Advparameters.Help') %}
+          {% set helpMessage = helpMessage ~ ' ' ~ '(ie. "DROP TABLE IF EXISTS")'|trans({}, 'Admin.Advparameters.Help') %}
 
-      {{ ps.label_with_help(('Drop existing tables during import'|trans), helpMessage) }}
-      {{ form_errors(backupForm.backup_options.backup_drop_tables) }}
-      {{ form_widget(backupForm.backup_options.backup_drop_tables) }}
+          {{ ps.label_with_help(('Drop existing tables during import'|trans), helpMessage) }}
+          <div class="col-sm">
+            {{ form_errors(backupForm.backup_options.backup_drop_tables) }}
+            {{ form_widget(backupForm.backup_options.backup_drop_tables) }}
+          </div>
+      </div>
     </div>
   </div>
   <div class="card-footer">
