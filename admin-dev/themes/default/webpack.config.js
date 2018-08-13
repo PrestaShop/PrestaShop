@@ -74,7 +74,6 @@ const config = {
     }]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
   ]
 };
@@ -96,6 +95,8 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   );
+} else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 module.exports = config;
