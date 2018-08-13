@@ -146,7 +146,7 @@ class TranslationsController extends FrameworkBundleAdminController
      * Show translations settings page
      *
      * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
