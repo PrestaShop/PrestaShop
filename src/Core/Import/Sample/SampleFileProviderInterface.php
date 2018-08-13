@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -23,10 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ImportPage from './ImportPage';
+namespace PrestaShop\PrestaShop\Core\Import\Sample;
 
-const $ = window.$;
+use Symfony\Component\HttpFoundation\File\File;
 
-$(() => {
-  new ImportPage();
-});
+/**
+ * Interface SampleFileProviderInterface defines contract for sample import file provider
+ */
+interface SampleFileProviderInterface
+{
+    /**
+     * Get sample import file
+     *
+     * @param string $sampleFileName
+     *
+     * @return File|null File if files was found or null otherwise
+     */
+    public function getFile($sampleFileName);
+}

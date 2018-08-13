@@ -22,3 +22,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
         arguments:
             - '@prestashop.core.import.dir'
+
+    prestashop.core.import.sample.file_provider:
+        class: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
