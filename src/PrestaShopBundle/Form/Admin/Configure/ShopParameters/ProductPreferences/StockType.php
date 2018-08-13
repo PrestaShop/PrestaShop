@@ -48,19 +48,19 @@ class StockType extends TranslatorAwareType
             ->add('allow_ordering_oos', SwitchType::class)
             ->add('stock_management', SwitchType::class)
             ->add('in_stock_label', TranslateTextType::class, [
-                'locales' => $this->allLocales,
+                'locales' => $this->installedLocales,
             ])
             ->add('oos_allowed_backorders', TranslateTextType::class, [
-                'locales' => $this->allLocales,
+                'locales' => $this->installedLocales,
             ])
             ->add('oos_denied_backorders', TranslateTextType::class, [
-                'locales' => $this->allLocales,
+                'locales' => $this->installedLocales,
             ])
             ->add('delivery_time', TranslateTextType::class, [
-                'locales' => $this->allLocales,
+                'locales' => $this->installedLocales,
             ])
             ->add('oos_delivery_time', TranslateTextType::class, [
-                'locales' => $this->allLocales,
+                'locales' => $this->installedLocales,
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'choices' => [

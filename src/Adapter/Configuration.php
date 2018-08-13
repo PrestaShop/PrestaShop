@@ -87,31 +87,6 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Gets translatable configuration values
-     *
-     * @param string $key
-     * @param bool $activeLanguage - if set to false, then it retrieves translations of the
-     * languages which are disabled
-     * @param null|int $idShopGroup
-     * @param null|int $idShop
-     *
-     * @return array - array key is the language id
-     */
-    public function getInternational($key, $activeLanguage = true, $idShopGroup = null, $idShop = null)
-    {
-        if ($activeLanguage) {
-            return ConfigurationLegacy::getInt($key, $idShopGroup, $idShop);
-        }
-
-        $languageIds = LanguageLegacy::getIDs($activeLanguage);
-        $result = [];
-        foreach ($languageIds as $idLang) {
-            $result[$idLang] = ConfigurationLegacy::get($key, $idLang, $idShopGroup, $idShop);
-        }
-        return $result;
-    }
-
-    /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
      * \Configuration
      *

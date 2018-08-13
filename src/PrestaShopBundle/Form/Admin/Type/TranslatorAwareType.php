@@ -48,9 +48,9 @@ abstract class TranslatorAwareType extends CommonAbstractType
     /**
      * Active and in-active languages available on shop. Used to apply translations
      *
-     * @var array $allLocales
+     * @var array $installedLocales
      */
-    protected $allLocales;
+    protected $installedLocales;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -58,7 +58,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     ) {
         $this->translator = $translator;
         $this->locales = $languageDataProvider->getActiveLocales();
-        $this->allLocales = $languageDataProvider->getIncludingInactiveLocales();
+        $this->installedLocales = $languageDataProvider->getInstalledLocales();
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
      */
     protected function getIncludingInactiveLocalesChoices()
     {
-        return $this->formatLocales($this->allLocales);
+        return $this->formatLocales($this->installedLocales);
     }
 
     /**

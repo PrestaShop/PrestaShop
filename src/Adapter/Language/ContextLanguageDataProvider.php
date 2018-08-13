@@ -24,7 +24,7 @@ class ContextLanguageDataProvider
      *
      * @return array
      */
-    public function getIncludingInactiveLocales()
+    public function getInstalledLocales()
     {
         return $this->legacyContext->getLanguages(false);
     }
