@@ -25,8 +25,6 @@
  *-->
 <template>
   <div id="serp"">
-    <p>Search result preview: ('Admin.Catalog.Feature')</p>
-  
     <div class="serp-preview">
       <div class="serp-title">{{title}}</div>
       <div class="serp-url">{{url}}<span class="serp-arrow"></span></div>
