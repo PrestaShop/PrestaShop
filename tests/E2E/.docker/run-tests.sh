@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 PS_VERSION="${PS_VERSION:-1.7}"
 URL="${URL:-prestashop}"
@@ -34,7 +34,7 @@ else
 fi
 
 
-pushd /var/www/html/tests/E2E/
+cd /var/www/html/tests/E2E/
 npm install
 echo $COMMAND -- $COMMAND_PARAMETERS $@
 $COMMAND -- $COMMAND_PARAMETERS $@

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ "$DB_SERVER" = "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
   echo >&2 'error: You requested automatic PrestaShop installation but MySQL server address is not provided '
@@ -67,10 +67,9 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
     export PS_DOMAIN=$(hostname -i)
   fi
 
-  pushd /var/www/html
+  cd /var/www/html
   echo "\n* Install Dependencies...";
   /usr/bin/composer install
-  popd
 
   echo "\n* Install PrestaShop...";
   php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
