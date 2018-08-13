@@ -52,11 +52,14 @@ abstract class TranslatorAwareType extends CommonAbstractType
      */
     protected $allLocales;
 
-    public function __construct(TranslatorInterface $translator, LegacyContext $context)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $activeLocales,
+        array $allLocales
+    ) {
         $this->translator = $translator;
-        $this->locales = $context->getLanguages();
-        $this->allLocales = $context->getLanguages(false);
+        $this->locales = $activeLocales;
+        $this->allLocales = $allLocales;
     }
 
     /**

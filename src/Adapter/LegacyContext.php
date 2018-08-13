@@ -207,6 +207,28 @@ class LegacyContext
     }
 
     /**
+     * Returns all languages - active and inactive ones. The first one is the employee default one.
+     *
+     * @return array
+     */
+    public function getLanguagesIncludingInactive()
+    {
+        $languages = Language::getLanguages(false);
+
+        $defaultLanguageFirst = $this->getLanguage();
+        usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
+            if ($a['id_lang'] == $defaultLanguageFirst->id) {
+                return -1; // $a is the default one.
+            }
+            if ($b['id_lang'] == $defaultLanguageFirst->id) {
+                return 1; // $b is the default one.
+            }
+            return 0;
+        });
+        return $languages;
+    }
+
+    /**
      * Returns language ISO code set for the current employee
 
      * @return string Languages
