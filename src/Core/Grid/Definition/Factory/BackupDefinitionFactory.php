@@ -111,6 +111,15 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                                 ),
                             ])
                         )
+                        ->add((new LinkRowAction('view'))
+                            ->setName($this->trans('View', [], 'Admin.Global'))
+                            ->setIcon('zoom_in')
+                            ->setOptions([
+                                'route' => 'admin_backup_view_download',
+                                'route_param_name' => 'downloadFileName',
+                                'route_param_field' => 'file_name',
+                            ])
+                        )
                     ,
                 ])
             )
