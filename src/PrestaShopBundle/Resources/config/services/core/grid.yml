@@ -20,7 +20,7 @@ services:
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
             - '@prestashop.hook.dispatcher'
-            - 'logs'
+            - 'email_logs'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
