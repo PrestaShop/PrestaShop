@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+/**
+ * Class BackupFilters defines filters for 'Configure > Advanced Parameters > Database > Backup' listing
+ */
 final class BackupFilters extends Filters
 {
     /**

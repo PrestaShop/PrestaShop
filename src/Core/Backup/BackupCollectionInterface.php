@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup;
 
+/**
+ * Interface BackupCollectionInterface defines contract for backup collection
+ */
 interface BackupCollectionInterface
 {
     /**

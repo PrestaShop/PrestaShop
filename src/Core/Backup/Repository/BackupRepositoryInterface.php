@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Backup\Repository;
 
 use PrestaShop\PrestaShop\Core\Backup\BackupCollectionInterface;
 
+/**
+ * Interface BackupRepositoryInterface defines contract for backup repository
+ */
 interface BackupRepositoryInterface
 {
     /**
