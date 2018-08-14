@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Util\DateTime\TimeDefinition;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -123,12 +124,12 @@ final class BackupGridDataProvider implements GridDataProviderInterface
      */
     private function getFormattedAge(BackupInterface $backup)
     {
-        if (3600 > $backup->getAge()) {
+        if (TimeDefinition::HOUR_IN_SECONDS > $backup->getAge()) {
             return sprintf('< 1 %s', $this->translator->trans('Hour', [], 'Admin.Global'));
         }
 
-        if (86400 > $backup->getAge()) {
-            $hours = (int) floor($backup->getAge() / 3600);
+        if (TimeDefinition::DAY_IN_SECONDS > $backup->getAge()) {
+            $hours = (int) floor($backup->getAge() / TimeDefinition::HOUR_IN_SECONDS);
             $label = 1 === $hours ?
                 $this->translator->trans('Hour', [], 'Admin.Global') :
                 $this->translator->trans('Hours', [], 'Admin.Global');
@@ -136,7 +137,7 @@ final class BackupGridDataProvider implements GridDataProviderInterface
             return sprintf('%s %s', $hours, $label);
         }
 
-        $days = (int) floor($backup->getAge() / 86400);
+        $days = (int) floor($backup->getAge() / TimeDefinition::DAY_IN_SECONDS);
         $label = 1 === $days ?
             $this->translator->trans('Day', [], 'Admin.Global') :
             $this->translator->trans('Days', [], 'Admin.Global');
