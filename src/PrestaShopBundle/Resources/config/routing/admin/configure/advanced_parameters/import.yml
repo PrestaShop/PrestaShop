@@ -7,7 +7,7 @@ admin_import:
 
 admin_import_show_data:
     path: /import-data
-    methods: [GET]
+    methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:showImportData'
         _legacy_controller: AdminImport
