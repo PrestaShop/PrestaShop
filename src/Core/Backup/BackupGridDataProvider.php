@@ -54,6 +54,7 @@ final class BackupGridDataProvider implements GridDataProviderInterface
      * @var string
      */
     private $languageDateTimeFormat;
+
     /**
      * @var BackupComparatorInterface
      */
