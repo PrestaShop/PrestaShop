@@ -3,7 +3,7 @@ services:
         public: true
 
     prestashop.core.backup.options_configuration:
-        class: 'PrestaShop\PrestaShop\Core\Backup\BackupOptionsConfigurator'
+        class: 'PrestaShop\PrestaShop\Core\Backup\Configuration\BackupOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 

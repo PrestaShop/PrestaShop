@@ -26,12 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup;
 
-interface BackupProviderInterface
+interface BackupCollectionInterface
 {
     /**
-     * Get available backups
+     * Add backup to collection
+     *
+     * @param BackupInterface $backup
+     *
+     * @return self
+     */
+    public function add(BackupInterface $backup);
+
+    /**
+     * Get all backups
      *
      * @return BackupInterface[]
      */
-    public function getBackups();
+    public function all();
 }
