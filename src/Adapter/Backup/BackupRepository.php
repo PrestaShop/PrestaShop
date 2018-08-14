@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Backup;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
 use PrestaShop\PrestaShop\Core\Backup\BackupCollection;
 use PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Class BackupRepository is responsible for providing available backups
@@ -42,23 +44,19 @@ final class BackupRepository implements BackupRepositoryInterface
      */
     public function get()
     {
-        $backupPath = opendir(PrestaShopBackup::getBackupPath());
-
-        if (false === $backupPath) {
-            return null;
-        }
+        $backupFinder = (new Finder())
+            ->files()
+            ->in(PrestaShopBackup::getBackupPath())
+            ->name('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/')
+            ->depth(0)
+        ;
 
         $backups = new BackupCollection();
 
-        while (false !== $file = readdir($backupPath)) {
-            if (0 === preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches)) {
-                continue;
-            }
-
-            $backups->add(new Backup($file));
+        /** @var SplFileInfo $file */
+        foreach ($backupFinder as $file) {
+            $backups->add(new Backup($file->getFilename()));
         }
-
-        closedir($backupPath);
 
         return $backups;
     }
