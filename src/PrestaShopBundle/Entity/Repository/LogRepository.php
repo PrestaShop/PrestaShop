@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Query\QueryBuilderHelperTrait;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
@@ -38,17 +38,24 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
  */
 class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
-    use QueryBuilderHelperTrait;
-
     private $connection;
     private $databasePrefix;
     private $logTable;
 
-    public function __construct(Connection $connection, $databasePrefix)
-    {
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    public function __construct(
+        Connection $connection,
+        $databasePrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+    ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
         $this->logTable = $this->databasePrefix."log";
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
@@ -167,7 +174,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $qb = $this->buildGridQuery($searchCriteria);
         $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee');
 
-        $this->addPaginationAndSorting($searchCriteria, $qb);
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb);
 
         return $qb;
     }

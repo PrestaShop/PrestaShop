@@ -29,6 +29,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
     prestashop.core.api.stock.repository:
         class: PrestaShopBundle\Entity\Repository\StockRepository
