@@ -27,39 +27,41 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-  <div class="container">
-    <div class="card">
-      {% block translations_kpis_row %}
-        <div class="row">
-          {{ render(controller(
-            'PrestaShopBundle:Admin\\Common:renderKpiRow',
-            { 'kpiRow': kpiRow }
-          )) }}
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div class="card">
+        {% block translations_kpis_row %}
+          <div class="row">
+            {{ render(controller(
+              'PrestaShopBundle:Admin\\Common:renderKpiRow',
+              { 'kpiRow': kpiRow }
+            )) }}
+          </div>
+        {% endblock %}
+      </div>
+
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
         </div>
-      {% endblock %}
-    </div>
-
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
+        </div>
       </div>
     </div>
   </div>
