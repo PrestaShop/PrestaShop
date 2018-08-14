@@ -72,6 +72,9 @@ const config = {
     imports: [
       './js/pages/import',
     ],
+    imports_data: [
+      './js/pages/import-data',
+    ],
     localization: [
       './js/pages/localization',
     ],
