@@ -24,26 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup\Comparator;
 
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
-use PrestaShop\PrestaShop\Core\Backup\Manager\BackupRemoverInterface;
 
 /**
- * Class BackupRemover deletes given backup
- *
- * @internal
+ * Interface BackupComparatorInterface defines contract for backups comparator
  */
-final class BackupRemover implements BackupRemoverInterface
+interface BackupComparatorInterface
 {
     /**
-     * {@inheritdoc}
+     * Compare 2 backups
+     *
+     * @param BackupInterface $backup1
+     * @param BackupInterface $backup2
+     *
+     * @return int
      */
-    public function remove(BackupInterface $backup)
-    {
-        $legacyBackup = new PrestaShopBackup($backup->getFileName());
-
-        return $legacyBackup->delete();
-    }
+    public function compare(BackupInterface $backup1, BackupInterface $backup2);
 }

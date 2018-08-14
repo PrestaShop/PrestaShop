@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup\Configuration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 /**
  * Class BackupOptionsConfigurator configures backup options
  */
-final class BackupOptionsConfigurator implements DataConfigurationInterface
+final class BackupOptionsConfiguration implements DataConfigurationInterface
 {
     /**
      * @var ConfigurationInterface

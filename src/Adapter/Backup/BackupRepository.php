@@ -27,33 +27,39 @@
 namespace PrestaShop\PrestaShop\Adapter\Backup;
 
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
-use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
-use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
-use PrestaShop\PrestaShop\Core\Backup\Manager\BackupCreatorInterface;
+use PrestaShop\PrestaShop\Core\Backup\BackupCollection;
+use PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface;
 
 /**
- * Class DatabaseBackupCreator is responsible for creating database backups
+ * Class BackupRepository is responsible for providing available backups
  *
  * @internal
  */
-final class DatabaseBackupCreator implements BackupCreatorInterface
+final class BackupRepository implements BackupRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function createBackup()
+    public function get()
     {
-        if (!is_writable(PrestaShopBackup::getBackupPath())) {
-            throw new DirectoryIsNotWritableException('To create backup, its directory must be writable');
+        $backupPath = opendir(PrestaShopBackup::getBackupPath());
+
+        if (false === $backupPath) {
+            return null;
         }
 
-        $legacyBackup = new PrestaShopBackup();
-        if (!$legacyBackup->add()) {
-            throw new BackupException('Failed to create backup');
+        $backups = new BackupCollection();
+
+        while (false !== $file = readdir($backupPath)) {
+            if (0 === preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches)) {
+                continue;
+            }
+
+            $backups->add(new Backup($file));
         }
 
-        $backupFilePathParts = explode(DIRECTORY_SEPARATOR, $legacyBackup->id);
+        closedir($backupPath);
 
-        return new Backup(end($backupFilePathParts));
+        return $backups;
     }
 }

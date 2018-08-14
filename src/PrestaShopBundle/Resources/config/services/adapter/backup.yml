@@ -6,7 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Backup\DatabaseBackupCreator'
 
     prestashop.adapter.backup.backup_provider:
-        class: 'PrestaShop\PrestaShop\Adapter\Backup\BackupProvider'
+        class: 'PrestaShop\PrestaShop\Adapter\Backup\BackupRepository'
 
     prestashop.adapter.backup.backup_remover:
         class: 'PrestaShop\PrestaShop\Adapter\Backup\BackupRemover'
