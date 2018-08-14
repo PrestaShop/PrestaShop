@@ -191,3 +191,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.import.import_data_match.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchConfiguration'
+        arguments:
+            - '@translator'
