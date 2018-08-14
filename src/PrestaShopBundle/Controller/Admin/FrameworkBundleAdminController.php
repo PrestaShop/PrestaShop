@@ -175,7 +175,7 @@ class FrameworkBundleAdminController extends Controller
         $version = $this->get('prestashop.core.foundation.version')->getVersion();
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
-        if (false === $title) {
+        if (empty($title)) {
             $title = $this->trans('Help', 'Admin.Global');
         }
 
