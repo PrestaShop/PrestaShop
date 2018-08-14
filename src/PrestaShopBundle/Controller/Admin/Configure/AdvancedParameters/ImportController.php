@@ -281,7 +281,7 @@ class ImportController extends FrameworkBundleAdminController
         $form->setData($request->request->all());
 
         $errors = $formHandler->save($form->getData());
-        
+
         return $this->json([
             'errors' => $errors
         ]);
