@@ -27,33 +27,41 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  {% if hasDownloadFile %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig' %}
-  {% endif %}
+  {% block backup_download_file %}
+    {% if hasDownloadFile %}
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/download_file.html.twig' %}
+    {% endif %}
+  {% endblock %}
 
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
+  {% block backup_alerts %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig' %}
+      </div>
     </div>
-  </div>
+  {% endblock %}
 
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': backupGrid} %}
+  {% block backup_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': backupGrid} %}
+      </div>
     </div>
-  </div>
+  {% endblock %}
 
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
+  {% block backup_options %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig' %}
+      </div>
     </div>
-  </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
