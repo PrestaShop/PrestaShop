@@ -33,10 +33,12 @@
     </label>
     <div class="form-row">
       <div class="col-xs-12 col-md-8">
-        {{ form_widget(importDataConfigurationForm.data_matching_configuration) }}
+        {{ form_widget(importDataConfigurationForm.data_matching_configuration, {'attr': {'class': 'js-import-match-input'}}) }}
       </div>
       <div class="col">
-        <button class="btn btn-primary-reverse btn-outline-primary light-button">
+        <button
+          class="btn btn-primary-reverse btn-outline-primary light-button js-save-import-match"
+          data-url="{{ path('admin_import_save_import_match') }}">
           <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>
@@ -47,7 +49,7 @@
     <label class="form-control-label">
       {{ 'Rows to skip'|trans }}
     </label>
-    {{ form_widget(importDataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4', 'min': 0}}) }}
+    {{ form_widget(importDataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
   </div>
 </div>
 
