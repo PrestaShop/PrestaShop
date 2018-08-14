@@ -35,39 +35,47 @@
       <i class="material-icons">file_copy</i> {{ 'Copy'|trans({}, 'Admin.Actions') }}
     </h3>
 
-    <div class="card-block">
+    <div class="card-block row">
       <div class="card-text">
-        <div class="alert alert-info" role="alert">
-          <div class="alert-text">
-            {{ 'Copies data from one language to another.'|trans({}, 'Admin.International.Help') }}<br>
-            {{ 'Warning: This will replace all of the existing data inside the destination language.'|trans({}, 'Admin.International.Help') }}<br>
-            {{ 'If necessary [1][2] you must first create a new language[/1].'|trans({}, 'Admin.International.Help')|replace({'[1]': '<a href="'~addLanguageUrl~'">','[2]': '<i class="material-icons">launch</i>','[/1]': '</a>'})|raw }}
+        <div class="row">
+          <div class="col">
+            <div class="alert alert-info" role="alert">
+              <div class="alert-text">
+                {{ 'Copies data from one language to another.'|trans({}, 'Admin.International.Help') }}<br>
+                {{ 'Warning: This will replace all of the existing data inside the destination language.'|trans({}, 'Admin.International.Help') }}<br>
+                {{ 'If necessary [1][2] you must first create a new language[/1].'|trans({}, 'Admin.International.Help')|replace({'[1]': '<a href="'~addLanguageUrl~'">','[2]': '<i class="material-icons">launch</i>','[/1]': '</a>'})|raw }}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
           <label class="form-control-label">
             {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification')) }}
           </label>
-          <div class="input-group">
-            {{ form_errors(copyLanguage.from_language) }}
-            {{ form_widget(copyLanguage.from_language) }}
+          <div class="col">
+            <div class="input-group">
+              {{ form_errors(copyLanguage.from_language) }}
+              {{ form_widget(copyLanguage.from_language) }}
 
-            {{ form_errors(copyLanguage.from_theme) }}
-            {{ form_widget(copyLanguage.from_theme) }}
+              {{ form_errors(copyLanguage.from_theme) }}
+              {{ form_widget(copyLanguage.from_theme) }}
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
           <label class="form-control-label">
             {{ 'To'|trans({}, 'Admin.Global') }}
           </label>
-          <div class="input-group">
-            {{ form_errors(copyLanguage.to_language) }}
-            {{ form_widget(copyLanguage.to_language) }}
+          <div class="col">
+            <div class="input-group">
+              {{ form_errors(copyLanguage.to_language) }}
+              {{ form_widget(copyLanguage.to_language) }}
 
-            {{ form_errors(copyLanguage.to_theme) }}
-            {{ form_widget(copyLanguage.to_theme) }}
+              {{ form_errors(copyLanguage.to_theme) }}
+              {{ form_widget(copyLanguage.to_theme) }}
+            </div>
           </div>
         </div>
       </div>

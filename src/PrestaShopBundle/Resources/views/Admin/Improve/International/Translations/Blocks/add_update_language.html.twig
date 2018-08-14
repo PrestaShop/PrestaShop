@@ -32,19 +32,25 @@
     <div class="material-icons">arrow_drop_down_circle</div> {{ 'Add / Update a language'|trans }}
   </h3>
 
-  <div class="card-block">
+  <div class="card-block row">
     <div class="card-text">
-      <div class="alert alert-info" role="alert">
-        <div class="alert-text">
-          {{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-info" role="alert">
+            <div class="alert-text">
+              {{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}
+            </div>
+          </div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group row">
         <label class="form-control-label">
           {{ 'Please select the language you want to add or update'|trans }}
         </label>
-        {{ form_errors(addUpdateLanguageForm.iso_localization_pack) }}
-        {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
+        <div class="col-sm">
+          {{ form_errors(addUpdateLanguageForm.iso_localization_pack) }}
+          {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
+        </div>
       </div>
     </div>
   </div>
