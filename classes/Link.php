@@ -750,7 +750,7 @@ class LinkCore
                     break;
                 }
 
-                $routeName = 'admin_international_translation_overview';
+                $routeName = 'admin_international_translations_show_settings';
 
                 break;
 
