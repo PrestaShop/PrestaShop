@@ -40,6 +40,7 @@ class LinkCore
     public $protocol_content;
 
     protected $ssl_enable;
+    protected $urlShopId = null;
 
     protected static $category_disable_rewrite = null;
 
@@ -772,7 +773,81 @@ class LinkCore
 
         $idLang = Context::getContext()->language->id;
 
-        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+        return $this->getAdminBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * @param int|null  $idShop
+     * @param bool|null $ssl
+     * @param bool      $relativeProtocol
+     * @return string
+     * @throws PrestaShopDatabaseException
+     */
+    public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
+    {
+        if (null === $ssl) {
+            $ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+        }
+
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
+            if (null === $idShop) {
+                $idShop = $this->getMatchingUrlShopId();
+            }
+
+            //Use the matching shop if present, or fallback on the default one
+            if (null !== $idShop) {
+                $shop = new Shop($idShop);
+            } else {
+                $shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+            }
+        } else {
+            $shop = Context::getContext()->shop;
+        }
+
+        if ($relativeProtocol) {
+            $base = '//'.($ssl && $this->ssl_enable ? $shop->domain_ssl : $shop->domain);
+        } else {
+            $base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
+        }
+
+        return $base.$shop->getBaseURI();
+    }
+
+    /**
+     * Search for a shop whose domain matches the current url
+     *
+     * @return int|null
+     */
+    public function getMatchingUrlShopId()
+    {
+        if (null === $this->urlShopId) {
+            $host = Tools::getHttpHost();
+            $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
+
+            $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
+                    FROM '._DB_PREFIX_.'shop_url su
+                    LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
+                    WHERE (su.domain = \''.pSQL($host).'\' OR su.domain_ssl = \''.pSQL($host).'\')
+                        AND s.active = 1
+                        AND s.deleted = 0
+                    ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
+
+            try {
+                $result = Db::getInstance()->executeS($sql);
+            } catch (PrestaShopDatabaseException $e) {
+                return null;
+            }
+
+            foreach ($result as $row) {
+                // A shop matching current URL was found
+                if (preg_match('#^'.preg_quote($row['uri'], '#').'#i', $request_uri)) {
+                    $this->urlShopId = $row['id_shop'];
+                    break;
+                }
+            }
+        }
+
+        return $this->urlShopId;
     }
 
     /**
@@ -1180,13 +1255,8 @@ class LinkCore
      */
     public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
-        static $force_ssl = null;
-
-        if ($ssl === null) {
-            if ($force_ssl === null) {
-                $force_ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
-            }
-            $ssl = $force_ssl;
+        if (null === $ssl) {
+            $ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));;
         }
 
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $idShop !== null) {
