@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% block backup_creation_form %}
 <form action="{{ path('admin_backup_create') }}" method="post">
   <input type="hidden" name="_token" value="{{ csrf_token('backup') }}">
 
@@ -31,3 +32,4 @@
     {{ 'I have read the disclaimer. Please create a new backup.'|trans({}, 'Admin.Advparameters.Notification') }}
   </button>
 </form>
+{% endblock %}

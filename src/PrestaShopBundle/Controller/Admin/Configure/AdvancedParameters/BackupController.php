@@ -79,6 +79,7 @@ class BackupController extends FrameworkBundleAdminController
             'backupGrid' => $gridPresenter->present($backupGrid),
             'backupForm' => $backupForm->createView(),
             'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
+            'dbPrefix' => $configuration->get('_DB_PREFIX_'),
             'hasDownloadFile' => $hasDownloadFile,
             'downloadFile' => $downloadFile,
             'enableSidebar' => true,
