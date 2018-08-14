@@ -267,6 +267,12 @@ class ImportController extends FrameworkBundleAdminController
 
     public function saveImportMatchAction(Request $request)
     {
+        $formHandler = $this->get('prestashop.admin.advanced_parameters.import_data.form_handler');
+
+        $form = $formHandler->getForm();
+        $form->setData($request->request->all());
+
+        $errors = $formHandler->save($form->getData());
     }
 
     /**
