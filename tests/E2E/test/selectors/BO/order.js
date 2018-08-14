@@ -30,7 +30,11 @@ module.exports = {
     delete_button: '(//*[@id="table-cart"]//a[@class="delete"])[1]',
     stock_product: '//*[@id="orderProducts"]//tr[%NUMBER]/td[5]',
     total_order: '//*[@id="total_order"]/td[@class="amount text-right nowrap"]/strong',
-    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]'
+    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
+    order_view_button: '//*[@id="form-order"]//table//tbody//tr[%ORDERNumber]//td[12]//a',
+    documents_tab: '//*[@id="tabOrder"]/li[2]/a',
+    empty_page_logo: '//*[@id="documents_table"]//div[@class="list-empty-msg"]',
+    pdf_icon: '//*[@id="table-order"]/tbody/tr[%ORDER]//td[11]//i'
   },
 
   CreateOrder: {
@@ -74,5 +78,11 @@ module.exports = {
     customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[8]',
     id_shopping_carts: 'table-cart',
     reset_button: '//*[@name="submitResetcart"]'
+  },
+
+  Invoices: {
+    disable_invoice: '//label[@for="form_invoice_options_enable_invoices_0"]',
+    save_button: '//*[@id="main-div"]//button[contains(text(),"Save")]',
+    success_msg: '//*[@id="main-div"]//div[@class="alert-text"]/p'
   }
 };

@@ -507,7 +507,6 @@ class CommonClient {
     return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
 
-
   /**
    * This function searches the data in the table in case a filter input exists
    * @param selector
@@ -567,6 +566,16 @@ class CommonClient {
         expect(current_url).to.contain(param);
         global.param[param] = current_url.split(param + '=')[1].split("&")[0];
       });
+  }
+
+  changeOrderState(selector, state) {
+    return this.client
+      .waitForExist(selector.order_state_select, 90000)
+      .execute(function () {
+        document.querySelector('#id_order_state').style = "";
+      })
+      .selectByVisibleText(selector.order_state_select, state)
+      .waitForExistAndClick(selector.update_status_button)
   }
 
   dragAndDrop(sourceElement, destinationElement) {
