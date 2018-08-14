@@ -109,6 +109,9 @@ class AddressCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
+    
+    // when you override this class, do not create a field with allow_null=>true 
+    // because it will give you exception on checkout address step
     public static $definition = array(
         'table' => 'address',
         'primary' => 'id_address',
