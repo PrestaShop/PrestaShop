@@ -579,7 +579,7 @@ class MailCore extends ObjectModel
             $message->setFrom(array($from => $fromName));
 
             // Hook to alter Swift Message before sending mail
-            Hook::exec('actionEmailAlterMessageBeforeSend', [
+            Hook::exec('actionMailAlterMessageBeforeSend', [
                 'message' => &$message,
             ]);
 
