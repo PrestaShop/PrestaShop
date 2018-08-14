@@ -30,31 +30,27 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Trait QueryBuilderHelperTrait provides helper methods for most common grid query building actions
+ * Interface DoctrineSearchCriteriaApplicatorInterface contract for doctrine query builder applicator
  */
-trait QueryBuilderHelperTrait
+interface DoctrineSearchCriteriaApplicatorInterface
 {
     /**
-     * Provides reusable way for adding pagination & sorting to query builder
+     * Apply pagination on query builder
      *
      * @param SearchCriteriaInterface $searchCriteria
      * @param QueryBuilder $queryBuilder
+     *
+     * @return self
      */
-    private function addPaginationAndSorting(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder)
-    {
-        if (null !== $searchCriteria->getOrderBy() && null !== $searchCriteria->getOrderWay()) {
-            $queryBuilder->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            );
-        }
+    public function applyPagination(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder);
 
-        if (null !== $searchCriteria->getLimit()) {
-            $queryBuilder->setMaxResults($searchCriteria->getLimit());
-        }
-
-        if (null !== $searchCriteria->getOffset()) {
-            $queryBuilder->setFirstResult($searchCriteria->getOffset());
-        }
-    }
+    /**
+     * Apply sorting on query builder
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param QueryBuilder $queryBuilder
+     *
+     * @return self
+     */
+    public function applySorting(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder);
 }

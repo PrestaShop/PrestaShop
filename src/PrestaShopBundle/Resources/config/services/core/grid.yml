@@ -19,6 +19,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
+            - '@prestashop.hook.dispatcher'
+            - 'logs'
 
     prestashop.core.grid.data_provider.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
@@ -98,3 +100,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\EmailLogsQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
+
+    # Query applicators
+    prestashop.core.query.doctrine_search_criteria_applicator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
