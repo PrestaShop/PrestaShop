@@ -24,36 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup;
 
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
-use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
-use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
-use PrestaShop\PrestaShop\Core\Backup\Manager\BackupCreatorInterface;
-
-/**
- * Class DatabaseBackupCreator is responsible for creating database backups
- *
- * @internal
- */
-final class DatabaseBackupCreator implements BackupCreatorInterface
+final class BackupCollection implements BackupCollectionInterface
 {
+    /**
+     * @var BackupInterface[]
+     */
+    private $backups = [];
+
     /**
      * {@inheritdoc}
      */
-    public function createBackup()
+    public function add(BackupInterface $backup)
     {
-        if (!is_writable(PrestaShopBackup::getBackupPath())) {
-            throw new DirectoryIsNotWritableException('To create backup, its directory must be writable');
-        }
+        $this->backups[] = $backup;
 
-        $legacyBackup = new PrestaShopBackup();
-        if (!$legacyBackup->add()) {
-            throw new BackupException('Failed to create backup');
-        }
+        return $this;
+    }
 
-        $backupFilePathParts = explode(DIRECTORY_SEPARATOR, $legacyBackup->id);
-
-        return new Backup(end($backupFilePathParts));
+    /**
+     * {@inheritdoc}
+     */
+    public function all()
+    {
+        return $this->backups;
     }
 }

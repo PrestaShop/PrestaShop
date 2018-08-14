@@ -24,41 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup\Repository;
 
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
-use PrestaShop\PrestaShop\Core\Backup\BackupProviderInterface;
+use PrestaShop\PrestaShop\Core\Backup\BackupCollectionInterface;
 
-/**
- * Class BackupProvider is responsible for providing available backups
- *
- * @internal
- */
-final class BackupProvider implements BackupProviderInterface
+interface BackupRepositoryInterface
 {
     /**
-     * {@inheritdoc}
+     * Get available backups
+     *
+     * @return BackupCollectionInterface
      */
-    public function getBackups()
-    {
-        $backupPath = @opendir(PrestaShopBackup::getBackupPath());
-
-        if (false === $backupPath) {
-            return null;
-        }
-
-        $backups = [];
-
-        while (false !== $file = readdir($backupPath)) {
-            if (0 === preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches)) {
-                continue;
-            }
-
-            $backups[] = new Backup($file);
-        }
-
-        closedir($backupPath);
-
-        return $backups;
-    }
+    public function get();
 }

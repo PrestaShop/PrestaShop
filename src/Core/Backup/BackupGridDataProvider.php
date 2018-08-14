@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup;
 
+use PrestaShop\PrestaShop\Core\Backup\Comparator\BackupComparatorInterface;
+use PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
@@ -39,9 +41,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class BackupGridDataProvider implements GridDataProviderInterface
 {
     /**
-     * @var BackupProviderInterface
+     * @var BackupRepositoryInterface
      */
-    private $backupProvider;
+    private $backupRepository;
 
     /**
      * @var TranslatorInterface
@@ -52,20 +54,27 @@ final class BackupGridDataProvider implements GridDataProviderInterface
      * @var string
      */
     private $languageDateTimeFormat;
+    /**
+     * @var BackupComparatorInterface
+     */
+    private $backupByDateComparator;
 
     /**
-     * @param BackupProviderInterface $backupProvider
+     * @param BackupRepositoryInterface $backupRepository
+     * @param BackupComparatorInterface $backupByDateComparator
      * @param TranslatorInterface $translator
      * @param string $languageDateTimeFormat
      */
     public function __construct(
-        BackupProviderInterface $backupProvider,
+        BackupRepositoryInterface $backupRepository,
+        BackupComparatorInterface $backupByDateComparator,
         TranslatorInterface $translator,
         $languageDateTimeFormat
     ) {
-        $this->backupProvider = $backupProvider;
+        $this->backupRepository = $backupRepository;
         $this->translator = $translator;
         $this->languageDateTimeFormat = $languageDateTimeFormat;
+        $this->backupByDateComparator = $backupByDateComparator;
     }
 
     /**
@@ -73,8 +82,8 @@ final class BackupGridDataProvider implements GridDataProviderInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        $backups = $this->backupProvider->getBackups();
-        usort($backups, [$this, 'sortingCompare']);
+        $backups = $this->backupRepository->get()->all();
+        usort($backups, [$this->backupByDateComparator, 'compare']);
 
         $paginatedBackups = null !== $searchCriteria->getOffset() && null !== $searchCriteria->getLimit() ?
             array_slice($backups, $searchCriteria->getOffset(), $searchCriteria->getLimit()) :
@@ -100,19 +109,6 @@ final class BackupGridDataProvider implements GridDataProviderInterface
             $backupCollection,
             count($backups)
         );
-    }
-
-    /**
-     * Compare to backup records
-     *
-     * @param BackupInterface $backup1
-     * @param BackupInterface $backup2
-     *
-     * @return bool
-     */
-    private function sortingCompare(BackupInterface $backup1, BackupInterface $backup2)
-    {
-        return $backup2->getDate()->getTimestamp() - $backup1->getDate()->getTimestamp();
     }
 
     /**

@@ -24,36 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup\Comparator;
 
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
-use PrestaShop\PrestaShop\Core\Backup\Exception\BackupException;
-use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
-use PrestaShop\PrestaShop\Core\Backup\Manager\BackupCreatorInterface;
+use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Class DatabaseBackupCreator is responsible for creating database backups
- *
- * @internal
+ * Class BackupByDateComparator compares 2 backups by creation date
  */
-final class DatabaseBackupCreator implements BackupCreatorInterface
+final class BackupByDateComparator implements BackupComparatorInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function createBackup()
+    public function compare(BackupInterface $backup1, BackupInterface $backup2)
     {
-        if (!is_writable(PrestaShopBackup::getBackupPath())) {
-            throw new DirectoryIsNotWritableException('To create backup, its directory must be writable');
-        }
-
-        $legacyBackup = new PrestaShopBackup();
-        if (!$legacyBackup->add()) {
-            throw new BackupException('Failed to create backup');
-        }
-
-        $backupFilePathParts = explode(DIRECTORY_SEPARATOR, $legacyBackup->id);
-
-        return new Backup(end($backupFilePathParts));
+        return $backup2->getDate()->getTimestamp() - $backup1->getDate()->getTimestamp();
     }
 }

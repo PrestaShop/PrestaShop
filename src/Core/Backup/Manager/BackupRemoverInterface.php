@@ -24,17 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup\Manager;
+
+use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Interface BackupCreatorInterface defines contract for backup creator
+ * Interface BackupRemoverInterface defines contract for backup remover
  */
-interface BackupCreatorInterface
+interface BackupRemoverInterface
 {
     /**
-     * Create new backup
+     * @param BackupInterface $backup
      *
-     * @return BackupInterface
+     * @return bool True if backup were removed successfully or False otherwise
      */
-    public function createBackup();
+    public function remove(BackupInterface $backup);
 }
