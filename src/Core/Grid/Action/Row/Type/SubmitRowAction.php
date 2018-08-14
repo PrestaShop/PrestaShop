@@ -42,6 +42,9 @@ final class SubmitRowAction extends AbstractRowAction
         return 'submit';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

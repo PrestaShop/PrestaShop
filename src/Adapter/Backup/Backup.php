@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Class Backup
+ * Class Backup represents single database backup
  *
  * @internal
  */
