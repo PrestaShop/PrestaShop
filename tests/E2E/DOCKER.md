@@ -19,8 +19,6 @@ Wait some seconds
 ## Run tests
 
 ```bash
-# Go inside tests container
-$ docker-compose exec tests bash
-$ /tmp/run-tests.sh
+$ docker-compose exec tests bash /tmp/run-tests.sh
 ```
 
