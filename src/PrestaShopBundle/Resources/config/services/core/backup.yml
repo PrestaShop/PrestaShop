@@ -11,5 +11,9 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Backup\BackupGridDataProvider'
         arguments:
             - '@prestashop.adapter.backup.backup_provider'
+            - '@prestashop.core.backup.comparator.backup_by_date_comparator'
             - '@translator'
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
+
+    prestashop.core.backup.comparator.backup_by_date_comparator:
+        class: 'PrestaShop\PrestaShop\Core\Backup\Comparator\BackupByDateComparator'
