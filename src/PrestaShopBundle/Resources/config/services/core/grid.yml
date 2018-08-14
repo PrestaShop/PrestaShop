@@ -20,7 +20,7 @@ services:
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
             - '@prestashop.hook.dispatcher'
-            - 'logs'
+            - 'email_logs'
 
     prestashop.core.grid.data_provider.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
