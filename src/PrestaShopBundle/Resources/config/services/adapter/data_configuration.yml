@@ -236,3 +236,16 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+
+    prestashop.adapter.webservice.webservice_account_eraser:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountEraser'
+
+    prestashop.adapter.webservice.webservice_account_status_modifier:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountStatusModifier'
+        arguments:
+            - '@translator'
+
+    prestashop.adapter.import.import_data_match.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchConfiguration'
+        arguments:
+            - '@translator'
