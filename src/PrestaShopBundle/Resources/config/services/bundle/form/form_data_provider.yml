@@ -153,3 +153,5 @@ services:
 
     prestashop.admin.advanced_parameters.import_data_configuration.data_provider:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationProvider'
+        arguments:
+            - '@prestashop.adapter.import.import_data_match.configuration'

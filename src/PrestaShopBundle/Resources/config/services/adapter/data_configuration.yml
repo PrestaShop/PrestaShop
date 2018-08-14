@@ -242,3 +242,8 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.adapter.import.import_data_match.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchConfiguration'
+        arguments:
+            - '@translator'
