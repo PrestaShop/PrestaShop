@@ -129,8 +129,8 @@ class ImportController extends FrameworkBundleAdminController
 
             if (!$errors = $formHandler->save($data)) {
                 //todo: remove legacy request to get the new request available
-                return $this->fowardRequestToLegacyResponse($request);
-                //return $this->redirectToRoute('admin_import_show_data');
+                //return $this->fowardRequestToLegacyResponse($request);
+                return $this->redirectToRoute('admin_import_show_data');
             }
 
             $this->flashErrors($errors);
@@ -255,6 +255,15 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_import');
+    }
+
+    public function loadImportMatchAction(Request $request)
+    {
+        //todo: implement
+    }
+
+    public function saveImportMatchAction(Request $request)
+    {
     }
 
     /**
