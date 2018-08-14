@@ -48,7 +48,7 @@ export default class SaveImportMatchConfiguration
   }
 
   /**
-   * Method responsible for sabing the import match configuration
+   * Method responsible for saving the import match configuration
    */
   save() {
     const $button = $('.js-save-import-match');
@@ -68,7 +68,20 @@ export default class SaveImportMatchConfiguration
       contentType: false,
       processData: false,
     }).then(response => {
-      console.log(response);
+      if (typeof response.errors !== 'undefined' && response.errors.length) {
+        this._showErrorPopUp(response.errors);
+      }
     });
+  }
+
+  /**
+   * Shows error messages in the native error pop-up
+   *
+   * @param {Array} errors
+   *
+   * @private
+   */
+  _showErrorPopUp(errors) {
+    alert(errors);
   }
 }
