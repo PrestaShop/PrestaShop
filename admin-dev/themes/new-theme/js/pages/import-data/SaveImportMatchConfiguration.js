@@ -47,26 +47,26 @@ export default class SaveImportMatchConfiguration
     $(document).on('click', '.js-save-import-match', () => this.save());
   }
 
+  /**
+   * Method responsible for sabing the import match configuration
+   */
   save() {
     const $button = $('.js-save-import-match');
     const name = $('.js-import-match-input').val();
     const rowsToSkip = $('.js-rows-skip').val();
-    // todo: uncomment const matchTypes = ImportMatchTypeProvider.getTypes;
-    const matchTypes = [{
-      id: 1,
-      value: 'test value'
-    }];
+    // todo: uncomment const matchTypes = ImportMatchTypeProvider.getTypes as json string
     const url = $button.attr('data-url');
+    const data = new FormData();
+    data.append('data_matching_configuration', name);
+    data.append('rows_skip', rowsToSkip);
 
     $.ajax({
       type: 'POST',
       url: url,
-      dataType : 'json',
-      data: {
-        name,
-        rowsToSkip,
-        matchTypes
-      },
+      data,
+      cache: false,
+      contentType: false,
+      processData: false,
     }).then(response => {
       console.log(response);
     });
