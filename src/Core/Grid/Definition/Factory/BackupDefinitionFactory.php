@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -98,9 +99,10 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ActionColumn('actions'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('delete'))
+                        ->add((new SubmitRowAction('delete'))
                             ->setIcon('delete')
                             ->setOptions([
+                                'method' => 'DELETE',
                                 'route' => 'admin_backup_delete',
                                 'route_param_name' => 'deleteFileName',
                                 'route_param_field' => 'file_name',
