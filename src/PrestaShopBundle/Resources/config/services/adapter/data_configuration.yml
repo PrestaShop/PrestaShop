@@ -225,3 +225,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountStatusModifier'
         arguments:
             - '@translator'
+
+    prestashop.adapter.import.import_data_match.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchConfiguration'
+        arguments:
+            - '@translator'
