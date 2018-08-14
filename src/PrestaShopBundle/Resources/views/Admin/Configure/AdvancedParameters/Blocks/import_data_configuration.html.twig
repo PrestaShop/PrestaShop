@@ -25,15 +25,17 @@
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
+{% set dataConfigurationForm = importDataConfigurationForm.import_data_configuration %}
+
 <div class="col-xs-12 col-md-6">
   <div class="form-group">
-    {{ form_errors(importDataConfigurationForm.data_matching_configuration) }}
+    {{ form_errors(dataConfigurationForm.data_matching_configuration) }}
     <label class="form-control-label">
       {{ 'Save your data matching configuration'|trans }}
     </label>
     <div class="form-row">
       <div class="col-xs-12 col-md-8">
-        {{ form_widget(importDataConfigurationForm.data_matching_configuration, {'attr': {'class': 'js-import-match-input'}}) }}
+        {{ form_widget(dataConfigurationForm.data_matching_configuration, {'attr': {'class': 'js-import-match-input'}}) }}
       </div>
       <div class="col">
         <button
@@ -45,11 +47,11 @@
     </div>
   </div>
   <div class="form-group">
-    {{ form_errors(importDataConfigurationForm.rows_skip) }}
+    {{ form_errors(dataConfigurationForm.rows_skip) }}
     <label class="form-control-label">
       {{ 'Rows to skip'|trans }}
     </label>
-    {{ form_widget(importDataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
+    {{ form_widget(dataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
   </div>
 </div>
 

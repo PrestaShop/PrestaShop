@@ -248,3 +248,13 @@ services:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_manager'
             - '@prestashop.adapter.sql_manager.sql_query_validator'
+
+    prestashop.admin.advanced_parameters.import_data.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.import.form_data_provider'
+            -
+              'import_data_configuration': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType'
+            - 'ImportDataConfiguration'
