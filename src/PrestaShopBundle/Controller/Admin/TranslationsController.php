@@ -28,12 +28,10 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
-use PrestaShop\PrestaShop\Core\Language\Export\Config\LanguageExporterConfig;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,68 +58,6 @@ class TranslationsController extends FrameworkBundleAdminController
     public function overviewAction()
     {
         return parent::overviewAction();
-    }
-
-    // redirect to the new translation application
-    // before, clean request params
-    private function redirectToTranslationApp(Request $request)
-    {
-        $params = array();
-        foreach ($request->request->all() as $k => $p) {
-            if (strstr($k, 'selected')) {
-                $k = 'selected';
-            } elseif ('locale' === $k) {
-                $translationService = $this->get('prestashop.service.translation');
-                $p = $translationService->langToLocale($p);
-            }
-            if (!empty($p) && !in_array($k, array('controller'))) {
-                $params[$k] = $p;
-            }
-        }
-
-        return $this->redirectToRoute('admin_international_translation_overview', $params);
-    }
-
-    /**
-     * List translations keys and corresponding editable values.
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function listAction(Request $request)
-    {
-        if (!$request->isMethod('POST')) {
-            return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
-        }
-
-        if (!in_array(
-            $this->authorizationLevel(self::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            return $this->redirect('admin_dashboard');
-        }
-
-        return $this->redirectToTranslationApp($request);
-    }
-
-    /**
-     * List translations keys and corresponding editable values for one module.
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function moduleAction(Request $request)
-    {
-        if (!$request->isMethod('POST')) {
-            return $this->redirect('./admin-dev/index.php?controller=AdminTranslations');
-        }
-
-        return $this->redirectToTranslationApp($request);
     }
 
     /**
