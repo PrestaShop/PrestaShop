@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,36 +21,12 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.Advparameters.Feature' %}
+import SaveImportMatchConfiguration from '../import-data/SaveImportMatchConfiguration';
 
-{% block content %}
-<div class="container">
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">list</i> {{ ' Match your data'|trans }}
-    </h3>
-    <div class="card-block">
-      <div class="card-text">
-        <div class="alert alert-info" role="alert">
-          <p class="alert-text">
-            {{ 'Please match each column of your source file to one of the destination columns.'|trans }}
-          </p>
-        </div>
-        {% block import_panel %}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_data_configuration.html.twig' %}
-        {% endblock %}
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
+const $ = window.$;
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/imports_data.bundle.js') }}"></script>
-{% endblock %}
-
+$(() => {
+  new SaveImportMatchConfiguration().init();
+});
