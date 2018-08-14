@@ -114,10 +114,7 @@ class SortOrder
     {
         $direction = strtolower($dir);
         if (!in_array($direction, ['asc', 'desc', 'random'])) {
-            throw new Exception(sprintf(
-                'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
-                $dir
-            ));
+            $direction = 'asc';
         }
 
         $this->direction = $direction;
