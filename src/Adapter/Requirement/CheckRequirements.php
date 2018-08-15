@@ -74,6 +74,8 @@ class CheckRequirements
             }
         }
 
+        $testsErrors = $this->fillMissingDescriptions($testsErrors, $paramsRequiredResults);
+
         $results = array(
             'failRequired' => $failRequired,
             'testsErrors' => $testsErrors,
@@ -82,6 +84,7 @@ class CheckRequirements
 
         if (!$isHostMode) {
             $results = array_merge($results, array(
+                'testsErrors' => $this->fillMissingDescriptions($testsErrors, $paramsOptionalResults),
                 'failOptional' => in_array('fail', $paramsOptionalResults),
                 'testsOptional' => $paramsOptionalResults,
             ));
@@ -122,5 +125,21 @@ class CheckRequirements
             'new_phpversion' => $this->translator->trans('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.6. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.6 now!', array('%s' => phpversion()), 'Admin.Advparameters.Notification'),
             'apache_mod_rewrite' => $this->translator->trans('Enable the Apache mod_rewrite module', array(), 'Admin.Advparameters.Notification')
         );
+    }
+
+    /**
+     * Add default message on missing check descriptions
+     *
+     * @param array $errorMessages
+     * @param array $checks
+     *
+     * @return array Error messages with fallback for missing entries
+     */
+    private function fillMissingDescriptions($errorMessages, $checks)
+    {
+        foreach (array_keys(array_diff_key($checks, $errorMessages)) as $key) {
+            $errorMessages[$key] = $this->translator->trans('%key% (missing description)', array('%key%' => $key), 'Admin.Advparameters.Feature');
+        }
+        return $errorMessages;
     }
 }
