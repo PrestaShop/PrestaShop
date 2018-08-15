@@ -98,17 +98,20 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        if (!$request->request->has('request_sql')) {
-            return $this->redirectToRoute('admin_request_sql');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
+        $emailLogsDefinition = $definitionFactory->create();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
         }
 
-        $filters = $request->request->get('request_sql');
-
-        return $this->redirectToRoute('admin_request_sql', ['filters' => [
-            'id_request_sql' => $filters['id_request_sql'],
-            'name' => $filters['name'],
-            'sql' => $filters['sql'],
-        ]]);
+        return $this->redirectToRoute('admin_request_sql', ['filters' => $filters]);
     }
 
     /**
