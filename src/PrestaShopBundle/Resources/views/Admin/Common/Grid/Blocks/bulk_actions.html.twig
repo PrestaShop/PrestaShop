@@ -23,20 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.actions.bulk|length > 0 and grid.data.rows_total > 0 %}
-  <div class="btn-group">
-    <button class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
-            data-toggle="dropdown"
-            disabled
-    >
-      {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
-      <i class="icon-caret-up"></i>
-    </button>
+{% if grid.actions.bulk|length > 0 and grid.data.records_total > 0 %}
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
+              data-toggle="dropdown"
+              disabled
+      >
+        {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
+        <i class="icon-caret-up"></i>
+      </button>
 
-    <div class="dropdown-menu">
-      {% for action in grid.actions.bulk %}
-        {{ include('@PrestaShop/Admin/Common/Grid/Actions/Bulk/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
-      {% endfor %}
+      <div class="dropdown-menu">
+        {% for action in grid.actions.bulk %}
+          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Bulk/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
+        {% endfor %}
+      </div>
     </div>
-  </div>
 {% endif %}
