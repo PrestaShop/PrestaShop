@@ -45,7 +45,7 @@ class ModuleEventSubscriber implements EventSubscriberInterface
      *
      * @var bool
      */
-    public $enabled;
+    private $enabled;
 
     public function __construct(PrestaTrustChecker $checker)
     {
@@ -76,5 +76,17 @@ class ModuleEventSubscriber implements EventSubscriberInterface
         }
 
         $this->checker->checkModuleZip($event->getModuleZip());
+    }
+
+    /**
+     * Enable / disable the PrestaTrust feature
+     *
+     * @param bool $enable
+     * @return $this
+     */
+    public function toggleService($enable)
+    {
+        $this->enabled = (bool) $enable;
+        return $this;
     }
 }
