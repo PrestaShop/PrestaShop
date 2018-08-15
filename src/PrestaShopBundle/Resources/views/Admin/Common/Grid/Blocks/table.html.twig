@@ -33,12 +33,12 @@
   {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
   </thead>
   <tbody>
-  {% if grid.data.rows is not empty %}
-    {% for row in grid.data.rows %}
+  {% if grid.data.records is not empty %}
+    {% for record in grid.data.records %}
       <tr>
         {% for column in grid.columns %}
           <td>
-            {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'grid': grid, 'column': column, 'row': row}) }}
+            {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'grid': grid, 'column': column, 'record': record}) }}
           </td>
         {% endfor %}
       </tr>
