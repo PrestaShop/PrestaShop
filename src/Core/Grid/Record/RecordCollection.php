@@ -24,27 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Row;
+namespace PrestaShop\PrestaShop\Core\Grid\Record;
 
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class RowCollection is a wrapper around rows from database
+ * Class RecordCollection is a wrapper around rows from database
  */
-class RowCollection extends AbstractCollection implements RowCollectionInterface
+final class RecordCollection extends AbstractCollection implements RecordCollectionInterface
 {
     /**
-     * @param array $rows Raw rows data
+     * @param array $records Raw records data
      */
-    public function __construct(array $rows = [])
+    public function __construct(array $records = [])
     {
-        $this->items = $rows;
+        $this->items = $records;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRows()
+    public function all()
     {
         return $this->items;
     }
