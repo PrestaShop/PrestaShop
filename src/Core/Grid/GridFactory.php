@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class GridFactory is responsible for creating final Grid instance
@@ -48,7 +48,7 @@ final class GridFactory implements GridFactoryInterface
     private $dataProvider;
 
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
     private $dispatcher;
 
@@ -61,7 +61,7 @@ final class GridFactory implements GridFactoryInterface
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataProviderInterface      $dataProvider
      * @param FilterFormFactoryInterface     $filterFormFactory
-     * @param HookDispatcher                 $dispatcher
+     * @param HookDispatcherInterface        $dispatcher
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
