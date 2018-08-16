@@ -26,6 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddRequestSqlCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetRequestSqlForEditingQuery;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -181,15 +185,22 @@ class RequestSqlController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_request_sql');
             }
 
-            $errors = $requestSqlFormHandler->save($requestSqlForm->getData());
+            try {
+                $requestSqlData = $requestSqlForm->getData()['request_sql'];
 
-            if (empty($errors)) {
+                $addRequestSqlCommand = new AddRequestSqlCommand(
+                    $requestSqlData['name'],
+                    $requestSqlData['sql']
+                );
+
+                $this->getCommandBus()->handle($addRequestSqlCommand);
+
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_request_sql');
+            } catch (RequestSqlException $e) {
+                //@todo: handle properly
             }
-
-            $this->flashErrors($errors);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig', [
@@ -217,19 +228,27 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function editAction($requestSqlId, Request $request)
     {
-        $requestSqlFormHandler = $this->getRequestSqlFormHandler();
+        try {
+            $getRequestForEditingQuery = new GetRequestSqlForEditingQuery($requestSqlId);
+            $editableRequestSql = $this->getCommandBus()->handle($getRequestForEditingQuery);
 
-        $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
-        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+            //@todo: implement $editableRequestSql editing handler
+        } catch (RequestSqlException $e){
+            //@todo: handle properly
 
-        $requestSql = $dataProvider->getRequestSql($requestSqlId);
-        if (!$requestSql) {
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_request_sql');
         }
 
-        $requestSqlForm = $requestSqlFormHandler->getForm(['request_sql' => $requestSql]);
+        $requestSqlFormHandler = $this->getRequestSqlFormHandler();
+        $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
+        $requestSqlForm = $requestSqlFormHandler->getForm([
+            'request_sql' => [
+                'name' => $editableRequestSql->getName(),
+                'sql' => $editableRequestSql->getSql(),
+            ]
+        ]);
         $requestSqlForm->handleRequest($request);
 
         if ($requestSqlForm->isSubmitted()) {
@@ -253,7 +272,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $requestSqlForm->createView(),
-            'dbTableNames' => $dataProvider->getTables(),
+            'dbTableNames' => $this->get('prestashop.adapter.sql_manager.request_sql_data_provider')->getTables(),
         ]);
     }
 
@@ -446,5 +465,13 @@ class RequestSqlController extends FrameworkBundleAdminController
     protected function getRequestSqlFormHandler()
     {
         return $this->get('prestashop.admin.request_sql.form_handler');
+    }
+
+    /**
+     * @return CommandBus
+     */
+    protected function getCommandBus()
+    {
+        return $this->get('tactician.commandbus');
     }
 }
