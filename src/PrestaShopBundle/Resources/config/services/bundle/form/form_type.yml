@@ -235,7 +235,7 @@ services:
         public: true
         arguments:
             - "@translator"
-            - "@prestashop.adapter.data_provider.context_language"
+            - "@=service('prestashop.adapter.data_provider.context_language').getInstalledLocales()"
 
     form.type.order.invoices.generate_by_date:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'

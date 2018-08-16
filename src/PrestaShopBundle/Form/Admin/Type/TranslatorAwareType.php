@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -52,13 +51,19 @@ abstract class TranslatorAwareType extends CommonAbstractType
      */
     protected $installedLocales;
 
+    /**
+     * TranslatorAwareType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales - Active and in-active languages available on shop
+     */
     public function __construct(
         TranslatorInterface $translator,
-        ContextLanguageDataProvider $languageDataProvider
+        array $locales
     ) {
         $this->translator = $translator;
-        $this->locales = $languageDataProvider->getActiveLocales();
-        $this->installedLocales = $languageDataProvider->getInstalledLocales();
+        $this->locales = $this->getActiveLocales($locales);
+        $this->installedLocales = $locales;
     }
 
     /**
@@ -107,6 +112,25 @@ abstract class TranslatorAwareType extends CommonAbstractType
         $result = [];
         foreach ($locales as $locale) {
             $result[$locale['name']] = $locale['iso_code'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Gets active locales
+     *
+     * @param array $locales
+     *
+     * @return array
+     */
+    private function getActiveLocales(array $locales)
+    {
+        $result = [];
+        foreach ($locales as $locale) {
+            if ($locale['active']) {
+                $result['active'][] = $locale;
+            }
         }
 
         return $result;
