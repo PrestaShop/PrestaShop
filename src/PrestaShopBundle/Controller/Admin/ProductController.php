@@ -717,7 +717,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_list_id' => $productIdList];
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -860,7 +860,7 @@ class ProductController extends FrameworkBundleAdminController
         $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -940,7 +940,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_id' => $id];
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -1093,7 +1093,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $pagePreference AdminPagePreferenceInterface */
         $pagePreference->setTemporaryShouldUseLegacyPage('product', $use);
 
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
         $hookDispatcher->dispatch(
             'shouldUseLegacyPage',
