@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
-use PrestaShopBundle\Service\Hook\HookDispatcher as HookDispatcherService;
+use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class HookDispatcher is responsible for dispatching hooks
@@ -34,24 +35,24 @@ use PrestaShopBundle\Service\Hook\HookDispatcher as HookDispatcherService;
 final class HookDispatcher implements HookDispatcherInterface
 {
     /**
-     * @var HookDispatcherService
+     * @var HookDispatcherAdapter
      */
-    private $hookDispatcherService;
+    private $hookDispatcherAdapter;
 
     /**
-     * @param HookDispatcherService $deprecatedHookDispatcherService
+     * @param HookDispatcherAdapter $hookDispatcherAdapter
      */
-    public function __construct(HookDispatcherService $deprecatedHookDispatcherService)
+    public function __construct(HookDispatcherAdapter $hookDispatcherAdapter)
     {
-        $this->hookDispatcherService = $deprecatedHookDispatcherService;
+        $this->hookDispatcherAdapter = $hookDispatcherAdapter;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dispatch(HookInterface $hook)
+    public function dispatchHook(HookInterface $hook)
     {
-        $this->hookDispatcherService->dispatchForParameters(
+        $this->hookDispatcherAdapter->dispatchForParameters(
             $hook->getName(),
             $hook->getParameters()
         );
@@ -62,7 +63,7 @@ final class HookDispatcher implements HookDispatcherInterface
      */
     public function dispatchWithParameters($hookName, array $hookParameters = [])
     {
-        $this->dispatch(new Hook($hookName, $hookParameters));
+        $this->dispatchHook(new Hook($hookName, $hookParameters));
     }
 
     /**
@@ -70,7 +71,7 @@ final class HookDispatcher implements HookDispatcherInterface
      */
     public function dispatchRendering(HookInterface $hook)
     {
-        $event = $this->hookDispatcherService->renderForParameters(
+        $event = $this->hookDispatcherAdapter->renderForParameters(
             $hook->getName(),
             $hook->getParameters()
         );
