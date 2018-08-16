@@ -38,6 +38,8 @@ matrix:
       env: EXTRA_DEPS=phpHigh EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=unit
 
 before_install:
+  # Avoid Composer authentication issues
+  - if [[ $TRAVIS_REPO_SLUG = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh

@@ -230,3 +230,21 @@ services:
               'email_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
               'smtp_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
             - 'EmailConfiguration'
+
+    prestashop.admin.request_sql_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.request_sql_settings.form_data_provider'
+            -
+              'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
+            - 'RequestSql'
+
+    # Entity form handler
+    prestashop.admin.request_sql.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.sql_manager.request_sql_manager'
+            - '@prestashop.adapter.sql_manager.sql_query_validator'

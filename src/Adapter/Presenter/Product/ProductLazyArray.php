@@ -286,6 +286,22 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getAttachments()
+    {
+        foreach ($this->product['attachments'] as &$attachment) {
+            if (!isset($attachment['file_size_formatted'])) {
+                $attachment['file_size_formatted'] = Tools::formatBytes($attachment['file_size'], 2);
+            }
+        }
+
+        return $this->product['attachments'];
+    }
+
+    /**
+     * @arrayAccess
      * @return array|mixed
      */
     public function getQuantityDiscounts()
@@ -702,7 +718,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         if ($show_availability) {
-            if ($product['quantity'] - $product['quantity_wanted'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {

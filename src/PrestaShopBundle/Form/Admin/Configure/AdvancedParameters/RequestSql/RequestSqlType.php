@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,7 +22,28 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
-<a href="{$href|escape:'html':'UTF-8'}" title="{$action}" class="btn btn-default">
-	<i class="icon-cloud-upload"></i> {$action}
-</a>
+ */
+
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+/**
+ * Class RequestSqlType defines RequestSql entity form type
+ */
+class RequestSqlType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', TextType::class)
+            ->add('sql', TextareaType::class)
+        ;
+    }
+}

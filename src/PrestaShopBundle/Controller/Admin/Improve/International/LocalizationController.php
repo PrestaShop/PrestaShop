@@ -46,7 +46,7 @@ class LocalizationController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Improve/International/Localization/localization.html.twig")
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -77,7 +77,7 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Save localization settings
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_localization_show_settings")
      *
      * @param Request $request
@@ -110,7 +110,7 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Handles localization pack import
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_localization_show_settings")
      *
      * @param Request $request

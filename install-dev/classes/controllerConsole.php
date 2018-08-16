@@ -77,10 +77,10 @@ abstract class InstallControllerConsole
     {
         if (!($argc - 1)) {
             $available_arguments = Datas::getInstance()->getArgs();
-            echo 'Arguments available:'."\n";
+            echo 'Arguments available:'.PHP_EOL;
             foreach ($available_arguments as $key => $arg) {
                 $name = isset($arg['name']) ? $arg['name'] : $key;
-                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '')."\n";
+                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '').PHP_EOL;
             }
             exit;
         }
@@ -94,7 +94,7 @@ abstract class InstallControllerConsole
         if ($errors !== true) {
             if (count($errors)) {
                 foreach ($errors as $error) {
-                    echo $error."\n";
+                    echo $error.PHP_EOL;
                 }
             }
             exit;
@@ -153,10 +153,13 @@ abstract class InstallControllerConsole
             if (!is_array($errors)) {
                 $errors = array($errors);
             }
-            echo 'Errors :'."\n";
+            echo 'Errors :'. PHP_EOL;
             foreach ($errors as $error_process) {
+                if (!is_array($error_process)) {
+                    $error_process = [$error_process];
+                }
                 foreach ($error_process as $error) {
-                    echo(is_string($error) ? $error : print_r($error, true))."\n";
+                    echo(is_string($error) ? $error : print_r($error, true)).PHP_EOL;
                 }
             }
             die;

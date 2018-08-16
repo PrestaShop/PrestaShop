@@ -27,11 +27,9 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
 
 class FrontControllerCore extends Controller
 {
@@ -379,7 +377,7 @@ class FrontControllerCore extends Controller
                 && $cart->nbProducts()
                 && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
                 && !FrontController::isInWhitelistForGeolocation()
-                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))
+                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', '::1'))
             ) {
                 /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
@@ -507,6 +505,14 @@ class FrontControllerCore extends Controller
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
         );
+
+        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+
+        if (is_array($modulesVariables)) {
+            foreach ($modulesVariables as $moduleName => $variables) {
+                $templateVars['modules'][$moduleName] = $variables;
+            }
+        }
 
         $this->context->smarty->assign($templateVars);
 
@@ -831,7 +837,7 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1'))) {
+        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
@@ -1957,15 +1963,12 @@ class FrontControllerCore extends Controller
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function buildContainer()
     {
-        $container = new ContainerBuilder();
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
-        $loader->load(_PS_CONFIG_DIR_.'services/front/services_'. $env .'.yml');
-        $container->compile();
-
-        return $container;
+        return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
     }
 
     /**

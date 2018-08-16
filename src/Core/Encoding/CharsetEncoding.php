@@ -24,12 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Encoding;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * Class CharsetEncoding defines file chartset encoding constants
+ */
+final class CharsetEncoding
+{
+    const UTF_8 = 'utf-8';
+    const ISO_8859_1 = 'iso-8859-1';
 
-header('Location: ../../../../../../../../');
-exit;
+    /**
+     * This class is not meant to be instantiated as it is used to access encoding constants only.
+     */
+    private function __construct()
+    {
+    }
+}

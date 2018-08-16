@@ -24,12 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-header('Location: ../../../../../../../');
-exit;
+/**
+ * Class RequestSqlSettingsType build form type for "Configure > Advanced Parameters > Database > SQL Manager" page
+ */
+class RequestSqlSettingsType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('default_file_encoding', ChoiceType::class, [
+                'choices' => [
+                    CharsetEncoding::UTF_8 => 1,
+                    CharsetEncoding::ISO_8859_1 => 2,
+                ],
+                'translation_domain' => false,
+            ])
+        ;
+    }
+}

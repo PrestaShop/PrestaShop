@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.sql_manager.request_sql_manager:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager'
+
+    prestashop.adapter.sql_manager.request_sql_data_provider:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlDataProvider'
+
+    prestashop.adapter.sql_manager.sql_query_validator:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator'
+
+    prestashop.adapter.sql_manager.request_sql_exporter:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlExporter'
+        arguments:
+            - '@prestashop.adapter.sql_manager.request_sql_data_provider'
+            - '@prestashop.core.export.dir'
+            - '@prestashop.adapter.legacy.configuration'

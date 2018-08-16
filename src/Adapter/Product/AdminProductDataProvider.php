@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use AppKernel;
 use Db;
 use Context;
@@ -62,17 +63,19 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     private $imageManager;
 
     /**
-     * Constructor.
-     *
-     * Entity manager is automatically injected.
-     *
-     * @param EntityManager $entityManager
-     * @param ImageManager  $imageManager
+     * @var CacheItemPoolInterface
      */
-    public function __construct(EntityManager $entityManager, ImageManager $imageManager)
+    private $cache;
+
+    public function __construct(
+        EntityManager $entityManager,
+        ImageManager $imageManager,
+        CacheItemPoolInterface $cache
+    )
     {
         $this->entityManager = $entityManager;
         $this->imageManager = $imageManager;
+        $this->cache = $cache;
     }
 
     /**
@@ -81,19 +84,32 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function getPersistedFilterParameters()
     {
         $employee = Context::getContext()->employee;
-        $shop = Context::getContext()->shop;
-        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
-            'employee' => $employee->id ?: 0,
-            'shop' => $shop->id ?: 0,
-            'controller' => 'ProductController',
-            'action' => 'catalogAction',
-        ));
-        /* @var $filter AdminFilter */
-        if (!$filter) {
-            return AdminFilter::getProductCatalogEmptyFilter();
+        $employeeId = $employee->id ?: 0;
+
+        $cachedFilters = $this->cache->getItem("app.product_filters_${employeeId}");
+
+        if (!$cachedFilters->isHit()) {
+
+            $shop = Context::getContext()->shop;
+            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
+                'employee' => $employeeId,
+                'shop' => $shop->id ?: 0,
+                'controller' => 'ProductController',
+                'action' => 'catalogAction',
+            ));
+
+            /* @var $filter AdminFilter */
+            if (is_null($filter)) {
+                $filters = AdminFilter::getProductCatalogEmptyFilter();
+            } else {
+                $filters = $filter->getProductCatalogFilter();
+            }
+
+            $cachedFilters->set($filters);
+            $this->cache->save($cachedFilters);
         }
 
-        return $filter->getProductCatalogFilter();
+        return $cachedFilters->get();
     }
 
     /**

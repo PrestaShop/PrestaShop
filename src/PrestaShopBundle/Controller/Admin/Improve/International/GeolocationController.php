@@ -44,7 +44,7 @@ class GeolocationController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Improve/International/Geolocation/geolocation.html.twig")
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -70,7 +70,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * Process geolocation configuration form
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')",
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation"
      * )

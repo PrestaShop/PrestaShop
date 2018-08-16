@@ -1,5 +1,4 @@
-<?php
-/**
+/*!
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,14 +21,38 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ *
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+.form-horizontal {
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+  .card-block {
+    justify-content: center;
+  }
 
-header('Location: ../../../../../../');
-exit;
+  .card-text {
+    @extend .col-sm-10;
+  }
+
+  .form-group.row {
+    margin-bottom: 1.2rem;
+
+    > .form-control-label:first-of-type {
+      @extend .col-sm-5;
+      @extend .col-form-label;
+
+      @include media-breakpoint-up('sm') {
+        text-align: right;
+        padding-right: 25px;
+      }
+    }
+  }
+
+  // make ps-switch align with label
+  .ps-switch:not(.ps-switch-lg) {
+    @include media-breakpoint-up('sm') {
+      margin-top: 5px;
+    }
+  }
+
+}
