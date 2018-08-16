@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -86,14 +86,13 @@ class ImportController extends FrameworkBundleAdminController
         $finder = $this->get('prestashop.core.import.file_finder');
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
 
-        $form = $formHandler->getForm();
+        // add support for preselected entity when import type is available in query
+        $formData = $request->query->has('import_type') ?
+            ['entity' => $request->query->get('import_type')] :
+            []
+        ;
 
-        if ($request->query->has('import_type')) {
-            $formData = $form->getData();
-            $formData['entity'] = Entity::getFromName($request->query->get('import_type'));
-            $form->setData($formData);
-        }
-
+        $form = $this->get('form.factory')->createNamed('', ImportType::class, $formData);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -125,8 +124,8 @@ class ImportController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_import');
             }
 
-            $data = $form->getData();
-            if (!$errors = $formHandler->save($data)) {
+            $formData = $form->getData();
+            if (!$errors = $formHandler->save($formData)) {
                 return $this->fowardRequestToLegacyResponse($request);
             }
 
