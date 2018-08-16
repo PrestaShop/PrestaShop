@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,20 +27,25 @@
 namespace Tests\Integration\PrestaShopBundle\Test;
 
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Context;
+use Symfony\Component\Translation\Translator;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\Routing\Router;
+use Psr\Log\NullLogger;
+
 use Currency;
 use Employee;
 use Language;
-use Psr\Log\NullLogger;
-use Shop;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Translation\Translator;
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use Context;
 use Theme;
+use Shop;
 
+/**
+ * Responsible of e2e and integration tests using Symfony.
+ * Time-consuming, by default dump and restore the entire database.
+ */
 class WebTestCase extends TestCase
 {
     /**
@@ -108,6 +113,12 @@ class WebTestCase extends TestCase
 
         $contextMock->shop->theme = $themeMock;
 
+        $countryMock = $this->getMockBuilder(Country::class)
+            ->getMock();
+        $countryMock->iso_code = 'en';
+
+        $contextMock->country = $countryMock;
+
         $languageMock = $this->getMockBuilder(Language::class)
             ->disableAutoload()
             ->disableOriginalConstructor()
@@ -162,18 +173,16 @@ class WebTestCase extends TestCase
                             'name' => 'Français (French)',
                             'iso_code' => 'fr',
                             'language_code' => 'fr',
-                            'locale' => 'fr-FR'
-                        ]
+                            'locale' => 'fr-FR',
+                        ],
                     ]
                 )
             );
-
 
         $legacyContextMock->method('getLanguage')
             ->will(
                 self::returnValue($languageMock)
             );
-
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
@@ -190,7 +199,7 @@ class WebTestCase extends TestCase
 
         $values = array(
             array('_PS_MODE_DEMO_', null, true),
-            array('_PS_MODULE_DIR_', null, __DIR__.'/../../../resources/modules/'),
+            array('_PS_MODULE_DIR_', null, __DIR__ . '/../../../resources/modules/'),
         );
 
         $configurationMock->method('get')
@@ -198,4 +207,6 @@ class WebTestCase extends TestCase
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }
+
+
 }
