@@ -52,7 +52,7 @@ services:
             - { name: twig.extension }
 
     prestashop.bundle.twig.extension.column:
-        class: 'PrestaShopBundle\Twig\Extension\ColumnExtension'
+        class: 'PrestaShopBundle\Twig\Extension\GridExtension'
         arguments:
             - '@templating.engine.twig'
             - '@prestashop.static_cache.adapter'

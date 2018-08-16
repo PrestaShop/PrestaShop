@@ -33,13 +33,13 @@ use Twig\Extension\AbstractExtension;
 use Twig_SimpleFunction as SimpleFunction;
 
 /**
- * Class ColumnExtension is responsible for providing twig functions:
+ * Class GridExtension is responsible for providing twig functions:
  *
  * 1. column_content(record, column, grid) - renders column content based on column type
  * 2. column_header(column, grid) - renders column header based on column type
  * 3. column_filter(column, grid) - renders column filter based on column type
  */
-class ColumnExtension extends AbstractExtension
+class GridExtension extends AbstractExtension
 {
     const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
 
