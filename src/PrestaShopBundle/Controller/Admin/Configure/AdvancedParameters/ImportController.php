@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -86,6 +87,13 @@ class ImportController extends FrameworkBundleAdminController
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
 
         $form = $formHandler->getForm();
+
+        if ($request->query->has('import_type')) {
+            $formData = $form->getData();
+            $formData['entity'] = Entity::getFromName($request->query->get('import_type'));
+            $form->setData($formData);
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
