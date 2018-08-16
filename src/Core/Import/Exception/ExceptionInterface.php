@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
+/**
+ * Interface ExceptionInterface is implemented by all import exceptions
+ */
 interface ExceptionInterface
 {
-
 }
