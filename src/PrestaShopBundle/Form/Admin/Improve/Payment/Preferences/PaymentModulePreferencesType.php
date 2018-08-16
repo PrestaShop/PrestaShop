@@ -70,7 +70,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param ContextLanguageDataProvider $languageDataProvider
+     * @param array $locales
      * @param array $paymentModules
      * @param array $countryChoices
      * @param array $groupChoices
@@ -80,7 +80,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     public function __construct(
         TranslatorInterface $translator,
-        ContextLanguageDataProvider $languageDataProvider,
+        array $locales,
         array $paymentModules,
         array $countryChoices,
         array $groupChoices,
@@ -88,7 +88,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         array $currencyChoices,
         CountryDataProvider $countryDataProvider
     ) {
-        parent::__construct($translator, $languageDataProvider);
+        parent::__construct($translator, $locales);
 
         $this->countryChoices = $countryChoices;
         $this->groupChoices = $groupChoices;

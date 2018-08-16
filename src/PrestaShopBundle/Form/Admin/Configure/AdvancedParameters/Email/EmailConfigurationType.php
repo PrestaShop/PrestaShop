@@ -54,17 +54,17 @@ class EmailConfigurationType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param ContextLanguageDataProvider $languageDataProvider
+     * @param array $locales
      * @param FormChoiceProviderInterface $mailMethodChoiceProvider
      * @param FormChoiceProviderInterface $contactsChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
-        ContextLanguageDataProvider $languageDataProvider,
+        array $locales,
         FormChoiceProviderInterface $mailMethodChoiceProvider,
         FormChoiceProviderInterface $contactsChoiceProvider
     ) {
-        parent::__construct($translator, $languageDataProvider);
+        parent::__construct($translator, $locales);
 
         $this->mailMethodChoiceProvider = $mailMethodChoiceProvider;
         $this->contactsChoiceProvider = $contactsChoiceProvider;

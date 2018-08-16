@@ -47,15 +47,15 @@ class ImportLocalizationPackType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param ContextLanguageDataProvider $languageDataProvider
+     * @param array $locales
      * @param array $localizationPackChoices
      */
     public function __construct(
         TranslatorInterface $translator,
-        ContextLanguageDataProvider $languageDataProvider,
+        array $locales,
         array $localizationPackChoices
     ) {
-        parent::__construct($translator, $languageDataProvider);
+        parent::__construct($translator, $locales);
 
         $this->localizationPackChoices = $localizationPackChoices;
     }

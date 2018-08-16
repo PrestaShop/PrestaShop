@@ -56,11 +56,11 @@ class GeneralType extends TranslatorAwareType
 
     public function __construct(
         TranslatorInterface $translator,
-        ContextLanguageDataProvider $languageDataProvider,
+        array $locales,
         $defaultCurrencyIsoCode,
         array $tosCmsChoices
     ) {
-        parent::__construct($translator, $languageDataProvider);
+        parent::__construct($translator, $locales);
 
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->tosCmsChoices = $tosCmsChoices;

@@ -56,12 +56,12 @@ class CarrierOptionsType extends TranslatorAwareType
 
     public function __construct(
         TranslatorInterface $translator,
-        ContextLanguageDataProvider $languageDataProvider,
+        array $locales,
         array $carriers,
         array $orderByChoices,
         array $orderWayChoices
     ) {
-        parent::__construct($translator, $languageDataProvider);
+        parent::__construct($translator, $locales);
 
         $this->carriers = $carriers;
         $this->orderByChoices = $orderByChoices;
