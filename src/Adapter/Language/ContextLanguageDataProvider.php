@@ -28,14 +28,4 @@ class ContextLanguageDataProvider
     {
         return $this->legacyContext->getLanguages(false);
     }
-
-    /**
-     * Returns active locales. The first one is the employee default one.
-     *
-     * @return array
-     */
-    public function getActiveLocales()
-    {
-        return $this->legacyContext->getLanguages();
-    }
 }
