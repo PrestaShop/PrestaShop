@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -83,7 +82,12 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.logs');
+        $logsDefinition = $definitionFactory->create();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);
+
         $searchParametersForm->handleRequest($request);
         $filters = array();
 
