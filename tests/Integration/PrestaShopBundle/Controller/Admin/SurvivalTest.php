@@ -92,6 +92,7 @@ class SurvivalTest extends WebTestCase
             'admin_product_preferences' => ['Product Preferences', 'admin_product_preferences'],
             'admin_customer_preferences' => ['Customer Preferences', 'admin_customer_preferences'],
             'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
+            'admin_logs' => ['Logs', 'admin_logs'],
             // @todo: why these tests are failing when pages are available?
             // 'admin_system_information' => ['Information', 'admin_system_information'],
             // 'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
