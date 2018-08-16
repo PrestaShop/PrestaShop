@@ -139,6 +139,16 @@ class CategoryControllerCore extends ProductListingFrontController
         return parent::getLayout();
     }
 
+    protected function getAjaxProductSearchVariables()
+    {
+        $data = parent::getAjaxProductSearchVariables();
+        $rendered_products_header = $this->render('catalog/_partials/category-header', array('listing' => $data));
+        $data['rendered_products_header'] = $rendered_products_header;
+
+        return $data;
+    }
+
+
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
