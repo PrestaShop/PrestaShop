@@ -133,7 +133,12 @@ class ProductController extends FrameworkBundleAdminController
             $sortOrder
         );
 
-        extract($filters, EXTR_OVERWRITE);
+        // mimic native extract() function.
+        $offset = $filters['offset'];
+        $limit = $filters['limit'];
+        $orderBy = $filters['orderBy'];
+        $sortOrder = $filters['sortOrder'];
+
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         $toolbarButtons = $this->getToolbarButtons();
