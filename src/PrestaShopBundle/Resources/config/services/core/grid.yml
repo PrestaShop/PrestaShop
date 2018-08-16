@@ -63,7 +63,7 @@ services:
             - '@prestashop.core.grid.definition.factory.logs'
             - '@prestashop.core.grid.data_provider.log'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -71,7 +71,7 @@ services:
             - '@prestashop.core.grid.definition.factory.email_logs'
             - '@prestashop.core.grid.data_provider.email_logs'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -79,7 +79,7 @@ services:
             - '@prestashop.core.grid.definition.factory.request_sql'
             - '@prestashop.core.grid.data_provider.request_sql'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:

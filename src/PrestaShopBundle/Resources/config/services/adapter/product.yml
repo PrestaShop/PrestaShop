@@ -16,7 +16,7 @@ services:
         decorates: prestashop.core.admin.data_updater.product_interface
         public: false
         arguments:
-            - "@prestashop.hook.dispatcher"
+            - "@prestashop.core.hook.dispatcher"
             - "@prestashop.static_cache.adapter"
 
     prestashop.adapter.admin.wrapper.product:

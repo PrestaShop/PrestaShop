@@ -36,7 +36,7 @@ interface HookDispatcherInterface
      *
      * @param HookInterface $hook
      */
-    public function dispatch(HookInterface $hook);
+    public function dispatchHook(HookInterface $hook);
 
     /**
      * Dispatch hook with raw parameters
