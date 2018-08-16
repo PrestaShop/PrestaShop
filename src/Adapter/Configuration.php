@@ -115,18 +115,7 @@ class Configuration extends ParameterBag implements AdvancedConfigurationInterfa
     }
 
     /**
-<<<<<<< HEAD
-     * Set configuration value
-     *
-     * @param string $key
-     * @param mixed  $value
-     * @param array  $options Options
-     *
-     * @return $this
-     * @throws \Exception
-=======
      * {@inheritdoc}
->>>>>>> f309381af7... update Configuration with AdvancedConfigurationInterface
      */
     public function set($key, $value, array $options = [])
     {
@@ -165,14 +154,7 @@ class Configuration extends ParameterBag implements AdvancedConfigurationInterfa
     }
 
     /**
-<<<<<<< HEAD
-     * Removes a configuration key.
-     *
-     * @param type $key
-     * @return type
-=======
      * {@inheritdoc}
->>>>>>> f309381af7... update Configuration with AdvancedConfigurationInterface
      */
     public function remove($key)
     {
