@@ -63,6 +63,8 @@ class SurvivalTest extends WebTestCase
          * If you need to debug these HTTP calls, you can use:
          * if ($response->isServerError()) {
          *    $content = $response->getContent();
+         *    file_put_contents('error.html', $content);
+         *    // then display 'error.html' in a web browser.
          * }
          */
         self::assertTrue($response->isSuccessful(),
@@ -93,10 +95,10 @@ class SurvivalTest extends WebTestCase
             'admin_customer_preferences' => ['Customer Preferences', 'admin_customer_preferences'],
             'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
             'admin_logs' => ['Logs', 'admin_logs'],
-            // @todo: why these tests are failing when pages are available?
-            // 'admin_system_information' => ['Information', 'admin_system_information'],
-            // 'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
-            // 'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
+            'admin_system_information' => ['Information', 'admin_system_information'],
+            // @todo: something is missing for Vuejs application of translations page.
+            //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
+            'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
             'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],
             'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
             'admin_module_manage' => ['Manage installed modules', 'admin_module_manage'],

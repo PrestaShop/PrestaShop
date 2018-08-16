@@ -71,6 +71,8 @@ class LogsController extends FrameworkBundleAdminController
             'grid' => $presentedGrid,
         ];
 
+        //dump($presentedGrid);die;
+
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
     }
 

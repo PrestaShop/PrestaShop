@@ -26,7 +26,10 @@
 
 namespace Tests\Integration\PrestaShopBundle\Test;
 
+use MyProject\Proxies\__CG__\stdClass;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Context;
 use Currency;
@@ -40,6 +43,7 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
 use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use Theme;
+use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 
 class WebTestCase extends TestCase
 {
@@ -108,6 +112,12 @@ class WebTestCase extends TestCase
 
         $contextMock->shop->theme = $themeMock;
 
+        $countryMock = $this->getMockBuilder(Country::class)
+            ->getMock();
+        $countryMock->iso_code = 'en';
+
+        $contextMock->country = $countryMock;
+
         $languageMock = $this->getMockBuilder(Language::class)
             ->disableAutoload()
             ->disableOriginalConstructor()
@@ -174,9 +184,44 @@ class WebTestCase extends TestCase
                 self::returnValue($languageMock)
             );
 
+        $loggedEmployeeData = new \stdClass();
+        $loggedEmployeeData->email = '';
+        $loggedEmployeeData->id = 1;
+        $loggedEmployeeData->passwd = '';
+        $loggedEmployeeMock = new LoggedEmployee($loggedEmployeeData);
+
+        $tokenMock = $this->getMockBuilder(TokenInterface::class)
+            ->setMethods([
+                'getUser',
+                'getRoles',
+                'isAuthenticated',
+            ])
+            ->disableAutoload()
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $tokenMock->method('getUser')->willReturn($loggedEmployeeMock);
+
+        $tokenMock->method('getRoles')->willReturn([]);
+        $tokenMock->method('isAuthenticated')->willReturn(true);
+
+        $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
+            ->setMethods([
+                'getToken',
+            ])
+            ->disableAutoload()
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $tokenStorageMock->method('getToken')
+            ->willReturn($tokenMock)
+        ;
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
+        self::$kernel->getContainer()->set('security.token_storage', $tokenStorageMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
     }
 
