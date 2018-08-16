@@ -790,19 +790,16 @@ class ProductController extends FrameworkBundleAdminController
                         $productList,
                         ['filter_category' => $persistedFilterParams['filter_category']]
                     );
+
                     $this->addFlash(
                         'success',
-                        $translator->trans('Products successfully sorted.', [], 'Admin.Catalog.Notification')
+                        $this->trans('Products successfully sorted.','Admin.Catalog.Notification')
                     );
                     $logger->info(
                         'Products sorted: (' . implode(',', $productIdList) .
                         ') with positions (' . implode(',', $productPositionList) . ').'
                     );
-                    $this->addFlash(
-                        'success',
-                        $this->trans('Products successfully sorted.', 'Admin.Catalog.Notification')
-                    );
-                    $logger->info('Products sorted: (' . implode(',', $productIdList) . ') with positions (' . implode(',', $productPositionList) . ').');
+
                     $hookDispatcher->dispatchMultiple(
                         ['actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'],
                         ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
