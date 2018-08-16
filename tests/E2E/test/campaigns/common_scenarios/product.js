@@ -40,6 +40,9 @@ global.productVariations = [];
  *  options: {
  *      filename: "attached_filename"
  *  }
+ *  taxRule: {
+ *      value: '10%'
+ *  },
  * };
  */
 module.exports = {
@@ -61,6 +64,13 @@ module.exports = {
       test('should set the "Quantity" input', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]));
       test('should set the "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]));
       test('should upload the first product picture', () => client.uploadPicture(productData["image_name"], AddProductPage.picture));
+
+      if (productData.hasOwnProperty('taxRule')) {
+        scenario('Change "Tax rule', client => {
+          test('should click on "Tax rule"', () => client.waitForExistAndClick(AddProductPage.tax_rule));
+          test('should click on "' + productData['taxRule']['value'] + '"', () => client.waitForExistAndClick(AddProductPage.tax_option.replace('%OPTION', productData['taxRule']['value'])));
+        }, 'product/product');
+      }
 
       if (productData.hasOwnProperty('type') && productData.type === 'pack') {
         scenario('Add the created product to pack', client => {

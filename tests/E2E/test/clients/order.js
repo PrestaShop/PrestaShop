@@ -33,7 +33,7 @@ class Order extends CommonClient {
       .waitForExistAndClick(selector)
       .then(() => this.client.getText(selector))
       .then((name) => global.invoiceFileName = name.replace('#', ''))
-      .then(() => this.client.pause(2000));
+      .then(() => this.client.pause(4000));
   }
 
   downloadCart(selector) {

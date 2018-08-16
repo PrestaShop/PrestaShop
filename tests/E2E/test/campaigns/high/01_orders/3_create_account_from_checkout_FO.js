@@ -1,4 +1,5 @@
-const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');              "OrderRef": global.tab['OrderRef'],
+
 const common_scenarios = require('../../common_scenarios/order');
 
 scenario('Create account from checkout in Front Office', () => {

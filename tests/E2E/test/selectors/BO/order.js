@@ -32,10 +32,24 @@ module.exports = {
     total_order: '//*[@id="total_order"]/td[@class="amount text-right nowrap"]/strong',
     total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
     order_view_button: '//*[@id="form-order"]//table//tbody//tr[%ORDERNumber]//td[12]//a',
-    documents_tab: '//*[@id="tabOrder"]/li[2]/a',
+    order_date: '(//*[@id="content"]//div[@class="kpi-content"])[1]/span[2]',
+    order_ref: '(//*[@id="content"]//span[@class="badge"])[1]',
+    product_information: '//*[@id="orderProducts"]/tbody/tr[1]/td[2]/a',
     empty_page_logo: '//*[@id="documents_table"]//div[@class="list-empty-msg"]',
-    pdf_icon: '//*[@id="table-order"]/tbody/tr[%ORDER]//td[11]//i'
-  },
+    pdf_icon: '//*[@id="table-order"]/tbody/tr[%ORDER]//td[11]//i',
+    invoice_document:'//table//td[3]/a',
+    product_quantity: '//*[@id="orderProducts"]//span[contains(@class,"product_quantity_show")]',
+    product_name_tab:'//*[@id="orderProducts"]//span[contains(@class,"productName")]',
+    product_unit_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_excl"]',
+    product_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_incl"]',
+    total_order_price: '//*[@id="total_order"]/td[2]/strong',
+    total_product: '//*[@id="total_products"]/td[2]',
+    shipping_cost_price: '//*[@id="total_shipping"]/td[2]',
+    total: '//*[@id="total_order"]/td[2]/strong',
+    total_tax: '//*[@id="total_taxes"]/td[2]',
+    carrier: '//*[@id="shipping_table"]/tbody/tr/td[3]',
+    payment_method: '//*[@id="formAddPayment"]/div/table/tbody/tr[1]/td[2]'
+ },
 
   CreateOrder: {
     new_order_button: '//*[@id="page-header-desc-order-new_order"]',
@@ -81,7 +95,9 @@ module.exports = {
   },
 
   Invoices: {
-    disable_invoice: '//label[@for="form_invoice_options_enable_invoices_0"]',
+    disable_enable_invoice: '//label[@for="form_invoice_options_enable_invoices_%STATUS"]',
+    disable_enable_image: '//label[@for="form_invoice_options_enable_product_images_%STATUS"]',
+    disable_enable_tax_breakdown: '//label[@for="form_invoice_options_enable_tax_breakdown_%STATUS"]',
     save_button: '//*[@id="main-div"]//button[contains(text(),"Save")]',
     success_msg: '//*[@id="main-div"]//div[@class="alert-text"]/p'
   }

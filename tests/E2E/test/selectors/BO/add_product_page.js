@@ -197,6 +197,7 @@ module.exports = {
     get catalog_submit_filter() {
       return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]';
     },
+    catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
@@ -227,7 +228,9 @@ module.exports = {
     product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
     add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div',
     attribute_group_name: '//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]',
-    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label'
+    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label',
+    tax_rule: '//*[@id="select2-step2_id_tax_rules_group_rendered-container"]',
+    tax_option: '//ul[@class="select2-results__options"]//li[contains(text(), "%OPTION")]',
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',

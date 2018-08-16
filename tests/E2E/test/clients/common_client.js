@@ -332,7 +332,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
@@ -601,6 +601,12 @@ class CommonClient {
     }
   }
 
+  displayHiddenBlock(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementsByClassName(selector).style = '';
+      })
+  }
 }
 
 module.exports = CommonClient;
