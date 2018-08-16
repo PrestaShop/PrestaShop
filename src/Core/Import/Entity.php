@@ -43,6 +43,18 @@ final class Entity
     const TYPE_ALIAS = 7;
     const TYPE_STORE_CONTACTS = 8;
 
+    const AVAILABLE_TYPES = [
+        'categories' => self::TYPE_CATEGORIES,
+        'products' => self::TYPE_PRODUCTS,
+        'combinations' => self::TYPE_COMBINATIONS,
+        'customers' => self::TYPE_CUSTOMERS,
+        'addresses' => self::TYPE_ADDRESSES,
+        'brands' => self::TYPE_BRANDS,
+        'suppliers' => self::TYPE_SUPPLIERS,
+        'alis'=> self::TYPE_ALIAS,
+        'contacts'=> self::TYPE_STORE_CONTACTS,
+    ];
+
     /**
      * Get import entity type from name
      *
@@ -52,23 +64,8 @@ final class Entity
      */
     public static function getFromName($importType)
     {
-        switch ($importType) {
-            case 'categories':
-                return self::TYPE_CATEGORIES;
-            case 'products':
-                return self::TYPE_PRODUCTS;
-            case 'combinations':
-                return self::TYPE_COMBINATIONS;
-            case 'customers':
-                return self::TYPE_CUSTOMERS;
-            case 'addresses':
-                return self::TYPE_ADDRESSES;
-            case 'manufacturers':
-                return self::TYPE_BRANDS;
-            case 'suppliers':
-                return self::TYPE_SUPPLIERS;
-            case 'alias':
-                return self::TYPE_ALIAS;
+        if (isset(self::AVAILABLE_TYPES[$importType])) {
+            return self::AVAILABLE_TYPES[$importType];
         }
 
         throw new NotSupportedImportTypeException(sprintf('Import type with name "%s" is not supported.', $importType));

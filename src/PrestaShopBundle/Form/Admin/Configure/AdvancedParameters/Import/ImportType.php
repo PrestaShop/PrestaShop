@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -83,7 +84,23 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('sendemail', SwitchType::class, [
                 'data' => true,
-            ]);
+            ])
+        ;
+
+        $builder->get('entity')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($entity) {
+                    if (null === $entity) {
+                        return $entity;
+                    }
+
+                    return is_numeric($entity) ? $entity : Entity::getFromName($entity);
+                },
+                function ($entity) {
+                    return $entity;
+                }
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
