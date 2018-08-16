@@ -64,7 +64,7 @@ class DispatcherCore
         ),
         'supplier_rule' => array(
             'controller' =>    'supplier',
-            'rule' =>        '{id}__{rewrite}',
+            'rule' =>        'supplier/{id}-{rewrite}',
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
                 'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
@@ -74,7 +74,7 @@ class DispatcherCore
         ),
         'manufacturer_rule' => array(
             'controller' =>    'manufacturer',
-            'rule' =>        '{id}_{rewrite}',
+            'rule' =>        'brand/{id}-{rewrite}',
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
                 'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
