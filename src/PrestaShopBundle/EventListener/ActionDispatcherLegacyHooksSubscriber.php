@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -51,13 +51,13 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
     const NA_CONTROLLER = 0;
 
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
-    private $hookDispacher;
+    private $hookDispatcher;
 
-    public function __construct(HookDispatcher $hookDispatcher)
+    public function __construct(HookDispatcherInterface $hookDispatcher)
     {
-        $this->hookDispacher = $hookDispatcher;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     public static function getSubscribedEvents()
@@ -86,7 +86,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
             $controllerType = self::BACK_OFFICE_CONTROLLER;
         }
 
-        $this->dispatchHook(self::DISPATCHER_BEFORE_ACTION, array(
+        $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_BEFORE_ACTION, array(
             'controller_type' => $controllerType
         ));
 
@@ -103,23 +103,11 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         $requestAttributes = $event->getRequest()->attributes;
 
         if ($requestAttributes->has('controller_type') && $requestAttributes->has('controller_name')) {
-            $this->dispatchHook(self::DISPATCHER_AFTER_ACTION, array(
+            $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_AFTER_ACTION, array(
                 'controller_type' => $requestAttributes->get('controller_type'),
                 'controller_class' => $requestAttributes->get('controller_name'),
                 'is_module' => 0,
             ));
         }
-    }
-
-    /**
-     * @param array $parameters
-     * @return HookEvent
-     */
-    private function dispatchHook($eventName, array $parameters = array())
-    {
-        $hookEvent = new HookEvent();
-        $hookEvent->setHookParameters($parameters);
-
-        $this->hookDispacher->dispatch($eventName, $hookEvent);
     }
 }
