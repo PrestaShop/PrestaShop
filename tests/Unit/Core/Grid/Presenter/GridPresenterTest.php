@@ -61,7 +61,7 @@ class GridPresenterTest extends TestCase
             'filter_form' => [],
             'columns' => [],
             'actions' => ['grid', 'bulk'],
-            'data' => ['rows', 'rows_total', 'query'],
+            'data' => ['records', 'records_total', 'query'],
             'pagination' => ['offset', 'limit'],
             'sorting' => ['order_by', 'order_way'],
             'filters' => [],
