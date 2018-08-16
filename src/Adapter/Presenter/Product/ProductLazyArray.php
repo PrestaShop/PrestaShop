@@ -180,7 +180,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getCanonicalUrl()
     {
-        return $this->getProductURL($this->product, $this->language, true);
+        return $this->getProductURL($this->product, $this->language);
     }
 
     /**
@@ -672,13 +672,11 @@ class ProductLazyArray extends AbstractLazyArray
      * @inheritdoc
      * @param array $product
      * @param Language $language
-     * @param bool $canonical
      * @return string
      */
     private function getProductURL(
         array $product,
-        Language $language,
-        $canonical = false
+        Language $language
     ) {
         $linkRewrite = isset($product['link_rewrite'])?$product['link_rewrite']:null;
         $category = isset($product['category'])?$product['category']:null;
@@ -691,7 +689,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            (!$canonical) ? $product['id_product_attribute'] : null,
+            $product['id_product_attribute'],
             false,
             false,
             true

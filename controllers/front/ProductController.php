@@ -1228,6 +1228,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
 
+        $idProductAttribute = $this->getIdProductAttribute(true);
+        if ($idProductAttribute) {
+            $attributes = $this->product->getAttributeCombinationsById($this->getIdProductAttribute(), $this->context->language->id);
+            if ($attributes && count($attributes) > 0) {
+                foreach ($attributes as $attribute) {
+                    $page['meta']['title'] .= ' '.$attribute['group_name'].' '.$attribute['attribute_name'];
+                }
+            }
+        }
+
         return $page;
     }
 
