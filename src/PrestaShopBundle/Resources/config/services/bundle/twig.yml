@@ -55,5 +55,6 @@ services:
         class: 'PrestaShopBundle\Twig\Extension\ColumnExtension'
         arguments:
             - '@templating.engine.twig'
+            - '@prestashop.static_cache.adapter'
         tags:
             - { name: twig.extension }
