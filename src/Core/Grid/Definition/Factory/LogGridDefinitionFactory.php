@@ -26,18 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Status\SeverityLevelColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 
 /**
  * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
@@ -152,11 +153,9 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'date_add',
                 ])
             )
-            ->add(
-                (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->add((new ActionsColumn('actions'))
                 ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
                         'attr' => [
                             'data-url' => $this->resetActionUrl,
                             'data-redirect' => $this->redirectionUrl,
@@ -173,30 +172,26 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add(new GridAction(
-                'delete',
-                $this->trans('Erase all', [], 'Admin.Advparameters.Feature'),
-                'delete_forever',
-                'delete_all_logs'
-            ))
-            ->add(new GridAction(
-                'common_refresh_list',
-                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
-                'refresh',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_show_query',
-                $this->trans('Show SQL query', [], 'Admin.Actions'),
-                'code',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_export_sql_manager',
-                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
-                'storage',
-                'simple'
-            ))
+            ->add((new SubmitGridAction('delete_all_email_logs'))
+                ->setName($this->trans('Erase all', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('delete')
+                ->setOptions([
+                    'submit_route' => 'admin_logs_delete',
+                    'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning')
+                ])
+            )
+            ->add((new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
+            )
         ;
     }
 }

@@ -11,7 +11,7 @@ let promise = Promise.resolve();
 let customerData = {
   first_name: 'demo',
   last_name: 'demo',
-  email_address: 'demo@prestashop.com',
+  email_address: global.adminEmail,
   password: '123456789',
   birthday: {
     day: '18',
@@ -21,7 +21,7 @@ let customerData = {
 };
 
 let addressData = {
-  email: 'demo@prestashop.com',
+  email: global.adminEmail,
   id_number: '123456789',
   address_alias: 'Ma super address',
   first_name: 'demo',

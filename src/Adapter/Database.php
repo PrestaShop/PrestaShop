@@ -28,12 +28,15 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Db;
 use DbQuery;
 
+/**
+ * Adapter for Db legacy class.
+ */
 class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface
 {
     /**
      * Perform a SELECT sql statement
      *
-     * @param $sqlString
+     * @param string $sqlString
      * @return array|false
      * @throws \PrestaShopDatabaseException
      */
@@ -45,7 +48,7 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     /**
      * Escape $unsafe to be used into a SQL statement
      *
-     * @param $unsafeData
+     * @param string $unsafeData
      * @return string
      */
     public function escape($unsafeData)

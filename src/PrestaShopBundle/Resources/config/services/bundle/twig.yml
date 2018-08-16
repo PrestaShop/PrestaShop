@@ -42,14 +42,6 @@ services:
         tags:
             - { name: twig.extension }
 
-    prestashop.twig.extension.admin:
-       class: PrestaShopBundle\Twig\AdminExtension
-       arguments:
-            - "@request_stack"
-            - "@service_container"
-       tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
         arguments:

@@ -30,6 +30,9 @@ use Access;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * Decides on access rights to a Page
+ */
 class PageVoter extends Voter
 {
     const CREATE = 'create';
@@ -49,22 +52,20 @@ class PageVoter extends Voter
     const LEVEL_READ   = 1;
 
     /**
-     * @param string $attribute
-     * @param mixed $subject
+     * Indicates if this voter should pronounce on this attribute and subject
+     *
+     * @param string $attribute Rights to test
+     * @param mixed $subject Subject to secure (a controller name)
      * @return bool
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::CREATE, self::UPDATE, self::DELETE, self::READ))) {
-            return false;
-        }
-
-        return true;
+        return in_array($attribute, array(self::CREATE, self::UPDATE, self::DELETE, self::READ));
     }
 
     /**
-     * @param string $attribute
-     * @param mixed $subject
+     * @param string $attribute Access right to test
+     * @param string $subject Controller name
      * @param TokenInterface $token
      * @return bool
      */
@@ -72,18 +73,42 @@ class PageVoter extends Voter
     {
         $user = $token->getUser();
         $employeeProfileId = $user->getData()->id_profile;
-        $global =  $subject . $attribute;
+        $action = $this->buildAction($subject, $attribute);
 
-        return $this->can($global, $employeeProfileId);
+        return $this->can($action, $employeeProfileId);
     }
 
     /**
-     * @param $action
-     * @param $employeeProfileId
+     * Checks if the provided user profile is allowed to perform the requested action
+     *
+     * @param string $action
+     * @param int $employeeProfileId
+     *
      * @return bool
+     * @throws \Exception
      */
     protected function can($action, $employeeProfileId)
     {
         return Access::isGranted('ROLE_MOD_TAB_' . strtoupper($action), $employeeProfileId);
+    }
+
+    /**
+     * Builds the action name by joining subject and attribute
+     *
+     * @param string $subject Subject the attribute is performed onto (usually a controller name)
+     * @param string $attribute
+     *
+     * @return string
+     */
+    private function buildAction($subject, $attribute)
+    {
+        $action = $subject;
+
+        // add underscore to join if needed
+        if (substr($action, -1) !== '_') {
+            $action .= '_';
+        }
+
+        return $action . $attribute;
     }
 }

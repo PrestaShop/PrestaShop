@@ -17,3 +17,11 @@ _performance:
 _system_information:
     resource: "system_information.yml"
     prefix: /system-information/
+
+_email:
+    resource: "email.yml"
+    prefix: /emails
+
+_sql_manager:
+    resource: "request_sql.yml"
+    prefix: /request-sql/

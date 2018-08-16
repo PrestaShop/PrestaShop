@@ -52,6 +52,7 @@ class ProductFilter extends HashMapWhitelistFilter
             "condition",
             "cover",
             "customizable",
+            "customizations",
             "description_short",
             "discount_amount",
             "discount_percentage",

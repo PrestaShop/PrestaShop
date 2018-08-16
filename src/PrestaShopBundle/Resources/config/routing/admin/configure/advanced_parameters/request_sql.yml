@@ -1,0 +1,77 @@
+admin_request_sql:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:index'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:search'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_process:
+    path: /settings
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:processForm'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:create'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_edit:
+    path: /edit/{requestSqlId}
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:edit'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
+
+admin_request_sql_delete:
+    path: /delete/{requestSqlId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:delete'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
+
+admin_request_sql_delete_bulk:
+    path: /delete/bulk
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:deleteBulk'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_table_columns:
+    path: /tables/{mySqlTableName}/columns
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:ajaxTableColumns'
+        _legacy_controller: AdminRequestSql
+
+admin_request_sql_view:
+    path: /view/{requestSqlId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:view'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+
+
+admin_request_sql_export:
+    path: /export/{requestSqlId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\RequestSql:export'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        requestSqlId: \d+

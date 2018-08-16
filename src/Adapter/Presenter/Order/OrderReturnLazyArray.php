@@ -33,17 +33,33 @@ use Tools;
 
 class OrderReturnLazyArray extends AbstractLazyArray
 {
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * @var Link
+     */
     private $link;
+
     /** @var array */
     private $orderReturn;
 
-    public function __construct($prefix, Link $link, $orderReturn)
+    /**
+     * OrderReturnLazyArray constructor.
+     * @param string $prefix
+     * @param Link $link
+     * @param array $orderReturn
+     * @throws \ReflectionException
+     */
+    public function __construct($prefix, Link $link, array $orderReturn)
     {
         $this->prefix = $prefix;
         $this->link = $link;
         $this->orderReturn = $orderReturn;
         parent::__construct();
+        $this->appendArray($orderReturn);
     }
 
     /**

@@ -13,35 +13,17 @@ let options = {
   port: 4444,
   deprecationWarnings: false
 };
-if (typeof global.selenium_url !== 'undefined') {
-  options.host = global.selenium_url;
-}
 
-let options2 = {
-  logLevel: 'silent',
-  waitForTimeout: 30000,
-  desiredCapabilities: {
-    browserName: 'chrome',
-    'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-    username: process.env.SAUCE_USERNAME,
-    access_key: process.env.SAUCE_ACCESS_KEY,
-    screenResolution: "1680x1050",
-    platform: "Windows 7"
-  },
-  port: 4445,
-  deprecationWarnings: false
-};
 
 function initCommands(client) {
-
   client.addCommand('linkAccess', function (link) {
     return client
-      .url('http://' + link);
+      .url(link);
   });
 
   client.addCommand('localhost', function (link) {
     return client
-      .url('http://' + link + '/install-dev');
+      .url(link + '/install-dev');
   });
 
   client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {
@@ -91,20 +73,20 @@ function initCommands(client) {
       .selectByVisibleText(selector, value);
   });
 
-  client.addCommand('signInBO', function (selector, link = URL, login = 'demo@prestashop.com', password = 'prestashop_demo') {
+  client.addCommand('signInBO', function (selector, link = global.URL, login = global.adminEmail, password = global.adminPassword) {
     this.selector = globals.selector;
     return client
-      .url('http://' + link + '/admin-dev')
+      .url(link + '/admin-dev')
       .waitAndSetValue(selector.login_input, login)
       .waitAndSetValue(selector.password_inputBO, password)
       .waitForExistAndClick(selector.login_buttonBO)
       .waitForExist(selector.menuBO, 120000);
   });
 
-  client.addCommand('accessToBO', function (selector, link = URL) {
+  client.addCommand('accessToBO', function (selector, link = global.URL) {
     this.selector = globals.selector;
     return client
-      .url('http://' + link + '/admin-dev')
+      .url(link + '/admin-dev')
       .waitForExist(selector.menuBO, 120000);
   });
 
@@ -115,9 +97,9 @@ function initCommands(client) {
       .pause(pause);
   });
 
-  client.addCommand('signInFO', function (selector, link = URL) {
+  client.addCommand('signInFO', function (selector, link = global.URL) {
     return client
-      .url('http://' + link)
+      .url(link)
       .waitForExistAndClick(selector.sign_in_button)
       .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
       .waitAndSetValue(selector.password_inputFO, '123456789')
@@ -139,7 +121,7 @@ function initCommands(client) {
 
   client.addCommand('accessToFO', function (selector) {
     return client
-      .url('http://' + URL)
+      .url(global.URL)
       .waitForExistAndClick(selector.logo_home_page);
   });
 
@@ -154,12 +136,8 @@ function initCommands(client) {
     return client
       .getAttribute(selector + '/..', 'class')
       .then((text) => {
-        global.isOpen = text.indexOf('open');
-        if (global.isOpen !== -1) {
-          return global.isOpen = true;
-        } else {
-          return global.isOpen = false;
-        }
+        global.isOpen = text.indexOf('open') !== -1;
+        return global.isOpen;
       });
   });
 
@@ -169,19 +147,33 @@ module.exports = {
   getClient: function () {
     if (client) {
       return client;
-    } else {
-      if (typeof headless !== 'undefined' && headless) {
-        options["desiredCapabilities"] = {
-          browserName: 'chrome',
-          chromeOptions: {
-            args: ['--headless', '--disable-gpu', '--window-size=1270,899']
-          }
-        };
-      }
-      client = webdriverio.remote(options);
-      initCommands(client);
-      return client;
     }
+
+    if (typeof global.headless !== 'undefined' && global.headless) {
+      options["desiredCapabilities"] = {
+        browserName: 'chrome',
+        chromeOptions: {
+          args: ['--headless', '--disable-gpu', '--window-size=1270,899']
+        }
+      };
+    }
+
+    if (typeof global.selenium_protocol !== 'undefined') {
+      options.protocol = global.selenium_protocol;
+    }
+
+    if (typeof global.selenium_host !== 'undefined') {
+      options.host = global.selenium_host;
+    }
+
+    if (typeof global.selenium_port !== 'undefined') {
+      options.port = global.selenium_port;
+    }
+
+
+    client = webdriverio.remote(options);
+    initCommands(client);
+    return client;
   },
   getCustomDate: function (numberOfDay) {
     let today = new Date();
@@ -198,8 +190,7 @@ module.exports = {
       mm = '0' + mm;
     }
 
-    today = yyyy + '-' + mm + '-' + dd;
-    return today;
+    return yyyy + '-' + mm + '-' + dd;
   },
   browser: function () {
     return options.desiredCapabilities.browserName;

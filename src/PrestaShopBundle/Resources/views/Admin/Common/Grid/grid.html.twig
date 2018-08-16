@@ -23,11 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="row js-grid" id="{{ grid.id }}_grid">
+<div class="row js-grid" id="{{ grid.id }}_grid" data-grid-id="{{ grid.id }}">
   <div class="col">
     <div class="row">
       <div class="col">
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
+        <div class="row">
+          <div class="col">
+            {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
+          </div>
+        </div>
       </div>
       <div class="col-2">
         {{ include('@PrestaShop/Admin/Common/Grid/Blocks/grid_actions.html.twig', {'grid': grid}) }}

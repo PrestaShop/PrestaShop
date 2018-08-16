@@ -38,13 +38,13 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CustomerAddressFormCore extends AbstractForm
 {
-    private $language;
+    protected $language;
 
     protected $template = 'customer/_partials/address-form.tpl';
 
-    private $address;
+    protected $address;
 
-    private $persister;
+    protected $persister;
 
     public function __construct(
         Smarty $smarty,

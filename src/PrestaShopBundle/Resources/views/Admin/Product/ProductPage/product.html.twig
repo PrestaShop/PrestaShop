@@ -57,6 +57,7 @@
 
         {# PANEL ESSENTIALS #}
         {% block product_panel_essentials %}
+          {% set formQuantityShortcut = form.step1.qty_0_shortcut is defined ? form.step1.qty_0_shortcut : null  %}
           {{ include('@Product/ProductPage/Panels/essentials.html.twig', {
               'formPackItems': form.step1.inputPackItems,
               'productId': id_product,
@@ -69,7 +70,7 @@
               'is_combination_active': is_combination_active,
               'has_combinations': has_combinations,
               'formReference': form.step6.reference,
-              'formQuantityShortcut': form.step1.qty_0_shortcut,
+              'formQuantityShortcut': formQuantityShortcut,
               'formPriceShortcut': form.step1.price_shortcut,
               'formPriceShortcutTTC': form.step1.price_ttc_shortcut,
               'formCategories': form.step1,
@@ -79,10 +80,11 @@
 
         {# PANEL COMBINATIONS #}
         {% block product_panel_combinations %}
+          {% set formStockQuantity = form.step3.qty_0 is defined ? form.step3.qty_0 : null  %}
           {{ include('@Product/ProductPage/Panels/combinations.html.twig', {
               'formDependsOnStocks': form.step3.depends_on_stock,
               'productId': id_product,
-              'formStockQuantity': form.step3.qty_0,
+              'formStockQuantity': formStockQuantity,
               'formStockMinimalQuantity': form.step3.minimal_quantity,
               'formLowStockThreshold': form.step3.low_stock_threshold,
               'formLowStockAlert': form.step3.low_stock_alert,

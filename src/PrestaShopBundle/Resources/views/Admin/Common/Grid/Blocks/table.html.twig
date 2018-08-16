@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{{ form_start(grid.filter_form) }}
+{{ form_start(grid.filter_form, {'attr': {'id': grid.id ~ '_filter_form'}}) }}
 <table class="js-grid-table table"
        id="{{ grid.id }}_grid_table"
        data-query="{{ grid.data.query }}"
 >
   <thead class="thead-default">
-    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
-    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+  {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
+  {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
   </thead>
   <tbody>
   {% if grid.data.rows is not empty %}

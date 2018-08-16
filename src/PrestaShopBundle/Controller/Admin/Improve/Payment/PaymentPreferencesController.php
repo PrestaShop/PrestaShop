@@ -42,7 +42,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Show payment preferences page
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
      *      message="Access denied."
      * )
      *
@@ -80,7 +80,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Process payment modules preferences form
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')",
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="Access denied.",
      *     redirectRoute="admin_payment_preferences"
      * )

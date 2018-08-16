@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Hook;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Bridge to execute hooks in modern pages.
+ */
 class HookManager
 {
     /**

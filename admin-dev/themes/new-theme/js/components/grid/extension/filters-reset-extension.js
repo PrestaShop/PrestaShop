@@ -38,8 +38,8 @@ export default class FiltersResetExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getContainer().on('click', '.reset-search', (event) => {
-      resetSearch($(event.target).data('url'), $(event.target).data('redirect'));
+    grid.getContainer().on('click', '.js-reset-search', (event) => {
+      resetSearch($(event.currentTarget).data('url'), $(event.currentTarget).data('redirect'));
     });
   }
 }

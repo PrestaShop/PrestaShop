@@ -99,11 +99,10 @@ class CommonClient {
       return this.client
         .waitForExistAndClick(selector.languageFO.language_selector)
         .waitForVisibleAndClick(selector.languageFO.language_FR)
-    } else {
-      return this.client
-        .waitForExistAndClick(selector.languageFO.language_selector)
-        .waitForVisibleAndClick(selector.languageFO.language_EN)
     }
+    return this.client
+       .waitForExistAndClick(selector.languageFO.language_selector)
+       .waitForVisibleAndClick(selector.languageFO.language_EN)
   }
 
   selectLanguage(selector, option, language, id) {
@@ -146,8 +145,10 @@ class CommonClient {
       .scrollWaitForExistAndClick(selector, margin, timeout);
   }
 
-  waitForVisibleAndClick(selector, timeout = 90000) {
-    return this.client.waitForVisibleAndClick(selector, timeout);
+  waitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .waitForVisibleAndClick(selector, timeout);
   }
 
   moveToObject(selector, pause = 0) {

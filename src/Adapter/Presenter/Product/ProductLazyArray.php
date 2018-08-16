@@ -44,13 +44,44 @@ use Tools;
 
 class ProductLazyArray extends AbstractLazyArray
 {
+    /**
+     * @var ImageRetriever
+     */
     private $imageRetriever;
+
+    /**
+     * @var Link
+     */
     private $link;
+
+    /**
+     * @var PriceFormatter
+     */
     private $priceFormatter;
+
+    /**
+     * @var ProductColorsRetriever
+     */
     private $productColorsRetriever;
+
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var ProductPresentationSettings
+     */
     protected $settings;
+
+    /**
+     * @var array
+     */
     protected $product;
+
+    /**
+     * @var Language
+     */
     private $language;
 
     public function __construct(
@@ -251,6 +282,22 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return null;
+    }
+
+    /**
+     * @arrayAccess
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getAttachments()
+    {
+        foreach ($this->product['attachments'] as &$attachment) {
+            if (!isset($attachment['file_size_formatted'])) {
+                $attachment['file_size_formatted'] = Tools::formatBytes($attachment['file_size'], 2);
+            }
+        }
+
+        return $this->product['attachments'];
     }
 
     /**
@@ -578,6 +625,11 @@ class ProductLazyArray extends AbstractLazyArray
         }
     }
 
+    /**
+     * @param array $product
+     * @param ProductPresentationSettings $settings
+     * @return bool
+     */
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
@@ -666,7 +718,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         if ($show_availability) {
-            if ($product['quantity'] - $product['quantity_wanted'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {
@@ -724,6 +776,10 @@ class ProductLazyArray extends AbstractLazyArray
         $this->product['availability'] = 'last_remaining_items';
     }
 
+    /**
+     * @param string $key
+     * @return string
+     */
     private function getTranslatedKey($key)
     {
         switch ($key) {
