@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form;
 
 use Exception;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
@@ -47,7 +47,7 @@ class FormHandler implements FormHandlerInterface
     protected $formDataProvider;
 
     /**
-     * @var HookDispatcher the event dispatcher.
+     * @var HookDispatcherInterface the event dispatcher.
      */
     protected $hookDispatcher;
 
@@ -63,7 +63,7 @@ class FormHandler implements FormHandlerInterface
 
     public function __construct(
         FormBuilderInterface $formBuilder,
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName
@@ -86,7 +86,7 @@ class FormHandler implements FormHandlerInterface
         }
 
         $this->formBuilder->setData($this->formDataProvider->getData());
-        $this->hookDispatcher->dispatchForParameters(
+        $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Form",
             [
                 'form_builder' => &$this->formBuilder,
@@ -105,7 +105,7 @@ class FormHandler implements FormHandlerInterface
     {
         $errors = $this->formDataProvider->setData($data);
 
-        $this->hookDispatcher->dispatchForParameters(
+        $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Save",
             [
                 'errors' => &$errors,
