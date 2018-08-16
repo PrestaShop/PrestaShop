@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -691,7 +692,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            (!$canonical) ? $product['id_product_attribute'] : null,
+            $canonical ? Product::getDefaultAttribute($this->product['id_product']) : $product['id_product_attribute'],
             false,
             false,
             true
