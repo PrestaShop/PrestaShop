@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class HookDispatcher is responsible for dispatching hooks
