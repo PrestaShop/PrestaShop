@@ -506,6 +506,14 @@ class FrontControllerCore extends Controller
             'token' => Tools::getToken(),
         );
 
+        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+
+        if (is_array($modulesVariables)) {
+            foreach ($modulesVariables as $moduleName => $variables) {
+                $templateVars['modules'][$moduleName] = $variables;
+            }
+        }
+
         $this->context->smarty->assign($templateVars);
 
         Media::addJsDef(array (
