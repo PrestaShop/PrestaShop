@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
@@ -55,7 +56,8 @@ class ModuleController extends ModuleAbstractController
     const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
+     *
      * @return Response
      */
     public function catalogAction()
@@ -83,7 +85,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted(['read', 'create'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
      *
@@ -148,7 +150,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'create'], 'ADMINMODULESSF_')")
+     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
      * @return Response
@@ -302,7 +304,9 @@ class ModuleController extends ModuleAbstractController
         $deniedAccess = $this->checkPermissions(
             [
                 PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_CREATE
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+                PageVoter::LEVEL_UPDATE
             ]
         );
         if (null !== $deniedAccess) {
@@ -727,8 +731,10 @@ class ModuleController extends ModuleAbstractController
     /**
      * Find module type
      *
+     * @param ApiModule $installedProduct Installed product
+     * @param array $modulesTheme Modules theme
      */
-    private function findModuleType(object $installedProduct, $modulesTheme)
+    private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
     {
         if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
             return 'theme_bundle';

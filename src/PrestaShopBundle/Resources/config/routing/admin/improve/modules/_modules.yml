@@ -91,3 +91,10 @@ admin_module_notification_count:
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\Modules\Alerts:notificationsCount
         _legacy_controller: AdminModulesNotifications
+
+admin_module_updates:
+    path:     /updates
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Improve/Modules/Updates:index
+        _legacy_controller: AdminModulesUpdates
