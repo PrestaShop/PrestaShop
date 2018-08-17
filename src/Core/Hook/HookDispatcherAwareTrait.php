@@ -26,27 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
-use PrestaShopBundle\Service\Hook\HookDispatcher;
-
 /**
  * Trait EventDispatcherAwareTrait
  */
 trait HookDispatcherAwareTrait
 {
     /**
-     * @todo: replace attribute & setter parameter with interface
-     *
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
-    protected $dispatcher;
+    protected $hookDispatcher;
 
     /**
      * Set hook dispatcher
      *
-     * @param HookDispatcher $dispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      */
-    public function setDispatcher(HookDispatcher $dispatcher)
+    public function setHookDispatcher(HookDispatcherInterface $hookDispatcher)
     {
-        $this->dispatcher = $dispatcher;
+        $this->hookDispatcher = $hookDispatcher;
     }
 }
