@@ -24,37 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Status;
+namespace PrestaShop\PrestaShop\Core\Hook;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 
-final class SeverityLevelColumn extends AbstractColumn
+/**
+ * Trait EventDispatcherAwareTrait
+ */
+trait HookDispatcherAwareTrait
 {
     /**
-     * {@inheritdoc}
+     * @todo: replace attribute & setter parameter with interface
+     *
+     * @var HookDispatcher
      */
-    public function getType()
-    {
-        return 'severity_level';
-    }
+    protected $dispatcher;
 
     /**
-     * {@inheritdoc}
+     * Set hook dispatcher
+     *
+     * @param HookDispatcher $dispatcher
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function setDispatcher(HookDispatcher $dispatcher)
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'with_message' => false,
-            ])
-            ->setAllowedTypes('with_message', 'bool')
-            ->setAllowedTypes('field', 'string')
-        ;
+        $this->dispatcher = $dispatcher;
     }
 }

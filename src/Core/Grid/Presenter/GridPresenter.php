@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
@@ -47,6 +49,7 @@ final class GridPresenter implements GridPresenterInterface
             'name' => $definition->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
             'columns' => $definition->getColumns()->toArray(),
+            'column_filters' => $this->getColumnFilters($definition),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),
                 'bulk' => $definition->getBulkActions()->toArray(),
@@ -66,5 +69,26 @@ final class GridPresenter implements GridPresenterInterface
             ],
             'filters' => $searchCriteria->getFilters(),
         ];
+    }
+
+    /**
+     * Get filters that have associated columns
+     *
+     * @param DefinitionInterface $definition
+     *
+     * @return array
+     */
+    private function getColumnFilters(DefinitionInterface $definition)
+    {
+        $columnFiltersMapping = [];
+
+        /** @var FilterInterface $filter */
+        foreach ($definition->getFilters()->all() as $filter) {
+            if (null !== $associatedColumn = $filter->getAssociatedColumn()) {
+                $columnFiltersMapping[$associatedColumn][] = $filter->getName();
+            }
+        }
+
+        return $columnFiltersMapping;
     }
 }

@@ -24,37 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Status;
+namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-final class SeverityLevelColumn extends AbstractColumn
+/**
+ * Interface FilterCollectionInterface defines contract for grid filters
+ */
+interface FilterCollectionInterface
 {
     /**
-     * {@inheritdoc}
+     * Add filter to collection
+     *
+     * @param FilterInterface $filter
+     *
+     * @return self
      */
-    public function getType()
-    {
-        return 'severity_level';
-    }
+    public function add(FilterInterface $filter);
 
     /**
-     * {@inheritdoc}
+     * Remove filter from collection
+     *
+     * @param string $filterName
+     *
+     * @return self
      */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
+    public function remove($filterName);
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'with_message' => false,
-            ])
-            ->setAllowedTypes('with_message', 'bool')
-            ->setAllowedTypes('field', 'string')
-        ;
-    }
+    /**
+     * Get all filters
+     *
+     * @return FilterInterface[]
+     */
+    public function all();
 }

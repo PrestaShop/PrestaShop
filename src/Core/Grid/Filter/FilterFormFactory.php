@@ -60,18 +60,13 @@ final class FilterFormFactory implements FilterFormFactoryInterface
             FormType::class
         );
 
-        /** @var ColumnInterface $column */
-        foreach ($definition->getColumns() as $column) {
-            $options = $column->getOptions();
-            if (isset($options['filter'])) {
-                /** @var ColumnFilterOption $columnOption */
-                $columnOption = $options['filter'];
-                $formBuilder->add(
-                    $column->getId(),
-                    $columnOption->getFilterType(),
-                    $columnOption->getFilterTypeOptions()
-                );
-            }
+        /** @var FilterInterface $filter */
+        foreach ($definition->getFilters()->all() as $filter) {
+            $formBuilder->add(
+                $filter->getName(),
+                $filter->getType(),
+                $filter->getTypeOptions()
+            );
         }
 
         return $formBuilder->getForm();

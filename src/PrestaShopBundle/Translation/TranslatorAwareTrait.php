@@ -47,4 +47,18 @@ trait TranslatorAwareTrait
     {
         $this->translator = $translator;
     }
+
+    /**
+     * Shortcut method to translate text
+     *
+     * @param string $id
+     * @param array $options
+     * @param string $domain
+     *
+     * @return string
+     */
+    protected function trans($id, array $options, $domain)
+    {
+        return $this->translator->trans($id, $options, $domain);
+    }
 }

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**
  * Interface GridDefinitionInterface defines contract for grid definition
@@ -50,15 +51,6 @@ interface DefinitionInterface
     public function getName();
 
     /**
-     * Set grid name
-     *
-     * @param string $name
-     *
-     * @return self
-     */
-    public function setName($name);
-
-    /**
      * Get grid columns
      *
      * @return ColumnCollectionInterface
@@ -66,25 +58,9 @@ interface DefinitionInterface
     public function getColumns();
 
     /**
-     * Set grid columns
-     *
-     * @param ColumnCollectionInterface $columns
-     *
-     * @return self
-     */
-    public function setColumns(ColumnCollectionInterface $columns);
-
-    /**
      * @return BulkActionCollectionInterface
      */
     public function getBulkActions();
-
-    /**
-     * @param BulkActionCollectionInterface $bulkActions
-     *
-     * @return self
-     */
-    public function setBulkActions(BulkActionCollectionInterface $bulkActions);
 
     /**
      * Get grid actions
@@ -94,11 +70,9 @@ interface DefinitionInterface
     public function getGridActions();
 
     /**
-     * Set grid actions
+     * Get filters
      *
-     * @param GridActionCollectionInterface $gridActions
-     *
-     * @return self
+     * @return FilterCollectionInterface
      */
-    public function setGridActions(GridActionCollectionInterface $gridActions);
+    public function getFilters();
 }

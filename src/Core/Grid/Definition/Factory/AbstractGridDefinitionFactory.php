@@ -26,10 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
@@ -37,25 +42,25 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
  */
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
-    use TranslatorAwareTrait;
+    use TranslatorAwareTrait, HookDispatcherAwareTrait;
 
     /**
      * {@inheritdoc}
      */
     final public function create()
     {
-        $definition = (new Definition($this->getId()))
-            ->setName($this->getName())
-            ->setColumns($this->getColumns())
-        ;
+        $definition = new Definition(
+            $this->getId(),
+            $this->getName(),
+            $this->getColumns(),
+            $this->getFilters(),
+            $this->getGridActions(),
+            $this->getBulkActions()
+        );
 
-        if (null !== $bulkActions = $this->getBulkActions()) {
-            $definition->setBulkActions($bulkActions);
-        }
-
-        if (null !== $gridActions = $this->getGridActions()) {
-            $definition->setGridActions($gridActions);
-        }
+        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
+            'definition' => $definition,
+        ]);
 
         return $definition;
     }
@@ -82,34 +87,35 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     abstract protected function getColumns();
 
     /**
-     * Get defined grid actions
+     * Get defined grid actions.
+     * Override this method to define custom grid actions collection.
      *
-     * @return GridActionCollectionInterface|null
+     * @return GridActionCollectionInterface
      */
     protected function getGridActions()
     {
-        return null;
+        return new GridActionCollection();
     }
 
     /**
-     * Get defined bulk actions
+     * Get defined bulk actions.
+     * Override this method to define custom bulk actions collection.
      *
-     * @return BulkActionCollectionInterface|null
+     * @return BulkActionCollectionInterface
      */
     protected function getBulkActions()
     {
-        return null;
+        return new BulkActionCollection();
     }
 
     /**
-     * @param string $id
-     * @param array $options
-     * @param string $domain
+     * Get defined filters.
+     * Override this method to define custom filters collection.
      *
-     * @return string
+     * @return FilterCollectionInterface
      */
-    protected function trans($id, array $options, $domain)
+    protected function getFilters()
     {
-        return $this->translator->trans($id, $options, $domain);
+        return new FilterCollection();
     }
 }

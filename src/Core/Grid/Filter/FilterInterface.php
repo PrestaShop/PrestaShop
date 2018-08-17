@@ -24,46 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column;
+namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Define a Column filter option.
+ * Interface FilterInterface defines contract for grid filter
  */
-final class ColumnFilterOption
+interface FilterInterface
 {
     /**
-     * @var string class name that must implements FormTypeInterface
+     * Get filter type to use
+     *
+     * @return string Fully qualified filter type class name
      */
-    private $filterType;
+    public function getType();
 
     /**
-     * @var array
+     * Get filter name
+     *
+     * @return string
      */
-    private $filterTypeOptions;
+    public function getName();
 
     /**
-     * @param string $filterType
+     * Set filter type options
+     *
      * @param array $filterTypeOptions
+     *
+     * @return self
      */
-    public function __construct($filterType, array $filterTypeOptions = [])
-    {
-        $this->filterType = $filterType;
-        $this->filterTypeOptions = $filterTypeOptions;
-    }
+    public function setTypeOptions(array $filterTypeOptions);
 
     /**
-     * @return string the class name of Form Type.
+     * Get filter type options
+     *
+     * @return array
      */
-    public function getFilterType()
-    {
-        return $this->filterType;
-    }
+    public function getTypeOptions();
 
     /**
-     * @return array the form type options if any.
+     * Set column ID if filter is associated with column
+     *
+     * @param string $columnId
+     *
+     * @return self
      */
-    public function getFilterTypeOptions()
-    {
-        return $this->filterTypeOptions;
-    }
+    public function setAssociatedColumn($columnId);
+
+    /**
+     * Get associated column
+     *
+     * @return string|null
+     */
+    public function getAssociatedColumn();
 }
