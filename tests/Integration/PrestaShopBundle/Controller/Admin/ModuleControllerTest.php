@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -52,7 +52,6 @@ class ModuleControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
         $responseContent = $response->getContent();
-
 
         $decodedContent = json_decode($responseContent, true);
 

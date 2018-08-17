@@ -47,7 +47,7 @@ class FormHandler implements FormHandlerInterface
     protected $formDataProvider;
 
     /**
-     * @var HookDispatcherInterface the event dispatcher.
+     * @var HookDispatcherInterface the event dispatcher
      */
     protected $hookDispatcher;
 

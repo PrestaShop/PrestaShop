@@ -195,8 +195,6 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Get the old but still useful context.
-     *
-     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     protected function getContext()
     {

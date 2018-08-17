@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * Class RenderingHook defines rendered hook
+ * Class RenderingHook defines rendered hook.
  */
 final class RenderedHook implements RenderedHookInterface
 {

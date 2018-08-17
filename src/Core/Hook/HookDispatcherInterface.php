@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,22 +35,22 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 interface HookDispatcherInterface extends EventDispatcherInterface
 {
     /**
-     * Dispatch given hook
+     * Dispatch given hook.
      *
      * @param HookInterface $hook
      */
     public function dispatchHook(HookInterface $hook);
 
     /**
-     * Dispatch hook with raw parameters
+     * Dispatch hook with raw parameters.
      *
      * @param string $hookName
-     * @param array  $hookParameters
+     * @param array $hookParameters
      */
     public function dispatchWithParameters($hookName, array $hookParameters = []);
 
     /**
-     * Dispatch rendering hook
+     * Dispatch rendering hook.
      *
      * @param HookInterface $hook
      *
@@ -59,10 +59,10 @@ interface HookDispatcherInterface extends EventDispatcherInterface
     public function dispatchRendering(HookInterface $hook);
 
     /**
-     * Dispatch rendering hook with parameters
+     * Dispatch rendering hook with parameters.
      *
      * @param string $hookName
-     * @param array  $hookParameters
+     * @param array $hookParameters
      *
      * @return RenderedHookInterface
      */

@@ -32,7 +32,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use PrestaShopBundle\Service\Hook\HookEvent;
 
 /**
  * @todo Extract logic outside of EventSubscriber
@@ -87,7 +86,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         }
 
         $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_BEFORE_ACTION, array(
-            'controller_type' => $controllerType
+            'controller_type' => $controllerType,
         ));
 
         $requestAttributes->set('controller_type', $controllerType);

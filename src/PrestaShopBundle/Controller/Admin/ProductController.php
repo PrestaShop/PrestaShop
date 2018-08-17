@@ -44,7 +44,6 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +55,7 @@ use Psr\Log\LoggerInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
@@ -96,15 +96,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      *
-     * @return array|Template|RedirectResponse|Response
-     *
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
-     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
-     * @throws \LogicException
-     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
-     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
-     * @throws \Symfony\Component\Form\Exception\LogicException
-     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
+     * @return array Template vars
      */
     public function catalogAction(
         Request $request,
@@ -117,9 +109,51 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
-        $language = $this->getContext()->language;
-        $request->getSession()->set('_locale', $language->locale);
-        $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
+        /**
+         * Parameters can be overwritten with urls:.
+         *
+         * @example ?limit=100&offset=2&orderBy=name&sortOrder=desc
+         */
+        $limit = $request->query->get('limit', $limit);
+        $offset = $request->query->get('offset', $offset);
+        $orderBy = $request->query->get('orderBy', $orderBy);
+        $sortOrder = $request->query->get('sortOrder', $sortOrder);
+
+        $context = $this->get('prestashop.adapter.legacy.context')->getContext();
+        $request->getSession()->set('_locale', $context->language->locale);
+
+        // Redirect to legacy controller (FIXME: temporary behavior)
+        $pagePreference = $this->get('prestashop.core.admin.page_preference_interface');
+        /* @var $pagePreference AdminPagePreferenceInterface */
+        if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
+            $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
+            /* @var $legacyUrlGenerator UrlGeneratorInterface */
+            $redirectionParams = [
+                // do not transmit limit & offset: go to the first page when redirecting
+                'productOrderby' => $orderBy,
+                'productOrderway' => $sortOrder,
+            ];
+
+            return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams));
+        }
+
+        // If POST, then check/cast POST params formats
+        if ($request->isMethod('POST')) {
+            foreach ($request->request->all() as $param => $value) {
+                switch ($param) {
+                    case 'filter_category':
+                        if (!is_numeric($value)) {
+                            $request->request->set($param, '');
+                        }
+                        if (is_numeric($value) && $value < 0) {
+                            $request->request->set($param, '');
+                        }
+                }
+            }
+        }
+
+        /* @var $logger LoggerInterface */
+        $logger = $this->get('logger');
 
         /* @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
@@ -173,10 +207,12 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters['_route'] = 'admin_product_catalog';
             $categoriesForm = $this->createForm(ProductCategories::class);
             if (!empty($persistedFilterParameters['filter_category'])) {
-                $categoriesForm->setData(
-                    array(
-                        'tree' => array(0 => $persistedFilterParameters['filter_category']),
-                    )
+                $categories->setData(
+                    [
+                        'tree' => [
+                            0 => $persistedFilterParameters['filter_category'],
+                        ],
+                    ]
                 );
             }
         }
@@ -235,7 +271,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $sortOrder To order product list
      * @param string $view full|quicknav To change default template used to render the content
      *
-     * @return array|Template|Response
+     * @return array Template vars
      */
     public function listAction(
         Request $request,
@@ -408,7 +444,46 @@ class ProductController extends FrameworkBundleAdminController
         $response = new JsonResponse();
         $modelMapper = $this->get('prestashop.adapter.admin.model.product');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
-        $form = $this->createProductForm($product, $modelMapper);
+
+        $form = $this->createFormBuilder($modelMapper->getFormData(), ['allow_extra_fields' => true])
+            ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+            ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
+            ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
+            ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
+            ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', [
+                'mapping_type' => $product->getRedirectType(),
+            ])
+            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
+
+        // Prepare combination form (fake but just to validate the form)
+        $combinations = $modelMapper->getAttributesResume();
+
+        if (is_array($combinations)) {
+            $maxInputVars = (int) ini_get('max_input_vars');
+            $combinationsCount = count($combinations) * 25;
+            $combinationsInputs = ceil($combinationsCount / 1000) * 1000;
+
+            if ($combinationsInputs > $maxInputVars) {
+                $this->addFlash(
+                    'error',
+                    $this->trans(
+                        'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
+                        'Admin.Notifications.Error',
+                        ['%value%' => $combinationsInputs]
+                    )
+                );
+            }
+
+            foreach ($combinations as $combination) {
+                $form->add(
+                    'combination_' . $combination['id_product_attribute'],
+                    'PrestaShopBundle\Form\Admin\Product\ProductCombination'
+                );
+            }
+        }
+
+        $form = $form->getForm();
 
         $formBulkCombinations = $this->createForm(
             ProductCombinationBulk::class,
@@ -425,8 +500,9 @@ class ProductController extends FrameworkBundleAdminController
         // Legacy code. To fix when Object model will change. But report Hooks.
         $postData = $request->request->all();
         $combinationsList = [];
+
         if (!empty($postData)) {
-            foreach ($postData as $postKey => $postValue) {
+            foreach ((array) $postData as $postKey => $postValue) {
                 if (preg_match('/^combination_.*/', $postKey)) {
                     $combinationsList[$postKey] = $postValue;
                     $postData['form'][$postKey] = $postValue; // need to validate the form
@@ -961,7 +1037,13 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @return CsvResponse
      *
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * This action will allow the merchant to switch between the new and the old pages for Catalog & Products pages.
+     * This is a temporary behavior, that will be removed in a futur minor release. This is here to let the modules
+     * adapting their hooks to the new controller behavior during a short time.
+     *
+     * FIXME: This is a temporary behavior. (clean the route YML conf in the same time)
+     *
+     * @param bool $use True to use legacy version. False for refactored page.
      */
     public function exportAction()
     {
@@ -975,8 +1057,6 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param int|string $quantity the quantity to set on the catalog filters persistence
      * @param string $active the activation state to set on the catalog filters persistence
-     *
-     * @return RedirectResponse
      */
     public function catalogFiltersAction($quantity = 'none', $active = 'none')
     {
@@ -1047,5 +1127,64 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
+    }
+
+    /**
+     * @param $action
+     * @param string $suffix
+     *
+     * @return bool
+     */
+    protected function shouldDenyAction($action, $suffix = '')
+    {
+        return (
+                $action === 'delete' . $suffix && !$this->isGranted(PageVoter::DELETE, 'ADMINPRODUCTS_')
+            ) || (
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
+            ) || (
+                ($action === 'duplicate' . $suffix) &&
+                (!$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_') || !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_'))
+            )
+        ;
+    }
+
+    /**
+     * @param $action
+     * @param string $suffix
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    protected function getForbiddenActionMessage($action, $suffix = '')
+    {
+        $translator = $this->get('translator');
+
+        if ($action === 'delete' . $suffix) {
+            return $translator->trans(
+                'You do not have permission to delete this.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+            return $translator->trans(
+                'You do not have permission to edit this.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        if ($action === 'duplicate' . $suffix) {
+            return $translator->trans(
+                'You do not have permission to add this.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        throw new Exception(sprintf('Invalid action (%s)', $action . $suffix));
     }
 }

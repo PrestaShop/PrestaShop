@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * Interface HookInterface defines contract for hook
+ * Interface HookInterface defines contract for hook.
  */
 interface HookInterface
 {
     /**
-     * Get hook name
+     * Get hook name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Get hook parameters
+     * Get hook parameters.
      *
      * @return array
      */

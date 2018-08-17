@@ -160,6 +160,7 @@ class HookExtension extends \Twig_Extension
         }
 
         $hookRenders = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters)->getContent();
+
         return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
     }
 
