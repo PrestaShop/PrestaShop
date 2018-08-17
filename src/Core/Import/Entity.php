@@ -38,7 +38,7 @@ final class Entity
     const TYPE_COMBINATIONS = 2;
     const TYPE_CUSTOMERS = 3;
     const TYPE_ADDRESSES = 4;
-    const TYPE_BRANDS = 5;
+    const TYPE_MANUFACTURERS = 5;
     const TYPE_SUPPLIERS = 6;
     const TYPE_ALIAS = 7;
     const TYPE_STORE_CONTACTS = 8;
@@ -49,9 +49,9 @@ final class Entity
         'combinations' => self::TYPE_COMBINATIONS,
         'customers' => self::TYPE_CUSTOMERS,
         'addresses' => self::TYPE_ADDRESSES,
-        'brands' => self::TYPE_BRANDS,
+        'manufacturers' => self::TYPE_MANUFACTURERS,
         'suppliers' => self::TYPE_SUPPLIERS,
-        'alis'=> self::TYPE_ALIAS,
+        'alias'=> self::TYPE_ALIAS,
         'contacts'=> self::TYPE_STORE_CONTACTS,
     ];
 
