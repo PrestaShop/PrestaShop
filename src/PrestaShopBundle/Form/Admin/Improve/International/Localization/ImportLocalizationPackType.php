@@ -67,6 +67,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
                 'choices' => $this->localizationPackChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('content_to_import', ChoiceType::class, [
                 'expanded' => true,
@@ -79,6 +80,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
                     LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
                     LocalizationPackImportConfigInterface::CONTENT_UNITS,
                 ],
+                'choice_translation_domain' => false,
             ])
             ->add('download_pack_data', SwitchType::class, [
                 'data' => 1,
