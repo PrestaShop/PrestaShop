@@ -33,11 +33,13 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class RequestSqlGridDefinitionFactory is responsible for creating RequestSql grid definition
@@ -112,12 +114,6 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Global.Actions'))
                 ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
-                        'attr' => [
-                            'data-url' => $this->resetSearchUrl,
-                            'data-redirect' => $this->redirectionUrl,
-                        ],
-                    ]),
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('export'))
                             ->setIcon('cloud_download')
@@ -156,6 +152,42 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ])
                         ),
                 ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_request_sql', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_request_sql')
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('sql', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('sql')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetSearchUrl,
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
+                ])
+                ->setAssociatedColumn('actions')
             )
         ;
     }
