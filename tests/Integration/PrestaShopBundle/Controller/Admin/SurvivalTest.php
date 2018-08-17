@@ -65,7 +65,8 @@ class SurvivalTest extends WebTestCase
          *    $content = $response->getContent();
          * }
          */
-        self::assertTrue($response->isSuccessful(),
+        self::assertTrue(
+            $response->isSuccessful(),
             sprintf(
                 '%s page should be available, but status code is %s',
                 $pageName,
