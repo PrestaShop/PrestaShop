@@ -47,7 +47,6 @@ services:
             - "@prestashop.module.zip.manager"
             - "@translator"
             - "@event_dispatcher"
-            - "@=service('prestashop.adapter.legacy.context').getContext().employee"
 
     prestashop.module.zip.manager:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager

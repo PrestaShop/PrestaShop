@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
-use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -37,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -84,14 +83,9 @@ class ModuleManager implements AddonManagerInterface
     private $translator;
 
     /**
-     * @var Employee Legacy employee class
+     * @var HookDispatcherInterface
      */
-    private $employee;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    private $hookDispatcher;
 
     /**
      * Additionnal data used for module actions.
@@ -101,13 +95,13 @@ class ModuleManager implements AddonManagerInterface
     private $actionParams;
 
     /**
-     * @param AdminModuleDataProvider $adminModulesProvider
+     * @param AdminModuleDataProvider $adminModuleProvider
      * @param ModuleDataProvider $modulesProvider
      * @param ModuleDataUpdater $modulesUpdater
      * @param ModuleRepository $moduleRepository
      * @param ModuleZipManager $moduleZipManager
      * @param TranslatorInterface $translator
-     * @param Employee|null $employee
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -116,17 +110,15 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        EventDispatcherInterface $dispatcher,
-        Employee $employee = null
-        ) {
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
         $this->moduleUpdater = $modulesUpdater;
         $this->moduleRepository = $moduleRepository;
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
-        $this->employee = $employee;
-        $this->dispatcher = $dispatcher;
+        $this->hookDispatcher = $hookDispatcher;
 
         $this->actionParams = new ParameterBag();
     }
@@ -650,14 +642,14 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * This function is a refacto of the event dispatching.
+     * This function is a refacto of the event dispatching
      *
-     * @param strig $event
+     * @param string $event
      * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
      */
     private function dispatch($event, $module)
     {
-        $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
+        $this->hookDispatcher->dispatchWithParameters($event, ['event' => new ModuleManagementEvent($module)]);
     }
 
     private function checkIsInstalled($name)
