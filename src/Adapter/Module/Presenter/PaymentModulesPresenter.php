@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module\Presenter;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
 /**
