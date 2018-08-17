@@ -20,6 +20,7 @@ module.exports = {
     built_in_module_span: '//*[@id="built-in_modules"]',
     installed_module_span: '//*[@id="installed_modules"]',
     selection_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
+    install_module_button: '//*[@id="modules-list-container-other"]//button',
     install_button: '//*[@id="modules-list-container-all"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-install"]',
     config_legend_adwords: '//*[@id="content"]//h4[contains(@class,"page-subtitle")]',
     uninstall_adwords_module: '//*[@id="module-modal-confirm-gadwords-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]',
