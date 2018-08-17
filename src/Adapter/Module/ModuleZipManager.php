@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShopBundle\Event\ModuleZipManagementEvent;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -61,19 +61,19 @@ class ModuleZipManager
     private $translator;
 
     /**
-     * @var HookDispatcherInterface
+     * @var EventDispatcherInterface
      */
-    private $hookDispatcher;
+    private $eventDispatcher;
     
     public function __construct(
         Filesystem $filesystem,
         TranslatorInterface $translator,
-        HookDispatcherInterface $hookDispatcher
+        EventDispatcherInterface $eventDispatcher
         )
     {
         $this->filesystem = $filesystem;
         $this->translator = $translator;
-        $this->hookDispatcher = $hookDispatcher;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -168,11 +168,10 @@ class ModuleZipManager
             null,
             array('override' => true)
         );
-        $this->hookDispatcher
-            ->dispatchWithParameters(ModuleZipManagementEvent::DOWNLOAD,
-                [
-                    'event' => new ModuleZipManagementEvent($this->getSource($source))
-                ]
+        $this->eventDispatcher
+            ->dispatch(
+                ModuleZipManagementEvent::DOWNLOAD,
+                new ModuleZipManagementEvent($this->getSource($source))
             )
         ;
 

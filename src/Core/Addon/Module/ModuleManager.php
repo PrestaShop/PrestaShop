@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -76,9 +76,9 @@ class ModuleManager implements AddonManagerInterface
     private $translator;
 
     /**
-     * @var HookDispatcherInterface
+     * @var EventDispatcherInterface
      */
-    private $hookDispatcher;
+    private $eventDispatcher;
 
     /**
      * Additionnal data used for module actions
@@ -94,7 +94,7 @@ class ModuleManager implements AddonManagerInterface
      * @param ModuleRepository $moduleRepository
      * @param ModuleZipManager $moduleZipManager
      * @param TranslatorInterface $translator
-     * @param HookDispatcherInterface $hookDispatcher
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -103,7 +103,7 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        HookDispatcherInterface $hookDispatcher
+        EventDispatcherInterface $eventDispatcher
         )
     {
         $this->adminModuleProvider = $adminModuleProvider;
@@ -112,7 +112,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleRepository = $moduleRepository;
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
-        $this->hookDispatcher = $hookDispatcher;
+        $this->eventDispatcher = $eventDispatcher;
 
         $this->actionParams = new ParameterBag();
     }
@@ -621,7 +621,7 @@ class ModuleManager implements AddonManagerInterface
      */
     private function dispatch($event, $module)
     {
-        $this->hookDispatcher->dispatchWithParameters($event, ['event' => new ModuleManagementEvent($module)]);
+        $this->eventDispatcher->dispatch($event, new ModuleManagementEvent($module));
     }
 
     private function checkIsInstalled($name)
@@ -636,7 +636,7 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * We check the module does not ask for pre-requesites to be respected prior the action being executed.
+     * We check the module does not ask for pre-requisites to be respected prior the action being executed.
      *
      * @param string $action
      * @param Module $module
