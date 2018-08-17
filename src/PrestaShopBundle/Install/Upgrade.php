@@ -303,6 +303,8 @@ namespace PrestaShopBundle\Install {
             if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language)) {
                 if ($id_lang = (int) $this->getConfValue('PS_LANG_DEFAULT')) {
                     Context::getContext()->language = new Language($id_lang);
+                } else {
+                    Context::getContext()->language = new Language();
                 }
             }
             if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country)) {
