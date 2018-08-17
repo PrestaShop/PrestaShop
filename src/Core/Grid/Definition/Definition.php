@@ -71,7 +71,7 @@ final class Definition implements DefinitionInterface
     private $filters;
 
     /**
-     * @param string $id Unique grid identifier (used as table ID when rendering table)
+     * @param string $id Unique grid identifier
      * @param string $name
      * @param ColumnCollectionInterface $columns
      * @param FilterCollectionInterface $filters
