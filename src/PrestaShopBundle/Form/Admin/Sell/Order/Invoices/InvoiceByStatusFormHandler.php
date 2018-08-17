@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class InvoiceByStatusFormHandler manages the data manipulated using "By status" form
- * in "Sell > Orders > Invoices" page
+ * in "Sell > Orders > Invoices" page.
  */
 final class InvoiceByStatusFormHandler extends FormHandler
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * Trait EventDispatcherAwareTrait
+ * Trait EventDispatcherAwareTrait.
  */
 trait HookDispatcherAwareTrait
 {
@@ -37,7 +37,7 @@ trait HookDispatcherAwareTrait
     protected $hookDispatcher;
 
     /**
-     * Set hook dispatcher
+     * Set hook dispatcher.
      *
      * @param HookDispatcherInterface $hookDispatcher
      */

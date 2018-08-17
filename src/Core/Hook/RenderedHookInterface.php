@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * Interface RenderedHookInterface defines contract for rendered hook
+ * Interface RenderedHookInterface defines contract for rendered hook.
  */
 interface RenderedHookInterface
 {
     /**
-     * Get rendered hook
+     * Get rendered hook.
      *
      * @return HookInterface
      */
     public function getHook();
 
     /**
-     * Get rendered content
+     * Get rendered content.
      *
      * @return array
      */

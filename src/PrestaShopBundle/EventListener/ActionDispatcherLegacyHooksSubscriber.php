@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use PrestaShopBundle\Service\Hook\HookEvent;
 
 /**
  * @todo Extract logic outside of EventSubscriber
@@ -43,7 +42,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
     const DISPATCHER_AFTER_ACTION = 'actionDispatcherAfter';
 
     /**
-     * List of available front controllers types
+     * List of available front controllers types.
      */
     const FRONT_OFFICE_CONTROLLER = 1;
     const BACK_OFFICE_CONTROLLER = 2;
@@ -63,7 +62,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::CONTROLLER => array (
+            KernelEvents::CONTROLLER => array(
                 array('callActionDispatcherBeforeHook', 100),
             ),
             KernelEvents::RESPONSE => array(
@@ -87,7 +86,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         }
 
         $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_BEFORE_ACTION, array(
-            'controller_type' => $controllerType
+            'controller_type' => $controllerType,
         ));
 
         $requestAttributes->set('controller_type', $controllerType);

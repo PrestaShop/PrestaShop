@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,32 +32,32 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
- * Complete implementation of FormHandlerInterface
+ * Complete implementation of FormHandlerInterface.
  */
 class FormHandler implements FormHandlerInterface
 {
     /**
-     * @var FormBuilderInterface the form builder.
+     * @var FormBuilderInterface the form builder
      */
     protected $formBuilder;
 
     /**
-     * @var FormDataProviderInterface the form data provider.
+     * @var FormDataProviderInterface the form data provider
      */
     protected $formDataProvider;
 
     /**
-     * @var HookDispatcherInterface the event dispatcher.
+     * @var HookDispatcherInterface the event dispatcher
      */
     protected $hookDispatcher;
 
     /**
-     * @var string the hook name.
+     * @var string the hook name
      */
     protected $hookName;
 
     /**
-     * @var array the list of Form Types.
+     * @var array the list of Form Types
      */
     protected $formTypes;
 
@@ -77,6 +77,7 @@ class FormHandler implements FormHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws Exception
      */
     public function getForm()
@@ -98,6 +99,7 @@ class FormHandler implements FormHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws Exception
      * @throws UndefinedOptionsException
      */

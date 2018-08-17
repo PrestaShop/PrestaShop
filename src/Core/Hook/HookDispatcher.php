@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class HookDispatcher is responsible for dispatching hooks
+ * Class HookDispatcher is responsible for dispatching hooks.
  */
 final class HookDispatcher implements HookDispatcherInterface
 {
