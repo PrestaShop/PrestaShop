@@ -26,6 +26,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
+            - '@prestashop.hook.dispatcher'
+            - 'request_sql'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
