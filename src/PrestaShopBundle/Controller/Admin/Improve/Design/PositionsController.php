@@ -134,11 +134,14 @@ class PositionsController extends FrameworkBundleAdminController
 
     /**
      * Transplant a module
+     * @TODO this part isn't finished yet waiting for CQRS
      *
      * @Template("@PrestaShop/Admin/Improve/Design/positions-form.html.twig")
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
+     * @param integer $moduleId
+     * @param integer $hookId
      *
      * @return Response
      */
@@ -182,5 +185,69 @@ class PositionsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'selectedModule' => []
         ];
+    }
+
+    /**
+     * Unhook module
+     *
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function unhookAction(Request $request)
+    {
+        $unhooks = $request->request->get('unhooks');
+        $context = null;
+        if (empty($request->request->get('unhooks'))) {
+            $moduleId = $request->request->get('moduleId');
+            $hookId = $request->request->get('hookId');
+            $unhooks = [sprintf('%d_%d', $hookId, $moduleId)];
+            $context = Shop::getContextListShopID();
+        }
+
+        $errors = [];
+        foreach ($unhooks as $unhook) {
+            $explode = explode('_', $unhook);
+            $hookId = (int) $explode[0];
+            $moduleId = (int) $explode[1];
+            $module = Module::getInstanceById($moduleId);
+            $hook = new Hook($hookId);
+
+            if (!Validate::isLoadedObject($module)) {
+                $errors[] = $this->trans(
+                    'This module cannot be loaded.',
+                    [],
+                    'Admin.Modules.Notification'
+                );
+                continue;
+            }
+
+            if (!$hookId || !Validate::isLoadedObject($hook)) {
+                $errors[] = $this->trans(
+                    'Hook cannot be loaded.',
+                    [],
+                    'Admin.Modules.Notification'
+                );
+                continue;
+            }
+
+            if (!$module->unregisterHook($hookId, $context) || !$module->unregisterExceptions($hookId, $context)) {
+                $errors[] = $this->trans(
+                    'An error occurred while deleting the module from its hook.',
+                    [],
+                    'Admin.Modules.Notification'
+                );
+            }
+        }
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirect(
+            $this->generateUrl('admin_modules_positions')
+        );
     }
 }

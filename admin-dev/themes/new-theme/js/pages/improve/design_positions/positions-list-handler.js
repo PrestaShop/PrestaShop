@@ -138,7 +138,8 @@ class PositionsListHandler {
         $(this).data('previous-index', ui.item.index());
       },
       update: function(e, ui) {
-        const { hookId, moduleId } = ui.item.attr('id').split('_');
+        const [ hookId, moduleId ] = ui.item.attr('id').split('_');
+
         const $data = {
           hookId,
           moduleId,

@@ -80,7 +80,7 @@
           </form>
         </div>
 
-        <form id="module-positions-form" method="post" action="" data-update-url="{{ getAdminLink('AdminModulesPositions') }}">
+        <form id="module-positions-form" method="post" action="" data-update-url="{{ path('api_improve_design_positions_update') }}">
           {% for hook in hooks %}
             <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}"{% if not hook['position'] %} style="display:none;"{% endif %}>
               <a name="{{ hook['name'] }}"></a>
@@ -160,7 +160,7 @@
                             </button>
 
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;deleteGraft{% if selectedModule %}&amp;show-modules={{ selectedModule }}{% endif %}">
+                              <a class="dropdown-item" href="{{ path('admin_modules_positions_unhook') }}?id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;deleteGraft{% if selectedModule %}&amp;show-modules={{ selectedModule }}{% endif %}">
                                 <i class="material-icons">indeterminate_check_box</i>
                                 {{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}
                               </a>

@@ -11,3 +11,10 @@ admin_modules_positions_edit:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:edit'
         _legacy_controller: AdminModulesPositions
+
+admin_modules_positions_unhook:
+    path: /unhook
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:unhook'
+        _legacy_controller: AdminModulesPositions
