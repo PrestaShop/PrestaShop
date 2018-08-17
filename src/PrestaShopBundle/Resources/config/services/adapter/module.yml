@@ -46,14 +46,14 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.module.zip.manager"
             - "@translator"
-            - "@event_dispatcher"
+            - "@prestashop.core.hook.dispatcher"
 
     prestashop.module.zip.manager:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
         arguments:
             - "@filesystem"
             - "@translator"
-            - "@event_dispatcher"
+            - "@prestashop.core.hook.dispatcher"
 
     prestashop.adapter.presenter.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
