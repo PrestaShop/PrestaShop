@@ -59,7 +59,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             } else if (!$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
                 $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
             }
-            $idProductAttribute = $this->getIdProductAttribute(false);
+            $idProductAttribute = $this->getIdProductAttributeByRequest();
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -946,47 +946,87 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     /**
      * Return id_product_attribute by id_product_attribute request parameter
-     * or by the group request parameter.
-     *
-     * @param bool $useGroups
+     * 
      * @return int
      */
-    private function getIdProductAttribute($useGroups = false)
+    private function getIdProductAttributeByRequest()
     {
         $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
 
-        if ($useGroups === true) {
-            $groups = Tools::getValue('group');
+        return $this->tryToGetAvailableIdProductAttribute($requestedIdProductAttribute);
+    }
 
-            if (!empty($groups)) {
-                $requestedIdProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
-                    $this->product->id,
-                    $groups,
-                    true
-                );
-            }
-        }
+    /**
+     * Return id_product_attribute by id_product_attribute request parameter
+     * or by the group request parameter.
+     *
+     * @return int|null
+     * @throws PrestaShopException
+     */
+    private function getIdProductAttributeByRequestOrGroup()
+    {
+        $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
 
+        $groupIdProductAttribute = $this->getIdProductAttributeByGroup();
+        $requestedIdProductAttribute = null !== $groupIdProductAttribute ? $groupIdProductAttribute : $requestedIdProductAttribute;
+
+        return $this->tryToGetAvailableIdProductAttribute($requestedIdProductAttribute);
+    }
+
+    /**
+     * If the PS_DISP_UNAVAILABLE_ATTR functionality is enabled, this method check
+     * if $checkedIdProductAttribute is available.
+     * If not try to return the first available attribute, if none are available
+     * simply returns the input
+     *
+     * @param int $checkedIdProductAttribute
+     * @return int
+     */
+    private function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
+    {
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
-            $productAttributes = array_filter(
+            $availableProductAttributes = array_filter(
                 $this->product->getAttributeCombinations(),
                 function ($elem) {
                     return $elem['quantity'] > 0;
                 }
             );
-            $productAttribute = array_filter(
-                $productAttributes,
-                function ($elem) use ($requestedIdProductAttribute) {
-                    return $elem['id_product_attribute'] == $requestedIdProductAttribute;
+
+            $availableProductAttribute = array_filter(
+                $availableProductAttributes,
+                function ($elem) use ($checkedIdProductAttribute) {
+                    return $elem['id_product_attribute'] == $checkedIdProductAttribute;
                 }
             );
 
-            if (empty($productAttribute) && !empty($productAttributes)) {
-                return (int)array_shift($productAttributes)['id_product_attribute'];
+            if (empty($availableProductAttribute) && count($availableProductAttributes)) {
+                return (int)array_shift($availableProductAttributes)['id_product_attribute'];
             }
         }
 
-        return $requestedIdProductAttribute;
+        return $checkedIdProductAttribute;
+    }
+
+    /**
+     * Return id_product_attribute by the group request parameter.
+     *
+     * @return int|null
+     * @throws PrestaShopException
+     */
+    private function getIdProductAttributeByGroup()
+    {
+        $idProductAttribute = null;
+
+        $groups = Tools::getValue('group');
+        if (!empty($groups)) {
+            $idProductAttribute = (int) Product::getIdProductAttributeByIdAttributes(
+                $this->product->id,
+                $groups,
+                true
+            );
+        }
+
+        return $idProductAttribute;
     }
 
     public function getTemplateVarProduct()
@@ -999,7 +1039,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['id_product_attribute'] = $this->getIdProductAttribute(true);
+        $product['id_product_attribute'] = $this->getIdProductAttributeByRequestOrGroup();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
@@ -1110,7 +1150,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $breadcrumb['links'][] = array(
             'title' => $this->product->name,
-            'url' => $this->context->link->getProductLink($this->product, null, null, null, null, null, (int) $this->getIdProductAttribute()),
+            'url' => $this->context->link->getProductLink($this->product, null, null, null, null, null, (int) $this->getIdProductAttributeByRequest()),
         );
 
         return $breadcrumb;
@@ -1228,10 +1268,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
 
-        $idProductAttribute = $this->getIdProductAttribute(true);
+        $idProductAttribute = $this->getIdProductAttributeByRequest();
         if ($idProductAttribute) {
-            $attributes = $this->product->getAttributeCombinationsById($this->getIdProductAttribute(), $this->context->language->id);
-            if ($attributes && count($attributes) > 0) {
+            $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
+            if (is_array($attributes) && count($attributes) > 0) {
                 foreach ($attributes as $attribute) {
                     $page['meta']['title'] .= ' '.$attribute['group_name'].' '.$attribute['attribute_name'];
                 }
