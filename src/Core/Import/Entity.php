@@ -51,8 +51,8 @@ final class Entity
         'addresses' => self::TYPE_ADDRESSES,
         'manufacturers' => self::TYPE_MANUFACTURERS,
         'suppliers' => self::TYPE_SUPPLIERS,
-        'alias'=> self::TYPE_ALIAS,
-        'contacts'=> self::TYPE_STORE_CONTACTS,
+        'alias' => self::TYPE_ALIAS,
+        'contacts' => self::TYPE_STORE_CONTACTS,
     ];
 
     /**
@@ -64,7 +64,7 @@ final class Entity
      */
     public static function getFromName($importType)
     {
-        if (isset(self::AVAILABLE_TYPES[$importType])) {
+        if (array_key_exists($importType, self::AVAILBALE_TYPES)) {
             return self::AVAILABLE_TYPES[$importType];
         }
 
