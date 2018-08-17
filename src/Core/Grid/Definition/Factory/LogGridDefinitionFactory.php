@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionsColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Employee\EmployeeNameWithAvatarColumn;
@@ -153,7 +153,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'date_add',
                 ])
             )
-            ->add((new ActionsColumn('actions'))
+            ->add((new ActionColumn('actions'))
                 ->setOptions([
                     'filter' => new ColumnFilterOption(SearchAndResetType::class, [
                         'attr' => [

@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Row;
+namespace PrestaShop\PrestaShop\Core\Grid\Record;
 
 use Countable;
 use Iterator;
 
 /**
- * Interface RowCollectionInterface defines interface for raw rows wrapper
+ * Interface RecordCollectionInterface defines interface for raw rows wrapper
  */
-interface RowCollectionInterface extends Countable, Iterator
+interface RecordCollectionInterface extends Countable, Iterator
 {
     /**
      * Get raw rows
      *
      * @return array
      */
-    public function getRows();
+    public function all();
 }

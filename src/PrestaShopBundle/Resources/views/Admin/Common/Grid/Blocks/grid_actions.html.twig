@@ -22,13 +22,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-
 {% if grid.actions.grid|length > 0 %}
-  {% set girdActionsButtonId = grid.id-grid ~ '-actions-button' %}
+  {% set gridActionsButtonId = grid.id ~ '-grid-actions-button' %}
 
   <div class="dropdown text-right">
     <button class="btn btn-text dropdown-toggle tool-button"
-            id="{{ girdActionsButtonId }}"
+            id="{{ gridActionsButtonId }}"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
@@ -37,7 +36,7 @@
       <span class="sr-only">{{ 'Settings'|trans({}, 'Admin.Global') }}</span>
     </button>
 
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ girdActionsButtonId }}">
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ gridActionsButtonId }}">
       {% for action in grid.actions.grid %}
         {{ include('@PrestaShop/Admin/Common/Grid/Actions/Grid/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
       {% endfor %}

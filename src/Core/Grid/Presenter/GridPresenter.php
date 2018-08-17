@@ -52,8 +52,8 @@ final class GridPresenter implements GridPresenterInterface
                 'bulk' => $definition->getBulkActions()->toArray(),
             ],
             'data' => [
-                'rows' => $data->getRows(),
-                'rows_total' => $data->getRowsTotal(),
+                'records' => $data->getRecords(),
+                'records_total' => $data->getRecordsTotal(),
                 'query' => $data->getQuery(),
             ],
             'pagination' => [

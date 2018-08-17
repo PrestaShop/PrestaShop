@@ -129,7 +129,8 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
             }
 
             if (empty($filters)) {
-                $filters = new $filtersClass($filtersClass::getDefaults());
+                $defaultFilters = $filtersClass::getDefaults();
+                $filters = new $filtersClass($defaultFilters);
             }
         }
 
