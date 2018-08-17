@@ -332,7 +332,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
@@ -417,6 +417,10 @@ class CommonClient {
 
   alertAccept() {
     return this.client.alertAccept();
+  }
+
+  alertDismiss() {
+    return this.client.alertDismiss();
   }
 
   showElement(className, order) {
@@ -590,6 +594,57 @@ class CommonClient {
       return this.client
         .middleClick(selector)
     }
+  }
+
+  /**
+   * These functions are used to sort table then check the sorted table
+   * elementsTable, elementsSortedTable are two global variables that must be initialized in the sort table function
+   */
+
+  getTableField(element_list, i, sorted = false) {
+    return this.client
+      .getText(element_list.replace("%ID", i + 1)).then(function (name) {
+        if (sorted) {
+          elementsSortedTable[i] = name.toLowerCase();
+        }
+        else {
+          elementsTable[i] = name.toLowerCase();
+        }
+      });
+  }
+
+  /**
+   * This function checks the sort of a table
+   * @param numberElements number of rows in the table
+   * @param sortBy= true if we sort by a number, sortBy= false if we sort by a string
+   * @param sortWay equal to 'ASC' or 'DESC'
+   */
+  checkSortTable(numberElements, sortBy = false, sortWay = 'ASC') {
+    return this.client
+      .pause(2000)
+      .then(() => {
+        this.client
+          .pause(3000)
+          .waitUntil(function () {
+            if (sortBy) {
+              if (sortWay === 'ASC') {
+                expect(elementsTable.sort(function (a, b) {
+                  return a - b
+                })).to.deep.equal(elementsSortedTable);
+              } else {
+                expect(elementsTable.sort(function (a, b) {
+                  return a - b
+                }).reverse()).to.deep.equal(elementsSortedTable);
+              }
+            } else {
+              if (sortWay === 'ASC') {
+                expect(elementsTable.sort()).to.deep.equal(elementsSortedTable);
+              } else {
+                expect(elementsTable.sort().reverse()).to.deep.equal(elementsSortedTable);
+              }
+            }
+          }, 1000 * numberElements);
+      });
   }
 
 }
