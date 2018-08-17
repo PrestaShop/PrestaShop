@@ -56,7 +56,7 @@ class ImportType extends TranslatorAwareType
                     $this->trans('Combinations', 'Admin.Global') => Entity::TYPE_COMBINATIONS,
                     $this->trans('Customers', 'Admin.Global') => Entity::TYPE_CUSTOMERS,
                     $this->trans('Addresses', 'Admin.Global') => Entity::TYPE_ADDRESSES,
-                    $this->trans('Brands', 'Admin.Global') => Entity::TYPE_BRANDS,
+                    $this->trans('Brands', 'Admin.Global') => Entity::TYPE_MANUFACTURERS,
                     $this->trans('Suppliers', 'Admin.Global') => Entity::TYPE_SUPPLIERS,
                     $this->trans('Alias', 'Admin.Shopparameters.Feature') => Entity::TYPE_ALIAS,
                     $this->trans('Store contacts', 'Admin.Advparameters.Feature') => Entity::TYPE_STORE_CONTACTS,
