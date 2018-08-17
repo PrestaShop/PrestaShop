@@ -26,27 +26,28 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve;
 
+use DateTime;
 use Exception;
+use Module;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
+use PrestaShopBundle\Entity\ModuleHistory;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
-use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
-use PrestaShopBundle\Security\Voter\PageVoter;
-use PrestaShopBundle\Entity\ModuleHistory;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use Profile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Module;
-use Profile;
 use stdClass;
-use DateTime;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display
@@ -683,9 +684,12 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @param TODO
+     * @param AdminModuleDataProvider $modulesProvider
+     * @param array $modules
+     *
+     * @return array
      */
-    private function constructJsonCatalogBodyResponse($modulesProvider, $modules)
+    private function constructJsonCatalogBodyResponse(AdminModuleDataProvider $modulesProvider, array $modules)
     {
         $collection = AddonsCollection::createFrom($modules);
         $modules = $modulesProvider->generateAddonsUrls($collection);
