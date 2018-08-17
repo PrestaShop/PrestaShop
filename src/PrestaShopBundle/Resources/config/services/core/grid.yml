@@ -29,7 +29,7 @@ services:
         abstract: true
         calls:
             - [setTranslator, ['@translator']]
-            - [setDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
