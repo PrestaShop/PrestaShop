@@ -42,6 +42,7 @@ use Twig_SimpleFunction as SimpleFunction;
 class GridExtension extends AbstractExtension
 {
     const BASE_COLUMN_CONTENT_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Content';
+    const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
 
     /**
      * @var EngineInterface
@@ -72,6 +73,9 @@ class GridExtension extends AbstractExtension
             new SimpleFunction('column_content', [$this, 'renderColumnContent'], [
                 'is_safe' => ['html'],
             ]),
+            new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -88,22 +92,81 @@ class GridExtension extends AbstractExtension
      */
     public function renderColumnContent(array $record, array $column, array $grid)
     {
-        $columnType = $column['type'];
-        $columnId = $column['id'];
-        $gridId = $grid['id'];
-        $templateCacheKey = sprintf('%s_%s_%s.html.twig', $gridId, $columnId, $columnType);
+        $templateCacheKey = sprintf('column_%s_%s_%s_content', $grid['id'], $column['id'], $column['type']);
 
-        if ($this->cache->hasItem($templateCacheKey)) {
-            return $this->templating->render($this->cache->getItem($templateCacheKey)->get(), [
-                'column' => $column,
-                'row' => $record,
-                'grid' => $grid,
-            ]);
+        if (false === $this->cache->hasItem($templateCacheKey)) {
+            $template = $this->getTemplatePath(
+                $column,
+                $grid,
+                self::BASE_COLUMN_CONTENT_TEMPLATE_PATH
+            );
+
+            if (null === $template) {
+                throw new ErrorException(sprintf('Content template for column type "%s" was not found', $column['type']));
+            }
+
+            $this->cache->save(
+                $this->cache
+                    ->getItem($templateCacheKey)
+                    ->set($template)
+            );
         }
 
-        $columnGridSpecificTemplate = sprintf('%s/%s_%s_%s.html.twig', self::BASE_COLUMN_CONTENT_TEMPLATE_PATH, $gridId, $columnId, $columnType);
-        $gridSpecificTemplate = sprintf('%s/%s_%s.html.twig', self::BASE_COLUMN_CONTENT_TEMPLATE_PATH, $gridId, $columnType);
-        $columnTemplate = sprintf('%s/%s.html.twig', self::BASE_COLUMN_CONTENT_TEMPLATE_PATH, $columnType);
+        return $this->templating->render($this->cache->getItem($templateCacheKey)->get(), [
+            'column' => $column,
+            'record' => $record,
+            'grid' => $grid,
+        ]);
+    }
+
+    /**
+     * Render column header
+     *
+     * @param array $column
+     * @param array $grid
+     *
+     * @return string
+     */
+    public function renderColumnHeader(array $column, array $grid)
+    {
+        $templateCacheKey = sprintf('column_%s_%s_%s_header', $grid['id'], $column['id'], $column['type']);
+
+        if (!$this->cache->hasItem($templateCacheKey)) {
+            $template = $this->getTemplatePath(
+                $column,
+                $grid,
+                self::BASE_COLUMN_HEADER_TEMPLATE_PATH,
+                'default.html.twig'
+            );
+
+            $this->cache->save(
+                $this->cache
+                    ->getItem($templateCacheKey)
+                    ->set($template)
+            );
+        }
+
+        return $this->templating->render($this->cache->getItem($templateCacheKey)->get(), [
+            'column' => $column,
+            'grid' => $grid,
+        ]);
+    }
+
+    /**
+     * Get template for column
+     *
+     * @param array $column
+     * @param array $grid
+     * @param string $basePath
+     * @param string|null $defaultTemplate
+     *
+     * @return string|null
+     */
+    private function getTemplatePath(array $column, array $grid, $basePath, $defaultTemplate = null)
+    {
+        $columnGridSpecificTemplate = sprintf('%s/%s_%s_%s.html.twig', $basePath, $grid['id'], $column['id'], $column['type']);
+        $gridSpecificTemplate = sprintf('%s/%s_%s.html.twig', $basePath, $grid['id'], $column['type']);
+        $columnTemplate = sprintf('%s/%s.html.twig', $basePath, $column['type']);
 
         $template = null;
 
@@ -113,22 +176,10 @@ class GridExtension extends AbstractExtension
             $template = $gridSpecificTemplate;
         } elseif ($this->templating->exists($columnTemplate)) {
             $template = $columnTemplate;
+        } elseif (null !== $defaultTemplate) {
+            $template = sprintf('%s/%s', $basePath, $defaultTemplate);
         }
 
-        if (null === $template) {
-            throw new ErrorException(sprintf('Content template for column type "%s" was not found.', $columnType));
-        }
-
-        $this->cache->save(
-            $this->cache
-                ->getItem($templateCacheKey)
-                ->set($template)
-        );
-
-        return $this->templating->render($this->cache->getItem($templateCacheKey)->get(), [
-            'column' => $column,
-            'row' => $record,
-            'grid' => $grid,
-        ]);
+        return $template;
     }
 }
