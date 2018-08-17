@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class HookDispatcher is responsible for dispatching hooks
@@ -84,5 +86,69 @@ final class HookDispatcher implements HookDispatcherInterface
     public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
     {
         return $this->dispatchRendering(new Hook($hookName, $hookParameters));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dispatch($eventName, Event $event = null)
+    {
+        return $this->hookDispatcherAdapter->dispatch($eventName, $event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addListener($eventName, $listener, $priority = 0)
+    {
+        $this->hookDispatcherAdapter->addListener($eventName, $listener, $priority);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSubscriber(EventSubscriberInterface $subscriber)
+    {
+        $this->hookDispatcherAdapter->addSubscriber($subscriber);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeListener($eventName, $listener)
+    {
+        $this->hookDispatcherAdapter->removeListener($eventName, $listener);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeSubscriber(EventSubscriberInterface $subscriber)
+    {
+        $this->hookDispatcherAdapter->removeSubscriber($subscriber);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getListeners($eventName = null)
+    {
+        return $this->hookDispatcherAdapter->getListeners($eventName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getListenerPriority($eventName, $listener)
+    {
+        return $this->hookDispatcherAdapter->getListenerPriority($eventName, $listener);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasListeners($eventName = null)
+    {
+        return $this->hookDispatcherAdapter->hasListeners($eventName);
     }
 }
