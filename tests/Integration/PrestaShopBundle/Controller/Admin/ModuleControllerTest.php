@@ -52,6 +52,7 @@ class ModuleControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
         $responseContent = $response->getContent();
+        
 
         $decodedContent = json_decode($responseContent, true);
 
