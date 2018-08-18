@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Backup\Comparator\BackupComparatorInterface;
 use PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
+use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\TimeDefinition;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -104,7 +104,7 @@ final class BackupGridDataProvider implements GridDataProviderInterface
             ];
         }
 
-        $backupCollection = new RowCollection($backupsArray);
+        $backupCollection = new RecordCollection($backupsArray);
 
         return new GridData(
             $backupCollection,
