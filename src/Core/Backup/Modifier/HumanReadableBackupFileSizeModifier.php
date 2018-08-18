@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,26 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Backup\Modifier;
+
+use PrestaShop\PrestaShop\Core\Grid\Modifier\ModifierInterface;
 
 /**
- * Interface RecordCollectionInterface defines interface for raw rows wrapper.
+ * Class HumanReadableBackupSizeModifier modifies backup size to be human readable
  */
-interface RecordCollectionInterface
+final class HumanReadableBackupFileSizeModifier implements ModifierInterface
 {
     /**
-     * Get raw rows.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function all();
+    public function modify(array $record)
+    {
+        $record['file_size'] = $this->getHumanReadableSize($record['file_size']);
+    }
 
     /**
-     * Map records through given function
+     * Get size that is human readable
      *
-     * @param callable $callable
+     * @param int $sizeInBytes
      *
-     * @return self
+     * @return string
      */
-    public function map(callable $callable);
+    private function getHumanReadableSize($sizeInBytes)
+    {
+        return sprintf('%s Kb', number_format($sizeInBytes / 1000, 2));
+    }
 }

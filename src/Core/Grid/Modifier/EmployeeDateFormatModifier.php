@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,26 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Grid\Modifier;
+
+use DateTimeInterface;
 
 /**
- * Interface RecordCollectionInterface defines interface for raw rows wrapper.
+ * Class EmployeeDateFormatModifier modifies date to be in employee date format
  */
-interface RecordCollectionInterface
+final class EmployeeDateFormatModifier implements ModifierInterface
 {
     /**
-     * Get raw rows.
-     *
-     * @return array
+     * @var string
      */
-    public function all();
+    private $employeeDateTimeFormat;
 
     /**
-     * Map records through given function
-     *
-     * @param callable $callable
-     *
-     * @return self
+     * @param $employeeDateTimeFormat
      */
-    public function map(callable $callable);
+    public function __construct($employeeDateTimeFormat)
+    {
+        $this->employeeDateTimeFormat = $employeeDateTimeFormat;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function modify(array $record)
+    {
+        $record['date'] = $this->getDateInEmployeeDateFormat($record['date']);
+
+        return $record;
+    }
+
+    /**
+     * Get date in employee date format
+     *
+     * @param DateTimeInterface $dateTime
+     *
+     * @return string
+     */
+    private function getDateInEmployeeDateFormat(DateTimeInterface $dateTime)
+    {
+        return date($this->employeeDateTimeFormat, $dateTime->getTimestamp());
+    }
 }

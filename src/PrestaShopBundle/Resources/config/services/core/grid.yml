@@ -1,3 +1,6 @@
+imports:
+    - { resource: grid/*.yml }
+
 services:
     _defaults:
         public: true

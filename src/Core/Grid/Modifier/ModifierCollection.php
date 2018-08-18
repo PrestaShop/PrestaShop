@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,26 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Grid\Modifier;
 
-/**
- * Interface RecordCollectionInterface defines interface for raw rows wrapper.
- */
-interface RecordCollectionInterface
+final class ModifierCollection implements ModifierCollectionInterface
 {
-    /**
-     * Get raw rows.
-     *
-     * @return array
-     */
-    public function all();
 
-    /**
-     * Map records through given function
-     *
-     * @param callable $callable
-     *
-     * @return self
-     */
-    public function map(callable $callable);
 }

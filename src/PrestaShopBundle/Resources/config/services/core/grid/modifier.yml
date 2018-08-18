@@ -1,0 +1,6 @@
+services:
+
+    prestashop.core.grid.modifier.employee_date_format:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Modifier\EmployeeDateFormatModifier'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
