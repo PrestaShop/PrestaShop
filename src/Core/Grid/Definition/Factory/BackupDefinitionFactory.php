@@ -71,14 +71,14 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('date'))
                 ->setName($this->trans('Date', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'date_formatted',
+                    'field' => 'date',
                     'sortable' => false,
                 ])
             )
             ->add((new DataColumn('age'))
                 ->setName($this->trans('Age', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
-                    'field' => 'age_formatted',
+                    'field' => 'age',
                     'sortable' => false,
                 ])
             )
@@ -92,7 +92,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('file_size'))
                 ->setName($this->trans('File size', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
-                    'field' => 'file_size_formatted',
+                    'field' => 'file_size',
                     'sortable' => false,
                 ])
             )

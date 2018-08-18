@@ -24,43 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Backup\Modifier;
+
+use PrestaShop\PrestaShop\Core\Grid\Modifier\ModifierInterface;
 
 /**
- * Class RecordCollection is a wrapper around rows from database
+ * Class HumanReadableBackupSizeModifier modifies backup size to be human readable
  */
-final class RecordCollection implements RecordCollectionInterface
+final class HumanReadableBackupFileSizeModifier implements ModifierInterface
 {
     /**
-     * @var array
+     * {@inheritdoc}
      */
-    private $records;
-
-    /**
-     * @param array $records Raw records data
-     */
-    public function __construct(array $records = [])
+    public function modify(array $record)
     {
-        $this->records = $records;
+        $record['file_size'] = $this->getHumanReadableSize($record['file_size']);
     }
 
     /**
-     * {@inheritdoc}
+     * Get size that is human readable
+     *
+     * @param int $sizeInBytes
+     *
+     * @return string
      */
-    public function all()
+    private function getHumanReadableSize($sizeInBytes)
     {
-        return $this->records;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callable)
-    {
-        foreach ($this->records as $key => $record) {
-            $this->records[$key] = $callable($record);
-        }
-
-        return $this;
+        return sprintf('%s Kb', number_format($sizeInBytes / 1000, 2));
     }
 }

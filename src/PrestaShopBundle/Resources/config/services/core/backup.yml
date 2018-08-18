@@ -17,3 +17,11 @@ services:
 
     prestashop.core.backup.comparator.backup_by_date_comparator:
         class: 'PrestaShop\PrestaShop\Core\Backup\Comparator\BackupByDateComparator'
+
+    prestashop.core.backup.modifier.human_readable_backup_age:
+        class: 'PrestaShop\PrestaShop\Core\Backup\Modifier\HumanReadableBackupAgeModifier'
+        arguments:
+            - '@translator'
+
+    prestashop.core.backup.modifier.human_readable_backup_size:
+        class: 'PrestaShop\PrestaShop\Core\Backup\Modifier\HumanReadableBackupFileSizeModifier'

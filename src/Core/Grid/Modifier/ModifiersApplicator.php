@@ -24,43 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Grid\Modifier;
+
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
- * Class RecordCollection is a wrapper around rows from database
+ * Class ModifiersApplicator is responsible for applying modifiers on the record
  */
-final class RecordCollection implements RecordCollectionInterface
+final class ModifiersApplicator implements ModifiersApplicatorInterface
 {
     /**
-     * @var array
+     * @var HookDispatcher
      */
-    private $records;
+    private $dispatcher;
 
     /**
-     * @param array $records Raw records data
+     * @param HookDispatcher $dispatcher
      */
-    public function __construct(array $records = [])
+    public function __construct(HookDispatcher $dispatcher)
     {
-        $this->records = $records;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function apply(ModifierCollectionInterface $modifiers, array $record)
     {
-        return $this->records;
-    }
+        $this->dispatcher->dispatchForParameters('actionCustomizeRecordModifiers', [
+            'modifiers' => $modifiers,
+        ]);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callable)
-    {
-        foreach ($this->records as $key => $record) {
-            $this->records[$key] = $callable($record);
+        foreach ($modifiers->all() as $modifier) {
+            $record = $modifier->modify($record);
         }
 
-        return $this;
+        return $record;
     }
 }

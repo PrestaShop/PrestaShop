@@ -63,18 +63,12 @@ final class BackupGridDataProvider implements GridDataProviderInterface
     /**
      * @param BackupRepositoryInterface $backupRepository
      * @param BackupComparatorInterface $backupByDateComparator
-     * @param TranslatorInterface $translator
-     * @param string $languageDateTimeFormat
      */
     public function __construct(
         BackupRepositoryInterface $backupRepository,
-        BackupComparatorInterface $backupByDateComparator,
-        TranslatorInterface $translator,
-        $languageDateTimeFormat
+        BackupComparatorInterface $backupByDateComparator
     ) {
         $this->backupRepository = $backupRepository;
-        $this->translator = $translator;
-        $this->languageDateTimeFormat = $languageDateTimeFormat;
         $this->backupByDateComparator = $backupByDateComparator;
     }
 
@@ -98,9 +92,6 @@ final class BackupGridDataProvider implements GridDataProviderInterface
                 'file_size' => $backup->getSize(),
                 'date' => $backup->getDate(),
                 'age' => $backup->getAge(),
-                'age_formatted' => $this->getFormattedAge($backup),
-                'date_formatted' => date($this->languageDateTimeFormat, $backup->getDate()->getTimestamp()),
-                'file_size_formatted' => $this->getFormattedSize($backup),
             ];
         }
 
@@ -110,47 +101,5 @@ final class BackupGridDataProvider implements GridDataProviderInterface
             $backupCollection,
             count($backups)
         );
-    }
-
-    /**
-     * Get formatted age
-     *
-     * @param BackupInterface $backup
-     *
-     * @return string
-     */
-    private function getFormattedAge(BackupInterface $backup)
-    {
-        if (TimeDefinition::HOUR_IN_SECONDS > $backup->getAge()) {
-            return sprintf('< 1 %s', $this->translator->trans('Hour', [], 'Admin.Global'));
-        }
-
-        if (TimeDefinition::DAY_IN_SECONDS > $backup->getAge()) {
-            $hours = (int) floor($backup->getAge() / TimeDefinition::HOUR_IN_SECONDS);
-            $label = 1 === $hours ?
-                $this->translator->trans('Hour', [], 'Admin.Global') :
-                $this->translator->trans('Hours', [], 'Admin.Global');
-
-            return sprintf('%s %s', $hours, $label);
-        }
-
-        $days = (int) floor($backup->getAge() / TimeDefinition::DAY_IN_SECONDS);
-        $label = 1 === $days ?
-            $this->translator->trans('Day', [], 'Admin.Global') :
-            $this->translator->trans('Days', [], 'Admin.Global');
-
-        return sprintf('%s %s', $days, $label);
-    }
-
-    /**
-     * Get formatted backup size
-     *
-     * @param BackupInterface $backup
-     *
-     * @return string
-     */
-    private function getFormattedSize(BackupInterface $backup)
-    {
-        return sprintf('%s Kb', number_format($backup->getSize() / 1000, 2));
     }
 }

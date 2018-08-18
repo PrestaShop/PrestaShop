@@ -24,43 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Grid\Modifier;
+
+use DateTimeInterface;
 
 /**
- * Class RecordCollection is a wrapper around rows from database
+ * Class EmployeeDateFormatModifier modifies date to be in employee date format
  */
-final class RecordCollection implements RecordCollectionInterface
+final class EmployeeDateFormatModifier implements ModifierInterface
 {
     /**
-     * @var array
+     * @var string
      */
-    private $records;
+    private $employeeDateTimeFormat;
 
     /**
-     * @param array $records Raw records data
+     * @param $employeeDateTimeFormat
      */
-    public function __construct(array $records = [])
+    public function __construct($employeeDateTimeFormat)
     {
-        $this->records = $records;
+        $this->employeeDateTimeFormat = $employeeDateTimeFormat;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function modify(array $record)
     {
-        return $this->records;
+        $record['date'] = $this->getDateInEmployeeDateFormat($record['date']);
+
+        return $record;
     }
 
     /**
-     * {@inheritdoc}
+     * Get date in employee date format
+     *
+     * @param DateTimeInterface $dateTime
+     *
+     * @return string
      */
-    public function map(callable $callable)
+    private function getDateInEmployeeDateFormat(DateTimeInterface $dateTime)
     {
-        foreach ($this->records as $key => $record) {
-            $this->records[$key] = $callable($record);
-        }
-
-        return $this;
+        return date($this->employeeDateTimeFormat, $dateTime->getTimestamp());
     }
 }

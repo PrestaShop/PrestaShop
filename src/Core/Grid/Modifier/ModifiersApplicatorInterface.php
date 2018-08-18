@@ -24,43 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Grid\Modifier;
 
 /**
- * Class RecordCollection is a wrapper around rows from database
+ * Interface ModifiersApplicatorInterface defines contract for modifiers applicator on the record
  */
-final class RecordCollection implements RecordCollectionInterface
+interface ModifiersApplicatorInterface
 {
     /**
-     * @var array
+     * Apply modifications to the record
+     *
+     * @param ModifierCollectionInterface $modifiers
+     * @param array $record
+     *
+     * @return array Record after applying modifiers
      */
-    private $records;
-
-    /**
-     * @param array $records Raw records data
-     */
-    public function __construct(array $records = [])
-    {
-        $this->records = $records;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function all()
-    {
-        return $this->records;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callable)
-    {
-        foreach ($this->records as $key => $record) {
-            $this->records[$key] = $callable($record);
-        }
-
-        return $this;
-    }
+    public function apply(ModifierCollectionInterface $modifiers, array $record);
 }

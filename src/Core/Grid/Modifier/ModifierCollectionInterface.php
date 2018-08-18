@@ -24,43 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Record;
+namespace PrestaShop\PrestaShop\Core\Grid\Modifier;
 
-/**
- * Class RecordCollection is a wrapper around rows from database
- */
-final class RecordCollection implements RecordCollectionInterface
+interface ModifierCollectionInterface
 {
     /**
-     * @var array
+     * Get all modifiers
+     *
+     * @return ModifierInterface[]
      */
-    private $records;
-
-    /**
-     * @param array $records Raw records data
-     */
-    public function __construct(array $records = [])
-    {
-        $this->records = $records;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function all()
-    {
-        return $this->records;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callable)
-    {
-        foreach ($this->records as $key => $record) {
-            $this->records[$key] = $callable($record);
-        }
-
-        return $this;
-    }
+    public function all();
 }
