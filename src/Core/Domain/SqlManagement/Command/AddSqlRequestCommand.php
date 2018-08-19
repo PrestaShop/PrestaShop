@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 
-class AddRequestSqlCommand
+class AddSqlRequestCommand
 {
     /**
      * @var string
@@ -44,7 +44,7 @@ class AddRequestSqlCommand
      * @param string $name
      * @param string $sql
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     public function __construct($name, $sql)
     {
@@ -91,12 +91,12 @@ class AddRequestSqlCommand
      *
      * @return $this
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     private function setSql($sql)
     {
         if (empty($sql)) {
-            throw new RequestSqlException('RequestSql name cannot be empty');
+            throw new SqlRequestException('RequestSql name cannot be empty');
         }
 
         $this->sql = $sql;

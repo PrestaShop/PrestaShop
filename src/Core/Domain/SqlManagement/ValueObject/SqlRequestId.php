@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 
-class RequestSqlId
+class SqlRequestId
 {
     /**
      * @var int
@@ -38,12 +38,12 @@ class RequestSqlId
     /**
      * @param int $requestSqlId
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     public function __construct($requestSqlId)
     {
         if (!is_numeric($requestSqlId) || $requestSqlId <= 0) {
-            throw new RequestSqlException(
+            throw new SqlRequestException(
                 sprintf('Invalid Request Sql id: %s', $requestSqlId)
             );
         }

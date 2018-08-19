@@ -27,34 +27,34 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddRequestSqlCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\AddRequestSqlHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddRequestSqlException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\AddSqlRequestHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddSqlRequestException;
+use RequestSql;
 
 /**
- * Class AddRequestSqlHandler handles RequestSql creation command
+ * Class AddSqlRequestHandler handles RequestSql creation command
  */
-final class AddRequestSqlHandler implements AddRequestSqlHandlerInterface
+final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
 {
     /**
-     * @var AddRequestSqlCommand
+     * @var AddSqlRequestCommand
      */
     private $command;
 
     /**
      * {@inheritdoc}
      *
-     * @throws CannotAddRequestSqlException
+     * @throws CannotAddSqlRequestException
      */
-    public function handle(AddRequestSqlCommand $command)
+    public function handle(AddSqlRequestCommand $command)
     {
         $this->command = $command;
 
         try {
             return $this->buildRequestSql();
         } catch (Exception $e) {
-            throw new CannotAddRequestSqlException(
+            throw new CannotAddSqlRequestException(
                 'Unable to add new RequestSql',
                 0,
                 $e

@@ -27,22 +27,22 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableRequestSql;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetRequestSqlForEditingQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetRequestSqlForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\RequestSqlId;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
-final class GetRequestSqlForEditingHandler implements GetRequestSqlForEditingHandlerInterface
+final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws RequestSqlException
-     * @throws RequestSqlNotFoundException
+     * @throws SqlRequestException
+     * @throws SqlRequestNotFoundException
      */
-    public function handle(GetRequestSqlForEditingQuery $query)
+    public function handle(GetSqlRequestForEditingQuery $query)
     {
         $entity = $this->loadById($query->getRequestSqlId());
 
@@ -50,24 +50,24 @@ final class GetRequestSqlForEditingHandler implements GetRequestSqlForEditingHan
     }
 
     /**
-     * @param RequestSqlId $requestSqlId
+     * @param SqlRequestId $requestSqlId
      *
      * @return RequestSql
      *
-     * @throws RequestSqlNotFoundException
+     * @throws SqlRequestNotFoundException
      */
-    private function loadById(RequestSqlId $requestSqlId)
+    private function loadById(SqlRequestId $requestSqlId)
     {
         $entity = new RequestSql($requestSqlId->getValue());
 
         if (0 >= $entity->id) {
-            throw new RequestSqlNotFoundException(
+            throw new SqlRequestNotFoundException(
                 sprintf('RequestSql with id "%s" cannot be found', $requestSqlId->getValue())
             );
         }
 
         if ((int) $entity->id !== $requestSqlId->getValue()) {
-            throw new RequestSqlNotFoundException(
+            throw new SqlRequestNotFoundException(
                 sprintf(
                     'The retrieved id "%s" does not match requested RequestSql id "%s"',
                     $entity->id,
@@ -82,14 +82,14 @@ final class GetRequestSqlForEditingHandler implements GetRequestSqlForEditingHan
     /**
      * @param RequestSql $entity
      *
-     * @return EditableRequestSql
+     * @return EditableSqlRequest
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     private function buildEditableRequestSql(RequestSql $entity)
     {
-        return new EditableRequestSql(
-            new RequestSqlId($entity->id),
+        return new EditableSqlRequest(
+            new SqlRequestId($entity->id),
             $entity->name,
             $entity->sql
         );

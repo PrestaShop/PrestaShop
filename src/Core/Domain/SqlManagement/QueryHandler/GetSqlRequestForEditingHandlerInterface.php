@@ -24,10 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
 
-class RequestSqlException extends DomainException
+interface GetSqlRequestForEditingHandlerInterface
 {
+    /**
+     * @param GetSqlRequestForEditingQuery $query
+     *
+     * @return EditableSqlRequest
+     */
+    public function handle(GetSqlRequestForEditingQuery $query);
 }

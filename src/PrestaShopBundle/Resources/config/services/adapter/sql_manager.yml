@@ -19,11 +19,11 @@ services:
             - '@prestashop.adapter.legacy.configuration'
 
     prestashop.adapter.sql_manager.command_handler.add_request_sql:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\AddRequestSqlHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\AddSqlRequestHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddRequestSqlCommand' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand' }
 
     prestashop.adapter.sql_manager.query_handler.get_request_sql_for_editing:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetRequestSqlForEditingHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestForEditingHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetRequestSqlForEditingQuery' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery' }
