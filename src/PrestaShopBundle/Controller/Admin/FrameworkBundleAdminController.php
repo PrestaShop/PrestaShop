@@ -289,4 +289,24 @@ class FrameworkBundleAdminController extends Controller
 
         return $this->redirect($legacyContext->getAdminLink($defaultTab));
     }
+
+    /**
+     * Get commands bus to execute commands
+     *
+     * @return \League\Tactician\CommandBus
+     */
+    protected function getCommandBus()
+    {
+        return $this->get('tactician.commandbus');
+    }
+
+    /**
+     * Get query bus to execute queries
+     *
+     * @return \League\Tactician\CommandBus
+     */
+    protected function getQueryBus()
+    {
+        return $this->get('tactician.commandbus');
+    }
 }
