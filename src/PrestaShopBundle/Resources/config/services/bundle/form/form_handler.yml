@@ -236,5 +236,4 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
         arguments:
             - '@form.factory'
-            - '@prestashop.adapter.sql_manager.request_sql_manager'
-            - '@prestashop.adapter.sql_manager.sql_query_validator'
+            - '@prestashop.core.command_bus.command'
