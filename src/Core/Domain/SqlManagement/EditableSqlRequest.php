@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\RequestSqlId;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
-class EditableRequestSql
+class EditableSqlRequest
 {
     /**
-     * @var RequestSqlId
+     * @var SqlRequestId
      */
     private $requestSqlId;
 
@@ -47,14 +47,14 @@ class EditableRequestSql
     private $sql;
 
     /**
-     * @param RequestSqlId $requestSqlId
+     * @param SqlRequestId $requestSqlId
      * @param string $name
      * @param string $sql
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     public function __construct(
-        RequestSqlId $requestSqlId,
+        SqlRequestId $requestSqlId,
         $name,
         $sql
     ){
@@ -66,7 +66,7 @@ class EditableRequestSql
     }
 
     /**
-     * @return RequestSqlId
+     * @return SqlRequestId
      */
     public function getRequestSqlId()
     {
@@ -90,9 +90,9 @@ class EditableRequestSql
     }
 
     /**
-     * @param RequestSqlId $requestSqlId
+     * @param SqlRequestId $requestSqlId
      *
-     * @return EditableRequestSql
+     * @return EditableSqlRequest
      */
     private function setRequestSqlId($requestSqlId)
     {
@@ -104,14 +104,14 @@ class EditableRequestSql
     /**
      * @param string $name
      *
-     * @return EditableRequestSql
+     * @return EditableSqlRequest
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     private function setName($name)
     {
         if (empty($name)) {
-            throw new RequestSqlException('RequestSql name cannot be empty');
+            throw new SqlRequestException('RequestSql name cannot be empty');
         }
 
         $this->name = $name;
@@ -122,14 +122,14 @@ class EditableRequestSql
     /**
      * @param string $sql
      *
-     * @return EditableRequestSql
+     * @return EditableSqlRequest
      *
-     * @throws RequestSqlException
+     * @throws SqlRequestException
      */
     private function setSql($sql)
     {
         if (empty($sql)) {
-            throw new RequestSqlException('RequestSql SQL cannot be empty');
+            throw new SqlRequestException('RequestSql SQL cannot be empty');
         }
 
         $this->sql = $sql;

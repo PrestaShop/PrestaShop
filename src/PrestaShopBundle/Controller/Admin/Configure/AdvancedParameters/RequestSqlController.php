@@ -27,9 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use League\Tactician\CommandBus;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddRequestSqlCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\RequestSqlException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetRequestSqlForEditingQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -188,7 +188,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             try {
                 $requestSqlData = $requestSqlForm->getData()['request_sql'];
 
-                $addRequestSqlCommand = new AddRequestSqlCommand(
+                $addRequestSqlCommand = new AddSqlRequestCommand(
                     $requestSqlData['name'],
                     $requestSqlData['sql']
                 );
@@ -198,7 +198,7 @@ class RequestSqlController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_request_sql');
-            } catch (RequestSqlException $e) {
+            } catch (SqlRequestException $e) {
                 //@todo: handle properly
             }
         }
@@ -229,11 +229,11 @@ class RequestSqlController extends FrameworkBundleAdminController
     public function editAction($requestSqlId, Request $request)
     {
         try {
-            $getRequestForEditingQuery = new GetRequestSqlForEditingQuery($requestSqlId);
+            $getRequestForEditingQuery = new GetSqlRequestForEditingQuery($requestSqlId);
             $editableRequestSql = $this->getCommandBus()->handle($getRequestForEditingQuery);
 
             //@todo: implement $editableRequestSql editing handler
-        } catch (RequestSqlException $e){
+        } catch (SqlRequestException $e){
             //@todo: handle properly
 
             $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));

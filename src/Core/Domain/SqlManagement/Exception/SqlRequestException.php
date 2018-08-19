@@ -24,16 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddRequestSqlCommand;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-interface AddRequestSqlHandlerInterface
+class SqlRequestException extends DomainException
 {
-    /**
-     * @param AddRequestSqlCommand $command
-     *
-     * @return int Created RequestSql id
-     */
-    public function handle(AddRequestSqlCommand $command);
 }

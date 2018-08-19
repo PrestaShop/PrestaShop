@@ -26,6 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
-class RequestSqlNotFoundException extends RequestSqlException
+class CannotAddSqlRequestException extends SqlRequestException
 {
 }
