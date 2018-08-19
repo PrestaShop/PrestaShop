@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 
+/**
+ * Class AddSqlRequestCommand holds commands data for SqlRequest creation
+ */
 class AddSqlRequestCommand
 {
     /**
@@ -76,9 +79,17 @@ class AddSqlRequestCommand
      * @param string $name
      *
      * @return self
+     *
+     * @throws SqlRequestException
      */
     private function setName($name)
     {
+        if (!is_string($name) || empty($name)) {
+            throw new SqlRequestException(
+                sprintf('Invalid RequestSql name "%s"',  var_export($name, true))
+            );
+        }
+
         $this->name = $name;
 
         return $this;
@@ -95,8 +106,10 @@ class AddSqlRequestCommand
      */
     private function setSql($sql)
     {
-        if (empty($sql)) {
-            throw new SqlRequestException('RequestSql name cannot be empty');
+        if (!is_string($sql) || empty($sql)) {
+            throw new SqlRequestException(
+                sprintf('Invalid RequestSql SQL query "%s"',  var_export($sql, true))
+            );
         }
 
         $this->sql = $sql;

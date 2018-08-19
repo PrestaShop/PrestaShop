@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use League\Tactician\CommandBus;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
@@ -200,6 +199,8 @@ class RequestSqlController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_request_sql');
             } catch (SqlRequestException $e) {
                 //@todo: handle properly
+
+                throw $e;
             }
         }
 
@@ -465,13 +466,5 @@ class RequestSqlController extends FrameworkBundleAdminController
     protected function getRequestSqlFormHandler()
     {
         return $this->get('prestashop.admin.request_sql.form_handler');
-    }
-
-    /**
-     * @return CommandBus
-     */
-    protected function getCommandBus()
-    {
-        return $this->get('tactician.commandbus');
     }
 }
