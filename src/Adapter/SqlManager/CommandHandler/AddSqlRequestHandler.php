@@ -27,9 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\AddSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddSqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use RequestSql;
 
 /**
@@ -41,44 +45,75 @@ final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
      * @var AddSqlRequestCommand
      */
     private $command;
+    /**
+     * @var SqlQueryValidator
+     */
+    private $sqlQueryValidator;
+
+    /**
+     * @param SqlQueryValidator $sqlQueryValidator
+     */
+    public function __construct(SqlQueryValidator $sqlQueryValidator)
+    {
+        $this->sqlQueryValidator = $sqlQueryValidator;
+    }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CannotAddSqlRequestException
      */
     public function handle(AddSqlRequestCommand $command)
     {
         $this->command = $command;
 
+        return $this->buildRequestSql();
+    }
+
+    /**
+     * @return SqlRequestId
+     *
+     * @throws CannotAddSqlRequestException
+     * @throws SqlRequestConstraintException
+     * @throws SqlRequestException
+     */
+    private function buildRequestSql()
+    {
+        $this->validateSqlQuery();
+
         try {
-            return $this->buildRequestSql();
+            $entity = new RequestSql();
+            $entity->name = $this->command->getName();
+            $entity->sql = $this->command->getSql();
+
+            $entity->add();
+
+            if (0 >= $entity->id) {
+                throw new SqlRequestException(
+                    sprintf('Invalid entity id after creation: %s', $entity->id)
+                );
+            }
         } catch (Exception $e) {
             throw new CannotAddSqlRequestException(
-                'Unable to add new RequestSql',
+                'Failed to create RequestSql',
                 0,
                 $e
             );
         }
+
+        return new SqlRequestId($entity->id);
     }
 
     /**
-     * @return int
+     * Check if SQL query is valid
      *
-     * @throws Exception
+     * @throws SqlRequestConstraintException
      */
-    private function buildRequestSql()
+    private function validateSqlQuery()
     {
-        $entity = new RequestSql();
-        $entity->name = $this->command->getName();
-        $entity->sql = $this->command->getSql();
-
-        $entity->add();
-
-        if (0 >= $entity->id) {
-            throw new Exception(sprintf('Invalid entity id after creation: %s', $entity->id));
+        if (!empty($errors = $this->sqlQueryValidator->validate($this->command->getSql()))) {
+            throw new SqlRequestConstraintException(
+                sprintf('RequestSql query "%s" is malformed', $this->command->getSql()),
+                SqlRequestConstraintException::MALFORMED_SQL_QUERY_ERROR
+            );
         }
-
-        return $entity->id;
     }
 }
