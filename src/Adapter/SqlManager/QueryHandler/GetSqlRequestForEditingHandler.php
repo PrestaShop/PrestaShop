@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use RequestSql;
 
 final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHandlerInterface
 {

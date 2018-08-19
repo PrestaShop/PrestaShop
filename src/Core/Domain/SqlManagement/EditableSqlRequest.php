@@ -34,7 +34,7 @@ class EditableSqlRequest
     /**
      * @var SqlRequestId
      */
-    private $requestSqlId;
+    private $sqlRequestId;
 
     /**
      * @var string
@@ -59,7 +59,7 @@ class EditableSqlRequest
         $sql
     ){
         $this
-            ->setRequestSqlId($requestSqlId)
+            ->setSqlRequestId($requestSqlId)
             ->setName($name)
             ->setSql($sql)
         ;
@@ -68,9 +68,9 @@ class EditableSqlRequest
     /**
      * @return SqlRequestId
      */
-    public function getRequestSqlId()
+    public function getSqlRequestId()
     {
-        return $this->requestSqlId;
+        return $this->sqlRequestId;
     }
 
     /**
@@ -90,13 +90,13 @@ class EditableSqlRequest
     }
 
     /**
-     * @param SqlRequestId $requestSqlId
+     * @param SqlRequestId $sqlRequestId
      *
      * @return EditableSqlRequest
      */
-    private function setRequestSqlId($requestSqlId)
+    private function setSqlRequestId(SqlRequestId $sqlRequestId)
     {
-        $this->requestSqlId = $requestSqlId;
+        $this->sqlRequestId = $sqlRequestId;
 
         return $this;
     }
