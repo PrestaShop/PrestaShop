@@ -24,17 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableRequestSql;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetRequestSqlForEditingQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
-interface GetRequestSqlForEditingHandlerInterface
+class GetSqlRequestForEditingQuery
 {
     /**
-     * @param GetRequestSqlForEditingQuery $query
-     *
-     * @return EditableRequestSql
+     * @var SqlRequestId
      */
-    public function handle(GetRequestSqlForEditingQuery $query);
+    private $requestSqlId;
+
+    /**
+     * @param $requestSqlId
+     *
+     * @throws SqlRequestException
+     */
+    public function __construct($requestSqlId)
+    {
+        $this->requestSqlId = new SqlRequestId($requestSqlId);
+    }
+
+    /**
+     * @return SqlRequestId
+     */
+    public function getRequestSqlId()
+    {
+        return $this->requestSqlId;
+    }
 }
