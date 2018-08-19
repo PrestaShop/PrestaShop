@@ -26,8 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager;
-use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
+use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddSqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
@@ -41,28 +44,20 @@ class RequestSqlFormHandler
     private $formFactory;
 
     /**
-     * @var RequestSqlManager
+     * @var CommandBus
      */
-    private $requestSqlManager;
-
-    /**
-     * @var SqlQueryValidator
-     */
-    private $requestSqlValidator;
+    private $commandBus;
 
     /**
      * @param FormFactoryInterface $formFactory
-     * @param RequestSqlManager $requestSqlManager
-     * @param SqlQueryValidator $requestSqlValidator
+     * @param CommandBus $commandBus
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        RequestSqlManager $requestSqlManager,
-        SqlQueryValidator $requestSqlValidator
+        CommandBus $commandBus
     ) {
         $this->formFactory = $formFactory;
-        $this->requestSqlManager = $requestSqlManager;
-        $this->requestSqlValidator = $requestSqlValidator;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -85,10 +80,70 @@ class RequestSqlFormHandler
      */
     public function save(array $data)
     {
-        if ($errors = $this->requestSqlValidator->validate($data['request_sql']['sql'])) {
-            return $errors;
+        $errors = [];
+
+        try {
+            $addRequestSqlCommand = new AddSqlRequestCommand(
+                $data['request_sql']['name'],
+                $data['request_sql']['sql']
+            );
+
+            $this->commandBus->handle($addRequestSqlCommand);
+        } catch (SqlRequestConstraintException $e) {
+            $errors[] = $this->getHumanReadableConstraintErrorMessage($e);
+        } catch (CannotAddSqlRequestException $e) {
+            $errors[] = $this->getHumanReadableCreationErrorMessage();
+        } catch (SqlRequestException $e) {
+            $errors[] = $this->getHumanReadableCreationErrorMessage();
         }
 
-        return $this->requestSqlManager->createOrUpdateFromData($data['request_sql']);
+        return $errors;
+    }
+
+    /**
+     * @param SqlRequestConstraintException $e
+     *
+     * @return array Constraint error message prepared for translation
+     */
+    private function getHumanReadableConstraintErrorMessage(SqlRequestConstraintException $e)
+    {
+        switch ($e->getCode()) {
+            case SqlRequestConstraintException::INVALID_NAME_ERROR:
+                $invalidField = 'name';
+                break;
+            case SqlRequestConstraintException::INVALID_SQL_QUERY_ERROR:
+            case SqlRequestConstraintException::MALFORMED_SQL_QUERY_ERROR:
+                $invalidField = 'sql';
+                break;
+            default:
+                $invalidField = null;
+                break;
+        }
+
+        if (null === $invalidField) {
+            return $this->getHumanReadableCreationErrorMessage();
+        }
+
+        return [
+            'key' => 'The %s field is invalid.',
+            'parameters' => [
+                $invalidField
+            ],
+            'domain' => 'Admin.Notifications.Error',
+        ];
+    }
+
+    /**
+     * Get human readable error message when failed to create RequestSql
+     *
+     * @return array
+     */
+    private function getHumanReadableCreationErrorMessage()
+    {
+        return [
+            'key' => 'An error occurred while creating an object.',
+            'parameters' => [],
+            'domain' => 'Admin.Notifications.Error',
+        ];
     }
 }

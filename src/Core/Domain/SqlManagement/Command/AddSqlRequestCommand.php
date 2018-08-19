@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 
 /**
@@ -80,13 +81,14 @@ class AddSqlRequestCommand
      *
      * @return self
      *
-     * @throws SqlRequestException
+     * @throws SqlRequestConstraintException
      */
     private function setName($name)
     {
         if (!is_string($name) || empty($name)) {
-            throw new SqlRequestException(
-                sprintf('Invalid RequestSql name "%s"',  var_export($name, true))
+            throw new SqlRequestConstraintException(
+                sprintf('Invalid RequestSql name "%s"',  var_export($name, true)),
+                SqlRequestConstraintException::INVALID_NAME_ERROR
             );
         }
 
@@ -102,13 +104,14 @@ class AddSqlRequestCommand
      *
      * @return $this
      *
-     * @throws SqlRequestException
+     * @throws SqlRequestConstraintException
      */
     private function setSql($sql)
     {
         if (!is_string($sql) || empty($sql)) {
-            throw new SqlRequestException(
-                sprintf('Invalid RequestSql SQL query "%s"',  var_export($sql, true))
+            throw new SqlRequestConstraintException(
+                sprintf('Invalid RequestSql SQL query "%s"',  var_export($sql, true)),
+                SqlRequestConstraintException::INVALID_SQL_QUERY_ERROR
             );
         }
 

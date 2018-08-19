@@ -20,6 +20,8 @@ services:
 
     prestashop.adapter.sql_manager.command_handler.add_request_sql:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\AddSqlRequestHandler'
+        arguments:
+            - '@prestashop.adapter.sql_manager.sql_query_validator'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand' }
 

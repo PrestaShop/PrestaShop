@@ -184,24 +184,15 @@ class RequestSqlController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_request_sql');
             }
 
-            try {
-                $requestSqlData = $requestSqlForm->getData()['request_sql'];
+            $errors = $requestSqlFormHandler->save($requestSqlForm->getData());
 
-                $addRequestSqlCommand = new AddSqlRequestCommand(
-                    $requestSqlData['name'],
-                    $requestSqlData['sql']
-                );
-
-                $this->getCommandBus()->handle($addRequestSqlCommand);
-
+            if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_request_sql');
-            } catch (SqlRequestException $e) {
-                //@todo: handle properly
-
-                throw $e;
             }
+
+            $this->flashErrors($errors);
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig', [
