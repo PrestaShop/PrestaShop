@@ -93,6 +93,7 @@ class FrameworkBundleAdminController extends Controller
      * @param Form $form The form
      *
      * @return array[array[string]] Errors
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function getFormErrorsForJS(Form $form)
     {
@@ -156,6 +157,7 @@ class FrameworkBundleAdminController extends Controller
      * @param array  $parameters The hook parameters
      *
      * @return array The responses of hooks
+     * @throws \Exception
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -191,6 +193,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Get the old but still useful context
      *
+     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     protected function getContext()
     {
@@ -207,7 +210,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     protected function isDemoModeEnabled()
     {
@@ -228,6 +231,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $controller name of the controller to valide access
      *
      * @return int
+     * @throws \LogicException
      */
     protected function authorizationLevel($controller)
     {
@@ -268,6 +272,7 @@ class FrameworkBundleAdminController extends Controller
      * Return errors as flash error messages
      *
      * @param array $errorMessages
+     * @throws \LogicException
      */
     protected function flashErrors(array $errorMessages)
     {
@@ -288,5 +293,64 @@ class FrameworkBundleAdminController extends Controller
         $defaultTab = $legacyContext->getDefaultEmployeeTab();
 
         return $this->redirect($legacyContext->getAdminLink($defaultTab));
+    }
+
+    /**
+     * Check if the connected user is granted to actions on a specific object.
+     * @param $action
+     * @param $object
+     * @param string $suffix
+     * @return bool
+     * @throws \LogicException
+     */
+    protected function actionIsAllowed($action, $object = '', $suffix = '')
+    {
+        return (
+                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
+            ) || (
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                $this->isGranted(PageVoter::UPDATE, $object)
+            ) || (
+                ($action === 'duplicate' . $suffix) &&
+                ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
+            )
+        ;
+    }
+
+    /**
+     * Display a message about permissions failure according to an action.
+     * @param $action
+     * @param string $suffix
+     * @return string
+     * @throws \Exception
+     */
+    protected function getForbiddenActionMessage($action, $suffix = '')
+    {
+        if ($action === 'delete' . $suffix) {
+            return $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+            return $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'duplicate' . $suffix) {
+            return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
+        }
+
+        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+    }
+
+    /**
+     * Get Admin URI from PrestaShop 1.6 Back Office.
+     * @param string $controller the old Controller name
+     * @param bool $withToken whether we add token or not
+     * @param array $params url parameters
+     *
+     * @return string the page URI (with token)
+     */
+    protected function getAdminLink($controller, array $params, $withToken = true)
+    {
+        return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
     }
 }
