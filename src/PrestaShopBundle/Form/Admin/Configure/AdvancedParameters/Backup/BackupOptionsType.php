@@ -35,6 +35,9 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class BackupOptionsType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
