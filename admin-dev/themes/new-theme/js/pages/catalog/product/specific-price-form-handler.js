@@ -32,7 +32,11 @@ const $ = window.$;
  * - https://github.com/PrestaShop/PrestaShop/blob/develop/admin-dev/themes/default/js/bundle/product/form.js#L557
  */
 class SpecificPriceFormHandler {
+
   constructor() {
+    this.prefixCreateForm = 'form_step2_specific_price_';
+    this.prefixEditForm = 'form_modal_';
+
     this.$createPriceFormDefaultValues = new Object();
     this.storePriceFormDefaultValues();
 
@@ -45,6 +49,9 @@ class SpecificPriceFormHandler {
     this.configureDeletePriceButtonsBehavior();
   }
 
+  /**
+   * @private
+   */
   loadAndDisplayExistingSpecificPricesList() {
     var listContainer = $('#js-specific-price-list');
     var url = listContainer.attr('data').replace(/list\/\d+/, 'list/' + this.getProductId());
@@ -121,7 +128,12 @@ class SpecificPriceFormHandler {
     return row;
   }
 
+  /**
+   * @private
+   */
   configureAddPriceFormBehavior() {
+    const usePrefixForCreate = true;
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     $('#specific_price_form .js-cancel').click(() => {
       this.resetCreatePriceFormDefaultValues();
@@ -130,26 +142,75 @@ class SpecificPriceFormHandler {
 
     $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm());
 
-    this.loadAndFillOptionsForSelectCombinationInput();
+    this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
-    $('#form_step2_specific_price_sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible());
+    $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
 
-    $('#form_step2_specific_price_leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible());
+    $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
-    $('#form_step2_specific_price_sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible());
+    $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
   }
 
+  /**
+   * @private
+   */
+  configureEditPriceFormInsideModalBehavior() {
+    const usePrefixForCreate = false;
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    $('#edit-specific-price-modal-form .js-cancel').click(() => this.closeEditPriceModalAndRemoveForm());
+
+    this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
+
+    $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
+
+    $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
+
+    $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
+
+    this.reinitializeDatePickers();
+
+    this.initializeLeaveBPriceField(usePrefixForCreate);
+  }
+
+  /**
+   * @private
+   */
+  reinitializeDatePickers() {
+    $('.datepicker input').datetimepicker({format: 'YYYY-MM-DD'});
+  }
+
+  /**
+   * @param boolean usePrefixForCreate
+   *
+   * @private
+   */
+  initializeLeaveBPriceField(usePrefixForCreate) {
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    if ($(selectorPrefix + 'sp_price').val() != '') {
+      $(selectorPrefix + 'sp_price').prop('disabled', false);
+      $(selectorPrefix + 'leave_bprice').prop('checked', false);
+    }
+  }
+
+  /**
+   * @private
+   */
   configureEditPriceModalBehavior() {
     $(document).on('click', '#js-specific-price-list .js-edit', (event) => {
       event.preventDefault();
 
       var specificPriceId = $(event.currentTarget).data('specificPriceId');
 
-      this.openEditPriceModal(specificPriceId);
+      this.openEditPriceModalAndLoadForm(specificPriceId);
     });
 
   }
 
+  /**
+   * @private
+   */
   configureDeletePriceButtonsBehavior() {
     $(document).on('click', '#js-specific-price-list .js-delete', (event) => {
       event.preventDefault();
@@ -189,7 +250,11 @@ class SpecificPriceFormHandler {
         });
   }
 
-
+  /**
+   * @param string clickedLink selector
+   *
+   * @private
+   */
   deleteSpecificPrice(clickedLink) {
     modalConfirmation.create(translate_javascripts['This will delete the specific price. Do you wish to proceed?'], null, {
       onContinue: () => {
@@ -235,8 +300,16 @@ class SpecificPriceFormHandler {
     this.$createPriceFormDefaultValues = storage;
   }
 
-  loadAndFillOptionsForSelectCombinationInput() {
-    var inputField = $('#form_step2_specific_price_sp_id_product_attribute');
+  /**
+   * @param boolean usePrefixForCreate
+   *
+   * @private
+   */
+  loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate) {
+
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    var inputField = $(selectorPrefix + 'sp_id_product_attribute');
     var url = inputField.attr('data-action').replace(/product-combinations\/\d+/, 'product-combinations/' + this.getProductId());
 
     $.ajax({
@@ -258,19 +331,18 @@ class SpecificPriceFormHandler {
   }
 
   /**
-   * Get product ID for current Catalog Product page
+   * @param boolean usePrefixForCreate
    *
-   * @returns integer
+   * @private
    */
-  getProductId() {
-    return $('#form_id_product').val();
-  }
+  showSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
 
-  showSpecificPriceTaxFieldIfEligible() {
-    if ($('#form_step2_specific_price_sp_reduction_type').val() === 'percentage') {
-      $('#form_step2_specific_price_sp_reduction_tax').hide();
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    if ($(selectorPrefix + 'sp_reduction_type').val() === 'percentage') {
+      $(selectorPrefix + 'sp_reduction_tax').hide();
     } else {
-      $('#form_step2_specific_price_sp_reduction_tax').show();
+      $(selectorPrefix + 'sp_reduction_tax').show();
     }
   }
 
@@ -296,14 +368,27 @@ class SpecificPriceFormHandler {
     });
   }
 
-  enableSpecificPriceFieldIfEligible() {
-    $('#form_step2_specific_price_sp_price').prop('disabled', $('#form_step2_specific_price_leave_bprice').is(':checked')).val('');
+  /**
+   * @param boolean usePrefixForCreate
+   *
+   * @private
+   */
+  enableSpecificPriceFieldIfEligible(usePrefixForCreate) {
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    $(selectorPrefix + 'sp_price').prop('disabled', $(selectorPrefix + 'leave_bprice').is(':checked')).val('');
   }
 
-  enableSpecificPriceTaxFieldIfEligible() {
-    const uglySelect2Selector = $('#select2-form_step2_specific_price_sp_reduction_tax-container').parent().parent();
+  /**
+   * @param boolean usePrefixForCreate
+   *
+   * @private
+   */
+  enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+    const uglySelect2Selector = $('#select2-' + selectorPrefix + 'sp_reduction_tax-container').parent().parent();
 
-    if ($('#form_step2_specific_price_sp_reduction_type').val() === 'amount') {
+    if ($(selectorPrefix + 'sp_reduction_type').val() === 'amount') {
       uglySelect2Selector.show();
     } else {
       uglySelect2Selector.hide();
@@ -317,7 +402,7 @@ class SpecificPriceFormHandler {
    *
    * @private
    */
-  openEditPriceModal(specificPriceId) {
+  openEditPriceModalAndLoadForm(specificPriceId) {
     const url = $('#js-specific-price-list').data('actionEdit').replace(/get-form\/\d+/, 'get-form/' + specificPriceId);
 
     $('#edit-specific-price-modal').modal("show");
@@ -328,11 +413,22 @@ class SpecificPriceFormHandler {
     })
         .done(response => {
           this.insertEditSpecificPriceFormIntoModal(response)
-          this.loadJQueryBindersForModal();
+          this.configureEditPriceFormInsideModalBehavior();
         })
         .fail(errors => {
           showErrorMessage(errors.responseJSON);
         });
+  }
+
+  /**
+   * @private
+   */
+  closeEditPriceModalAndRemoveForm() {
+    $('#edit-specific-price-modal').modal("hide");
+
+    var formLocationHolder = $('#edit-specific-price-modal-form');
+
+    formLocationHolder.empty();
   }
 
   /**
@@ -347,8 +443,30 @@ class SpecificPriceFormHandler {
     formLocationHolder.append(form);
   }
 
-  loadJQueryBindersForModal() {
-    // to be implemented to reproduce https://github.com/PrestaShop/PrestaShop/pull/9388/files#diff-92ead381d47087dcec5699f591e4e4bbR749 behavior
+  /**
+   * Get product ID for current Catalog Product page
+   *
+   * @returns integer
+   *
+   * @private
+   */
+  getProductId() {
+    return $('#form_id_product').val();
+  }
+
+  /**
+   * @param boolean usePrefixForCreate
+   *
+   * @returns string
+   *
+   * @private
+   */
+  getPrefixSelector(usePrefixForCreate) {
+    if (usePrefixForCreate == true) {
+      return '#' + this.prefixCreateForm;
+    } else {
+      return '#' + this.prefixEditForm;
+    }
   }
 }
 
