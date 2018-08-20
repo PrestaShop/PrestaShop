@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.bus.command:
+        alias: 'tactician.commandbus.default'
+        public: true
+
+    prestashop.core.bus.query:
+      alias: 'tactician.commandbus.default'
+      public: true

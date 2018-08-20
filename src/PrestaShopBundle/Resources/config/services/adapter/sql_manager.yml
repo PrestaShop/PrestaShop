@@ -18,6 +18,11 @@ services:
             - '@prestashop.core.export.dir'
             - '@prestashop.adapter.legacy.configuration'
 
+    prestashop.adapter.sql_manager.request_sql_form_data_validator:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlFormDataValidator'
+        arguments:
+            - '@prestashop.adapter.sql_manager.sql_query_validator'
+
     prestashop.adapter.sql_manager.command_handler.add_request_sql:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\AddSqlRequestHandler'
         arguments:
