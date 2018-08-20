@@ -119,14 +119,22 @@
                             </div>
 
                             {% if canMove %}
-                              <div class="btn-group-vertical">
+                              <div class="btn-group-vertical module-buttons-update">
                                 <a class="btn btn-outline-primary btn-sm"
-                                  href="{{ path('api_improve_design_positions_update', {moduleId: moduleInstance.id, hookId: hook['id_hook'], way: 0}) }}">
+                                  href="{{ path('api_improve_design_positions_update', {moduleId: moduleInstance.id, hookId: hook['id_hook'], way: 0}) }}"
+                                  data-hook-id="{{ hook['id_hook'] }}"
+                                  data-module-id="{{ moduleInstance.id }}"
+                                  data-way="0"
+                                >
                                   <i class="material-icons">expand_less</i>
                                 </a>
 
                                 <a class="btn btn-outline-primary btn-sm"
-                                  href="{{ path('api_improve_design_positions_update', {moduleId: moduleInstance.id, hookId: hook['id_hook'], way: 1}) }}">
+                                  href="{{ path('api_improve_design_positions_update', {moduleId: moduleInstance.id, hookId: hook['id_hook'], way: 1}) }}"
+                                  data-hook-id="{{ hook['id_hook'] }}"
+                                  data-module-id="{{ moduleInstance.id }}"
+                                  data-way="1"
+                                >
                                   <i class="material-icons">expand_more</i>
                                 </a>
                               </div>

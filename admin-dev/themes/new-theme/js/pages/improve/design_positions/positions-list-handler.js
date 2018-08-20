@@ -43,7 +43,7 @@ class PositionsListHandler {
     self.$hookSearch = $("#hook-search");
     self.$modulePositionsForm = $('#module-positions-form');
     self.$moduleUnhookButton = $('#unhook-button-position-bottom');
-
+    self.$moduleButtonsUpdate = $('.module-buttons-update .btn');
 
     self.handleList();
     self.handleSortable();
@@ -124,6 +124,40 @@ class PositionsListHandler {
         $(`.hook${$(this).data('hook-id')}:not(:checked)`).length === 0
       );
     });
+
+    self.$moduleButtonsUpdate.on('click', function($event) {
+      const $btn = $(this);
+      const $current = $btn.closest('.module-item');
+      let $destination;
+
+      if ($btn.data('way')) {
+        $destination = $current.next('.module-item');
+      } else {
+        $destination = $current.prev('.module-item');
+      }
+
+      if ($destination.length === 0) {
+        return false;
+      }
+
+      if ($btn.data('way')) {
+        $current.insertAfter($destination);
+      } else {
+        $current.insertBefore($destination);
+      }
+
+      self.updatePositions(
+        {
+          hookId: $btn.data('hook-id'),
+          moduleId: $btn.data('module-id'),
+          way: $btn.data('way'),
+          positions: [],
+        },
+        $btn.closest('ul')
+      );
+
+      return false;
+    });
   }
 
   /**
@@ -137,7 +171,7 @@ class PositionsListHandler {
       start: function(e, ui) {
         $(this).data('previous-index', ui.item.index());
       },
-      update: function(e, ui) {
+      update: function($event, ui) {
         const [ hookId, moduleId ] = ui.item.attr('id').split('_');
 
         const $data = {
@@ -147,26 +181,34 @@ class PositionsListHandler {
           positions: [],
         };
 
-        $.each(e.target.children, function(index, element) {
-          $data.positions.push($(element).attr('id'));
-        });
-
-        $.ajax({
-          type: 'POST',
-          headers: {'cache-control': 'no-cache'},
-          url: self.$modulePositionsForm.data('update-url'),
-          data: $data,
-          success: () => {
-            let start = 0;
-
-            $.each(e.target.children, function(index, element) {
-              $(element).find('.index-position').html(++start);
-            });
-
-            window.showSuccessMessage(window.update_success_msg);
-          }
-        });
+        self.updatePositions(
+          $data,
+          $($event.target)
+        );
       },
+    });
+  }
+
+  updatePositions($data, $list) {
+    const self = this;
+    $.each($list.children(), function(index, element) {
+      $data.positions.push($(element).attr('id'));
+    });
+
+    $.ajax({
+      type: 'POST',
+      headers: {'cache-control': 'no-cache'},
+      url: self.$modulePositionsForm.data('update-url'),
+      data: $data,
+      success: () => {
+        let start = 0;
+        $.each($list.children(), function(index, element) {
+          console.log($(element).find('.index-position'));
+          $(element).find('.index-position').html(++start);
+        });
+
+        window.showSuccessMessage(window.update_success_msg);
+      }
     });
   }
 

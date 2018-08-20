@@ -32,11 +32,12 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Module as LegacyModule;
 
 class PositionsController extends ApiController
 {
     /**
+     * Update positions
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -49,7 +50,7 @@ class PositionsController extends ApiController
         $positions = $request->request->get('positions');
         $position = (int) is_array($positions) ? array_search($hookId.'_'.$moduleId, $positions) + 1 : null;
 
-        $module = LegacyModule::getInstanceById($moduleId);
+        $module = $this->container->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
         if (empty($module->id)) {
             return $this->jsonResponse(
                 [
@@ -74,6 +75,8 @@ class PositionsController extends ApiController
     }
 
     /**
+     * Get hookable list
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -109,6 +112,8 @@ class PositionsController extends ApiController
     }
 
     /**
+     * Get hookable module list
+     *
      * @param Request $request
      *
      * @return JsonResponse
