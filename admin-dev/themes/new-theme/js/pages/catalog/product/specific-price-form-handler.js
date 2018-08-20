@@ -25,12 +25,6 @@
 
 const $ = window.$;
 
-/**
- * $@todo: need to migrate deleted legacy JS behaviors:
- * - https://github.com/PrestaShop/PrestaShop/blob/develop/admin-dev/themes/default/js/bundle/product/form.js#L186
- * - https://github.com/PrestaShop/PrestaShop/blob/develop/admin-dev/themes/default/js/bundle/product/form.js#L191
- * - https://github.com/PrestaShop/PrestaShop/blob/develop/admin-dev/themes/default/js/bundle/product/form.js#L557
- */
 class SpecificPriceFormHandler {
 
   constructor() {
@@ -142,7 +136,7 @@ class SpecificPriceFormHandler {
 
     $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm());
 
-    this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
+    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
 
     $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
 
