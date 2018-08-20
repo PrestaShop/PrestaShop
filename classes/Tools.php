@@ -2621,6 +2621,7 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '/js/jquery/*',
         );
 
         // Directories
