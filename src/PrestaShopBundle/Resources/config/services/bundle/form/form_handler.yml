@@ -237,4 +237,4 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
-            - '@prestashop.core.bus.command'
+            - '@prestashop.core.command_bus.command'
