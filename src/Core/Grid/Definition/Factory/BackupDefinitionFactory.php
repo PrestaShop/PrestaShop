@@ -108,7 +108,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Global'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
