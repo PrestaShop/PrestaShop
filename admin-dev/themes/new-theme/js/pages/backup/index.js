@@ -29,6 +29,8 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 
+const $ = window.$;
+
 $(() => {
   const backupGrid = new Grid('backup');
 
