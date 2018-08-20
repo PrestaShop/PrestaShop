@@ -237,4 +237,10 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
+            - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
+
+    prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormDataProvider'
+        arguments:
             - '@prestashop.core.command_bus.command'
+            - '@prestashop.core.command_bus.query'
