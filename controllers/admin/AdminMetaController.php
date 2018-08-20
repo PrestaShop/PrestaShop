@@ -37,6 +37,16 @@ class AdminMetaControllerCore extends AdminController
     protected $url = false;
     protected $toolbar_scroll = false;
 
+    /**
+     * @var string Path to .htaccess
+     */
+    private $ht_file;
+
+    /**
+     * @var string Path to robots.txt
+     */
+    private $rb_file;
+
     public function __construct()
     {
         $this->table = 'meta';
@@ -46,7 +56,6 @@ class AdminMetaControllerCore extends AdminController
         $this->identifier_name = 'page';
         $this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
         $this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-        $this->rb_data = Tools::getRobotsContent();
 
         parent::__construct();
 

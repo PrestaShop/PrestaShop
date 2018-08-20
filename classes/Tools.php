@@ -2566,7 +2566,7 @@ FileETag none
         if (count($robots_content['Directories'])) {
             fwrite($write_fd, "# Directories\n");
             foreach ($robots_content['Directories'] as $dir) {
-                fwrite($write_fd, 'Disallow: */'.$dir."\n");
+                fwrite($write_fd, 'Disallow: /'.$dir."\n");
             }
         }
 
@@ -2621,22 +2621,22 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
-            '*/themes/*/assets/cache/*.js',
-            '*/themes/*/assets/cache/*.css',
-            '*/themes/*/assets/css/*',
+            '/js/jquery/*',
         );
 
         // Directories
-        $tab['Directories'] = array('cache/', 'classes/', 'config/', 'controllers/',
-            'css/', 'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
-            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'vendor/', 'web/', 'webservice/');
+        $tab['Directories'] = array(
+            'app/', 'cache/', 'classes/', 'config/', 'controllers/',
+            'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
+            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'var/', 'vendor/', 'webservice/',
+        );
 
         // Files
         $disallow_controllers = array(
             'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
             'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
             'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
-            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
+            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics', 'attachment', 'guest-tracking',
         );
 
         // Rewrite files
