@@ -134,6 +134,36 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
+     * Update specific price Form process
+     *
+     * @param int idSpecificPrice
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function updateAction($idSpecificPrice, Request $request)
+    {
+        $response = new JsonResponse();
+
+        // @todo: check it works
+        $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
+        $formData = $request->get('form');
+        $formValues = $formData['modal'];
+
+        /** @var AdminProductWrapper $adminProductWrapper */
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $errors = $adminProductWrapper->processProductSpecificPrice($idProduct, $formValues, $idSpecificPrice);
+
+        if (!empty($errors)) {
+            $response->setData(implode(', ', $errors));
+            $response->setStatusCode(400);
+        }
+
+        return $response;
+    }
+
+
+    /**
      * Delete a specific price
      *
      * @param int $idSpecificPrice The specific price ID

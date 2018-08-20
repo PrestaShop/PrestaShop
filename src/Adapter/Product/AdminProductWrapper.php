@@ -227,16 +227,17 @@ class AdminProductWrapper
     }
 
     /**
-     * processProductSpecificPrice
-     * Add/Update specific price
+     * Add/Update a SpecificPrice object
      *
      * @param int $id_product
      * @param array $specificPriceValues the posted values
+     * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
      *
      * @return AdminProductsController instance
      */
-    public function processProductSpecificPrice($id_product, $specificPriceValues)
+    public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
+        // ---- data formatting ----
         $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
@@ -257,34 +258,69 @@ class AdminProductWrapper
         if (!$to) {
             $to = '0000-00-00 00:00:00';
         }
+        $isThisAnUpdate = (null !== $idSpecificPrice);
 
+        // ---- validation ----
         if (($price == '-1') && ((float)$reduction == '0')) {
             $this->errors[] = $this->translator->trans('No reduction value has been submitted', array(), 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
             $this->errors[] = $this->translator->trans('Invalid date range', array(), 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
-        } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
-            $specificPrice = new SpecificPrice();
-            $specificPrice->id_product = (int)$id_product;
-            $specificPrice->id_product_attribute = (int)$id_product_attribute;
-            $specificPrice->id_shop = (int)$id_shop;
-            $specificPrice->id_currency = (int)($id_currency);
-            $specificPrice->id_country = (int)($id_country);
-            $specificPrice->id_group = (int)($id_group);
-            $specificPrice->id_customer = (int)$id_customer;
-            $specificPrice->price = (float)($price);
-            $specificPrice->from_quantity = (int)($from_quantity);
-            $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
-            $specificPrice->reduction_tax = $reduction_tax;
-            $specificPrice->reduction_type = $reduction_type;
-            $specificPrice->from = $from;
-            $specificPrice->to = $to;
-
-            if (!$specificPrice->add()) {
-                $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', array(), 'Admin.Catalog.Notification');
-            }
         }
+        $validationResult = $this->validateSpecificPrice(
+            $id_product,
+            $id_shop,
+            $id_currency,
+            $id_country,
+            $id_group,
+            $id_customer,
+            $price,
+            $from_quantity,
+            $reduction,
+            $reduction_type,
+            $from,
+            $to,
+            $id_product_attribute,
+            $isThisAnUpdate
+        );
+
+        if (false === $validationResult) {
+            return $this->errors;
+        }
+
+        // ---- data modification ----
+        if ($isThisAnUpdate) {
+            $specificPrice = new SpecificPrice($idSpecificPrice);
+        } else {
+            $specificPrice = new SpecificPrice();
+        }
+
+        $specificPrice->id_product = (int)$id_product;
+        $specificPrice->id_product_attribute = (int)$id_product_attribute;
+        $specificPrice->id_shop = (int)$id_shop;
+        $specificPrice->id_currency = (int)($id_currency);
+        $specificPrice->id_country = (int)($id_country);
+        $specificPrice->id_group = (int)($id_group);
+        $specificPrice->id_customer = (int)$id_customer;
+        $specificPrice->price = (float)($price);
+        $specificPrice->from_quantity = (int)($from_quantity);
+        $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+        $specificPrice->reduction_tax = $reduction_tax;
+        $specificPrice->reduction_type = $reduction_type;
+        $specificPrice->from = $from;
+        $specificPrice->to = $to;
+
+        if ($isThisAnUpdate) {
+            $dataSavingResult = $specificPrice->save();
+        } else {
+            $dataSavingResult = $specificPrice->add();
+        }
+
+        if (false === $dataSavingResult) {
+            $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', array(), 'Admin.Catalog.Notification');
+        }
+
 
         return $this->errors;
     }
@@ -292,7 +328,22 @@ class AdminProductWrapper
     /**
      * Validate a specific price
      */
-    private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
+    private function validateSpecificPrice(
+        $id_product,
+        $id_shop,
+        $id_currency,
+        $id_country,
+        $id_group,
+        $id_customer,
+        $price,
+        $from_quantity,
+        $reduction,
+        $reduction_type,
+        $from,
+        $to,
+        $id_combination = 0,
+        $isThisAnUpdate = false
+    )
     {
         if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
@@ -304,7 +355,7 @@ class AdminProductWrapper
             $this->errors[] = 'Please select a discount type (amount or percentage).';
         } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = 'The from/to date is invalid.';
-        } elseif (SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (!$isThisAnUpdate && SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {
             return true;

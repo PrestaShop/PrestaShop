@@ -158,7 +158,9 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = false;
     var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $('#edit-specific-price-modal-form .js-cancel').click(() => this.closeEditPriceModalAndRemoveForm());
+    $('#form_modal_cancel').click(() => this.closeEditPriceModalAndRemoveForm());
+
+    $('#form_modal_save').click(() => this.submitEditPriceForm());
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
@@ -247,6 +249,36 @@ class SpecificPriceFormHandler {
           showErrorMessage(errors.responseJSON);
 
           $('#specific_price_form .js-save').removeAttr('disabled');
+        });
+  }
+
+  /**
+   * @private
+   */
+  submitEditPriceForm() {
+    const baseUrl = $('#edit-specific-price-modal-form').attr('data-action');
+    const specificPriceId = $('#edit-specific-price-modal-form').data('specificPriceId');
+    const url = baseUrl.replace(/update\/\d+/, 'update/' + specificPriceId);
+
+    const data = $('#edit-specific-price-modal-form input, #edit-specific-price-modal-form select, #form_id_product').serialize();
+
+    $('#edit-specific-price-modal-form .js-save').attr('disabled', 'disabled');
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+    })
+        .done(response => {
+          showSuccessMessage(translate_javascripts['Form update success']);
+          this.closeEditPriceModalAndRemoveForm();
+          this.loadAndDisplayExistingSpecificPricesList();
+          $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
+        })
+        .fail(errors => {
+          showErrorMessage(errors.responseJSON);
+
+          $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
         });
   }
 
@@ -412,7 +444,8 @@ class SpecificPriceFormHandler {
       url: url,
     })
         .done(response => {
-          this.insertEditSpecificPriceFormIntoModal(response)
+          this.insertEditSpecificPriceFormIntoModal(response);
+          $('#edit-specific-price-modal-form').data('specificPriceId', specificPriceId);
           this.configureEditPriceFormInsideModalBehavior();
         })
         .fail(errors => {

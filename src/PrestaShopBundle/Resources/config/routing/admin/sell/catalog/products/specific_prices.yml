@@ -23,6 +23,15 @@ admin_specific_price_add:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::addAction
 
+admin_specific_price_update:
+    path:     /update/{idSpecificPrice}/
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::updateAction
+        idSpecificPrice: 0
+    requirements:
+        idSpecificPrice: \d+
+
 admin_delete_specific_price:
     path:     /delete/{idSpecificPrice}
     methods:  [GET]
