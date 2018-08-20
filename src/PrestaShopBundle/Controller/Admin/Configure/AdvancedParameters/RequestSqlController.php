@@ -26,9 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -174,7 +171,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             ];
         }
 
-        $requestSqlForm = $requestSqlFormHandler->getForm($requestSqlData);
+        $requestSqlForm = $requestSqlFormHandler->getForm();
         $requestSqlForm->handleRequest($request);
 
         if ($requestSqlForm->isSubmitted()) {
@@ -220,37 +217,25 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function editAction($requestSqlId, Request $request)
     {
-        try {
-            $getRequestForEditingQuery = new GetSqlRequestForEditingQuery($requestSqlId);
-            $editableRequestSql = $this->getCommandBus()->handle($getRequestForEditingQuery);
-
-            //@todo: implement $editableRequestSql editing handler
-        } catch (SqlRequestException $e){
-            //@todo: handle properly
-
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_request_sql');
-        }
-
         $requestSqlFormHandler = $this->getRequestSqlFormHandler();
-        $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
-        $requestSqlForm = $requestSqlFormHandler->getForm([
-            'request_sql' => [
-                'name' => $editableRequestSql->getName(),
-                'sql' => $editableRequestSql->getSql(),
-            ]
-        ]);
-        $requestSqlForm->handleRequest($request);
 
-        if ($requestSqlForm->isSubmitted()) {
+        $editRequestSqlForm = $requestSqlFormHandler->getFormFor($requestSqlId);
+        $editRequestSqlForm->handleRequest($request);
+
+        if ($editRequestSqlForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
                 return $this->redirectToRoute('admin_request_sql');
             }
-            if (!$errors = $formHandler->save($requestSqlForm->getData())) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            $errors = $requestSqlFormHandler->save($editRequestSqlForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToRoute('admin_request_sql');
             }
@@ -263,7 +248,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'requestSqlForm' => $requestSqlForm->createView(),
+            'requestSqlForm' => $editRequestSqlForm->createView(),
             'dbTableNames' => $this->get('prestashop.adapter.sql_manager.request_sql_data_provider')->getTables(),
         ]);
     }

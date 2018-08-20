@@ -34,3 +34,11 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestForEditingHandler'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery' }
+
+    prestashop.adapter.sql_manager.command_handler.edit_request_sql:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\EditSqlRequestHandler'
+        arguments:
+            - '@prestashop.adapter.sql_manager.sql_query_validator'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand' }
+
