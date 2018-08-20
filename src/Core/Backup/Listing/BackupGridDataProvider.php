@@ -24,8 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Backup;
+namespace PrestaShop\PrestaShop\Core\Backup\Listing;
 
+use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 use PrestaShop\PrestaShop\Core\Backup\Comparator\BackupComparatorInterface;
 use PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
