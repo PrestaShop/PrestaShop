@@ -138,7 +138,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return [
             'form' => $form->createView()->offsetGet('modal'),
-            'has_combinations' => ($product->hasCombinations())
+            'has_combinations' => ($product->hasCombinations()),
+            'is_modal' => true,
         ];
     }
 
