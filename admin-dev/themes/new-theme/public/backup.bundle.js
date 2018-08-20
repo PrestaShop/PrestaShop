@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e0495d382e7b8cf724f8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "75f18597c706b9f183d0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -848,6 +848,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
+var $ = window.$;
 
 $(function () {
   var backupGrid = new __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__["a" /* default */]('backup');
