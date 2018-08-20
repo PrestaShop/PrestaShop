@@ -26,13 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use League\Tactician\CommandBus;
 use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlFormDataValidator;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddSqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Class RequestSqlFormHandler is responsible for creating RequestSql form
@@ -45,44 +41,57 @@ class RequestSqlFormHandler
     private $formFactory;
 
     /**
-     * @var CommandBus
-     */
-    private $commandBus;
-
-    /**
      * @var RequestSqlFormDataValidator
      */
     private $requestSqlFormDataValidator;
 
     /**
+     * @var RequestSqlFormDataProvider
+     */
+    private $requestSqlFormDataProvider;
+
+    /**
      * @param FormFactoryInterface $formFactory
      * @param RequestSqlFormDataValidator $requestSqlFormDataValidator
-     * @param CommandBus $commandBus
+     * @param RequestSqlFormDataProvider $requestSqlFormDataProvider
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         RequestSqlFormDataValidator $requestSqlFormDataValidator,
-        CommandBus $commandBus
+        RequestSqlFormDataProvider $requestSqlFormDataProvider
     ) {
         $this->formFactory = $formFactory;
-        $this->commandBus = $commandBus;
         $this->requestSqlFormDataValidator = $requestSqlFormDataValidator;
+        $this->requestSqlFormDataProvider = $requestSqlFormDataProvider;
     }
 
     /**
-     * {@inheritdoc}
+     * Get RequestSql form
+     *
+     * @return FormInterface
      */
-    public function getForm(array $data = [])
+    public function getForm()
     {
-        $builder = $this->formFactory->createBuilder()
-            ->add('request_sql', RequestSqlType::class)
-            ->setData($data)
-        ;
-
-        return $builder->getForm();
+        return $this->getRequestSqlForm();
     }
 
     /**
+     * Get for for given RequestSql
+     *
+     * @param int $requestSqlId
+     *
+     * @return FormInterface
+     */
+    public function getFormFor($requestSqlId)
+    {
+        $requestSqlFormData = $this->requestSqlFormDataProvider->getData($requestSqlId);
+
+        return $this->getRequestSqlForm($requestSqlFormData);
+    }
+
+    /**
+     * Save RequestSql form data
+     *
      * @param array $data
      *
      * @return array
@@ -95,68 +104,23 @@ class RequestSqlFormHandler
             return $errors;
         }
 
-        try {
-            $addRequestSqlCommand = new AddSqlRequestCommand(
-                $data['request_sql']['name'],
-                $data['request_sql']['sql']
-            );
-
-            $this->commandBus->handle($addRequestSqlCommand);
-        } catch (SqlRequestConstraintException $e) {
-            $errors[] = $this->getHumanReadableConstraintErrorMessage($e);
-        } catch (CannotAddSqlRequestException $e) {
-            $errors[] = $this->getHumanReadableCreationErrorMessage();
-        } catch (SqlRequestException $e) {
-            $errors[] = $this->getHumanReadableCreationErrorMessage();
-        }
-
-        return $errors;
+        return $this->requestSqlFormDataProvider->saveData($data['request_sql']);
     }
 
     /**
-     * @param SqlRequestConstraintException $e
+     * @param array $formData
      *
-     * @return array Constraint error message prepared for translation
+     * @return FormInterface
      */
-    private function getHumanReadableConstraintErrorMessage(SqlRequestConstraintException $e)
+    private function getRequestSqlForm(array $formData = [])
     {
-        switch ($e->getCode()) {
-            case SqlRequestConstraintException::INVALID_NAME_ERROR:
-                $invalidField = 'name';
-                break;
-            case SqlRequestConstraintException::INVALID_SQL_QUERY_ERROR:
-            case SqlRequestConstraintException::MALFORMED_SQL_QUERY_ERROR:
-                $invalidField = 'sql';
-                break;
-            default:
-                $invalidField = null;
-                break;
-        }
+        $builder = $this->formFactory->createBuilder()
+            ->add('request_sql', RequestSqlType::class)
+            ->setData([
+                'request_sql' => $formData,
+            ])
+        ;
 
-        if (null === $invalidField) {
-            return $this->getHumanReadableCreationErrorMessage();
-        }
-
-        return [
-            'key' => 'The %s field is invalid.',
-            'parameters' => [
-                $invalidField
-            ],
-            'domain' => 'Admin.Notifications.Error',
-        ];
-    }
-
-    /**
-     * Get human readable error message when failed to create RequestSql
-     *
-     * @return array
-     */
-    private function getHumanReadableCreationErrorMessage()
-    {
-        return [
-            'key' => 'An error occurred while creating an object.',
-            'parameters' => [],
-            'domain' => 'Admin.Notifications.Error',
-        ];
+        return $builder->getForm();
     }
 }
