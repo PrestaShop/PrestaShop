@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.shop.context:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Context'

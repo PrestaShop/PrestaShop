@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Hook;
 
 use Hook;
@@ -35,11 +34,38 @@ use Hook;
 class HookInformationProvider
 {
     /**
-     * @param $hook_name
+     * @param string $hookName
+     *
      * @return bool
      */
-    public function isDisplayHookName($hook_name)
+    public function isDisplayHookName($hookName)
     {
-        return Hook::isDisplayHookName($hook_name);
+        return Hook::isDisplayHookName($hookName);
+    }
+
+    /**
+     * Return Hooks List
+     *
+     * @param bool $position         Where position is active
+     * @param bool $onlyDisplayHooks Only hook with display hook name
+     *
+     * @return array Hooks List
+     */
+    public function getHooks($position = false, $onlyDisplayHooks = false)
+    {
+        return Hook::getHooks($position, $onlyDisplayHooks);
+    }
+
+    /**
+     * Return Hooks list
+     *
+     * @param int $hookId   Hook id
+     * @param int $moduleId Module id
+     *
+     * @return array Modules list
+     */
+    public static function getModulesFromHook($hookId, $moduleId = null)
+    {
+        return Hook::getModulesFromHook($hookId, $moduleId);
     }
 }

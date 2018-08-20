@@ -26,16 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
-use PrestaShopBundle\Form\Admin\Improve\Design\PositionsFormDataProvider;
+use Hook;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Form\Admin\Improve\Design\PositionsFormDataProvider;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-use Module;
-use Hook;
-use Shop;
 
 /**
  * Configuration modules positions  "Improve > Design > Positions"
@@ -64,10 +62,12 @@ class PositionsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $moduleAdapter = $this->get('prestashop.adapter.legacy.module');
+        $hookProvider = $this->get('prestashop.adapter.legacy.hook');
         $context = $this->getContext();
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $admin_dir = basename(_PS_ADMIN_DIR_);
-        $installedModules = Module::getModulesInstalled();
+        $installedModules = $moduleAdapter->getModulesInstalled();
 
         $showModules = $request->get('show_modules');
         if ($showModules && strval($showModules) != 'all') {
@@ -76,15 +76,18 @@ class PositionsController extends FrameworkBundleAdminController
 
         $modules = [];
         foreach ($installedModules as $installedModule) {
-            if ($module = Module::getInstanceById((int) $installedModule['id_module'])) {
+            if ($module = $moduleAdapter->getInstanceById($installedModule['id_module'])) {
                 // We want to be able to sort modules by display name
                 $modules[(int) $module->id] = $module;
             }
         }
 
-        $hooks = Hook::getHooks();
+        $hooks = $hookProvider->getHooks();
         foreach ($hooks as $key => $hook) {
-            $hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->selectedModule);
+            $hooks[$key]['modules'] = $hookProvider->getModulesFromHook(
+                $hook['id_hook'],
+                $this->selectedModule
+            );
             // No module found, no need to continue
             if (!is_array($hooks[$key]['modules'])) {
                 unset($hooks[$key]);
@@ -104,7 +107,7 @@ class PositionsController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $hooks[$key]['position'] = Hook::isDisplayHookName($hook['name']);
+            $hooks[$key]['position'] = $hookProvider->isDisplayHookName($hook['name']);
         }
 
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
@@ -118,6 +121,7 @@ class PositionsController extends FrameworkBundleAdminController
                 ]
             ],
             'showModules' => $this->showModules,
+            'selectedModule' => $this->selectedModule,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false,
@@ -125,16 +129,16 @@ class PositionsController extends FrameworkBundleAdminController
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminModulesPositions'),
-            'selectedModule' => $this->selectedModule,
             'hooks' => $hooks,
             'modules' => $modules,
-            'canMove' => !(Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+            'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext()
         ];
     }
 
     /**
      * Transplant a module
-     * @TODO this part isn't finished yet waiting for CQRS
+     *
+     * @TODO this part isn't finished yet, waiting for CQRS!
      *
      * @Template("@PrestaShop/Admin/Improve/Design/positions-form.html.twig")
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
@@ -198,13 +202,14 @@ class PositionsController extends FrameworkBundleAdminController
      */
     public function unhookAction(Request $request)
     {
+        $validateAdapter = $this->get('prestashop.adapter.validate');
         $unhooks = $request->request->get('unhooks');
         $context = null;
-        if (empty($request->request->get('unhooks'))) {
-            $moduleId = $request->request->get('moduleId');
-            $hookId = $request->request->get('hookId');
+        if (empty($unhooks)) {
+            $moduleId = $request->query->get('moduleId');
+            $hookId = $request->query->get('hookId');
             $unhooks = [sprintf('%d_%d', $hookId, $moduleId)];
-            $context = Shop::getContextListShopID();
+            $context = $this->get('prestashop.adapter.shop.context')->getContextListShopID();
         }
 
         $errors = [];
@@ -212,10 +217,10 @@ class PositionsController extends FrameworkBundleAdminController
             $explode = explode('_', $unhook);
             $hookId = (int) $explode[0];
             $moduleId = (int) $explode[1];
-            $module = Module::getInstanceById($moduleId);
+            $module = $this->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
             $hook = new Hook($hookId);
 
-            if (!Validate::isLoadedObject($module)) {
+            if (!$validateAdapter->isLoadedObject($module)) {
                 $errors[] = $this->trans(
                     'This module cannot be loaded.',
                     [],
@@ -224,7 +229,7 @@ class PositionsController extends FrameworkBundleAdminController
                 continue;
             }
 
-            if (!$hookId || !Validate::isLoadedObject($hook)) {
+            if (!$hookId || !$validateAdapter->isLoadedObject($hook)) {
                 $errors[] = $this->trans(
                     'Hook cannot be loaded.',
                     [],

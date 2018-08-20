@@ -82,4 +82,16 @@ class Validate
     {
         return ValidateLegacy::isModuleName($name);
     }
+
+    /**
+     * Check if object has been correctly loaded
+     *
+     * @param object $object Object to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isLoadedObject($object)
+    {
+        return ValidateLegacy::isLoadedObject($object);
+    }
 }
