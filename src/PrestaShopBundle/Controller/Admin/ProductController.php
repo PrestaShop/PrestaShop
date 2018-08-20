@@ -396,6 +396,7 @@ class ProductController extends FrameworkBundleAdminController
         $response = new JsonResponse();
         $modelMapper = $this->get('prestashop.adapter.admin.model.product');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+
         $form = $this->createProductForm($product, $modelMapper);
 
         $formBulkCombinations = $this->createForm(
@@ -581,7 +582,7 @@ class ProductController extends FrameworkBundleAdminController
         )
             ->add('id_product', HiddenType::class)
             ->add('step1', ProductInformation::class)
-            ->add('step2', ProductPrice::class)
+            ->add('step2', ProductPrice::class, ['id_product' => $product->id])
             ->add('step3', ProductQuantity::class)
             ->add('step4', ProductShipping::class)
             ->add('step5', ProductSeo::class, [

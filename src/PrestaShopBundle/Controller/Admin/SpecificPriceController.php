@@ -122,14 +122,23 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
         $formData = $this->formatSpecificPriceToPrefillForm($idSpecificPrice, $price);
 
+        $options = [
+            'id_product' => $price->id_product,
+            'selected_product_attribute' => $price->id_product_attribute
+        ];
+
         $formBuilder = $this->createFormBuilder();
-        $formBuilder->add('modal', SpecificPriceFormType::class);
+        $formBuilder->add('modal', SpecificPriceFormType::class, $options);
+
         $form = $formBuilder->getForm();
         $form->setData($formData);
 
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct((int)$price->id_product);
+
         return [
             'form' => $form->createView()->offsetGet('modal'),
-            'has_combinations' => ($price->id_product_attribute !== '0')
+            'has_combinations' => ($product->hasCombinations())
         ];
     }
 
