@@ -148,20 +148,6 @@ class DispatcherCore
     );
 
     /**
-     * @var array List of legacy routes with their matching default rule
-     */
-    public $legacy_default_routes = array(
-        'legacy_supplier_rule' => array(
-            'rule_id' =>    'supplier_rule',
-            'legacy_rule' =>        '{id}__{rewrite}',
-        ),
-        'legacy_manufacturer_rule' => array(
-            'rule_id' =>    'manufacturer_rule',
-            'legacy_rule' =>        '{id}_{rewrite}',
-        ),
-    );
-
-    /**
      * @var bool If true, use routes to build URL (mod rewrite must be activated)
      */
     protected $use_routes = false;
@@ -623,16 +609,6 @@ class DispatcherCore
 
         if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
             $language_ids[] = (int)$context->language->id;
-        }
-
-        //Some default have seen their rules modified for SEO purposes. To avoid getting 404 on former
-        //pages, we had legacy routes which will be 301 redirected by their respective controller
-        foreach ($this->legacy_default_routes as $id => $legacy_rule) {
-            if (!isset($this->default_routes[$id]) && isset($this->default_routes[$legacy_rule['rule_id']])) {
-                $route = $this->default_routes[$legacy_rule['rule_id']];
-                $route['rule'] = $legacy_rule['legacy_rule'];
-                $this->default_routes[$id] = $route;
-            }
         }
 
         // Set default routes
