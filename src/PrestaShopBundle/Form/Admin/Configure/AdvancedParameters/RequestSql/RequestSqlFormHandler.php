@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
 use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlFormDataValidator;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
@@ -49,15 +50,23 @@ class RequestSqlFormHandler
     private $commandBus;
 
     /**
+     * @var RequestSqlFormDataValidator
+     */
+    private $requestSqlFormDataValidator;
+
+    /**
      * @param FormFactoryInterface $formFactory
+     * @param RequestSqlFormDataValidator $requestSqlFormDataValidator
      * @param CommandBus $commandBus
      */
     public function __construct(
         FormFactoryInterface $formFactory,
+        RequestSqlFormDataValidator $requestSqlFormDataValidator,
         CommandBus $commandBus
     ) {
         $this->formFactory = $formFactory;
         $this->commandBus = $commandBus;
+        $this->requestSqlFormDataValidator = $requestSqlFormDataValidator;
     }
 
     /**
@@ -80,7 +89,11 @@ class RequestSqlFormHandler
      */
     public function save(array $data)
     {
-        $errors = [];
+        $errors = $this->requestSqlFormDataValidator->validate($data['request_sql']);
+
+        if (!empty($errors)) {
+            return $errors;
+        }
 
         try {
             $addRequestSqlCommand = new AddSqlRequestCommand(
