@@ -43,6 +43,8 @@ final class DatabaseBackupCreator implements BackupCreatorInterface
      */
     public function createBackup()
     {
+        ini_set('max_execution_time', 0);
+
         if (!is_writable(PrestaShopBackup::getBackupPath())) {
             throw new DirectoryIsNotWritableException('To create backup, its directory must be writable');
         }

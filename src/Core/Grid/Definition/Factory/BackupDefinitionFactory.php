@@ -99,7 +99,16 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ActionColumn('actions'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('view'))
+                            ->setIcon('remove_red_eye')
+                            ->setOptions([
+                                'route' => 'admin_backup_view_download',
+                                'route_param_name' => 'downloadFileName',
+                                'route_param_field' => 'file_name',
+                            ])
+                        )
                         ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Global'))
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
@@ -111,15 +120,6 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                            ])
-                        )
-                        ->add((new LinkRowAction('view'))
-                            ->setName($this->trans('View', [], 'Admin.Global'))
-                            ->setIcon('zoom_in')
-                            ->setOptions([
-                                'route' => 'admin_backup_view_download',
-                                'route_param_name' => 'downloadFileName',
-                                'route_param_field' => 'file_name',
                             ])
                         )
                     ,

@@ -90,7 +90,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.backup'
-            - '@prestashop.core.backup.grid_data_provider'
+            - '@prestashop.core.backup.listing.grid_data_provider'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.hook.dispatcher'
 
