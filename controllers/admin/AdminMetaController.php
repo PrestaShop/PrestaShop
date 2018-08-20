@@ -46,7 +46,6 @@ class AdminMetaControllerCore extends AdminController
         $this->identifier_name = 'page';
         $this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
         $this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-        $this->rb_data = Tools::getRobotsContent();
 
         parent::__construct();
 
