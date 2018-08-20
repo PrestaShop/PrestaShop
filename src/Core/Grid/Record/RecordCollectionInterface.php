@@ -26,10 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Record;
 
+use Countable;
+use Iterator;
+
 /**
  * Interface RecordCollectionInterface defines interface for raw rows wrapper.
  */
-interface RecordCollectionInterface
+interface RecordCollectionInterface extends Countable, Iterator
 {
     /**
      * Get raw rows.
@@ -37,13 +40,4 @@ interface RecordCollectionInterface
      * @return array
      */
     public function all();
-
-    /**
-     * Map records through given function
-     *
-     * @param callable $callable
-     *
-     * @return self
-     */
-    public function map(callable $callable);
 }

@@ -26,22 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Record;
 
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+
 /**
  * Class RecordCollection is a wrapper around rows from database.
  */
-final class RecordCollection implements RecordCollectionInterface
+final class RecordCollection extends AbstractCollection implements RecordCollectionInterface
 {
-    /**
-     * @var array
-     */
-    private $records;
-
     /**
      * @param array $records Raw records data
      */
     public function __construct(array $records = [])
     {
-        $this->records = $records;
+        $this->items = $records;
     }
 
     /**
@@ -49,18 +46,6 @@ final class RecordCollection implements RecordCollectionInterface
      */
     public function all()
     {
-        return $this->records;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callable)
-    {
-        foreach ($this->records as $key => $record) {
-            $this->records[$key] = $callable($record);
-        }
-
-        return $this;
+        return $this->items;
     }
 }
