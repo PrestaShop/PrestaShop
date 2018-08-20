@@ -157,8 +157,6 @@ class BackupController extends FrameworkBundleAdminController
             $backupCreator = $this->get('prestashop.adapter.backup.database_creator');
             $backup = $backupCreator->createBackup();
 
-            $routeParams['download_filename'] = $backup->getFileName();
-
             $this->addFlash(
                 'success',
                 $this->trans(
