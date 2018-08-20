@@ -12,6 +12,7 @@ Allow: */modules/*.css
 Allow: */modules/*.js
 Allow: */modules/*.png
 Allow: */modules/*.jpg
+Allow: /js/jquery/*
 # Private pages
 Disallow: /*?order=
 Disallow: /*?tag=
