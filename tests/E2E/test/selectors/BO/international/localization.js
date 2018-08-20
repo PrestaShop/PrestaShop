@@ -4,7 +4,11 @@ module.exports = {
       pack_select: '//*[@id="import_localization_pack_iso_localization_pack"]',
       pack_search_input: '//*[@id="import_localization_pack_iso_localization_pack"]//div[@class="chosen-search"]//input',
       pack_option: '//*[@id="import_localization_pack_iso_localization_pack"]//ul[@class="chosen-results"]//li',
-      import_button: '//*[@name="import_localization_pack"]//div[@class="card-footer"]//button'
+      import_button: '//*[@name="import_localization_pack"]//div[@class="card-footer"]//button',
+      advanced_language_identifier_input: '//*[@id="form_advanced_language_identifier"]',
+      advanced_country_identifier_input: '//*[@id="form_advanced_country_identifier"]',
+      advanced_save_button: '(//*[@id="main-div"]//div[@class="card"])[4]//button',
+      alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B")]'
     },
     languages: {
       add_new_language_button: '//*[@id="page-header-desc-lang-new_language"]',
