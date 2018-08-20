@@ -37,6 +37,16 @@ class AdminMetaControllerCore extends AdminController
     protected $url = false;
     protected $toolbar_scroll = false;
 
+    /**
+     * @var string Path to .htaccess
+     */
+    private $ht_file;
+
+    /**
+     * @var string Path to robots.txt
+     */
+    private $rb_file;
+
     public function __construct()
     {
         $this->table = 'meta';
