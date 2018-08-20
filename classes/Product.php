@@ -976,7 +976,7 @@ class ProductCore extends ObjectModel
         if ($this->active) {
             //case where active will be false after parent::toggleStatus()
             $this->id_type_redirected = 0;
-            $this->redirect_type = '404';
+            $this->redirect_type = '301-category';
         } else {
             //case where active will be true after parent::toggleStatus()
             $this->id_type_redirected = 0;

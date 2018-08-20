@@ -118,9 +118,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
                     );
                 } else {
-                    if (!$this->product->id_type_redirected ||
-                        (in_array($this->product->redirect_type, array('301-product', '302-product')) && $this->product->id_type_redirected == $this->product->id)
-                    ) {
+                    if (!$this->product->id_type_redirected) {
+                        if (in_array($this->product->redirect_type, array('301-category', '302-category'))) {
+                            $this->product->id_type_redirected = $this->product->id_category_default;
+                        } else {
+                            $this->product->redirect_type = '404';
+                        }
+                    } elseif (in_array($this->product->redirect_type, array('301-product', '302-product')) && $this->product->id_type_redirected == $this->product->id) {
                         $this->product->redirect_type = '404';
                     }
 

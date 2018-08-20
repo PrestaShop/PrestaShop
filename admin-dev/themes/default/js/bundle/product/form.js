@@ -2052,10 +2052,12 @@ var seo = (function() {
       case '302-category':
         productRedirect.find('label').html(redirectTypeElem.attr('data-labelcategory'));
         productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholdercategory'));
+        productRedirect.find('.typeahead-hint').html(redirectTypeElem.attr('data-hintcategory'));
         break;
       default:
         productRedirect.find('label').html(redirectTypeElem.attr('data-labelproduct'));
         productRedirect.find('input').attr('placeholder', redirectTypeElem.attr('data-placeholderproduct'));
+        productRedirect.find('.typeahead-hint').html('');
     }
 
     productRedirect.find('.autocomplete-search').attr('data-remoteurl', redirectTypeElem.find('option:selected').data('remoteurl'));
