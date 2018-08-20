@@ -134,11 +134,11 @@ class ProductSeo extends CommonAbstractType
                 FormType\ChoiceType::class,
                 [
                     'choices' => [
-                        $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => '404',
-                        $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => '301-product',
-                        $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => '302-product',
                         $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
                         $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
+                        $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => '301-product',
+                        $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => '302-product',
+                        $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => '404',
                     ],
                     'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
                         if (array_key_exists($index, $remoteUrls)) {
@@ -154,6 +154,7 @@ class ProductSeo extends CommonAbstractType
                         'data-placeholderproduct' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
                         'data-labelcategory' => $this->translator->trans('Target category', [], 'Admin.Catalog.Feature'),
                         'data-placeholdercategory' => $this->translator->trans('To which category the page should redirect?', [], 'Admin.Catalog.Help'),
+                        'data-hintcategory' => $this->translator->trans('If no category is selected the Main Category is used', [], 'Admin.Catalog.Help'),
                     ],
                 ]
             )
