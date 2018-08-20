@@ -64,7 +64,7 @@ class HookInformationProvider
      *
      * @return array Modules list
      */
-    public static function getModulesFromHook($hookId, $moduleId = null)
+    public function getModulesFromHook($hookId, $moduleId = null)
     {
         return Hook::getModulesFromHook($hookId, $moduleId);
     }
