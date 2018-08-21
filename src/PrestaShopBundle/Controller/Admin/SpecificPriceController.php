@@ -104,7 +104,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Get one specific price list for a product
      *
-     * @Template("@PrestaShop/Admin/Product/ProductPage\Forms/form_specific_price.html.twig")
+     * @Template("@PrestaShop/Admin/Product/ProductPage/Forms/form_specific_price.html.twig")
      *
      * @param int $idSpecificPrice
      *
