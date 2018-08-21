@@ -107,16 +107,8 @@ class RequestSqlFormDataProvider
                 $this->getAddRequestSqlCommand($requestSqlData);
 
             $this->commandBus->handle($command);
-        }  catch (SqlRequestConstraintException $e) {
-            $errors[] = $this->getHumanReadableConstraintErrorMessage($e);
-        } catch (SqlRequestNotFoundException $e) {
-            $errors[] = $this->getHumanReadableNotFoundException();
-        } catch (CannotAddSqlRequestException $e) {
-            $errors[] = $this->getHumanReadableCreateErrorMessage();
-        } catch (CannotEditSqlRequestException $e) {
-            $errors[] = $this->getHumanReadableUpdateErrorMessage();
         } catch (SqlRequestException $e) {
-            $errors[] = $this->getHumanReadableGenericErrorMessage();
+            $errors[] = $this->handleException($e);
         }
 
         return $errors;
@@ -126,6 +118,8 @@ class RequestSqlFormDataProvider
      * @param array $requestSqlData
      *
      * @return AddSqlRequestCommand
+     *
+     * @throws SqlRequestConstraintException
      */
     private function getAddRequestSqlCommand(array $requestSqlData)
     {
@@ -139,102 +133,103 @@ class RequestSqlFormDataProvider
      * @param array $requestSqlData
      *
      * @return EditSqlRequestCommand
+     *
+     * @throws SqlRequestException
      */
     private function getEditRequestSqlCommand(array $requestSqlData)
     {
-        return new EditSqlRequestCommand(
-            new SqlRequestId($requestSqlData['id']),
-            $requestSqlData['name'],
-            $requestSqlData['sql']
-        );
+        return (new EditSqlRequestCommand(new SqlRequestId($requestSqlData['id'])))
+            ->setName($requestSqlData['name'])
+            ->setSql($requestSqlData['sql']);
     }
 
     /**
-     * @param SqlRequestConstraintException $e
+     * Transform exception into translatable errors
      *
-     * @return array Constraint error message prepared for translation
+     * @param SqlRequestException $e
+     *
+     * @return array Errors
      */
-    private function getHumanReadableConstraintErrorMessage(SqlRequestConstraintException $e)
+    private function handleException(SqlRequestException $e)
     {
-        switch ($e->getCode()) {
-            case SqlRequestConstraintException::INVALID_NAME_ERROR:
-                $invalidField = 'name';
-                break;
-            case SqlRequestConstraintException::INVALID_SQL_QUERY_ERROR:
-            case SqlRequestConstraintException::MALFORMED_SQL_QUERY_ERROR:
-                $invalidField = 'sql';
-                break;
-            default:
-                $invalidField = null;
-                break;
+        $exceptionType = get_class($e);
+
+        if (SqlRequestConstraintException::class === $exceptionType) {
+            return $this->getConstraintError($e);
         }
 
-        if (null === $invalidField) {
+        return $this->getErrorByExceptionType($e);
+    }
+
+    /**
+     * Get error for constraint exception
+     *
+     * @param SqlRequestConstraintException $e
+     *
+     * @return array
+     */
+    private function getConstraintError(SqlRequestConstraintException $e)
+    {
+        $invalidFieldDictionary = [
+            SqlRequestConstraintException::INVALID_NAME => 'name',
+            SqlRequestConstraintException::INVALID_SQL_QUERY => 'sql',
+            SqlRequestConstraintException::MALFORMED_SQL_QUERY => 'sql',
+        ];
+
+        $code = $e->getCode();
+
+        if (isset($invalidFieldDictionary[$code])) {
             return [
-                'key' => 'Invalid data supplied.',
-                'parameters' => [],
+                'key' => 'The %s field is invalid.',
+                'parameters' => [
+                    $invalidFieldDictionary[$code],
+                ],
                 'domain' => 'Admin.Notifications.Error',
             ];
         }
 
         return [
-            'key' => 'The %s field is invalid.',
-            'parameters' => [
-                $invalidField
+            'key' => 'Invalid data supplied.',
+            'parameters' => [],
+            'domain' => 'Admin.Notifications.Error',
+        ];
+    }
+
+    /**
+     * Get error for exception
+     *
+     * @param SqlRequestException $e
+     *
+     * @return array
+     */
+    private function getErrorByExceptionType(SqlRequestException $e)
+    {
+        $exceptionDictionary = [
+            SqlRequestNotFoundException::class => [
+                'key' => 'The object cannot be loaded (or found)',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Error',
             ],
-            'domain' => 'Admin.Notifications.Error',
+            CannotAddSqlRequestException::class => [
+                'key' => 'An error occurred while creating an object.',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Error',
+            ],
+            CannotEditSqlRequestException::class => [
+                'key' => 'An error occurred while updating an object.',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Error',
+            ],
         ];
-    }
 
-    /**
-     * Get human readable error message when failed to create RequestSql
-     *
-     * @return array
-     */
-    private function getHumanReadableCreateErrorMessage()
-    {
-        return [
-            'key' => 'An error occurred while creating an object.',
-            'parameters' => [],
-            'domain' => 'Admin.Notifications.Error',
-        ];
-    }
+        $exceptionType = get_class($e);
 
-    /**
-     * Get human readable error message when failed to create RequestSql
-     *
-     * @return array
-     */
-    private function getHumanReadableUpdateErrorMessage()
-    {
-        return [
-            'key' => 'An error occurred while creating an object.',
-            'parameters' => [],
-            'domain' => 'Admin.Notifications.Error',
-        ];
-    }
+        if (isset($exceptionDictionary[$exceptionType])) {
+            return $exceptionDictionary[$exceptionType];
+        }
 
-    /**
-     * Get general error when something goes wrong
-     *
-     * @return array
-     */
-    private function getHumanReadableGenericErrorMessage()
-    {
         return [
             'key' => 'Unexpected error occurred.',
-            'parameters' => [],
-            'domain' => 'Admin.Notifications.Error',
-        ];
-    }
-
-    /**
-     * Get error message when RequestSql is not found
-     */
-    private function getHumanReadableNotFoundException()
-    {
-        return [
-            'key' => 'The object cannot be loaded (or found)',
             'parameters' => [],
             'domain' => 'Admin.Notifications.Error',
         ];
