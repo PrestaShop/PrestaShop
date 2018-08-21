@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
@@ -30,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -119,39 +121,39 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     );
                 } else {
                     if (!$this->product->id_type_redirected) {
-                        if (in_array($this->product->redirect_type, array('301-category', '302-category'))) {
+                        if (in_array($this->product->redirect_type, array(ProductInterface::REDIRECT_CATEGORY_301, ProductInterface::REDIRECT_CATEGORY_302))) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
                         } else {
-                            $this->product->redirect_type = '404';
+                            $this->product->redirect_type = ProductInterface::REDIRECT_NOT_FOUND;
                         }
-                    } elseif (in_array($this->product->redirect_type, array('301-product', '302-product')) && $this->product->id_type_redirected == $this->product->id) {
-                        $this->product->redirect_type = '404';
+                    } elseif (in_array($this->product->redirect_type, array(ProductInterface::REDIRECT_PRODUCT_301, ProductInterface::REDIRECT_PRODUCT_302)) && $this->product->id_type_redirected == $this->product->id) {
+                        $this->product->redirect_type = ProductInterface::REDIRECT_NOT_FOUND;
                     }
 
                     switch ($this->product->redirect_type) {
-                        case '301-product':
+                        case ProductInterface::REDIRECT_PRODUCT_301:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: '.$this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
                         break;
-                        case '302-product':
+                        case ProductInterface::REDIRECT_PRODUCT_302:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: '.$this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
                         break;
-                        case '301-category':
+                        case ProductInterface::REDIRECT_CATEGORY_301:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
                             break;
-                        case '302-category':
+                        case ProductInterface::REDIRECT_CATEGORY_302:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: '.$this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
                             break;
-                        case '404':
+                        case ProductInterface::REDIRECT_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
