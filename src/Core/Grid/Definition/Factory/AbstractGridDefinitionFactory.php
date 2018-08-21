@@ -42,7 +42,7 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
  */
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
-    use TranslatorAwareTrait, HookDispatcherAwareTrait;
+    use TranslatorAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -57,10 +57,6 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getGridActions(),
             $this->getBulkActions()
         );
-
-        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
-            'definition' => $definition,
-        ]);
 
         return $definition;
     }
