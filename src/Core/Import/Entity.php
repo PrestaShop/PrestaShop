@@ -64,7 +64,7 @@ final class Entity
      */
     public static function getFromName($importType)
     {
-        if (array_key_exists($importType, self::AVAILBALE_TYPES)) {
+        if (array_key_exists($importType, self::AVAILABLE_TYPES)) {
             return self::AVAILABLE_TYPES[$importType];
         }
 
