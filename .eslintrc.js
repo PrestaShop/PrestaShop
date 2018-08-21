@@ -13,7 +13,7 @@ module.exports = {
         window: true,
     },
     root: true,
-    extends: 'airbnb',
+    extends: 'airbnb-base',
     plugins: [
         'import',
         'html',
