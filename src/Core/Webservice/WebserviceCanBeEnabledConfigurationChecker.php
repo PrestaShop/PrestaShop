@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * Looks at server configuration in order to check PrestaShop Webservice can be enabled
  */
-class WebserviceCanBeEnabledConfigurationChecker
+final class WebserviceCanBeEnabledConfigurationChecker
 {
     const ISSUE_NOT_APACHE_SERVER = 'not_apache_server';
     const ISSUE_CANNOT_CHECK_APACHE_MODULES = 'cannot_check_apache_modules';
@@ -67,7 +67,7 @@ class WebserviceCanBeEnabledConfigurationChecker
      * Analyses the server configuration (apache configuration and php settings)
      * to check whether PrestaShop Webservice can be used or not.
      *
-     * @param Request $request optional
+     * @param Request $request (optional) Request.
      *
      * @return array empty if no errors
      */
@@ -75,12 +75,16 @@ class WebserviceCanBeEnabledConfigurationChecker
     {
         $issues = $this->lookForIssues($request);
 
+        if (empty($issues)) {
+            return [];
+        }
+
         $allWarningMessages = $this->getWarningMessages();
         $selectedWarningMessages = [];
 
         foreach ($issues as $issue) {
             if (false === array_key_exists($issue, $allWarningMessages)) {
-                throw new RuntimeException(sprintf('Unexpected configuration issue %s', $issue));
+                throw new RuntimeException(sprintf('Unexpected configuration issue "%s"', $issue));
             }
 
             $selectedWarningMessages[] = $allWarningMessages[$issue];
