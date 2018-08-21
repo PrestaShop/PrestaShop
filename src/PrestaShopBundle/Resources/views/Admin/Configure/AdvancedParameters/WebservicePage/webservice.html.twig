@@ -25,56 +25,61 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
+{% set webserviceConfigurationForm = form.webservice_configuration %}
+
 {% block content %}
+  {{ form_start(form, {'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+  <div class="row justify-content-center">
+    {% block webservice_form_configuration %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'Settings'|trans({}, 'Admin.Global') }}
+          </h3>
 
-    {% block webservice_configuration_panel %}
-    <div class="col-md-12">
-        {{ form_start(form, {'attr' : {'class': 'form'} }) }}
-        <div class="row">
-            {% block webservice_configuration %}
-                <div class="col">
-                    <div class="card">
-                        <h3 class="card-header">
-                            <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
-                        </h3>
-                        <div class="card-block">
-                            <div class="card-text">
-                                <div class="form-group">
-                                    <label class="form-control-label">{{ 'Enable PrestaShop\'s webservice'|trans }}</label>
-                                    {{ form_errors(form.webservice_configuration.enable_webservice) }}
-                                    {{ form_widget(form.webservice_configuration.enable_webservice) }}
-                                </div>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Enable PrestaShop\'s webservice'|trans }}</label>
 
-                                <small class="form-text">
-                                    {{ 'Before activating the webservice, you must be sure to: '|trans({}, 'Admin.Advparameters.Help') }}<br/>
-                                    1. {{ 'Check that URL rewriting is available on this server.'|trans({}, 'Admin.Advparameters.Help') }}<br/>
-                                    2. {{ 'Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.'|trans({}, 'Admin.Advparameters.Help') }}
-                                </small>
+                <div class="col-sm">
+                    {{ form_errors(webserviceConfigurationForm.enable_webservice) }}
+                    {{ form_widget(webserviceConfigurationForm.enable_webservice) }}
 
-                                <div class="form-group">
-                                    <label class="form-control-label">{{ 'Enable CGI mode for PHP'|trans }}</label>
-                                    {{ form_errors(form.webservice_configuration.enable_cgi) }}
-                                    {{ form_widget(form.webservice_configuration.enable_cgi) }}
-                                </div>
+                  <small class="form-text">
+                      {{ 'Before activating the webservice, you must be sure to: '|trans({}, 'Admin.Advparameters.Help') }}
+                      <br/>
+                      1. {{ 'Check that URL rewriting is available on this server.'|trans({}, 'Admin.Advparameters.Help') }}
+                      <br/>
+                      2. {{ 'Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.'|trans({}, 'Admin.Advparameters.Help') }}
+                    </small>
+                  </div>
+              </div>
 
-                                <small class="form-text">
-                                    {{ 'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'|trans({}, 'Admin.Advparameters.Help') }}
-                                </small>
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Enable CGI mode for PHP'|trans }}</label>
 
-                                {{ form_rest(form) }}
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-sm">
+                  {{ form_errors(webserviceConfigurationForm.enable_cgi) }}
+                  {{ form_widget(webserviceConfigurationForm.enable_cgi) }}
+
+                  <small class="form-text">
+                    {{ 'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'|trans({}, 'Admin.Advparameters.Help') }}
+                  </small>
                 </div>
-            {% endblock %}
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
         </div>
-        {{ form_end(form) }}
-    </div>
+      </div>
     {% endblock %}
 
+  </div>
+  {{ form_end(form) }}
 {% endblock %}
