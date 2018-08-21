@@ -26,24 +26,42 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Class RequestSqlType defines RequestSql entity form type
+ * Class RequestSqlSettingsFormDataProvider is responsible for managing RequestSql settings
  */
-class RequestSqlType extends AbstractType
+final class SqlRequestSettingsFormDataProvider implements FormDataProviderInterface
 {
+    /**
+     * @var DataConfigurationInterface
+     */
+    private $dataConfiguration;
+
+    /**
+     * @param DataConfigurationInterface $dataConfiguration
+     */
+    public function __construct(DataConfigurationInterface $dataConfiguration)
+    {
+        $this->dataConfiguration = $dataConfiguration;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getData()
     {
-        $builder
-            ->add('name', TextType::class)
-            ->add('sql', TextareaType::class)
-        ;
+        return [
+            'settings' => $this->dataConfiguration->getConfiguration(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->dataConfiguration->updateConfiguration($data['settings']);
     }
 }

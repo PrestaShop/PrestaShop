@@ -26,14 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlFormDataValidator;
+use PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
  * Class RequestSqlFormHandler is responsible for creating RequestSql form
  */
-class RequestSqlFormHandler
+class SqlRequestFormHandler
 {
     /**
      * @var FormFactoryInterface
@@ -41,24 +41,24 @@ class RequestSqlFormHandler
     private $formFactory;
 
     /**
-     * @var RequestSqlFormDataValidator
+     * @var SqlRequestFormDataValidator
      */
     private $requestSqlFormDataValidator;
 
     /**
-     * @var RequestSqlFormDataProvider
+     * @var SqlRequestFormDataProvider
      */
     private $requestSqlFormDataProvider;
 
     /**
      * @param FormFactoryInterface $formFactory
-     * @param RequestSqlFormDataValidator $requestSqlFormDataValidator
-     * @param RequestSqlFormDataProvider $requestSqlFormDataProvider
+     * @param SqlRequestFormDataValidator $requestSqlFormDataValidator
+     * @param SqlRequestFormDataProvider $requestSqlFormDataProvider
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        RequestSqlFormDataValidator $requestSqlFormDataValidator,
-        RequestSqlFormDataProvider $requestSqlFormDataProvider
+        SqlRequestFormDataValidator $requestSqlFormDataValidator,
+        SqlRequestFormDataProvider $requestSqlFormDataProvider
     ) {
         $this->formFactory = $formFactory;
         $this->requestSqlFormDataValidator = $requestSqlFormDataValidator;
@@ -115,7 +115,7 @@ class RequestSqlFormHandler
     private function getRequestSqlForm(array $formData = [])
     {
         $builder = $this->formFactory->createBuilder()
-            ->add('request_sql', RequestSqlType::class)
+            ->add('request_sql', SqlRequestType::class)
             ->setData([
                 'request_sql' => $formData,
             ])

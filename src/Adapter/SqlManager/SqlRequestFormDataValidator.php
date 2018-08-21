@@ -24,44 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
+namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use RequestSql;
 
 /**
- * Class RequestSqlSettingsFormDataProvider is responsible for managing RequestSql settings
+ * Class RequestSqlFormDataValidator
+ *
+ * @internal
  */
-final class RequestSqlSettingsFormDataProvider implements FormDataProviderInterface
+class SqlRequestFormDataValidator
 {
     /**
-     * @var DataConfigurationInterface
+     * @var SqlQueryValidator
      */
-    private $dataConfiguration;
+    private $sqlQueryValidator;
 
     /**
-     * @param DataConfigurationInterface $dataConfiguration
+     * @param SqlQueryValidator $sqlQueryValidator
      */
-    public function __construct(DataConfigurationInterface $dataConfiguration)
+    public function __construct(SqlQueryValidator $sqlQueryValidator)
     {
-        $this->dataConfiguration = $dataConfiguration;
+        $this->sqlQueryValidator = $sqlQueryValidator;
     }
 
     /**
-     * {@inheritdoc}
+     * Validate RequestSql form data
+     *
+     * @param array $data
+     *
+     * @return array Errors if any
      */
-    public function getData()
+    public function validate(array $data)
     {
-        return [
-            'settings' => $this->dataConfiguration->getConfiguration(),
-        ];
-    }
+        if ($errors = $this->sqlQueryValidator->validate($data['sql'])) {
+            return $errors;
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->dataConfiguration->updateConfiguration($data['settings']);
+        $requestSql = new RequestSql();
+        $requestSql->name = $data['name'];
+        $requestSql->sql = $data['sql'];
+
+        if (true !== $error = $requestSql->validateFields(false, true)) {
+            return [$error];
+        }
+
+        return [];
     }
 }

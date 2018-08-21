@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 /**
  * Class RequestSqlFormDataProvider is responsible for getting/saving RequestSql form data
  */
-class RequestSqlFormDataProvider
+class SqlRequestFormDataProvider
 {
     /**
      * @var CommandBus

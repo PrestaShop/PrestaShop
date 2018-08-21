@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 /**
  * Class RequestSqlDataProvider is responsible for providing data related to Request SQL model
  */
-class RequestSqlDataProvider
+class SqlRequestDataProvider
 {
     /**
      * @var RequestSql instance is used for retrieving DB tables & columns information

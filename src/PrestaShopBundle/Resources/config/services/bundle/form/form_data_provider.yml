@@ -122,6 +122,6 @@ services:
             - '@prestashop.core.email.smtp_configurator'
 
     prestashop.admin.request_sql_settings.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsFormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsFormDataProvider'
         arguments:
             - '@prestashop.adapter.sql_manager_settings.configuration'

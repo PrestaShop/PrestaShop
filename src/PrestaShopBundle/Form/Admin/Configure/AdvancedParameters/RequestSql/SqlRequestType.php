@@ -26,26 +26,24 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class RequestSqlSettingsType build form type for "Configure > Advanced Parameters > Database > SQL Manager" page
+ * Class RequestSqlType defines RequestSql entity form type
  */
-class RequestSqlSettingsType extends AbstractType
+class SqlRequestType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('default_file_encoding', ChoiceType::class, [
-                'choices' => [
-                    CharsetEncoding::UTF_8 => 1,
-                    CharsetEncoding::ISO_8859_1 => 2,
-                ],
-                'translation_domain' => false,
-            ])
+            ->add('name', TextType::class)
+            ->add('sql', TextareaType::class)
         ;
     }
 }

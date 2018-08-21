@@ -26,42 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-use RequestSql;
+use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 
 /**
- * Class RequestSqlFormDataValidator
- *
- * @internal
+ * Class RequestSqlManager for managing legacy RequestSqlCore model
  */
-class RequestSqlFormDataValidator
+class SqlRequestManager
 {
     /**
-     * @var SqlQueryValidator
-     */
-    private $sqlQueryValidator;
-
-    /**
-     * @param SqlQueryValidator $sqlQueryValidator
-     */
-    public function __construct(SqlQueryValidator $sqlQueryValidator)
-    {
-        $this->sqlQueryValidator = $sqlQueryValidator;
-    }
-
-    /**
-     * Validate RequestSql form data
+     * Create or updating existing RequestSqlCore model from given data
      *
-     * @param array $data
+     * @param array $data RequestSql data
      *
      * @return array Errors if any
      */
-    public function validate(array $data)
+    public function createOrUpdateFromData(array $data)
     {
-        if ($errors = $this->sqlQueryValidator->validate($data['sql'])) {
-            return $errors;
-        }
+        $id = isset($data['id']) ? (int) $data['id'] : null;
 
-        $requestSql = new RequestSql();
+        $requestSql = new RequestSql($id);
         $requestSql->name = $data['name'];
         $requestSql->sql = $data['sql'];
 
@@ -69,6 +52,36 @@ class RequestSqlFormDataValidator
             return [$error];
         }
 
+        $requestSql->save();
+
         return [];
+    }
+
+    /**
+     * Delete Request SQL
+     *
+     * @param int[] $requestSqlIds ID of Request SQL
+     *
+     * @return array Errors if any
+     */
+    public function delete(array $requestSqlIds)
+    {
+        $errors = [];
+
+        foreach ($requestSqlIds as $id) {
+            $requestSql = new RequestSql($id);
+
+            if (!$requestSql->delete()) {
+                $errors[] = [
+                    'key' => 'Can\'t delete #%id%',
+                    'parameters' => [
+                        '%id%' => $id
+                    ],
+                    'domain' => 'Admin.Notifications.Error',
+                ];
+            }
+        }
+
+        return $errors;
     }
 }
