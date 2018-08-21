@@ -21,6 +21,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.multi_lang_configuration'
 
     prestashop.adapter.customer.customer_configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
@@ -102,6 +103,9 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
 
+    prestashop.adapter.multi_lang_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\MultiLangConfiguration'
+
     prestashop.adapter.order.delivery.slip.options.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
         arguments:
@@ -116,6 +120,11 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.data_provider.context_language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
 
     prestashop.adapter.data_provider.language:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'

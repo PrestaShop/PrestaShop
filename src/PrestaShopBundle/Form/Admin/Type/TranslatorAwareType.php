@@ -38,26 +38,42 @@ abstract class TranslatorAwareType extends CommonAbstractType
     private $translator;
 
     /**
-     * All languages available on shop. Used for translations
+     * Active languages available on shop.
      *
      * @param array $locales
      */
     protected $locales;
 
-    public function __construct(TranslatorInterface $translator, array $locales)
-    {
+    /**
+     * Active and in-active languages available on shop. Used to apply translations
+     *
+     * @var array $installedLocales
+     */
+    protected $installedLocales;
+
+    /**
+     * TranslatorAwareType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales - Active and in-active languages available on shop
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales
+    ) {
         $this->translator = $translator;
-        $this->locales = $locales;
+        $this->locales = $this->getActiveLocales($locales);
+        $this->installedLocales = $locales;
     }
 
     /**
      * Get the translated chain from key
      *
-     * @param $key the key to be translated
-     * @param $domain the domain to be selected
+     * @param $key - the key to be translated
+     * @param $domain - the domain to be selected
      * @param array $parameters Optional, pass parameters if needed (uncommon)
      *
-     * @returns string
+     * @return string
      */
     protected function trans($key, $domain, $parameters = [])
     {
@@ -71,12 +87,52 @@ abstract class TranslatorAwareType extends CommonAbstractType
      */
     protected function getLocaleChoices()
     {
-        $locales = [];
+        return $this->formatLocales($this->locales);
+    }
 
-        foreach ($this->locales as $locale) {
-            $locales[$locale['name']] = $locale['iso_code'];
+    /**
+     * Get locales to be used in form type including the disabled ones
+     *
+     * @return array
+     */
+    protected function getIncludingInactiveLocalesChoices()
+    {
+        return $this->formatLocales($this->installedLocales);
+    }
+
+    /**
+     * Formats the response so the array key becomes the name of locale and value is the iso code of the locale.
+     *
+     * @param array $locales
+     *
+     * @return array
+     */
+    private function formatLocales(array $locales)
+    {
+        $result = [];
+        foreach ($locales as $locale) {
+            $result[$locale['name']] = $locale['iso_code'];
         }
 
-        return $locales;
+        return $result;
+    }
+
+    /**
+     * Gets active locales
+     *
+     * @param array $locales
+     *
+     * @return array
+     */
+    private function getActiveLocales(array $locales)
+    {
+        $result = [];
+        foreach ($locales as $locale) {
+            if ($locale['active']) {
+                $result[] = $locale;
+            }
+        }
+
+        return $result;
     }
 }

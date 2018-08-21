@@ -32,6 +32,7 @@ use Shop;
 use Combination;
 use Feature;
 use Configuration as ConfigurationLegacy;
+use Language as LanguageLegacy;
 
 /**
  * Adapter of Configuration ObjectModel.
