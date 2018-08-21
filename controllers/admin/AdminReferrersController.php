@@ -23,35 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd() . '/..');
-}
-
-if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers' . (int) Tab::getIdFromClassName('AdminReferrers') . (int) Tools::getValue('id_employee'))) {
-    if (Tools::isSubmit('ajaxProductFilter')) {
-        Referrer::getAjaxProduct(
-            (int) Tools::getValue('id_referrer'),
-            (int) Tools::getValue('id_product'),
-            new Employee((int) Tools::getValue('id_employee'))
-        );
-    } elseif (Tools::isSubmit('ajaxFillProducts')) {
-        $json_array = array();
-        $result = Db::getInstance()->executeS('
-			SELECT p.id_product, pl.name
-			FROM ' . _DB_PREFIX_ . 'product p
-			LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
-				ON (p.id_product = pl.id_product AND pl.id_lang = ' . (int) Tools::getValue('id_lang') . ')
-			' . (Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%' . pSQL(Tools::getValue('filter')) . '%"' : '')
-        );
-
-        foreach ($result as $row) {
-            $json_array[] = '{id_product:' . (int) $row['id_product'] . ',name:\'' . addslashes($row['name']) . '\'}';
-        }
-
-        die('[' . implode(',', $json_array) . ']');
-    }
-}
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
@@ -397,6 +368,34 @@ class AdminReferrersControllerCore extends AdminController
         $this->tpl_form_vars = array('uri' => $uri);
 
         return parent::renderForm();
+    }
+
+    public function displayAjaxProductFilter()
+    {
+        $this->ajaxRender(
+            Referrer::getAjaxProduct(
+                (int)Tools::getValue('id_referrer'),
+                (int)Tools::getValue('id_product'),
+                new Employee((int)Tools::getValue('id_employee'))
+        ));
+    }
+
+    public function displayAjaxFillProducts()
+    {
+        $json_array = array();
+        $result = Db::getInstance()->executeS('
+            SELECT p.id_product, pl.name
+            FROM '._DB_PREFIX_.'product p
+            LEFT JOIN '._DB_PREFIX_.'product_lang pl
+                ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)Tools::getValue('id_lang').')
+            '.(Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%'.pSQL(Tools::getValue('filter')).'%"' : '')
+        );
+
+        foreach ($result as $row) {
+            $json_array[] = '{id_product:'.(int)$row['id_product'].',name:\''.addslashes($row['name']).'\'}';
+        }
+
+        $this->ajaxRender('['.implode(',', $json_array).']');
     }
 
     public function displayCalendar($action = null, $table = null, $identifier = null, $id = null)
