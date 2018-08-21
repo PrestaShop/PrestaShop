@@ -52,7 +52,22 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getCanonicalURL()
     {
-        return $this->context->link->getCategoryLink($this->category);
+        $canonicalUrl = $this->context->link->getCategoryLink($this->category);
+        $parsedUrl = parse_url($canonicalUrl);
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $params);
+        } else {
+            $params = array();
+        }
+        $page = (int) Tools::getValue('page');
+        if ($page > 1) {
+            $params['page'] = $page;
+        } else {
+            unset($params['page']);
+        }
+        $canonicalUrl = http_build_url($parsedUrl, ['query' => http_build_query($params)]);
+
+        return $canonicalUrl;
     }
 
     /**
