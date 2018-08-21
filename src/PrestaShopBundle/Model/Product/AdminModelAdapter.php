@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShopBundle\Utils\FloatParser;
 use ProductDownload;
 use Attachment;
@@ -254,18 +255,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         // Product redirection
         $form_data['redirect_type'] = (string) $form_data['redirect_type'];
-        if ($form_data['redirect_type'] != '404') {
+        if ($form_data['redirect_type'] != ProductInterface::REDIRECT_TYPE_NOT_FOUND) {
             if (isset($form_data['id_type_redirected']) && !empty($form_data['id_type_redirected']['data'])) {
                 $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
-            } elseif ($form_data['redirect_type'] == '301-category' || $form_data['redirect_type'] == '302-category') {
+            } elseif (ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY == $form_data['redirect_type'] || ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND == $form_data['redirect_type']) {
                 $form_data['id_type_redirected'] = 0;
             } else {
                 $form_data['id_type_redirected'] = 0;
-                $form_data['redirect_type'] = '404';
+                $form_data['redirect_type'] = ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY;
             }
         } else {
             $form_data['id_type_redirected'] = 0;
-            $form_data['redirect_type'] = '404';
         }
 
         //map inputPackItems

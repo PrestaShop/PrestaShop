@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 /**
  * This form class is responsible to generate the product SEO form.
@@ -64,10 +65,10 @@ class ProductSeo extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $remoteUrls = [
-            '301-product' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            '302-product' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            '301-category' => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
-            '302-category' => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
+            ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
         ];
 
         $builder->add(
@@ -134,11 +135,11 @@ class ProductSeo extends CommonAbstractType
                 FormType\ChoiceType::class,
                 [
                     'choices' => [
-                        $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
-                        $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
-                        $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => '301-product',
-                        $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => '302-product',
-                        $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => '404',
+                        $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY,
+                        $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND,
+                        $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY,
+                        $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND,
+                        $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_NOT_FOUND,
                     ],
                     'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
                         if (array_key_exists($index, $remoteUrls)) {
