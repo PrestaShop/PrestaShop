@@ -34,7 +34,13 @@
      {if $pagination.should_be_displayed}
         <ul class="page-list clearfix text-sm-center">
           {foreach from=$pagination.pages item="page"}
-          
+            {if $page.type === 'previous' && $pagination.current_page === 1}
+              {continue}
+            {/if}
+            {if $page.type === 'next' && $pagination.current_page === $pagination.pages_count}
+              {continue}
+            {/if}
+
             <li {if $page.current} class="current" {/if}>
               {if $page.type === 'spacer'}
                 <span class="spacer">&hellip;</span>
