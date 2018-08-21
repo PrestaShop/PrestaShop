@@ -23,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopObjectNotFoundException;
 use SpecificPrice;
 use Customer;
 use Combination;
@@ -227,16 +229,17 @@ class AdminProductWrapper
     }
 
     /**
-     * processProductSpecificPrice
-     * Add/Update specific price
+     * Add/Update a SpecificPrice object
      *
      * @param int $id_product
      * @param array $specificPriceValues the posted values
+     * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
      *
      * @return AdminProductsController instance
      */
-    public function processProductSpecificPrice($id_product, $specificPriceValues)
+    public function processProductSpecificPrice($id_product, $specificPriceValues, $id_specific_price = null)
     {
+        // ---- data formatting ----
         $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
@@ -257,34 +260,69 @@ class AdminProductWrapper
         if (!$to) {
             $to = '0000-00-00 00:00:00';
         }
+        $isThisAnUpdate = (null !== $id_specific_price);
 
+        // ---- validation ----
         if (($price == '-1') && ((float)$reduction == '0')) {
             $this->errors[] = $this->translator->trans('No reduction value has been submitted', array(), 'Admin.Catalog.Notification');
         } elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
             $this->errors[] = $this->translator->trans('Invalid date range', array(), 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
-        } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
-            $specificPrice = new SpecificPrice();
-            $specificPrice->id_product = (int)$id_product;
-            $specificPrice->id_product_attribute = (int)$id_product_attribute;
-            $specificPrice->id_shop = (int)$id_shop;
-            $specificPrice->id_currency = (int)($id_currency);
-            $specificPrice->id_country = (int)($id_country);
-            $specificPrice->id_group = (int)($id_group);
-            $specificPrice->id_customer = (int)$id_customer;
-            $specificPrice->price = (float)($price);
-            $specificPrice->from_quantity = (int)($from_quantity);
-            $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
-            $specificPrice->reduction_tax = $reduction_tax;
-            $specificPrice->reduction_type = $reduction_type;
-            $specificPrice->from = $from;
-            $specificPrice->to = $to;
-
-            if (!$specificPrice->add()) {
-                $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', array(), 'Admin.Catalog.Notification');
-            }
         }
+        $validationResult = $this->validateSpecificPrice(
+            $id_product,
+            $id_shop,
+            $id_currency,
+            $id_country,
+            $id_group,
+            $id_customer,
+            $price,
+            $from_quantity,
+            $reduction,
+            $reduction_type,
+            $from,
+            $to,
+            $id_product_attribute,
+            $isThisAnUpdate
+        );
+
+        if (false === $validationResult) {
+            return $this->errors;
+        }
+
+        // ---- data modification ----
+        if ($isThisAnUpdate) {
+            $specificPrice = new SpecificPrice($id_specific_price);
+        } else {
+            $specificPrice = new SpecificPrice();
+        }
+
+        $specificPrice->id_product = (int)$id_product;
+        $specificPrice->id_product_attribute = (int)$id_product_attribute;
+        $specificPrice->id_shop = (int)$id_shop;
+        $specificPrice->id_currency = (int)($id_currency);
+        $specificPrice->id_country = (int)($id_country);
+        $specificPrice->id_group = (int)($id_group);
+        $specificPrice->id_customer = (int)$id_customer;
+        $specificPrice->price = (float)($price);
+        $specificPrice->from_quantity = (int)($from_quantity);
+        $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+        $specificPrice->reduction_tax = $reduction_tax;
+        $specificPrice->reduction_type = $reduction_type;
+        $specificPrice->from = $from;
+        $specificPrice->to = $to;
+
+        if ($isThisAnUpdate) {
+            $dataSavingResult = $specificPrice->save();
+        } else {
+            $dataSavingResult = $specificPrice->add();
+        }
+
+        if (false === $dataSavingResult) {
+            $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', array(), 'Admin.Catalog.Notification');
+        }
+
 
         return $this->errors;
     }
@@ -292,7 +330,22 @@ class AdminProductWrapper
     /**
      * Validate a specific price
      */
-    private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
+    private function validateSpecificPrice(
+        $id_product,
+        $id_shop,
+        $id_currency,
+        $id_country,
+        $id_group,
+        $id_customer,
+        $price,
+        $from_quantity,
+        $reduction,
+        $reduction_type,
+        $from,
+        $to,
+        $id_combination = 0,
+        $isThisAnUpdate = false
+    )
     {
         if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
@@ -304,12 +357,30 @@ class AdminProductWrapper
             $this->errors[] = 'Please select a discount type (amount or percentage).';
         } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = 'The from/to date is invalid.';
-        } elseif (SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (!$isThisAnUpdate && SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return SpecificPrice
+     *
+     * @throws PrestaShopObjectNotFoundException
+     */
+    public function getSpecificPriceDataById($id)
+    {
+        $price = new SpecificPrice($id);
+
+        if (null === $price->id) {
+            throw new PrestaShopObjectNotFoundException(sprintf('Cannot find specific price with id %d', $id));
+        }
+
+        return $price;
     }
 
     /**
@@ -402,9 +473,9 @@ class AdminProductWrapper
                 }
 
                 if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID())) {
-                    $can_delete_specific_prices = true;
+                    $can_edit_or_delete_specific_prices = true;
                     if (Shop::isFeatureActive()) {
-                        $can_delete_specific_prices = (count($this->legacyContext->employee->getAssociatedShops()) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
+                        $can_edit_or_delete_specific_prices = (count($this->legacyContext->employee->getAssociatedShops()) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);
@@ -424,7 +495,8 @@ class AdminProductWrapper
                         'impact' => $impact,
                         'period' => $period,
                         'from_quantity' => $specific_price['from_quantity'],
-                        'can_delete' => (!$rule->id && $can_delete_specific_prices) ? true : false
+                        'can_delete' => (!$rule->id && $can_edit_or_delete_specific_prices) ? true : false,
+                        'can_edit' => (!$rule->id && $can_edit_or_delete_specific_prices) ? true : false,
                     ];
 
                     unset($customer_full_name);
@@ -456,13 +528,13 @@ class AdminProductWrapper
         if (isset($error)) {
             return array(
                 'status' => 'error',
-                'message'=> $error
+                'message' => $error
             );
         }
 
         return array(
             'status' => 'ok',
-            'message'=> $this->translator->trans('Successful deletion', array(), 'Admin.Notifications.Success'),
+            'message' => $this->translator->trans('Successful deletion', array(), 'Admin.Notifications.Success'),
         );
     }
 
@@ -554,19 +626,19 @@ class AdminProductWrapper
                 //create label
                 if (isset($customization['id_customization_field'])) {
                     $id_customization_field = (int)$customization['id_customization_field'];
-                    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization_field`
+                    Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization_field`
 					SET `required` = ' . ($customization['require'] ? 1 : 0) . ', `type` = ' . (int)$customization['type'] . '
-					WHERE `id_customization_field` = '.$id_customization_field);
+					WHERE `id_customization_field` = ' . $id_customization_field);
                 } else {
                     Db::getInstance()->execute(
-                        'INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+                        'INSERT INTO `' . _DB_PREFIX_ . 'customization_field` (`id_product`, `type`, `required`)
                     	VALUES ('
-                            .(int) $product->id.', '
-                            .(int) $customization['type'].', '
-                            .($customization['require'] ? 1 : 0)
-                        .')'
+                        . (int)$product->id . ', '
+                        . (int)$customization['type'] . ', '
+                        . ($customization['require'] ? 1 : 0)
+                        . ')'
                     );
-                    $id_customization_field = (int) Db::getInstance()->Insert_ID();
+                    $id_customization_field = (int)Db::getInstance()->Insert_ID();
                 }
 
                 $new_customization_fields_ids[$key] = $id_customization_field;
@@ -577,16 +649,16 @@ class AdminProductWrapper
                     $name = $customization['label'][$language['id_lang']];
                     foreach ($shopList as $id_shop) {
                         $langValues .= '('
-                            .(int) $id_customization_field.', '
-                            .(int) $language['id_lang'].', '
-                            .(int) $id_shop.',\''
-                            .pSQL($name)
-                            .'\'), ';
+                            . (int)$id_customization_field . ', '
+                            . (int)$language['id_lang'] . ', '
+                            . (int)$id_shop . ',\''
+                            . pSQL($name)
+                            . '\'), ';
                     }
                 }
                 Db::getInstance()->execute(
-                    'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '
-                    .rtrim(
+                    'INSERT INTO `' . _DB_PREFIX_ . 'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '
+                    . rtrim(
                         $langValues,
                         ', '
                     )
@@ -603,14 +675,14 @@ class AdminProductWrapper
         }
 
         //update product count fields labels
-        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '.$productCustomizableValue.', `uploadable_files` = '.(int)$countFieldFile.', `text_fields` = '.(int)$countFieldText.' WHERE `id_product` = '.(int)$product->id);
+        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product` SET `customizable` = ' . $productCustomizableValue . ', `uploadable_files` = ' . (int)$countFieldFile . ', `text_fields` = ' . (int)$countFieldText . ' WHERE `id_product` = ' . (int)$product->id);
 
         //update product_shop count fields labels
         ObjectModel::updateMultishopTable('product', array(
             'customizable' => $productCustomizableValue,
             'uploadable_files' => (int)$countFieldFile,
             'text_fields' => (int)$countFieldText,
-        ), 'a.id_product = '.(int)$product->id);
+        ), 'a.id_product = ' . (int)$product->id);
 
         Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
 
@@ -645,7 +717,7 @@ class AdminProductWrapper
             $download->display_filename = $data['name'];
             $download->filename = $fileName ? $fileName : $download->filename;
             $download->date_add = date('Y-m-d H:i:s');
-            $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'].' 23:59:59' : '';
+            $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'] . ' 23:59:59' : '';
             $download->nb_days_accessible = (int)$data['nb_days'];
             $download->nb_downloadable = (int)$data['nb_downloadable'];
             $download->active = 1;
@@ -678,8 +750,8 @@ class AdminProductWrapper
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
         if ($download && !empty($download->filename)) {
-            unlink(_PS_DOWNLOAD_DIR_.$download->filename);
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_download` SET filename = "" WHERE `id_product_download` = '.(int)$download->id);
+            unlink(_PS_DOWNLOAD_DIR_ . $download->filename);
+            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_download` SET filename = "" WHERE `id_product_download` = ' . (int)$download->id);
         }
     }
 
