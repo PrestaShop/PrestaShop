@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -437,7 +437,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return RequestSqlFormHandler
+     * @return SqlRequestFormHandler
      */
     protected function getRequestSqlFormHandler()
     {

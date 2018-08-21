@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class RequestSqlExporter
 {
     /**
-     * @var RequestSqlDataProvider
+     * @var SqlRequestDataProvider
      */
     private $dataProvider;
 
@@ -53,12 +53,12 @@ class RequestSqlExporter
     private $configuration;
 
     /**
-     * @param RequestSqlDataProvider $dataProvider
+     * @param SqlRequestDataProvider $dataProvider
      * @param ExportDirectory $exportDirectory
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
-        RequestSqlDataProvider $dataProvider,
+        SqlRequestDataProvider $dataProvider,
         ExportDirectory $exportDirectory,
         ConfigurationInterface $configuration
     ) {

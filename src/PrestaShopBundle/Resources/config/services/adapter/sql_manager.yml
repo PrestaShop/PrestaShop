@@ -3,10 +3,10 @@ services:
         public: true
 
     prestashop.adapter.sql_manager.request_sql_manager:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager'
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestManager'
 
     prestashop.adapter.sql_manager.request_sql_data_provider:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlDataProvider'
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestDataProvider'
 
     prestashop.adapter.sql_manager.sql_query_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator'
@@ -19,7 +19,7 @@ services:
             - '@prestashop.adapter.legacy.configuration'
 
     prestashop.adapter.sql_manager.request_sql_form_data_validator:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlFormDataValidator'
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator'
         arguments:
             - '@prestashop.adapter.sql_manager.sql_query_validator'
 
