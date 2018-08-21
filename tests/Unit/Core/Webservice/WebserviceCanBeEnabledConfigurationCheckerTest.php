@@ -28,9 +28,8 @@ namespace Tests\Unit\Core\Webservice;
 
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\TestCase\UnitTestCase;
 
-class WebserviceCanBeEnabledConfigurationCheckerTest extends UnitTestCase
+class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\TestCase
 {
     private $translatorStub;
     private $configurationStub;

@@ -44,8 +44,6 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
  */
 class WebserviceController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminWebservice';
-
     /**
      * Displays the Webservice main page.
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
@@ -72,7 +70,7 @@ class WebserviceController extends FrameworkBundleAdminController
             'requireBulkActions' => false, // temporary
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminWebservice'),
+            'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
         ];
