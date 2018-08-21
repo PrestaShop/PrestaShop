@@ -36,8 +36,7 @@ class PrestashopCouldNotDownloadLatestVersionException extends \Exception
  */
 class Download
 {
-    // @todo: what happens for PS 1.8+ ?
-    const ADDONS_API_RELEASES_XML_FEED = 'https://api.prestashop.com/xml/channel17.xml';
+    const ADDONS_API_RELEASES_XML_FEED = 'https://api.prestashop.com/xml/channel.xml';
 
     /**
      * @var string
@@ -87,7 +86,7 @@ class Download
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             $opts = stream_context_get_options($stream_context);
-            
+
             if (isset($opts['http']['method']) && strtolower($opts['http']['method']) == 'post') {
                 curl_setopt($curl, CURLOPT_POST, true);
                 if (isset($opts['http']['content'])) {
@@ -106,42 +105,28 @@ class Download
 
     /**
      * @return string
-     *
-     * @throws \RuntimeException
      */
     public function getLatestStableAvailableVersion()
     {
         $feed = $this->getFeed();
 
-        foreach ($feed->channel as $channel) {
+        $branch = $this->getLatestStableBranchObjectFromFeed($feed);
+        $versionNumberAsString = (string)$branch->num;
+        $versionNumber = VersionNumber::fromString($versionNumberAsString);
 
-            $channelName = (string)$channel['name'];
-            if ('stable' === $channelName) {
-                return (string)$channel->branch->num;
-            }
-        }
-
-        throw new PrestashopCouldNotDownloadLatestVersionException('Could not find latest stable version from API releases xml feed');
+        return $versionNumber->__toString();
     }
 
     /**
      * @return string
-     *
-     * @throws Exception
      */
     public function getLatestStableAvailableVersionLink()
     {
         $feed = $this->getFeed();
 
-        foreach ($feed->channel as $channel) {
+        $branch = $this->getLatestStableBranchObjectFromFeed($feed);
 
-            $channelName = (string)$channel['name'];
-            if ('stable' === $channelName) {
-                return (string)$channel->branch->download->link;
-            }
-        }
-
-        throw new PrestashopCouldNotDownloadLatestVersionException('Could not find latest stable version from API releases xml feed');
+        return (string)$branch->download->link;
     }
 
     /**
@@ -169,5 +154,44 @@ class Download
         }
 
         return $this->xmlFeedStoredInCache;
+    }
+
+    /**
+     * @param SimpleXMLElement $feed
+     *
+     * @return \StdClass
+     *
+     * @throws PrestashopCouldNotDownloadLatestVersionException
+     */
+    private function getLatestStableBranchObjectFromFeed($feed)
+    {
+        foreach ($feed->channel as $channel) {
+
+            $channelName = (string)$channel['name'];
+            if ('stable' === $channelName) {
+
+                $maxStableVersion = null;
+                $maxStableBranch = null;
+                foreach ($channel->branch as $branch) {
+
+                    $versionNumberAsString = (string)$branch->num;
+                    $versionNumber = VersionNumber::fromString($versionNumberAsString);
+
+                    if (null === $maxStableVersion) {
+                        $maxStableVersion = $versionNumber;
+                        $maxStableBranch = $branch;
+                    } else {
+                        if ($versionNumber->isHigherThan($maxStableVersion)) {
+                            $maxStableVersion = $versionNumber;
+                            $maxStableBranch = $branch;
+                        }
+                    }
+                }
+
+                return $maxStableBranch;
+            }
+        }
+
+        throw new PrestashopCouldNotDownloadLatestVersionException('Could not find latest stable version from API releases xml feed');
     }
 }

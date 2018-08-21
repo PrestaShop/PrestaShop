@@ -147,7 +147,7 @@ class ConfigurationValidator
      */
     private function getRandomDirectoryPath()
     {
-        $randomDirectoryName = 'test-' . rand(0, 999);
+        $randomDirectoryName = 'test-' . uniqid();
         $dirPath = __DIR__ . DIRECTORY_SEPARATOR . $randomDirectoryName;
 
         return $dirPath;
