@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
 class SqlRequestConstraintException extends SqlRequestException
 {
-    const INVALID_NAME_ERROR = 10;
-    const INVALID_SQL_QUERY_ERROR = 20;
-    const MALFORMED_SQL_QUERY_ERROR = 30;
+    const INVALID_NAME = 10;
+    const INVALID_SQL_QUERY = 20;
+    const MALFORMED_SQL_QUERY = 30;
 }

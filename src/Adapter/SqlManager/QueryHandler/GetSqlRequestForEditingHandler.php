@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestFo
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use RequestSql;
 
+/**
+ * Class GetSqlRequestForEditingHandler
+ */
 final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHandlerInterface
 {
     /**

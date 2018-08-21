@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstrai
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * Class EditSqlRequestCommand defines command for SqlRequest editing
+ * This command modifies an existing SqlRequest object, replacing its data by the provided one
  */
 class EditSqlRequestCommand
 {
@@ -51,19 +51,10 @@ class EditSqlRequestCommand
 
     /**
      * @param SqlRequestId $sqlRequestId
-     * @param string $name
-     * @param string $sql
      */
-    public function __construct(
-        SqlRequestId $sqlRequestId,
-        $name,
-        $sql
-    ) {
-        $this
-            ->setSqlRequestId($sqlRequestId)
-            ->setName($name)
-            ->setSql($sql)
-        ;
+    public function __construct(SqlRequestId $sqlRequestId)
+    {
+        $this->setSqlRequestId($sqlRequestId);
     }
 
     /**
@@ -93,7 +84,7 @@ class EditSqlRequestCommand
     /**
      * @param SqlRequestId $sqlRequestId
      *
-     * @return EditSqlRequestCommand
+     * @return self
      */
     private function setSqlRequestId(SqlRequestId $sqlRequestId)
     {
@@ -111,12 +102,12 @@ class EditSqlRequestCommand
      *
      * @throws SqlRequestConstraintException
      */
-    private function setName($name)
+    public function setName($name)
     {
         if (!is_string($name) || empty($name)) {
             throw new SqlRequestConstraintException(
                 sprintf('Invalid RequestSql name "%s"', var_export($name, true)),
-                SqlRequestConstraintException::INVALID_NAME_ERROR
+                SqlRequestConstraintException::INVALID_NAME
             );
         }
 
@@ -130,16 +121,16 @@ class EditSqlRequestCommand
      *
      * @param string $sql
      *
-     * @return $this
+     * @return self
      *
      * @throws SqlRequestConstraintException
      */
-    private function setSql($sql)
+    public function setSql($sql)
     {
         if (!is_string($sql) || empty($sql)) {
             throw new SqlRequestConstraintException(
                 sprintf('Invalid RequestSql SQL query "%s"', var_export($sql, true)),
-                SqlRequestConstraintException::INVALID_SQL_QUERY_ERROR
+                SqlRequestConstraintException::INVALID_SQL_QUERY
             );
         }
 

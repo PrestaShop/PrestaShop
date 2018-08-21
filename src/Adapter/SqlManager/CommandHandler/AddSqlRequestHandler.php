@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\AddSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotAddSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use PrestaShopException;
 use RequestSql;
 
 /**
@@ -42,47 +42,33 @@ use RequestSql;
 final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
 {
     /**
-     * @var AddSqlRequestCommand
-     */
-    private $command;
-
-    /**
      * {@inheritdoc}
+     *
+     * @throws CannotAddSqlRequestException
+     * @throws SqlRequestException
      */
     public function handle(AddSqlRequestCommand $command)
     {
-        $this->command = $command;
-
         try {
-            return $this->buildRequestSql();
-        } catch (Exception $e) {
-            throw new CannotAddSqlRequestException(
+            $entity = new RequestSql();
+            $entity->name = $command->getName();
+            $entity->sql = $command->getSql();
+
+            $entity->add();
+
+            if (0 >= $entity->id) {
+                throw new CannotAddSqlRequestException(
+                    sprintf('Invalid entity id after creation: %s', $entity->id)
+                );
+            }
+
+            return new SqlRequestId($entity->id);
+        } catch (PrestaShopException $e) {
+            throw new SqlRequestException(
                 'Failed to create RequestSql',
                 0,
                 $e
             );
         }
-    }
-
-    /**
-     * @return SqlRequestId
-     *
-     * @throws SqlRequestException
-     */
-    private function buildRequestSql()
-    {
-        $entity = new RequestSql();
-        $entity->name = $this->command->getName();
-        $entity->sql = $this->command->getSql();
-
-        $entity->add();
-
-        if (0 >= $entity->id) {
-            throw new SqlRequestException(
-                sprintf('Invalid entity id after creation: %s', $entity->id)
-            );
-        }
-
-        return new SqlRequestId($entity->id);
     }
 }

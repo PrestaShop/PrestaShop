@@ -28,8 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\EditSqlRequestHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotEditSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShopException;
 use RequestSql;
 
 /**
@@ -40,45 +42,49 @@ use RequestSql;
 final class EditSqlRequestHandler implements EditSqlRequestHandlerInterface
 {
     /**
-     * @var EditSqlRequestCommand
-     */
-    private $command;
-
-    /**
      * {@inheritdoc}
-     */
-    public function handle(EditSqlRequestCommand $command)
-    {
-        $this->command = $command;
-
-        $this->editSqlRequest();
-    }
-
-    /**
+     *
+     * @param EditSqlRequestCommand $command
+     *
+     * @throws CannotEditSqlRequestException
      * @throws SqlRequestException
      * @throws SqlRequestNotFoundException
      */
-    private function editSqlRequest()
+    public function handle(EditSqlRequestCommand $command)
     {
-        $entity = new RequestSql($this->command->getSqlRequestId()->getValue());
+        try {
+            $entity = new RequestSql($command->getSqlRequestId()->getValue());
 
-        if (0 >= $entity->id) {
-            throw new SqlRequestNotFoundException(
-                sprintf(
-                    'RequestSql with id "%s" was not found for edit',
-                    $this->command->getSqlRequestId()->getValue()
-                )
-            );
-        }
+            if (0 >= $entity->id) {
+                throw new SqlRequestNotFoundException(
+                    sprintf(
+                        'RequestSql with id "%s" was not found for edit',
+                        $command->getSqlRequestId()->getValue()
+                    )
+                );
+            }
 
-        $entity->name = $this->command->getName();
-        $entity->sql = $this->command->getSql();
+            if (null !== $command->getName()) {
+                $entity->name = $command->getName();
+            }
 
-        if (false === $entity->update()) {
+            if (null !== $command->getSql()) {
+                $entity->sql = $command->getSql();
+            }
+
+            if (false === $entity->update()) {
+                throw new CannotEditSqlRequestException(
+                    sprintf(
+                        'Error occurred when updating RequestSql with id "%s"',
+                        $command->getSqlRequestId()->getValue()
+                    )
+                );
+            }
+        } catch (PrestaShopException $e) {
             throw new SqlRequestException(
                 sprintf(
                     'Error occurred when updating RequestSql with id "%s"',
-                    $this->command->getSqlRequestId()->getValue()
+                    $command->getSqlRequestId()->getValue()
                 )
             );
         }

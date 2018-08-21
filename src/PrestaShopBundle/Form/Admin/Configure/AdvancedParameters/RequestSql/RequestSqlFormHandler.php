@@ -94,7 +94,7 @@ class RequestSqlFormHandler
      *
      * @param array $data
      *
-     * @return array
+     * @return array[] Array of errors if any
      */
     public function save(array $data)
     {
