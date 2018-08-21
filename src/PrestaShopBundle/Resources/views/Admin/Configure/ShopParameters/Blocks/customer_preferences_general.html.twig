@@ -27,42 +27,54 @@
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block customer_preferences_general %}
-<div class="col">
+<div class="col-xl-10">
     <div class="card">
         <h3 class="card-header">
             <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
         </h3>
-        <div class="card-block">
+        <div class="card-block row">
             <div class="card-text">
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ps.label_with_help(('Re-display cart at login'|trans), ('After a customer logs in, you can recall and display the content of his/her last shopping cart.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.redisplay_cart_at_login) }}
-                    {{ form_widget(generalForm.redisplay_cart_at_login) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.redisplay_cart_at_login) }}
+                      {{ form_widget(generalForm.redisplay_cart_at_login) }}
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ps.label_with_help(('Send an email after registration'|trans), ('Send an email with summary of the account information (email, password) after registration.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.send_email_after_registration) }}
-                    {{ form_widget(generalForm.send_email_after_registration) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.send_email_after_registration) }}
+                      {{ form_widget(generalForm.send_email_after_registration) }}
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ps.label_with_help(('Password reset delay'|trans), ('Minimum time required between two requests for a password reset.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.password_reset_delay) }}
-                    {{ form_widget(generalForm.password_reset_delay) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.password_reset_delay) }}
+                      {{ form_widget(generalForm.password_reset_delay) }}
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ps.label_with_help(('Enable B2B mode'|trans), ('Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.enable_b2b_mode) }}
-                    {{ form_widget(generalForm.enable_b2b_mode) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.enable_b2b_mode) }}
+                      {{ form_widget(generalForm.enable_b2b_mode) }}
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ps.label_with_help(('Ask for birth date'|trans), ('Display or not the birth date field.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.ask_for_birthday) }}
-                    {{ form_widget(generalForm.ask_for_birthday) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.ask_for_birthday) }}
+                      {{ form_widget(generalForm.ask_for_birthday) }}
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ps.label_with_help(('Enable partner offers'|trans), ('Display or not the partner offers tick box, to receive offers from the store\'s partners.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.enable_offers) }}
-                    {{ form_widget(generalForm.enable_offers) }}
+                    <div class="col-sm">
+                      {{ form_errors(generalForm.enable_offers) }}
+                      {{ form_widget(generalForm.enable_offers) }}
+                    </div>
                 </div>
             </div>
         </div>
