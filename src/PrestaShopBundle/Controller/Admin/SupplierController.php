@@ -81,7 +81,7 @@ class SupplierController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.shop.context'),
             $this->get('prestashop.adapter.data_provider.tax')
         );
-        $allFormData = $modelMapper->getFormData();
+        $allFormData = $modelMapper->getFormData($product);
 
         $form = $this->createFormBuilder($allFormData);
         $simpleSubForm = $form->create('step6', FormType::class);
