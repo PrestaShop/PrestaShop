@@ -71,7 +71,7 @@ class EmailController extends FrameworkBundleAdminController
         if ($isEmailLogsEnabled) {
             $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
             $emailLogsGridFactory = $this->get('prestashop.core.grid.factory.email_logs');
-            $emailLogsGrid = $emailLogsGridFactory->createUsingSearchCriteria($filters);
+            $emailLogsGrid = $emailLogsGridFactory->getGrid($filters);
             $presentedEmailLogsGrid = $gridPresenter->present($emailLogsGrid);
         }
 
@@ -97,7 +97,7 @@ class EmailController extends FrameworkBundleAdminController
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.email_logs');
-        $emailLogsDefinition = $definitionFactory->create();
+        $emailLogsDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
         $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);

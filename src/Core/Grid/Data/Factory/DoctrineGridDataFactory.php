@@ -24,17 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PDO;
+use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineGridDataProvider is responsible for returning grid data using Doctrine query builders
+ * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders
  */
-final class DoctrineGridDataProvider implements GridDataProviderInterface
+final class DoctrineGridDataFactory implements GridDataFactoryInterface
 {
     /**
      * @var DoctrineQueryBuilderInterface

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -42,7 +42,7 @@ final class GridFactory implements GridFactoryInterface
     private $definitionFactory;
 
     /**
-     * @var GridDataProviderInterface
+     * @var GridDataFactoryInterface
      */
     private $dataProvider;
 
@@ -53,12 +53,12 @@ final class GridFactory implements GridFactoryInterface
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface      $dataProvider
+     * @param GridDataFactoryInterface      $dataProvider
      * @param FilterFormFactoryInterface     $filterFormFactory
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
-        GridDataProviderInterface $dataProvider,
+        GridDataFactoryInterface $dataProvider,
         FilterFormFactoryInterface $filterFormFactory
     ) {
         $this->definitionFactory = $definitionFactory;
@@ -69,9 +69,9 @@ final class GridFactory implements GridFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createUsingSearchCriteria(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria)
     {
-        $definition = $this->definitionFactory->create();
+        $definition = $this->definitionFactory->getDefinition();
 
         $filterForm = $this->filterFormFactory->create($definition);
         $filterForm->setData($searchCriteria->getFilters());

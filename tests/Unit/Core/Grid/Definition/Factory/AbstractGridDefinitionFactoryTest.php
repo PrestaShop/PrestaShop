@@ -80,7 +80,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
 
         $this->definitionFactory->setDispatcher($hookDispatcherMock);
 
-        $definition = $this->definitionFactory->create();
+        $definition = $this->definitionFactory->getDefinition();
 
         $this->assertInstanceOf(DefinitionInterface::class, $definition);
         $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());

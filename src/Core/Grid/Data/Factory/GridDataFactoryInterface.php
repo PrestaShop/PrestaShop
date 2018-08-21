@@ -24,14 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 
 /**
- * Interface GridDataProviderInterface defines contract for grid data providers
+ * Interface GridDataFactoryInterface defines contract for grid data providers
  */
-interface GridDataProviderInterface
+interface GridDataFactoryInterface
 {
     /**
      * @param SearchCriteriaInterface $searchCriteria

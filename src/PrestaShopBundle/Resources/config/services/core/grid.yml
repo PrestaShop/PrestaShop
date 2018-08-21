@@ -1,3 +1,5 @@
+parameters:
+    prestashop.core.grid.data.factory.doctrine_grid_data_factory: PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory
 services:
     _defaults:
         public: true
@@ -9,17 +11,17 @@ services:
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.log.repository'
 
     prestashop.core.grid.data_provider.email_logs:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
 
     prestashop.core.grid.data_provider.request_sql:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
 
