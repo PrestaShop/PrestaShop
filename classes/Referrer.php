@@ -366,7 +366,7 @@ class ReferrerCore extends ObjectModel
 
         // If it's a product and it has no visits nor orders
         if ((int) $idProduct && !$statsVisits['visits'] && !$statsSales['orders']) {
-            exit;
+            return;
         }
 
         $jsonArray = array(
@@ -387,6 +387,6 @@ class ReferrerCore extends ObjectModel
             'percent_fee' => Tools::displayPrice($statsSales['sales'] * $referrer->percent_fee / 100, $currency),
         );
 
-        die('[' . json_encode($jsonArray) . ']');
+        return '[' . json_encode($jsonArray) . ']';
     }
 }
