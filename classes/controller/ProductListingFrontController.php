@@ -426,9 +426,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'total_items' => $totalItems,
             'items_shown_from' => $itemsShownFrom,
             'items_shown_to' => ($itemsShownTo <= $totalItems) ? $itemsShownTo : $totalItems,
+            'current_page' => $pagination->getPage(),
+            'pages_count' => $pagination->getPagesCount(),
             'pages' => array_map(function ($link) {
                 $link['url'] = $this->updateQueryString(array(
-                    'page' => $link['page'],
+                    'page' => $link['page'] > 1 ? $link['page'] : null,
                 ));
 
                 return $link;

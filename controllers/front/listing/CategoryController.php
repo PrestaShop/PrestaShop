@@ -52,7 +52,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getCanonicalURL()
     {
-        return $this->context->link->getCategoryLink($this->category);
+        return $this->context->link->getCategoryLink($this->category, null, null, null, null, false, true);
     }
 
     /**

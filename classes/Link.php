@@ -395,7 +395,8 @@ class LinkCore
         $idLang = null,
         $selectedFilters = null,
         $idShop = null,
-        $relativeProtocol = false
+        $relativeProtocol = false,
+        $addPage = false
     ) {
         $dispatcher = Dispatcher::getInstance();
 
@@ -435,6 +436,12 @@ class LinkCore
         if ($dispatcher->hasKeyword($rule, $idLang, 'meta_title', $idShop)) {
             $category = $this->getCategoryObject($category, $idLang);
             $params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
+        }
+        if ($addPage) {
+            $page = (int) Tools::getValue('page');
+            if (false !== $page && $page > 1) {
+                $params['page'] = $page;
+            }
         }
 
         return $url.Dispatcher::getInstance()->createUrl($rule, $idLang, $params, $this->allow, '', $idShop);
