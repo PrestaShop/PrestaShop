@@ -66,34 +66,6 @@ class AbstractGridDefinitionFactoryTest extends TestCase
         $this->definitionFactory = $definitionFactory;
     }
 
-    public function testItCreatesDefinitionAndDispatchesHookToAllowDefinitionModification()
-    {
-        $hookDispatcherMock = $this->createMock(HookDispatcher::class);
-        $hookDispatcherMock
-            ->expects($this->once())
-            ->method('dispatchForParameters')
-            ->withConsecutive(
-                [$this->equalTo('modifyGridDefinition')],
-                [$this->isType('array'), $this->arrayHasKey('definition')]
-            )
-        ;
-
-        $this->definitionFactory->setDispatcher($hookDispatcherMock);
-
-        $definition = $this->definitionFactory->getDefinition();
-
-        $this->assertInstanceOf(DefinitionInterface::class, $definition);
-        $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());
-        $this->assertInstanceOf(GridActionCollectionInterface::class, $definition->getGridActions());
-
-        $this->assertEquals($definition->getId(), 'test_id');
-        $this->assertEquals($definition->getName(), 'Test name');
-        $this->assertCount(3, $definition->getColumns());
-        $this->assertCount(0, $definition->getGridActions());
-        $this->assertCount(0, $definition->getBulkActions());
-        $this->assertCount(0, $definition->getFilters()->all());
-    }
-
     private function getColumns()
     {
         return (new ColumnCollection())

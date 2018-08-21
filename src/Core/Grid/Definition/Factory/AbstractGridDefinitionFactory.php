@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
@@ -42,7 +41,7 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
  */
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
-    use TranslatorAwareTrait, HookDispatcherAwareTrait;
+    use TranslatorAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -57,10 +56,6 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getGridActions(),
             $this->getBulkActions()
         );
-
-        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
-            'definition' => $definition,
-        ]);
 
         return $definition;
     }
