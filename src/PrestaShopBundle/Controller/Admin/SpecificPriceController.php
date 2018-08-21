@@ -117,8 +117,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
         try {
             $price = $adminProductWrapper->getSpecificPriceDataById($idSpecificPrice);
         } catch (\PrestaShopObjectNotFoundException $e) {
-            // @todo: translate
-            return new Response(sprintf('Cannot find specific price %d', $idSpecificPrice), Response::HTTP_BAD_REQUEST);
+            $message = $this->trans('Cannot find specific price %*price', 'Admin.Catalog.Notification', ['price' => $idSpecificPrice]);
+            return new Response($message, Response::HTTP_BAD_REQUEST);
         }
         $formData = $this->formatSpecificPriceToPrefillForm($idSpecificPrice, $price);
 

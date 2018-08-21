@@ -22,13 +22,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<!-- Modal -->
 <div class="modal fade" id="edit-specific-price-modal" tabindex="1" role="dialog" aria-hidden="true">
 
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit a specific price {# need trad #}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{ "Edit a specific price"|trans({}, 'Admin.Catalog.Feature') }}
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
