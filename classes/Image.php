@@ -661,7 +661,7 @@ class ImageCore extends ObjectModel
 
         if (!$this->existing_path) {
             if (Configuration::get('PS_LEGACY_IMAGES') && file_exists(_PS_PROD_IMG_DIR_.$this->id_product.'-'.$this->id.'.'.$this->image_format)) {
-                $this->existing_path = $this->id_product.'-'.$this->id;
+                $this->existing_path = _PS_PROD_IMG_DIR_.$this->id_product.'-'.$this->id;
             } else {
                 $this->existing_path = $this->getImgPath();
             }
@@ -726,7 +726,7 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        $path = $this->getImgFolder().$this->id;
+        $path = _PS_PROD_IMG_DIR_.$this->getImgFolder().$this->id;
 
         return $path;
     }
@@ -778,7 +778,7 @@ class ImageCore extends ObjectModel
 
                     // if there's already a file at the new image path, move it to a dump folder
                     // most likely the preexisting image is a demo image not linked to a product and it's ok to replace it
-                    $newPath = _PS_PROD_IMG_DIR_.$image->getImgPath().(isset($matches[3]) ? $matches[3] : '').'.jpg';
+                    $newPath = $image->getImgPath().(isset($matches[3]) ? $matches[3] : '').'.jpg';
                     if (file_exists($newPath)) {
                         if (!file_exists(_PS_PROD_IMG_DIR_.$tmpFolder)) {
                             @mkdir(_PS_PROD_IMG_DIR_.$tmpFolder, self::$access_rights);
@@ -850,12 +850,12 @@ class ImageCore extends ObjectModel
             if (!$this->id_product) {
                 return false;
             }
-            $path = $this->id_product.'-'.$this->id;
+            $path = _PS_PROD_IMG_DIR_.$this->id_product.'-'.$this->id;
         } else {
             $path = $this->getImgPath();
             $this->createImgFolder();
         }
 
-        return _PS_PROD_IMG_DIR_.$path;
+        return $path;
     }
 }

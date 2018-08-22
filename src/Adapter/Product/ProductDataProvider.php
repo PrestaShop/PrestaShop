@@ -144,7 +144,7 @@ class ProductDataProvider
             'cover' => $imageData->cover ? true : false,
             'legend' => $imageData->legend,
             'format' => $imageData->image_format,
-            'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
+            'base_image_url' => $imageData->getImgPath(),
         ];
     }
 }
