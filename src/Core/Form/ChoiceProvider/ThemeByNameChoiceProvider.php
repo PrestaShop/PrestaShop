@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ThemeByNameChoiceProvider provides theme choices with name values
@@ -37,22 +36,15 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var ThemeRepository
      */
     private $themeRepository;
 
     /**
-     * @param TranslatorInterface $translator
      * @param ThemeRepository $themeRepository
      */
-    public function __construct(TranslatorInterface $translator, ThemeRepository $themeRepository)
+    public function __construct(ThemeRepository $themeRepository)
     {
-        $this->translator = $translator;
         $this->themeRepository = $themeRepository;
     }
 
