@@ -59,10 +59,11 @@ class PositionsControllerTest extends WebTestCase
             [
                 'unhooks' => [
                     '41_1',
-                    '3_1b',
-                    '3_41',
-                    '2_2',
-                    '1000_1000',
+                    '65_1000',
+                    '1000000_3',
+                    '65_3',
+                    'aa_dd',
+                    'something'
                 ],
             ]
         );
@@ -100,7 +101,7 @@ class PositionsControllerTest extends WebTestCase
                 'admin_modules_positions_unhook'
             ),
             [
-                'moduleId' => 4,
+                'moduleId' => 3,
                 'hookId' => 65,
             ]
         );

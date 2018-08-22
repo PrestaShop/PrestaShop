@@ -215,8 +215,8 @@ class PositionsController extends FrameworkBundleAdminController
         $errors = [];
         foreach ($unhooks as $unhook) {
             $explode = explode('_', $unhook);
-            $hookId = (int) $explode[0];
-            $moduleId = (int) $explode[1];
+            $hookId = (int) isset($explode[0]) ? $explode[0] : 0;
+            $moduleId = (int) isset($explode[1]) ? $explode[1] : 0;
             $module = $this->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
             $hook = new Hook($hookId);
 
@@ -228,7 +228,7 @@ class PositionsController extends FrameworkBundleAdminController
                 continue;
             }
 
-            if (!$hookId || !$validateAdapter->isLoadedObject($hook)) {
+            if (!$validateAdapter->isLoadedObject($hook)) {
                 $errors[] = $this->trans(
                     'Hook cannot be loaded.',
                     'Admin.Modules.Notification'
