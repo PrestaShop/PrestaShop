@@ -95,7 +95,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
      *
      * @return array
      */
-    protected function getIncludingInactiveLocalesChoices()
+    protected function getInstalledLocalesChoices()
     {
         return $this->formatLocales($this->installedLocales);
     }
