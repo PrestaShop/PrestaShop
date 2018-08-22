@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MoneyWithSuffixType is a money type,
- * which also has a suffix string right after the currency sign
+ * which also has a suffix string right after the currency sign.
  */
 class MoneyWithSuffixType extends MoneyType
 {
@@ -68,7 +68,7 @@ class MoneyWithSuffixType extends MoneyType
 
     /**
      * Appends the suffix to the value, if the value is not empty.
-     * Can be used with array_walk()
+     * Can be used with array_walk().
      *
      * @param string $value
      * @param int $key not used, it's only here to make this method compatible with array_walk

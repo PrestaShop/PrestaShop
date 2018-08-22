@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepCore extends AbstractCheckoutStep
@@ -157,7 +155,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 Tools::getToken(true, $this->context)
             );
 
-            $deletionResult = (bool)$addressPersister->delete(
+            $deletionResult = (bool) $addressPersister->delete(
                 new Address((int) Tools::getValue('id_address'), $this->context->language->id),
                 Tools::getValue('token')
             );
@@ -214,41 +212,41 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function getTemplateParameters()
     {
-        $idAddressDelivery = (int)$this->getCheckoutSession()->getIdAddressDelivery();
-        $idAddressInvoice  = (int)$this->getCheckoutSession()->getIdAddressInvoice();
+        $idAddressDelivery = (int) $this->getCheckoutSession()->getIdAddressDelivery();
+        $idAddressInvoice = (int) $this->getCheckoutSession()->getIdAddressInvoice();
         $params = array(
-            'address_form'               => $this->addressForm->getProxy(),
-            'use_same_address'           => $this->use_same_address,
-            'use_different_address_url'  => $this->context->link->getPageLink(
+            'address_form' => $this->addressForm->getProxy(),
+            'use_same_address' => $this->use_same_address,
+            'use_different_address_url' => $this->context->link->getPageLink(
                 'order',
                 true,
                 null,
                 array('use_same_address' => 0)
             ),
-            'new_address_delivery_url'   => $this->context->link->getPageLink(
+            'new_address_delivery_url' => $this->context->link->getPageLink(
                 'order',
                 true,
                 null,
                 array('newAddress' => 'delivery')
             ),
-            'new_address_invoice_url'    => $this->context->link->getPageLink(
+            'new_address_invoice_url' => $this->context->link->getPageLink(
                 'order',
                 true,
                 null,
                 array('newAddress' => 'invoice')
             ),
-            'id_address_delivery'        => $idAddressDelivery,
-            'id_address_invoice'         => $idAddressInvoice,
+            'id_address_delivery' => $idAddressDelivery,
+            'id_address_invoice' => $idAddressInvoice,
             'show_delivery_address_form' => $this->show_delivery_address_form,
-            'show_invoice_address_form'  => $this->show_invoice_address_form,
-            'form_has_continue_button'   => $this->form_has_continue_button,
+            'show_invoice_address_form' => $this->show_invoice_address_form,
+            'form_has_continue_button' => $this->form_has_continue_button,
         );
 
         /** @var OrderControllerCore $controller */
         $controller = $this->context->controller;
         if (isset($controller)) {
-            $warnings         = $controller->checkoutWarning;
-            $addressWarning   = isset($warnings['address'])
+            $warnings = $controller->checkoutWarning;
+            $addressWarning = isset($warnings['address'])
                 ? $warnings['address']
                 : false;
             $invalidAddresses = isset($warnings['invalid_addresses'])
@@ -275,8 +273,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $params = array_replace(
                 $params,
                 array(
-                    'not_valid_addresses' => implode(",", $invalidAddresses),
-                    'use_same_address'    => $this->use_same_address,
+                    'not_valid_addresses' => implode(',', $invalidAddresses),
+                    'use_same_address' => $this->use_same_address,
                 ),
                 $errors
             );

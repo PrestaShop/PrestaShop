@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,11 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class AbtractColumn implements reusable column methods
+ * Class AbtractColumn implements reusable column methods.
  */
 abstract class AbstractColumn implements ColumnInterface
 {
@@ -120,9 +119,8 @@ abstract class AbstractColumn implements ColumnInterface
         ;
     }
 
-
     /**
-     * Resolve column options
+     * Resolve column options.
      *
      * @param array $options
      */

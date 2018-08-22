@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +35,7 @@ interface ProductExporterInterface
 {
     /**
      * @param array $products
+     *
      * @return Response
      */
     public function export(array $products);

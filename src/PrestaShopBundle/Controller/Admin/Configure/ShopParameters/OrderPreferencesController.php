@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,12 +33,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controller responsible of "Configure > Shop Parameters > Order Settings" page
+ * Controller responsible of "Configure > Shop Parameters > Order Settings" page.
  */
 class OrderPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show order preferences page
+     * Show order preferences page.
      *
      * @param Request $request
      *
@@ -64,7 +64,7 @@ class OrderPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle order settings form submit
+     * Handle order settings form submit.
      *
      * @param Request $request
      *

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ interface ProviderInterface
      * @return string[] List of directories to parse
      */
     public function getDirectories();
-    
+
     /**
      * @return string[] List of patterns for Database filtering
      */
@@ -55,7 +55,7 @@ interface ProviderInterface
      * @return MessageCatalogue A provider must return a MessageCatalogue
      */
     public function getMessageCatalogue();
-    
+
     /**
      * @return string Unique identifier
      */

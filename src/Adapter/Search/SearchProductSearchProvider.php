@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Search;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -39,6 +38,7 @@ use Tools;
 
 /**
  * Class responsible of retrieving products in Search page of Front Office.
+ *
  * @see SearchController
  */
 class SearchProductSearchProvider implements ProductSearchProviderInterface
@@ -68,7 +68,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchQuery $query
     ) {
         $products = [];
-        $count    = 0;
+        $count = 0;
 
         if (($string = $query->getSearchString())) {
             $queryString = Tools::replaceAccentedChars(urldecode($string));
@@ -85,7 +85,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 null
             );
             $products = $result['result'];
-            $count    = $result['total'];
+            $count = $result['total'];
 
             Hook::exec('actionSearch', array(
                 'searched_query' => $queryString,

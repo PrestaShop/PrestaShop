@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
@@ -31,6 +32,7 @@ class ProductListingLazyArray extends ProductLazyArray
 {
     /**
      * @arrayAccess
+     *
      * @return null|string
      */
     public function getAddToCartUrl()
@@ -49,6 +51,7 @@ class ProductListingLazyArray extends ProductLazyArray
     /**
      * @param array $product
      * @param ProductPresentationSettings $settings
+     *
      * @return bool
      */
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)

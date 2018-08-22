@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Twig extension for the Symfony Asset component.
+ *
  * @deprecated since 1.7.5.0 to be removed in 1.8.0.0
  *
  * @author Mlanawo Mbechezi <mlanawo.mbechezi@ikimea.com>
@@ -47,7 +49,6 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRunt
      */
     private $environment;
 
-
     /**
      * @var \Symfony\Component\DependencyInjection\Container
      */
@@ -55,6 +56,7 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_InitRunt
 
     /**
      * AdminExtension constructor.
+     *
      * @param RequestStack|null $requestStack
      * @param ContainerInterface $container
      */

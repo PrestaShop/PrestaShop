@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class RiskCore
+ * Class RiskCore.
  *
  * @since 1.5.0
  */
@@ -49,7 +49,7 @@ class RiskCore extends ObjectModel
     );
 
     /**
-     * Get fields
+     * Get fields.
      *
      * @return mixed
      */
@@ -64,7 +64,7 @@ class RiskCore extends ObjectModel
     }
 
     /**
-     * Get Risks
+     * Get Risks.
      *
      * @param int|null $idLang Language ID
      *

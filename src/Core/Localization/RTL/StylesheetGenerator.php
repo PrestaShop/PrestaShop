@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
 use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
-use \CSSJanus;
-use \Tools;
+use CSSJanus;
+use Tools;
 
 /**
  * Creates RTL versions of LTR CSS files.
@@ -37,23 +37,23 @@ use \Tools;
  * then applying an optional .rtlfix file, if one with the same name as the processed file is found.
  *
  * Inspired by "Localize Fixture" from Mahdi Shad @ iPresta
- * @link https://github.com/iPresta/localize-fixture
+ *
+ * @see https://github.com/iPresta/localize-fixture
  */
 class StylesheetGenerator
 {
-
     /**
-     * Default file type to look up
+     * Default file type to look up.
      */
     const DEFAULT_FILE_TYPE = 'css';
 
     /**
-     * Default suffix to use for RTL transformed files
+     * Default suffix to use for RTL transformed files.
      */
     const DEFAULT_RTL_SUFFIX = '_rtl';
 
     /**
-     * Extension of RTL fix files
+     * Extension of RTL fix files.
      */
     const RTLFIX_EXTENSION = 'rtlfix';
 
@@ -90,14 +90,14 @@ class StylesheetGenerator
         $allFiles = $this->getFilesInDirectory($directory);
 
         foreach ($allFiles as $file) {
-            if ($this->shouldProcessFile($directory.'/'.$file, $regenerate)) {
-                $this->processFile($directory.'/'.$file);
+            if ($this->shouldProcessFile($directory . '/' . $file, $regenerate)) {
+                $this->processFile($directory . '/' . $file);
             }
         }
     }
 
     /**
-     * Indicates if a file should be processed or not
+     * Indicates if a file should be processed or not.
      *
      * @param string $file File path
      * @param bool $regenerate Indicates if RTL files should be re-generated even if they exist
@@ -106,13 +106,13 @@ class StylesheetGenerator
      */
     private function shouldProcessFile($file, $regenerate)
     {
-        return (
+        return
             strpos($file, '/node_modules/') === false
             // does not end with .rtlfix
-            && substr(rtrim($file, '.'.$this->fileType), -4) !== $this->rtlSuffix
+            && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
             && ($regenerate || !file_exists($this->getRtlFileName($file)))
-        );
+        ;
     }
 
     /**
@@ -129,7 +129,7 @@ class StylesheetGenerator
         if ($content === false) {
             throw new GenerationException(
                 sprintf(
-                    "Unable to read from CSS file: %s",
+                    'Unable to read from CSS file: %s',
                     $filePath
                 )
             );
@@ -139,7 +139,7 @@ class StylesheetGenerator
 
         if (strlen($rendered) === 0 && strlen($content) !== 0) {
             throw new GenerationException(
-                sprintf("Failed to generate RTL CSS from file: %s", $filePath)
+                sprintf('Failed to generate RTL CSS from file: %s', $filePath)
             );
         }
 
@@ -158,12 +158,13 @@ class StylesheetGenerator
      *
      * @return string[] Array of file paths, relative to the provided directory
      */
-    private function getFilesInDirectory($directory) {
+    private function getFilesInDirectory($directory)
+    {
         return Tools::scandir($directory, $this->fileType, '', true);
     }
 
     /**
-     * Removes the file extension from path
+     * Removes the file extension from path.
      *
      * @param string $filePath Path to a file
      *
@@ -172,11 +173,12 @@ class StylesheetGenerator
     private function getFilePathWithoutExtension($filePath)
     {
         $path = pathinfo($filePath);
-        return $path['dirname'].'/'.$path['filename'];
+
+        return $path['dirname'] . '/' . $path['filename'];
     }
 
     /**
-     * Returns the full path for the RTL filename corresponding to the provided base filename
+     * Returns the full path for the RTL filename corresponding to the provided base filename.
      *
      * @param string $baseFileName Base file name
      *
@@ -184,7 +186,7 @@ class StylesheetGenerator
      */
     private function getRtlFileName($baseFileName)
     {
-        return $this->getFilePathWithoutExtension($baseFileName).$this->rtlSuffix.'.'.$this->fileType;
+        return $this->getFilePathWithoutExtension($baseFileName) . $this->rtlSuffix . '.' . $this->fileType;
     }
 
     /**
@@ -201,7 +203,7 @@ class StylesheetGenerator
     {
         $filePath = $this->getFilePathWithoutExtension($baseFile);
 
-        $rtlFixFilePath = $filePath.'.'.self::RTLFIX_EXTENSION;
+        $rtlFixFilePath = $filePath . '.' . self::RTLFIX_EXTENSION;
 
         if (file_exists($rtlFixFilePath)) {
             $rtlFixContent = file_get_contents($rtlFixFilePath);
@@ -209,7 +211,7 @@ class StylesheetGenerator
             if ($rtlFixContent === false) {
                 throw new GenerationException(
                     sprintf(
-                        "Failed to read from file: %s",
+                        'Failed to read from file: %s',
                         $rtlFixFilePath
                     )
                 );
@@ -236,7 +238,7 @@ class StylesheetGenerator
         if (false === file_put_contents($rtlFilePath, $content)) {
             throw new GenerationException(
                 sprintf(
-                    "Unable to write file to: %s",
+                    'Unable to write file to: %s',
                     $rtlFilePath
                 )
             );

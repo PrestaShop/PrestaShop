@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Validation;
 use PrestaShop\PrestaShop\Adapter\Validate;
 
 /**
- * Class Validator is responsible for validating data
+ * Class Validator is responsible for validating data.
  */
 final class Validator implements ValidatorInterface
 {

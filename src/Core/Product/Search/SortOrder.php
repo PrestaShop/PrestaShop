@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
@@ -58,11 +57,11 @@ class SortOrder
     public function toArray()
     {
         return [
-            'entity'        => $this->entity,
-            'field'         => $this->field,
-            'direction'     => $this->direction,
-            'label'         => $this->label,
-            'urlParameter'  => $this->toString()
+            'entity' => $this->entity,
+            'field' => $this->field,
+            'direction' => $this->direction,
+            'label' => $this->label,
+            'urlParameter' => $this->toString(),
         ];
     }
 
@@ -74,12 +73,14 @@ class SortOrder
     public static function newFromString($paramValue)
     {
         list($entity, $field, $direction) = explode('.', $paramValue);
+
         return new SortOrder($entity, $field, $direction);
     }
 
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -91,6 +92,7 @@ class SortOrder
     public function setEntity($entity)
     {
         $this->entity = $entity;
+
         return $this;
     }
 
@@ -102,6 +104,7 @@ class SortOrder
     public function setField($field)
     {
         $this->field = $field;
+
         return $this;
     }
 
@@ -121,6 +124,7 @@ class SortOrder
         }
 
         $this->direction = $direction;
+
         return $this->direction;
     }
 
@@ -138,6 +142,7 @@ class SortOrder
                 return 'cp.';
             } elseif ($this->field === 'manufacturer_name') {
                 $this->setField('name');
+
                 return 'm.';
             } else {
                 return 'p.';

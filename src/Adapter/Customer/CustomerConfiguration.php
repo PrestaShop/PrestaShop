@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class CustomerConfiguration is responsible for saving & loading customer configuration
+ * Class CustomerConfiguration is responsible for saving & loading customer configuration.
  */
 class CustomerConfiguration implements DataConfigurationInterface
 {
@@ -51,7 +51,7 @@ class CustomerConfiguration implements DataConfigurationInterface
     {
         return [
             'redisplay_cart_at_login' => $this->configuration->getBoolean('PS_CART_FOLLOWING'),
-            'send_email_after_registration' =>$this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
+            'send_email_after_registration' => $this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
             'password_reset_delay' => $this->configuration->getInt('PS_PASSWD_TIME_FRONT'),
             'enable_b2b_mode' => $this->configuration->getBoolean('PS_B2B_ENABLE'),
             'ask_for_birthday' => $this->configuration->getBoolean('PS_CUSTOMER_BIRTHDATE'),

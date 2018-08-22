@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use Tools;
 use Media;
 
 /**
- * Class able to clear application caches
+ * Class able to clear application caches.
  */
 class CacheClearer
 {
     /**
-     * Clear all application caches
+     * Clear all application caches.
      */
     public function clearAllCaches()
     {
@@ -47,7 +47,7 @@ class CacheClearer
     }
 
     /**
-     * Clear Symfony cache
+     * Clear Symfony cache.
      */
     public function clearSymfonyCache()
     {
@@ -55,7 +55,7 @@ class CacheClearer
     }
 
     /**
-     * Clear media cache only
+     * Clear media cache only.
      */
     public function clearMediaCache()
     {
@@ -63,7 +63,7 @@ class CacheClearer
     }
 
     /**
-     * Clear smarty cache only
+     * Clear smarty cache only.
      */
     public function clearSmartyCache()
     {

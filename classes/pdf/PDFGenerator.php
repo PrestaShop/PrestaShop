@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -67,7 +67,7 @@ class PDFGeneratorCore extends TCPDF
         'ko' => 'cid0kr',
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
-        'th' => 'freeserif'
+        'th' => 'freeserif',
     );
 
     /**
@@ -81,7 +81,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     * set the PDF encoding
+     * set the PDF encoding.
      *
      * @param string $encoding
      */
@@ -91,8 +91,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     *
-     * set the PDF header
+     * set the PDF header.
      *
      * @param string $header HTML
      */
@@ -102,8 +101,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     *
-     * set the PDF footer
+     * set the PDF footer.
      *
      * @param string $footer HTML
      */
@@ -113,8 +111,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     *
-     * create the PDF content
+     * create the PDF content.
      *
      * @param string $content HTML
      */
@@ -124,8 +121,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     *
-     * create the PDF pagination
+     * create the PDF pagination.
      *
      * @param string $pagination HTML
      */
@@ -135,7 +131,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     * Change the font
+     * Change the font.
      *
      * @param string $iso_lang
      */
@@ -172,9 +168,11 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     * Render HTML template
+     * Render HTML template.
+     *
      * @param string $filename
      * @param bool $display true:display to user, false:save, 'I','D','S' as fpdf display
+     *
      * @throws PrestaShopException
      *
      * @return string HTML rendered
@@ -205,7 +203,7 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     * Write a PDF page
+     * Write a PDF page.
      */
     public function writePage()
     {
@@ -217,8 +215,8 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
-     * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting
-    */
+     * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting.
+     */
     protected function getRandomSeed($seed = '')
     {
         $seed .= microtime();

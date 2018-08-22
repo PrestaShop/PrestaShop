@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,6 +38,7 @@ class OrderDiscountCore extends OrderCartRule
         if ($key == 'id_discount') {
             return $this->id_cart_rule;
         }
+
         return $this->{$key};
     }
 
@@ -56,6 +57,7 @@ class OrderDiscountCore extends OrderCartRule
     public function __call($method, $args)
     {
         Tools::displayAsDeprecated();
+
         return call_user_func_array(array($this->parent, $method), $args);
     }
 }

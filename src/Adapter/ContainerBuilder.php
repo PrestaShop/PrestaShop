@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
@@ -32,7 +33,7 @@ use Symfony\Component\Config\FileLocator;
 use LegacyCompilerPass;
 
 /**
- * Build the Container for PrestaShop Legacy
+ * Build the Container for PrestaShop Legacy.
  */
 class ContainerBuilder
 {
@@ -41,24 +42,25 @@ class ContainerBuilder
      * @param bool $isDebug
      *
      * @return SfContainerBuilder
+     *
      * @throws \Exception
      */
     public static function getContainer($name, $isDebug)
     {
-        $containerName = ucfirst($name).'Container';
-        $file = _PS_CACHE_DIR_."${containerName}.php";
+        $containerName = ucfirst($name) . 'Container';
+        $file = _PS_CACHE_DIR_ . "${containerName}.php";
 
         if (!$isDebug && file_exists($file)) {
             require_once $file;
 
-            return new $containerName;
+            return new $containerName();
         }
 
         $container = new SfContainerBuilder();
         $container->addCompilerPass(new LegacyCompilerPass());
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $env = $isDebug ? 'dev' : 'prod';
-        $servicesPath = _PS_CONFIG_DIR_."services/${name}/services_${env}.yml";
+        $servicesPath = _PS_CONFIG_DIR_ . "services/${name}/services_${env}.yml";
         $loader->load($servicesPath);
         $container->compile();
 

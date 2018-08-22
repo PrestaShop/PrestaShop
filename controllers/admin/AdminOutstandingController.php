@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,37 +44,37 @@ class AdminOutstandingControllerCore extends AdminController
 		c.`outstanding_allow_amount`,
 		r.`color`,
 		rl.`name` AS `risk`';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = a.`id_order`)
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
-		LEFT JOIN `'._DB_PREFIX_.'risk` r ON (r.`id_risk` = c.`id_risk`)
-		LEFT JOIN `'._DB_PREFIX_.'risk_lang` rl ON (r.`id_risk` = rl.`id_risk` AND rl.`id_lang` = '.(int)$this->context->language->id.')';
+        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.`id_order` = a.`id_order`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = o.`id_customer`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'risk` r ON (r.`id_risk` = c.`id_risk`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'risk_lang` rl ON (r.`id_risk` = rl.`id_risk` AND rl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_where = 'AND number > 0';
         $this->_use_found_rows = false;
 
         $risks = array();
         foreach (Risk::getRisks() as $risk) {
-            /** @var Risk $risk */
+            /* @var Risk $risk */
             $risks[$risk->id] = $risk->name;
         }
 
         $this->fields_list = array(
             'number' => array(
-                'title' => $this->trans('Invoice', array(), 'Admin.Global')
+                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
             ),
             'date_add' => array(
                 'title' => $this->trans('Date', array(), 'Admin.Global'),
                 'type' => 'date',
                 'align' => 'right',
-                'filter_key' => 'a!date_add'
+                'filter_key' => 'a!date_add',
             ),
             'customer' => array(
                 'title' => $this->trans('Customer', array(), 'Admin.Global'),
                 'filter_key' => 'customer',
-                'tmpTableFilter' => true
+                'tmpTableFilter' => true,
             ),
             'company' => array(
                 'title' => $this->trans('Company', array(), 'Admin.Global'),
-                'align' => 'center'
+                'align' => 'center',
             ),
             'risk' => array(
                 'title' => $this->trans('Risk', array(), 'Admin.Orderscustomers.Feature'),
@@ -84,34 +84,35 @@ class AdminOutstandingControllerCore extends AdminController
                 'color' => 'color',
                 'list' => $risks,
                 'filter_key' => 'r!id_risk',
-                'filter_type' => 'int'
+                'filter_type' => 'int',
             ),
             'outstanding_allow_amount' => array(
                 'title' => $this->trans('Outstanding Allowance', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
-                'type' => 'price'
+                'type' => 'price',
             ),
             'outstanding' => array(
                 'title' => $this->trans('Current Outstanding', array(), 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,
-                'search' => false
+                'search' => false,
             ),
             'id_invoice' => array(
                 'title' => $this->trans('Invoice', array(), 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,
-                'search' => false
-            )
+                'search' => false,
+            ),
         );
     }
 
     /**
-     * Toolbar initialisation
+     * Toolbar initialisation.
+     *
      * @return bool Force true (Hide New button)
      */
     public function initToolbar()
@@ -120,15 +121,17 @@ class AdminOutstandingControllerCore extends AdminController
     }
 
     /**
-     * Column callback for print PDF incon
+     * Column callback for print PDF incon.
+     *
      * @param $id_invoice integer Invoice ID
      * @param $tr array Row data
+     *
      * @return string HTML content
      */
     public function printPDFIcons($id_invoice, $tr)
     {
         $this->context->smarty->assign(array(
-            'id_invoice' => $id_invoice
+            'id_invoice' => $id_invoice,
         ));
 
         return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
@@ -144,21 +147,22 @@ class AdminOutstandingControllerCore extends AdminController
         if (!Validate::isLoadedObject($order)) {
             throw new PrestaShopException('object Order cannot be loaded');
         }
-        $customer = new Customer((int)$order->id_customer);
+        $customer = new Customer((int) $order->id_customer);
         if (!Validate::isLoadedObject($order_invoice)) {
             throw new PrestaShopException('object Customer cannot be loaded');
         }
 
-        return '<b>'.Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency).'</b>';
+        return '<b>' . Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency) . '</b>';
     }
 
     /**
-     * View render
+     * View render.
+     *
      * @throws PrestaShopException Invalid objects
      */
     public function renderView()
     {
-        $order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
+        $order_invoice = new OrderInvoice((int) Tools::getValue('id_order_invoice'));
         if (!Validate::isLoadedObject($order_invoice)) {
             throw new PrestaShopException('object OrderInvoice cannot be loaded');
         }
@@ -168,7 +172,7 @@ class AdminOutstandingControllerCore extends AdminController
         }
 
         $link = $this->context->link->getAdminLink('AdminOrders');
-        $link .= '&vieworder&id_order='.$order->id;
+        $link .= '&vieworder&id_order=' . $order->id;
         $this->redirect_after = $link;
         $this->redirect();
     }

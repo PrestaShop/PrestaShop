@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,16 +39,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class EmailController is responsible for handling "Configure > Advanced Parameters > E-mail" page
+ * Class EmailController is responsible for handling "Configure > Advanced Parameters > E-mail" page.
  */
 class EmailController extends FrameworkBundleAdminController
 {
     /**
-     * Show email configuration page
+     * Show email configuration page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @param Request         $request
+     * @param Request $request
      * @param EmailLogsFilter $filters
      *
      * @return Response
@@ -113,7 +113,7 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process email configuration saving
+     * Process email configuration saving.
      *
      * @DemoRestricted(redirectRoute="admin_email")
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
@@ -145,7 +145,7 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete selected email logs
+     * Delete selected email logs.
      *
      * @DemoRestricted(redirectRoute="admin_email")
      * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="Access denied.")
@@ -174,7 +174,7 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete all email logs
+     * Delete all email logs.
      *
      * @DemoRestricted(redirectRoute="admin_email")
      * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="Access denied.")
@@ -193,7 +193,7 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete single email log
+     * Delete single email log.
      *
      * @DemoRestricted(redirectRoute="admin_email")
      * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="Access denied.")
@@ -220,7 +220,7 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * Processes test email sending
+     * Processes test email sending.
      *
      * @param Request $request
      *
@@ -266,7 +266,7 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get email configuration form handler
+     * Get email configuration form handler.
      *
      * @return FormHandlerInterface
      */
