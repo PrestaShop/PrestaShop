@@ -49,9 +49,7 @@ final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get module choices
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getChoices()
     {

@@ -66,9 +66,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     }
 
     /**
-     * @inheritDoc
-     *
-     * @throws Exception
+     * {@inheritdoc}
      */
     public function import($isoCode)
     {

@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
 
 /**
- * Class NonInstalledLocalizationChoiceProvider is responsible for getting one part of choices to use
- * in 'Improve > International > Translations' page Add / Update a language form type.
+ * Class NonInstalledLocalizationChoiceProvider provides non installed localization choices
+ * with name keys and iso code values.
  */
 class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterface
 {
@@ -50,6 +50,11 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      */
     private $languageProvider;
 
+    /**
+     * @param LanguagePackLoaderInterface $languagePackLoader
+     * @param LanguageValidator $languageValidator
+     * @param LanguageDataProvider $languageProvider
+     */
     public function __construct(
         LanguagePackLoaderInterface $languagePackLoader,
         LanguageValidator $languageValidator,
@@ -60,10 +65,14 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
         $this->languageProvider = $languageProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getChoices()
     {
         $languages = $this->languagePackLoader->getLanguagePackList();
         $choices = [];
+
         foreach (array_keys($languages) as $locale) {
             if ($this->languageValidator->isInstalledByLocale($locale)) {
                 continue;
