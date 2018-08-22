@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Configuration modules positions  "Improve > Design > Positions"
+ * Configuration modules positions "Improve > Design > Positions"
  */
 class PositionsController extends FrameworkBundleAdminController
 {

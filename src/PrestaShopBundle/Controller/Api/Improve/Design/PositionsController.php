@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Controller\Api\Improve\Design;
 
 use PrestaShopBundle\Controller\Api\ApiController;
-use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\CategoryRepository;
+use PrestaShopBundle\Exception;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -77,6 +78,8 @@ class PositionsController extends ApiController
     /**
      * Get hookable list
      *
+     * @TODO not used yet
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -113,6 +116,8 @@ class PositionsController extends ApiController
 
     /**
      * Get hookable module list
+     *
+     * @TODO not used yet
      *
      * @param Request $request
      *
