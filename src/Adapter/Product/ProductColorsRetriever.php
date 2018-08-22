@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Product;
@@ -36,6 +35,7 @@ class ProductColorsRetriever
 {
     /**
      * @param int $id_product
+     *
      * @return mixed|null
      */
     public function getColoredVariants($id_product)

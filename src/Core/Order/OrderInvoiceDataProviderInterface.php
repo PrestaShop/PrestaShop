@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Order;
 use DateTimeInterface;
 
 /**
- * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider
+ * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider.
  */
 interface OrderInvoiceDataProviderInterface
 {
     /**
-     * Returns all the order invoices that match the date interval
+     * Returns all the order invoices that match the date interval.
      *
      * @param DateTimeInterface $dateFrom
      * @param DateTimeInterface $dateTo
@@ -44,7 +44,7 @@ interface OrderInvoiceDataProviderInterface
     public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
 
     /**
-     * Returns all the order invoices by given status
+     * Returns all the order invoices by given status.
      *
      * @param int $orderStateId
      *
@@ -53,7 +53,7 @@ interface OrderInvoiceDataProviderInterface
     public function getByStatus($orderStateId);
 
     /**
-     * Returns the next available invoice number
+     * Returns the next available invoice number.
      *
      * @return int
      */

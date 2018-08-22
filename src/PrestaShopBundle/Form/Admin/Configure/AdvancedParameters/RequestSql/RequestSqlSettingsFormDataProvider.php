@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Class RequestSqlSettingsFormDataProvider is responsible for managing RequestSql settings
+ * Class RequestSqlSettingsFormDataProvider is responsible for managing RequestSql settings.
  */
 final class RequestSqlSettingsFormDataProvider implements FormDataProviderInterface
 {

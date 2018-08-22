@@ -32,30 +32,38 @@
       <i class="material-icons">language</i> {{ 'Local units'|trans }}
     </h3>
 
-    <div class="card-block">
+    <div class="card-block row">
       <div class="card-text">
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Weight unit'|trans), ('The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(localUnitsForm.weight_unit) }}
-          {{ form_widget(localUnitsForm.weight_unit) }}
+          <div class="col-sm">
+            {{ form_errors(localUnitsForm.weight_unit) }}
+            {{ form_widget(localUnitsForm.weight_unit) }}
+          </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Distance unit'|trans), ('The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(localUnitsForm.distance_unit) }}
-          {{ form_widget(localUnitsForm.distance_unit) }}
+          <div class="col-sm">
+            {{ form_errors(localUnitsForm.distance_unit) }}
+            {{ form_widget(localUnitsForm.distance_unit) }}
+          </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Volume unit'|trans), ('The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(localUnitsForm.volume_unit) }}
-          {{ form_widget(localUnitsForm.volume_unit) }}
+          <div class="col-sm">
+            {{ form_errors(localUnitsForm.volume_unit) }}
+            {{ form_widget(localUnitsForm.volume_unit) }}
+          </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Dimension unit'|trans), ('The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(localUnitsForm.dimension_unit) }}
-          {{ form_widget(localUnitsForm.dimension_unit) }}
+          <div class="col-sm">
+            {{ form_errors(localUnitsForm.dimension_unit) }}
+            {{ form_widget(localUnitsForm.dimension_unit) }}
+          </div>
         </div>
       </div>
     </div>

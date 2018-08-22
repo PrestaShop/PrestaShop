@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
- * Class RequestSqlFormHandler is responsible for creating RequestSql form
+ * Class RequestSqlFormHandler is responsible for creating RequestSql form.
  */
 class RequestSqlFormHandler
 {
@@ -65,9 +65,6 @@ class RequestSqlFormHandler
         $this->requestSqlValidator = $requestSqlValidator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getForm(array $data = [])
     {
         $builder = $this->formFactory->createBuilder()

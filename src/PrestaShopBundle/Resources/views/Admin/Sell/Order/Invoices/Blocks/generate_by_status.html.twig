@@ -29,17 +29,21 @@
 {% form_theme generateByStatusForm _self %}
 
 {% block invoices_generate_by_status %}
-    <div id="by-status-block" class="col">
+    <div id="by-status-block" class="col-xl-10">
         {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
         <div class="card">
             <h3 class="card-header">
                 <i class="material-icons">schedule</i> {{ 'By order status'|trans }}
             </h3>
-            <div class="card-block">
+            <div class="card-block row">
                 <div class="card-text">
+                  <div class="form-group row">
                     {{ ps.label_with_help(('Order statuses'|trans), ('You can also export orders which have not been charged yet.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                    {{ form_errors(generateByStatusForm.order_states) }}
-                    {{ form_widget(generateByStatusForm.order_states) }}
+                    <div class="col-sm">
+                      {{ form_errors(generateByStatusForm.order_states) }}
+                      {{ form_widget(generateByStatusForm.order_states) }}
+                    </div>
+                  </div>
                 </div>
                 {{ form_rest(generateByStatusForm) }}
             </div>

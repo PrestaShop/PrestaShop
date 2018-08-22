@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class MailCore
+ * Class MailCore.
  */
 class MailCore extends ObjectModel
 {
@@ -58,74 +58,74 @@ class MailCore extends ObjectModel
                 'validate' => 'isEmail',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 126
+                'size' => 126,
             ],
             'template' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isTplName',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 62
+                'size' => 62,
             ],
             'subject' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isMailSubject',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 254
+                'size' => 254,
             ],
             'id_lang' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'copy_post' => false,
-                'required' => true
+                'required' => true,
             ],
             'date_add' => [
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
                 'copy_post' => false,
-                'required' => true
+                'required' => true,
             ],
         ],
     ];
 
     /**
-     * Mail content type
+     * Mail content type.
      */
     const TYPE_HTML = 1;
     const TYPE_TEXT = 2;
     const TYPE_BOTH = 3;
 
     /**
-     * Send mail under SMTP server
+     * Send mail under SMTP server.
      */
     const METHOD_SMTP = 2;
 
     /**
-     * Disable mail, will return immediately after calling send method
+     * Disable mail, will return immediately after calling send method.
      */
     const METHOD_DISABLE = 3;
 
     /**
-     * Send Email
+     * Send Email.
      *
-     * @param int    $idLang         Language ID of the email (to translate the template)
-     * @param string $template       Template: the name of template not be a var but a string !
-     * @param string $subject        Subject of the email
-     * @param string $templateVars   Template variables for the email
-     * @param string $to             To email
-     * @param string $toName         To name
-     * @param string $from           From email
-     * @param string $fromName       To email
-     * @param array  $fileAttachment Array with three parameters (content, mime and name).
-     *                               You can use an array of array to attach multiple files
-     * @param bool   $mode_smtp      SMTP mode (deprecated)
-     * @param string $templatePath   Template path
-     * @param bool   $die            Die after error
-     * @param int    $idShop         Shop ID
-     * @param string $bcc            Bcc recipient address. You can use an array of array to send to multiple recipients
-     * @param string $replyTo        Reply-To recipient address
-     * @param string $replyToName    Reply-To recipient name
+     * @param int $idLang Language ID of the email (to translate the template)
+     * @param string $template Template: the name of template not be a var but a string !
+     * @param string $subject Subject of the email
+     * @param string $templateVars Template variables for the email
+     * @param string $to To email
+     * @param string $toName To name
+     * @param string $from From email
+     * @param string $fromName To email
+     * @param array $fileAttachment Array with three parameters (content, mime and name).
+     *                              You can use an array of array to attach multiple files
+     * @param bool $mode_smtp SMTP mode (deprecated)
+     * @param string $templatePath Template path
+     * @param bool $die Die after error
+     * @param int $idShop Shop ID
+     * @param string $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string $replyTo Reply-To recipient address
+     * @param string $replyToName Reply-To recipient name
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -169,7 +169,7 @@ class MailCore extends ObjectModel
                     'die' => &$die,
                     'idShop' => &$idShop,
                     'bcc' => &$bcc,
-                    'replyTo' => &$replyTo
+                    'replyTo' => &$replyTo,
                 ],
                 null,
                 true
@@ -198,7 +198,7 @@ class MailCore extends ObjectModel
                 'PS_SHOP_NAME',
                 'PS_MAIL_SMTP_ENCRYPTION',
                 'PS_MAIL_SMTP_PORT',
-                'PS_MAIL_TYPE'
+                'PS_MAIL_TYPE',
             ],
             null,
             null,
@@ -229,7 +229,7 @@ class MailCore extends ObjectModel
             $configuration['PS_MAIL_SMTP_PORT'] = 'default';
         }
 
-        /**
+        /*
          * Sending an e-mail can be of vital importance for the merchant, when his password
          * is lost for example, so we must not die but do our best to send the e-mail.
          */
@@ -250,7 +250,7 @@ class MailCore extends ObjectModel
             $fromName = null;
         }
 
-        /**
+        /*
          * It would be difficult to send an e-mail if the e-mail is not valid,
          * so this time we can die if there is a problem.
          */
@@ -376,17 +376,17 @@ class MailCore extends ObjectModel
             $moduleName = false;
 
             // get templatePath
-            if (preg_match('#'.$shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
+            if (preg_match('#' . $shop->physical_uri . 'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath)) &&
                 preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/', $templatePath), $res)
             ) {
                 $moduleName = $res[1];
             }
 
             foreach ($isoArray as $isoCode) {
-                $isoTemplate = $isoCode.'/'.$template;
+                $isoTemplate = $isoCode . '/' . $template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
 
-                if (!file_exists($templatePath.$isoTemplate.'.txt') &&
+                if (!file_exists($templatePath . $isoTemplate . '.txt') &&
                     (
                         $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                         $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
@@ -395,11 +395,11 @@ class MailCore extends ObjectModel
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
                             'Error - The following e-mail template is missing: %s',
-                            [$templatePath.$isoTemplate.'.txt'],
+                            [$templatePath . $isoTemplate . '.txt'],
                             'Admin.Advparameters.Notification'
                         )
                     );
-                } elseif (!file_exists($templatePath.$isoTemplate.'.html') &&
+                } elseif (!file_exists($templatePath . $isoTemplate . '.html') &&
                           (
                               $configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                               $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
@@ -408,7 +408,7 @@ class MailCore extends ObjectModel
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
                             'Error - The following e-mail template is missing: %s',
-                            [$templatePath.$isoTemplate.'.html'],
+                            [$templatePath . $isoTemplate . '.html'],
                             'Admin.Advparameters.Notification'
                         )
                     );
@@ -437,10 +437,10 @@ class MailCore extends ObjectModel
                 null,
                 true
             );
-            $templateHtml .= Tools::file_get_contents($templatePath.$isoTemplate.'.html');
+            $templateHtml .= Tools::file_get_contents($templatePath . $isoTemplate . '.html');
             $templateTxt .= strip_tags(
                 html_entity_decode(
-                    Tools::file_get_contents($templatePath.$isoTemplate.'.txt'),
+                    Tools::file_get_contents($templatePath . $isoTemplate . '.txt'),
                     null,
                     'utf-8'
                 )
@@ -458,7 +458,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '['.Configuration::get('PS_SHOP_NAME', null, null, $idShop).'] '.$subject;
+            $subject = '[' . Configuration::get('PS_SHOP_NAME', null, null, $idShop) . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -478,12 +478,12 @@ class MailCore extends ObjectModel
             $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
 
             if (false !== Configuration::get('PS_LOGO_MAIL') &&
-                file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
+                file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
             ) {
-                $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
+                $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop);
             } else {
-                if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $idShop))) {
-                    $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $idShop);
+                if (file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $idShop))) {
+                    $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $idShop);
                 } else {
                     $templateVars['{shop_logo}'] = '';
                 }
@@ -605,7 +605,7 @@ class MailCore extends ObjectModel
                     $recipientsBcc = [];
                 }
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
-                    /** @var Swift_Address $recipient */
+                    /* @var Swift_Address $recipient */
                     $mail->id = null;
                     $mail->recipient = Tools::substr($email, 0, 126);
                     $mail->add();
@@ -615,7 +615,7 @@ class MailCore extends ObjectModel
             return $send;
         } catch (\Swift_SwiftException $e) {
             PrestaShopLogger::addLog(
-                'Swift Error: '.$e->getMessage(),
+                'Swift Error: ' . $e->getMessage(),
                 3,
                 null,
                 'Swift_Message'
@@ -628,20 +628,20 @@ class MailCore extends ObjectModel
     protected static function getTemplateBasePath($isoTemplate, $moduleName, $theme)
     {
         $basePathList = [
-            _PS_ROOT_DIR_.'/themes/'.$theme->getName().'/',
-            _PS_ROOT_DIR_.'/themes/'.$theme->get('parent').'/',
+            _PS_ROOT_DIR_ . '/themes/' . $theme->getName() . '/',
+            _PS_ROOT_DIR_ . '/themes/' . $theme->get('parent') . '/',
             _PS_ROOT_DIR_,
         ];
 
         if ($moduleName !== false) {
-            $templateRelativePath = '/modules/'.$moduleName.'/mails/';
+            $templateRelativePath = '/modules/' . $moduleName . '/mails/';
         } else {
             $templateRelativePath = '/mails/';
         }
 
         foreach ($basePathList as $base) {
-            $templatePath = $base.$templateRelativePath;
-            if (file_exists($templatePath.$isoTemplate.'.txt') || file_exists($templatePath.$isoTemplate.'.html')) {
+            $templatePath = $base . $templateRelativePath;
+            if (file_exists($templatePath . $isoTemplate . '.txt') || file_exists($templatePath . $isoTemplate . '.html')) {
                 return $templatePath;
             }
         }
@@ -656,7 +656,7 @@ class MailCore extends ObjectModel
      */
     public static function eraseLog($idMail)
     {
-        return Db::getInstance()->delete('mail', 'id_mail = '.(int) $idMail);
+        return Db::getInstance()->delete('mail', 'id_mail = ' . (int) $idMail);
     }
 
     /**
@@ -664,22 +664,22 @@ class MailCore extends ObjectModel
      */
     public static function eraseAllLogs()
     {
-        return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'mail');
+        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'mail');
     }
 
     /**
      * Send a test email.
      *
-     * @param bool        $smtpChecked    Is SMTP checked?
-     * @param string      $smtp_server    SMTP Server hostname
-     * @param string      $content        Content of the email
-     * @param string      $subject        Subject of the email
-     * @param bool        $type           Deprecated
-     * @param string      $to             To email address
-     * @param string      $from           From email address
-     * @param string      $smtpLogin      SMTP login name
-     * @param string      $smtpPassword   SMTP password
-     * @param int         $smtpPort       SMTP Port
+     * @param bool $smtpChecked Is SMTP checked?
+     * @param string $smtp_server SMTP Server hostname
+     * @param string $content Content of the email
+     * @param string $subject Subject of the email
+     * @param bool $type Deprecated
+     * @param string $to To email address
+     * @param string $from From email address
+     * @param string $smtpLogin SMTP login name
+     * @param string $smtpPassword SMTP password
+     * @param int $smtpPort SMTP Port
      * @param bool|string $smtpEncryption Encryption type. "off" or false disable encryption.
      *
      * @return bool|string True if succeeded, otherwise the error message
@@ -748,18 +748,18 @@ class MailCore extends ObjectModel
 
         if ($idLang === null) {
             $idLang = (!isset($context->language) || !is_object($context->language)) ?
-                    (int)Configuration::get('PS_LANG_DEFAULT') :
-                    (int)$context->language->id;
+                    (int) Configuration::get('PS_LANG_DEFAULT') :
+                    (int) $context->language->id;
         }
 
         $isoCode = Language::getIsoById((int) $idLang);
 
-        $file_core = _PS_ROOT_DIR_.'/mails/'.$isoCode.'/lang.php';
+        $file_core = _PS_ROOT_DIR_ . '/mails/' . $isoCode . '/lang.php';
         if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL)) {
             include $file_core;
         }
 
-        $fileTheme = _PS_THEME_DIR_.'mails/'.$isoCode.'/lang.php';
+        $fileTheme = _PS_THEME_DIR_ . 'mails/' . $isoCode . '/lang.php';
         if (Tools::file_exists_cache($fileTheme)) {
             include $fileTheme;
         }
@@ -802,7 +802,7 @@ class MailCore extends ObjectModel
     public static function isMultibyte($data)
     {
         $length = Tools::strlen($data);
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             if (ord(($data[$i])) > 128) {
                 return true;
             }
@@ -814,7 +814,7 @@ class MailCore extends ObjectModel
     /**
      * MIME encode the string.
      *
-     * @param string $string  The string to encode
+     * @param string $string The string to encode
      * @param string $charset The character set to use
      * @param string $newline The newline character(s)
      *
@@ -827,9 +827,9 @@ class MailCore extends ObjectModel
         }
 
         $charset = Tools::strtoupper($charset);
-        $start = '=?'.$charset.'?B?';
+        $start = '=?' . $charset . '?B?';
         $end = '?=';
-        $sep = $end.$newline.' '.$start;
+        $sep = $end . $newline . ' ' . $start;
         $length = 75 - Tools::strlen($start) - Tools::strlen($end);
         $length = $length - ($length % 4);
 
@@ -855,10 +855,10 @@ class MailCore extends ObjectModel
             $string = implode($sep, $parts);
         } else {
             $string = chunk_split(base64_encode($string), $length, $sep);
-            $string = preg_replace('/'.preg_quote($sep).'$/', '', $string);
+            $string = preg_replace('/' . preg_quote($sep) . '$/', '', $string);
         }
 
-        return $start.$string.$end;
+        return $start . $string . $end;
     }
 
     /**
@@ -875,16 +875,16 @@ class MailCore extends ObjectModel
             return $to;
         }
 
-        return $address[0].'@'.idn_to_ascii($address[1]);
+        return $address[0] . '@' . idn_to_ascii($address[1]);
     }
 
     /**
      * Generic function to dieOrLog with translations.
      *
-     * @param boolean $die       Should die
-     * @param string  $message   Message
-     * @param array   $templates Templates list
-     * @param string  $domain    Translation domain
+     * @param bool $die Should die
+     * @param string $message Message
+     * @param array $templates Templates list
+     * @param string $domain Translation domain
      */
     protected static function dieOrLog(
         $die,

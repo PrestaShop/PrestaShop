@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Class responsible for finding import files
+ * Class responsible for finding import files.
  */
 final class FileFinder
 {
@@ -45,7 +45,7 @@ final class FileFinder
     }
 
     /**
-     * Get import file names in import directory
+     * Get import file names in import directory.
      *
      * @return array|string[]
      */

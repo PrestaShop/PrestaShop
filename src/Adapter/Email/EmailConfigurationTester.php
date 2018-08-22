@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Email\MailOption;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class EmailConfigurationTester is responsible for sending test email
+ * Class EmailConfigurationTester is responsible for sending test email.
  *
  * @internal
  */

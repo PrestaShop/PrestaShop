@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class AverageTaxOfProductsTaxCalculator
 {
     private $id_order;
@@ -43,11 +41,11 @@ class AverageTaxOfProductsTaxCalculator
     {
         $prefix = $this->configuration->get('_DB_PREFIX_');
 
-        $sql = 'SELECT t.id_tax, t.rate, od.total_price_tax_excl FROM '.$prefix.'orders o
-                INNER JOIN '.$prefix.'order_detail od ON od.id_order = o.id_order
-                INNER JOIN '.$prefix.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail
-                INNER JOIN '.$prefix.'tax t ON t.id_tax = odt.id_tax
-                WHERE o.id_order = '.(int)$this->id_order;
+        $sql = 'SELECT t.id_tax, t.rate, od.total_price_tax_excl FROM ' . $prefix . 'orders o
+                INNER JOIN ' . $prefix . 'order_detail od ON od.id_order = o.id_order
+                INNER JOIN ' . $prefix . 'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail
+                INNER JOIN ' . $prefix . 'tax t ON t.id_tax = odt.id_tax
+                WHERE o.id_order = ' . (int) $this->id_order;
 
         return $this->db->select($sql);
     }
@@ -55,6 +53,7 @@ class AverageTaxOfProductsTaxCalculator
     public function setIdOrder($id_order)
     {
         $this->id_order = $id_order;
+
         return $this;
     }
 
@@ -67,7 +66,7 @@ class AverageTaxOfProductsTaxCalculator
             if (!array_key_exists($row['id_tax'], $amounts)) {
                 $amounts[$row['id_tax']] = array(
                     'rate' => $row['rate'],
-                    'base' => 0
+                    'base' => 0,
                 );
             }
 

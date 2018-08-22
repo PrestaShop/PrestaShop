@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Core\Email\EmailLogEraserInterface;
 
 /**
- * Class EmailLogEraser provides API for erasing email logs
+ * Class EmailLogEraser provides API for erasing email logs.
  *
  * @internal
  */
@@ -48,7 +48,7 @@ final class EmailLogEraser implements EmailLogEraserInterface
             $errors[] = [
                 'key' => 'You must select at least one element to delete.',
                 'parameters' => [],
-                'domain' => 'Admin.Notifications.Error'
+                'domain' => 'Admin.Notifications.Error',
             ];
 
             return $errors;
@@ -65,7 +65,7 @@ final class EmailLogEraser implements EmailLogEraserInterface
                     'parameters' => [
                         '%id%' => $emailLog->id,
                     ],
-                    'domain' => 'Admin.Notifications.Error'
+                    'domain' => 'Admin.Notifications.Error',
                 ];
 
                 continue;

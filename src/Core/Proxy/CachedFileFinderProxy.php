@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Proxy;
 use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 
 /**
- * Class CachedFileFinderProxy is a local cache proxy of file finder
+ * Class CachedFileFinderProxy is a local cache proxy of file finder.
  */
 final class CachedFileFinderProxy implements FileFinderInterface
 {

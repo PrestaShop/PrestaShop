@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -67,10 +67,10 @@ class DatabaseDump
     }
 
     /**
-     * Wrapper to easily build mysql commands: sets password, port, user
+     * Wrapper to easily build mysql commands: sets password, port, user.
      *
      * @param string $executable
-     * @param array  $arguments
+     * @param array $arguments
      *
      * @return string
      */
@@ -84,7 +84,7 @@ class DatabaseDump
         );
 
         if ($this->password) {
-            $parts[] = '-p'.escapeshellarg($this->password);
+            $parts[] = '-p' . escapeshellarg($this->password);
         }
 
         $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
@@ -98,6 +98,7 @@ class DatabaseDump
      * @param string $command
      *
      * @return array
+     *
      * @throws Exception
      */
     private function exec($command)
@@ -119,7 +120,7 @@ class DatabaseDump
     private function dump()
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile). ' 2> /dev/null';
+        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($dumpCommand);
     }
 
@@ -134,7 +135,7 @@ class DatabaseDump
     }
 
     /**
-     * Make a database dump
+     * Make a database dump.
      */
     public static function create()
     {
@@ -144,7 +145,7 @@ class DatabaseDump
     }
 
     /**
-     * Restore a database dump
+     * Restore a database dump.
      */
     public static function restoreDb()
     {

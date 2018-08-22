@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
- * Class GridPresenter is responsible for presenting grid
+ * Class GridPresenter is responsible for presenting grid.
  */
 final class GridPresenter implements GridPresenterInterface
 {
@@ -72,7 +72,7 @@ final class GridPresenter implements GridPresenterInterface
     }
 
     /**
-     * Get filters that have associated columns
+     * Get filters that have associated columns.
      *
      * @param DefinitionInterface $definition
      *

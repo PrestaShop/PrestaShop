@@ -29,36 +29,29 @@
 {% set configurationForm, localUnitsForm, advancedForm = localizationForm.configuration, localizationForm.local_units, localizationForm.advanced %}
 
 {% block content %}
-  <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
+    </div>
+  </div>
 
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
+  {{ form_start(localizationForm, {'action': path('admin_localization_save_settings')}) }}
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
       </div>
-    </div>
-
-    {{ form_start(localizationForm, {'action': path('admin_localization_save_settings')}) }}
-    <div class="row">
-      <div class="col">
-          {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
-        </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
+      <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/local_units.html.twig' %}
       </div>
-      <div class="col">
+      <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
       </div>
+
+      {% block localization_settings_form_rest %}
+        {{ form_rest(localizationForm) }}
+      {% endblock %}
     </div>
-
-    {% block localization_settings_form_rest %}
-      {{ form_rest(localizationForm) }}
-    {% endblock %}
-
-    {{ form_end(localizationForm) }}
-  </div>
+  {{ form_end(localizationForm) }}
 {% endblock %}
 
 {% block javascripts %}

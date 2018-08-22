@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,15 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 /**
  * @deprecated since 1.7.4.0
  * @see \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter
- *
  */
 class OrderPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter
 {
-
 }

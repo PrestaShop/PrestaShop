@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,40 +27,40 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
 
 /**
- * Interface BulkActionInterface defines contract for single grid bulk action
+ * Interface BulkActionInterface defines contract for single grid bulk action.
  */
 interface BulkActionInterface
 {
     /**
-     * Get unique bulk action identifier for grid
+     * Get unique bulk action identifier for grid.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * Get translated bulk action name
+     * Get translated bulk action name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Get action type
+     * Get action type.
      *
      * @return string
      */
     public function getType();
 
     /**
-     * Get action options
+     * Get action options.
      *
      * @return array
      */
     public function getOptions();
 
     /**
-     * Set options for bulk action
+     * Set options for bulk action.
      *
      * @param array $options
      *
@@ -69,7 +69,7 @@ interface BulkActionInterface
     public function setOptions(array $options);
 
     /**
-     * Set bulk action name
+     * Set bulk action name.
      *
      * @param string $name
      *

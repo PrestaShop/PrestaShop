@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,33 +27,33 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
 
 /**
- * Interface RowActionInterface defines contract for grid's row action
+ * Interface RowActionInterface defines contract for grid's row action.
  */
 interface RowActionInterface
 {
     /**
-     * Get unique row id for grid row's action
+     * Get unique row id for grid row's action.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * Get action type
+     * Get action type.
      *
      * @return string
      */
     public function getType();
 
     /**
-     * Get translated row action name
+     * Get translated row action name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set action name
+     * Set action name.
      *
      * @param string $name
      *
@@ -62,14 +62,14 @@ interface RowActionInterface
     public function setName($name);
 
     /**
-     * Get row action icon
+     * Get row action icon.
      *
      * @return string
      */
     public function getIcon();
 
     /**
-     * Set action icon
+     * Set action icon.
      *
      * @param string $icon
      *
@@ -78,14 +78,14 @@ interface RowActionInterface
     public function setIcon($icon);
 
     /**
-     * Get action options
+     * Get action options.
      *
      * @return array
      */
     public function getOptions();
 
     /**
-     * Set action options
+     * Set action options.
      *
      * @param array $options
      *

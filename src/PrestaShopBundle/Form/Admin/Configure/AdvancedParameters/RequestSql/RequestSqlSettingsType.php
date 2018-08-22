@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class RequestSqlSettingsType build form type for "Configure > Advanced Parameters > Database > SQL Manager" page
+ * Class RequestSqlSettingsType build form type for "Configure > Advanced Parameters > Database > SQL Manager" page.
  */
 class RequestSqlSettingsType extends AbstractType
 {

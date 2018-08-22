@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class EmailLogsQueryBuilder is responsible for building queries for email logs grid data
+ * Class EmailLogsQueryBuilder is responsible for building queries for email logs grid data.
  */
 final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -63,7 +63,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * Get generic query builder
+     * Get generic query builder.
      *
      * @param array $filters
      *
@@ -73,8 +73,8 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'mail', 'm')
-            ->leftJoin('m', $this->dbPrefix.'lang', 'l', 'm.id_lang = l.id_lang');
+            ->from($this->dbPrefix . 'mail', 'm')
+            ->leftJoin('m', $this->dbPrefix . 'lang', 'l', 'm.id_lang = l.id_lang');
 
         foreach ($filters as $name => $value) {
             if ('id_lang' === $name) {
@@ -99,7 +99,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%'.$value.'%');
+            $qb->setParameter($name, '%' . $value . '%');
         }
 
         return $qb;

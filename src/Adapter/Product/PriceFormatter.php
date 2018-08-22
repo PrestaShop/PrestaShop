@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,29 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Tools;
 
 /**
- * Format a price depending on locale and currency
+ * Format a price depending on locale and currency.
  */
 class PriceFormatter
 {
     /**
      * @param float $price
      * @param string|null $currency
+     *
      * @return float
      */
     public function convertAmount($price, $currency = null)
     {
-        return (float)Tools::convertPrice($price, $currency);
+        return (float) Tools::convertPrice($price, $currency);
     }
 
     /**
      * @param float $price
      * @param string|null $currency
+     *
      * @return string
      */
     public function format($price, $currency = null)
@@ -56,6 +57,7 @@ class PriceFormatter
 
     /**
      * @param float $price
+     *
      * @return string
      */
     public function convertAndFormat($price)

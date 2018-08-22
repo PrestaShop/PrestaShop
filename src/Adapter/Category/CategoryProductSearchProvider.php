@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -36,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Category;
 
 /**
- * Responsible of getting products for specific category
+ * Responsible of getting products for specific category.
  */
 class CategoryProductSearchProvider implements ProductSearchProviderInterface
 {
@@ -57,7 +56,9 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchContext $context
      * @param ProductSearchQuery $query
      * @param string $type
+     *
      * @return array|false|int
+     *
      * @throws \PrestaShopDatabaseException
      */
     private function getProductsOrCount(
@@ -92,7 +93,9 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
     /**
      * @param ProductSearchContext $context
      * @param ProductSearchQuery $query
+     *
      * @return ProductSearchResult
+     *
      * @throws \PrestaShopDatabaseException
      */
     public function runQuery(

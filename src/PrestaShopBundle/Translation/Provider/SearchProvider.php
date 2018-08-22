@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,9 +33,10 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     private $domain;
 
     /**
-     * Set domain
+     * Set domain.
      *
      * @param $domain
+     *
      * @return $this
      */
     public function setDomain($domain)
@@ -46,7 +47,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     }
 
     /**
-     * Get domain
+     * Get domain.
      *
      * @return mixed
      */
@@ -61,7 +62,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getTranslationDomains()
     {
         return array(
-            '^'.$this->getDomain(),
+            '^' . $this->getDomain(),
         );
     }
 
@@ -71,7 +72,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getFilters()
     {
         return array(
-            '#^'.$this->getDomain().'#',
+            '#^' . $this->getDomain() . '#',
         );
     }
 
@@ -111,6 +112,6 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }

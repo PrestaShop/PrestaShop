@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,9 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use AppKernel;
 
-
 /**
- * Retrieve common information from a the actual Shop
+ * Retrieve common information from a the actual Shop.
  *
  * Depends on Context, avoid re-use of this class
  */

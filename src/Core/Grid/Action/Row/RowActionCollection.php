@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class RowActionCollection defines contract for grid row action collection
+ * Class RowActionCollection defines contract for grid row action collection.
  */
 final class RowActionCollection extends AbstractCollection implements RowActionCollectionInterface
 {

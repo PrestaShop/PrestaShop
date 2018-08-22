@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -111,7 +111,7 @@ abstract class AbstractBulkAction implements BulkActionInterface
     }
 
     /**
-     * Resolve bulk action options
+     * Resolve bulk action options.
      *
      * @param array $options
      */

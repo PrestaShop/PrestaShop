@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Interface FilterCollectionInterface defines contract for grid filters
+ * Interface FilterCollectionInterface defines contract for grid filters.
  */
 interface FilterCollectionInterface
 {
     /**
-     * Add filter to collection
+     * Add filter to collection.
      *
      * @param FilterInterface $filter
      *
@@ -41,7 +41,7 @@ interface FilterCollectionInterface
     public function add(FilterInterface $filter);
 
     /**
-     * Remove filter from collection
+     * Remove filter from collection.
      *
      * @param string $filterName
      *
@@ -50,7 +50,7 @@ interface FilterCollectionInterface
     public function remove($filterName);
 
     /**
-     * Get all filters
+     * Get all filters.
      *
      * @return FilterInterface[]
      */

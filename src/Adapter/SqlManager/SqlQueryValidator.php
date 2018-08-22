@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 use PrestaShopDatabaseException;
 
 /**
- * Class SqlQueryValidator is responsible for validating Request SQL model data
+ * Class SqlQueryValidator is responsible for validating Request SQL model data.
  */
 class SqlQueryValidator
 {
@@ -73,7 +73,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get request sql errors
+     * Get request sql errors.
      *
      * @param array $sqlErrors
      *
@@ -111,7 +111,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "FROM" keyword validation
+     * Get SQL error for "FROM" keyword validation.
      *
      * @param array $legacyError
      *
@@ -150,7 +150,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "SELECT" keyword validation
+     * Get SQL error for "SELECT" keyword validation.
      *
      * @param array $legacyError
      *
@@ -197,7 +197,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "WHERE" keyword validation
+     * Get SQL error for "WHERE" keyword validation.
      *
      * @param array $legacyError
      *
@@ -236,7 +236,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "HAVING" keyword validation
+     * Get SQL error for "HAVING" keyword validation.
      *
      * @param array $legacyError
      *
@@ -275,7 +275,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "ORDER" keyword validation
+     * Get SQL error for "ORDER" keyword validation.
      *
      * @param array $legacyError
      *
@@ -304,7 +304,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "GROUP" keyword validation
+     * Get SQL error for "GROUP" keyword validation.
      *
      * @param array $legacyError
      *
@@ -333,7 +333,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get SQL error for "LIMIT" keyword validation
+     * Get SQL error for "LIMIT" keyword validation.
      *
      * @return array
      */
@@ -347,7 +347,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get reference related SQL error
+     * Get reference related SQL error.
      *
      * @param array $legacyError
      *
@@ -374,7 +374,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get required key error
+     * Get required key error.
      *
      * @param string $legacyError
      *
@@ -392,7 +392,7 @@ class SqlQueryValidator
     }
 
     /**
-     * Get unauthorized key error
+     * Get unauthorized key error.
      *
      * @param string $legacyError
      *

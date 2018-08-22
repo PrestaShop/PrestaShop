@@ -26,18 +26,19 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
-
 {% block geolocation_by_ip_address %}
   <div class="card">
     <h3 class="card-header">
       {{ 'Geolocation by IP address'|trans }}
     </h3>
-    <div class="card-block">
+    <div class="card-block row">
       <div class="card-text">
-        <div class="form-group">
+        <div class="form-group row">
           {{ ps.label_with_help(('Geolocation by IP address'|trans), ('This option allows you, among other things, to restrict access to your shop for certain countries. See below.'|trans({}, 'Admin.International.Help'))) }}
-          {{ form_errors(geolocationByIpAddressForm.geolocation_enabled) }}
-          {{ form_widget(geolocationByIpAddressForm.geolocation_enabled) }}
+          <div class="col-sm">
+            {{ form_errors(geolocationByIpAddressForm.geolocation_enabled) }}
+            {{ form_widget(geolocationByIpAddressForm.geolocation_enabled) }}
+          </div>
         </div>
       </div>
     </div>
