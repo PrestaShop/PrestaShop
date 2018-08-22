@@ -610,6 +610,10 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        if ($this->ajax) {
+            return;
+        }
+
         // Import form is reworked in Symfony.
         // If user tries to access legacy form directly,
         // we redirect him to new form.
@@ -751,6 +755,15 @@ class AdminImportControllerCore extends AdminController
         }
 
         die(json_encode($_FILES));
+    }
+
+    public function displayAjaxAvailableFields()
+    {
+        $fields = array_map(function ($elem) {
+            return ['field' => $elem];
+        }, $this->getAvailableFields(true));
+
+        $this->ajaxRender(json_encode($fields));
     }
 
     public function renderView()

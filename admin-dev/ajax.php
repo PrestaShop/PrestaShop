@@ -60,15 +60,12 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
 
 /**
  * Import controller: Fields available for a given entity
- * -> Moved in Symfony
+ * -> Moved in legacy (although called from symfony, the import content is not migrated yet)
  */
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
-    $import = new AdminImportController();
-
-    $fields = array_map(function ($elem) {
-        return ['field' => $elem];
-    }, $import->getAvailableFields(true));
-    die(json_encode($fields));
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminImport';
+    $_GET['action'] = 'availableFields';
 }
 
 //if (Tools::isSubmit('ajaxProductPackItems')) {
