@@ -29,15 +29,16 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestResultForViewingQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestResultForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestExecutionResultHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShopException;
 use RequestSql;
 
 /**
  * Class GetSqlRequestResultForViewingHandler
  */
-class GetSqlRequestResultForViewingHandler implements GetSqlRequestResultForViewingHandlerInterface
+final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutionResultHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,7 +46,7 @@ class GetSqlRequestResultForViewingHandler implements GetSqlRequestResultForView
      * @throws SqlRequestNotFoundException
      * @throws SqlRequestException
      */
-    public function handle(GetSqlRequestResultForViewingQuery $query)
+    public function handle(GetSqlRequestExecutionResultQuery $query)
     {
         try {
             $id = $query->getRequestSqlId()->getValue();
@@ -57,22 +58,19 @@ class GetSqlRequestResultForViewingHandler implements GetSqlRequestResultForView
                 );
             }
 
-            $records = Db::getInstance()->executeS($entity->sql);
+            $rows = Db::getInstance()->executeS($entity->sql);
 
-            if (empty($records)) {
-                return [
-                    'headers' => [],
-                    'records' => [],
-                ];
+            if (empty($rows)) {
+                return new SqlRequestExecutionResult([], []);
             }
 
-            $headers = array_keys(reset($records));
-            $records = $this->hideSensitiveData($records);
+            $columns = array_keys(reset($rows));
+            $rows = $this->hideSensitiveData($rows);
 
-            return [
-                'headers' => $headers,
-                'records' => $records,
-            ];
+            return new SqlRequestExecutionResult(
+                $columns,
+                $rows
+            );
         } catch (PrestaShopException $e) {
             throw new SqlRequestException(
                 'Unexpected error occurred',

@@ -26,15 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestResultForViewingQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 
 /**
  * Interface GetSqlRequestResultForViewingHandlerInterface defines contract for getting SqlRequest SQL query result
  */
-interface GetSqlRequestResultForViewingHandlerInterface
+interface GetSqlRequestExecutionResultHandlerInterface
 {
     /**
-     * @param GetSqlRequestResultForViewingQuery $query
+     * @param GetSqlRequestExecutionResultQuery $query
+     *
+     * @return SqlRequestExecutionResult
      */
-    public function handle(GetSqlRequestResultForViewingQuery $query);
+    public function handle(GetSqlRequestExecutionResultQuery $query);
 }

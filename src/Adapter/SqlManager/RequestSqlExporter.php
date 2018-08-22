@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
+use League\Tactician\CommandBus;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -38,11 +42,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class RequestSqlExporter
 {
     /**
-     * @var SqlRequestDataProvider
-     */
-    private $dataProvider;
-
-    /**
      * @var ExportDirectory
      */
     private $exportDirectory;
@@ -53,18 +52,23 @@ class RequestSqlExporter
     private $configuration;
 
     /**
-     * @param SqlRequestDataProvider $dataProvider
+     * @var CommandBus
+     */
+    private $queryBus;
+
+    /**
      * @param ExportDirectory $exportDirectory
      * @param ConfigurationInterface $configuration
+     * @param CommandBus $queryBus
      */
     public function __construct(
-        SqlRequestDataProvider $dataProvider,
         ExportDirectory $exportDirectory,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        CommandBus $queryBus
     ) {
-        $this->dataProvider = $dataProvider;
         $this->exportDirectory = $exportDirectory;
         $this->configuration = $configuration;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -76,8 +80,16 @@ class RequestSqlExporter
      */
     public function export($requestSqlId)
     {
-        $data = $this->dataProvider->getRequestSqlResult($requestSqlId);
-        if (null === $data) {
+        try {
+            $command = new GetSqlRequestExecutionResultQuery($requestSqlId);
+
+            /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+            $sqlRequestExecutionResult = $this->queryBus->handle($command);
+        } catch (SqlRequestException $e) {
+            return null;
+        }
+
+        if (empty($sqlRequestExecutionResult->getRows())) {
             return null;
         }
 
@@ -86,9 +98,9 @@ class RequestSqlExporter
             return null;
         }
 
-        fputcsv($csv, $data['columns'], ';');
+        fputcsv($csv, $sqlRequestExecutionResult->getColumns(), ';');
 
-        foreach ($data['rows'] as $row) {
+        foreach ($sqlRequestExecutionResult->getRows() as $row) {
             fputcsv($csv, $row, ';');
         }
 
