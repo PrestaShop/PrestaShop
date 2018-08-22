@@ -50,7 +50,8 @@ function buildTreeView()
 			data: {
 				getChildrenCategories : true,
 				use_shop_context : use_shop_context,
-				selectedCat: selectedCat
+				selectedCat: selectedCat,
+				token: window.token
 			}
 		}
 	});
