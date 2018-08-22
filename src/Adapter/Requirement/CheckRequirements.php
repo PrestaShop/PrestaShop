@@ -136,7 +136,7 @@ class CheckRequirements
     }
 
     /**
-     * Add default message on missing check descriptions
+     * Add default message on missing check descriptions.
      *
      * @param array $errorMessages
      * @param array $checks
@@ -148,6 +148,7 @@ class CheckRequirements
         foreach (array_keys(array_diff_key($checks, $errorMessages)) as $key) {
             $errorMessages[$key] = $this->translator->trans('%key% (missing description)', array('%key%' => $key), 'Admin.Advparameters.Feature');
         }
+
         return $errorMessages;
     }
 }

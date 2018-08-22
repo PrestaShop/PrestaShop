@@ -125,3 +125,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsFormDataProvider'
         arguments:
             - '@prestashop.adapter.sql_manager_settings.configuration'
+
+    prestashop.admin.webservice.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.webservice.configuration'
