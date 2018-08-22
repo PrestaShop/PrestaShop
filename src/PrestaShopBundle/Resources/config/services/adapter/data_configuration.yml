@@ -217,3 +217,8 @@ services:
             - '@prestashop.adapter.data_provider.language'
             - '@prestashop.adapter.cache_clearer'
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
+
+    prestashop.adapter.data_provider.context_language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
