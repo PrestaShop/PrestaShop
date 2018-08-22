@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
-use Module;
-use Tools;
 use Dispatcher;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,6 +34,8 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 /**
  * This form class generates the "Positions" form in
  * "Improve > Design > Positions" page.
+ *
+ * @TODO not implemented yet
  */
 class PositionsType extends TranslatorAwareType
 {
@@ -100,11 +100,7 @@ class PositionsType extends TranslatorAwareType
 
     protected function getTransplantTo()
     {
-        $hooks = array();
-        $moduleInstance = Module::getInstanceById((int) Tools::getValue('id_module'));
-
         return [];
-        // $hooks = $moduleInstance->getPossibleHooksList();
     }
 
     protected function getExceptionsData()

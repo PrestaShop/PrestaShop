@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
-use Module;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShopBundle\Exception\HookModuleNotFoundException;
@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 /**
  * This class is responsible of managing the data manipulated for modules hooks
  * in "Improve > Design > Positions" page.
+ *
+ * @TODO not implemented yet
  */
 final class PositionsFormDataProvider implements FormDataProviderInterface
 {
@@ -47,14 +49,21 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
     /**
      * @var Database
      */
-    private $databaseAdapterxs;
+    private $databaseAdapter;
+
+    /**
+     * @var Database
+     */
+    private $moduleAdapter;
 
     public function __construct(
         PositionsConfiguration $configuration,
-        Database $databaseAdapter
+        Database $databaseAdapter,
+        Module $moduleAdapter
     ) {
         $this->configuration = $configuration;
         $this->databaseAdapter = $databaseAdapter;
+        $this->moduleAdapter = $moduleAdapter;
     }
 
     /**
@@ -77,7 +86,7 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
             throw new HookModuleNotFoundException();
         }
 
-        $module = Module::getInstanceById($moduleId);
+        $module = $this->moduleAdapter->getInstanceById($moduleId);
         $exceptionsList = $module->getExceptions($hookId, true);
         $exceptionsString = '';
         if (!empty($exceptionsList)) {
