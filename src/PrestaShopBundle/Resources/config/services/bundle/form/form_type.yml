@@ -485,10 +485,10 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.form.choice_provider.translation_type'
-            - '@prestashop.core.form.choice_provider.email_content_type'
-            - '@prestashop.core.form.choice_provider.theme_by_name'
-            - '@prestashop.core.form.choice_provider.module_by_name'
+            - '@=service("prestashop.core.form.choice_provider.translation_type").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.email_content_type").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.module_by_name").getChoices()'
         tags:
             - { name: form.type }
 
@@ -497,9 +497,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.form.choice_provider.non_installed_localization'
-            - '@prestashop.core.form.choice_provider.translation_type'
-            - '@prestashop.core.form.choice_provider.email_content_type'
+            - '@=service("prestashop.core.form.choice_provider.non_installed_localization").getChoices()'
         tags:
             - { name: form.type }
 
@@ -508,7 +506,7 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.form.choice_provider.theme_by_name'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
         tags:
             - { name: form.type }
 
@@ -517,6 +515,6 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.form.choice_provider.theme_by_name'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
         tags:
             - { name: form.type }

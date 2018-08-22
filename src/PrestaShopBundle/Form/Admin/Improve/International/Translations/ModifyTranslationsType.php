@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,46 +38,46 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ModifyTranslationsType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $translationTypeChoiceProvider;
+    private $translationTypeChoices;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $emailContentTypeChoiceProvider;
+    private $emailContentTypeChoices;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $themeChoiceProvider;
+    private $themeChoices;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $moduleChoiceProvider;
+    private $moduleChoices;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $translationTypeChoiceProvider
-     * @param FormChoiceProviderInterface $emailContentTypeChoiceProvider
-     * @param FormChoiceProviderInterface $themeChoiceProvider
-     * @param FormChoiceProviderInterface $moduleChoiceProvider
+     * @param array $translationTypeChoices
+     * @param array $emailContentTypeChoices
+     * @param array $themeChoices
+     * @param array $moduleChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $translationTypeChoiceProvider,
-        FormChoiceProviderInterface $emailContentTypeChoiceProvider,
-        FormChoiceProviderInterface $themeChoiceProvider,
-        FormChoiceProviderInterface $moduleChoiceProvider
+        array $translationTypeChoices,
+        array $emailContentTypeChoices,
+        array $themeChoices,
+        array $moduleChoices
     ) {
         parent::__construct($translator, $locales);
-        $this->translationTypeChoiceProvider = $translationTypeChoiceProvider;
-        $this->emailContentTypeChoiceProvider = $emailContentTypeChoiceProvider;
-        $this->themeChoiceProvider = $themeChoiceProvider;
-        $this->moduleChoiceProvider = $moduleChoiceProvider;
+        $this->translationTypeChoices = $translationTypeChoices;
+        $this->emailContentTypeChoices = $emailContentTypeChoices;
+        $this->themeChoices = $themeChoices;
+        $this->moduleChoices = $moduleChoices;
     }
 
     /**
@@ -90,15 +89,15 @@ class ModifyTranslationsType extends TranslatorAwareType
 
         $builder
             ->add('translation_type', ChoiceType::class, [
-                'choices' => $this->translationTypeChoiceProvider->getChoices(),
+                'choices' => $this->translationTypeChoices,
             ])
             ->add('email_content_type', ChoiceType::class, [
-                'choices' => $this->emailContentTypeChoiceProvider->getChoices(),
+                'choices' => $this->emailContentTypeChoices,
             ])
             ->add('theme', ChoiceType::class, [
                 'choices' =>
                     [$noTheme => 0] +
-                    $this->themeChoiceProvider->getChoices(),
+                    $this->themeChoices,
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme'
@@ -107,7 +106,7 @@ class ModifyTranslationsType extends TranslatorAwareType
             ])
             ->add('module', ChoiceType::class, [
                 'placeholder' => '---',
-                'choices' => $this->moduleChoiceProvider->getChoices(),
+                'choices' => $this->moduleChoices,
             ])
             ->add('language', ChoiceType::class, [
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
