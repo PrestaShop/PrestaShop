@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 /**
  * Class GetSqlRequestForViewingQuery gets SqlRequest SQL query result for viewing
  */
-class GetSqlRequestResultForViewingQuery
+class GetSqlRequestExecutionResultQuery
 {
     /**
      * @var SqlRequestId

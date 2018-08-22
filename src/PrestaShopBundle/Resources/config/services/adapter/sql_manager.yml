@@ -11,9 +11,9 @@ services:
     prestashop.adapter.sql_manager.request_sql_exporter:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlExporter'
         arguments:
-            - '@prestashop.adapter.sql_manager.request_sql_data_provider'
             - '@prestashop.core.export.dir'
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.command_bus.query'
 
     prestashop.adapter.sql_manager.request_sql_form_data_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator'
@@ -31,19 +31,19 @@ services:
     prestashop.adapter.sql_manager.command_handler.edit_request_sql:
       class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\EditSqlRequestHandler'
       arguments:
-      - '@prestashop.adapter.sql_manager.sql_query_validator'
+          - '@prestashop.adapter.sql_manager.sql_query_validator'
       tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand' }
+          - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand' }
 
     prestashop.adapter.sql_manager.command_handler.delete_request_sql:
       class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\DeleteSqlRequestHandler'
       tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand' }
+          - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand' }
 
     prestashop.adapter.sql_manager.command_handler.bulk_delete_request_sql:
       class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\BulkDeleteSqlRequestHandler'
       tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand' }
+          - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand' }
 
     # Query handlers
     prestashop.adapter.sql_manager.query_handler.get_request_sql_for_editing:
@@ -51,8 +51,7 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery' }
 
-    prestashop.adapter.sql_manager.query_handler.get_request_sql_result_for_viewing:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestResultForViewingHandler'
+    prestashop.adapter.sql_manager.query_handler.get_request_sql_execution_result:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestExecutionResultHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestResultForViewingQuery' }
-
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery' }

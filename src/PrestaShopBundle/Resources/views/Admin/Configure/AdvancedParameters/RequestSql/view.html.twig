@@ -34,28 +34,28 @@
           <div class="card-header">
             <h3>
               <i class="material-icons">list</i>
-              {{ 'SQL query result'|trans }} ({{ sqlRequestResult.records|length }})
+              {{ 'SQL query result'|trans }} ({{ sqlRequestResult.rows|length }})
             </h3>
           </div>
             <div class="card-block">
-              {% if sqlRequestResult.records is not empty %}
+              {% if sqlRequestResult.rows is not empty %}
               <div class="table-responsive">
                 <table class="table">
                   <thead>
                     <tr>
-                      {% for header in sqlRequestResult.headers %}
-                        <th>{{ header }}</th>
+                      {% for column in sqlRequestResult.columns %}
+                        <th>{{ column }}</th>
                       {% endfor %}
                     </tr>
                   </thead>
                   <tbody>
-                    {% for record in sqlRequestResult.records %}
+                    {% for row in sqlRequestResult.rows %}
                     <tr>
-                      {% for header in sqlRequestResult.headers %}
-                        {% if requestSqlView.attributes[header] is defined %}
-                          <td>{{ requestSqlView.attributes[header] }}</td>
+                      {% for column in sqlRequestResult.columns %}
+                        {% if requestSqlView.attributes[column] is defined %}
+                          <td>{{ requestSqlView.attributes[column] }}</td>
                         {% else %}
-                          <td>{{ record[header] }}</td>
+                          <td>{{ row[column] }}</td>
                         {% endif %}
                       {% endfor %}
                     </tr>
