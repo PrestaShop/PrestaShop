@@ -68,6 +68,9 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $_GET['action'] = 'availableFields';
 }
 
+/**
+ * Not found
+ */
 //if (Tools::isSubmit('ajaxProductPackItems')) {
 //    $jsonArray = array();
 //    $products = Db::getInstance()->executeS('
@@ -84,17 +87,28 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
 //    }
 //    die('['.implode(',', $jsonArray).']');
 //}
-//
-//if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
-//    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
-//    die(json_encode($children_categories));
-//}
-//
-//if (Tools::isSubmit('getNotifications')) {
-//    $notification = new Notification;
-//    die(json_encode($notification->getLastElements()));
-//}
-//
+
+/**
+ * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
+ * -> Moved in legacy, in AdminCategories
+ */
+if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminCategories';
+    $_GET['action'] = 'childrenCategories';
+}
+
+/**
+ * List notifications for an employee
+ * i.e: recent orders, new customers...
+ *
+ * -> Duplicated in Symfony
+ */
+if (Tools::isSubmit('getNotifications')) {
+    $notification = new Notification;
+    die(json_encode($notification->getLastElements()));
+}
+
 //if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
 //    $notification = new Notification;
 //    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));

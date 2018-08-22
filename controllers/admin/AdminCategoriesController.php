@@ -1101,4 +1101,23 @@ class AdminCategoriesControllerCore extends AdminController
             die(Tools::jsonEncode(array('thumbnail' => $files)));
         }
     }
+
+    /**
+     * Display children categories
+     * 
+     * Required request params:
+     * - id_category_parent
+     * - selectedCat
+     * -use_shop_context
+     */
+    public function displayAjaxChildrenCategories()
+    {
+        $children_categories = Category::getChildrenWithNbSelectedSubCat(
+            Tools::getValue('id_category_parent'),
+            Tools::getValue('selectedCat'), Context::getContext()->language->id,
+            null,
+            Tools::getValue('use_shop_context')
+        );
+        $this->ajaxRender(json_encode($children_categories));
+    }
 }
