@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,18 +27,14 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\WebserviceKeyGridSearchCriteria;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 
-
 /**
- * Responsible of "Configure > Advanced Parameters > Webservice" page display
+ * Responsible of "Configure > Advanced Parameters > Webservice" page display.
  *
  * @todo: add unit tests
  */
@@ -46,6 +42,7 @@ class WebserviceController extends FrameworkBundleAdminController
 {
     /**
      * Displays the Webservice main page.
+     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
@@ -76,11 +73,10 @@ class WebserviceController extends FrameworkBundleAdminController
         ];
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
-
     }
 
     /**
-     * Process the Webservice configuration form
+     * Process the Webservice configuration form.
      *
      * @param Request $request
      *
@@ -101,6 +97,7 @@ class WebserviceController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($saveErrors);
             }
+
             return $this->redirectToRoute('admin_webservice');
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -79,7 +79,6 @@ final class WebserviceConfiguration implements DataConfigurationInterface
         $enableWebserviceisValid = (isset($configuration['enable_webservice']) && (is_bool($configuration['enable_webservice'])));
         $enableCGI = (isset($configuration['enable_webservice']) && (is_bool($configuration['enable_webservice'])));
 
-        return ($enableWebserviceisValid && $enableCGI);
+        return $enableWebserviceisValid && $enableCGI;
     }
-
 }
