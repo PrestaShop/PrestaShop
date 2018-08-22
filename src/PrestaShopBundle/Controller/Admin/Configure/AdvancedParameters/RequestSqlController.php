@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
@@ -303,29 +304,18 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $requestSqlIds = $request->request->get('request_sql_bulk');
-        if (empty($requestSqlIds)) {
-            $this->addFlash(
-                'error',
-                $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error')
-            );
+        try {
+            $requestSqlIds = $request->request->get('request_sql_bulk');
+            $bulkDeleteSqlRequestCommand = new BulkDeleteSqlRequestCommand($requestSqlIds);
 
-            return $this->redirectToRoute('admin_request_sql');
-        }
+            $this->getCommandBus()->handle($bulkDeleteSqlRequestCommand);
 
-        $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        $errors = $requestSqlManager->delete($requestSqlIds);
-
-        if (empty($errors)) {
             $this->addFlash(
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
-        } else {
-            $this->addFlash(
-                'error',
-                $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error')
-            );
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->redirectToRoute('admin_request_sql');
@@ -447,22 +437,34 @@ class RequestSqlController extends FrameworkBundleAdminController
     /**
      * Get human readable error for exception
      *
-     * @param SqlRequestException $exception
+     * @param SqlRequestException $e
      *
      * @return string Error message
      */
-    protected function handleException(SqlRequestException $exception)
+    protected function handleException(SqlRequestException $e)
     {
+        $code = $e->getCode();
+        $exceptionType = get_class($e);
+
         $exceptionMessages = [
             SqlRequestNotFoundException::class =>
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-            CannotDeleteSqlRequestException::class =>
-                $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
             SqlRequestException::class =>
                 $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
         ];
 
-        $exceptionType = get_class($exception);
+        $deleteExceptionMessages = [
+            CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE =>
+                $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::CANNOT_BULK_DELETE =>
+                $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
+        ];
+
+        if (CannotDeleteSqlRequestException::class === $exceptionType &&
+            isset($deleteExceptionMessages[$code])
+        ) {
+            return $deleteExceptionMessages[$code];
+        }
 
         if (isset($exceptionMessages[$exceptionType])) {
             return $exceptionMessages[$exceptionType];
