@@ -44,7 +44,7 @@ class SqlRequestId
     {
         if (!is_numeric($requestSqlId) || $requestSqlId <= 0) {
             throw new SqlRequestException(
-                sprintf('Invalid Request Sql id: %s', $requestSqlId)
+                sprintf('Invalid SqlRequest id: %s', var_export($requestSqlId, true))
             );
         }
 

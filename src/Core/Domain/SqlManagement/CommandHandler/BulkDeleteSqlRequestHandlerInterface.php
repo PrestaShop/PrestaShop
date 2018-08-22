@@ -24,10 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
-class CannotDeleteSqlRequestException extends SqlRequestException
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
+
+/**
+ * Interface BulkDeleteSqlRequestHandlerInterface defines contract for bulk deleting handler of SqlRequest
+ */
+interface BulkDeleteSqlRequestHandlerInterface
 {
-    const CANNOT_SINGLE_DELETE = 10;
-    const CANNOT_BULK_DELETE = 20;
+    /**
+     * @param BulkDeleteSqlRequestCommand $command
+     */
+    public function handle(BulkDeleteSqlRequestCommand $command);
 }

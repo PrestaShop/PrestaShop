@@ -26,49 +26,45 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\DeleteSqlRequestHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\BulkDeleteSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
 use PrestaShopException;
 use RequestSql;
 
 /**
- * Class DeleteSqlRequestHandler
- *
- * @internal
- */
-final class DeleteSqlRequestHandler implements DeleteSqlRequestHandlerInterface
+ * Class BulkDeleteSqlRequestHandler handles bulk delete of SqlRequest command
+  */
+final class BulkDeleteSqlRequestHandler implements BulkDeleteSqlRequestHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws CannotDeleteSqlRequestException
      * @throws SqlRequestException
      */
-    public function handle(DeleteSqlRequestCommand $command)
+    public function handle(BulkDeleteSqlRequestCommand $command)
     {
-        $entityId = $command->getSqlRequestId()->getValue();
-
         try {
-            $entity = new RequestSql($entityId);
+            $errorOccurred = false;
 
-            if (0 >= $entity->id) {
-                throw new SqlRequestNotFoundException(
-                    sprintf('SqlRequest with id "%s" was not found for edit', var_export($entityId, true))
-                );
+            foreach ($command->getSqlRequestIds() as $sqlRequestId) {
+                $entity = new RequestSql($sqlRequestId->getValue());
+
+                if (false === $entity->delete()) {
+                    $errorOccurred = true;
+                }
             }
 
-            if (false === $entity->delete()) {
+            if ($errorOccurred) {
                 throw new CannotDeleteSqlRequestException(
-                    sprintf('Could not delete SqlRequest with id %s', var_export($entityId)),
-                    CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE
+                    'Failed to delete one or more SqlRequest',
+                    CannotDeleteSqlRequestException::CANNOT_BULK_DELETE
                 );
             }
         } catch (PrestaShopException $e) {
             throw new SqlRequestException(
-                sprintf('Unexpected error occurred when deleting SqlRequest with id %s', var_export($entityId, true)),
+                'Unexpected error occurred when handling bulk delete SqlRequest',
                 0,
                 $e
             );
