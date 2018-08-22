@@ -38,7 +38,7 @@ class Upgrade extends AbstractCommand
         $command = new UpdateSchemaCommand();
         $this->application->add($command);
 
-        $this->addCacheClear();
+        $this->addCacheClear(false);
 
         $this->commands[] = array(
             'command' => 'prestashop:schema:update-without-foreign'
