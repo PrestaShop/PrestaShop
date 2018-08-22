@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -40,22 +38,22 @@ use Symfony\Component\Translation\TranslatorInterface;
 class AddUpdateLanguageType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $nonInstalledLocalizationChoiceProvider;
+    private $nonInstalledLocalizationChoices;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $nonInstalledLocalizationChoiceProvider
+     * @param array $nonInstalledLocalizationChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $nonInstalledLocalizationChoiceProvider
+        array $nonInstalledLocalizationChoices
     ) {
         parent::__construct($translator, $locales);
-        $this->nonInstalledLocalizationChoiceProvider = $nonInstalledLocalizationChoiceProvider;
+        $this->nonInstalledLocalizationChoices = $nonInstalledLocalizationChoices;
     }
 
     /**
@@ -66,18 +64,8 @@ class AddUpdateLanguageType extends TranslatorAwareType
         $builder->add('iso_localization_pack', ChoiceType::class, [
             'choices' => [
                 'Update a language' => $this->getLocaleChoices(),
-                'Add a language' => $this->nonInstalledLocalizationChoiceProvider->getChoices()
+                'Add a language' => $this->nonInstalledLocalizationChoices,
             ],
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.International.Feature'
         ]);
     }
 }

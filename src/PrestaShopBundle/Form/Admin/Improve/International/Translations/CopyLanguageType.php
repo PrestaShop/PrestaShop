@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,22 +38,22 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CopyLanguageType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $themeChoiceProvider;
+    private $themeChoices;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $themeChoiceProvider
+     * @param array $themeChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $themeChoiceProvider
+        array $themeChoices
     ) {
         parent::__construct($translator, $locales);
-        $this->themeChoiceProvider = $themeChoiceProvider;
+        $this->themeChoices = $themeChoices;
     }
 
     /**
@@ -62,7 +61,6 @@ class CopyLanguageType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $themeChoices = $this->themeChoiceProvider->getChoices();
         $localeChoices = $this->getLocaleChoices();
 
         $builder
@@ -70,13 +68,13 @@ class CopyLanguageType extends TranslatorAwareType
                 'choices' => $localeChoices,
             ])
             ->add('from_theme', ChoiceType::class, [
-                'choices' => $themeChoices,
+                'choices' => $this->themeChoices,
             ])
             ->add('to_language', ChoiceType::class, [
                 'choices' => $localeChoices,
             ])
             ->add('to_theme', ChoiceType::class, [
-                'choices' => $themeChoices,
+                'choices' => $this->themeChoices,
             ])
         ;
     }
