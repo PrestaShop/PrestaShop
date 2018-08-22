@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestComm
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestResultForViewingQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
@@ -336,11 +337,12 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function viewAction(Request $request, $requestSqlId)
     {
-        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        $requestSqlResult = $requestSqlDataProvider->getRequestSqlResult($requestSqlId);
+        try {
+            $command = new GetSqlRequestResultForViewingQuery($requestSqlId);
 
-        if (null === $requestSqlResult) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+            $sqlRequestResult = $this->getQueryBus()->handle($command);
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleException($e));
 
             return $this->redirectToRoute('admin_request_sql');
         }
@@ -351,7 +353,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'requestSqlResult' => $requestSqlResult,
+            'sqlRequestResult' => $sqlRequestResult,
         ]);
     }
 
