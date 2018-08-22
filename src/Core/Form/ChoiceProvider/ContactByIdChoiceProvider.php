@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
- * Class ContactByIdChoiceProvider is responsible for providing shop contact choices
+ * Class ContactByIdChoiceProvider is responsible for providing shop contact choices.
  */
 final class ContactByIdChoiceProvider implements FormChoiceProviderInterface
 {

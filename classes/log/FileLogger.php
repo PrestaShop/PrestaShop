@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,46 +23,46 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class FileLoggerCore extends AbstractLogger
 {
     protected $filename = '';
 
     /**
-    * Write the message in the log file
-    *
-    * @param string message
-    * @param level
-    */
+     * Write the message in the log file.
+     *
+     * @param string message
+     * @param level
+     */
     protected function logMessage($message, $level)
     {
         if (!is_string($message)) {
             $message = print_r($message, true);
         }
-        $formatted_message = '*'.$this->level_value[$level].'* '."\tv"._PS_VERSION_."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
-        return (bool)file_put_contents($this->getFilename(), $formatted_message, FILE_APPEND);
+        $formatted_message = '*' . $this->level_value[$level] . '* ' . "\tv" . _PS_VERSION_ . "\t" . date('Y/m/d - H:i:s') . ': ' . $message . "\r\n";
+
+        return (bool) file_put_contents($this->getFilename(), $formatted_message, FILE_APPEND);
     }
 
     /**
-    * Check if the specified filename is writable and set the filename
-    *
-    * @param string $filename
-    */
+     * Check if the specified filename is writable and set the filename.
+     *
+     * @param string $filename
+     */
     public function setFilename($filename)
     {
         if (is_writable(dirname($filename))) {
             $this->filename = $filename;
         } else {
-            die('Directory '.dirname($filename).' is not writable');
+            die('Directory ' . dirname($filename) . ' is not writable');
         }
     }
 
     /**
-    * Log the message
-    *
-    * @param string message
-    * @param level
-    */
+     * Log the message.
+     *
+     * @param string message
+     * @param level
+     */
     public function getFilename()
     {
         if (empty($this->filename)) {

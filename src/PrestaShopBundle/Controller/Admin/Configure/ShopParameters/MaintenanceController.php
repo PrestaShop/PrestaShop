@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,10 +33,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tools;
 
 /**
- * Responsible of "Configure > Shop Parameters > General > Maintenance" page
+ * Responsible of "Configure > Shop Parameters > General > Maintenance" page.
  */
 class MaintenanceController extends FrameworkBundleAdminController
 {
@@ -45,6 +44,7 @@ class MaintenanceController extends FrameworkBundleAdminController
     /**
      * @var FormInterface
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig")
+     *
      * @return Response
      */
     public function indexAction(Request $request, FormInterface $form = null)
@@ -69,6 +69,7 @@ class MaintenanceController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
@@ -93,6 +94,7 @@ class MaintenanceController extends FrameworkBundleAdminController
                 'error',
                 $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
             );
+
             return $redirectResponse;
         }
 
@@ -109,10 +111,12 @@ class MaintenanceController extends FrameworkBundleAdminController
 
         if (0 === count($saveErrors)) {
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
             return $redirectResponse;
         }
 
         $this->flashErrors($saveErrors);
+
         return $redirectResponse;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Status;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class SeverityLevelColumn extends AbstractColumn
@@ -54,9 +52,6 @@ final class SeverityLevelColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'with_message' => false,
-                'filter' => new ColumnFilterOption(TextType::class, [
-                    'required' => false,
-                ]),
             ])
             ->setAllowedTypes('with_message', 'bool')
             ->setAllowedTypes('field', 'string')

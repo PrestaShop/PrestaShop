@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -75,6 +75,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param $pageSize int
+     *
      * @return $this
      */
     public function setPageSize($pageSize)
@@ -86,6 +87,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param $pageIndex int
+     *
      * @return $this
      */
     public function setPageIndex($pageIndex)
@@ -97,6 +99,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param Request $request
+     *
      * @return $this
      */
     public function fromRequest(Request $request)
@@ -113,6 +116,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param $queryParams
+     *
      * @return mixed
      */
     protected function excludeUnknownParams(array $queryParams)
@@ -136,6 +140,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $queryParams
      * @param Request $request
+     *
      * @return array
      */
     protected function parseFilterParams(array $queryParams, Request $request)
@@ -175,6 +180,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $queryParams
+     *
      * @return array
      */
     protected function parsePaginationParams(array $queryParams)
@@ -187,8 +193,8 @@ abstract class QueryParamsCollection
             $queryParams['page_size'] = $this->getDefaultPageSize();
         }
 
-        $queryParams['page_size'] = (int)$queryParams['page_size'];
-        $queryParams['page_index'] = (int)$queryParams['page_index'];
+        $queryParams['page_size'] = (int) $queryParams['page_size'];
+        $queryParams['page_index'] = (int) $queryParams['page_index'];
 
         if (
             $queryParams['page_size'] > $this->getDefaultPageSize() ||
@@ -217,12 +223,13 @@ abstract class QueryParamsCollection
         return array(
             'page_size',
             'page_index',
-            'order'
+            'order',
         );
     }
 
     /**
      * @param array $queryParams
+     *
      * @return array|mixed
      */
     protected function parseOrderParams(array $queryParams)
@@ -258,17 +265,20 @@ abstract class QueryParamsCollection
 
     /**
      * @param $queryParams
+     *
      * @return mixed
      */
     abstract protected function setDefaultOrderParam($queryParams);
 
     /**
      * @param $subject
+     *
      * @return mixed
      */
     protected function removeDirection($subject)
     {
         $subject = str_replace(' asc', '', $subject);
+
         return str_replace(' desc', '', $subject);
     }
 
@@ -307,7 +317,7 @@ abstract class QueryParamsCollection
         }
 
         $filters = array(
-            self::SQL_CLAUSE_WHERE => implode("\n", $whereFilters)
+            self::SQL_CLAUSE_WHERE => implode("\n", $whereFilters),
         );
 
         $filters = $this->appendSqlSearchFilter($filters);
@@ -327,6 +337,7 @@ abstract class QueryParamsCollection
      * @param $value
      * @param $column
      * @param array $filters
+     *
      * @return array
      */
     protected function appendSqlFilter($value, $column, array $filters)
@@ -393,8 +404,8 @@ abstract class QueryParamsCollection
         $firstResult = ($pageIndex - 1) * $maxResult;
 
         return array(
-            self::SQL_PARAM_MAX_RESULTS => (int)$maxResult,
-            self::SQL_PARAM_FIRST_RESULT => (int)$firstResult
+            self::SQL_PARAM_MAX_RESULTS => (int) $maxResult,
+            self::SQL_PARAM_FIRST_RESULT => (int) $firstResult,
         );
     }
 
@@ -420,6 +431,7 @@ abstract class QueryParamsCollection
      * @param $column
      * @param $value
      * @param $sqlParams
+     *
      * @return mixed
      */
     protected function appendSqlFilterParams($column, $value, $sqlParams)
@@ -451,13 +463,13 @@ abstract class QueryParamsCollection
         }
 
         if (!is_array($value)) {
-            $sqlParams[$column] = (int)$value;
+            $sqlParams[$column] = (int) $value;
 
             return $sqlParams;
         }
 
         array_map(function ($index, $value) use (&$sqlParams, $column) {
-            $sqlParams[$column . '_' . $index] = (int)$value;
+            $sqlParams[$column . '_' . $index] = (int) $value;
         }, array_keys($value), $value);
 
         return $sqlParams;
@@ -465,6 +477,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $filters
+     *
      * @return array
      */
     protected function appendSqlCategoryFilter(array $filters)
@@ -478,6 +491,7 @@ abstract class QueryParamsCollection
     /**
      * @param $value
      * @param $sqlParams
+     *
      * @return mixed
      */
     protected function appendSqlCategoryFilterParam($value, $sqlParams)
@@ -492,10 +506,10 @@ abstract class QueryParamsCollection
         return $sqlParams;
     }
 
-
     /**
      * @param array $filters
      * @param dateAdd
+     *
      * @return array
      */
     protected function appendSqlDateAddFilter(array $filters, $dateAdd)
@@ -506,11 +520,11 @@ abstract class QueryParamsCollection
 
         if (array_key_exists('sup', $dateAdd)) {
             $search = ($this->isTimestamp($dateAdd['sup']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
-            $filters[] = sprintf('AND '.$search.' >= %s', '{date_add}', ':date_add_sup');
+            $filters[] = sprintf('AND ' . $search . ' >= %s', '{date_add}', ':date_add_sup');
         }
         if (array_key_exists('inf', $dateAdd)) {
             $search = ($this->isTimestamp($dateAdd['inf']) ? 'UNIX_TIMESTAMP(%s)' : '%s');
-            $filters[] = sprintf('AND '.$search.' <= %s', '{date_add}', ':date_add_inf');
+            $filters[] = sprintf('AND ' . $search . ' <= %s', '{date_add}', ':date_add_inf');
         }
 
         return $filters;
@@ -519,6 +533,7 @@ abstract class QueryParamsCollection
     /**
      * @param $value
      * @param $sqlParams
+     *
      * @return mixed
      */
     protected function appendSqlDateAddFilterParam($value, $sqlParams)
@@ -540,6 +555,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $filters
      * @param active
+     *
      * @return array
      */
     protected function appendSqlActiveFilter(array $filters, $active)
@@ -554,6 +570,7 @@ abstract class QueryParamsCollection
     /**
      * @param $value
      * @param $sqlParams
+     *
      * @return mixed
      */
     protected function appendSqlActiveFilterParam($value, $sqlParams)
@@ -565,10 +582,10 @@ abstract class QueryParamsCollection
         return $sqlParams;
     }
 
-
     /**
      * @param array $filters
      * @param $attributes
+     *
      * @return array
      */
     protected function appendSqlAttributesFilter(array $filters, $attributes)
@@ -595,6 +612,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $value
      * @param $sqlParams
+     *
      * @return array
      */
     protected function appendSqlAttributesFilterParam($value, $sqlParams)
@@ -612,10 +630,10 @@ abstract class QueryParamsCollection
         return $sqlParams;
     }
 
-
     /**
      * @param array $filters
      * @param $attributes
+     *
      * @return array
      */
     protected function appendSqlFeaturesFilter(array $filters, $attributes)
@@ -650,6 +668,7 @@ abstract class QueryParamsCollection
     /**
      * @param array $value
      * @param $sqlParams
+     *
      * @return array
      */
     protected function appendSqlFeaturesFilterParam($value, $sqlParams)
@@ -667,9 +686,9 @@ abstract class QueryParamsCollection
         return $sqlParams;
     }
 
-
     /**
      * @param $filters
+     *
      * @return mixed
      */
     protected function appendSqlSearchFilter($filters)
@@ -679,13 +698,13 @@ abstract class QueryParamsCollection
         }
 
         if (!is_array($this->queryParams['filter']['keywords'])) {
-            $this->queryParams['filter']['keywords'] = (array)$this->queryParams['filter']['keywords'];
+            $this->queryParams['filter']['keywords'] = (array) $this->queryParams['filter']['keywords'];
         }
 
         $parts = array_map(function ($index) {
             return sprintf(
                 'AND (' .
-                '{supplier_name} LIKE :keyword_%d OR '.
+                '{supplier_name} LIKE :keyword_%d OR ' .
                 '{product_reference} LIKE :keyword_%d OR ' .
                 '{product_name} LIKE :keyword_%d OR ' .
                 '{combination_name} LIKE :keyword_%d' .
@@ -720,7 +739,7 @@ abstract class QueryParamsCollection
         $check = (is_int($timestamp) || is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
 
         return  ($check === $timestamp)
-            && ((int) $timestamp <=  PHP_INT_MAX)
+            && ((int) $timestamp <= PHP_INT_MAX)
             && ((int) $timestamp >= ~PHP_INT_MAX);
     }
 }

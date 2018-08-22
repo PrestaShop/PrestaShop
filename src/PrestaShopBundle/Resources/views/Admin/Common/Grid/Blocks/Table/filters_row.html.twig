@@ -27,8 +27,10 @@
   <tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty %}d-none{% endif %}">
     {% for column in grid.columns %}
       <th>
-        {% if grid.filter_form[column.id] is defined %}
-          {{ form_widget(grid.filter_form[column.id]) }}
+        {% if grid.column_filters[column.id] is defined %}
+          {% for filter_name in grid.column_filters[column.id] %}
+            {{ form_widget(grid.filter_form[filter_name]) }}
+          {% endfor %}
         {% endif %}
       </th>
     {% endfor %}

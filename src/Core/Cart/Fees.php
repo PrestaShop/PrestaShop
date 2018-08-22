@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,6 @@ use Tools;
 
 class Fees
 {
-
     /**
      * @var Cart
      */
@@ -59,17 +58,17 @@ class Fees
     protected $finalWrappingFees;
 
     /**
-     * indicates if cart was already processed
+     * indicates if cart was already processed.
      *
      * @var bool
      */
     protected $isProcessed = false;
 
     /**
-     * @param Cart              $cart
+     * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
-     * @param int               $computePrecision
-     * @param int               $id_carrier
+     * @param int $computePrecision
+     * @param int $id_carrier
      */
     public function processCalculation(
         Cart $cart,
@@ -99,11 +98,11 @@ class Fees
                 )
             );
         }
-        $this->finalShippingFees = clone($this->shippingFees);
+        $this->finalShippingFees = clone $this->shippingFees;
 
         // wrapping fees
         if ($cart->gift) {
-            $this->wrappingFees      = new AmountImmutable(
+            $this->wrappingFees = new AmountImmutable(
                 Tools::convertPrice(
                     Tools::ps_round(
                         $cart->getGiftWrappingPrice(true),
@@ -120,9 +119,9 @@ class Fees
                 )
             );
         } else {
-            $this->wrappingFees      = new AmountImmutable();
+            $this->wrappingFees = new AmountImmutable();
         }
-        $this->finalWrappingFees = clone($this->wrappingFees);
+        $this->finalWrappingFees = clone $this->wrappingFees;
         $this->isProcessed = true;
     }
 
@@ -185,5 +184,4 @@ class Fees
             $taxExcluded
         );
     }
-
 }

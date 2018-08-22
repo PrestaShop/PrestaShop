@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Employee;
@@ -43,35 +44,41 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ModuleManager implements AddonManagerInterface
 {
     /**
-     * Admin Module Data Provider
+     * Admin Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
      */
     private $adminModuleProvider;
     /**
-     * Module Data Provider
+     * Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
      */
     private $moduleProvider;
     /**
-     * Module Data Provider
+     * Module Data Provider.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
     private $moduleUpdater;
 
     /**
-     * Module Repository
+     * Module Repository.
+     *
      * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     private $moduleRepository;
 
     /**
-     * Module Zip Manager
+     * Module Zip Manager.
+     *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
      */
     private $moduleZipManager;
 
     /**
-     * Translator
+     * Translator.
+     *
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
@@ -87,7 +94,7 @@ class ModuleManager implements AddonManagerInterface
     private $dispatcher;
 
     /**
-     * Additionnal data used for module actions
+     * Additionnal data used for module actions.
      *
      * @var ParameterBag
      */
@@ -129,16 +136,19 @@ class ModuleManager implements AddonManagerInterface
      * This setter is the way to register them in the manager.
      *
      * @param array $actionParams
+     *
      * @return $this
      */
     public function setActionParams(array $actionParams)
     {
         $this->actionParams->replace($actionParams);
+
         return $this;
     }
 
     /**
      * @param callable $modulesPresenter
+     *
      * @return object
      */
     public function getModulesWithNotifications(callable $modulesPresenter)
@@ -148,7 +158,7 @@ class ModuleManager implements AddonManagerInterface
         $modulesProvider = $this->adminModuleProvider;
         foreach ($modules as $moduleLabel => $modulesPart) {
             $collection = AddonsCollection::createFrom($modulesPart);
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection, str_replace("to_", "", $moduleLabel));
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection, str_replace('to_', '', $moduleLabel));
             $modules->{$moduleLabel} = $modulesPresenter($modulesPart);
         }
 
@@ -176,16 +186,16 @@ class ModuleManager implements AddonManagerInterface
             'to_update' => array(),
         );
 
-        /**
-         * @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct
+        /*
+         * @var \PrestaShop\PrestaShop\Adapter\Module\Module
          */
         foreach ($installedProducts as $installedProduct) {
             if ($this->shouldRecommendConfigurationForModule($installedProduct)) {
-                $modules->to_configure[] = (object)$installedProduct;
+                $modules->to_configure[] = (object) $installedProduct;
             }
 
             if ($installedProduct->canBeUpgraded()) {
-                $modules->to_update[] = (object)$installedProduct;
+                $modules->to_update[] = (object) $installedProduct;
             }
         }
 
@@ -194,6 +204,7 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * @param Module $installedProduct
+     *
      * @return bool
      */
     protected function shouldRecommendConfigurationForModule(Module $installedProduct)
@@ -205,6 +216,7 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * @param Module $installedProduct
+     *
      * @return array
      */
     protected function getModuleInstallationWarnings(Module $installedProduct)
@@ -212,6 +224,7 @@ class ModuleManager implements AddonManagerInterface
         if ($installedProduct->hasValidInstance()) {
             return $installedProduct->getInstance()->warning;
         }
+
         return array();
     }
 
@@ -221,7 +234,8 @@ class ModuleManager implements AddonManagerInterface
      * A theme can bundle modules, resources, documentation, email templates and so on.
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
-     * or a location (url or path to the zip file)
+     *                       or a location (url or path to the zip file)
+     *
      * @return bool true for success
      */
     public function install($source)
@@ -250,7 +264,7 @@ class ModuleManager implements AddonManagerInterface
 
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        } elseif (! $this->moduleProvider->isOnDisk($name)) {
+        } elseif (!$this->moduleProvider->isOnDisk($name)) {
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
@@ -259,14 +273,16 @@ class ModuleManager implements AddonManagerInterface
         $result = $module->onInstall();
 
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+
         return $result;
     }
 
     /**
-     * Remove all theme files, resources, documentation and specific modules
+     * Remove all theme files, resources, documentation and specific modules.
      *
      * @param string $name The source can be a module name (installed from either local disk or addons.prestashop.com).
-     * or a location (url or path to the zip file)
+     *                     or a location (url or path to the zip file)
+     *
      * @return bool true for success
      */
     public function uninstall($name)
@@ -279,7 +295,7 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to uninstall the module %module%.',
                     array(
-                        '%module%' => $name
+                        '%module%' => $name,
                     ),
                     'Admin.Modules.Notification'
                 )
@@ -302,14 +318,15 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-    * Download new files from source, backup old files, replace files with new ones
-    * and execute all necessary migration scripts form current version to the new one.
-    *
-    * @param Addon $name the theme you want to upgrade
-    * @param string $version the version you want to up upgrade to
-    * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
-    * @return bool true for success
-    */
+     * Download new files from source, backup old files, replace files with new ones
+     * and execute all necessary migration scripts form current version to the new one.
+     *
+     * @param Addon $name the theme you want to upgrade
+     * @param string $version the version you want to up upgrade to
+     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
+     *
+     * @return bool true for success
+     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
@@ -347,10 +364,11 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * Disable a module without uninstalling it.
-     * Allows the merchant to temporarly remove a module without uninstalling it
+     * Allows the merchant to temporarly remove a module without uninstalling it.
      *
-     * @param  string $name The module name to disable
-     * @return bool         True for success
+     * @param string $name The module name to disable
+     *
+     * @return bool True for success
      */
     public function disable($name)
     {
@@ -391,10 +409,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Enable a module previously disabled
+     * Enable a module previously disabled.
      *
-     * @param  string $name The module name to enable
-     * @return bool         True for success
+     * @param string $name The module name to enable
+     *
+     * @return bool True for success
      */
     public function enable($name)
     {
@@ -441,8 +460,9 @@ class ModuleManager implements AddonManagerInterface
      *
      * @deprecated use disableMobile()
      *
-     * @param  string $name The module name to disable
-     * @return bool         True for success
+     * @param string $name The module name to disable
+     *
+     * @return bool True for success
      */
     public function disable_mobile($name)
     {
@@ -452,8 +472,9 @@ class ModuleManager implements AddonManagerInterface
     /**
      * Disable a module specifically on mobile.
      *
-     * @param  string $name The module name to disable
-     * @return bool         True for success
+     * @param string $name The module name to disable
+     *
+     * @return bool True for success
      */
     public function disableMobile($name)
     {
@@ -494,10 +515,11 @@ class ModuleManager implements AddonManagerInterface
      * Not written in camel case because the route and the displayed action in the template
      * are related to this function name.
      *
-     * @deprecated use enableMobile.
+     * @deprecated use enableMobile
      *
-     * @param  string $name The module name to enable
-     * @return bool         True for success
+     * @param string $name The module name to enable
+     *
+     * @return bool True for success
      */
     public function enable_mobile($name)
     {
@@ -508,6 +530,7 @@ class ModuleManager implements AddonManagerInterface
      * Enable a module previously disabled on mobile.
      *
      * @param string $name The module name to enable
+     *
      * @return bool True for success
      */
     public function enableMobile($name)
@@ -545,10 +568,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Actions to perform to restaure default settings
+     * Actions to perform to restaure default settings.
      *
-     * @param  string $name The theme name to reset
-     * @return bool         True for success
+     * @param string $name The theme name to reset
+     *
+     * @return bool True for success
      */
     public function reset($name, $keep_data = false)
     {
@@ -568,7 +592,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            if ((bool)$keep_data && method_exists($this, 'reset')) {
+            if ((bool) $keep_data && method_exists($this, 'reset')) {
                 $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
                 $status = $module->onReset();
                 $this->dispatch(ModuleManagementEvent::INSTALL, $module);
@@ -593,9 +617,10 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Shortcut to the module data provider in order to know if a module is enabled
+     * Shortcut to the module data provider in order to know if a module is enabled.
      *
      * @param string $name The technical module name
+     *
      * @return bool
      */
     public function isEnabled($name)
@@ -604,20 +629,22 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Shortcut to the module data provider in order to know if a module is installed
+     * Shortcut to the module data provider in order to know if a module is installed.
      *
      * @param string $name The technical module name
+     *
      * @return bool True is installed
-    */
+     */
     public function isInstalled($name)
     {
         return $this->moduleProvider->isInstalled($name);
     }
 
     /**
-     * Shortcut to the module data updater to remove the module from the disk
+     * Shortcut to the module data updater to remove the module from the disk.
      *
      * @param string $name The technical module name
+     *
      * @return bool True if files were properly removed
      */
     public function removeModuleFromDisk($name)
@@ -626,9 +653,10 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Returns the last error, if found
+     * Returns the last error, if found.
      *
      * @param string $name The technical module name
+     *
      * @return string|null The last error added to the module if found
      */
     public function getError($name)
@@ -659,7 +687,8 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * This function is a refacto of the event dispatching
+     * This function is a refacto of the event dispatching.
+     *
      * @param strig $event
      * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
      */
@@ -686,6 +715,7 @@ class ModuleManager implements AddonManagerInterface
      *
      * @param string $action
      * @param Module $module
+     *
      * @throws UnconfirmedModuleActionException
      */
     private function checkConfirmationGiven($action, Module $module)

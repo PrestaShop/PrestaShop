@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Feature\GroupFeature;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class will provide Optional features configuration for a Shop
+ * This class will provide Optional features configuration for a Shop.
  */
 class OptionalFeaturesConfiguration implements DataConfigurationInterface
 {
@@ -62,8 +62,7 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
         CombinationFeature $combinationFeature,
         FeatureFeature $featureFeature,
         GroupFeature $groupFeature
-    )
-    {
+    ) {
         $this->configuration = $configuration;
         $this->combinationFeature = $combinationFeature;
         $this->featureFeature = $featureFeature;

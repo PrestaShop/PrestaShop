@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
@@ -288,6 +287,7 @@ class ModuleController extends FrameworkBundleAdminController
         if (!method_exists($moduleManager, $action)) {
             $response[$module]['status'] = false;
             $response[$module]['msg'] = $this->trans('Invalid action', 'Admin.Notifications.Error');
+
             return new JsonResponse($response);
         }
 
@@ -341,7 +341,7 @@ class ModuleController extends FrameworkBundleAdminController
                                 '%action%' => $e->getAction(),
                                 '%module%' => $module,
                             )
-                        )
+                        ),
                     ));
         } catch (Exception $e) {
             $response[$module]['status'] = false;
@@ -374,6 +374,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return JsonResponse
      */
     protected function getDisabledFunctionalityResponse($request)
@@ -424,6 +425,7 @@ class ModuleController extends FrameworkBundleAdminController
     public function notificationsCountAction()
     {
         $moduleManager = $this->container->get('prestashop.module.manager');
+
         return new JsonResponse(array(
             'count' => $moduleManager->countModulesWithNotifications(),
         ));
@@ -431,6 +433,7 @@ class ModuleController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function getPreferredModulesAction(Request $request)
@@ -553,7 +556,7 @@ class ModuleController extends FrameworkBundleAdminController
                     $this->authorizationLevel($this::CONTROLLER_NAME),
                     array(
                         PageVoter::LEVEL_CREATE,
-                        PageVoter::LEVEL_DELETE
+                        PageVoter::LEVEL_DELETE,
                     )
                 )
             ) {
@@ -571,7 +574,7 @@ class ModuleController extends FrameworkBundleAdminController
                 new Assert\NotNull(),
                 new Assert\File(
                     array(
-                        'maxSize'   => ini_get('upload_max_filesize'),
+                        'maxSize' => ini_get('upload_max_filesize'),
                         'mimeTypes' => array(
                             'application/zip',
                             'application/x-gzip',
@@ -587,7 +590,7 @@ class ModuleController extends FrameworkBundleAdminController
             if (0 !== count($violations)) {
                 $violationsMessages = '';
                 foreach ($violations as $violation) {
-                    $violationsMessages .= $violation->getMessage().PHP_EOL;
+                    $violationsMessages .= $violation->getMessage() . PHP_EOL;
                 }
                 throw new Exception($violationsMessages);
             }
@@ -635,6 +638,7 @@ class ModuleController extends FrameworkBundleAdminController
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')->generateAddonsUrls($collection);
+
             return new JsonResponse(
                     array(
                         'status' => false,
@@ -648,7 +652,7 @@ class ModuleController extends FrameworkBundleAdminController
                                 '%action%' => $e->getAction(),
                                 '%module%' => $module_name,
                             )
-                    )));
+                    ), ));
         } catch (Exception $e) {
             if (isset($module_name)) {
                 $moduleManager->disable($module_name);

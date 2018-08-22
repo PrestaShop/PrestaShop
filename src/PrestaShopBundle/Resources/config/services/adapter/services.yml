@@ -97,3 +97,17 @@ services:
         arguments:
             - "@prestashop.core.admin.data_provider.addons_interface"
             - "@prestashop.adapter.admin.data_provider.module"
+
+    prestashop.adapter.admin.model.product:
+        class: PrestaShopBundle\Model\Product\AdminModelAdapter
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.admin.wrapper.product"
+            - "@prestashop.adapter.tools"
+            - "@prestashop.adapter.data_provider.product"
+            - "@prestashop.adapter.data_provider.supplier"
+            - "@prestashop.adapter.data_provider.warehouse"
+            - "@prestashop.adapter.data_provider.feature"
+            - "@prestashop.adapter.data_provider.pack"
+            - "@prestashop.adapter.shop.context"
+            - "@prestashop.adapter.data_provider.tax"

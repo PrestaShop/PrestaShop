@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class generates the "Pdf" form in Delivery slips page
+ * This form class generates the "Pdf" form in Delivery slips page.
  */
 class SlipPdfType extends CommonAbstractType
 {

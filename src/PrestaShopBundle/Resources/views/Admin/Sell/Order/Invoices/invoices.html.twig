@@ -29,20 +29,19 @@
 %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            {# "By Date" block #}
-            {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig' %}
+  <div class="row justify-content-center">
+    {# "By Date" block #}
+    {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig' %}
 
-            {# "By order status" block #}
-            {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig' %}
+    {# "By order status" block #}
+    {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig' %}
 
-        </div>
-        <div class="row">
-            {# "Invoice options" block #}
-            {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig' %}
-        </div>
-    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    {# "Invoice options" block #}
+    {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig' %}
+  </div>
 {% endblock %}
 
 {% block javascripts %}

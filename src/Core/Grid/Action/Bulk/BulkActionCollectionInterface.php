@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
 use Iterator;
 
 /**
- * Interface BulkActionCollectionInterface defines bulk actions contract
+ * Interface BulkActionCollectionInterface defines bulk actions contract.
  */
 interface BulkActionCollectionInterface extends Iterator
 {
     /**
-     * Add bulk action to collection
+     * Add bulk action to collection.
      *
      * @param BulkActionInterface $bulkAction
      *
@@ -43,7 +43,7 @@ interface BulkActionCollectionInterface extends Iterator
     public function add(BulkActionInterface $bulkAction);
 
     /**
-     * Get bulk actions as array
+     * Get bulk actions as array.
      *
      * @return array
      */

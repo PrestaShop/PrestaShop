@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,11 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Cache;
 use Cache;
 
 /**
- * Adapter for generic cache methods
+ * Adapter for generic cache methods.
  */
 class CacheAdapter
 {
-
     /**
      * @param string $key
      * @param string $value
@@ -62,5 +61,4 @@ class CacheAdapter
     {
         return Cache::isStored($key);
     }
-
 }

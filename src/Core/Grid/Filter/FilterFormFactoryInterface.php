@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Interface FilterFormFactoryInterface
+ * Interface FilterFormFactoryInterface.
  */
 interface FilterFormFactoryInterface
 {
     /**
-     * Create filters form for grid definition
+     * Create filters form for grid definition.
      *
      * @param DefinitionInterface $definition
      *

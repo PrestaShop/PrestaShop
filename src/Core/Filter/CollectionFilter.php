@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Filter;
 
 /**
- * Iterates over a collection, filtering each element using a queue of filters
+ * Iterates over a collection, filtering each element using a queue of filters.
  */
 class CollectionFilter implements FilterInterface
 {
@@ -38,7 +38,7 @@ class CollectionFilter implements FilterInterface
     private $filters = [];
 
     /**
-     * Sets process queue
+     * Sets process queue.
      *
      * @param FilterInterface[] $filters
      *
@@ -51,7 +51,7 @@ class CollectionFilter implements FilterInterface
         foreach ($filters as $filter) {
             if (!$filter instanceof FilterInterface) {
                 throw new FilterException(
-                    sprintf("The provided filter is not valid filter: \"%s\"", print_r($filter, true))
+                    sprintf('The provided filter is not valid filter: "%s"', print_r($filter, true))
                 );
             }
         }
@@ -62,7 +62,8 @@ class CollectionFilter implements FilterInterface
     }
 
     /**
-     * Returns the current queue
+     * Returns the current queue.
+     *
      * @return FilterInterface[]
      */
     public function getQueue()
@@ -71,7 +72,7 @@ class CollectionFilter implements FilterInterface
     }
 
     /**
-     * Filters the provided subject
+     * Filters the provided subject.
      *
      * @param array $subject Collection to filter
      *
@@ -83,7 +84,7 @@ class CollectionFilter implements FilterInterface
     {
         if (!is_array($subject)) {
             throw new FilterException(
-                sprintf("Invalid subject: %s", print_r($subject, true))
+                sprintf('Invalid subject: %s', print_r($subject, true))
             );
         }
 

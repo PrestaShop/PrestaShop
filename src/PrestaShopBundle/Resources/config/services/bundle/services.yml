@@ -105,3 +105,8 @@ services:
             - "@=service('prestashop.core.foundation.version').getVersion()"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
+
+    # Product CSV Exporter
+    prestashop.core.product.csv_exporter:
+        class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
+        arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']

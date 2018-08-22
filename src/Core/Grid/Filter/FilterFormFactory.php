@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,14 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
- * Class FilterFormFactory is responsible for creating grid filter form
+ * Class FilterFormFactory is responsible for creating grid filter form.
  */
 final class FilterFormFactory implements FilterFormFactoryInterface
 {
@@ -60,18 +58,13 @@ final class FilterFormFactory implements FilterFormFactoryInterface
             FormType::class
         );
 
-        /** @var ColumnInterface $column */
-        foreach ($definition->getColumns() as $column) {
-            $options = $column->getOptions();
-            if (isset($options['filter'])) {
-                /** @var ColumnFilterOption $columnOption */
-                $columnOption = $options['filter'];
-                $formBuilder->add(
-                    $column->getId(),
-                    $columnOption->getFilterType(),
-                    $columnOption->getFilterTypeOptions()
-                );
-            }
+        /** @var FilterInterface $filter */
+        foreach ($definition->getFilters()->all() as $filter) {
+            $formBuilder->add(
+                $filter->getName(),
+                $filter->getType(),
+                $filter->getTypeOptions()
+            );
         }
 
         return $formBuilder->getForm();

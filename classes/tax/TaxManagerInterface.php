@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 /**
-* A TaxManager define a way to retrieve tax.
-*/
+ * A TaxManager define a way to retrieve tax.
+ */
 interface TaxManagerInterface
 {
     /**
-    * This method determine if the tax manager is available for the specified address.
-    *
-    * @param Address $address
-    *
-    * @return bool
-    */
+     * This method determine if the tax manager is available for the specified address.
+     *
+     * @param Address $address
+     *
+     * @return bool
+     */
     public static function isAvailableForThisAddress(Address $address);
 
     /**
-    * Return the tax calculator associated to this address
-    *
-    * @return TaxCalculator
-    */
+     * Return the tax calculator associated to this address.
+     *
+     * @return TaxCalculator
+     */
     public function getTaxCalculator();
 }

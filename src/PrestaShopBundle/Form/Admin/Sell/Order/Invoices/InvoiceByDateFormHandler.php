@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class InvoiceByDateFormHandler manages the data manipulated using "By date" form
- * in "Sell > Orders > Invoices" page
+ * in "Sell > Orders > Invoices" page.
  */
 final class InvoiceByDateFormHandler extends FormHandler
 {

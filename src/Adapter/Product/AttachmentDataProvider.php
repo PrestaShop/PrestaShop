@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Db;
 
 /**
- * This class will provide data from DB / ORM about attachment
+ * This class will provide data from DB / ORM about attachment.
  */
 class AttachmentDataProvider
 {
     /**
-     * Get all attachments
+     * Get all attachments.
      *
      * @param int $id_lang
      *
@@ -44,9 +44,9 @@ class AttachmentDataProvider
     {
         return Db::getInstance()->executeS('
 			SELECT *
-			FROM '._DB_PREFIX_.'attachment a
-			LEFT JOIN '._DB_PREFIX_.'attachment_lang al
-				ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int)$id_lang.')
+			FROM ' . _DB_PREFIX_ . 'attachment a
+			LEFT JOIN ' . _DB_PREFIX_ . 'attachment_lang al
+				ON (a.id_attachment = al.id_attachment AND al.id_lang = ' . (int) $id_lang . ')
         ');
     }
 }

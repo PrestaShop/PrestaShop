@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -59,7 +59,7 @@ class OrderConfirmationControllerCore extends FrontController
         $order = new Order((int) ($this->id_order));
 
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
-            Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
+            Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $order->reference;
         if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
@@ -127,7 +127,7 @@ class OrderConfirmationControllerCore extends FrontController
     }
 
     /**
-     * Check if an order is free and create it
+     * Check if an order is free and create it.
      */
     private function checkFreeOrder()
     {
@@ -141,7 +141,7 @@ class OrderConfirmationControllerCore extends FrontController
             Tools::redirect($this->context->link->getPageLink('order'));
         }
 
-        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        $total = (float) $cart->getOrderTotal(true, Cart::BOTH);
         if ($total > 0) {
             Tools::redirect($this->context->link->getPageLink('order'));
         }
@@ -155,6 +155,5 @@ class OrderConfirmationControllerCore extends FrontController
             null, array(), null, false,
             $cart->secure_key
         );
-
     }
 }

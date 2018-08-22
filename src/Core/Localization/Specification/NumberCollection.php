@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as Num
 
 /**
  * Number specifications collection
- * Contains a list of Number specification items (all implementing NumberInterface)
+ * Contains a list of Number specification items (all implementing NumberInterface).
  */
 class NumberCollection implements IteratorAggregate, Countable
 {
     /**
-     * The Number specification items
+     * The Number specification items.
      *
      * @var NumberSpecificationInterface[]
      */
@@ -51,7 +51,7 @@ class NumberCollection implements IteratorAggregate, Countable
      * It implements \IteratorAggregate.
      *
      * @return ArrayIterator|NumberSpecificationInterface[]
-     *  An ArrayIterator object for iterating over Number specification items
+     *                                                      An ArrayIterator object for iterating over Number specification items
      */
     public function getIterator()
     {
@@ -62,7 +62,7 @@ class NumberCollection implements IteratorAggregate, Countable
      * Gets the number of Number specification items in this collection.
      *
      * @return int
-     *  The number of Number specification items
+     *             The number of Number specification items
      */
     public function count()
     {
@@ -73,13 +73,12 @@ class NumberCollection implements IteratorAggregate, Countable
      * Adds a Number specification item at the end of the collection.
      *
      * @param int|string $index
-     *  The item index
-     *
-     * @param NumberSpecificationInterface $numberSpecification
-     *  The Number specification item to add.
+     *                          The item index
+     * @param numberSpecificationInterface $numberSpecification
+     *                                                          The Number specification item to add
      *
      * @return NumberCollection
-     *  Fluent interface
+     *                          Fluent interface
      */
     public function add($index, NumberSpecificationInterface $numberSpecification)
     {
@@ -92,7 +91,7 @@ class NumberCollection implements IteratorAggregate, Countable
      * Returns all Number specification items in this collection.
      *
      * @return NumberSpecificationInterface[]
-     *  An array of Number specification items
+     *                                        An array of Number specification items
      */
     public function all()
     {
@@ -103,11 +102,11 @@ class NumberCollection implements IteratorAggregate, Countable
      * Gets a Number specification item by index.
      *
      * @param int|string $index
-     *  The Number specification item index into this collection
-     *  (@see NumberCollection::add())
+     *                          The Number specification item index into this collection
+     *                          (@see NumberCollection::add())
      *
      * @return NumberSpecificationInterface|null
-     *  A Number specification instance or null when not found
+     *                                           A Number specification instance or null when not found
      */
     public function get($index)
     {
@@ -120,14 +119,14 @@ class NumberCollection implements IteratorAggregate, Countable
      * Removes a Number specification item or an array of Number specification items by index from the collection.
      *
      * @param int|string|int[]|string[]|array $index
-     *  The Number specification item index or an array of Number specification item indexes
+     *                                               The Number specification item index or an array of Number specification item indexes
      *
      * @return NumberCollection
-     *  Fluent interface
+     *                          Fluent interface
      */
     public function remove($index)
     {
-        foreach ((array)$index as $i) {
+        foreach ((array) $index as $i) {
             unset($this->numberSpecifications[$i]);
         }
 
@@ -138,7 +137,7 @@ class NumberCollection implements IteratorAggregate, Countable
      * Clear the collection, removing all contained Number specification items.
      *
      * @return NumberCollection
-     *  Fluent interface
+     *                          Fluent interface
      */
     public function clear()
     {

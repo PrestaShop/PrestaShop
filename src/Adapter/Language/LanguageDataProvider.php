@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Language;
 use Language;
 
 /**
- * Class LanguageDataProvider is responsible for providing language data from legacy part
+ * Class LanguageDataProvider is responsible for providing language data from legacy part.
  */
 class LanguageDataProvider
 {
     /**
-     * Returns languages data
+     * Returns languages data.
      *
      * @param bool $active
      * @param bool $shopId

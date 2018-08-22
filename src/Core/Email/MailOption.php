@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Email;
 
 /**
- * Class MailMethodOption defines available email sending method options
+ * Class MailMethodOption defines available email sending method options.
  */
 final class MailOption
 {
@@ -62,7 +62,7 @@ final class MailOption
     const TYPE_BOTH = 3;
 
     /**
-     * Class should not be initialized as its responsibility is to hold mail method options
+     * Class should not be initialized as its responsibility is to hold mail method options.
      */
     private function __construct()
     {

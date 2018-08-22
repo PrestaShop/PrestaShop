@@ -26,38 +26,44 @@
 {% trans_default_domain "Admin.Shipping.Feature" %}
 
 {% block shipping_preferences_carrier_options %}
-<div class="col">
+  <div class="col-xl-10">
     <div class="card">
-        <h3 class="card-header">
-            <i class="material-icons">local_shipping</i> {{ 'Carrier options'|trans }}
-        </h3>
-        <div class="card-block">
-            <div class="card-text">
-                <div class="form-group">
-                    <label class="form-control-label">{{ 'Default carrier'|trans }}</label>
-                    {{ form_errors(carrierOptionsForm.default_carrier) }}
-                    {{ form_widget(carrierOptionsForm.default_carrier) }}
-                    <small class="form-text">{{ 'Your shop\'s default carrier'|trans({}, 'Admin.Shipping.Help') }}</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label">{{ 'Sort by'|trans({}, 'Admin.Actions') }}</label>
-                    {{ form_errors(carrierOptionsForm.carrier_default_order_by) }}
-                    {{ form_widget(carrierOptionsForm.carrier_default_order_by) }}
-                    <small class="form-text">{{ 'This will only be visible in the front office.'|trans({}, 'Admin.Shipping.Help') }}</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label">{{ 'Order by'|trans({}, 'Admin.Actions') }}</label>
-                    {{ form_errors(carrierOptionsForm.carrier_default_order_way) }}
-                    {{ form_widget(carrierOptionsForm.carrier_default_order_way) }}
-                    <small class="form-text">{{ 'This will only be visible in the front office.'|trans({}, 'Admin.Shipping.Help') }}</small>
-                </div>
+      <h3 class="card-header">
+        <i class="material-icons">local_shipping</i> {{ 'Carrier options'|trans }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Default carrier'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(carrierOptionsForm.default_carrier) }}
+              {{ form_widget(carrierOptionsForm.default_carrier) }}
+              <small class="form-text">{{ 'Your shop\'s default carrier'|trans({}, 'Admin.Shipping.Help') }}</small>
             </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Sort by'|trans({}, 'Admin.Actions') }}</label>
+            <div class="col-sm">
+              {{ form_errors(carrierOptionsForm.carrier_default_order_by) }}
+              {{ form_widget(carrierOptionsForm.carrier_default_order_by) }}
+              <small class="form-text">{{ 'This will only be visible in the front office.'|trans({}, 'Admin.Shipping.Help') }}</small>
             </div>
+          </div>
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Order by'|trans({}, 'Admin.Actions') }}</label>
+            <div class="col-sm">
+              {{ form_errors(carrierOptionsForm.carrier_default_order_way) }}
+              {{ form_widget(carrierOptionsForm.carrier_default_order_way) }}
+              <small class="form-text">{{ 'This will only be visible in the front office.'|trans({}, 'Admin.Shipping.Help') }}</small>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * ImportDirectory class is responsible for returning import directory & data related to it
+ * ImportDirectory class is responsible for returning import directory & data related to it.
  */
 final class ImportDirectory
 {
@@ -48,7 +48,7 @@ final class ImportDirectory
     }
 
     /**
-     * Get path to import directory
+     * Get path to import directory.
      *
      * @return string
      */
@@ -56,11 +56,11 @@ final class ImportDirectory
     {
         return ($this->configuration->get('_PS_HOST_MODE_') ?
                 $this->configuration->get('_PS_ROOT_DIR_') :
-                $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR;
+                $this->configuration->get('_PS_ADMIN_DIR_')) . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
     }
 
     /**
-     * Check if import directory exists
+     * Check if import directory exists.
      *
      * @return bool
      */
@@ -70,7 +70,7 @@ final class ImportDirectory
     }
 
     /**
-     * Check if import directory is writable
+     * Check if import directory is writable.
      *
      * @return bool
      */
@@ -80,7 +80,7 @@ final class ImportDirectory
     }
 
     /**
-     * Check if import directory is readable
+     * Check if import directory is readable.
      *
      * @return bool
      */
@@ -90,7 +90,7 @@ final class ImportDirectory
     }
 
     /**
-     * Use import directory object as a string
+     * Use import directory object as a string.
      *
      * @return string
      */
