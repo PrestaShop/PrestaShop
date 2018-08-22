@@ -482,6 +482,7 @@ class MetaCore extends ObjectModel
         $cms = new CMS($idCms, $idLang);
         if (Validate::isLoadedObject($cms)) {
             $row = Meta::getPresentedObject($cms);
+            $row['meta_title'] = !empty($row['head_seo_title']) ? $row['head_seo_title'] : $row['meta_title'];
 
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
