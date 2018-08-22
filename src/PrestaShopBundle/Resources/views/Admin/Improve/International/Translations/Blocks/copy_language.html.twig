@@ -38,7 +38,7 @@
     <div class="card-block row">
       <div class="card-text">
         <div class="row">
-          <div class="col">
+          <div class="col-sm">
             <div class="alert alert-info" role="alert">
               <div class="alert-text">
                 {{ 'Copies data from one language to another.'|trans({}, 'Admin.International.Help') }}<br>
@@ -53,7 +53,7 @@
           <label class="form-control-label">
             {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification')) }}
           </label>
-          <div class="col">
+          <div class="col-sm">
             <div class="input-group">
               {{ form_errors(copyLanguage.from_language) }}
               {{ form_widget(copyLanguage.from_language) }}
@@ -68,7 +68,7 @@
           <label class="form-control-label">
             {{ 'To'|trans({}, 'Admin.Global') }}
           </label>
-          <div class="col">
+          <div class="col-sm">
             <div class="input-group">
               {{ form_errors(copyLanguage.to_language) }}
               {{ form_widget(copyLanguage.to_language) }}
