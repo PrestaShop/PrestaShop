@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Information" page display
+ * Responsible of "Configure > Advanced Parameters > Information" page display.
  */
 class SystemInformationController extends FrameworkBundleAdminController
 {
@@ -42,6 +42,7 @@ class SystemInformationController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/system_information.html.twig")
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)

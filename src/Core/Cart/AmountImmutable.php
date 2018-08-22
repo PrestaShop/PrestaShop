@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,13 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 /**
  * provide objects dealing with tax ex/in-cluded amounts
- * aims to avoid using multiple values into calculation processes
+ * aims to avoid using multiple values into calculation processes.
  *
  * this class is IMMUTABLE
  */
 class AmountImmutable
 {
-
     /**
      * @var float
      */
@@ -92,7 +91,7 @@ class AmountImmutable
     }
 
     /**
-     * sums another amount object
+     * sums another amount object.
      *
      * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
      *
@@ -107,7 +106,7 @@ class AmountImmutable
     }
 
     /**
-     * substract another amount object
+     * substract another amount object.
      *
      * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
      *

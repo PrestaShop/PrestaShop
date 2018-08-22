@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 
 /**
- * Class RequestSqlManager for managing legacy RequestSqlCore model
+ * Class RequestSqlManager for managing legacy RequestSqlCore model.
  */
 class RequestSqlManager
 {
     /**
-     * Create or updating existing RequestSqlCore model from given data
+     * Create or updating existing RequestSqlCore model from given data.
      *
      * @param array $data RequestSql data
      *
@@ -58,7 +58,7 @@ class RequestSqlManager
     }
 
     /**
-     * Delete Request SQL
+     * Delete Request SQL.
      *
      * @param int[] $requestSqlIds ID of Request SQL
      *
@@ -75,7 +75,7 @@ class RequestSqlManager
                 $errors[] = [
                     'key' => 'Can\'t delete #%id%',
                     'parameters' => [
-                        '%id%' => $id
+                        '%id%' => $id,
                     ],
                     'domain' => 'Admin.Notifications.Error',
                 ];

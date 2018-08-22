@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class PaginationConfiguration is responsible for saving & loading pagination configuration for products
+ * Class PaginationConfiguration is responsible for saving & loading pagination configuration for products.
  */
 class PaginationConfiguration implements DataConfigurationInterface
 {

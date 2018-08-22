@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class CmsCategoryLangCore extends DataLangCore
 {
     // Don't replace domain in init() with $this->domain for translation parsing
@@ -39,7 +38,7 @@ class CmsCategoryLangCore extends DataLangCore
             $replacements = array(
                 'home' => 'Home',
             );
-            $value        = str_replace(array_keys($replacements), array_values($replacements), $value);
+            $value = str_replace(array_keys($replacements), array_values($replacements), $value);
         }
 
         $value = parent::getFieldValue($field, $value);

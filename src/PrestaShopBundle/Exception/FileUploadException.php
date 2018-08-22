@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Exception;
 
 /**
- * Exception that should be thrown when file uploading has failed
+ * Exception that should be thrown when file uploading has failed.
  */
 class FileUploadException extends \RuntimeException
 {

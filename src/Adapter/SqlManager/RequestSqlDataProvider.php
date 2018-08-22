@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 
 /**
- * Class RequestSqlDataProvider is responsible for providing data related to Request SQL model
+ * Class RequestSqlDataProvider is responsible for providing data related to Request SQL model.
  */
 class RequestSqlDataProvider
 {
@@ -46,7 +46,7 @@ class RequestSqlDataProvider
     }
 
     /**
-     * Get Request SQL data by given id
+     * Get Request SQL data by given id.
      *
      * @param $id
      *
@@ -66,7 +66,7 @@ class RequestSqlDataProvider
     }
 
     /**
-     * Get all database tables
+     * Get all database tables.
      *
      * @return array
      */
@@ -76,7 +76,7 @@ class RequestSqlDataProvider
     }
 
     /**
-     * Get table's columns data
+     * Get table's columns data.
      *
      * @param string $table Database table name
      *
@@ -88,7 +88,7 @@ class RequestSqlDataProvider
     }
 
     /**
-     * Get Request SQL data
+     * Get Request SQL data.
      *
      * @param int $requestSqlId ID of Request SQL
      *
@@ -116,7 +116,7 @@ class RequestSqlDataProvider
     }
 
     /**
-     * Replaces sensitive data with placeholder values
+     * Replaces sensitive data with placeholder values.
      *
      * @param array $rows
      */

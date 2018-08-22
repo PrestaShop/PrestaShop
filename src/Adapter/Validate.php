@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Validate as ValidateLegacy;
@@ -34,6 +35,7 @@ class Validate
 {
     /**
      * @param mixed $way
+     *
      * @return bool
      */
     public static function isOrderWay($way)
@@ -43,6 +45,7 @@ class Validate
 
     /**
      * @param mixed $order
+     *
      * @return bool
      */
     public static function isOrderBy($order)
@@ -52,6 +55,7 @@ class Validate
 
     /**
      * @param mixed $date
+     *
      * @return bool
      */
     public static function isDate($date)
@@ -60,7 +64,7 @@ class Validate
     }
 
     /**
-     * Check if HTML content is clean
+     * Check if HTML content is clean.
      *
      * @param string $html
      * @param bool $allowIframe

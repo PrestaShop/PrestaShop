@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\AbstractGridAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class SubmitGridAction represents grid action that can be submitted
+ * Class SubmitGridAction represents grid action that can be submitted.
  */
 final class SubmitGridAction extends AbstractGridAction
 {
@@ -53,7 +53,7 @@ final class SubmitGridAction extends AbstractGridAction
             ])
             ->setDefaults([
                 'submit_method' => 'POST',
-                'confirm_message'=> null,
+                'confirm_message' => null,
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['null', 'string'])

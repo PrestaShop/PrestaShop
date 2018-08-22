@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Mail\MailingInformation;
 use PrestaShop\PrestaShop\Adapter\Shop\ShopInformation;
 
 /**
- * Provides a summary of system information
+ * Provides a summary of system information.
  */
 class SystemInformation
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,6 +32,7 @@ class LangRepository extends EntityRepository
 {
     /**
      * @param $isoCode
+     *
      * @return array
      */
     public function getLocaleByIsoCode($isoCode)
@@ -42,6 +43,7 @@ class LangRepository extends EntityRepository
             return $isoCodes[$isoCode] = $this->findOneBy(array('isoCode' => $isoCode))
                 ->getLocale();
         }
+
         return $isoCodes[$isoCode];
     }
 }

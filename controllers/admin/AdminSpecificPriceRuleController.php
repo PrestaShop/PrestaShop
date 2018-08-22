@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,9 +27,6 @@
 /**
  * @property SpecificPriceRule $object
  */
-
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
-
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {
     public $list_reduction_type;
@@ -46,68 +43,68 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::__construct();
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
-        if ($this->id_shop = (int)Tools::getValue('shop_id')) {
+        if ($this->id_shop = (int) Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
             $_POST['id_shop'] = $this->id_shop;
         }
 
         $this->list_reduction_type = array(
             'percentage' => $this->trans('Percentage', array(), 'Admin.Global'),
-            'amount' => $this->trans('Amount', array(), 'Admin.Global')
+            'amount' => $this->trans('Amount', array(), 'Admin.Global'),
         );
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
         $this->_select = 's.name shop_name, cu.iso_code as currency_iso_code, cl.name country_name, gl.name group_name';
-        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = a.id_shop)
-		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
-		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int)$this->context->language->id.')
-		LEFT JOIN '._DB_PREFIX_.'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang='.(int)$this->context->language->id.')';
+        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = a.id_shop)
+		LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON (cu.id_currency = a.id_currency)
+		LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang=' . (int) $this->context->language->id . ')
+		LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang=' . (int) $this->context->language->id . ')';
         $this->_use_found_rows = false;
 
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->fields_list = array(
             'id_specific_price_rule' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'name' => array(
                 'title' => $this->trans('Name', array(), 'Admin.Global'),
                 'filter_key' => 'a!name',
-                'width' => 'auto'
+                'width' => 'auto',
             ),
             'shop_name' => array(
                 'title' => $this->trans('Shop', array(), 'Admin.Global'),
-                'filter_key' => 's!name'
+                'filter_key' => 's!name',
             ),
             'currency_name' => array(
                 'title' => $this->trans('Currency', array(), 'Admin.Global'),
                 'align' => 'center',
-                'filter_key' => 'cu!name'
+                'filter_key' => 'cu!name',
             ),
             'country_name' => array(
                 'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'align' => 'center',
-                'filter_key' => 'cl!name'
+                'filter_key' => 'cl!name',
             ),
             'group_name' => array(
                 'title' => $this->trans('Group', array(), 'Admin.Global'),
                 'align' => 'center',
-                'filter_key' => 'gl!name'
+                'filter_key' => 'gl!name',
             ),
             'from_quantity' => array(
                 'title' => $this->trans('From quantity', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'reduction_type' => array(
                 'title' => $this->trans('Reduction type', array(), 'Admin.Catalog.Feature'),
@@ -120,7 +117,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->trans('Reduction', array(), 'Admin.Catalog.Feature'),
                 'align' => 'center',
                 'type' => 'decimal',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'from' => array(
                 'title' => $this->trans('Beginning', array(), 'Admin.Catalog.Feature'),
@@ -130,7 +127,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'to' => array(
                 'title' => $this->trans('End', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
-                'type' => 'datetime'
+                'type' => 'datetime',
             ),
         );
     }
@@ -139,9 +136,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_specific_price_rule'] = array(
-                'href' => self::$currentIndex.'&addspecific_price_rule&token='.$this->token,
+                'href' => self::$currentIndex . '&addspecific_price_rule&token=' . $this->token,
                 'desc' => $this->trans('Add new catalog price rule', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
@@ -175,7 +172,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Catalog price rules', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'icon-dollar'
+                'icon' => 'icon-dollar',
             ),
             'input' => array(
                 array(
@@ -192,10 +189,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'options' => array(
                         'query' => Shop::getShops(),
                         'id' => 'id_shop',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                     'condition' => Shop::isFeatureActive(),
-                    'default_value' => Shop::getContextShopID()
+                    'default_value' => Shop::getContextShopID(),
                 ),
                 array(
                     'type' => 'select',
@@ -204,7 +201,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'options' => array(
                         'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->trans('All currencies', array(), 'Admin.Global'))), Currency::getCurrencies(false, true, true)),
                         'id' => 'id_currency',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -212,9 +209,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_country' => 0, 'name' => $this->trans('All countries', array(), 'Admin.Global'))), Country::getCountries((int)$this->context->language->id)),
+                        'query' => array_merge(array(0 => array('id_country' => 0, 'name' => $this->trans('All countries', array(), 'Admin.Global'))), Country::getCountries((int) $this->context->language->id)),
                         'id' => 'id_country',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -222,9 +219,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'label' => $this->trans('Group', array(), 'Admin.Global'),
                     'name' => 'id_group',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_group' => 0, 'name' => $this->trans('All groups', array(), 'Admin.Global'))), Group::getGroups((int)$this->context->language->id)),
+                        'query' => array_merge(array(0 => array('id_group' => 0, 'name' => $this->trans('All groups', array(), 'Admin.Global'))), Group::getGroups((int) $this->context->language->id)),
                         'id' => 'id_group',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -241,7 +238,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'disabled' => ($this->object->price == -1 ? 1 : 0),
                     'maxlength' => 10,
                     'suffix' => $this->context->currency->getSign('right'),
-
                 ),
                 array(
                     'type' => 'checkbox',
@@ -252,22 +248,22 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                                 'id' => 'on',
                                 'name' => $this->trans('Leave initial price', array(), 'Admin.Catalog.Feature'),
                                 'val' => '1',
-                                'checked' => '1'
+                                'checked' => '1',
                             ),
                         ),
                         'id' => 'id',
-                        'name' => 'name'
-                    )
+                        'name' => 'name',
+                    ),
                 ),
                 array(
                     'type' => 'datetime',
                     'label' => $this->trans('From', array(), 'Admin.Global'),
-                    'name' => 'from'
+                    'name' => 'from',
                 ),
                 array(
                     'type' => 'datetime',
                     'label' => $this->trans('To', array(), 'Admin.Global'),
-                    'name' => 'to'
+                    'name' => 'to',
                 ),
                 array(
                     'type' => 'select',
@@ -276,7 +272,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'options' => array(
                         'query' => array(array('reduction_type' => 'amount', 'name' => $this->trans('Amount', array(), 'Admin.Global')), array('reduction_type' => 'percentage', 'name' => $this->trans('Percentage', array(), 'Admin.Global'))),
                         'id' => 'reduction_type',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -291,7 +287,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                                     ),
                         'id' => 'val',
                         'name' => 'lab',
-                    )
+                    ),
                 ),
                 array(
                     'type' => 'text',
@@ -301,7 +297,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 ),
             ),
             'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions')
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
             ),
         );
         if (($value = $this->getFieldValue($this->object, 'price')) != -1) {
@@ -315,37 +311,38 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
             'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 6),
             'leave_bprice_on' => $price ? 0 : 1,
-            'shop_id' => (($value = $this->getFieldValue($this->object, 'id_shop')) ? $value : 1)
+            'shop_id' => (($value = $this->getFieldValue($this->object, 'id_shop')) ? $value : 1),
         );
 
         $attribute_groups = array();
-        $attributes = Attribute::getAttributes((int)$this->context->language->id);
+        $attributes = Attribute::getAttributes((int) $this->context->language->id);
         foreach ($attributes as $attribute) {
             if (!isset($attribute_groups[$attribute['id_attribute_group']])) {
-                $attribute_groups[$attribute['id_attribute_group']]  = array(
+                $attribute_groups[$attribute['id_attribute_group']] = array(
                     'id_attribute_group' => $attribute['id_attribute_group'],
-                    'name' => $attribute['attribute_group']
+                    'name' => $attribute['attribute_group'],
                 );
             }
             $attribute_groups[$attribute['id_attribute_group']]['attributes'][] = array(
                 'id_attribute' => $attribute['id_attribute'],
-                'name' => $attribute['name']
+                'name' => $attribute['name'],
             );
         }
-        $features = Feature::getFeatures((int)$this->context->language->id);
+        $features = Feature::getFeatures((int) $this->context->language->id);
         foreach ($features as &$feature) {
-            $feature['values'] = FeatureValue::getFeatureValuesWithLang((int)$this->context->language->id, $feature['id_feature'], true);
+            $feature['values'] = FeatureValue::getFeatureValuesWithLang((int) $this->context->language->id, $feature['id_feature'], true);
         }
 
         $this->tpl_form_vars = array(
-            'manufacturers' => Manufacturer::getManufacturers(false, (int)$this->context->language->id, true, false, false, false, true),
+            'manufacturers' => Manufacturer::getManufacturers(false, (int) $this->context->language->id, true, false, false, false, true),
             'suppliers' => Supplier::getSuppliers(),
             'attributes_group' => $attribute_groups,
             'features' => $features,
-            'categories' => Category::getSimpleCategories((int)$this->context->language->id),
+            'categories' => Category::getSimpleCategories((int) $this->context->language->id),
             'conditions' => $this->object->getConditions(),
-            'is_multishop' => Shop::isFeatureActive()
+            'is_multishop' => Shop::isFeatureActive(),
             );
+
         return parent::renderForm();
     }
 
@@ -353,7 +350,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     {
         $_POST['price'] = Tools::getValue('leave_bprice_on') ? '-1' : Tools::getValue('price');
         if (Validate::isLoadedObject(($object = parent::processSave()))) {
-            /** @var SpecificPriceRule $object */
+            /* @var SpecificPriceRule $object */
             $object->deleteConditions();
             foreach ($_POST as $key => $values) {
                 if (preg_match('/^condition_group_([0-9]+)$/Ui', $key, $condition_group)) {
@@ -366,6 +363,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 }
             }
             $object->apply();
+
             return $object;
         }
     }
@@ -373,6 +371,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     public function postProcess()
     {
         Tools::clearSmartyCache();
+
         return parent::postProcess();
     }
 }

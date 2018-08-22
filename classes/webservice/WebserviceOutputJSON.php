@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class WebserviceOutputJSONCore implements WebserviceOutputInterface
 {
     public $docUrl = '';
@@ -32,17 +31,17 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     protected $schemaToDisplay;
 
     /**
-     * Current entity
+     * Current entity.
      */
     protected $currentEntity;
 
     /**
-     * Current association
+     * Current association.
      */
     protected $currentAssociatedEntity;
 
     /**
-     * Json content
+     * Json content.
      */
     protected $content = array();
 
@@ -56,6 +55,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if (is_string($schema)) {
             $this->schemaToDisplay = $schema;
         }
+
         return $this;
     }
 
@@ -67,6 +67,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     public function setWsUrl($url)
     {
         $this->wsUrl = $url;
+
         return $this;
     }
 
@@ -83,6 +84,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     public function renderErrors($message, $code = null)
     {
         $this->content['errors'][] = array('code' => $code, 'message' => $message);
+
         return '';
     }
 
@@ -103,10 +105,11 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         }
         // Case 1 : fields of the current entity (not an association)
         if (!$is_association) {
-            $this->currentEntity[$field['sqlId']]  = $field['value'];
+            $this->currentEntity[$field['sqlId']] = $field['value'];
         } else { // Case 2 : fields of an associated entity to the current one
             $this->currentAssociatedEntity[] = array('name' => $field['entities_name'], 'key' => $field['sqlId'], 'value' => $field['value']);
         }
+
         return '';
     }
 
@@ -123,6 +126,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if (isset($more_attr, $more_attr['id'])) {
             $this->content[$params['objectsNodeName']][] = array('id' => $more_attr['id']);
         }
+
         return '';
     }
 
@@ -132,6 +136,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if (isset($params['objectNodeName'])) {
             $node_name = $params['objectNodeName'];
         }
+
         return $node_name;
     }
 
@@ -159,12 +164,14 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     public function overrideContent($content)
     {
         $content = json_encode($this->content, JSON_UNESCAPED_UNICODE);
+
         return (false !== $content) ? $content : '';
     }
 
     public function setLanguages($languages)
     {
         $this->languages = $languages;
+
         return $this;
     }
 
@@ -172,30 +179,37 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
     {
         return '';
     }
+
     public function renderAssociationWrapperFooter()
     {
         return '';
     }
+
     public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false)
     {
         return '';
     }
+
     public function renderAssociationFooter($obj, $params, $assoc_name)
     {
         return;
     }
+
     public function renderErrorsHeader()
     {
         return '';
     }
+
     public function renderErrorsFooter()
     {
         return '';
     }
+
     public function renderAssociationField($field)
     {
         return '';
     }
+
     public function renderi18nField($field)
     {
         return '';

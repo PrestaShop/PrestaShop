@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
@@ -32,15 +33,17 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
 {
     /**
      * Get the **Legacy** Module object from its name
-     * Used for retrocompatibility
+     * Used for retrocompatibility.
      *
-     * @param  string $name The technical module name to instanciate
-     * @return \Module|null         Instance of legacy Module, if valid
+     * @param string $name The technical module name to instanciate
+     *
+     * @return \Module|null Instance of legacy Module, if valid
      */
     public function getInstanceByName($name);
 
     /**
      * @param AddonListFilter $filter
+     *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
     public function getFilteredList(AddonListFilter $filter);
@@ -55,6 +58,7 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
      *
      * @param string $name The technical name of the module
+     *
      * @return \PrestaShop\PrestaShop\Adapter\Module\Module
      */
     public function getModule($name);

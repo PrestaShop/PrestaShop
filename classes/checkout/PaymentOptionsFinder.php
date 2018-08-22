@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use PrestaShopBundle\Service\Hook\HookFinder;
@@ -32,10 +30,10 @@ use PrestaShopBundle\Service\Hook\HookFinder;
 class PaymentOptionsFinderCore extends HookFinder
 {
     /**
-     * Collects available payment options from three different hooks
-     * 
+     * Collects available payment options from three different hooks.
+     *
      * @return array An array of available payment options
-     * 
+     *
      * @see HookFinder::find()
      */
     public function find() //getPaymentOptions()
@@ -56,14 +54,14 @@ class PaymentOptionsFinderCore extends HookFinder
         $this->hookName = 'paymentOptions';
         $this->expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Payment\PaymentOption');
         $paymentOptions = array_merge($paymentOptions, parent::find());
-        
+
         // Safety check
-        foreach ($paymentOptions as $moduleName => $paymentOption) {	
-            if (!is_array($paymentOption)) {	
-                unset($paymentOptions[$moduleName]);	
-            }	
+        foreach ($paymentOptions as $moduleName => $paymentOption) {
+            if (!is_array($paymentOption)) {
+                unset($paymentOptions[$moduleName]);
+            }
         }
-        
+
         return $paymentOptions;
     }
 
@@ -87,7 +85,7 @@ class PaymentOptionsFinderCore extends HookFinder
             return array_map(function (PaymentOption $option) use (&$id) {
                 ++$id;
                 $formattedOption = $option->toArray();
-                $formattedOption['id'] = 'payment-option-'.$id;
+                $formattedOption['id'] = 'payment-option-' . $id;
 
                 if ($formattedOption['form']) {
                     $decorator = new PaymentOptionFormDecorator();

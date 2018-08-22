@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
@@ -54,20 +53,21 @@ class Filter
     public function toArray()
     {
         return [
-            'label'             => $this->label,
-            'type'              => $this->type,
-            'active'            => $this->active,
-            'displayed'         => $this->displayed,
-            'properties'        => $this->properties,
-            'magnitude'         => $this->magnitude,
-            'value'             => $this->value,
-            'nextEncodedFacets' => $this->nextEncodedFacets
+            'label' => $this->label,
+            'type' => $this->type,
+            'active' => $this->active,
+            'displayed' => $this->displayed,
+            'properties' => $this->properties,
+            'magnitude' => $this->magnitude,
+            'value' => $this->value,
+            'nextEncodedFacets' => $this->nextEncodedFacets,
         ];
     }
 
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -79,6 +79,7 @@ class Filter
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -90,6 +91,7 @@ class Filter
     public function setProperty($name, $value)
     {
         $this->properties[$name] = $value;
+
         return $this;
     }
 
@@ -101,6 +103,7 @@ class Filter
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -111,7 +114,8 @@ class Filter
 
     public function setMagnitude($magnitude)
     {
-        $this->magnitude = (int)$magnitude;
+        $this->magnitude = (int) $magnitude;
+
         return $this;
     }
 
@@ -123,6 +127,7 @@ class Filter
     public function setActive($active = true)
     {
         $this->active = $active;
+
         return $this;
     }
 
@@ -134,6 +139,7 @@ class Filter
     public function setDisplayed($displayed = true)
     {
         $this->displayed = $displayed;
+
         return $this;
     }
 
@@ -145,6 +151,7 @@ class Filter
     public function setNextEncodedFacets($nextEncodedFacets)
     {
         $this->nextEncodedFacets = $nextEncodedFacets;
+
         return $this;
     }
 

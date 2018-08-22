@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -48,23 +48,22 @@ class MemcacheServerManager
     public function __construct(Connection $connection, $dbPrefix)
     {
         $this->connection = $connection;
-        $this->tableName = $dbPrefix.'memcached_servers';
+        $this->tableName = $dbPrefix . 'memcached_servers';
     }
 
     /**
-     * Add a memcache server
+     * Add a memcache server.
      *
      * @param string $serverIp
      * @param int $serverPort
      * @param int $serverWeight
-     * @return void
      */
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
-        $this->connection->executeUpdate('INSERT INTO '. $this->tableName .' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
+        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
            'serverIp' => $serverIp,
            'serverPort' => (int) $serverPort,
-           'serverWeight' => (int) $serverWeight
+           'serverWeight' => (int) $serverWeight,
         ));
 
         return array(
@@ -76,7 +75,7 @@ class MemcacheServerManager
     }
 
     /**
-     * Test if a Memcache configuration is valid
+     * Test if a Memcache configuration is valid.
      *
      * @param string $serverIp
      * @param string @serverPort
@@ -96,9 +95,10 @@ class MemcacheServerManager
     }
 
     /**
-     * Delete a memcache server (a deletion returns the number of rows deleted)
+     * Delete a memcache server (a deletion returns the number of rows deleted).
      *
      * @param int $serverId_server id (in database)
+     *
      * @return bool
      */
     public function deleteServer($serverId)
@@ -109,12 +109,12 @@ class MemcacheServerManager
     }
 
     /**
-     * Get list of memcached servers
+     * Get list of memcached servers.
      *
      * @return array
      */
     public function getServers()
     {
-        return $this->connection->fetchAll('SELECT * FROM '. $this->tableName, array());
+        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, array());
     }
 }

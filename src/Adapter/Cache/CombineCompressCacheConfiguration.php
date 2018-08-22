@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
 
 /**
- * This class manages CCC features configuration for a Shop
+ * This class manages CCC features configuration for a Shop.
  */
 class CombineCompressCacheConfiguration implements DataConfigurationInterface
 {
@@ -104,8 +104,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
                         'key' => 'To use Smarty Cache, the directory %directorypath% must be writable.',
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array(
-                            '%directorypath%' => $this->getThemeCacheFolder()
-                        )
+                            '%directorypath%' => $this->getThemeCacheFolder(),
+                        ),
                     );
                 }
             }
@@ -142,7 +142,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Creates Cache folder for the active theme
+     * Creates Cache folder for the active theme.
+     *
      * @return bool
      */
     private function createThemeCacheFolder()
@@ -158,7 +159,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Update Cache version of assets if needed
+     * Update Cache version of assets if needed.
+     *
      * @param array the configuration
      */
     private function updateCachesVersionsIfNeeded(array $configuration)
@@ -183,8 +185,10 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Creates .htaccess if Apache optimization feature is enabled
+     * Creates .htaccess if Apache optimization feature is enabled.
+     *
      * @param bool $enabled
+     *
      * @return array not empty in case of error
      */
     private function manageApacheOptimization($enabled)
@@ -199,8 +203,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
                 $errors = array(
                     'key' => 'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
                     'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' =>
-                    array(
+                    'parameters' => array(
                         '[1]' => '<ul>',
                         '[/1]' => '</ul>',
                         '[2]' => '<li>',

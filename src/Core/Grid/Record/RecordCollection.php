@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Record;
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class RecordCollection is a wrapper around rows from database
+ * Class RecordCollection is a wrapper around rows from database.
  */
 final class RecordCollection extends AbstractCollection implements RecordCollectionInterface
 {

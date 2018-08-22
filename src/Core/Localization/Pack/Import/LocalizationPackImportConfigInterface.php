@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
- * Interface LocalizationPackImportConfigInterface defines
+ * Interface LocalizationPackImportConfigInterface defines.
  */
 interface LocalizationPackImportConfigInterface
 {
     /**
-     * Available content to import
+     * Available content to import.
      */
     const CONTENT_STATES = 'states';
     const CONTENT_TAXES = 'taxes';
@@ -42,21 +42,21 @@ interface LocalizationPackImportConfigInterface
     const CONTENT_GROUPS = 'groups';
 
     /**
-     * Get country ISO code
+     * Get country ISO code.
      *
      * @return string
      */
     public function getCountryIsoCode();
 
     /**
-     * Get content to import
+     * Get content to import.
      *
      * @return array
      */
     public function getContentToImport();
 
     /**
-     * Whether pack data should be downloaded
+     * Whether pack data should be downloaded.
      *
      * @return bool
      */

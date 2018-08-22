@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class RequestSqlCore
+ * Class RequestSqlCore.
  */
 class RequestSqlCore extends ObjectModel
 {
@@ -63,7 +63,7 @@ class RequestSqlCore extends ObjectModel
             'DESCRIBE', 'EXPLAIN', 'USE', 'HELP', 'SET', 'DUPLICATE', 'VALUES',  'INTO', 'RENAME', 'CALL', 'PROCEDURE',  'FUNCTION', 'DATABASE', 'SERVER',
             'LOGFILE', 'DEFINER', 'RETURNS', 'EVENT', 'TABLESPACE', 'VIEW', 'TRIGGER', 'DATA', 'DO', 'PASSWORD', 'USER', 'PLUGIN', 'FLUSH', 'KILL',
             'RESET', 'START', 'STOP', 'PURGE', 'EXECUTE', 'PREPARE', 'DEALLOCATE', 'LOCK', 'USING', 'DROP', 'FOR', 'UPDATE', 'BEGIN', 'BY', 'ALL', 'SHARE',
-            'MODE', 'TO','KEY', 'DISTINCTROW', 'DISTINCT',  'HIGH_PRIORITY', 'LOW_PRIORITY', 'DELAYED', 'IGNORE', 'FORCE', 'STRAIGHT_JOIN',
+            'MODE', 'TO', 'KEY', 'DISTINCTROW', 'DISTINCT',  'HIGH_PRIORITY', 'LOW_PRIORITY', 'DELAYED', 'IGNORE', 'FORCE', 'STRAIGHT_JOIN',
             'SQL_SMALL_RESULT', 'SQL_BIG_RESULT', 'QUICK', 'SQL_BUFFER_RESULT', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS', 'WITH',
         ),
     );
@@ -77,13 +77,13 @@ class RequestSqlCore extends ObjectModel
     public $error_sql = array();
 
     /**
-     * Get list of request SQL
+     * Get list of request SQL.
      *
      * @return array|bool
      */
     public static function getRequestSql()
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'request_sql` ORDER BY `id_request_sql`')) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'request_sql` ORDER BY `id_request_sql`')) {
             return false;
         }
 
@@ -96,7 +96,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Get list of request SQL by id request
+     * Get list of request SQL by id request.
      *
      * @param int $id
      *
@@ -104,12 +104,12 @@ class RequestSqlCore extends ObjectModel
      */
     public static function getRequestSqlById($id)
     {
-        return Db::getInstance()->executeS('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = '.(int) $id);
+        return Db::getInstance()->executeS('SELECT `sql` FROM `' . _DB_PREFIX_ . 'request_sql` WHERE `id_request_sql` = ' . (int) $id);
     }
 
     /**
      * Call the parserSQL() method in Tools class
-     * Cut the request in table for check it
+     * Cut the request in table for check it.
      *
      * @param string $sql
      *
@@ -121,7 +121,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check if the parsing of the SQL request is good or not
+     * Check if the parsing of the SQL request is good or not.
      *
      * @param array $tab
      * @param bool $in
@@ -148,7 +148,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Cut the request for check each cutting
+     * Cut the request for check each cutting.
      *
      * @param $tab
      * @param $in
@@ -196,7 +196,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Get list of all tables
+     * Get list of all tables.
      *
      * @return array
      */
@@ -212,7 +212,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Get list of all attributes by an table
+     * Get list of all attributes by an table.
      *
      * @param $table
      *
@@ -220,11 +220,11 @@ class RequestSqlCore extends ObjectModel
      */
     public function getAttributesByTable($table)
     {
-        return Db::getInstance()->executeS('DESCRIBE '.pSQL($table));
+        return Db::getInstance()->executeS('DESCRIBE ' . pSQL($table));
     }
 
     /**
-     * Cut an join sentence
+     * Cut an join sentence.
      *
      * @param $attrs
      * @param $from
@@ -248,7 +248,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Cut an attribute with or without the alias
+     * Cut an attribute with or without the alias.
      *
      * @param $attr
      * @param $from
@@ -278,11 +278,12 @@ class RequestSqlCore extends ObjectModel
                 );
             }
         }
+
         return false;
     }
 
     /**
-     * Get name of table by alias
+     * Get name of table by alias.
      *
      * @param bool $alias
      * @param $tables
@@ -311,18 +312,20 @@ class RequestSqlCore extends ObjectModel
             }
 
             $this->error_sql['returnNameTable'] = false;
+
             return false;
         } else {
             $tab = array();
             foreach ($tables as $table) {
                 $tab[] = $table['table'];
             }
+
             return $tab;
         }
     }
 
     /**
-     * Check if an attributes exists in a table
+     * Check if an attributes exists in a table.
      *
      * @param string $attr
      * @param $table
@@ -348,7 +351,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check if all required sentence existing
+     * Check if all required sentence existing.
      *
      * @param $tab
      *
@@ -368,7 +371,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check if an unauthorized existing in an array
+     * Check if an unauthorized existing in an array.
      *
      * @param string $tab
      *
@@ -388,7 +391,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "FROM" sentence
+     * Check a "FROM" sentence.
      *
      * @param string $from
      *
@@ -397,7 +400,7 @@ class RequestSqlCore extends ObjectModel
     public function checkedFrom($from)
     {
         $nb = count($from);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $table = $from[$i];
 
             if (isset($table['table']) && !in_array(str_replace('`', '', $table['table']), $this->getTables())) {
@@ -432,7 +435,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "SELECT" sentence
+     * Check a "SELECT" sentence.
      *
      * @param string $select
      * @param string $from
@@ -443,7 +446,7 @@ class RequestSqlCore extends ObjectModel
     public function checkedSelect($select, $from, $in = false)
     {
         $nb = count($select);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $attribut = $select[$i];
             if ($attribut['base_expr'] != '*' && !preg_match('/\.*$/', $attribut['base_expr'])) {
                 if ($attribut['expr_type'] == 'colref') {
@@ -476,7 +479,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "WHERE" sentence
+     * Check a "WHERE" sentence.
      *
      * @param string $where
      * @param string $from
@@ -487,7 +490,7 @@ class RequestSqlCore extends ObjectModel
     public function checkedWhere($where, $from, $sql)
     {
         $nb = count($where);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $attribut = $where[$i];
             if ($attribut['expr_type'] == 'colref' || $attribut['expr_type'] == 'reserved') {
                 if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from)) {
@@ -524,7 +527,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "HAVING" sentence
+     * Check a "HAVING" sentence.
      *
      * @param string $having
      * @param string $from
@@ -534,7 +537,7 @@ class RequestSqlCore extends ObjectModel
     public function checkedHaving($having, $from)
     {
         $nb = count($having);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $attribut = $having[$i];
             if ($attribut['expr_type'] == 'colref') {
                 if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from)) {
@@ -569,7 +572,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "ORDER" sentence
+     * Check a "ORDER" sentence.
      *
      * @param string $order
      * @param string $from
@@ -603,7 +606,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "GROUP BY" sentence
+     * Check a "GROUP BY" sentence.
      *
      * @param string $group
      * @param string $from
@@ -637,7 +640,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "LIMIT" sentence
+     * Check a "LIMIT" sentence.
      *
      * @param string $limit
      *

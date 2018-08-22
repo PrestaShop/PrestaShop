@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 class LocaleData
 {
     /**
-     * The locale code for this data (either language code or IETF tag)
+     * The locale code for this data (either language code or IETF tag).
      *
      * @var string
      */
@@ -38,21 +38,21 @@ class LocaleData
 
     /**
      * List of available numbering systems
-     * Array of strings (codes)
+     * Array of strings (codes).
      *
      * @var string[]
      */
     public $numberingSystems;
 
     /**
-     * Default numbering system
+     * Default numbering system.
      *
      * @var string
      */
     public $defaultNumberingSystem;
 
     /**
-     * Used to suppress groupings below a certain value
+     * Used to suppress groupings below a certain value.
      *
      * 1 -> grouping starts at 4 figures integers (1,000 and more)
      * 2 -> grouping starts at 5 figures integers (10,000 and more)
@@ -62,7 +62,7 @@ class LocaleData
     public $minimumGroupingDigits;
 
     /**
-     * Collection of all available symbols list (by numbering system)
+     * Collection of all available symbols list (by numbering system).
      *
      * @var NumberSymbolsData[]
      */
@@ -70,7 +70,7 @@ class LocaleData
 
     /**
      * Collection of all available decimal patterns (by numbering system)
-     * Array of strings (patterns)
+     * Array of strings (patterns).
      *
      * @var string[]
      */
@@ -78,7 +78,7 @@ class LocaleData
 
     /**
      * Collection of all available percent patterns (by numbering system)
-     * Array of strings (patterns)
+     * Array of strings (patterns).
      *
      * @var string[]
      */
@@ -86,20 +86,20 @@ class LocaleData
 
     /**
      * Collection of all available currency patterns (by numbering system)
-     * Array of strings (patterns)
+     * Array of strings (patterns).
      *
      * @var string[]
      */
     public $currencyPatterns;
 
     /**
-     * Override this object's data with another LocaleData object
+     * Override this object's data with another LocaleData object.
      *
      * @param LocaleData $localeData
-     *  Locale data to use for the override
+     *                               Locale data to use for the override
      *
      * @return $this
-     *  Fluent interface
+     *               Fluent interface
      */
     public function overrideWith(LocaleData $localeData)
     {

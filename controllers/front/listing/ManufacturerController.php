@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -78,7 +78,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->assignManufacturer();
                 $this->label = $this->trans(
                     'List of products by brand %brand_name%', array(
-                        '%brand_name%' => $this->manufacturer->name
+                        '%brand_name%' => $this->manufacturer->name,
                         ),
                     'Shop.Theme.Catalog'
                 );
@@ -105,7 +105,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $query
             ->setIdManufacturer($this->manufacturer->id)
             ->setSortOrder(new SortOrder('product', Tools::getProductsOrder('by'), Tools::getProductsOrder('way')));
-        ;
 
         return $query;
     }

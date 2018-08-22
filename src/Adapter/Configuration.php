@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -87,10 +88,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
+     * \Configuration.
      *
      * @param string $key
      * @param mixed $default The default value if the parameter key does not exist
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -113,13 +115,14 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Set configuration value
+     * Set configuration value.
      *
      * @param string $key
-     * @param mixed  $value
-     * @param array  $options Options
+     * @param mixed $value
+     * @param array $options Options
      *
      * @return $this
+     *
      * @throws \Exception
      */
     public function set($key, $value, array $options = [])
@@ -144,7 +147,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
@@ -162,6 +165,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * Removes a configuration key.
      *
      * @param type $key
+     *
      * @return type
      */
     public function remove($key)
@@ -171,16 +175,19 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
     }
 
     /**
-     * Unset configuration value
+     * Unset configuration value.
+     *
      * @param $key
+     *
      * @return $this
+     *
      * @throws \Exception
      *
      * @deprecated since version 1.7.4.0
@@ -207,7 +214,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Feature feature is active or not
+     * Return if Feature feature is active or not.
+     *
      * @return bool
      */
     public function featureIsActive()
@@ -216,7 +224,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Combination feature is active or not
+     * Return if Combination feature is active or not.
+     *
      * @return bool
      */
     public function combinationIsActive()
@@ -226,6 +235,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Restrict updates of a piece of configuration to a single shop.
+     *
      * @param Shop $shop
      */
     public function restrictUpdatesTo(Shop $shop)

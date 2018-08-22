@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
 use PrestaShop\PrestaShop\Core\Filter\FilterInterface;
 
 /**
- * Filters the main front end object ("prestashop" on your javascript console)
+ * Filters the main front end object ("prestashop" on your javascript console).
  */
 class MainFilter implements FilterInterface
 {
@@ -43,7 +43,8 @@ class MainFilter implements FilterInterface
     /**
      * @param array $filters FilterInterface[] filters, indexed by key to filter
      */
-    public function __construct(array $filters) {
+    public function __construct(array $filters)
+    {
         $this->filters = $filters;
     }
 
@@ -56,7 +57,6 @@ class MainFilter implements FilterInterface
     {
         foreach ($this->filters as $key => $filter) {
             if (isset($subject[$key]) && $filter instanceof FilterInterface) {
-
                 if ($filter instanceof CollectionFilter && !is_array($subject[$key])) {
                     continue;
                 }
