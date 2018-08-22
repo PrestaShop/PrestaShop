@@ -134,6 +134,7 @@ class AdminCmsControllerCore extends AdminController
                         'html' => $html_categories,
                     ),
                 ),
+                array(
                     'type' => 'text',
                     'label' => $this->trans('Title', array(), 'Admin.Global'),
                     'name' => 'cms_title',
