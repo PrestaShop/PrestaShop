@@ -48,7 +48,7 @@ class SpecificPriceFormHandler {
    */
   loadAndDisplayExistingSpecificPricesList() {
     var listContainer = $('#js-specific-price-list');
-    var url = listContainer.attr('data').replace(/list\/\d+/, 'list/' + this.getProductId());
+    var url = listContainer.data('listingUrl').replace(/list\/\d+/, 'list/' + this.getProductId());
 
     $.ajax({
       type: 'GET',
@@ -429,7 +429,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   openEditPriceModalAndLoadForm(specificPriceId) {
-    const url = $('#js-specific-price-list').data('actionEdit').replace(/get-form\/\d+/, 'get-form/' + specificPriceId);
+    const url = $('#js-specific-price-list').data('actionEdit').replace(/form\/\d+/, 'form/' + specificPriceId);
 
     $('#edit-specific-price-modal').modal("show");
 

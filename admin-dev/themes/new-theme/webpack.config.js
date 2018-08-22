@@ -71,7 +71,7 @@ let config = {
       './js/pages/localization'
     ],
     invoices: [
-        './js/pages/invoices',
+      './js/pages/invoices',
     ],
     geolocation: [
       './js/pages/geolocation',
@@ -86,7 +86,7 @@ let config = {
       './js/pages/sql-manager',
     ],
     catalog_product: [
-        './js/pages/catalog/product'
+      './js/pages/catalog/product'
     ]
   },
   output: {

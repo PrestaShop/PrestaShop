@@ -23,11 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use DateTime;
-use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice as SpecificPriceFormType;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityDataInconsistencyException;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
+use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice as SpecificPriceFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +66,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         //get product
         $product = $productAdapter->getProduct((int)$idProduct);
         if (!is_object($product) || empty($product->id)) {
-            $response->setStatusCode(400);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
             return $response;
         }
 
@@ -95,7 +99,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         if (!empty($errors)) {
             $response->setData(implode(', ', $errors));
-            $response->setStatusCode(400);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
 
         return $response;
@@ -116,8 +120,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         try {
             $price = $adminProductWrapper->getSpecificPriceDataById($idSpecificPrice);
-        } catch (\PrestaShopObjectNotFoundException $e) {
-            $message = $this->trans('Cannot find specific price %*price', 'Admin.Catalog.Notification', ['price' => $idSpecificPrice]);
+        } catch (EntityNotFoundException $e) {
+            $message = $this->trans(
+                'Cannot find specific price %price%',
+                'Admin.Catalog.Notification',
+                ['price' => $idSpecificPrice]
+            );
             return new Response($message, Response::HTTP_BAD_REQUEST);
         }
         $formData = $this->formatSpecificPriceToPrefillForm($idSpecificPrice, $price);
@@ -154,10 +162,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function updateAction($idSpecificPrice, Request $request)
     {
         $response = new JsonResponse();
-
-        // @todo: check it works
-        $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
         $formData = $request->get('form');
+
+        $idProduct = isset($formData['id_product']) ? $formData['id_product'] : null;
         $formValues = $formData['modal'];
 
         /** @var AdminProductWrapper $adminProductWrapper */
@@ -166,7 +173,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         if (!empty($errors)) {
             $response->setData(implode(', ', $errors));
-            $response->setStatusCode(400);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
 
         return $response;
@@ -189,7 +196,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);
 
         if ($res['status'] == 'error') {
-            $response->setStatusCode(400);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
 
         $response->setData($res['message']);
@@ -233,9 +240,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $cleanedFormData = array_map(function ($item) {
             if (!$item) {
                 return null;
-            } else {
-                return $item;
             }
+
+            return $item;
         }, $formattedFormData);
         return ['modal' => $cleanedFormData];
     }
@@ -254,8 +261,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
         try {
             $dateTime = new DateTime($dateAsString);
-        } catch (\Exception $e) {
-            throw new \PrestaShopDatabaseExceptionCore(sprintf('Found bad date for specific price: %s', $dateAsString));
+        } catch (Exception $e) {
+            throw new EntityDataInconsistencyException(sprintf('Found bad date for specific price: %s', $dateAsString));
         }
         return $dateTime->format('Y-m-d');
     }

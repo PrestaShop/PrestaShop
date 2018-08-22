@@ -9,7 +9,7 @@ admin_specific_price_list:
         idProduct: \d+
 
 admin_get_specific_price_update_form:
-    path:     /get-form/{idSpecificPrice}/
+    path:     /form/{idSpecificPrice}/
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\SpecificPriceController::getUpdateFormAction

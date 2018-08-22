@@ -38,6 +38,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ProductPrice extends CommonAbstractType
 {
+    // When the form is used to create, the product does not yet exists
+    // however the ID is required for some fields so we use a default one:
+    const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
+
     private $translator;
     private $tax_rules;
     private $tax_rules_rates;
@@ -224,7 +228,7 @@ class ProductPrice extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'id_product' => 1,
+            'id_product' => self::DEFAULT_PRODUCT_ID_FOR_FORM_CREATION,
         ]);
     }
 

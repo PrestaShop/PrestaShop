@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use SpecificPrice;
 use Customer;
 use Combination;
@@ -498,7 +499,7 @@ class AdminProductWrapper
     {
         $price = new SpecificPrice($id);
         if (null === $price->id) {
-            throw new PrestaShopObjectNotFoundException(sprintf('Cannot find specific price with id %d', $id));
+            throw new EntityNotFoundException(sprintf('Cannot find specific price with id %d', $id));
         }
         return $price;
     }
