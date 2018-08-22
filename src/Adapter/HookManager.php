@@ -69,9 +69,12 @@ class HookManager
             $hook_args = array_merge(array('request' => $request), $hook_args);
 
             // If Symfony application is booted, we use it to dispatch Hooks
-            $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
+            $hookDispatcher = $sfContainer->get('prestashop.core.hook.dispatcher');
 
-            return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
+            return $hookDispatcher
+                ->dispatchRenderingWithParameters($hook_name, $hook_args)
+                ->getContent()
+            ;
         } else {
             try {
                 return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);

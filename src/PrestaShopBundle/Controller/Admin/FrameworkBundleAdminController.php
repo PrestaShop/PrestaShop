@@ -147,7 +147,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function dispatchHook($hookName, array $parameters)
     {
-        $this->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
+        $this->get('prestashop.core.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
     }
 
     /**
@@ -164,7 +164,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function renderHook($hookName, array $parameters)
     {
-        return $this->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
+        return $this->get('prestashop.core.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
 
     /**
@@ -195,8 +195,6 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Get the old but still useful context.
-     *
-     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     protected function getContext()
     {

@@ -24,24 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Hook;
-
-use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
+namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * This dispatcher is used to trigger hook listeners.
- *
- * The dispatch process cannot be stopped like a common EventDispatcher.
- *
- * If the event is a RenderingHookEvent, then the final result is
- * an array of contents accessed from $event->getContent().
- *
- * @deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher instead.
+ * Class Hook defines hook.
  */
-class HookDispatcher extends HookDispatcherAdapter
+final class Hook implements HookInterface
 {
-    public function __construct()
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
+     * @param string $name
+     * @param array $parameters
+     */
+    public function __construct($name, array $parameters = [])
     {
-        trigger_error('Deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Core\Hook\HookDispatcher instead.', E_USER_DEPRECATED);
+        $this->name = $name;
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 }
