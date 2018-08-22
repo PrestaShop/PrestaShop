@@ -242,7 +242,8 @@ class AdminStoresControllerCore extends AdminController
                     'name' => 'note',
                     'lang' => true,
                     'cols' => 42,
-                    'rows' => 4
+                    'rows' => 10,
+                    'autoload_rte' => true
                 ),
                 array(
                     'type' => 'switch',

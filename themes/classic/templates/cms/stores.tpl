@@ -65,7 +65,7 @@
           <div class="store-item-footer divide-top">
             <div class="card-block">
               {if $store.note}
-                <p class="text-justify">{$store.note}<p>
+                <p class="text-justify">{$store.note nofilter}<p>
               {/if}
             </div>
             <ul class="card-block">
