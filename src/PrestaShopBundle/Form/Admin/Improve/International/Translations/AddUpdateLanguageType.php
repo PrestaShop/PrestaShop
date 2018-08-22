@@ -44,6 +44,11 @@ class AddUpdateLanguageType extends TranslatorAwareType
      */
     private $nonInstalledLocalizationChoiceProvider;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $nonInstalledLocalizationChoiceProvider
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -53,6 +58,9 @@ class AddUpdateLanguageType extends TranslatorAwareType
         $this->nonInstalledLocalizationChoiceProvider = $nonInstalledLocalizationChoiceProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('iso_localization_pack', ChoiceType::class, [
@@ -63,6 +71,9 @@ class AddUpdateLanguageType extends TranslatorAwareType
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

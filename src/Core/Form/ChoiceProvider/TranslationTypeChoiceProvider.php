@@ -48,9 +48,7 @@ final class TranslationTypeChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get translation type choices
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getChoices()
     {
