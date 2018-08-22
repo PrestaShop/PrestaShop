@@ -191,3 +191,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider'
         arguments:
             - '@prestashop.adapter.legacy.context'
+
+    prestashop.adapter.multi_lang_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\MultiLangConfiguration'
