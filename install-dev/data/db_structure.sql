@@ -402,6 +402,7 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   `name` varchar(128) NOT NULL,
   `description` text,
   `link_rewrite` varchar(128) NOT NULL,
+  `cms_title` varchar(128) DEFAULT NULL,
   `meta_title` varchar(128) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(255) DEFAULT NULL,

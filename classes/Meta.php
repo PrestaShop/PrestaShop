@@ -466,7 +466,7 @@ class MetaCore extends ObjectModel
     /**
      * Get CMS meta tags
      *
-     * @param int          $idCms
+     * @param int    $idCms
      * @param int    $idLang
      * @param string $pageName
      *
@@ -479,7 +479,7 @@ class MetaCore extends ObjectModel
         $cms = new CMS($idCms, $idLang);
         if (Validate::isLoadedObject($cms)) {
             $row = Meta::getPresentedObject($cms);
-
+            $row['meta_title'] = empty($row['meta_title']) ? $row['cms_title'] : $row['meta_title'];
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
 

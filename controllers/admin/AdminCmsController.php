@@ -58,7 +58,8 @@ class AdminCmsControllerCore extends AdminController
         $this->fields_list = array(
             'id_cms' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'link_rewrite' => array('title' => $this->trans('URL', array(), 'Admin.Global')),
-            'meta_title' => array('title' => $this->trans('Title', array(), 'Admin.Global'), 'filter_key' => 'b!meta_title'),
+            'cms_title' => array('title' => $this->trans('Title', array(), 'Admin.Global'), 'filter_key' => 'b!cms_title'),
+            'meta_title' => array('title' => $this->trans('Meta title', array(), 'Admin.Global'), 'filter_key' => 'b!meta_title'),
             'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'),'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
             'active' => array('title' => $this->trans('Displayed', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'class' => 'fixed-width-sm', 'type' => 'bool', 'orderby' => false)
         );
@@ -133,13 +134,21 @@ class AdminCmsControllerCore extends AdminController
                         'html' => $html_categories,
                     ),
                 ),
+                    'type' => 'text',
+                    'label' => $this->trans('Title', array(), 'Admin.Global'),
+                    'name' => 'cms_title',
+                    'id' => 'name', // for copyMeta2friendlyURL compatibility
+                    'lang' => true,
+                    'required' => true,
+                    'class' => 'copyMeta2friendlyURL',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
+                ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Meta title', array(), 'Admin.Global'),
                     'name' => 'meta_title',
                     'id' => 'name', // for copyMeta2friendlyURL compatibility
                     'lang' => true,
-                    'required' => true,
                     'class' => 'copyMeta2friendlyURL',
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
                 ),
