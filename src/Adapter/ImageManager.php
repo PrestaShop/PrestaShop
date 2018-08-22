@@ -55,11 +55,21 @@ class ImageManager
      * @param string $imageType
      * @param string $tableName
      * @param string $imageDir
+     * @param $productId
      * @return string The HTML < img > tag
      */
-    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = 'p')
-    {
-        $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir);
+    public function getThumbnailForListing(
+        $imageId,
+        $imageType = 'jpg',
+        $tableName = 'product',
+        $imageDir = 'p',
+        $productId = null
+    ) {
+        if ($productId === null) {
+            $productId = $imageId;
+        }
+
+        $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir, $productId);
 
         // because legacy uses relative path to reach a directory under root directory...
         $replacement = 'src="'.$this->legacyContext->getRootUrl();
@@ -91,15 +101,16 @@ class ImageManager
      * @param string $imageType
      * @param string $tableName
      * @param string $imageDir
+     * @param $productId
      * @return string
      */
-    private function getThumbnailTag($imageId, $imageType, $tableName, $imageDir)
+    private function getThumbnailTag($imageId, $imageType, $tableName, $imageDir, $productId)
     {
         $imagePath = $this->getImagePath($imageId, $imageType, $tableName, $imageDir);
 
         return LegacyImageManager::thumbnail(
             $imagePath,
-            $this->makeCachedImageName($imageId, $imageType, $tableName),
+            $this->makeCachedImageName($productId, $imageType, $tableName),
             45,
             $imageType
         );

@@ -370,7 +370,13 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 $product['price'] = Tools::displayPrice($product['price'], $currency);
                 $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);
             }
-            $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
+            $product['image'] = $this->imageManager->getThumbnailForListing(
+                $product['id_image'],
+                'jpg',
+                'product',
+                'p',
+                $product['id_product']
+            );
             $product['image_link'] = Context::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);
         }
 
