@@ -376,6 +376,7 @@ CREATE TABLE `PREFIX_cms_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `meta_title` varchar(128) NOT NULL,
+  `head_seo_title` varchar(128) DEFAULT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `content` longtext,
