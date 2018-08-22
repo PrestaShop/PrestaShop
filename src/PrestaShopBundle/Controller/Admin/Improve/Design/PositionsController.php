@@ -223,7 +223,6 @@ class PositionsController extends FrameworkBundleAdminController
             if (!$validateAdapter->isLoadedObject($module)) {
                 $errors[] = $this->trans(
                     'This module cannot be loaded.',
-                    [],
                     'Admin.Modules.Notification'
                 );
                 continue;
@@ -232,7 +231,6 @@ class PositionsController extends FrameworkBundleAdminController
             if (!$hookId || !$validateAdapter->isLoadedObject($hook)) {
                 $errors[] = $this->trans(
                     'Hook cannot be loaded.',
-                    [],
                     'Admin.Modules.Notification'
                 );
                 continue;
@@ -241,7 +239,6 @@ class PositionsController extends FrameworkBundleAdminController
             if (!$module->unregisterHook($hookId, $context) || !$module->unregisterExceptions($hookId, $context)) {
                 $errors[] = $this->trans(
                     'An error occurred while deleting the module from its hook.',
-                    [],
                     'Admin.Modules.Notification'
                 );
             }
