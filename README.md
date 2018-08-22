@@ -142,7 +142,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
 [install-guide]: http://doc.prestashop.com/display/PS17/Installing+PrestaShop
 [devdocs]: https://devdocs.prestashop.com/
-[create-issue]: http://forge.prestashop.com/secure/CreateIssue%21default.jspa?selectedProjectId=11322&issuetype=1
+[create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
 [reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/
 [modules-devdocs]: https://devdocs.prestashop.com/1.7/modules/
 [themes-devdocs]: https://devdocs.prestashop.com/1.7/themes/
