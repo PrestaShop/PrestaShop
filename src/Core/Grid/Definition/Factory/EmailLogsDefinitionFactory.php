@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -46,17 +46,17 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class EmailLogsDefinitionFactory is responsible for creating email logs definition
+ * Class EmailLogsDefinitionFactory is responsible for creating email logs definition.
  */
 final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string the URL to reset Grid filters.
+     * @var string the URL to reset Grid filters
      */
     private $resetActionUrl;
 
     /**
-     * @var string the URL for redirection.
+     * @var string the URL for redirection
      */
     private $redirectionUrl;
 
@@ -156,8 +156,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                                     'Admin.Notifications.Warning'
                                 ),
                             ])
-                        )
-                    ,
+                        ),
                 ])
             )
         ;
@@ -230,7 +229,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('delete')
                 ->setOptions([
                     'submit_route' => 'admin_delete_all_email_logs',
-                    'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning')
+                    'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
                 ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))
@@ -258,7 +257,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_delete_selected_email_logs',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AttachmentControllerCore extends FrontController
 {
-
     public function postProcess()
     {
         $a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
@@ -41,11 +39,11 @@ class AttachmentControllerCore extends FrontController
         }
 
         header('Content-Transfer-Encoding: binary');
-        header('Content-Type: '.$a->mime);
-        header('Content-Length: '.filesize(_PS_DOWNLOAD_DIR_.$a->file));
-        header('Content-Disposition: attachment; filename="'.utf8_decode($a->file_name).'"');
+        header('Content-Type: ' . $a->mime);
+        header('Content-Length: ' . filesize(_PS_DOWNLOAD_DIR_ . $a->file));
+        header('Content-Disposition: attachment; filename="' . utf8_decode($a->file_name) . '"');
         @set_time_limit(0);
-        $this->readfileChunked(_PS_DOWNLOAD_DIR_.$a->file);
+        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . $a->file);
         exit;
     }
 
@@ -55,7 +53,7 @@ class AttachmentControllerCore extends FrontController
     public function readfileChunked($filename, $retbytes = true)
     {
         // how many bytes per chunk
-        $chunksize = 1*(1024*1024);
+        $chunksize = 1 * (1024 * 1024);
         $buffer = '';
         $totalBytes = 0;
 
@@ -77,6 +75,7 @@ class AttachmentControllerCore extends FrontController
             // return num. bytes delivered like readfile() does.
             return $totalBytes;
         }
+
         return $status;
     }
 }

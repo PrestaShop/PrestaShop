@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,7 +42,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class RequestSqlGridDefinitionFactory is responsible for creating RequestSql grid definition
+ * Class RequestSqlGridDefinitionFactory is responsible for creating RequestSql grid definition.
  */
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
 {

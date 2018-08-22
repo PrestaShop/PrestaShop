@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -51,7 +52,7 @@ class FrameworkBundleAdminController extends Controller
     protected $layoutTitle;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -93,6 +94,7 @@ class FrameworkBundleAdminController extends Controller
      * @param Form $form The form
      *
      * @return array[array[string]] Errors
+     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function getFormErrorsForJS(Form $form)
@@ -140,8 +142,8 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::dispatchForParameters()
      *
-     * @param string $hookName   The hook name
-     * @param array  $parameters The hook parameters
+     * @param string $hookName The hook name
+     * @param array $parameters The hook parameters
      */
     protected function dispatchHook($hookName, array $parameters)
     {
@@ -153,10 +155,11 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::renderForParameters()
      *
-     * @param string $hookName   The hook name
-     * @param array  $parameters The hook parameters
+     * @param string $hookName The hook name
+     * @param array $parameters The hook parameters
      *
      * @return array The responses of hooks
+     *
      * @throws \Exception
      */
     protected function renderHook($hookName, array $parameters)
@@ -165,10 +168,10 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Generates a documentation link
+     * Generates a documentation link.
      *
-     * @param string      $section Legacy controller name
-     * @param bool|string $title   Help title
+     * @param string $section Legacy controller name
+     * @param bool|string $title Help title
      *
      * @return string
      */
@@ -181,8 +184,8 @@ class FrameworkBundleAdminController extends Controller
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
-            .$section.'?version='.$version.'&country='.$legacyContext->getEmployeeLanguageIso());
+        $docLink = urlencode('https://help.prestashop.com/' . $legacyContext->getEmployeeLanguageIso() . '/doc/'
+            . $section . '?version=' . $version . '&country=' . $legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', [
             'url' => $docLink,
@@ -191,7 +194,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get the old but still useful context
+     * Get the old but still useful context.
      *
      * @throws \Symfony\Component\Process\Exception\LogicException
      */
@@ -202,6 +205,7 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * @param $lang
+     *
      * @return mixed
      */
     protected function langToLocale($lang)
@@ -231,23 +235,24 @@ class FrameworkBundleAdminController extends Controller
      * @param string $controller name of the controller to valide access
      *
      * @return int
+     *
      * @throws \LogicException
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller.'_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller . '_')) {
             return PageVoter::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
+        if ($this->isGranted(PageVoter::CREATE, $controller . '_')) {
             return PageVoter::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
+        if ($this->isGranted(PageVoter::UPDATE, $controller . '_')) {
             return PageVoter::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller.'_')) {
+        if ($this->isGranted(PageVoter::READ, $controller . '_')) {
             return PageVoter::LEVEL_READ;
         }
 
@@ -255,7 +260,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get the translated chain from key
+     * Get the translated chain from key.
      *
      * @param string $key the key to be translated
      * @param string $domain the domain to be selected
@@ -269,9 +274,10 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Return errors as flash error messages
+     * Return errors as flash error messages.
      *
      * @param array $errorMessages
+     *
      * @throws \LogicException
      */
     protected function flashErrors(array $errorMessages)
@@ -283,7 +289,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Redirect employee to default page
+     * Redirect employee to default page.
      *
      * @return RedirectResponse
      */
@@ -297,10 +303,13 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Check if the connected user is granted to actions on a specific object.
+     *
      * @param $action
      * @param $object
      * @param string $suffix
+     *
      * @return bool
+     *
      * @throws \LogicException
      */
     protected function actionIsAllowed($action, $object = '', $suffix = '')
@@ -319,9 +328,12 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Display a message about permissions failure according to an action.
+     *
      * @param $action
      * @param string $suffix
+     *
      * @return string
+     *
      * @throws \Exception
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
@@ -343,6 +355,7 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Get Admin URI from PrestaShop 1.6 Back Office.
+     *
      * @param string $controller the old Controller name
      * @param bool $withToken whether we add token or not
      * @param array $params url parameters

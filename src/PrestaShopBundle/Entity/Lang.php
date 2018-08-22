@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Lang
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_lang", type="integer")
@@ -53,7 +52,7 @@ class Lang
     private $name;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="active", type="boolean")
      */
@@ -95,7 +94,7 @@ class Lang
     private $dateFormatFull;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_rtl", type="boolean")
      */
@@ -112,12 +111,11 @@ class Lang
      *      joinColumns={@ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
-     *
      */
     private $shops;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -125,9 +123,9 @@ class Lang
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -135,7 +133,7 @@ class Lang
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -149,7 +147,7 @@ class Lang
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -159,9 +157,9 @@ class Lang
     }
 
     /**
-     * Set active
+     * Set active.
      *
-     * @param integer $active
+     * @param int $active
      *
      * @return Lang
      */
@@ -173,9 +171,9 @@ class Lang
     }
 
     /**
-     * Get active
+     * Get active.
      *
-     * @return integer
+     * @return int
      */
     public function getActive()
     {
@@ -183,7 +181,7 @@ class Lang
     }
 
     /**
-     * Set isoCode
+     * Set isoCode.
      *
      * @param string $isoCode
      *
@@ -197,7 +195,7 @@ class Lang
     }
 
     /**
-     * Get isoCode
+     * Get isoCode.
      *
      * @return string
      */
@@ -207,7 +205,7 @@ class Lang
     }
 
     /**
-     * Set languageCode
+     * Set languageCode.
      *
      * @param string $languageCode
      *
@@ -221,7 +219,7 @@ class Lang
     }
 
     /**
-     * Get languageCode
+     * Get languageCode.
      *
      * @return string
      */
@@ -231,7 +229,7 @@ class Lang
     }
 
     /**
-     * Set dateFormatLite
+     * Set dateFormatLite.
      *
      * @param string $dateFormatLite
      *
@@ -245,7 +243,7 @@ class Lang
     }
 
     /**
-     * Get dateFormatLite
+     * Get dateFormatLite.
      *
      * @return string
      */
@@ -255,7 +253,7 @@ class Lang
     }
 
     /**
-     * Set dateFormatFull
+     * Set dateFormatFull.
      *
      * @param string $dateFormatFull
      *
@@ -269,7 +267,7 @@ class Lang
     }
 
     /**
-     * Get dateFormatFull
+     * Get dateFormatFull.
      *
      * @return string
      */
@@ -279,9 +277,9 @@ class Lang
     }
 
     /**
-     * Set isRtl
+     * Set isRtl.
      *
-     * @param boolean $isRtl
+     * @param bool $isRtl
      *
      * @return Lang
      */
@@ -293,9 +291,9 @@ class Lang
     }
 
     /**
-     * Get isRtl
+     * Get isRtl.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsRtl()
     {
@@ -303,7 +301,6 @@ class Lang
     }
 
     /**
-     *
      * @return string
      */
     public function getLocale()
@@ -312,8 +309,8 @@ class Lang
     }
 
     /**
-     *
      * @param string $locale
+     *
      * @return Lang
      */
     public function setLocale($locale)
@@ -324,7 +321,7 @@ class Lang
     }
 
     /**
-     * Add shop
+     * Add shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
@@ -338,7 +335,7 @@ class Lang
     }
 
     /**
-     * Remove shop
+     * Remove shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      */
@@ -348,7 +345,7 @@ class Lang
     }
 
     /**
-     * Get shops
+     * Get shops.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

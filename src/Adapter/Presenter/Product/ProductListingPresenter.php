@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
@@ -34,7 +35,9 @@ class ProductListingPresenter extends ProductPresenter
      * @param ProductPresentationSettings $settings
      * @param array $product
      * @param Language $language
+     *
      * @return ProductLazyArray|ProductListingLazyArray
+     *
      * @throws \ReflectionException
      */
     public function present(

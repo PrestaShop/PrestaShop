@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * Decides on access rights to a Page
+ * Decides on access rights to a Page.
  */
 class PageVoter extends Voter
 {
@@ -41,21 +41,22 @@ class PageVoter extends Voter
 
     const DELETE = 'delete';
 
-    const READ   = 'read';
+    const READ = 'read';
 
-    const LEVEL_DELETE   = 4;
+    const LEVEL_DELETE = 4;
 
-    const LEVEL_UPDATE   = 2;
+    const LEVEL_UPDATE = 2;
 
-    const LEVEL_CREATE   = 3;
+    const LEVEL_CREATE = 3;
 
-    const LEVEL_READ   = 1;
+    const LEVEL_READ = 1;
 
     /**
-     * Indicates if this voter should pronounce on this attribute and subject
+     * Indicates if this voter should pronounce on this attribute and subject.
      *
      * @param string $attribute Rights to test
      * @param mixed $subject Subject to secure (a controller name)
+     *
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -67,6 +68,7 @@ class PageVoter extends Voter
      * @param string $attribute Access right to test
      * @param string $subject Controller name
      * @param TokenInterface $token
+     *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -79,12 +81,13 @@ class PageVoter extends Voter
     }
 
     /**
-     * Checks if the provided user profile is allowed to perform the requested action
+     * Checks if the provided user profile is allowed to perform the requested action.
      *
      * @param string $action
      * @param int $employeeProfileId
      *
      * @return bool
+     *
      * @throws \Exception
      */
     protected function can($action, $employeeProfileId)
@@ -93,7 +96,7 @@ class PageVoter extends Voter
     }
 
     /**
-     * Builds the action name by joining subject and attribute
+     * Builds the action name by joining subject and attribute.
      *
      * @param string $subject Subject the attribute is performed onto (usually a controller name)
      * @param string $attribute

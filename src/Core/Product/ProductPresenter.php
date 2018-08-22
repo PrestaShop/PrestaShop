@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,16 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Product;
-
 
 /**
  * @deprecated since 1.7.4.0
  * @see \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter
  *
  * Class ProductPresenter
- * @package PrestaShop\PrestaShop\Core\Product
  */
 class ProductPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter
 {

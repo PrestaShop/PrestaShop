@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class AddressValidatorCore
+ * Class AddressValidatorCore.
  *
  * Validates addresses held by common PrestaShop objects (cart, customer...)
  */
@@ -36,25 +36,25 @@ class AddressValidatorCore
      * Returns an array of invalid address IDs.
      *
      * @param Cart $cart
-     *   The cart holding the addresses to be inspected
+     *                   The cart holding the addresses to be inspected
      *
      * @return array
-     *   The invalid address ids. Empty if everything is ok.
+     *               The invalid address ids. Empty if everything is ok.
      */
     public function validateCartAddresses(Cart $cart)
     {
         $invalidAddressIds = array();
-        $addressesIds      = array(
+        $addressesIds = array(
             $cart->id_address_delivery,
             $cart->id_address_invoice,
         );
 
         foreach ($addressesIds as $idAddress) {
-            $address = new CustomerAddress((int)$idAddress);
+            $address = new CustomerAddress((int) $idAddress);
             try {
                 $address->validateFields();
             } catch (PrestaShopException $e) {
-                $invalidAddressIds[] = (int)$idAddress;
+                $invalidAddressIds[] = (int) $idAddress;
             }
         }
 
@@ -66,26 +66,25 @@ class AddressValidatorCore
      * Returns an array of invalid address IDs.
      *
      * @param Customer $customer
-     *   The customer holding the addresses to be inspected
-     *
+     *                           The customer holding the addresses to be inspected
      * @param Language $language
-     *   The language in which addresses should be validated
+     *                           The language in which addresses should be validated
      *
      * @return array The invalid address ids. Empty if everything is ok.
-     * The invalid address ids. Empty if everything is ok.
+     *               The invalid address ids. Empty if everything is ok.
      */
     public function validateCustomerAddresses(Customer $customer, Language $language)
     {
         $invalidAddresses = array();
-        $addresses        = $customer->getAddresses($language->id);
+        $addresses = $customer->getAddresses($language->id);
 
         if (is_array($addresses)) {
             foreach ($addresses as $address) {
                 try {
-                    $adressObject = new CustomerAddress((int)$address['id_address']);
+                    $adressObject = new CustomerAddress((int) $address['id_address']);
                     $adressObject->validateFields();
                 } catch (PrestaShopException $e) {
-                    $invalidAddresses[] = (int)$address['id_address'];
+                    $invalidAddresses[] = (int) $address['id_address'];
                 }
             }
         }

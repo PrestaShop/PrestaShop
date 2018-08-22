@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
@@ -30,8 +31,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Adds listeners to renderhook Twig function, to let adding legacy helpers like Kpi, etc...
- *
- * @package PrestaShop\PrestaShop\Adapter\Admin
  */
 class LegacyBlockHelperSubscriber implements EventSubscriberInterface
 {
@@ -43,7 +42,7 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            'legacy_block_kpi' => array('renderKpi', 0)
+            'legacy_block_kpi' => array('renderKpi', 0),
         );
     }
 
@@ -51,6 +50,7 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
      * Renders a Kpi block for a given legacy controller name.
      *
      * @param RenderingHookEvent $event
+     *
      * @throws \Exception
      */
     public function renderKpi(RenderingHookEvent $event)

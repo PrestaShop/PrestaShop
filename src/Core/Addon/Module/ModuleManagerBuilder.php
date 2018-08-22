@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
@@ -133,19 +134,19 @@ class ModuleManagerBuilder
 
     private function __construct()
     {
-        $phpConfigFile = $this->getConfigDir().'/config.php';
+        $phpConfigFile = $this->getConfigDir() . '/config.php';
         if (file_exists($phpConfigFile)
-            && filemtime($phpConfigFile) >= filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.yml')) {
-            $config = require($phpConfigFile);
+            && filemtime($phpConfigFile) >= filemtime(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.yml')) {
+            $config = require $phpConfigFile;
         } else {
             $config = Yaml::parse(
                 file_get_contents(
-                    _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.yml'
+                    _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.yml'
                 )
             );
             try {
                 $filesystem = new Filesystem();
-                $filesystem->dumpFile($phpConfigFile, '<?php return '.var_export($config, true).';'."\n");
+                $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");
             } catch (IOException $e) {
                 return false;
             }
@@ -165,8 +166,8 @@ class ModuleManagerBuilder
         );
 
         $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
-        if (file_exists($this->getConfigDir().'/parameters.php')) {
-            $parameters = require($this->getConfigDir().'/parameters.php');
+        if (file_exists($this->getConfigDir() . '/parameters.php')) {
+            $parameters = require $this->getConfigDir() . '/parameters.php';
             if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
                 $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
             }
@@ -181,7 +182,7 @@ class ModuleManagerBuilder
             self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
         }
 
-        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir.'/doctrine');
+        self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
         self::$legacyLogger = new LegacyLogger();
         self::$categoriesProvider = new CategoriesProvider($marketPlaceClient, self::$legacyLogger);
@@ -229,7 +230,7 @@ class ModuleManagerBuilder
 
     protected function getConfigDir()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
+        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
     }
 
     /**

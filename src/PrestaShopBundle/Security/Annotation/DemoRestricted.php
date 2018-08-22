@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Security\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 
 /**
- * Forbid access to the page if Demonstration mode is enabled
+ * Forbid access to the page if Demonstration mode is enabled.
  *
  * @Annotation
  */
@@ -64,7 +65,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param string $domain The translation domain name.
+     * @param string $domain the translation domain name
      */
     public function setDomain($domain)
     {
@@ -80,7 +81,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param string $message The message displayed after redirection.
+     * @param string $message the message displayed after redirection
      */
     public function setMessage($message)
     {
@@ -96,7 +97,7 @@ class DemoRestricted extends ConfigurationAnnotation
     }
 
     /**
-     * @param string $redirectRoute The route used for redirection.
+     * @param string $redirectRoute the route used for redirection
      */
     public function setRedirectRoute($redirectRoute)
     {

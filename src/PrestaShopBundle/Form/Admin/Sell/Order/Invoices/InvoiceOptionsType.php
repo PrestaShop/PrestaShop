@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -88,7 +88,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('add_current_year', SwitchType::class)
             ->add('reset_number_annually', SwitchType::class)
             ->add('year_position', ChoiceType::class, [
-                'choices'  => [
+                'choices' => [
                     $this->trans('After the sequential number', 'Admin.Orderscustomers.Feature') => 0,
                     $this->trans('Before the sequential number', 'Admin.Orderscustomers.Feature') => 1,
                 ],
@@ -110,7 +110,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'locales' => $this->locales,
             ])
             ->add('invoice_model', ChoiceType::class, [
-                'choices'  => $this->invoiceModelChoiceProvider->getChoices(),
+                'choices' => $this->invoiceModelChoiceProvider->getChoices(),
             ])
             ->add('use_disk_cache', SwitchType::class)
         ;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,12 +34,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controller responsible of "Sell > Orders > Invoices" page
+ * Controller responsible of "Sell > Orders > Invoices" page.
  */
 class InvoicesController extends FrameworkBundleAdminController
 {
     /**
-     * Show order preferences page
+     * Show order preferences page.
      *
      * @param Request $request
      *
@@ -68,7 +68,7 @@ class InvoicesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Action that generates invoices PDF by date interval
+     * Action that generates invoices PDF by date interval.
      *
      * @param Request $request
      *
@@ -85,12 +85,13 @@ class InvoicesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Action that generates invoices PDF by order status
+     * Action that generates invoices PDF by order status.
      *
      * @param Request $request
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
 
+     *
      * @return RedirectResponse
      */
     public function generatePdfByStatusAction(Request $request)
@@ -122,7 +123,7 @@ class InvoicesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Processes the form in a generic way
+     * Processes the form in a generic way.
      *
      * @param FormHandlerInterface $formHandler
      * @param Request $request

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * This class require Xcache extension
+ * This class require Xcache extension.
  *
  * @since 1.5.0
  */
@@ -91,6 +91,7 @@ class CacheXcacheCore extends Cache
     public function flush()
     {
         $this->delete('*');
+
         return true;
     }
 }

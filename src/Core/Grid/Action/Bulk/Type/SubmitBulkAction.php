@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid
+ * Class BulkAction holds data about single bulk action available in grid.
  */
 final class SubmitBulkAction extends AbstractBulkAction
 {

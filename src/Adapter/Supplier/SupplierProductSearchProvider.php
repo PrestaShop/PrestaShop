@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -37,6 +36,7 @@ use Supplier;
 
 /**
  * Class responsible of retrieving products in Suppliers page of Front Office.
+ *
  * @see SupplierController
  */
 class SupplierProductSearchProvider implements ProductSearchProviderInterface
@@ -69,6 +69,7 @@ class SupplierProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchContext $context
      * @param ProductSearchQuery $query
      * @param string $type
+     *
      * @return array|bool
      */
     private function getProductsOrCount(

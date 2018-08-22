@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -108,7 +108,7 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function initContent()
     {
@@ -119,20 +119,19 @@ class CategoryControllerCore extends ProductListingFrontController
                 'catalog/listing/category',
                 [
                     'entity' => 'category',
-                    'id'     => $this->category->id,
+                    'id' => $this->category->id,
                 ]
             );
         }
     }
 
     /**
-     * overrides layout if category is not visible
+     * overrides layout if category is not visible.
      *
      * @return bool|string
      */
     public function getLayout()
     {
-
         if (!$this->category->checkAccess($this->context->customer->id)) {
             return 'layouts/layout-full-width.tpl';
         }
@@ -225,10 +224,10 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['category-id-'.$this->category->id] = true;
-        $page['body_classes']['category-'.$this->category->name] = true;
-        $page['body_classes']['category-id-parent-'.$this->category->id_parent] = true;
-        $page['body_classes']['category-depth-level-'.$this->category->level_depth] = true;
+        $page['body_classes']['category-id-' . $this->category->id] = true;
+        $page['body_classes']['category-' . $this->category->name] = true;
+        $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
+        $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
 
         return $page;
     }

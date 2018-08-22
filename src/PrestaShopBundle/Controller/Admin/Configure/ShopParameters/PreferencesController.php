@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Configure > Shop Parameters > General" page
+ * Responsible of "Configure > Shop Parameters > General" page.
  */
 class PreferencesController extends FrameworkBundleAdminController
 {
@@ -63,7 +63,7 @@ class PreferencesController extends FrameworkBundleAdminController
         $toolsAdapter = $this->get('prestashop.adapter.tools');
 
         // SSL URI is used for the merchant to check if he has SSL enabled
-        $sslUri = 'https://'.$toolsAdapter->getShopDomainSsl().$request->getRequestUri();
+        $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
 
         return array(
             'layoutHeaderToolbarBtn' => array(),
@@ -81,7 +81,7 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the form
+     * Process the form.
      *
      * @param Request $request
      *

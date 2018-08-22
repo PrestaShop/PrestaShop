@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 
 /**
- * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders
+ * Class AbstractDoctrineQueryBuilder provides most common dependencies of doctrine query builders.
  */
 abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInterface
 {

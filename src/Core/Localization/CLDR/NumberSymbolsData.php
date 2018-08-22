@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 class NumberSymbolsData
 {
     /**
-     * Decimal separator character
+     * Decimal separator character.
      *
      * Separates the integer and fractional part of the number.
      *
@@ -42,7 +42,7 @@ class NumberSymbolsData
     public $decimal;
 
     /**
-     * Digits group separator character
+     * Digits group separator character.
      *
      * separates clusters of integer digits to make large numbers more legible; commonly used for thousands(grouping
      * size 3, e.g. "100,000,000") or in some locales, ten-thousands (grouping size 4, e.g. "1,0000,0000").
@@ -52,7 +52,7 @@ class NumberSymbolsData
     public $group;
 
     /**
-     * List elements separator character
+     * List elements separator character.
      *
      * Symbol used to separate numbers in a list intended to represent structured data such as an array.
      *
@@ -61,7 +61,7 @@ class NumberSymbolsData
     public $list;
 
     /**
-     * Percent sign character
+     * Percent sign character.
      *
      * Used to indicate a percentage (1/100th) amount.
      *
@@ -70,7 +70,7 @@ class NumberSymbolsData
     public $percentSign;
 
     /**
-     * Minus sign character
+     * Minus sign character.
      *
      * Symbol used to denote negative value.
      *
@@ -79,7 +79,7 @@ class NumberSymbolsData
     public $minusSign;
 
     /**
-     * Plus sign character
+     * Plus sign character.
      *
      * Symbol used to denote positive value.
      * It can be used to produce modified patterns, so that 3.12 is formatted as "+3.12", for example.
@@ -89,7 +89,7 @@ class NumberSymbolsData
     public $plusSign;
 
     /**
-     * Exponential character
+     * Exponential character.
      *
      * Symbol separating the mantissa and exponent values.
      *
@@ -98,7 +98,7 @@ class NumberSymbolsData
     public $exponential;
 
     /**
-     * Superscripting exponent character
+     * Superscripting exponent character.
      *
      * Used in numbers to show a format like "1.23 × 10^4"
      * (exponential character is a shortcut for "× 10^n" notation)
@@ -108,7 +108,7 @@ class NumberSymbolsData
     public $superscriptingExponent;
 
     /**
-     * Permille sign character
+     * Permille sign character.
      *
      * Used to define them as a per-mille (1/1000th) amount.
      *
@@ -141,27 +141,27 @@ class NumberSymbolsData
     public $timeSeparator;
 
     /**
-     * Will be set when decimal separator is different when formatting a price
+     * Will be set when decimal separator is different when formatting a price.
      *
      * @var string
      */
     public $currencyDecimal;
 
     /**
-     * Will be set when digits grouping is different when formatting a price
+     * Will be set when digits grouping is different when formatting a price.
      *
      * @var string
      */
     public $currencyGroup;
 
     /**
-     * Override this object's symbols with another NumberSymbolsData object
+     * Override this object's symbols with another NumberSymbolsData object.
      *
      * @param NumberSymbolsData $symbolsData
-     *  Symbols to use for the override
+     *                                       Symbols to use for the override
      *
      * @return $this
-     *  Fluent interface
+     *               Fluent interface
      */
     public function overrideWith(NumberSymbolsData $symbolsData)
     {

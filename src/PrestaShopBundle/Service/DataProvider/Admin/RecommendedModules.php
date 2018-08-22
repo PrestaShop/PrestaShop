@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 use Symfony\Component\Routing\Router;
@@ -35,7 +36,6 @@ use Module;
  */
 class RecommendedModules
 {
-
     /**
      * @var Router
      */
@@ -54,10 +54,11 @@ class RecommendedModules
     }
 
     /**
-     * Gets all recommended modules for a specific domain
+     * Gets all recommended modules for a specific domain.
      *
      * @param string $domain The given domain to filter recommended modules
      * @param bool|false $randomize To shuffle results
+     *
      * @return array A list of modules names (identifiers)
      */
     public function getRecommendedModuleIdList($domain = 'administration', $randomize = false)
@@ -84,6 +85,7 @@ class RecommendedModules
      * Filters the given module list to remove installed ones, and bad filled cases.
      *
      * @param array $moduleFullList The input list to filter
+     *
      * @return array The filtered list of modules
      */
     public function filterInstalledAndBadModules(array $moduleFullList)
@@ -94,7 +96,7 @@ class RecommendedModules
         }, Module::getModulesInstalled());
 
         foreach ($moduleFullList as $key => $module) {
-            if ((bool)array_key_exists($module->attributes->get('name'), $installed_modules) === true) {
+            if ((bool) array_key_exists($module->attributes->get('name'), $installed_modules) === true) {
                 unset($moduleFullList[$key]);
             }
             if (!isset($module->attributes->get('media')->img)) {

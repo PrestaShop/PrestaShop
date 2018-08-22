@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as Curr
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataRepositoryInterface as CurrencyDataRepositoryInterface;
 
 /**
- * Currency repository class
+ * Currency repository class.
  *
  * Used to get Currency instances (by currency code for example)
  */
@@ -55,9 +55,8 @@ class Repository implements CurrencyRepositoryInterface
         $this->dataRepository = $dataRepository;
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getCurrency($currencyCode)
     {

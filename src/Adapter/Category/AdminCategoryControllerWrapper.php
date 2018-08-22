@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use AdminCategoriesController;
 class AdminCategoryControllerWrapper
 {
     /**
-     * Get instance of legacy class AdminCategoriesController
+     * Get instance of legacy class AdminCategoriesController.
      *
      * @return AdminCategoriesController
      */

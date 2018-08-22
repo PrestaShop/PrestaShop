@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,13 +30,14 @@ trait NormalizeFieldTrait
 {
     /**
      * @param $rows
+     *
      * @return mixed
      */
     protected function castNumericToInt($rows)
     {
         $castIdentifiersToIntegers = function (&$columnValue, $columnName) {
             if ($this->shouldCastToInt($columnName, $columnValue)) {
-                $columnValue = (int)$columnValue;
+                $columnValue = (int) $columnValue;
             }
         };
 
@@ -47,6 +48,7 @@ trait NormalizeFieldTrait
 
     /**
      * @param $rows
+     *
      * @return mixed
      */
     protected function castIdsToArray($rows)
@@ -63,8 +65,8 @@ trait NormalizeFieldTrait
     }
 
     /**
-     * @param String $columnName
-     * @param String $columnValue
+     * @param string $columnName
+     * @param string $columnValue
      *
      * @return bool
      */

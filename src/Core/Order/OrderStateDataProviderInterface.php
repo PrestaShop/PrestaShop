@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Order;
 
 /**
- * Interface OrderStateDataProviderInterface defines OrderState data provider
+ * Interface OrderStateDataProviderInterface defines OrderState data provider.
  */
 interface OrderStateDataProviderInterface
 {
     /**
-     * Get order states in given language
+     * Get order states in given language.
      *
      * @param int $languageId
      *

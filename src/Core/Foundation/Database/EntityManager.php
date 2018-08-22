@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
@@ -43,7 +44,8 @@ class EntityManager
     }
 
     /**
-     * Return current database object used
+     * Return current database object used.
+     *
      * @return DatabaseInterface
      */
     public function getDatabase()
@@ -52,8 +54,10 @@ class EntityManager
     }
 
     /**
-     * Return current repository used
+     * Return current repository used.
+     *
      * @param $className
+     *
      * @return mixed
      */
     public function getRepository($className)
@@ -78,9 +82,12 @@ class EntityManager
     }
 
     /**
-     * Return entity's meta data
+     * Return entity's meta data.
+     *
      * @param $className
+     *
      * @return mixed
+     *
      * @throws \PrestaShop\PrestaShop\Adapter\CoreException
      */
     public function getEntityMetaData($className)
@@ -94,24 +101,30 @@ class EntityManager
     }
 
     /**
-     * Flush entity to DB
+     * Flush entity to DB.
+     *
      * @param EntityInterface $entity
+     *
      * @return $this
      */
     public function save(EntityInterface $entity)
     {
         $entity->save();
+
         return $this;
     }
 
     /**
-     * DElete entity from DB
+     * DElete entity from DB.
+     *
      * @param EntityInterface $entity
+     *
      * @return $this
      */
     public function delete(EntityInterface $entity)
     {
         $entity->delete();
+
         return $this;
     }
 }

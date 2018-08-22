@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShopGroup
+ * ShopGroup.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopGroupRepository")
@@ -38,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ShopGroup
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_shop_group", type="integer")
@@ -54,45 +53,44 @@ class ShopGroup
     private $name;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="share_customer", type="boolean")
      */
     private $shareCustomer;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="share_order", type="boolean")
      */
     private $shareOrder;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="share_stock", type="boolean")
      */
     private $shareStock;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="deleted", type="boolean")
      */
     private $deleted;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -100,7 +98,7 @@ class ShopGroup
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -114,7 +112,7 @@ class ShopGroup
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -124,9 +122,9 @@ class ShopGroup
     }
 
     /**
-     * Set shareCustomer
+     * Set shareCustomer.
      *
-     * @param boolean $shareCustomer
+     * @param bool $shareCustomer
      *
      * @return ShopGroup
      */
@@ -138,9 +136,9 @@ class ShopGroup
     }
 
     /**
-     * Get shareCustomer
+     * Get shareCustomer.
      *
-     * @return boolean
+     * @return bool
      */
     public function getShareCustomer()
     {
@@ -148,9 +146,9 @@ class ShopGroup
     }
 
     /**
-     * Set shareOrder
+     * Set shareOrder.
      *
-     * @param boolean $shareOrder
+     * @param bool $shareOrder
      *
      * @return ShopGroup
      */
@@ -162,9 +160,9 @@ class ShopGroup
     }
 
     /**
-     * Get shareOrder
+     * Get shareOrder.
      *
-     * @return boolean
+     * @return bool
      */
     public function getShareOrder()
     {
@@ -172,9 +170,9 @@ class ShopGroup
     }
 
     /**
-     * Set shareStock
+     * Set shareStock.
      *
-     * @param boolean $shareStock
+     * @param bool $shareStock
      *
      * @return ShopGroup
      */
@@ -186,9 +184,9 @@ class ShopGroup
     }
 
     /**
-     * Get shareStock
+     * Get shareStock.
      *
-     * @return boolean
+     * @return bool
      */
     public function getShareStock()
     {
@@ -196,9 +194,9 @@ class ShopGroup
     }
 
     /**
-     * Set active
+     * Set active.
      *
-     * @param boolean $active
+     * @param bool $active
      *
      * @return ShopGroup
      */
@@ -210,9 +208,9 @@ class ShopGroup
     }
 
     /**
-     * Get active
+     * Get active.
      *
-     * @return boolean
+     * @return bool
      */
     public function getActive()
     {
@@ -220,9 +218,9 @@ class ShopGroup
     }
 
     /**
-     * Set deleted
+     * Set deleted.
      *
-     * @param boolean $deleted
+     * @param bool $deleted
      *
      * @return ShopGroup
      */
@@ -234,9 +232,9 @@ class ShopGroup
     }
 
     /**
-     * Get deleted
+     * Get deleted.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDeleted()
     {
