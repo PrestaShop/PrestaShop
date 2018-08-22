@@ -53,15 +53,23 @@ final class LanguageCopier implements LanguageCopierInterface
     private $translator;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @param LanguageDataProvider $languageDataProvider
      * @param TranslatorInterface $translator
+     * @param Filesystem $filesystem
      */
     public function __construct(
         LanguageDataProvider $languageDataProvider,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Filesystem $filesystem
     ) {
         $this->languageDataProvider = $languageDataProvider;
         $this->translator = $translator;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -77,11 +85,9 @@ final class LanguageCopier implements LanguageCopierInterface
             true
         );
 
-        $fs = new Filesystem();
-
         foreach ($languageFiles as $source => $destination) {
             try {
-                $fs->mkdir(dirname($destination));
+                $this->filesystem->mkdir(dirname($destination));
             } catch (IOExceptionInterface $exception) {
                 $this->errors[] = $this->translator->trans(
                     'Cannot create the folder "%folder%". Please check your directory writing permissions.',
@@ -94,7 +100,7 @@ final class LanguageCopier implements LanguageCopierInterface
             }
 
             try {
-                $fs->copy($source, $destination);
+                $this->filesystem->copy($source, $destination);
             } catch (IOExceptionInterface $exception) {
                 $this->errors[] = $this->translator->trans(
                     'Impossible to copy "%source%" to "%dest%".',

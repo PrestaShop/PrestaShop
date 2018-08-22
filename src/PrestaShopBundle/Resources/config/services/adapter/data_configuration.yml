@@ -134,6 +134,7 @@ services:
         arguments:
             - '@prestashop.adapter.data_provider.language'
             - '@translator'
+            - '@filesystem'
 
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
