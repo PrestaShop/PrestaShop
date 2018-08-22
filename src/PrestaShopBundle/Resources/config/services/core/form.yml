@@ -92,7 +92,6 @@ services:
     prestashop.core.form.choice_provider.theme_by_name:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
         arguments:
-            - '@translator'
             - '@prestashop.core.addon.theme.repository'
 
     prestashop.core.form.choice_provider.module_by_name:
