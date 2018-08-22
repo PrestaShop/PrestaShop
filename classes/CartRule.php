@@ -492,7 +492,7 @@ class CartRuleCore extends ObjectModel
         Cart $cart
     ) {
 
-        return self::getCustomerCartRules(
+        return static::getCustomerCartRules(
            $languageId,
            $customerId,
            $active = true,
