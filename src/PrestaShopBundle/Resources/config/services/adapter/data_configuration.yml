@@ -186,3 +186,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.data_provider.context_language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\ContextLanguageDataProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.context'
