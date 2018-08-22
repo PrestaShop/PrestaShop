@@ -550,7 +550,8 @@
 				url: 'ajax.php',
 				data: {
 					getAvailableFields:1,
-					entity: $("#entity").val()
+					entity: $("#entity").val(),
+					token: window.token
 				},
 				dataType: 'json',
 				success: function(j){

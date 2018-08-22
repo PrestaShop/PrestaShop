@@ -136,7 +136,8 @@ export default class FormFieldToggle {
       url: url,
       data: {
         getAvailableFields: 1,
-        entity: entity
+        entity: entity,
+        token: window.token
       },
       dataType: 'json',
     }).then(response => {
