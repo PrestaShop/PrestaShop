@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -268,22 +273,17 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function deleteAction($requestSqlId)
     {
-        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        if (null === $requestSqlDataProvider->getRequestSql($requestSqlId)) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+        try {
+            $deleteSqlRequestCommand = new DeleteSqlRequestCommand(
+                new SqlRequestId($requestSqlId)
+            );
 
-            return $this->redirectToRoute('admin_request_sql');
-        }
+            $this->getCommandBus()->handle($deleteSqlRequestCommand);
 
-        $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        $errors = $requestSqlManager->delete([$requestSqlId]);
-        if (empty($errors)) {
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-
-            return $this->redirectToRoute('admin_request_sql');
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleException($e));
         }
-
-        $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
 
         return $this->redirectToRoute('admin_request_sql');
     }
@@ -442,5 +442,32 @@ class RequestSqlController extends FrameworkBundleAdminController
     protected function getRequestSqlFormHandler()
     {
         return $this->get('prestashop.admin.request_sql.form_handler');
+    }
+
+    /**
+     * Get human readable error for exception
+     *
+     * @param SqlRequestException $exception
+     *
+     * @return string Error message
+     */
+    protected function handleException(SqlRequestException $exception)
+    {
+        $exceptionMessages = [
+            SqlRequestNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::class =>
+                $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+            SqlRequestException::class =>
+                $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+        ];
+
+        $exceptionType = get_class($exception);
+
+        if (isset($exceptionMessages[$exceptionType])) {
+            return $exceptionMessages[$exceptionType];
+        }
+
+        return $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }

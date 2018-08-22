@@ -42,3 +42,7 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand' }
 
+    prestashop.adapter.sql_manager.command_handler.delete_request_sql:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\DeleteSqlRequestHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand' }
