@@ -85,64 +85,43 @@ class ConfigurationValidator
      */
     public function testFilesystemCapabilities()
     {
-        // choose a random available directory name
         $dirPath = $this->getRandomDirectoryPath();
 
-        $randomNameIsActuallyAlreadyUsed = (is_dir($dirPath) || file_exists($dirPath));
-        if ($randomNameIsActuallyAlreadyUsed) {
-            // retry another random directory name
-            $dirPath = $this->getRandomDirectoryPath();
+        $this->checkRandomNameIsNotAlreadyUsed($dirPath);
 
-            $randomNameIsActuallyAlreadyUsed = (is_dir($dirPath) || file_exists($dirPath));
-            if ($randomNameIsActuallyAlreadyUsed) {
-                throw new \RuntimeException('Failed to find available directory name');
-            }
-        }
-
-        // create directory
-        $createDirectoryResult = @mkdir($dirPath);
-        if (false === $createDirectoryResult) {
+        if (false === $this->createDirectoryTest($dirPath)) {
             return ['Cannot create directories'];
         }
 
-        // create file in it
-        $fileCreationTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-file.php';
-        $createFileResult = @file_put_contents($fileCreationTestPath, "<?php echo 'Hello world !';");
+        list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
             return ['Cannot write files'];
         }
 
-        // download a file from github in directory
-        $downloadTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-download.txt';
-        // @todo: use another file from the network ?
-        $target = 'https://raw.githubusercontent.com/PrestaShop/PrestaShop/develop/robots.txt';
-        $downloadFileResult = @file_put_contents($downloadTestPath, Download::fileGetContents($target));
-        if (false === $downloadFileResult) {
+        if (false === $this->downloadFileTest($dirPath)) {
             return ['Cannot download files from network'];
         }
 
-        // move a file from test directory into root directory
-        $fileMoveTestPath = __DIR__ . DIRECTORY_SEPARATOR . 'test-move.php';
-        $moveResult = @rename($fileCreationTestPath, $fileMoveTestPath);
+        list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
             return ['Cannot move files into prestashop root directory'];
         }
 
-        // delete test file in root directory
-        $deleteFileResult = unlink($fileMoveTestPath);
-        if (false === $deleteFileResult) {
+        if (false === $this->deleteFileTest($fileMoveTestPath)) {
             return ['Cannot delete files in prestashop root directory'];
         }
 
-        // delete test directory
-        $deleteDirectoryContentResult = array_map('unlink', glob($dirPath . DIRECTORY_SEPARATOR . "*.*"));
-        $deleteDirectoryResult = @rmdir($dirPath);
+        list($deleteDirectoryContentResult, $deleteDirectoryResult) = $this->deleteDirectoryTest($dirPath);
         if ((false === $deleteDirectoryContentResult) || (false === $deleteDirectoryResult)) {
             return ['Cannot delete directories in prestashop root directory'];
         }
+
+        return [];
     }
 
     /**
+     * Choose a random available directory name
+     *
      * @return string
      */
     private function getRandomDirectoryPath()
@@ -151,5 +130,101 @@ class ConfigurationValidator
         $dirPath = __DIR__ . DIRECTORY_SEPARATOR . $randomDirectoryName;
 
         return $dirPath;
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return bool
+     */
+    private function createDirectoryTest($dirPath)
+    {
+        $createDirectoryResult = @mkdir($dirPath);
+
+        return $createDirectoryResult;
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return array
+     */
+    private function createFileTest($dirPath)
+    {
+        $fileCreationTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-file.php';
+        $createFileResult = @file_put_contents($fileCreationTestPath, "<?php echo 'Hello world !';");
+
+        return array($fileCreationTestPath, $createFileResult);
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return bool
+     */
+    private function downloadFileTest($dirPath)
+    {
+        $downloadTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-download.txt';
+        // @todo: use another file from the network ?
+        $target = 'https://raw.githubusercontent.com/PrestaShop/PrestaShop/develop/robots.txt';
+        $downloadFileResult = @file_put_contents($downloadTestPath, Download::fileGetContents($target));
+
+        return $downloadFileResult;
+    }
+
+    /**
+     * Move a file from test directory into root directory.
+     *
+     * @param string $fileCreationTestPath
+     *
+     * @return array
+     */
+    private function moveFileTest($fileCreationTestPath)
+    {
+        $fileMoveTestPath = __DIR__ . DIRECTORY_SEPARATOR . 'test-move.php';
+        $moveResult = @rename($fileCreationTestPath, $fileMoveTestPath);
+
+        return array($fileMoveTestPath, $moveResult);
+    }
+
+    /**
+     * @param string $fileMoveTestPath
+     *
+     * @return bool
+     */
+    private function deleteFileTest($fileMoveTestPath)
+    {
+        $deleteFileResult = unlink($fileMoveTestPath);
+
+        return $deleteFileResult;
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return array
+     */
+    private function deleteDirectoryTest($dirPath)
+    {
+        $deleteDirectoryContentResult = array_map('unlink', glob($dirPath . DIRECTORY_SEPARATOR . '*.*'));
+        $deleteDirectoryResult = @rmdir($dirPath);
+
+        return array($deleteDirectoryContentResult, $deleteDirectoryResult);
+    }
+
+    /**
+     * @param string $dirPath
+     *
+     * @return bool
+     *
+     * @throws \RuntimeException
+     */
+    private function checkRandomNameIsNotAlreadyUsed($dirPath)
+    {
+        if (is_dir($dirPath) || file_exists($dirPath)) {
+            throw new \RuntimeException(sprintf('Test directory name is already used: %s', $dirPath));
+        }
+
+        return true;
     }
 }
