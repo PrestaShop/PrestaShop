@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use RuntimeException;
 
 /**
- * Looks at server configuration in order to check PrestaShop Webservice can be enabled
+ * Looks at server configuration in order to check PrestaShop Webservice can be enabled.
  */
 final class WebserviceCanBeEnabledConfigurationChecker
 {
@@ -67,7 +67,7 @@ final class WebserviceCanBeEnabledConfigurationChecker
      * Analyses the server configuration (apache configuration and php settings)
      * to check whether PrestaShop Webservice can be used or not.
      *
-     * @param Request $request (optional) Request.
+     * @param request $request (optional) Request
      *
      * @return array empty if no errors
      */
@@ -118,7 +118,6 @@ final class WebserviceCanBeEnabledConfigurationChecker
             if (false === in_array('mod_rewrite', $apache_modules)) {
                 $issues[] = self::ISSUE_APACHE_MOD_AUTH_REWRITE_NOT_AVAILABLE;
             }
-
         } else {
             $issues[] = self::ISSUE_CANNOT_CHECK_APACHE_MODULES;
         }

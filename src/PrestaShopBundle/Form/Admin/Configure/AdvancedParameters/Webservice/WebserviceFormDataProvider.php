@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -54,7 +54,7 @@ final class WebserviceFormDataProvider implements FormDataProviderInterface
     public function getData()
     {
         return [
-            'webservice_configuration' => $this->webserviceConfiguration->getConfiguration()
+            'webservice_configuration' => $this->webserviceConfiguration->getConfiguration(),
         ];
     }
 
