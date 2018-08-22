@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Configuration modules positions "Improve > Design > Positions"
+ * Configuration modules positions "Improve > Design > Positions".
  */
 class PositionsController extends FrameworkBundleAdminController
 {
@@ -51,7 +51,7 @@ class PositionsController extends FrameworkBundleAdminController
     protected $selectedModule = null;
 
     /**
-     * Display hooks positions
+     * Display hooks positions.
      *
      * @Template("@PrestaShop/Admin/Improve/Design/positions.html.twig")
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
@@ -116,9 +116,9 @@ class PositionsController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => [
                 'save' => [
                     'href' => $legacyContextService->getAdminLink('AdminModulesPositions') .
-                    '&addToHook'.($this->showModules ? '&show_modules='.$this->showModules : ''),
+                    '&addToHook' . ($this->showModules ? '&show_modules=' . $this->showModules : ''),
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
-                ]
+                ],
             ],
             'showModules' => $this->showModules,
             'selectedModule' => $this->selectedModule,
@@ -131,12 +131,12 @@ class PositionsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminModulesPositions'),
             'hooks' => $hooks,
             'modules' => $modules,
-            'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext()
+            'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
         ];
     }
 
     /**
-     * Transplant a module
+     * Transplant a module.
      *
      * @TODO this part isn't finished yet, waiting for CQRS!
      *
@@ -144,8 +144,8 @@ class PositionsController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
-     * @param integer $moduleId
-     * @param integer $hookId
+     * @param int $moduleId
+     * @param int $hookId
      *
      * @return Response
      */
@@ -187,12 +187,12 @@ class PositionsController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'selectedModule' => []
+            'selectedModule' => [],
         ];
     }
 
     /**
-     * Unhook module
+     * Unhook module.
      *
      * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *

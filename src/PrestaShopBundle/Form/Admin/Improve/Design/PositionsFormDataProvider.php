@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
 use Module;
-
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShopBundle\Exception\HookModuleNotFoundException;
@@ -59,7 +58,7 @@ final class PositionsFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Load data
+     * Load data.
      *
      * @param $moduleId Module id
      * @param $hookId   Hook id

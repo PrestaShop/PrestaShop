@@ -63,7 +63,7 @@ class LinkCore
         if (Link::$category_disable_rewrite === null) {
             Link::$category_disable_rewrite = array(
                 Configuration::get('PS_HOME_CATEGORY'),
-                Configuration::get('PS_ROOT_CATEGORY')
+                Configuration::get('PS_ROOT_CATEGORY'),
             );
         }
 
@@ -579,7 +579,7 @@ class LinkCore
                 !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop) &&
                 !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
             ) {
-                return $url.$dispatcher->createUrl(
+                return $url . $dispatcher->createUrl(
                     'supplier_rule',
                     $idLang,
                     array('id' => (int) $supplier, 'rewrite' => (string) $alias),

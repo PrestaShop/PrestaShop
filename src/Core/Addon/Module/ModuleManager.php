@@ -395,7 +395,8 @@ class ModuleManager implements AddonManagerInterface
                     'Error when disabling module %module%. %error_details%.',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage()),
+                        '%error_details%' => $e->getMessage(),
+                    ),
                     'Admin.Modules.Notification'
                 ),
                 0,
@@ -440,7 +441,7 @@ class ModuleManager implements AddonManagerInterface
                     'Error when enabling module %module%. %error_details%.',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage()
+                        '%error_details%' => $e->getMessage(),
                     ),
                     'Admin.Modules.Notification'
                 ),
@@ -501,7 +502,8 @@ class ModuleManager implements AddonManagerInterface
                     'Error when disabling module %module% on mobile. %error_details%',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage()),
+                        '%error_details%' => $e->getMessage(),
+                    ),
                     'Admin.Modules.Notification'
                 ),
                 0,
@@ -558,7 +560,8 @@ class ModuleManager implements AddonManagerInterface
                     'Error when enabling module %module% on mobile. %error_details%',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage()),
+                        '%error_details%' => $e->getMessage(),
+                    ),
                     'Admin.Modules.Notification'
                 ),
                 0,
@@ -605,7 +608,8 @@ class ModuleManager implements AddonManagerInterface
                     'Error when resetting module %module%. %error_details%',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage()),
+                        '%error_details%' => $e->getMessage(),
+                    ),
                     'Admin.Modules.Notification'
                 ),
                 0,

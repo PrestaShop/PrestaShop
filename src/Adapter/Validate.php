@@ -77,9 +77,10 @@ class Validate
     }
 
     /**
-     * Check for module name validity
+     * Check for module name validity.
      *
      * @param string $name Module name to validate
+     *
      * @return bool
      */
     public function isModuleName($name)
@@ -88,7 +89,7 @@ class Validate
     }
 
     /**
-     * Check if object has been correctly loaded
+     * Check if object has been correctly loaded.
      *
      * @param object $object Object to validate
      *

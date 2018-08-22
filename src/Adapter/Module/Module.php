@@ -434,7 +434,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Return installed modules
+     * Return installed modules.
      *
      * @param int $position Take only positionnables modules
      *
@@ -446,7 +446,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Return an instance of the specified module
+     * Return an instance of the specified module.
      *
      * @param int $moduleId Module id
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,17 +27,15 @@
 namespace PrestaShopBundle\Controller\Api\Improve\Design;
 
 use PrestaShopBundle\Controller\Api\ApiController;
-use PrestaShopBundle\Entity\Repository\CategoryRepository;
 use PrestaShopBundle\Exception;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class PositionsController extends ApiController
 {
     /**
-     * Update positions
+     * Update positions.
      *
      * @param Request $request
      *
@@ -49,7 +47,7 @@ class PositionsController extends ApiController
         $hookId = $request->request->getInt('hookId');
         $way = $request->request->getInt('way');
         $positions = $request->request->get('positions');
-        $position = (int) is_array($positions) ? array_search($hookId.'_'.$moduleId, $positions) + 1 : null;
+        $position = (int) is_array($positions) ? array_search($hookId . '_' . $moduleId, $positions) + 1 : null;
 
         $module = $this->container->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
         if (empty($module->id)) {
@@ -76,7 +74,7 @@ class PositionsController extends ApiController
     }
 
     /**
-     * Get hookable list
+     * Get hookable list.
      *
      * @TODO not used yet
      *
@@ -115,7 +113,7 @@ class PositionsController extends ApiController
     }
 
     /**
-     * Get hookable module list
+     * Get hookable module list.
      *
      * @TODO not used yet
      *

@@ -1984,10 +1984,10 @@ abstract class ModuleCore implements ModuleInterface
             $minPosition = min((int) $from['position'], (int) $to['position']);
             $maxPosition = max((int) $from['position'], (int) $to['position']);
 
-            $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-                SET position = position ' . ($way ? '- 1' : '+ 1').'
-                WHERE position BETWEEN ' . $minPosition . ' AND '. $maxPosition .'
-                AND `id_hook` = '.(int) $from['id_hook'].' AND `id_shop` = '.$shop_id;
+            $sql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
+                SET position = position ' . ($way ? '- 1' : '+ 1') . '
+                WHERE position BETWEEN ' . $minPosition . ' AND ' . $maxPosition . '
+                AND `id_hook` = ' . (int) $from['id_hook'] . ' AND `id_shop` = ' . $shop_id;
 
             if (!Db::getInstance()->execute($sql)) {
                 return false;

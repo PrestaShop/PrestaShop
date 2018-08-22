@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -46,7 +46,7 @@ class PositionsService
     }
 
     /**
-     * Get Hookable list from request
+     * Get Hookable list from request.
      *
      * @param Request $request Request
      *
@@ -95,7 +95,7 @@ class PositionsService
     }
 
     /**
-     * Get Hookable module list from request
+     * Get Hookable module list from request.
      *
      * @param Request $request Request
      *
@@ -105,23 +105,23 @@ class PositionsService
     {
         $hookName = $request->request->get('hook');
         $hookableModulesList = [];
-        $modules = Db::getInstance()->executeS('SELECT id_module, name FROM `'._DB_PREFIX_.'module` ');
+        $modules = Db::getInstance()->executeS('SELECT id_module, name FROM `' . _DB_PREFIX_ . 'module` ');
         foreach ($modules as $module) {
             if (!$this->validator->isModuleName($module['name'])) {
                 continue;
             }
 
             $moduleInstance = Module::getInstanceByName($module);
-            if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php')) {
-                include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
+            if (file_exists(_PS_MODULE_DIR_ . $module['name'] . '/' . $module['name'] . '.php')) {
+                include_once _PS_MODULE_DIR_ . $module['name'] . '/' . $module['name'] . '.php';
 
                 /** @var Module $mod */
                 $mod = new $module['name']();
                 if ($mod->isHookableOn($hookName)) {
                     $hookableModulesList[] = [
-                        'id' => (int)$mod->id,
+                        'id' => (int) $mod->id,
                         'name' => $mod->displayName,
-                        'display' => Hook::exec($hookName, [], (int)$mod->id)
+                        'display' => Hook::exec($hookName, [], (int) $mod->id),
                     ];
                 }
             }

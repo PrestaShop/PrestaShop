@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Improve\Design;
 
 use Module;
@@ -34,7 +35,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 
 /**
  * This form class generates the "Positions" form in
- * "Improve > Design > Positions" page
+ * "Improve > Design > Positions" page.
  */
 class PositionsType extends TranslatorAwareType
 {
@@ -67,7 +68,7 @@ class PositionsType extends TranslatorAwareType
                     'required' => true,
                     'attr' => [
                         'placeholder' => $this->trans('E.g. address, addresses, attachment', 'Admin.Design.Help'),
-                    ]
+                    ],
                 ]
             )
             ->add(
@@ -100,7 +101,8 @@ class PositionsType extends TranslatorAwareType
     protected function getTransplantTo()
     {
         $hooks = array();
-        $moduleInstance = Module::getInstanceById((int)Tools::getValue('id_module'));
+        $moduleInstance = Module::getInstanceById((int) Tools::getValue('id_module'));
+
         return [];
         // $hooks = $moduleInstance->getPossibleHooksList();
     }
@@ -108,7 +110,7 @@ class PositionsType extends TranslatorAwareType
     protected function getExceptionsData()
     {
         $data = [
-            $this->trans('___________ CUSTOM ___________', 'Admin.Design.Feature') => null
+            $this->trans('___________ CUSTOM ___________', 'Admin.Design.Feature') => null,
         ];
 
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
@@ -121,7 +123,7 @@ class PositionsType extends TranslatorAwareType
 
         $modulesControllersType = [
             'admin' => $this->trans('Admin modules controller', 'Admin.Design.Feature'),
-            'front' => $this->trans('Front modules controller', 'Admin.Design.Feature')
+            'front' => $this->trans('Front modules controller', 'Admin.Design.Feature'),
         ];
 
         foreach ($modulesControllersType as $type => $label) {

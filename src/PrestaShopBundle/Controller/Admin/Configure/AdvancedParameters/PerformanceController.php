@@ -59,7 +59,7 @@ class PerformanceController extends FrameworkBundleAdminController
                 'href' => $this->generateUrl('admin_clear_cache'),
                 'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
                 'icon' => 'delete',
-            ]
+            ],
         ];
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;

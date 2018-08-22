@@ -39,7 +39,7 @@ interface ValidatorInterface
     public function isCleanHtml($html, array $options = []);
 
     /**
-     * Check if Module name is valid
+     * Check if Module name is valid.
      *
      * @param string $name
      *
