@@ -43,6 +43,11 @@ class ExportThemeLanguageType extends TranslatorAwareType
      */
     private $themeChoiceProvider;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $themeChoiceProvider
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -52,6 +57,9 @@ class ExportThemeLanguageType extends TranslatorAwareType
         $this->themeChoiceProvider = $themeChoiceProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

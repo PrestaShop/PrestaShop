@@ -57,9 +57,7 @@ final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get theme choices
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getChoices()
     {

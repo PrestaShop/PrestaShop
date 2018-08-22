@@ -32,22 +32,22 @@ namespace PrestaShop\PrestaShop\Core\Language\Copier;
 final class LanguageCopierConfig implements LanguageCopierConfigInterface
 {
     /**
-     * @var string
+     * @var string the theme name from which the language will be copied
      */
     private $themeFrom;
 
     /**
-     * @var string
+     * @var string the language iso code, which will be copied from
      */
     private $languageFrom;
 
     /**
-     * @var string
+     * @var string the theme name to which the language will be copied
      */
     private $themeTo;
 
     /**
-     * @var string
+     * @var string the language iso code, which will be copied to
      */
     private $languageTo;
 
