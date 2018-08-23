@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.cqrs.command_bus:
+        alias: 'tactician.commandbus.default'
+        public: false
+
+    prestashop.core.cqrs.query_bus:
+        alias: 'tactician.commandbus.default'
+        public: false
+
+    prestashop.core.cqrs.tactician_command_bus:
+        class: 'PrestaShop\PrestaShop\Core\Cqrs\TacticianCommandBusAdapter'
+        arguments:
+            - '@prestashop.core.cqrs.command_bus'
+
+    prestashop.core.cqrs.tactician_query_bus:
+        alias: 'prestashop.core.cqrs.tactician_command_bus'
