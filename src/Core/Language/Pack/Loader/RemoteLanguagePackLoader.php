@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Foundation\Version;
 final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
 {
     /**
-     * @var string - the link from which available languages are retrieved
+     * The link from which available languages are retrieved
      */
-    private $packLink = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+    const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
 
     /**
      * @var Version
@@ -56,7 +56,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     public function getLanguagePackList()
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getVersion(), $this->packLink);
+        $normalizedLink = str_replace('%ps_version%', $this->version->getVersion(), self::PACK_LINK);
         $jsonResponse = file_get_contents($normalizedLink);
 
         $result = [];
