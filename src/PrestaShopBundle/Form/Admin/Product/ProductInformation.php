@@ -142,7 +142,7 @@ class ProductInformation extends CommonAbstractType
             'required' => true,
         ])
             ->add('inputPackItems', TypeaheadProductPackCollectionType::class, [
-                'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
+                'remote_url' => $this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
                 'mapping_value' => 'id',
                 'mapping_name' => 'name',
                 'placeholder' => $this->translator->trans('Search for a product', [], 'Admin.Catalog.Help'),
@@ -276,7 +276,7 @@ class ProductInformation extends CommonAbstractType
                 'mapped' => false,
             ])
             ->add('related_products', TypeaheadProductCollectionType::class, [
-                'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+                'remote_url' => $this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
                 'mapping_value' => 'id',
                 'mapping_name' => 'name',
                 'placeholder' => $this->translator->trans('Search and add a related product', [], 'Admin.Catalog.Help'),
