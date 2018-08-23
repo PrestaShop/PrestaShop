@@ -34,7 +34,7 @@
 
 use ToolsCore as Tools;
 
-@trigger_error('Using ajax.php to make an ajax call is deprecated. Use a controller instead.', E_USER_DEPRECATED);
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated. Use a controller instead.', E_USER_DEPRECATED);
 
 require dirname(__FILE__).'/../classes/Tools.php';
 
