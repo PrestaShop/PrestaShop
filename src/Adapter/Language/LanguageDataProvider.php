@@ -75,23 +75,21 @@ class LanguageDataProvider
     }
 
     /**
-     * Gets the files list for given language
+     * Gets the files list for given language, including files from modules
      *
-     * @param $isoFrom
-     * @param $themeFrom
-     * @param bool $isoTo
-     * @param bool $themeTo
-     * @param bool $modules
+     * @param string $isoFrom
+     * @param string $themeFrom
+     * @param string $isoTo
+     * @param string $themeTo
      *
      * @return array
      */
     public function getFilesList(
         $isoFrom,
         $themeFrom,
-        $isoTo = false,
-        $themeTo = false,
-        $modules = false
+        $isoTo,
+        $themeTo
     ) {
-        return Language::getFilesList($isoFrom, $themeFrom, $isoTo, $themeTo, false, false, $modules);
+        return Language::getFilesList($isoFrom, $themeFrom, $isoTo, $themeTo, false, false, true);
     }
 }
