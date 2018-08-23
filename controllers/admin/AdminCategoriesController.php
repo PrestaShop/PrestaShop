@@ -1120,4 +1120,30 @@ class AdminCategoriesControllerCore extends AdminController
         );
         $this->ajaxRender(json_encode($children_categories));
     }
+
+    /**
+     * Look for a category having a part of the given query {q} in its name.
+     * Results are limited by the {limit} parameter
+     */
+    public function displayAjaxSearchCategory()
+    {
+        $q = Tools::getValue('q');
+        $limit = Tools::getValue('limit');
+        $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
+            FROM `'._DB_PREFIX_.'category` c
+            LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
+            WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
+            AND cl.`name` LIKE \'%'.pSQL($q).'%\'
+            GROUP BY c.id_category
+            ORDER BY c.`position`
+            LIMIT '.(int)$limit
+        );
+        $echo = '';
+        if ($results) {
+            foreach ($results as $result) {
+                $echo .= trim($result['name']).'|'.(int)$result['id_category'].PHP_EOL;
+            }
+        }
+        $this->ajaxRender($echo);
+    }
 }

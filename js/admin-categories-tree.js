@@ -296,6 +296,9 @@ function searchCategory()
 			formatItem: function(item)
 			{
 				return item[1]+' - '+item[0];
+			},
+			extraParams: {
+				token: window.token,
 			}
 		}).result(function(event, item)
 		{
