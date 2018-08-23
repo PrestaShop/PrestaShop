@@ -259,11 +259,6 @@ class ImportController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_import');
     }
 
-    public function loadImportMatchAction(Request $request)
-    {
-        //todo: implement
-    }
-
     public function saveImportMatchAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.advanced_parameters.import_data.form_handler');
@@ -273,7 +268,6 @@ class ImportController extends FrameworkBundleAdminController
         $form->setData($requestData['form']['import_data_configuration']);
 
         $errors = $formHandler->save($form->getData());
-
         return $this->json([
             'errors' => $errors
         ]);
