@@ -82,6 +82,18 @@ class ThemeRepository implements AddonRepositoryInterface
         return $this->themes;
     }
 
+    /**
+     * Gets list of themes as a collection
+     *
+     * @return ThemeCollection
+     */
+    public function getListAsCollection()
+    {
+        $list = $this->getList();
+
+        return ThemeCollection::createFrom($list);
+    }
+
     public function getListExcluding(array $exclude)
     {
         $filter = (new AddonListFilter())
