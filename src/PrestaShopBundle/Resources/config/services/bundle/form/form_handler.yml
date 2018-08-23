@@ -235,7 +235,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.webservice.form_data_provider'
             -
               'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceType'

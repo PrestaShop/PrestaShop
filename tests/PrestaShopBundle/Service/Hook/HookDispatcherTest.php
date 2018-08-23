@@ -80,21 +80,24 @@ class HookDispatcherTest extends KernelTestCase
     {
         $kernel = $this->createKernel();
         $kernel->boot();
-        $hookDisptacher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
 
-        $hookDisptacher->addListener('test_test_2', array($this, 'listenerCallback2'));
-        $hookDisptacher->addListener('test_test_2', array($this, 'listenerCallback2b'));
-        $event = $hookDisptacher->dispatch('test_test_2', new RenderingHookEvent());
+        $hookDispatcher->addListener('test_test_2', array($this, 'listenerCallback2'));
+        $hookDispatcher->addListener('test_test_2', array($this, 'listenerCallback2b'));
+        $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
+
         $this->assertArraySubset(array(
-            'listenerCallback2' => "result_test_2",
-            'overriden_listener_name' => "result_test_2b"
+            'listenerCallback2' => ["result_test_2"],
+            'overriden_listener_name' => ["result_test_2b"],
         ), $event->getContent());
     }
+
     public function listenerCallback2(RenderingHookEvent $event, $eventName)
     {
         $this->assertEquals('test_test_2', $eventName);
         $event->setContent(['result_test_2']);
     }
+
     public function listenerCallback2b(RenderingHookEvent $event, $eventName)
     {
         $this->assertEquals('test_test_2', $eventName);
