@@ -104,7 +104,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     }
 
     /**
-     * Gets formatted two letters language code with the second letter transformed in uppercase
+     * Gets language code in format of ISO 639-1
      *
      * @param string $languageCode - language code to format
      *
