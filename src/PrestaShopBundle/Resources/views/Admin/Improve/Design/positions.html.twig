@@ -45,7 +45,7 @@
                     <select id="show-modules" class="filter">
                       <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
                       {% for module in modules %}
-                        <option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %} >{{ module.displayName }}</option>
+                        <option value="{{ module.id }}"{% if selectedModule == module.id %} selected="selected"{% endif %}>{{ module.displayName }}</option>
                       {% endfor %}
                     </select>
                   </div>

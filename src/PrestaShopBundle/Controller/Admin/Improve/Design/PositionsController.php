@@ -43,11 +43,6 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * @var int
      */
-    protected $showModules = null;
-
-    /**
-     * @var int Not Implemented yet
-     */
     protected $selectedModule = null;
 
     /**
@@ -69,9 +64,9 @@ class PositionsController extends FrameworkBundleAdminController
         $admin_dir = basename(_PS_ADMIN_DIR_);
         $installedModules = $moduleAdapter->getModulesInstalled();
 
-        $showModules = $request->get('show_modules');
-        if ($showModules && strval($showModules) != 'all') {
-            $this->showModules = (int) $showModules;
+        $selectedModule = $request->get('show_modules');
+        if ($selectedModule && strval($selectedModule) != 'all') {
+            $this->selectedModule = (int) $selectedModule;
         }
 
         $modules = [];
@@ -116,11 +111,11 @@ class PositionsController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => [
                 'save' => [
                     'href' => $legacyContextService->getAdminLink('AdminModulesPositions') .
-                    '&addToHook' . ($this->showModules ? '&show_modules=' . $this->showModules : ''),
+                    '&addToHook' . ($this->selectedModule ? '&show_modules=' . $this->selectedModule : ''),
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
                 ],
             ],
-            'showModules' => $this->showModules,
+            'selectedModule' => $this->selectedModule,
             'selectedModule' => $this->selectedModule,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
@@ -132,62 +127,6 @@ class PositionsController extends FrameworkBundleAdminController
             'hooks' => $hooks,
             'modules' => $modules,
             'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
-        ];
-    }
-
-    /**
-     * Transplant a module.
-     *
-     * @TODO this part isn't finished yet, waiting for CQRS!
-     *
-     * @Template("@PrestaShop/Admin/Improve/Design/positions-form.html.twig")
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
-     *
-     * @param Request $request
-     * @param int $moduleId
-     * @param int $hookId
-     *
-     * @return Response
-     */
-    public function editAction(Request $request, $moduleId, $hookId)
-    {
-        /* @var $formHandler FormHandler */
-        $formHandler = $this->get('prestashop.adapter.improve.design.positions.form_handler');
-
-        /* @var $dataProvider PositionsFormDataProvider */
-        $dataProvider = $this->get('prestashop.adapter.improve.design.positions.form_provider');
-        $dataProvider->load(
-            $moduleId,
-            $hookId
-        );
-
-        /* @var $form Form */
-        $form = $formHandler->getForm();
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $errors = $formHandler->save($form->getData());
-            if (empty($errors)) {
-                $this->addFlash(
-                    'success',
-                    $this->trans('Update successful', 'Admin.Notifications.Success')
-                );
-            } else {
-                $this->flashErrors($errors);
-            }
-
-            return $this->redirectToRoute('admin_order_delivery_slip');
-        }
-
-        return [
-            'form' => $form->createView(),
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'layoutTitle' => $this->trans('Delivery Slips', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => false,
-            'requireBulkActions' => false,
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'selectedModule' => [],
         ];
     }
 
