@@ -125,7 +125,7 @@ class PositionsListHandler {
       );
     });
 
-    self.$moduleButtonsUpdate.on('click', function($event) {
+    self.$moduleButtonsUpdate.on('click', function() {
       const $btn = $(this);
       const $current = $btn.closest('.module-item');
       let $destination;
