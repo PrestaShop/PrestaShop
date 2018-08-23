@@ -43,28 +43,38 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
      * @var LanguagePackInstaller
      */
     private $languagePack;
+
     /**
      * @var LanguageDataProvider
      */
     private $languageProvider;
+
     /**
      * @var CacheClearer
      */
     private $cacheClearer;
 
     /**
+     * @var string
+     */
+    private $translationsDir;
+
+    /**
      * @param LanguagePackInstallerInterface $languagePack
      * @param LanguageDataProvider $languageProvider
      * @param CacheClearer $cacheClearer
+     * @param string $translationsDir
      */
     public function __construct(
         LanguagePackInstallerInterface $languagePack,
         LanguageDataProvider $languageProvider,
-        CacheClearer $cacheClearer
+        CacheClearer $cacheClearer,
+        $translationsDir
     ) {
         $this->languagePack = $languagePack;
         $this->languageProvider = $languageProvider;
         $this->cacheClearer = $cacheClearer;
+        $this->translationsDir = $translationsDir;
     }
 
     /**
@@ -97,7 +107,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
         $languageCode = $this->languageProvider->getLanguageCodeByIso($isoCode);
         $languageCode = $this->getFormattedLanguageCode($languageCode);
 
-        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate = new Update($this->translationsDir);
         $cldrUpdate->fetchLocale($languageCode);
     }
 
