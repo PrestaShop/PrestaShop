@@ -50,11 +50,6 @@ services:
         arguments:
             - "@prestashop.adapter.data_provider.product"
 
-    prestashop.service.improve.design.positions:
-        class: PrestaShopBundle\Service\Improve\Design\PositionsService
-        arguments:
-            - '@prestashop.core.validation.validator'
-
     prestashop.service.translation:
         class: PrestaShopBundle\Service\TranslationService
         properties:

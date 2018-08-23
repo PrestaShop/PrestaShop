@@ -112,11 +112,6 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.improve.design.positions.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Improve\Design\PositionsConfiguration'
-        arguments:
-            - '@prestashop.adapter.legacy.configuration'
-
     prestashop.adapter.order.invoice_options.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
         arguments:
