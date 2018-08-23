@@ -24,7 +24,6 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
 
     public function getConfiguration()
     {
-        // TODO: Implement getConfiguration() method.
     }
 
     public function updateConfiguration(array $configuration)
