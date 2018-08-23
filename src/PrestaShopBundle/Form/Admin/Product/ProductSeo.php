@@ -65,8 +65,8 @@ class ProductSeo extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $remoteUrls = [
-            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $$this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
             ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
         ];
@@ -163,7 +163,7 @@ class ProductSeo extends CommonAbstractType
                 'id_type_redirected',
                 TypeaheadProductCollectionType::class,
                 [
-                    'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+                    'remote_url' => $this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
                     'mapping_value' => 'id',
                     'mapping_name' => 'name',
                     'mapping_type' => $options['mapping_type'],

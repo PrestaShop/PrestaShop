@@ -1262,7 +1262,8 @@ product_tabs['Pack'] = new function() {
 				dataType: 'json',
 				data: function (term) {
 					return {
-						q: term
+						q: term,
+						token: window.token
 					};
 				},
 				results: function (data) {
