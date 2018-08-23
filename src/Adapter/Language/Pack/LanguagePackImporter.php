@@ -74,17 +74,13 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     {
         $result = $this->languagePack->downloadAndInstallLanguagePack($isoCode);
 
-        $errors = [];
-        // returns the errors
-        if (is_array($result) && !empty($result)) {
-            $errors = $result;
+        if (!empty($result)) {
+            return $result;
         }
+        
+        $this->updateCldr($isoCode);
 
-        if (empty($errors)) {
-            $this->updateCldr($isoCode);
-        }
-
-        return $errors;
+        return [];
     }
 
     /**

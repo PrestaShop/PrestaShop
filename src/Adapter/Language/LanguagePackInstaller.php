@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Language;
 use Language;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class LanguagePack is responsible for the language pack actions regarding installation
@@ -41,13 +42,20 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
     private $version;
 
     /**
-     * LanguagePack constructor.
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * LanguagePackInstaller constructor.
      *
+     * @param TranslatorInterface $translator
      * @param Version $version
      */
-    public function __construct(Version $version)
+    public function __construct(TranslatorInterface $translator, Version $version)
     {
         $this->version = $version;
+        $this->translator = $translator;
     }
 
     /**
@@ -55,6 +63,22 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
      */
     public function downloadAndInstallLanguagePack($iso)
     {
-        return Language::downloadAndInstallLanguagePack($iso, $this->version->getVersion());
+        $result = Language::downloadAndInstallLanguagePack($iso, $this->version->getVersion());
+
+        if (false === $result) {
+            return [
+                $this->translator->trans(
+                    'Fatal error: ISO code is not correct',
+                    [],
+                    'Admin.International.Notification'
+                )
+            ];
+        }
+
+        if (is_array($result) && !empty($result)) {
+            return $result;
+        }
+
+        return [];
     }
 }
