@@ -147,7 +147,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function dispatchHook($hookName, array $parameters)
     {
-        $this->get('prestashop.core.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
+        $this->get('prestashop.core.hook.dispatcher')->dispatchWithParameters($hookName, $parameters);
     }
 
     /**
