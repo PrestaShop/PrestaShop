@@ -772,6 +772,7 @@ class LinkCore
             default:
                 $routes = array(
                     'AdminAdminPreferences' => 'admin_administration',
+                    'AdminCommon' => 'admin_common_notifications',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
                     'AdminImport' => 'admin_import',

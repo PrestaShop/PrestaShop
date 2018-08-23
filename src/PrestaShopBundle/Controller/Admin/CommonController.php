@@ -42,6 +42,21 @@ use Symfony\Component\HttpFoundation\Response;
 class CommonController extends FrameworkBundleAdminController
 {
     /**
+     * Get a summary of recent events on the shop.
+     * This includes:
+     * - Created orders
+     * - Registered customers
+     * - New messages
+     *
+     * @return JsonResponse
+     */
+    public function notificationsAction()
+    {
+        // Adapter needed here?
+        return new JsonResponse((new \Notification)->getLastElements());
+    }
+
+    /**
      * This will allow you to retrieve an HTML code with a ready and linked paginator.
      *
      * To be able to use this paginator, the current route must have these standard parameters:
