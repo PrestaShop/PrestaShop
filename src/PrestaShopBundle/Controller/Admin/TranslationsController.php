@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -105,7 +106,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
         $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
         $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
-        $copyLanguageForm = $this->get('prestashop.admin.translations.copy_language.form_handler')->getForm();
+        $copyLanguageForm = $this->createForm(CopyLanguageType::class);
         $exportLanguageForm = $this->createForm(ExportThemeLanguageType::class);
 
         return [
@@ -226,36 +227,26 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function copyLanguageAction(Request $request)
     {
-        $formHandler = $this->get('prestashop.admin.translations.copy_language.form_handler');
-        $form = $formHandler->getForm();
+        $form = $this->createForm(CopyLanguageType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            $languageCopier = $this->get('prestashop.adapter.language.copier');
             $data = $form->getData();
+            $languageCopierConfig = new LanguageCopierConfig(
+                $data['from_theme'],
+                $data['from_language'],
+                $data['to_theme'],
+                $data['to_language']
+            );
 
-            if ($errors = $formHandler->save($data)) {
+            if ($errors = $languageCopier->copy($languageCopierConfig)) {
                 $this->flashErrors($errors);
             } else {
-                $languageCopier = $this->get('prestashop.adapter.language.copier');
-
-                $languageCopierConfig = new LanguageCopierConfig(
-                    $data['copy_language']['from_theme'],
-                    $data['copy_language']['from_language'],
-                    $data['copy_language']['to_theme'],
-                    $data['copy_language']['to_language']
+                $this->addFlash(
+                    'success',
+                    $this->trans('The translation was successfully copied.', 'Admin.International.Notification')
                 );
-                $errors = $languageCopier->copy($languageCopierConfig);
-
-                if ($errors) {
-                    foreach ($errors as $error) {
-                        $this->addFlash('error', $error);
-                    }
-                } else {
-                    $this->addFlash(
-                        'success',
-                        $this->trans('The translation was successfully copied.', 'Admin.International.Notification')
-                    );
-                }
             }
         }
 
