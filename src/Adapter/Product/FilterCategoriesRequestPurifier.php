@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Adapter\Product;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use Symfony\Component\HttpFoundation\Request;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Extracted from Product Controller, used to cleanup the request.
+ * For internal use only.
+ */
+final class FilterCategoriesRequestPurifier
+{
+    const CATEGORY = 'filter_category';
+
+    /**
+     * Changes the filter category values in case it is not numeric or signed.
+     *
+     * @param Request $request
+     *
+     * @return Request
+     */
+    public function purify(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+            $value = $request->request->get(self::CATEGORY);
+            if (null !== $value && (!is_numeric($value) || $value < 0)) {
+                $request->request->set(self::CATEGORY, '');
+            }
+        }
+
+        return $request;
+    }
+}

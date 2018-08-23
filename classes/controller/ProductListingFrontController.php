@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
-use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
-use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
@@ -165,7 +161,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'js_enabled' => $this->ajax,
             'activeFilters' => $activeFilters,
             'sort_order' => $result->getCurrentSortOrder()->toString(),
-            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null))
+            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null)),
         ));
     }
 
@@ -200,7 +196,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         return $this->render('catalog/_partials/active_filters', array(
             'activeFilters' => $activeFilters,
-            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null))
+            'clear_all_link' => $this->updateQueryString(array('q' => null, 'page' => null)),
         ));
     }
 
@@ -401,7 +397,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * Generated URLs will include the page number, obviously,
      * but also the sort order and the "q" (facets) parameters.
      *
-     * @param ProductSearchQuery  $query
+     * @param ProductSearchQuery $query
      * @param ProductSearchResult $result
      *
      * @return an array that makes rendering the pagination very easy
@@ -434,7 +430,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $link;
             }, $pagination->buildLinks()),
             // Compare to 3 because there are the next and previous links
-            'should_be_displayed' => (count($pagination->buildLinks()) > 3)
+            'should_be_displayed' => (count($pagination->buildLinks()) > 3),
         );
     }
 
@@ -445,7 +441,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * but not the page number because normally when you change the sort order
      * you want to go back to page one.
      *
-     * @param array  $sortOrders                   the available sort orders
+     * @param array $sortOrders the available sort orders
      * @param string $currentSortOrderURLParameter used to know which of the sort orders (if any) is active
      *
      * @return array

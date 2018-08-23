@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\PDF;
 use PrestaShop\PrestaShop\Core\PDF\PDFTemplateTypeProviderInterface;
 
 /**
- * Class InvoiceTemplateTypeProvider provides invoice PDF template type
+ * Class InvoiceTemplateTypeProvider provides invoice PDF template type.
  */
 final class InvoiceTemplateTypeProvider implements PDFTemplateTypeProviderInterface
 {

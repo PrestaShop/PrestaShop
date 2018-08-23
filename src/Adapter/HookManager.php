@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Hook;
@@ -34,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HookManager
 {
     /**
-     * Execute modules for specified hook
+     * Execute modules for specified hook.
      *
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
@@ -68,9 +69,12 @@ class HookManager
             $hook_args = array_merge(array('request' => $request), $hook_args);
 
             // If Symfony application is booted, we use it to dispatch Hooks
-            $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
+            $hookDispatcher = $sfContainer->get('prestashop.core.hook.dispatcher');
 
-            return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
+            return $hookDispatcher
+                ->dispatchRenderingWithParameters($hook_name, $hook_args)
+                ->getContent()
+            ;
         } else {
             try {
                 return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);

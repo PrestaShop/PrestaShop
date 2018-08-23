@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 class DoctrineGridDataProviderTest extends TestCase
@@ -54,10 +54,10 @@ class DoctrineGridDataProviderTest extends TestCase
         $data = $this->doctrineDataProvider->getData($criteria);
 
         $this->assertInstanceOf(GridDataInterface::class, $data);
-        $this->assertInstanceOf(RowCollectionInterface::class, $data->getRows());
+        $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
 
-        $this->assertEquals(4, $data->getRowsTotal());
-        $this->assertCount(2, $data->getRows());
+        $this->assertEquals(4, $data->getRecordsTotal());
+        $this->assertCount(2, $data->getRecords());
         $this->assertEquals('SELECT * FROM ps_test', $data->getQuery());
     }
 

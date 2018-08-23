@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\PDF;
 
 /**
- * Interface PDFGeneratorInterface defines a PDF generator
+ * Interface PDFGeneratorInterface defines a PDF generator.
  */
 interface PDFGeneratorInterface
 {
     /**
-     * Generates PDF out of given object and template using legacy generator
+     * Generates PDF out of given object and template using legacy generator.
      *
      * @param array $objectCollection collection of objects
      */

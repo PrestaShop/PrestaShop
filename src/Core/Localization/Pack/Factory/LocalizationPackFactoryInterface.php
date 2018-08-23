@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Localization\Pack\Factory;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 
 /**
- * Interface LocalizationPackFactoryInterface defines contract for localization pack factory
+ * Interface LocalizationPackFactoryInterface defines contract for localization pack factory.
  */
 interface LocalizationPackFactoryInterface
 {
     /**
-     * Creates new localization pack
+     * Creates new localization pack.
      *
      * @return LocalizationPack
      */

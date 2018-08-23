@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 use GuzzleHttp\Exception\RequestException;
@@ -123,6 +124,7 @@ class CategoriesProvider
                 }
             }
         }
+
         return $categoryName;
     }
 
@@ -133,6 +135,7 @@ class CategoriesProvider
      * @param $name
      * @param array $moduleIds
      * @param null $tab
+     *
      * @return object
      */
     private function createMenuObject($menu, $name, $moduleIds = array(), $tab = null)

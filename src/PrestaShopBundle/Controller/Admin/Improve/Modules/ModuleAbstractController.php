@@ -35,9 +35,10 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     /**
-     * Common method of alerts & updates routes for getting template variables
+     * Common method of alerts & updates routes for getting template variables.
      *
      * @param string $type Type of alert to display (to_configure / to_update ...)
+     *
      * @return array
      */
     protected function getNotificationPageData($type)
@@ -65,7 +66,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     }
 
     /**
-     * Common method for all module related controller for getting the header buttons
+     * Common method for all module related controller for getting the header buttons.
      *
      * @return array
      */
@@ -93,7 +94,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     }
 
     /**
-     * Create a button in the header for the marketplace account (login or logout)
+     * Create a button in the header for the marketplace account (login or logout).
      *
      * @return array
      */
@@ -102,13 +103,14 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
+
             return [
                 'addons_logout' => [
                     'href' => '#',
                     'desc' => $addonsEmail['username_addons'],
                     'icon' => 'exit_to_app',
                     'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
-                ]
+                ],
             ];
         }
 
@@ -118,7 +120,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
                 'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
                 'icon' => 'vpn_key',
                 'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-            ]
+            ],
         ];
     }
 }

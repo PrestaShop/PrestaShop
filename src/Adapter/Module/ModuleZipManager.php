@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-
 use Exception;
 use Tools;
 use ZipArchive;
@@ -54,8 +53,9 @@ class ModuleZipManager
      */
     private $filesystem;
 
-     /**
-     * Translator
+    /**
+     * Translator.
+     *
      * @var TranslatorInterface
      */
     private $translator;
@@ -63,29 +63,31 @@ class ModuleZipManager
     /**
      * @var EventDispatcherInterface
      */
-    private $dispatcher;
-    
+    private $eventDispatcher;
+
     public function __construct(
         Filesystem $filesystem,
         TranslatorInterface $translator,
-        EventDispatcherInterface $dispatcher
-        )
-    {
+        EventDispatcherInterface $eventDispatcher
+        ) {
         $this->filesystem = $filesystem;
         $this->translator = $translator;
-        $this->dispatcher = $dispatcher;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Detect module name from zipball.
-     * @param String $source
-     * @return String
+     *
+     * @param string $source
+     *
+     * @return string
+     *
      * @throws Exception If unable to find the module name
      */
     public function getName($source)
     {
         $this->initSource($source);
-        
+
         if ($this->getSource($source)->getName($source) !== null) {
             return $this->getSource($source)->getName($source);
         }
@@ -106,7 +108,7 @@ class ModuleZipManager
                     'Cannot extract module in %path% to get its name. %error%',
                     array(
                         '%path%' => $sandboxPath,
-                        '%error%' => $zip->getStatusString()),
+                        '%error%' => $zip->getStatusString(), ),
                     'Admin.Modules.Notification'));
         }
 
@@ -127,12 +129,12 @@ class ModuleZipManager
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
                     ->files()
-                    ->in($sandboxPath.$moduleName)
+                    ->in($sandboxPath . $moduleName)
                     ->depth('== 0')
                     ->exclude(['__MACOSX'])
                     ->ignoreVCS(true);
             foreach (iterator_to_array($moduleFolder) as $file) {
-                if ($file->getFileName() === $moduleName.'.php') {
+                if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
                     break;
                 }
@@ -148,50 +150,60 @@ class ModuleZipManager
         }
 
         $this->getSource($source)->setName($moduleName);
+
         return $moduleName;
     }
 
     /**
-     * When ready, send the module Zip in the modules folder
-     * @param String $source
+     * When ready, send the module Zip in the modules folder.
+     *
+     * @param string $source
      */
     public function storeInModulesFolder($source)
     {
         $name = $this->getName($source);
         $sandboxPath = $this->getSandboxPath($source);
         // Now we are sure to have a valid module, we copy it to the modules folder
-        $modulePath = _PS_MODULE_DIR_.$name;
+        $modulePath = _PS_MODULE_DIR_ . $name;
         $this->filesystem->mkdir($modulePath);
         $this->filesystem->mirror(
-            $sandboxPath.$name,
+            $sandboxPath . $name,
             $modulePath,
             null,
             array('override' => true)
         );
-        $this->dispatcher->dispatch(
-            ModuleZipManagementEvent::DOWNLOAD,
-            new ModuleZipManagementEvent($this->getSource($source)));
+        $this->eventDispatcher
+            ->dispatch(
+                ModuleZipManagementEvent::DOWNLOAD,
+                new ModuleZipManagementEvent($this->getSource($source))
+            )
+        ;
+
         $this->filesystem->remove($sandboxPath);
     }
 
     /**
      * @param $source
+     *
      * @return null|string
      */
     private function getSandboxPath($source)
     {
         $sandboxPath = $this->getSource($source)->getSandboxPath();
         if ($sandboxPath === null) {
-            $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
+            $sandboxPath = _PS_CACHE_DIR_ . 'sandbox/' . uniqid() . '/';
             $this->filesystem->mkdir($sandboxPath);
             $this->getSource($source)->setSandboxPath($sandboxPath);
         }
+
         return $sandboxPath;
     }
 
     /**
-     * Get a ModuleZip instance from a given source (= zip filepath)
+     * Get a ModuleZip instance from a given source (= zip filepath).
+     *
      * @param string $source
+     *
      * @return null|ModuleZip
      */
     private function getSource($source)
@@ -199,12 +211,14 @@ class ModuleZipManager
         if (!array_key_exists($source, self::$sources)) {
             return null;
         }
+
         return self::$sources[$source];
     }
 
     /**
-     * Init all data regarding a source before proceeding it
-     * @param String $source
+     * Init all data regarding a source before proceeding it.
+     *
+     * @param string $source
      */
     private function initSource($source)
     {

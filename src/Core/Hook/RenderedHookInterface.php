@@ -1,5 +1,6 @@
-{**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,24 +22,26 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{extends file="helpers/list/list_header.tpl"}
+namespace PrestaShop\PrestaShop\Core\Hook;
 
-{block name="override_header"}
+/**
+ * Interface RenderedHookInterface defines contract for rendered hook.
+ */
+interface RenderedHookInterface
+{
+    /**
+     * Get rendered hook.
+     *
+     * @return HookInterface
+     */
+    public function getHook();
 
-	<div class="panel">
-		<h3>
-			<i class="icon-warning-sign"></i>
-			{l s='Severity levels' d='Admin.Advparameters.Help'}
-		</h3>
-		<p>{l s='Meaning of severity levels:'}</p>
-		<ol>
-			<li><span class="badge badge-success">{l s='Informative only' d='Admin.Advparameters.Help'}</span></li>
-			<li><span class="badge badge-warning">{l s='Warning' d='Admin.Advparameters.Help'}</span></li>
-			<li><span class="badge badge-danger">{l s='Error' d='Admin.Advparameters.Help'}</span></li>
-			<li><span class="badge badge-critical">{l s='Major issue (crash)!' d='Admin.Advparameters.Help'}</span></li>
-		</ol>
-	</div>
-
-{/block}
+    /**
+     * Get rendered content.
+     *
+     * @return array
+     */
+    public function getContent();
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * Class SmtpDataConfigurator is responsible for configuring SMTP data
+ * Class SmtpDataConfigurator is responsible for configuring SMTP data.
  */
 final class SmtpDataConfigurator implements DataConfigurationInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic category form
- * Name (not translated), and parent category selector
+ * Name (not translated), and parent category selector.
  */
 class SimpleCategory extends CommonAbstractType
 {
@@ -43,7 +43,7 @@ class SimpleCategory extends CommonAbstractType
     private $categories;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $categoryDataProvider
@@ -55,7 +55,7 @@ class SimpleCategory extends CommonAbstractType
     }
 
     /**
-     * Create and format a valid array keys categories that can be validate by the choice SF2 cform component
+     * Create and format a valid array keys categories that can be validate by the choice SF2 cform component.
      *
      * @param array $list The nested array categories
      */
@@ -82,12 +82,12 @@ class SimpleCategory extends CommonAbstractType
             'required' => false,
             'attr' => [
                 'placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'),
-                'class' => 'ajax'
+                'class' => 'ajax',
             ],
             'constraints' => $options['ajax'] ? [] : [
                 new Assert\NotBlank(),
-                new Assert\Length(['min' => 1, 'max' => 128])
-            ]
+                new Assert\Length(['min' => 1, 'max' => 128]),
+            ],
         ])
             ->add('id_parent', ChoiceType::class, [
                 'choices' => $this->categories,
@@ -96,7 +96,7 @@ class SimpleCategory extends CommonAbstractType
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
                 ],
-                'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature')
+                'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature'),
             ]);
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,46 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column;
+namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Define a Column filter option.
+ * Interface FilterCollectionInterface defines contract for grid filters.
  */
-final class ColumnFilterOption
+interface FilterCollectionInterface
 {
     /**
-     * @var string class name that must implements FormTypeInterface
+     * Add filter to collection.
+     *
+     * @param FilterInterface $filter
+     *
+     * @return self
      */
-    private $filterType;
+    public function add(FilterInterface $filter);
 
     /**
-     * @var array
+     * Remove filter from collection.
+     *
+     * @param string $filterName
+     *
+     * @return self
      */
-    private $filterTypeOptions;
+    public function remove($filterName);
 
     /**
-     * @param string $filterType
-     * @param array $filterTypeOptions
+     * Get all filters.
+     *
+     * @return FilterInterface[]
      */
-    public function __construct($filterType, array $filterTypeOptions = [])
-    {
-        $this->filterType = $filterType;
-        $this->filterTypeOptions = $filterTypeOptions;
-    }
-
-    /**
-     * @return string the class name of Form Type.
-     */
-    public function getFilterType()
-    {
-        return $this->filterType;
-    }
-
-    /**
-     * @return array the form type options if any.
-     */
-    public function getFilterTypeOptions()
-    {
-        return $this->filterTypeOptions;
-    }
+    public function all();
 }

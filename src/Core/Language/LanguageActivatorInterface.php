@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,25 +27,21 @@
 namespace PrestaShop\PrestaShop\Core\Language;
 
 /**
- * Interface LanguageActivatorInterface defines contract for language activator
+ * Interface LanguageActivatorInterface defines contract for language activator.
  */
 interface LanguageActivatorInterface
 {
     /**
-     * Activate language
+     * Activate language.
      *
      * @param int $langId
-     *
-     * @return void
      */
     public function enable($langId);
 
     /**
-     * Deactivate language
+     * Deactivate language.
      *
      * @param int $langId
-     *
-     * @return void
      */
     public function disable($langId);
 }

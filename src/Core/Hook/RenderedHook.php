@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,20 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Row;
-
-use Countable;
-use Iterator;
+namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * Interface RowCollectionInterface defines interface for raw rows wrapper
+ * Class RenderingHook defines rendered hook.
  */
-interface RowCollectionInterface extends Countable, Iterator
+final class RenderedHook implements RenderedHookInterface
 {
     /**
-     * Get raw rows
-     *
-     * @return array
+     * @var HookInterface
      */
-    public function getRows();
+    private $hook;
+
+    /**
+     * @var array ['module_name' => 'rendered_content', ...]
+     */
+    private $content;
+
+    /**
+     * @param HookInterface $hook
+     * @param array $content
+     */
+    public function __construct(HookInterface $hook, array $content = [])
+    {
+        $this->hook = $hook;
+        $this->content = $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHook()
+    {
+        return $this->hook;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
 }

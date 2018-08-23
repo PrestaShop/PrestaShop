@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,18 +37,18 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 class Price extends NumberSpecification
 {
     /**
-     * Currency display option : symbol notation
+     * Currency display option : symbol notation.
      */
     const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
-     * Currency display option : ISO code notation
+     * Currency display option : ISO code notation.
      */
     const CURRENCY_DISPLAY_CODE = 'code';
 
     /**
      * Type of display for currency symbol
-     * cf. self::CURRENCY_DISPLAY_SYMBOL and self::CURRENCY_DISPLAY_CODE constants
+     * cf. self::CURRENCY_DISPLAY_SYMBOL and self::CURRENCY_DISPLAY_CODE constants.
      *
      * @var string
      */
@@ -56,13 +56,13 @@ class Price extends NumberSpecification
 
     /**
      * @var string The currency symbol
-     * eg : €
+     *             eg : €
      */
     protected $currencySymbol;
 
     /**
      * @var string The currency code
-     * eg : EUR
+     *             eg : EUR
      */
     protected $currencyCode;
 
@@ -70,36 +70,26 @@ class Price extends NumberSpecification
      * Price specification constructor.
      *
      * @param string $positivePattern
-     *  CLDR formatting pattern for positive amounts
-     *
+     *                                CLDR formatting pattern for positive amounts
      * @param string $negativePattern
-     *  CLDR formatting pattern for negative amounts
-     *
+     *                                CLDR formatting pattern for negative amounts
      * @param NumberSymbolList[] $symbols
-     *  List of available number symbols lists (NumberSymbolList objects)
-     *  Each list is indexed by numbering system
-     *
+     *                                    List of available number symbols lists (NumberSymbolList objects)
+     *                                    Each list is indexed by numbering system
      * @param int $maxFractionDigits
-     *  Maximum number of digits after decimal separator
-     *
+     *                               Maximum number of digits after decimal separator
      * @param int $minFractionDigits
-     *  Minimum number of digits after decimal separator
-     *
+     *                               Minimum number of digits after decimal separator
      * @param bool $groupingUsed
-     *  Is digits grouping used ?
-     *
+     *                           Is digits grouping used ?
      * @param int $primaryGroupSize
-     *  Size of primary digits group in the number
-     *
+     *                              Size of primary digits group in the number
      * @param int $secondaryGroupSize
-     *  Size of secondary digits group in the number
-     *
+     *                                Size of secondary digits group in the number
      * @param string $currencyDisplay
-     *  Type of display for currency symbol
-     *
+     *                                Type of display for currency symbol
      * @param string $currencySymbol
-     *  Currency symbol of this price (eg. : €)
-     *
+     *                               Currency symbol of this price (eg. : €)
      * @param $currencyCode
      *  Currency code of this price (eg. : EUR)
      *
@@ -119,8 +109,8 @@ class Price extends NumberSpecification
         $currencyCode
     ) {
         $this->currencyDisplay = $currencyDisplay;
-        $this->currencySymbol  = $currencySymbol;
-        $this->currencyCode    = $currencyCode;
+        $this->currencySymbol = $currencySymbol;
+        $this->currencyCode = $currencyCode;
 
         parent::__construct(
             $positivePattern,
@@ -135,7 +125,7 @@ class Price extends NumberSpecification
     }
 
     /**
-     * Get type of display for currency symbol
+     * Get type of display for currency symbol.
      *
      * @return string
      */
@@ -146,7 +136,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency symbol
-     * eg. : €
+     * eg. : €.
      *
      * @return string
      */
@@ -157,7 +147,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency ISO code
-     * eg. : EUR
+     * eg. : EUR.
      *
      * @return string
      */
@@ -167,7 +157,7 @@ class Price extends NumberSpecification
     }
 
     /**
-     * Data (attributes) validation
+     * Data (attributes) validation.
      *
      * @throws LocalizationException
      */

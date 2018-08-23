@@ -63,7 +63,7 @@ class ProductPreferencesFormHandler extends FormHandler
     /**
      * Inject the cache clearer if needed.
      *
-     * @param CacheClearer $cacheClearer The Cache clearer.
+     * @param CacheClearer $cacheClearer the Cache clearer
      */
     public function setCacheClearer(CacheClearer $cacheClearer)
     {

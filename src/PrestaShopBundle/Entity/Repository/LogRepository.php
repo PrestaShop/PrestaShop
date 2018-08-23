@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -45,7 +45,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
-        $this->logTable = $this->databasePrefix."log";
+        $this->logTable = $this->databasePrefix . 'log';
     }
 
     /**
@@ -60,7 +60,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
     /**
      * Get all logs with employee name and avatar information SQL query.
+     *
      * @param array $filters
+     *
      * @return string the SQL query
      */
     public function findAllWithEmployeeInformationQuery($filters)
@@ -79,7 +81,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
     /**
      * Get all logs with employee name and avatar information.
+     *
      * @param array $filters
+     *
      * @return array the list of logs
      */
     public function findAllWithEmployeeInformation($filters)
@@ -92,19 +96,21 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
     /**
      * Get a reusable Query Builder to dump and execute SQL.
+     *
      * @param array $filters
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     public function getAllWithEmployeeInformationQuery($filters)
     {
-        $employeeTable = $this->databasePrefix.'employee';
+        $employeeTable = $this->databasePrefix . 'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
         $wheres = array_filter($filters['filters'], function ($value) {
             return !empty($value);
         });
         $scalarFilters = array_filter($wheres, function ($key) {
             return !in_array($key, array('date_from', 'date_to', 'employee'), true);
-        },ARRAY_FILTER_USE_KEY);
+        }, ARRAY_FILTER_USE_KEY);
 
         $qb = $queryBuilder
             ->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
@@ -118,7 +124,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         if (!empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {
                 $qb->andWhere("$column LIKE :$column");
-                $qb->setParameter($column, '%'.$value.'%');
+                $qb->setParameter($column, '%' . $value . '%');
             }
         }
 
@@ -134,7 +140,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         /* Manage Employee filter */
         if (!empty($wheres['employee'])) {
             $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
-            $qb->setParameter('employee', '%'.$wheres['employee'].'%');
+            $qb->setParameter('employee', '%' . $wheres['employee'] . '%');
         }
 
         return $qb;
@@ -142,18 +148,20 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
     /**
      * Delete all logs.
-     * @return integer The number of affected rows.
+     *
+     * @return int the number of affected rows
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function deleteAll()
     {
-        $platform   = $this->connection->getDatabasePlatform();
+        $platform = $this->connection->getDatabasePlatform();
 
         return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
     }
 
     /**
-     * Get query that searches grid rows
+     * Get query that searches grid rows.
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *
@@ -174,7 +182,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     }
 
     /**
-     * Get query that counts grid rows
+     * Get query that counts grid rows.
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *
@@ -189,7 +197,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     }
 
     /**
-     * Build query body without select, sorting & limiting
+     * Build query body without select, sorting & limiting.
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *
@@ -197,7 +205,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     private function buildGridQuery(SearchCriteriaInterface $searchCriteria = null)
     {
-        $employeeTable = $this->databasePrefix.'employee';
+        $employeeTable = $this->databasePrefix . 'employee';
 
         $qb = $this->connection
             ->createQueryBuilder()
@@ -216,7 +224,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
             if ('employee' == $filterName) {
                 $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
-                $qb->setParameter('employee', '%'.$filterValue.'%');
+                $qb->setParameter('employee', '%' . $filterValue . '%');
                 continue;
             }
 
@@ -234,7 +242,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             $qb->andWhere("$filterName LIKE :$filterName");
-            $qb->setParameter($filterName, '%'.$filterValue.'%');
+            $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
 
         return $qb;

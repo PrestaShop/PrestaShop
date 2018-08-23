@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 use Iterator;
 
 /**
- * Interface PanelActionCollectionInterface defines contract for grid action collection
+ * Interface PanelActionCollectionInterface defines contract for grid action collection.
  */
 interface GridActionCollectionInterface extends Iterator
 {
     /**
-     * Add grid action to collection
+     * Add grid action to collection.
      *
      * @param GridActionInterface $action
      *
@@ -43,7 +43,7 @@ interface GridActionCollectionInterface extends Iterator
     public function add(GridActionInterface $action);
 
     /**
-     * Get grid panel actions as array
+     * Get grid panel actions as array.
      *
      * @return array
      */

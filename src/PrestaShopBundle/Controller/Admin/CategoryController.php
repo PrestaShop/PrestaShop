@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +32,12 @@ use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Admin controller for the Category pages
+ * Admin controller for the Category pages.
  */
 class CategoryController extends FrameworkBundleAdminController
 {
     /**
-     * Process Ajax Form to add a simple category (name and parent category)
+     * Process Ajax Form to add a simple category (name and parent category).
      *
      * @param Request $request
      *
@@ -88,10 +89,11 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get Categories formatted like ajax_product_file.php
+     * Get Categories formatted like ajax_product_file.php.
      *
      * @param $limit
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function getAjaxCategoriesAction($limit, Request $request)

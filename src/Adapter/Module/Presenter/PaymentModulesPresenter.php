@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
 /**
- * Class PaymentModulesPresenter is responsible for presenting payment modules
+ * Class PaymentModulesPresenter is responsible for presenting payment modules.
  */
 class PaymentModulesPresenter
 {
@@ -80,7 +80,7 @@ class PaymentModulesPresenter
     }
 
     /**
-     * Get presented payment modules
+     * Get presented payment modules.
      *
      * @return array
      */

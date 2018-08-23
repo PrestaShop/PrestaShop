@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,7 @@
 
 /**
  * Class PaymentFree
- * Simple class to allow free order
+ * Simple class to allow free order.
  */
 class PaymentFree extends PaymentModule
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,11 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Image;
 
 use Db;
-use Exception;
 use Shop;
 
 class ImageTypeRepository
@@ -57,6 +55,7 @@ class ImageTypeRepository
                 $data['scope']
             );
         }
+
         return $this;
     }
 
@@ -94,7 +93,7 @@ class ImageTypeRepository
             "SELECT id_image_type FROM {$this->db_prefix}image_type WHERE name = '$escaped_name'"
         );
 
-        return (int)$id_image_type;
+        return (int) $id_image_type;
     }
 
     protected function removeAllTypes()

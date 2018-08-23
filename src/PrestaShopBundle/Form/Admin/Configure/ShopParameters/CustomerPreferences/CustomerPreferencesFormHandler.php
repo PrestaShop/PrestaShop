@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -63,16 +63,17 @@ final class CustomerPreferencesFormHandler extends FormHandler
     }
 
     /**
-     * Based on B2b mode, we need to enable/disable some tabs
+     * Based on B2b mode, we need to enable/disable some tabs.
      *
      * @param bool $b2bMode Current B2B mode status
+     *
      * @throws \InvalidArgumentException
      */
     private function handleB2bUpdate($b2bMode)
     {
         $b2bTabs = ['AdminOutstanding'];
         foreach ($b2bTabs as $tabName) {
-            $this->tabRepository->changeStatusByClassName($tabName, (bool)$b2bMode);
+            $this->tabRepository->changeStatusByClassName($tabName, (bool) $b2bMode);
         }
     }
 }

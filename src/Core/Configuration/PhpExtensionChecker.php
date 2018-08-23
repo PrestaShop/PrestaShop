@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
 /**
- * Class PhpExtensionChecker provides object-oriented way to check if PHP extensions are loaded
+ * Class PhpExtensionChecker provides object-oriented way to check if PHP extensions are loaded.
  */
 final class PhpExtensionChecker implements PhpExtensionCheckerInterface
 {

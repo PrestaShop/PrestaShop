@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,15 +30,16 @@ use Shop;
 use ShopGroup;
 
 /**
- * This class will provide legacy shop context
+ * This class will provide legacy shop context.
  */
 class Context
 {
     /**
-     * Get shops list
+     * Get shops list.
      *
      * @param bool $active
      * @param bool $get_as_list_id
+     *
      * @return array
      */
     public function getShops($active = true, $get_as_list_id = false)
@@ -47,7 +48,7 @@ class Context
     }
 
     /**
-     * Get current ID of shop if context is CONTEXT_SHOP
+     * Get current ID of shop if context is CONTEXT_SHOP.
      *
      * @return int
      */
@@ -57,9 +58,10 @@ class Context
     }
 
     /**
-     * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID)
+     * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID).
      *
      * @param bool|string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     *
      * @return array
      */
     public function getContextListShopID($share = false)
@@ -68,7 +70,7 @@ class Context
     }
 
     /**
-     * Get if it's a GroupShop context
+     * Get if it's a GroupShop context.
      *
      * @return bool
      */
@@ -78,7 +80,7 @@ class Context
     }
 
     /**
-     * Get if it's a Shop context
+     * Get if it's a Shop context.
      *
      * @return bool
      */
@@ -88,7 +90,7 @@ class Context
     }
 
     /**
-     * Get if it's a All context
+     * Get if it's a All context.
      *
      * @return bool
      */
@@ -98,7 +100,7 @@ class Context
     }
 
     /**
-     * Check if shop context is Shop
+     * Check if shop context is Shop.
      *
      * @return bool
      */
@@ -112,7 +114,7 @@ class Context
     }
 
     /**
-     * Update Multishop context for only one shop
+     * Update Multishop context for only one shop.
      *
      * @param int $id Shop id to set in the current context
      */
@@ -122,7 +124,7 @@ class Context
     }
 
     /**
-     * Update Multishop context for only one shop group
+     * Update Multishop context for only one shop group.
      *
      * @param int $id Shop id to set in the current context
      */
@@ -132,7 +134,7 @@ class Context
     }
 
     /**
-     * Update Multishop context for only one shop group
+     * Update Multishop context for only one shop group.
      *
      * @param int $id Shop id to set in the current context
      */
@@ -147,20 +149,21 @@ class Context
     }
 
     /**
-     * Retrieve group ID of a shop
+     * Retrieve group ID of a shop.
      *
      * @param $shopId
      * @param bool $asId
+     *
      * @return int
      */
     public function getGroupFromShop($shopId, $asId = true)
     {
         return Shop::getGroupFromShop($shopId, $asId);
-
     }
 
     /**
      * @param $shopGroupId
+     *
      * @return ShopGroup
      */
     public function ShopGroup($shopGroupId)

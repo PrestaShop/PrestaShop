@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -50,7 +50,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use stdClass;
 
 /**
- * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display
+ * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
  */
 class ModuleController extends ModuleAbstractController
 {
@@ -154,6 +154,7 @@ class ModuleController extends ModuleAbstractController
      * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function getPreferredModulesAction(Request $request)
@@ -307,7 +308,7 @@ class ModuleController extends ModuleAbstractController
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-                PageVoter::LEVEL_UPDATE
+                PageVoter::LEVEL_UPDATE,
             ]
         );
         if (null !== $deniedAccess) {
@@ -379,6 +380,7 @@ class ModuleController extends ModuleAbstractController
         if (!method_exists($moduleManager, $action)) {
             $response[$module]['status'] = false;
             $response[$module]['msg'] = $this->trans('Invalid action', 'Admin.Notifications.Error');
+
             return new JsonResponse($response);
         }
 
@@ -433,7 +435,7 @@ class ModuleController extends ModuleAbstractController
                             '%action%' => $e->getAction(),
                             '%module%' => $module,
                         ]
-                    )
+                    ),
                 ]
             );
         } catch (Exception $e) {
@@ -488,7 +490,7 @@ class ModuleController extends ModuleAbstractController
         $deniedAccess = $this->checkPermissions(
             [
                 PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE
+                PageVoter::LEVEL_DELETE,
             ]
         );
         if (null !== $deniedAccess) {
@@ -504,7 +506,7 @@ class ModuleController extends ModuleAbstractController
                 new Assert\NotNull(),
                 new Assert\File(
                     [
-                        'maxSize'   => ini_get('upload_max_filesize'),
+                        'maxSize' => ini_get('upload_max_filesize'),
                         'mimeTypes' => [
                             'application/zip',
                             'application/x-gzip',
@@ -579,7 +581,7 @@ class ModuleController extends ModuleAbstractController
                         '%action%' => $e->getAction(),
                         '%module%' => $moduleName,
                     ]
-                )
+                ),
             ];
         } catch (Exception $e) {
             if (isset($moduleName)) {
@@ -733,7 +735,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * Find module type
+     * Find module type.
      *
      * @param ApiModule $installedProduct Installed product
      * @param array $modulesTheme Modules theme

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AuthControllerCore extends FrontController
 {
     public $ssl = true;
@@ -65,8 +64,8 @@ class AuthControllerCore extends FrontController
             }
 
             $this->context->smarty->assign([
-                'register_form'  => $register_form->getProxy(),
-                'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop')
+                'register_form' => $register_form->getProxy(),
+                'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop'),
             ]);
             $this->setTemplate('customer/registration');
         } else {
@@ -81,7 +80,7 @@ class AuthControllerCore extends FrontController
             }
 
             $this->context->smarty->assign([
-                'login_form' => $login_form->getProxy()
+                'login_form' => $login_form->getProxy(),
             ]);
             $this->setTemplate('customer/authentication');
         }

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This class loads and saves general configuration for product
+ * This class loads and saves general configuration for product.
  */
 class GeneralConfiguration implements DataConfigurationInterface
 {

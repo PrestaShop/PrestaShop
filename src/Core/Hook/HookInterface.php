@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Hook;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * Interface HookInterface defines contract for hook.
+ */
+interface HookInterface
+{
+    /**
+     * Get hook name.
+     *
+     * @return string
+     */
+    public function getName();
 
-header('Location: ../../../../../../../');
-exit;
+    /**
+     * Get hook parameters.
+     *
+     * @return array
+     */
+    public function getParameters();
+}

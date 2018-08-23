@@ -29,8 +29,7 @@
 {% set geolocationByIpAddressForm, geolocationIpAddressWhitelistForm, geolocationOptionsForm = geolocationForm.geolocation_by_id_address, geolocationForm.geolocation_ip_address_whitelist, geolocationForm.geolocation_options %}
 
 {% block content %}
-  <div class="container" id="geolocationContent">
-    {% if not geolocationDatabaseAvailable %}
+  {% if not geolocationDatabaseAvailable %}
     <div class="row">
       <div class="col">
         <div class="alert alert-warning" role="alert">
@@ -40,33 +39,27 @@
         </div>
       </div>
     </div>
-    {% endif %}
+  {% endif %}
 
-    {{ form_start(geolocationForm, {'action': path('admin_geolocation_process_form')}) }}
-    <div class="row">
-      <div class="col">
+  {{ form_start(geolocationForm, {'action': path('admin_geolocation_process_form')}) }}
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col">
+      <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col">
+      <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
       </div>
+
+      {% block geolocation_form_rest %}
+        {{ form_rest(geolocationForm) }}
+      {% endblock %}
     </div>
-
-    {% block geolocation_form_rest %}
-      {{ form_rest(geolocationForm) }}
-    {% endblock %}
-
-    {{ form_end(geolocationForm) }}
-  </div>
+  {{ form_end(geolocationForm) }}
 {% endblock %}
 
 {% block javascripts %}

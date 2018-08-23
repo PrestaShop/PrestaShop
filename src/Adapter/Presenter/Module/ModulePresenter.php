@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 
 use Currency;
@@ -45,7 +46,7 @@ class ModulePresenter implements PresenterInterface
     public function __construct(Currency $currency, PriceFormatter $priceFormatter)
     {
         $this->currency = $currency;
-        $this->priceFormatter  = $priceFormatter;
+        $this->priceFormatter = $priceFormatter;
     }
 
     /**
@@ -56,7 +57,7 @@ class ModulePresenter implements PresenterInterface
     public function present($module)
     {
         if (!($module instanceof Module)) {
-            throw new Exception("ModulePresenter can only present instance of Module");
+            throw new Exception('ModulePresenter can only present instance of Module');
         }
 
         $attributes = $module->attributes->all();
@@ -77,9 +78,10 @@ class ModulePresenter implements PresenterInterface
             $prices['displayPrice'] = $this->priceFormatter->convertAndFormat($prices[$iso_code]);
             $prices['raw'] = $prices[$iso_code];
         } else {
-            $prices['displayPrice'] = '$'.$prices['USD'];
+            $prices['displayPrice'] = '$' . $prices['USD'];
             $prices['raw'] = $prices['USD'];
         }
+
         return $prices;
     }
 
@@ -87,6 +89,7 @@ class ModulePresenter implements PresenterInterface
      * Transform a collection of addons as a simple array of data.
      *
      * @param AddonsCollection|array $modules
+     *
      * @return array
      */
     public function presentCollection($modules)
@@ -100,9 +103,10 @@ class ModulePresenter implements PresenterInterface
     }
 
     /**
-     * Generate the list of small icons to be displayed near the module name
+     * Generate the list of small icons to be displayed near the module name.
      *
      * @param array $attributes Attributes of presented module
+     *
      * @return array
      */
     private function addPicos(array $attributes)
@@ -124,6 +128,7 @@ class ModulePresenter implements PresenterInterface
                 'class' => $class,
             );
         }
+
         return $picos;
     }
 }

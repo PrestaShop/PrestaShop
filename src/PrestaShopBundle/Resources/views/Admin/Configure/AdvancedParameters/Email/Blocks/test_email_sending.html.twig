@@ -26,30 +26,42 @@
 
 {% block test_email_sending %}
   {{ form_start(testEmailSendingForm, {'action': path('admin_send_test_email')}) }}
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">settings</i> {{ 'Test your email configuration'|trans }}
-    </h3>
-    <div class="card-body">
-      <div class="form-group">
-        <label for="send_test_email" class="form-control-label">
-          {{ 'Send a test email to'|trans }}
-        </label>
-        {{ form_widget(testEmailSendingForm.send_email_to) }}
-      </div>
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">settings</i> {{ 'Test your email configuration'|trans }}
+        </h3>
+        <div class="card-block row">
+          <div class="card-text">
+            <div class="form-group row">
+              <label for="send_test_email" class="form-control-label">
+                {{ 'Send a test email to'|trans }}
+              </label>
+              <div class="col-sm">
+                {{ form_widget(testEmailSendingForm.send_email_to) }}
+              </div>
+            </div>
 
-      <div class="alert alert-danger d-none js-test-email-errors" role="alert"></div>
-      <div class="alert alert-success d-none js-test-email-success" role="alert">
-        <p class="alert-text">{{ 'A test email has been sent to the email address you provided.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-      </div>
-    </div>
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        <div class="spinner d-none js-test-email-loader"></div>
-        <button type="button" class="btn btn-primary js-send-test-email-btn">
-          <i class="material-icons">email</i>
-          {{ 'Send a test email'|trans }}
-        </button>
+            <div class="row">
+              <div class="col">
+                <div class="alert alert-danger d-none js-test-email-errors" role="alert"></div>
+                <div class="alert alert-success d-none js-test-email-success" role="alert">
+                  <p class="alert-text">{{ 'A test email has been sent to the email address you provided.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <div class="spinner d-none js-test-email-loader"></div>
+            <button type="button" class="btn btn-primary js-send-test-email-btn">
+              <i class="material-icons">email</i>
+              {{ 'Send a test email'|trans }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

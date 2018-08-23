@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -139,7 +139,7 @@ abstract class AbstractGridAction implements GridActionInterface
     }
 
     /**
-     * Resolve action options
+     * Resolve action options.
      *
      * @param array $options
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class GetFileControllerCore extends FrontController
 {
     protected $display_header = false;
@@ -37,7 +36,7 @@ class GetFileControllerCore extends FrontController
             if (!Validate::isSha1($filename)) {
                 die(Tools::displayError());
             }
-            $file = _PS_DOWNLOAD_DIR_.strval(preg_replace('/\.{2,}/', '.', $filename));
+            $file = _PS_DOWNLOAD_DIR_ . strval(preg_replace('/\.{2,}/', '.', $filename));
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
             if (empty($filename)) {
                 $newFileName = Tools::getValue('filename');
@@ -58,9 +57,9 @@ class GetFileControllerCore extends FrontController
 
             Tools::setCookieLanguage();
             if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
+                Tools::redirect('index.php?controller=authentication&back=get-file.php&key=' . $key);
             } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
-                $order = new Order((int)Tools::getValue('id_order'));
+                $order = new Order((int) Tools::getValue('id_order'));
                 if (!Validate::isLoadedObject($order)) {
                     $this->displayCustomError('Invalid key.');
                 }
@@ -83,7 +82,7 @@ class GetFileControllerCore extends FrontController
             }
 
             /* check whether order has been paid, which is required to download the product */
-            $order = new Order((int)$info['id_order']);
+            $order = new Order((int) $info['id_order']);
             $state = $order->getCurrentOrderState();
             if (!$state || !$state->paid) {
                 $this->displayCustomError('This order has not been paid.');
@@ -94,7 +93,7 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This product has been deleted.');
             }
 
-            if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_.$info['filename'])) {
+            if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_ . $info['filename'])) {
                 $this->displayCustomError('This file no longer exists.');
             }
 
@@ -122,7 +121,7 @@ class GetFileControllerCore extends FrontController
             /* Access is authorized -> increment download value for the customer */
             OrderDetail::incrementDownload($info['id_order_detail']);
 
-            $file = _PS_DOWNLOAD_DIR_.$info['filename'];
+            $file = _PS_DOWNLOAD_DIR_ . $info['filename'];
             $filename = $info['display_filename'];
         }
 
@@ -135,12 +134,12 @@ class GetFileControllerCore extends FrontController
         } elseif (function_exists('mime_content_type')) {
             $mimeType = @mime_content_type($file);
         } elseif (function_exists('exec')) {
-            $mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($file)));
+            $mimeType = trim(@exec('file -b --mime-type ' . escapeshellarg($file)));
             if (!$mimeType) {
-                $mimeType = trim(@exec('file --mime '.escapeshellarg($file)));
+                $mimeType = trim(@exec('file --mime ' . escapeshellarg($file)));
             }
             if (!$mimeType) {
-                $mimeType = trim(@exec('file -bi '.escapeshellarg($file)));
+                $mimeType = trim(@exec('file -bi ' . escapeshellarg($file)));
             }
         }
 
@@ -276,7 +275,7 @@ class GetFileControllerCore extends FrontController
             'mxu' => 'video/vnd.mpegurl',
             'avi' => 'video/x-msvideo',
             'movie' => 'video/x-sgi-movie',
-            'ice' => 'x-conference-xcooltalk');
+            'ice' => 'x-conference-xcooltalk', );
 
             if (isset($mimeTypes[$bName])) {
                 $mimeType = $mimeTypes[$bName];
@@ -291,9 +290,9 @@ class GetFileControllerCore extends FrontController
 
         /* Set headers for download */
         header('Content-Transfer-Encoding: binary');
-        header('Content-Type: '.$mimeType);
-        header('Content-Length: '.filesize($file));
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . filesize($file));
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         //prevents max execution timeout, when reading large files
         @set_time_limit(0);
         $fp = fopen($file, 'rb');
@@ -309,7 +308,7 @@ class GetFileControllerCore extends FrontController
 
     /**
      * Display an error message with js
-     * and redirect using js function
+     * and redirect using js function.
      *
      * @param string $msg
      */
@@ -319,19 +318,17 @@ class GetFileControllerCore extends FrontController
             'Invalid key.' => $this->trans('Invalid key.', array(), 'Shop.Notifications.Error'),
             'This product does not exist in our store.' => $this->trans('This product does not exist in our store.', array(), 'Shop.Notifications.Error'),
             'This product has been deleted.' => $this->trans('This product has been deleted.', array(), 'Shop.Notifications.Error'),
-            'This file no longer exists.'    => $this->trans('This file no longer exists.', array(), 'Shop.Notifications.Error'),
+            'This file no longer exists.' => $this->trans('This file no longer exists.', array(), 'Shop.Notifications.Error'),
             'This product has been refunded.' => $this->trans('This product has been refunded.', array(), 'Shop.Notifications.Error'),
             'The product deadline is in the past.' => $this->trans('The product deadline is in the past.', array(), 'Shop.Notifications.Error'),
             'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', array(), 'Shop.Notifications.Error'),
             'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', array(), 'Shop.Notifications.Error'),
-            'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', array(), 'Shop.Notifications.Error')
-        );
-        ?>
+            'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', array(), 'Shop.Notifications.Error'),
+        ); ?>
         <script type="text/javascript">
         //<![CDATA[
-        alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8');
-        ?>");
-        window.location.href = '<?php echo __PS_BASE_URI__ ?>';
+        alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8'); ?>");
+        window.location.href = '<?php echo __PS_BASE_URI__; ?>';
         //]]>
         </script>
         <?php

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class CustomerAddressPersisterCore
 {
     private $customer;
@@ -34,8 +32,8 @@ class CustomerAddressPersisterCore
     public function __construct(Customer $customer, Cart $cart, $token)
     {
         $this->customer = $customer;
-        $this->cart     = $cart;
-        $this->token    = $token;
+        $this->cart = $cart;
+        $this->token = $token;
     }
 
     public function getToken()
@@ -45,7 +43,7 @@ class CustomerAddressPersisterCore
 
     private function authorizeChange(Address $address, $token)
     {
-        if ($address->id_customer && (int)$address->id_customer !== (int)$this->customer->id) {
+        if ($address->id_customer && (int) $address->id_customer !== (int) $this->customer->id) {
             // Can't touch anybody else's address
             return false;
         }

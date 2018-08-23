@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails
+ * Class TestEmailSendingType is responsible for building form type used to send testing emails.
  */
 class TestEmailSendingType extends AbstractType
 {

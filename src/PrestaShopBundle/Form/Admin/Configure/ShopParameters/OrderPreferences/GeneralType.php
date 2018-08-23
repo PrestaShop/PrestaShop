@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,7 +47,7 @@ class GeneralType extends TranslatorAwareType
     private $defaultCurrencyIsoCode;
 
     /**
-     * CMS pages choices for Terms Of Service
+     * CMS pages choices for Terms Of Service.
      *
      * @var array
      */

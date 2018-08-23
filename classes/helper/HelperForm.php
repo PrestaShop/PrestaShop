@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
  use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
  /**
@@ -64,6 +63,7 @@ class HelperFormCore extends Helper
     public function generateForm($fields_form)
     {
         $this->fields_form = $fields_form;
+
         return $this->generate();
     }
 
@@ -71,7 +71,7 @@ class HelperFormCore extends Helper
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
         if (is_null($this->submit_action)) {
-            $this->submit_action = 'submitAdd'.$this->table;
+            $this->submit_action = 'submitAdd' . $this->table;
         }
 
         $categories = true;
@@ -93,7 +93,7 @@ class HelperFormCore extends Helper
                     }
                     switch ($params['type']) {
                         case 'select':
-                            $field_name = (string)$params['name'];
+                            $field_name = (string) $params['name'];
                             // If multiple select check that 'name' field is suffixed with '[]'
                             if (isset($params['multiple']) && $params['multiple'] && stripos($field_name, '[]') === false) {
                                 $params['name'] .= '[]';
@@ -143,47 +143,47 @@ class HelperFormCore extends Helper
 
                         case 'file':
                             $uploader = new HelperUploader();
-                            $uploader->setId(isset($params['id'])?$params['id']:null);
+                            $uploader->setId(isset($params['id']) ? $params['id'] : null);
                             $uploader->setName($params['name']);
-                            $uploader->setUrl(isset($params['url'])?$params['url']:null);
-                            $uploader->setMultiple(isset($params['multiple'])?$params['multiple']:false);
-                            $uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
-                            $uploader->setMaxFiles(isset($params['max_files'])?$params['max_files']:null);
+                            $uploader->setUrl(isset($params['url']) ? $params['url'] : null);
+                            $uploader->setMultiple(isset($params['multiple']) ? $params['multiple'] : false);
+                            $uploader->setUseAjax(isset($params['ajax']) ? $params['ajax'] : false);
+                            $uploader->setMaxFiles(isset($params['max_files']) ? $params['max_files'] : null);
 
                             if (isset($params['files']) && $params['files']) {
                                 $uploader->setFiles($params['files']);
                             } elseif (isset($params['image']) && $params['image']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                        'type'       => HelperUploader::TYPE_IMAGE,
-                                        'image'      => isset($params['image'])?$params['image']:null,
-                                        'size'       => isset($params['size'])?$params['size']:null,
-                                        'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
-                                    )
+                                        'type' => HelperUploader::TYPE_IMAGE,
+                                        'image' => isset($params['image']) ? $params['image'] : null,
+                                        'size' => isset($params['size']) ? $params['size'] : null,
+                                        'delete_url' => isset($params['delete_url']) ? $params['delete_url'] : null,
+                                    ),
                                 ));
                             }
 
                             if (isset($params['file']) && $params['file']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                        'type'       => HelperUploader::TYPE_FILE,
-                                        'size'       => isset($params['size'])?$params['size']:null,
-                                        'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
-                                        'download_url' => isset($params['file'])?$params['file']:null
-                                    )
+                                        'type' => HelperUploader::TYPE_FILE,
+                                        'size' => isset($params['size']) ? $params['size'] : null,
+                                        'delete_url' => isset($params['delete_url']) ? $params['delete_url'] : null,
+                                        'download_url' => isset($params['file']) ? $params['file'] : null,
+                                    ),
                                 ));
                             }
 
                             if (isset($params['thumb']) && $params['thumb']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
-                                        'type'  => HelperUploader::TYPE_IMAGE,
-                                        'image' => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
-                                    )
+                                        'type' => HelperUploader::TYPE_IMAGE,
+                                        'image' => isset($params['thumb']) ? '<img src="' . $params['thumb'] . '" alt="' . (isset($params['title']) ? $params['title'] : '') . '" title="' . (isset($params['title']) ? $params['title'] : '') . '" />' : null,
+                                    ),
                                 ));
                             }
 
-                            $uploader->setTitle(isset($params['title'])?$params['title']:null);
+                            $uploader->setTitle(isset($params['title']) ? $params['title'] : null);
                             $params['file'] = $uploader->render();
                             break;
 
@@ -206,13 +206,13 @@ class HelperFormCore extends Helper
                         case 'textarea':
                             if ($tinymce) {
                                 $iso = $this->context->language->iso_code;
-                                $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+                                $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en';
                                 $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
-                                $this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
+                                $this->tpl_vars['ad'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
                                 $this->tpl_vars['tinymce'] = true;
 
-                                $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
-                                $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
+                                $this->context->controller->addJS(_PS_JS_DIR_ . 'tiny_mce/tiny_mce.js');
+                                $this->context->controller->addJS(_PS_JS_DIR_ . 'admin/tinymce.inc.js');
                                 $tinymce = false;
                             }
 
@@ -239,7 +239,6 @@ class HelperFormCore extends Helper
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
-
         $this->tpl->assign(array(
             'title' => $this->title,
             'toolbar_btn' => $this->toolbar_btn,
@@ -261,19 +260,19 @@ class HelperFormCore extends Helper
             'fields' => $this->fields_form,
             'fields_value' => $this->fields_value,
             'required_fields' => $this->getFieldsRequired(),
-            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_ . 'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
             'show_cancel_button' => $this->show_cancel_button,
-            'back_url' => $this->back_url
+            'back_url' => $this->back_url,
         ));
 
         return parent::generate();
     }
 
     /**
-     * Return true if there are required fields
+     * Return true if there are required fields.
      */
     public function getFieldsRequired()
     {
@@ -286,11 +285,12 @@ class HelperFormCore extends Helper
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * Render an area to determinate shop association
+     * Render an area to determinate shop association.
      *
      * @return string
      */
@@ -301,10 +301,10 @@ class HelperFormCore extends Helper
         }
 
         $assos = array();
-        if ((int)$this->id) {
-            $sql = 'SELECT `id_shop`, `'.bqSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`
-					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
+        if ((int) $this->id) {
+            $sql = 'SELECT `id_shop`, `' . bqSQL($this->identifier) . '`
+					FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`
+					WHERE `' . bqSQL($this->identifier) . '` = ' . (int) $this->id;
 
             foreach (Db::getInstance()->executeS($sql) as $row) {
                 $assos[$row['id_shop']] = $row['id_shop'];
@@ -342,6 +342,7 @@ class HelperFormCore extends Helper
         }
         $tree->setSelectedShops($assos);
         $tree->setAttribute('table', $this->table);
+
         return $tree->render();
     }
 }

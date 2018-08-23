@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Command;
 
 use AppKernel;
@@ -50,7 +51,7 @@ abstract class AbstractCommand
         set_time_limit(0);
 
         if (null === $kernel) {
-            require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+            require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
             $kernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', false);
         }
 

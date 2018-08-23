@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Improve > Modules > Modules & Services > Updates" page display
+ * Responsible of "Improve > Modules > Modules & Services > Updates" page display.
  */
 class UpdatesController extends ModuleAbstractController
 {

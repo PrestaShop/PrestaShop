@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,28 +24,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Row;
-
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Class RowCollection is a wrapper around rows from database
+ * Class FilterCollection manages filters collection for grid.
  */
-class RowCollection extends AbstractCollection implements RowCollectionInterface
+final class FilterCollection implements FilterCollectionInterface
 {
     /**
-     * @param array $rows Raw rows data
+     * @var FilterInterface[]
      */
-    public function __construct(array $rows = [])
+    private $filters = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(FilterInterface $filter)
     {
-        $this->items = $rows;
+        $this->filters[$filter->getName()] = $filter;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRows()
+    public function remove($filterName)
     {
-        return $this->items;
+        if (isset($this->filters[$filterName])) {
+            unset($this->filters[$filterName]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all()
+    {
+        return $this->filters;
     }
 }

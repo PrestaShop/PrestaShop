@@ -16,7 +16,11 @@ yaml_themes=$?
 php bin/console lint:yaml .t9n.yml
 yaml_trad=$?
 
-if [[ "$php" == "0" && "$yaml_src" == "0" && "$yaml_app" == "0" && "$yaml_themes" == "0" && "$yaml_trad == 0" ]]; then
+# Check our current PHP Coding Style rules
+php ./vendor/bin/php-cs-fixer fix --dry-run --stop-on-violation --show-progress=dot
+coding_styles=$?
+
+if [[ "$php" == "0" && "$yaml_src" == "0" && "$yaml_app" == "0" && "$yaml_themes" == "0" && "$yaml_trad == 0" && "$coding_styles == 0" ]]; then
   echo -e "\e[92mSYNTAX TESTS OK"
   exit 0;
 else

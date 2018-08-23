@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,12 +34,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class PaymentPreferencesController is responsible for "Improve > Payment > Preferences" page
+ * Class PaymentPreferencesController is responsible for "Improve > Payment > Preferences" page.
  */
 class PaymentPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show payment preferences page
+     * Show payment preferences page.
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller'))",
@@ -77,7 +77,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process payment modules preferences form
+     * Process payment modules preferences form.
      *
      * @AdminSecurity(
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
