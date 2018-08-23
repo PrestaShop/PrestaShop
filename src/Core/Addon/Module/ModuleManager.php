@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
-use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -84,14 +83,9 @@ class ModuleManager implements AddonManagerInterface
     private $translator;
 
     /**
-     * @var Employee Legacy employee class
-     */
-    private $employee;
-
-    /**
      * @var EventDispatcherInterface
      */
-    private $dispatcher;
+    private $eventDispatcher;
 
     /**
      * Additionnal data used for module actions.
@@ -101,13 +95,13 @@ class ModuleManager implements AddonManagerInterface
     private $actionParams;
 
     /**
-     * @param AdminModuleDataProvider $adminModulesProvider
+     * @param AdminModuleDataProvider $adminModuleProvider
      * @param ModuleDataProvider $modulesProvider
      * @param ModuleDataUpdater $modulesUpdater
      * @param ModuleRepository $moduleRepository
      * @param ModuleZipManager $moduleZipManager
      * @param TranslatorInterface $translator
-     * @param Employee|null $employee
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -116,8 +110,7 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        EventDispatcherInterface $dispatcher,
-        Employee $employee = null
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
@@ -125,8 +118,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleRepository = $moduleRepository;
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
-        $this->employee = $employee;
-        $this->dispatcher = $dispatcher;
+        $this->eventDispatcher = $eventDispatcher;
 
         $this->actionParams = new ParameterBag();
     }
@@ -693,12 +685,12 @@ class ModuleManager implements AddonManagerInterface
     /**
      * This function is a refacto of the event dispatching.
      *
-     * @param strig $event
+     * @param string $event
      * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
      */
     private function dispatch($event, $module)
     {
-        $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
+        $this->eventDispatcher->dispatch($event, new ModuleManagementEvent($module));
     }
 
     private function checkIsInstalled($name)
@@ -715,7 +707,7 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * We check the module does not ask for pre-requesites to be respected prior the action being executed.
+     * We check the module does not ask for pre-requisites to be respected prior the action being executed.
      *
      * @param string $action
      * @param Module $module

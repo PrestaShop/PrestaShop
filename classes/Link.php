@@ -782,6 +782,7 @@ class LinkCore
                     'AdminInvoices' => 'admin_order_invoices',
                     'AdminEmails' => 'admin_email',
                     'AdminRequestSql' => 'admin_request_sql',
+                    // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                 );
 
                 if (isset($routes[$controller])) {

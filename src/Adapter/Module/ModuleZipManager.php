@@ -63,16 +63,16 @@ class ModuleZipManager
     /**
      * @var EventDispatcherInterface
      */
-    private $dispatcher;
+    private $eventDispatcher;
 
     public function __construct(
         Filesystem $filesystem,
         TranslatorInterface $translator,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $eventDispatcher
         ) {
         $this->filesystem = $filesystem;
         $this->translator = $translator;
-        $this->dispatcher = $dispatcher;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -172,9 +172,13 @@ class ModuleZipManager
             null,
             array('override' => true)
         );
-        $this->dispatcher->dispatch(
-            ModuleZipManagementEvent::DOWNLOAD,
-            new ModuleZipManagementEvent($this->getSource($source)));
+        $this->eventDispatcher
+            ->dispatch(
+                ModuleZipManagementEvent::DOWNLOAD,
+                new ModuleZipManagementEvent($this->getSource($source))
+            )
+        ;
+
         $this->filesystem->remove($sandboxPath);
     }
 

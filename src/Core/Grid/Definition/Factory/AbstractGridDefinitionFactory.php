@@ -58,7 +58,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getBulkActions()
         );
 
-        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
+        $this->hookDispatcher->dispatchWithParameters('modifyGridDefinition', [
             'definition' => $definition,
         ]);
 

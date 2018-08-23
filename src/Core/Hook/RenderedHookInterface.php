@@ -24,24 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Hook;
-
-use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
+namespace PrestaShop\PrestaShop\Core\Hook;
 
 /**
- * This dispatcher is used to trigger hook listeners.
- *
- * The dispatch process cannot be stopped like a common EventDispatcher.
- *
- * If the event is a RenderingHookEvent, then the final result is
- * an array of contents accessed from $event->getContent().
- *
- * @deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher instead.
+ * Interface RenderedHookInterface defines contract for rendered hook.
  */
-class HookDispatcher extends HookDispatcherAdapter
+interface RenderedHookInterface
 {
-    public function __construct()
-    {
-        trigger_error('Deprecated since 1.7.5, to be removed in 1.8. Use PrestaShop\PrestaShop\Core\Hook\HookDispatcher instead.', E_USER_DEPRECATED);
-    }
+    /**
+     * Get rendered hook.
+     *
+     * @return HookInterface
+     */
+    public function getHook();
+
+    /**
+     * Get rendered content.
+     *
+     * @return array
+     */
+    public function getContent();
 }

@@ -26,8 +26,7 @@
 
 namespace PrestaShopBundle\Twig;
 
-use PrestaShopBundle\Service\Hook\HookDispatcher;
-use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 
@@ -37,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 class HookExtension extends \Twig_Extension
 {
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
     private $hookDispatcher;
 
@@ -54,11 +53,11 @@ class HookExtension extends \Twig_Extension
     /**
      * Constructor.
      *
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      * @param ModuleDataProvider $moduleDataProvider
      */
     public function __construct(
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         ModuleDataProvider $moduleDataProvider,
         ModuleRepository $moduleRepository = null
     ) {
@@ -125,7 +124,7 @@ class HookExtension extends \Twig_Extension
         // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
         // modules.
         ob_start();
-        $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
+        $hookRenders = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters)->getContent();
         ob_clean();
 
         $render = [];
@@ -159,7 +158,10 @@ class HookExtension extends \Twig_Extension
         if ($hookName == '') {
             throw new \Exception('Hook name missing');
         }
-        $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
+        $hookRenders = $this->hookDispatcher
+            ->dispatchRenderingWithParameters($hookName, $hookParameters)
+            ->getContent()
+        ;
 
         return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
     }

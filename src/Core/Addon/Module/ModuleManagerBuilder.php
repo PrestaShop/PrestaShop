@@ -99,8 +99,7 @@ class ModuleManagerBuilder
                 $this->buildRepository(),
                 self::$moduleZipManager,
                 self::$translator,
-                new NullDispatcher(),
-                Context::getContext()->employee
+                new NullDispatcher()
             );
         }
     }

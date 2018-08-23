@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Product;
 use Validate;
 use Shop;
@@ -47,7 +47,7 @@ use Image;
 class AdminProductDataUpdater implements ProductInterface
 {
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
     private $hookDispatcher;
 
@@ -56,7 +56,7 @@ class AdminProductDataUpdater implements ProductInterface
      *
      * @param HookDispatcher $hookDispatcher
      */
-    public function __construct(HookDispatcher $hookDispatcher)
+    public function __construct(HookDispatcherInterface $hookDispatcher)
     {
         $this->hookDispatcher = $hookDispatcher;
     }

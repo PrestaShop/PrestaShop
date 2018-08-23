@@ -26,23 +26,45 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 /**
- * Trait EventDispatcherAwareTrait.
+ * Interface HookDispatcherInterface defines contract for hook dispatcher
+ * Extends EventDispatcherInterface for compatibility with the Event Dispatcher component.
  */
-trait HookDispatcherAwareTrait
+interface HookDispatcherInterface extends EventDispatcherInterface
 {
     /**
-     * @var HookDispatcherInterface
+     * Dispatch given hook.
+     *
+     * @param HookInterface $hook
      */
-    protected $hookDispatcher;
+    public function dispatchHook(HookInterface $hook);
 
     /**
-     * Set hook dispatcher.
+     * Dispatch hook with raw parameters.
      *
-     * @param HookDispatcherInterface $hookDispatcher
+     * @param string $hookName
+     * @param array $hookParameters
      */
-    public function setHookDispatcher(HookDispatcherInterface $hookDispatcher)
-    {
-        $this->hookDispatcher = $hookDispatcher;
-    }
+    public function dispatchWithParameters($hookName, array $hookParameters = []);
+
+    /**
+     * Dispatch rendering hook.
+     *
+     * @param HookInterface $hook
+     *
+     * @return RenderedHookInterface
+     */
+    public function dispatchRendering(HookInterface $hook);
+
+    /**
+     * Dispatch rendering hook with parameters.
+     *
+     * @param string $hookName
+     * @param array $hookParameters
+     *
+     * @return RenderedHookInterface
+     */
+    public function dispatchRenderingWithParameters($hookName, array $hookParameters = []);
 }

@@ -6,7 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.form_provider'
             -
               'smarty': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
@@ -22,7 +22,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.maintenance.form_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
@@ -32,7 +32,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.administration.form_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType'
@@ -44,7 +44,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.shipping_preferences.data_provider'
             -
               'handling': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
@@ -55,7 +55,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.order.invoices.by_date.data_provider'
             -
               'generate_by_date': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
@@ -67,7 +67,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.order.invoices.by_status.data_provider'
             -
               'generate_by_status': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
@@ -79,7 +79,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.order.invoices.options.data_provider'
             -
               'invoice_options': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
@@ -89,7 +89,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.customer_preferences.data_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
@@ -103,7 +103,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.order_preferences.data_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
@@ -114,7 +114,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.product_preferences.data_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
@@ -131,7 +131,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.preferences.form_provider'
             -
               'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
@@ -141,7 +141,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.logs.form_provider'
             -
               'logs_by_email': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
@@ -151,7 +151,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@prestashop.admin.import.form_builder'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
             - []
             - 'ImportPage'
@@ -160,7 +160,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.order.delivery.slip.options.form_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
@@ -170,7 +170,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.order.delivery.slip.pdf.form_provider'
             -
               'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
@@ -180,7 +180,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.geolocation.form_data_provider'
             -
               'geolocation_by_id_address': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
@@ -192,7 +192,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.localization.form_data_provider'
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
@@ -204,7 +204,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.payment_preferences.form_data_provider'
             -
               'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
@@ -214,7 +214,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.email_configuration.form_data_provider'
             -
               'email_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
@@ -225,11 +225,21 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.request_sql_settings.form_data_provider'
             -
               'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
             - 'RequestSql'
+
+    prestashop.adapter.webservice.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.webservice.form_data_provider'
+            -
+              'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceType'
+            - 'WebservicePage'
 
     # Entity form handler
     prestashop.admin.request_sql.form_handler:
