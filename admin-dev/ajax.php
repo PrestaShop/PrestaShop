@@ -69,24 +69,16 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
 }
 
 /**
+ * Return the list of a pack of products
  * Not found
+ *
+ * -> Moved in legacy
  */
-//if (Tools::isSubmit('ajaxProductPackItems')) {
-//    $jsonArray = array();
-//    $products = Db::getInstance()->executeS('
-//	SELECT p.`id_product`, pl.`name`
-//	FROM `'._DB_PREFIX_.'product` p
-//	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-//	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
-//	'.Shop::addSqlRestrictionOnLang('pl').'
-//	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
-//	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
-//
-//    foreach ($products as $packItem) {
-//        $jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
-//    }
-//    die('['.implode(',', $jsonArray).']');
-//}
+if (Tools::isSubmit('ajaxProductPackItems')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminProducts';
+    $_GET['action'] = 'productPackItems';
+}
 
 /**
  * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
