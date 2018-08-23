@@ -62,11 +62,28 @@ The pre-installer must be a single-file single-page web application although it 
 frontend and some assets. In order to achieve this, the tool `tools/build/CreateRelease.php` bundles
 all code and assets into a single file.
 
-In this file, backend routing is done using `$GET` parameters.
+Consequently all AJAX queries target the same file, with different `GET` and `POST` parameters.
 
 In details:
 - `index.php` call runs the php file which outputs HTML and javascript to be run by the browser
 - the browser then loads assets using URLs such as `index.php?element=jquery`, `index.php?element=css`,
 `index.php?element=css`
-- the browser runs the javascript code which performs ajax calls such as `POST index.php` or `GET index.php?run=check-version` which trigger
-php routines on backend side
+- the browser runs the javascript code which performs ajax calls such as `POST index.php` which
+triggers php routines on backend side
+
+
+Here are the "available routes" provided by `index.php`:
+- `GET index.php` : displays the pre-installer page and run the javascript pre-installer app
+- `GET index.php?run=check-version` : checks whether there is a more recent version of PrestaShop and if it can be downloaded
+- `POST index.php { extract: true, startId: startId }` : performs the zip extraction process
+- `POST index.php  {downloadLatest: true}` : performs the download of the latest PS version process
+- `GET index.php?element=[...]` : loads the requested asset
+
+### Workflow
+
+Here is the workflow followed by the JS app:
+
+![Workflow diagram](pre-installer-diagram.jpg)
+
+> This diagram has been drawn using [www.draw.io](www.draw.io). If you wish to edit it, use
+the [diagram source file](https://github.com/PrestaShop/PrestaShop/blob/develop/tools/build/pre-installer-diagram-src.xml).
