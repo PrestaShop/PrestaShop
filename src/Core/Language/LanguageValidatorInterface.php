@@ -24,21 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Language;
-
-use Language;
-use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
+namespace PrestaShop\PrestaShop\Core\Language;
 
 /**
- * Class LanguageValidator is responsible for supporting validations from legacy Language class part
+ * Interface LanguageValidatorInterface defines contract for LanguageValidator
  */
-final class LanguageValidator implements LanguageValidatorInterface
+interface LanguageValidatorInterface
 {
     /**
-     * {@inheritdoc}
+     * Checks if language is installed by comparing locale
+     *
+     * @param string $locale
+     *
+     * @return bool
      */
-    public function isInstalledByLocale($locale)
-    {
-        return Language::isInstalledByLocale($locale);
-    }
+    public function isInstalledByLocale($locale);
 }
