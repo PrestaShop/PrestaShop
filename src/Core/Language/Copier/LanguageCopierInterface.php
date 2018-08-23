@@ -35,13 +35,8 @@ interface LanguageCopierInterface
      * Copies a language with given config
      *
      * @param LanguageCopierConfigInterface $config
-     */
-    public function copyLanguage(LanguageCopierConfigInterface $config);
-
-    /**
-     * Gets array of errors that occurred during the copying of language
      *
-     * @return array
+     * @return array of errors if any occurred, empty array otherwise
      */
-    public function getErrors();
+    public function copy(LanguageCopierConfigInterface $config);
 }

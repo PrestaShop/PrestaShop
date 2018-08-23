@@ -43,11 +43,6 @@ final class LanguageCopier implements LanguageCopierInterface
     private $languageDataProvider;
 
     /**
-     * @var array
-     */
-    private $errors = [];
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -75,8 +70,9 @@ final class LanguageCopier implements LanguageCopierInterface
     /**
      * {@inheritdoc}
      */
-    public function copyLanguage(LanguageCopierConfigInterface $config)
+    public function copy(LanguageCopierConfigInterface $config)
     {
+        $errors = [];
         $languageFiles = $this->languageDataProvider->getFilesList(
             $config->getLanguageFrom(),
             $config->getThemeFrom(),
@@ -89,7 +85,7 @@ final class LanguageCopier implements LanguageCopierInterface
             try {
                 $this->filesystem->mkdir(dirname($destination));
             } catch (IOExceptionInterface $exception) {
-                $this->errors[] = $this->translator->trans(
+                $errors[] = $this->translator->trans(
                     'Cannot create the folder "%folder%". Please check your directory writing permissions.',
                     [
                         '%folder%' => $destination,
@@ -102,7 +98,7 @@ final class LanguageCopier implements LanguageCopierInterface
             try {
                 $this->filesystem->copy($source, $destination);
             } catch (IOExceptionInterface $exception) {
-                $this->errors[] = $this->translator->trans(
+                $errors[] = $this->translator->trans(
                     'Impossible to copy "%source%" to "%dest%".',
                     [
                         '%source%' => $source,
@@ -121,7 +117,7 @@ final class LanguageCopier implements LanguageCopierInterface
                 );
 
                 if (!$changedModuleTranslationKeys) {
-                    $this->errors[] = $this->translator->trans(
+                    $errors[] = $this->translator->trans(
                         'Impossible to translate "%dest%".',
                         [
                             '%dest%' => $destination,
@@ -132,21 +128,15 @@ final class LanguageCopier implements LanguageCopierInterface
             }
         }
 
-        if (!empty($this->errors)) {
-            $this->errors[] = $this->translator->trans(
+        if (!empty($errors)) {
+            $errors[] = $this->translator->trans(
                 'A part of the data has been copied but some of the language files could not be found.',
                 [],
                 'Admin.International.Notification'
             );
         }
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getErrors()
-    {
-        return $this->errors;
+        return $errors;
     }
 
     /**
