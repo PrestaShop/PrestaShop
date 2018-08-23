@@ -53,11 +53,6 @@ if (Tools::isSubmit('ajaxReferrers')) {
     }
 }
 
-// Not used anymore, but kept just in case
-if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
-    readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
-}
-
 /**
  * Import controller: Fields available for a given entity
  * -> Moved in legacy (although called from symfony, the import content is not migrated yet)
@@ -88,27 +83,6 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminCategories';
     $_GET['action'] = 'childrenCategories';
-}
-
-/**
- * List notifications for an employee
- * i.e: recent orders, new customers...
- *
- * -> Duplicated (NOT MOVED) in Symfony
- */
-if (Tools::isSubmit('getNotifications')) {
-    $notification = new Notification;
-    die(json_encode($notification->getLastElements()));
-}
-
-/**
- * Updates the last time a notification has been seen
- *
- * -> Duplicated (NOT MOVED) in Symfony
- */
-if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-    $notification = new Notification;
-    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
 }
 
 /**
@@ -151,4 +125,48 @@ if (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
     $_GET['action'] = 'emailHTML';
 }
 
-require_once dirname(__FILE__).'/index.php';
+if (1 === $_GET['ajax']) {
+    require_once dirname(__FILE__).'/index.php';
+}
+
+/**
+ * From this line, the code could not be moved outside this file. It still requires the core to work.
+ */
+
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', getcwd());
+}
+
+if (!defined('PS_ADMIN_DIR')) {
+    define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
+}
+
+require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+
+$context = Context::getContext();
+
+// Not used anymore, but kept just in case
+if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
+    readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
+}
+
+/**
+ * List notifications for an employee
+ * i.e: recent orders, new customers...
+ *
+ * -> Duplicated (NOT MOVED) in Symfony
+ */
+if (Tools::isSubmit('getNotifications')) {
+    $notification = new Notification;
+    die(json_encode($notification->getLastElements()));
+}
+
+/**
+ * Updates the last time a notification has been seen
+ *
+ * -> Duplicated (NOT MOVED) in Symfony
+ */
+if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
+    $notification = new Notification;
+    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
+}
