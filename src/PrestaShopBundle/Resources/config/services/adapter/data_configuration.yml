@@ -206,3 +206,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.language.pack.importer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\LanguagePackImporter'
