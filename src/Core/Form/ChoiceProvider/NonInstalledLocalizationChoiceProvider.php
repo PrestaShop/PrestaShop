@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageValidator;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
-use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
 
 /**
  * Class NonInstalledLocalizationChoiceProvider provides non installed localization choices
