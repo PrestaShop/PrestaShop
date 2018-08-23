@@ -132,7 +132,8 @@
 									dataType: 'html',
 									data: {
 										getEmailHTML : true,
-										email : src
+										email : src,
+										token: window.token
 									},
 									success: function(result)
 									{
