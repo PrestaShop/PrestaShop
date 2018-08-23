@@ -44,29 +44,25 @@ export default class SaveImportMatchConfiguration
    * Method responsible for all events loading related with save data match configuration
    */
   loadEvents() {
-    $(document).on('click', '.js-save-import-match', () => this.save());
+    $(document).on('click', '.js-save-import-match', (event) => this.save(event));
   }
 
   /**
    * Method responsible for saving the import match configuration
    */
-  save() {
+  save(event) {
+    event.preventDefault();
     const $button = $('.js-save-import-match');
-    const name = $('.js-import-match-input').val();
-    const rowsToSkip = $('.js-rows-skip').val();
     // todo: uncomment const matchTypes = ImportMatchTypeProvider.getTypes as json string
     const url = $button.attr('data-url');
-    const data = new FormData();
-    data.append('match_name', name);
-    data.append('rows_skip', rowsToSkip);
+
+    const $form = $('form[name="import_data_configuration"]');
+    const data = $form.serialize();
 
     $.ajax({
       type: 'POST',
       url: url,
       data,
-      cache: false,
-      contentType: false,
-      processData: false,
     }).then(response => {
       if (typeof response.errors !== 'undefined' && response.errors.length) {
         this._showErrorPopUp(response.errors);
