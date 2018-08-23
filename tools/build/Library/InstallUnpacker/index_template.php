@@ -46,20 +46,7 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 
 // --------------------------------------------------------------------------------
 
-$installManager = new InstallManager();
 
-function isThisTheLatestAvailableVersion()
-{
-    $latestVersionAvailable = getLatestStableAvailableVersion();
-
-    return (_PS_VERSION_ === $latestVersionAvailable);
-}
-
-function getLatestStableAvailableVersion()
-{
-    global $installManager;
-    return $installManager->getLatestStableAvailableVersion();
-}
 
 function getFileContent($fileOrContent, $debug)
 {
@@ -92,26 +79,50 @@ function getZipErrorMessage($errorCode)
 
 $selfUri = basename(__FILE__);
 
-$userHasChosenToDownloadLatestPSVersion = ((isset($_POST['downloadLatest'])) && ($_POST['downloadLatest'] === 'true'));
-if ($userHasChosenToDownloadLatestPSVersion) {
-    $issues = $installManager->testDownloadCapabilities();
+if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
+    try {
+        $installManager = new InstallManager();
 
-    if (empty($issues)) {
-        try {
-            $installManager->downloadUnzipAndReplaceLatestPSVersion();
+        $latestVersionAvailable = $installManager->getLatestStableAvailableVersion();
+
+        $isThisTheLatestAvailableVersion = (_PS_VERSION_ === $latestVersionAvailable);
+        if ($isThisTheLatestAvailableVersion) {
             die(json_encode([
-                'success' => true,
-            ]));
-        } catch (\Exception $e) {
-            die(json_encode([
-                'error' => true,
-                'message' => $e->getMessage(),
+                'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false
             ]));
         }
-    } else {
+
+        $possibleInstallIssues = $installManager->testDownloadCapabilities();
+        if (false === empty($possibleInstallIssues)) {
+            die(json_encode([
+                'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false
+            ]));
+        }
+
         die(json_encode([
-            'warning' => true,
-            'issues' => $issues,
+            'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => true
+        ]));
+
+    } catch (\Exception $e) {
+        die(json_encode([
+            'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false
+        ]));
+    }
+}
+
+if ((isset($_POST['downloadLatest'])) && ($_POST['downloadLatest'] === 'true')) {
+
+    try {
+        $installManager = new InstallManager();
+
+        $installManager->downloadUnzipAndReplaceLatestPSVersion();
+        die(json_encode([
+            'success' => true,
+        ]));
+    } catch (\Exception $e) {
+        die(json_encode([
+            'error' => true,
+            'message' => $e->getMessage(),
         ]));
     }
 }
@@ -226,139 +237,23 @@ if (isset($_GET['element'])) {
     exit;
 }
 
-$thereIsAMoreRecentPSVersion = false;
-$userHasChosenToIgnoreLatestPSVersion = ((isset($_GET['skipForm'])) && ($_GET['skipForm'] === 'true'));
-if (false === $userHasChosenToIgnoreLatestPSVersion) {
-    try {
-        if (false === isThisTheLatestAvailableVersion()) {
-            $latestPrestaShopAvailableVersion = getLatestStableAvailableVersion();
-            $thereIsAMoreRecentPSVersion = true;
-        }
-    } catch (\Exception $e) {
-        // do nothing, this is an optional feature
-    }
-}
-
-$showFormToDownloadLatestPSVersion = ($thereIsAMoreRecentPSVersion && !$userHasChosenToIgnoreLatestPSVersion);
-
-if ($showFormToDownloadLatestPSVersion):
-    ?>
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>PrestaShop installation</title>
-        <link rel="stylesheet" type="text/css" href="<?= $selfUri ?>?element=css">
-    </head>
-    <body id="body-install-form">
-    <div id="content">
-        <div>
-            <img id="puffin" src="<?= $selfUri ?>?element=png-installer"/>
-            <div id="header">
-                The version you’re about to install is not
-                the latest version of PrestaShop
-            </div>
-            <div id="question">
-                Do you want to install the latest version instead? (recommended)
-            </div>
-            <div id="form-panel">
-                <div id="form">
-                    <a id="skip-button" class="button button-no" href="<?= $selfUri ?>?skipForm=true">No thanks</a>
-                    <a id="latest-button" class="button button-yes" href="#">Yes please!</a>
-                </div>
-
-                <div id="waiting" class="error-container"></div>
-                <div id="error" class="error-container"></div>
-                <div id="fallback-after-error" style="display:none;" class="error-container">Cannot download latest Prestashop version.<br/>
-                    Please click on 'No thanks' to resume standard installation.
-                </div>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript" src="<?= $selfUri ?>?element=jquery"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $("#skip-button").on("click", function (event) {
-                $.post(
-                    "<?= $selfUri ?>",
-                    {'skipForm': true}
-                );
-            });
-
-            $("#latest-button").on("click", function (event) {
-
-                $.ajax({
-                    url: "<?= $selfUri ?>",
-                    method: "POST",
-                    data: {'downloadLatest': true},
-                    beforeSend: function () {
-                        $('#latest-button').addClass('inactive-link');
-                        $('#waiting').html('Downloading latest version ...');
-                    },
-                    success: function (msg) {
-                        try {
-                            msg = JSON.parse(msg);
-                        } catch (e) {
-                            if (String(msg).match("<tittle>PrestaShop")) {
-                                msg = "Invalid server response";
-                            }
-                            msg = {
-                                message: msg
-                            };
-                        }
-
-                        if (msg.error) {
-                            $('#error').html('An error has occured: <br />' + msg.message);
-                            $('#waiting').remove();
-                            $('#fallback-after-error').show();
-                        } else {
-                            if (msg.success == true) {
-                                location.reload();
-                            } else {
-                                if (msg.warning == true) {
-                                    var issuesList = 'An error has occured: <br /><ul>';
-
-                                    $.each(msg.issues, function (key, issue) {
-                                        issuesList = issuesList + '<li>' + issue + '</li>';
-                                    });
-
-                                    var issuesList = issuesList + '</ul>';
-
-                                    $('#error').html(issuesList);
-                                    $('#waiting').remove();
-                                    $('#fallback-after-error').show();
-                                } else {
-                                    $('#error').html('An error has occured: <br />' + msg.message);
-                                    $('#waiting').remove();
-                                    $('#fallback-after-error').show();
-                                }
-                            }
-                        }
-                    },
-                    fail: function (jqXHR, textStatus, errorThrown) {
-                        $('#error').html('We are sorry, an error has occurred ' + textStatus);
-                        $('#waiting').remove();
-                    }
-                });
-            });
-        });
-    </script>
-    </body>
-    </html>
-<?php else: ?>
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>PrestaShop installation</title>
-        <link rel="stylesheet" type="text/css" href="<?= $selfUri ?>?element=css">
-    </head>
-    <body id="body-install-in-progress">
-    <div id="content">
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <title>PrestaShop installation</title>
+      <link rel="stylesheet" type="text/css" href="<?= $selfUri ?>?element=css">
+  </head>
+  <body>
+    <div id="content-install-in-progress"
+       data-extract-url="<?= $selfUri ?>"
+       data-check-version-url="<?= $selfUri ?>?run=check-version"
+       data-download-latest-url="<?= $selfUri ?>">
         <div>
             <img id="spinner" src="<?= $selfUri ?>?element=gif"/>
-            <div id="versionPanel">Installing Prestashop <?= _PS_VERSION_ ?></div>
+            <div id="versionPanel" style="display: none;">Installing Prestashop <?= _PS_VERSION_ ?></div>
+            <div id="initializationMessage">Initialization ...</div>
             <div id="progressContainer">
                 <div class="progressNumber">0 %</div>
                 <div class="progress">
@@ -366,12 +261,35 @@ if ($showFormToDownloadLatestPSVersion):
                     </div>
                 </div>
             </div>
-            <div id="error">
+            <div id="error-install-in-progress">
             </div>
         </div>
     </div>
+    <div id="content-install-form" style="display: none">
+      <div>
+        <img id="puffin" src="<?= $selfUri ?>?element=png-installer"/>
+        <div id="header">
+          The version you’re about to install is not
+          the latest version of PrestaShop
+        </div>
+        <div id="question">
+          Do you want to install the latest version instead? (recommended)
+        </div>
+        <div id="form-panel">
+          <div id="form">
+            <a id="skip-button" class="button button-no" href="#">No thanks</a>
+            <a id="latest-button" class="button button-yes" href="#">Yes please!</a>
+          </div>
+
+          <div id="waiting" class="error-container"></div>
+          <div id="error-install-form" class="error-container"></div>
+          <div id="fallback-after-error" style="display:none;" class="error-container">Cannot download latest Prestashop version.<br/>
+            Please click on 'No thanks' to resume standard installation.
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="text/javascript" src="<?= $selfUri ?>?element=jquery"></script>
     <script type="text/javascript" src="<?= $selfUri ?>?element=js-runner"></script>
-    </body>
-    </html>
-<?php endif; ?>
+  </body>
+</html>

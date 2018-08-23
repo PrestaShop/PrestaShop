@@ -27,21 +27,19 @@
     src: url('index.php?element=font');
 }
 
-#body-install-in-progress {
+#content-install-in-progress {
   font-family: 'OpenSans', sans-serif;
   font-size: 16px;
   text-align: center;
   margin-top: 50px;
+  width: 100%;
 }
 
-#body-install-form {
+#content-install-form {
   font-family: 'OpenSans', sans-serif;
   font-size: 16px;
   text-align: center;
   margin-top: 15%;
-}
-
-#content {
   width: 100%;
 }
 
