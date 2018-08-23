@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
 use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;

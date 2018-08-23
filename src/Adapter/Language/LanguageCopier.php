@@ -77,8 +77,7 @@ final class LanguageCopier implements LanguageCopierInterface
             $config->getLanguageFrom(),
             $config->getThemeFrom(),
             $config->getLanguageTo(),
-            $config->getThemeTo(),
-            true
+            $config->getThemeTo()
         );
 
         foreach ($languageFiles as $source => $destination) {
