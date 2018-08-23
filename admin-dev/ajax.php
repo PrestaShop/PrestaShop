@@ -119,25 +119,17 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
     die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
 }
 
-//if (Tools::isSubmit('searchCategory')) {
-//    $q = Tools::getValue('q');
-//    $limit = Tools::getValue('limit');
-//    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
-//		FROM `'._DB_PREFIX_.'category` c
-//		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-//		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
-//		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
-//		GROUP BY c.id_category
-//		ORDER BY c.`position`
-//		LIMIT '.(int)$limit
-//    );
-//    if ($results) {
-//        foreach ($results as $result) {
-//            echo trim($result['name']).'|'.(int)$result['id_category']."\n";
-//        }
-//    }
-//}
-//
+/**
+ * Search for a category
+ *
+ * -> moved in legacy
+ */
+if (Tools::isSubmit('searchCategory')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminCategories';
+    $_GET['action'] = 'searchCategory';
+}
+
 //if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
 //    $category = new Category((int)$id_category);
 //    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
