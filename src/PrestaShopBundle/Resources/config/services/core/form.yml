@@ -113,3 +113,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CategoryDeleteModeChoiceProvider'
         arguments:
             - '@translator'
+
+    prestashop.core.form.import.choice_provider.import_match_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.import.import_data_match.provider").getImportMatchConfiguration()'
