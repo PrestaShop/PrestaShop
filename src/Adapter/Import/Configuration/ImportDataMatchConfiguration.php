@@ -5,6 +5,7 @@ namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
 
 use Db;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -17,6 +18,11 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      */
     private $translator;
 
+    /**
+     * ImportDataMatchConfiguration constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -24,6 +30,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
 
     public function getConfiguration()
     {
+        return [];
     }
 
     public function updateConfiguration(array $configuration)

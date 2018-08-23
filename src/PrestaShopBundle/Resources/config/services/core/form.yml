@@ -71,3 +71,8 @@ services:
         arguments:
             - '@prestashop.adapter.contact.repository'
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+    prestashop.core.form.import.choice_provider.import_match_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.import.import_data_match.provider").getImportMatchConfiguration()'

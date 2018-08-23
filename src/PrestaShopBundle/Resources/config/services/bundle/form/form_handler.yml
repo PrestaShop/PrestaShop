@@ -254,7 +254,7 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.import.form_data_provider'
+            - '@prestashop.admin.advanced_parameters.import_data_configuration.data_provider'
             -
               'import_data_configuration': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType'
             - 'ImportDataConfiguration'

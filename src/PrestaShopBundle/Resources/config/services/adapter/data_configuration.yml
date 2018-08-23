@@ -196,3 +196,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchConfiguration'
         arguments:
             - '@translator'
+
+    prestashop.adapter.import.import_data_match.provider:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchProvider'

@@ -6,9 +6,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * todo: insert comment
+ * Class ImportDataConfigurationProvider is responsible for providing or updating data for import match configuration
  */
-class ImportDataConfigurationProvider implements FormDataProviderInterface
+final class ImportDataConfigurationProvider implements FormDataProviderInterface
 {
     /**
      * @var DataConfigurationInterface

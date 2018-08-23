@@ -274,9 +274,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.import.import_data_configuration:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType'
-
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
         tags:
@@ -480,5 +477,12 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.mail_method'
             - '@prestashop.core.form.choice_provider.contact_by_id'
+        tags:
+            - { name: form.type }
+
+    form.type.import.import_data_configuration:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType'
+        arguments:
+            - '@prestashop.core.form.import.choice_provider.import_match_configuration'
         tags:
             - { name: form.type }
