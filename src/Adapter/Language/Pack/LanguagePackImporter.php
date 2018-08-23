@@ -24,13 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Language\Pack\Import;
+namespace PrestaShop\PrestaShop\Adapter\Language\Pack;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 
 /**
@@ -42,28 +43,38 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
      * @var LanguagePackInstaller
      */
     private $languagePack;
+
     /**
      * @var LanguageDataProvider
      */
     private $languageProvider;
+
     /**
      * @var CacheClearer
      */
     private $cacheClearer;
 
     /**
+     * @var string
+     */
+    private $translationsDir;
+
+    /**
      * @param LanguagePackInstallerInterface $languagePack
      * @param LanguageDataProvider $languageProvider
      * @param CacheClearer $cacheClearer
+     * @param string $translationsDir
      */
     public function __construct(
         LanguagePackInstallerInterface $languagePack,
         LanguageDataProvider $languageProvider,
-        CacheClearer $cacheClearer
+        CacheClearer $cacheClearer,
+        $translationsDir
     ) {
         $this->languagePack = $languagePack;
         $this->languageProvider = $languageProvider;
         $this->cacheClearer = $cacheClearer;
+        $this->translationsDir = $translationsDir;
     }
 
     /**
@@ -73,17 +84,13 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     {
         $result = $this->languagePack->downloadAndInstallLanguagePack($isoCode);
 
-        $errors = [];
-        // returns the errors
-        if (is_array($result) && !empty($result)) {
-            $errors = $result;
+        if (!empty($result)) {
+            return $result;
         }
 
-        if (empty($errors)) {
-            $this->updateCldr($isoCode);
-        }
+        $this->updateCldr($isoCode);
 
-        return $errors;
+        return [];
     }
 
     /**
@@ -100,7 +107,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
         $languageCode = $this->languageProvider->getLanguageCodeByIso($isoCode);
         $languageCode = $this->getFormattedLanguageCode($languageCode);
 
-        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate = new Update($this->translationsDir);
         $cldrUpdate->fetchLocale($languageCode);
     }
 

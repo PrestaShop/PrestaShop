@@ -36,8 +36,8 @@ interface LanguagePackInstallerInterface
      *
      * @param string $iso -3166-2 alpha-2 format code
      *
-     * @return array|bool - if false is returned then iso code is not valid.
-     * If array is returned then it contains errors. If true then everything went fine
+     * @return array - if not empty then it contains errors. In another case the function
+     * has been executed successfully
      */
     public function downloadAndInstallLanguagePack($iso);
 }

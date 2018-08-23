@@ -126,6 +126,7 @@ services:
     prestashop.adapter.language.language_pack_installer:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
         arguments:
+            - '@translator'
             - '@prestashop.core.foundation.version'
 
     prestashop.adapter.language.validator:
@@ -206,3 +207,11 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.language.pack.importer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\LanguagePackImporter'
+        arguments:
+            - '@prestashop.adapter.language.language_pack_installer'
+            - '@prestashop.adapter.data_provider.language'
+            - '@prestashop.adapter.cache_clearer'
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
