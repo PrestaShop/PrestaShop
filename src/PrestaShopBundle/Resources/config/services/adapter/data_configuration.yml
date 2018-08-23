@@ -125,6 +125,8 @@ services:
 
     prestashop.adapter.language.language_pack:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePack'
+        arguments:
+            - '@prestashop.core.foundation.version'
 
     prestashop.adapter.language.validator:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'
