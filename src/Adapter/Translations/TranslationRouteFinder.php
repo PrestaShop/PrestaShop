@@ -38,13 +38,35 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class TranslationRouteFinder
 {
     /**
+     * Mails translations type
+     */
+    const MAILS = 'mails';
+
+    /**
+     * Modules translations type
+     */
+    const MODULES = 'modules';
+
+    /**
+     * Email body translations type
+     */
+    const BODY = 'body';
+
+    /**
+     * Themes translations type
+     */
+    const THEMES = 'themes';
+
+    /**
      * @var TranslationService
      */
     private $translationService;
+
     /**
      * @var Link
      */
     private $link;
+
     /**
      * @var ModuleRepositoryInterface
      */
@@ -79,8 +101,8 @@ class TranslationRouteFinder
         $route = 'admin_international_translation_overview';
 
         switch ($propertyAccessor->getValue($routeProperties, '[translation_type]')) {
-            case 'mails':
-                if ('body' === $propertyAccessor->getValue($routeProperties, '[email_content_type]')) {
+            case self::MAILS:
+                if (self::BODY === $propertyAccessor->getValue($routeProperties, '[email_content_type]')) {
                     $language = $propertyAccessor->getValue($routeProperties, '[language]');
                     $route = $this->link->getAdminLink(
                         'AdminTranslations',
@@ -88,8 +110,8 @@ class TranslationRouteFinder
                         [],
                         [
                             'lang' => $language,
-                            'type' => 'mails',
-                            'selected-emails' => 'body',
+                            'type' => self::MAILS,
+                            'selected-emails' => self::BODY,
                             'selected-theme' => $propertyAccessor->getValue($routeProperties, '[theme]'),
                             'locale' => $this->translationService->langToLocale($language),
                         ]
@@ -98,7 +120,7 @@ class TranslationRouteFinder
 
                 break;
 
-            case 'modules':
+            case self::MODULES:
                 $moduleName = $propertyAccessor->getValue($routeProperties, '[module]');
 
                 // If module is not using the new translation system -
@@ -109,7 +131,7 @@ class TranslationRouteFinder
                         true,
                         [],
                         [
-                            'type' => 'modules',
+                            'type' => self::MODULES,
                             'module' => $moduleName,
                         ]
                     );
@@ -141,22 +163,22 @@ class TranslationRouteFinder
         ];
 
         switch ($propertyAccessor->getValue($routeProperties, '[translation_type]')) {
-            case 'themes':
+            case self::THEMES:
                 $parameters['selected'] = $propertyAccessor->getValue($routeProperties, '[theme]');
 
                 break;
 
-            case 'mails':
+            case self::MAILS:
                 $emailContentType = $propertyAccessor->getValue($routeProperties, '[email_content_type]');
                 $parameters['selected'] = $emailContentType;
 
-                if ('body' === $emailContentType) {
+                if (self::BODY === $emailContentType) {
                     $parameters = [];
                 }
 
                 break;
 
-            case 'modules':
+            case self::MODULES:
                 $moduleName = $propertyAccessor->getValue($routeProperties, '[module]');
                 $parameters['selected'] = $moduleName;
 
