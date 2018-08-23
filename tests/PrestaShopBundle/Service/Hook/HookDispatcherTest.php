@@ -90,14 +90,14 @@ class HookDispatcherTest extends KernelTestCase
             'overriden_listener_name' => "result_test_2b"
         ), $event->getContent());
     }
-    public function listenerCallback2(Event $event, $eventName)
+    public function listenerCallback2(RenderingHookEvent $event, $eventName)
     {
         $this->assertEquals('test_test_2', $eventName);
-        $event->setContent('result_test_2');
+        $event->setContent(['result_test_2']);
     }
-    public function listenerCallback2b(Event $event, $eventName)
+    public function listenerCallback2b(RenderingHookEvent $event, $eventName)
     {
         $this->assertEquals('test_test_2', $eventName);
-        $event->setContent('result_test_2b', 'overriden_listener_name');
+        $event->setContent(['result_test_2b'], 'overriden_listener_name');
     }
 }
