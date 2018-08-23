@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 /**
  * Class LanguagePack is responsible for the language pack actions regarding installation
  */
-class LanguagePackInstaller implements LanguagePackInstallerInterface
+final class LanguagePackInstaller implements LanguagePackInstallerInterface
 {
     /**
      * @var Version
