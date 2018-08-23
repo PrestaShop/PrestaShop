@@ -214,3 +214,4 @@ services:
             - '@prestashop.adapter.language.language_pack_installer'
             - '@prestashop.adapter.data_provider.language'
             - '@prestashop.adapter.cache_clearer'
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'

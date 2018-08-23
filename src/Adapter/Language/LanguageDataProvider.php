@@ -76,7 +76,7 @@ class LanguageDataProvider
         if (false === $result) {
             return [];
         }
-        
+
         return $result;
     }
 
