@@ -26,7 +26,7 @@
 import FormFieldToggle from "./FormFieldToggle";
 
 export default class TranslationSettingsPage {
-    init() {
-        new FormFieldToggle().init();
+    constructor() {
+        new FormFieldToggle();
     }
 }

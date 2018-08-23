@@ -25,15 +25,45 @@
 
 const $ = window.$;
 
+/**
+ * Back office translations type
+ *
+ * @type {string}
+ */
 const back = 'back';
+
+/**
+ * Modules translations type
+ * @type {string}
+ */
 const themes = 'themes';
+
+/**
+ * Modules translations type
+ * @type {string}
+ */
 const modules = 'modules';
+
+/**
+ * Mails translations type
+ * @type {string}
+ */
 const mails = 'mails';
+
+/**
+ * Other translations type
+ * @type {string}
+ */
 const others = 'others';
+
+/**
+ * Email body translations type
+ * @type {string}
+ */
 const emailContentBody = 'body';
 
 export default class FormFieldToggle {
-    init() {
+    constructor() {
         $('.js-translation-type').on('change', this.toggleFields.bind(this));
         $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
 
