@@ -109,11 +109,16 @@ if (Tools::isSubmit('getNotifications')) {
     die(json_encode($notification->getLastElements()));
 }
 
-//if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-//    $notification = new Notification;
-//    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
-//}
-//
+/**
+ * Updates the last time a notification has been seen
+ *
+ * -> Duplicated (NOT MOVED) in Symfony
+ */
+if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
+    $notification = new Notification;
+    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
+}
+
 //if (Tools::isSubmit('searchCategory')) {
 //    $q = Tools::getValue('q');
 //    $limit = Tools::getValue('limit');

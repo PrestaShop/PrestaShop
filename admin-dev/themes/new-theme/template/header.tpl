@@ -71,6 +71,7 @@
     var default_language = '{$default_language|intval}';
     var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_catalog_post"])|addslashes}';
     var admin_notification_get_link = '{$link->getAdminLink("AdminCommon")|addslashes}';
+    var admin_notification_push_link = '{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
     var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
     var update_success_msg = '{l s='Update successful' js=1}';
     var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1}';
