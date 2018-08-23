@@ -154,7 +154,7 @@
 
                         <div class="module-column-actions">
                           <div class="btn-group">
-                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions') }}&amp;id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if showModules %}&amp;show_modules={{ showModules }}{% endif %}">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions') }}&amp;id_module={{ moduleInstance.id }}&amp;id_hook={{ hook['id_hook'] }}&amp;editGraft{% if selectedModule %}&amp;show_modules={{ selectedModule }}{% endif %}">
                               <i class="material-icons">edit</i>
                               {{ 'Edit' | trans({}, 'Admin.Actions') }}
                             </a>
