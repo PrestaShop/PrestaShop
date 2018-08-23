@@ -41,28 +41,29 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      * @var LanguageValidator
      */
     private $languageValidator;
-    /**
-     * @var LanguagePackLoaderInterface
-     */
-    private $languagePackLoader;
+
     /**
      * @var LanguageDataProvider
      */
     private $languageProvider;
+    /**
+     * @var array
+     */
+    private $languagePackList;
 
     /**
-     * @param LanguagePackLoaderInterface $languagePackLoader
+     * @param array $languagePackList
      * @param LanguageValidator $languageValidator
      * @param LanguageDataProvider $languageProvider
      */
     public function __construct(
-        LanguagePackLoaderInterface $languagePackLoader,
+        array $languagePackList,
         LanguageValidator $languageValidator,
         LanguageDataProvider $languageProvider
     ) {
         $this->languageValidator = $languageValidator;
-        $this->languagePackLoader = $languagePackLoader;
         $this->languageProvider = $languageProvider;
+        $this->languagePackList = $languagePackList;
     }
 
     /**
@@ -70,10 +71,9 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
      */
     public function getChoices()
     {
-        $languages = $this->languagePackLoader->getLanguagePackList();
         $choices = [];
 
-        foreach (array_keys($languages) as $locale) {
+        foreach (array_keys($this->languagePackList) as $locale) {
             if ($this->languageValidator->isInstalledByLocale($locale)) {
                 continue;
             }
