@@ -62,10 +62,9 @@ $(document).ready(function() {
 
 function updateEmployeeNotifications() {
   $.post(
-    baseAdminDir + "ajax.php",
+    admin_notification_push_link,
     {
-      "updateElementEmployee": "1",
-      "updateElementEmployeeType": $('.notifications .nav-item.active a').attr('data-type')
+      "type": $('.notifications .nav-item.active a').attr('data-type')
     }
   );
 }

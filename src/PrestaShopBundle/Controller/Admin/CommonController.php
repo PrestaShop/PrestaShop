@@ -57,6 +57,18 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
+     * Update the last time a notification type has been seen
+     * 
+     * @param Request $request
+     */
+    public function notificationsAckAction(Request $request)
+    {
+        $type = $request->request->get('type');
+        // Adapter needed here?
+        return new JsonResponse((new \Notification)->updateEmployeeLastElement($type));
+    }
+
+    /**
      * This will allow you to retrieve an HTML code with a ready and linked paginator.
      *
      * To be able to use this paginator, the current route must have these standard parameters:
