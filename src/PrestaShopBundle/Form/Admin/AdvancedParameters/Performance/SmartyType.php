@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Smarty" form in Performance page
+ * This form class generates the "Smarty" form in Performance page.
  */
 class SmartyType extends CommonAbstractType
 {
@@ -79,7 +79,7 @@ class SmartyType extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature'
+            'translation_domain' => 'Admin.Advparameters.Feature',
         ]);
     }
 

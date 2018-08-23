@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Geolocation\GeoLite;
 
 /**
- * Interface GeoLiteCityInterface defines contract for GeoLiteCity
+ * Interface GeoLiteCityInterface defines contract for GeoLiteCity.
  */
 interface GeoLiteCityCheckerInterface
 {
     /**
-     * Check if GeoLiteCity data is available in PrestaShop installation
+     * Check if GeoLiteCity data is available in PrestaShop installation.
      *
      * @return bool
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class LocalizationConfigurationType is responsible for building 'Improve > International > Localization' page
- * 'Configuration' form
+ * 'Configuration' form.
  */
 class LocalizationConfigurationType extends AbstractType
 {
@@ -83,17 +83,21 @@ class LocalizationConfigurationType extends AbstractType
         $builder
             ->add('default_language', ChoiceType::class, [
                 'choices' => $this->languageChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('detect_language_from_browser', SwitchType::class)
             ->add('default_country', ChoiceType::class, [
                 'choices' => $this->countryChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('detect_country_from_browser', SwitchType::class)
             ->add('default_currency', ChoiceType::class, [
                 'choices' => $this->currencyChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('timezone', ChoiceType::class, [
                 'choices' => $this->timezoneChoices,
+                'choice_translation_domain' => false,
             ])
         ;
     }

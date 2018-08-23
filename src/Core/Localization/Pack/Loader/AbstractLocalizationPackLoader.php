@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use ErrorException;
 use SimpleXMLElement;
 
 /**
- * Class AbstractLocalizationPackLoader is abstract localization pack loader that implements XML loading from file
+ * Class AbstractLocalizationPackLoader is abstract localization pack loader that implements XML loading from file.
  */
 abstract class AbstractLocalizationPackLoader implements LocalizationPackLoaderInterface
 {
     /**
-     * Loads XML from local or remote file
+     * Loads XML from local or remote file.
      *
      * @param string $file
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class InvoiceByStatusFormHandler manages the data manipulated using "By status" form
- * in "Sell > Orders > Invoices" page
+ * in "Sell > Orders > Invoices" page.
  */
 final class InvoiceByStatusFormHandler extends FormHandler
 {
@@ -51,7 +51,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
 
     /**
      * @param FormBuilderInterface $formBuilder
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
      * @param array $formTypes
      * @param string $hookName
@@ -60,7 +60,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
      */
     public function __construct(
         FormBuilderInterface $formBuilder,
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName,

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -112,7 +112,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private function getThemesOnDisk()
     {
         $suffix = 'config/theme.yml';
-        $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix, GLOB_NOSORT);
+        $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . '*/' . $suffix, GLOB_NOSORT);
 
         $themes = array();
         foreach ($themeDirectories as $directory) {

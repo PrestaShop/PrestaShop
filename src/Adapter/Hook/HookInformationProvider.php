@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,18 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Hook;
 
 use Hook;
 
 /**
- * Give information about the hooks
+ * Give information about the hooks.
  */
 class HookInformationProvider
 {
     /**
      * @param $hook_name
+     *
      * @return bool
      */
     public function isDisplayHookName($hook_name)

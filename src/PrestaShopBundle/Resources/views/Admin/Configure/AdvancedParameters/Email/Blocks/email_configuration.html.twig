@@ -25,43 +25,57 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block email_configuration %}
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">mail</i> {{ 'Email'|trans({}, 'Admin.Global') }}
-    </h3>
-    <div class="card-body">
-      <div class="form-group">
-        <label class="form-control-label">{{ 'Send emails to'|trans }}</label>
-        {{ form_errors(emailConfigurationForm.email_config.send_emails_to) }}
-        {{ form_widget(emailConfigurationForm.email_config.send_emails_to) }}
-        <small class="form-text">
-          {{ 'Where customers send messages from the order page.'|trans({}, 'Admin.Advparameters.Help') }}
-        </small>
-      </div>
+  <div class="col-xl-10">
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">mail</i> {{ 'Email'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Send emails to'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.email_config.send_emails_to) }}
+              {{ form_widget(emailConfigurationForm.email_config.send_emails_to) }}
+              <small class="form-text">
+                {{ 'Where customers send messages from the order page.'|trans({}, 'Admin.Advparameters.Help') }}
+              </small>
+            </div>
+          </div>
 
-      <div class="form-group js-email-method" data-smtp-mail-method="{{ smtpMailMethod }}">
-        {{ form_errors(emailConfigurationForm.email_config.mail_method) }}
-        {{ form_widget(emailConfigurationForm.email_config.mail_method) }}
-      </div>
+          <div class="form-group row js-email-method" data-smtp-mail-method="{{ smtpMailMethod }}">
+            <label class="form-control-label"></label>
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.email_config.mail_method) }}
+              {{ form_widget(emailConfigurationForm.email_config.mail_method) }}
+            </div>
+          </div>
 
-      <div class="form-group">
-        {{ form_errors(emailConfigurationForm.email_config.mail_type) }}
-        {{ form_widget(emailConfigurationForm.email_config.mail_type) }}
-      </div>
+          <div class="form-group row">
+            <label class="form-control-label"></label>
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.email_config.mail_type) }}
+              {{ form_widget(emailConfigurationForm.email_config.mail_type) }}
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label class="form-control-label">{{ 'Log Emails'|trans }}</label>
-        {{ form_errors(emailConfigurationForm.email_config.log_emails) }}
-        {{ form_widget(emailConfigurationForm.email_config.log_emails) }}
-      </div>
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Log Emails'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.email_config.log_emails) }}
+              {{ form_widget(emailConfigurationForm.email_config.log_emails) }}
+            </div>
+          </div>
 
-      {% block email_configuration_form_rest %}
-        {{ form_rest(emailConfigurationForm.email_config) }}
-      {% endblock %}
-    </div>
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          {% block email_configuration_form_rest %}
+            {{ form_rest(emailConfigurationForm.email_config) }}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
       </div>
     </div>
   </div>

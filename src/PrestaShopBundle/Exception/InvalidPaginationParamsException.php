@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,8 +40,7 @@ class InvalidPaginationParamsException extends OutOfBoundsException
         $message = '',
         $code = 0,
         Exception $previous = null
-    )
-    {
+    ) {
         if ($message == '') {
             $message = 'A page index should be an integer greater than 1.';
         }

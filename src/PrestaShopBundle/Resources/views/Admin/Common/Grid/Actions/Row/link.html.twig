@@ -23,8 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<a class="btn tooltip-link js-link-row-action"
-   href="{{ path(action.options.route, { (action.options.route_param_name) : row[action.options.route_param_field]}) }}"
+{% set class = 'btn tooltip-link js-link-row-action' %}
+
+{% if attributes.class is defined %}
+  {% set class = class ~ ' ' ~ attributes.class %}
+{% endif %}
+
+<a class="{{ class }}"
+   href="{{ path(action.options.route, { (action.options.route_param_name) : record[action.options.route_param_field]}) }}"
    data-confirm-message="{{ action.options.confirm_message }}"
 >
   {% if action.icon is not empty %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,10 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-
 use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -38,18 +36,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Logs" page display
+ * Responsible of "Configure > Advanced Parameters > Logs" page display.
  */
 class LogsController extends FrameworkBundleAdminController
 {
     /**
-     * @var string The controller name for routing.
+     * @var string the controller name for routing
      */
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
-     * @param LogsFilters $filters the list of filters from the request.
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param LogsFilters $filters the list of filters from the request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(LogsFilters $filters)
@@ -77,14 +77,21 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      * @DemoRestricted(redirectRoute="admin_logs")
+     *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function searchAction(Request $request)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.logs');
+        $logsDefinition = $definitionFactory->create();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);
+
         $searchParametersForm->handleRequest($request);
         $filters = array();
 
@@ -98,11 +105,13 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      * @DemoRestricted(redirectRoute="admin_logs")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
+     *
      * @throws \Exception
      */
     public function processFormAction(Request $request)
@@ -130,9 +139,10 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      *
      * @return RedirectResponse
+     *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteAllAction()
@@ -145,7 +155,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return FormHandlerInterface the form handler to set the severity level.
+     * @return FormHandlerInterface the form handler to set the severity level
      */
     private function getFormHandler()
     {
@@ -153,7 +163,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return LogRepository the repository to retrieve logs from database.
+     * @return LogRepository the repository to retrieve logs from database
      */
     private function getLogRepository()
     {

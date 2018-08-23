@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,8 @@
  */
 
 /**
- * Represents one product ordered
+ * Represents one product ordered.
+ *
  * @since 1.5.0
  */
 class SupplyOrderDetailCore extends ObjectModel
@@ -81,7 +82,7 @@ class SupplyOrderDetailCore extends ObjectModel
     public $id_currency;
 
     /**
-     * @var float Exchange rate between $id_currency and SupplyOrder::$id_ref_currency, at the time
+     * @var float Exchange rate between and SupplyOrder::$id_ref_currency, at the time
      */
     public $exchange_rate;
 
@@ -102,7 +103,7 @@ class SupplyOrderDetailCore extends ObjectModel
 
     /**
      * @var float This defines the price of the product, considering the number of units to buy.
-     * ($unit_price_te * $quantity), without discount, without tax
+     *            ($unit_price_te * $quantity), without discount, without tax
      */
     public $price_te = 0;
 
@@ -112,12 +113,12 @@ class SupplyOrderDetailCore extends ObjectModel
     public $discount_rate = 0;
 
     /**
-     * @var float Supplier discount value (($discount_rate / 100) * $price_te), without tax
+     * @var float Supplier discount value (($discount_rate / 100) *), without tax
      */
     public $discount_value_te = 0;
 
     /**
-     * @var float ($price_te - $discount_value_te), with discount, without tax
+     * @var float ($price_te -), with discount, without tax
      */
     public $price_with_discount_te = 0;
 
@@ -132,7 +133,7 @@ class SupplyOrderDetailCore extends ObjectModel
     public $tax_value = 0;
 
     /**
-     * @var float ($price_with_discount_te + $tax_value)
+     * @var float ($price_with_discount_te +)
      */
     public $price_ti = 0;
 
@@ -142,8 +143,8 @@ class SupplyOrderDetailCore extends ObjectModel
     public $tax_value_with_order_discount = 0;
 
     /**
-     * @var float This is like $price_with_discount_te, considering the global order discount.
-     * (i.e. if SupplyOrder::discount_rate is set)
+     * @var float This is like, considering the global order discount.
+     *            (i.e. if SupplyOrder::discount_rate is set)
      */
     public $price_with_order_discount_te = 0;
 
@@ -154,29 +155,29 @@ class SupplyOrderDetailCore extends ObjectModel
         'table' => 'supply_order_detail',
         'primary' => 'id_supply_order_detail',
         'fields' => array(
-            'id_supply_order' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product_attribute' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reference' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
-            'supplier_reference' =>            array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
-            'name' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'ean13' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
-            'isbn' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
-            'upc' =>                            array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
-            'id_currency' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'exchange_rate' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'unit_price_te' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'quantity_expected' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'quantity_received' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'price_te' =>                        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'discount_rate' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'discount_value_te' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'price_with_discount_te' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'tax_rate' =>                        array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'tax_value' =>                        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'price_ti' =>                        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'tax_value_with_order_discount' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'price_with_order_discount_te' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
+            'supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+            'ean13' => array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
+            'isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
+            'upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
+            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'exchange_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'unit_price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'quantity_expected' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+            'quantity_received' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'discount_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'discount_value_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'price_with_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'tax_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'tax_value' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'price_ti' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'tax_value_with_order_discount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'price_with_order_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
         ),
     );
 
@@ -219,23 +220,23 @@ class SupplyOrderDetailCore extends ObjectModel
     /**
      * Calculates all prices for this product based on its quantity and unit price
      * Applies discount if necessary
-     * Calculates tax value, function of tax rate
+     * Calculates tax value, function of tax rate.
      */
     protected function calculatePrices()
     {
         // calculates entry price
-        $this->price_te = Tools::ps_round((float)$this->unit_price_te * (int)$this->quantity_expected, 6);
+        $this->price_te = Tools::ps_round((float) $this->unit_price_te * (int) $this->quantity_expected, 6);
 
         // calculates entry discount value
         if ($this->discount_rate != null && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0) {
-            $this->discount_value_te = Tools::ps_round((float)$this->price_te * ($this->discount_rate / 100), 6);
+            $this->discount_value_te = Tools::ps_round((float) $this->price_te * ($this->discount_rate / 100), 6);
         }
 
         // calculates entry price with discount
         $this->price_with_discount_te = Tools::ps_round($this->price_te - $this->discount_value_te, 6);
 
         // calculates tax value
-        $this->tax_value = Tools::ps_round($this->price_with_discount_te * ((float)$this->tax_rate / 100), 6);
+        $this->tax_value = Tools::ps_round($this->price_with_discount_te * ((float) $this->tax_rate / 100), 6);
         $this->price_ti = Tools::ps_round($this->price_with_discount_te + $this->tax_value, 6);
 
         // defines default values for order discount fields
@@ -245,20 +246,20 @@ class SupplyOrderDetailCore extends ObjectModel
 
     /**
      * Applies a global order discount rate, for the current product (i.e detail)
-     * Calls ObjectModel::update()
+     * Calls ObjectModel::update().
      *
      * @param float|int $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
      */
     public function applyGlobalDiscount($discount_rate)
     {
-        if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0) {
+        if ($discount_rate != null && is_numeric($discount_rate) && (float) $discount_rate > 0) {
             // calculates new price, with global order discount, tax ecluded
-            $discount_value = $this->price_with_discount_te - (($this->price_with_discount_te * (float)$discount_rate) / 100);
+            $discount_value = $this->price_with_discount_te - (($this->price_with_discount_te * (float) $discount_rate) / 100);
 
             $this->price_with_order_discount_te = Tools::ps_round($discount_value, 6);
 
             // calculates new tax value, with global order discount
-            $this->tax_value_with_order_discount = Tools::ps_round($this->price_with_order_discount_te * ((float)$this->tax_rate / 100), 6);
+            $this->tax_value_with_order_discount = Tools::ps_round($this->price_with_order_discount_te * ((float) $this->tax_rate / 100), 6);
 
             parent::update();
         }
@@ -268,6 +269,7 @@ class SupplyOrderDetailCore extends ObjectModel
      * @see ObjectModel::validateController()
      *
      * @param bool $htmlentities Optional
+     *
      * @return array Errors, if any..
      */
     public function validateController($htmlentities = true)
@@ -286,12 +288,12 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         foreach ($fields_required as $field) {
-            if (($value = $this->{$field}) == false && (string)$value != '0') {
+            if (($value = $this->{$field}) == false && (string) $value != '0') {
                 if (!$this->id || $field != 'passwd') {
                     $errors[] = $this->trans(
                         '%s is required.',
                         array(
-                            '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b>'
+                            '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
                         ),
                         'Shop.Notifications.Error'
                     );
@@ -314,7 +316,7 @@ class SupplyOrderDetailCore extends ObjectModel
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
                 if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
-                    $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+                    $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {
                         $this->{$field} = Tools::hash($value);
@@ -326,15 +328,15 @@ class SupplyOrderDetailCore extends ObjectModel
         }
 
         if ($this->quantity_expected <= 0) {
-            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->tax_rate < 0 || $this->tax_rate > 100) {
-            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         if ($this->discount_rate < 0 || $this->discount_rate > 100) {
-            $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.$this->trans('is invalid.', array(), 'Shop.Notifications.Error');
+            $errors[] = '<b>' . SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)) . '</b> ' . $this->trans('is invalid.', array(), 'Shop.Notifications.Error');
         }
 
         return $errors;

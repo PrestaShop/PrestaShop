@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Event\Dispatcher;
 
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class NullDispatcher implements EventDispatcherInterface
+class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterface
 {
     public function addListener($eventName, $listener, $priority = 0)
     {
@@ -60,6 +62,22 @@ class NullDispatcher implements EventDispatcherInterface
     }
 
     public function getListenerPriority($eventName, $listener)
+    {
+    }
+
+    public function dispatchHook(HookInterface $hook)
+    {
+    }
+
+    public function dispatchWithParameters($hookName, array $hookParameters = [])
+    {
+    }
+
+    public function dispatchRendering(HookInterface $hook)
+    {
+    }
+
+    public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
     {
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,50 +29,33 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**
- * Interface GridDefinitionInterface defines contract for grid definition
+ * Interface GridDefinitionInterface defines contract for grid definition.
  */
 interface DefinitionInterface
 {
     /**
-     * Get unique grid identifier
+     * Get unique grid identifier.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * Get grid name
+     * Get grid name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set grid name
-     *
-     * @param string $name
-     *
-     * @return self
-     */
-    public function setName($name);
-
-    /**
-     * Get grid columns
+     * Get grid columns.
      *
      * @return ColumnCollectionInterface
      */
     public function getColumns();
-
-    /**
-     * Set grid columns
-     *
-     * @param ColumnCollectionInterface $columns
-     *
-     * @return self
-     */
-    public function setColumns(ColumnCollectionInterface $columns);
 
     /**
      * @return BulkActionCollectionInterface
@@ -80,25 +63,16 @@ interface DefinitionInterface
     public function getBulkActions();
 
     /**
-     * @param BulkActionCollectionInterface $bulkActions
-     *
-     * @return self
-     */
-    public function setBulkActions(BulkActionCollectionInterface $bulkActions);
-
-    /**
-     * Get grid actions
+     * Get grid actions.
      *
      * @return GridActionCollectionInterface
      */
     public function getGridActions();
 
     /**
-     * Set grid actions
+     * Get filters.
      *
-     * @param GridActionCollectionInterface $gridActions
-     *
-     * @return self
+     * @return FilterCollectionInterface
      */
-    public function setGridActions(GridActionCollectionInterface $gridActions);
+    public function getFilters();
 }

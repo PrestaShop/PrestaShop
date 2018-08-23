@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
 /**
- * Interface PhpExtensionCheckerInterface
+ * Interface PhpExtensionCheckerInterface.
  */
 interface PhpExtensionCheckerInterface
 {
     /**
-     * Check if PHP extension is loaded or not
+     * Check if PHP extension is loaded or not.
      *
      * @param string $extension
      *

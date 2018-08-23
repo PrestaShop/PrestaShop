@@ -78,10 +78,13 @@ const config = {
       './js/pages/geolocation',
     ],
     payment_preferences: [
-      './js/pages/payment-preferences'
+      './js/pages/payment-preferences',
     ],
     email: [
       './js/pages/email'
+    ],
+    sql_manager: [
+      './js/pages/sql-manager',
     ]
   },
   output: {

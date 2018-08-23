@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ class NewProductsControllerCore extends ProductListingFrontController
     public $php_self = 'new-products';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function initContent()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class GenderCore
+ * Class GenderCore.
  *
  * @since 1.5.0
  */
@@ -66,7 +66,7 @@ class GenderCore extends ObjectModel
     }
 
     /**
-     * Get all Genders
+     * Get all Genders.
      *
      * @param int|null $idLang Language ID
      *
@@ -84,16 +84,16 @@ class GenderCore extends ObjectModel
     }
 
     /**
-     * Get Gender image
+     * Get Gender image.
      *
      * @return string File path
      */
     public function getImage()
     {
-        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg')) {
-            return _THEME_GENDERS_DIR_.'Unknown.jpg';
+        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_ . $this->id . '.jpg')) {
+            return _THEME_GENDERS_DIR_ . 'Unknown.jpg';
         }
 
-        return _THEME_GENDERS_DIR_.$this->id.'.jpg';
+        return _THEME_GENDERS_DIR_ . $this->id . '.jpg';
     }
 }

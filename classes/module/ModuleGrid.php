@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class ModuleGridCore extends Module
 {
     protected $_employee;
@@ -31,22 +30,22 @@ abstract class ModuleGridCore extends Module
     /** @var array of strings graph data */
     protected $_values = array();
 
-    /** @var int total number of values **/
+    /** @var int total number of values * */
     protected $_totalCount = 0;
 
-    /**@var string graph titles */
+    /** @var string graph titles */
     protected $_title;
 
-    /**@var int start */
+    /** @var int start */
     protected $_start;
 
-    /**@var int limit */
+    /** @var int limit */
     protected $_limit;
 
-    /**@var string column name on which to sort */
+    /** @var string column name on which to sort */
     protected $_sort = null;
 
-    /**@var string sort direction DESC/ASC */
+    /** @var string sort direction DESC/ASC */
     protected $_direction = null;
 
     /** @var ModuleGridEngine grid engine */
@@ -69,10 +68,10 @@ abstract class ModuleGridCore extends Module
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
-        if (!Tools::file_exists_cache($file = _PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
+        if (!Tools::file_exists_cache($file = _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
             die(Tools::displayError());
         }
-        require_once($file);
+        require_once $file;
         $this->_render = new $render($type);
 
         $this->_start = $start;
@@ -102,15 +101,15 @@ abstract class ModuleGridCore extends Module
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
-        if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php')) {
+        if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
             return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', array(), 'Admin.Modules.Notification');
         }
 
-        $grider = 'grider.php?render='.$render.'&module='.Tools::safeOutput(Tools::getValue('module'));
+        $grider = 'grider.php?render=' . $render . '&module=' . Tools::safeOutput(Tools::getValue('module'));
 
         $context = Context::getContext();
-        $grider .= '&id_employee='.(int)$context->employee->id;
-        $grider .= '&id_lang='.(int)$context->language->id;
+        $grider .= '&id_employee=' . (int) $context->employee->id;
+        $grider .= '&id_lang=' . (int) $context->language->id;
 
         if (!isset($params['width']) || !Validate::IsUnsignedInt($params['width'])) {
             $params['width'] = 600;
@@ -125,28 +124,29 @@ abstract class ModuleGridCore extends Module
             $params['limit'] = 40;
         }
 
-        $grider .= '&width='.$params['width'];
-        $grider .= '&height='.$params['height'];
+        $grider .= '&width=' . $params['width'];
+        $grider .= '&height=' . $params['height'];
         if (isset($params['start']) && Validate::IsUnsignedInt($params['start'])) {
-            $grider .= '&start='.$params['start'];
+            $grider .= '&start=' . $params['start'];
         }
         if (isset($params['limit']) && Validate::IsUnsignedInt($params['limit'])) {
-            $grider .= '&limit='.$params['limit'];
+            $grider .= '&limit=' . $params['limit'];
         }
         if (isset($params['type']) && Validate::IsName($params['type'])) {
-            $grider .= '&type='.$params['type'];
+            $grider .= '&type=' . $params['type'];
         }
         if (isset($params['option']) && Validate::IsGenericName($params['option'])) {
-            $grider .= '&option='.$params['option'];
+            $grider .= '&option=' . $params['option'];
         }
         if (isset($params['sort']) && Validate::IsName($params['sort'])) {
-            $grider .= '&sort='.$params['sort'];
+            $grider .= '&sort=' . $params['sort'];
         }
         if (isset($params['dir']) && Validate::isSortDirection($params['dir'])) {
-            $grider .= '&dir='.$params['dir'];
+            $grider .= '&dir=' . $params['dir'];
         }
 
-        require_once(_PS_ROOT_DIR_.'/modules/'.$render.'/'.$render.'.php');
+        require_once _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php';
+
         return call_user_func(array($render, 'hookGridEngine'), $params, $grider);
     }
 
@@ -156,7 +156,7 @@ abstract class ModuleGridCore extends Module
         $this->setLang(Context::getContext()->language->id);
         $this->getData();
 
-        $layers = isset($datas['layers']) ?  $datas['layers'] : 1;
+        $layers = isset($datas['layers']) ? $datas['layers'] : 1;
 
         if (isset($datas['option'])) {
             $this->setOption($datas['option'], $layers);
@@ -164,15 +164,15 @@ abstract class ModuleGridCore extends Module
 
         if (count($datas['columns'])) {
             foreach ($datas['columns'] as $column) {
-                $this->_csv .= $column['header'].';';
+                $this->_csv .= $column['header'] . ';';
             }
-            $this->_csv = rtrim($this->_csv, ';')."\n";
+            $this->_csv = rtrim($this->_csv, ';') . "\n";
 
             foreach ($this->_values as $value) {
                 foreach ($datas['columns'] as $column) {
-                    $this->_csv .= $value[$column['dataIndex']].';';
+                    $this->_csv .= $value[$column['dataIndex']] . ';';
                 }
-                $this->_csv = rtrim($this->_csv, ';')."\n";
+                $this->_csv = rtrim($this->_csv, ';') . "\n";
             }
         }
         $this->_displayCsv();
@@ -184,7 +184,7 @@ abstract class ModuleGridCore extends Module
             ob_end_clean();
         }
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.$this->displayName.' - '.time().'.csv"');
+        header('Content-Disposition: attachment; filename="' . $this->displayName . ' - ' . time() . '.csv"');
         echo $this->_csv;
         exit;
     }

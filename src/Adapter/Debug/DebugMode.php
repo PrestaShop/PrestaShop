@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Debug;
 use Tools;
 
 /**
- * Utilitary class to manages the Debug mode legacy application
+ * Utilitary class to manages the Debug mode legacy application.
  */
 class DebugMode
 {
@@ -41,15 +41,15 @@ class DebugMode
     const DEBUG_MODE_ERROR_NO_DEFINITION_FOUND = 5;
 
     /**
-     * Is Debug Mode enabled? Checks on custom defines file first
+     * Is Debug Mode enabled? Checks on custom defines file first.
      *
      * @return bool Whether debug mode is enabled
      */
     public function isDebugModeEnabled()
     {
         $definesClean = '';
-        $customDefinesPath = _PS_ROOT_DIR_.'/config/defines_custom.inc.php';
-        $definesPath = _PS_ROOT_DIR_.'/config/defines.inc.php';
+        $customDefinesPath = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
+        $definesPath = _PS_ROOT_DIR_ . '/config/defines.inc.php';
 
         if (is_readable($customDefinesPath)) {
             $definesClean = php_strip_whitespace($customDefinesPath);
@@ -66,7 +66,7 @@ class DebugMode
     }
 
     /**
-     * Enable Debug mode
+     * Enable Debug mode.
      *
      * @return int Whether changing debug mode succeeded or error code
      */
@@ -76,7 +76,7 @@ class DebugMode
     }
 
     /**
-     * Disable debug mode
+     * Disable debug mode.
      *
      * @return int Whether changing debug mode succeeded or error code
      */
@@ -86,34 +86,35 @@ class DebugMode
     }
 
     /**
-     * Check read permission on custom defines.inc.php
+     * Check read permission on custom defines.inc.php.
      *
      * @return bool Whether the file can be read
      */
     private function isCustomDefinesReadable()
     {
-        return is_readable(_PS_ROOT_DIR_.'/config/defines_custom.inc.php');
+        return is_readable(_PS_ROOT_DIR_ . '/config/defines_custom.inc.php');
     }
 
     /**
-     * Check read permission on main defines.inc.php
+     * Check read permission on main defines.inc.php.
      *
      * @return bool Whether the file can be read
      */
     private function isMainDefinesReadable()
     {
-        return is_readable(_PS_ROOT_DIR_.'/config/defines.inc.php');
+        return is_readable(_PS_ROOT_DIR_ . '/config/defines.inc.php');
     }
 
     /**
-     * Update Debug Mode value in main defines file
+     * Update Debug Mode value in main defines file.
      *
      * @param string $value should be "true" or "false"
+     *
      * @return int the debug mode
      */
     private function updateDebugModeValueInMainFile($value)
     {
-        $filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
+        $filename = _PS_ROOT_DIR_ . '/config/defines.inc.php';
         $cleanedFileContent = php_strip_whitespace($filename);
         $fileContent = Tools::file_get_contents($filename);
 
@@ -121,7 +122,7 @@ class DebugMode
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
 
-        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', '. $value .');', $fileContent);
+        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
         if (!@file_put_contents($filename, $fileContent)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
         }
@@ -134,19 +135,20 @@ class DebugMode
     }
 
     /**
-     * Update Debug Mode value in custom defines file
+     * Update Debug Mode value in custom defines file.
      *
      * @param string $value should be "true" or "false"
+     *
      * @return int the debug mode
      */
     private function updateDebugModeValueInCustomFile($value)
     {
-        $customFileName = _PS_ROOT_DIR_.'/config/defines_custom.inc.php';
+        $customFileName = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
         $cleanedFileContent = php_strip_whitespace($customFileName);
         $fileContent = Tools::file_get_contents($customFileName);
 
         if (!empty($cleanedFileContent) && preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $cleanedFileContent)) {
-            $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', '. $value .');', $fileContent);
+            $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
 
             if (!@file_put_contents($customFileName, $fileContent)) {
                 return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;
@@ -161,9 +163,10 @@ class DebugMode
     }
 
     /**
-     * Change value of _PS_MODE_DEV_ constant
+     * Change value of _PS_MODE_DEV_ constant.
      *
      * @param string $value should be "true" or "false"
+     *
      * @return int the debug mode
      */
     private function changePsModeDevValue($value)

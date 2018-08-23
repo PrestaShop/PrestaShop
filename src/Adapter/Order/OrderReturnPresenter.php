@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,9 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 /**
  * @deprecated since 1.7.4.0
  * @see \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
- *
  */
 class OrderReturnPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
 {
-
 }

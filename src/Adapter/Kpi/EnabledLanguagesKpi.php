@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class EnabledLanguagesKpi is an implementation for enabled languages KPI
+ * Class EnabledLanguagesKpi is an implementation for enabled languages KPI.
  */
 final class EnabledLanguagesKpi implements KpiInterface
 {
@@ -82,7 +82,7 @@ final class EnabledLanguagesKpi implements KpiInterface
         $enabledLanguages = $this->configuration->get('ENABLED_LANGUAGES');
 
         $kpi = new HelperKpi();
-        $kpi->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.'new-theme/template/');
+        $kpi->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
         $kpi->id = 'box-languages';
         $kpi->icon = 'mic';
         $kpi->color = 'color1';

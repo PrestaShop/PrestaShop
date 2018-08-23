@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCore
 {
     public function init()
@@ -75,7 +74,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             'Year' => $this->trans('Year', array(), 'Admin.Global'),
             'From' => $this->trans('From:', array(), 'Admin.Global'),
             'To' => $this->trans('To:', array(), 'Admin.Global'),
-            'Save' => $this->trans('Save', array(), 'Admin.Global')
+            'Save' => $this->trans('Save', array(), 'Admin.Global'),
         ), $this->token);
     }
 
@@ -93,11 +92,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         }
 
         $action = Context::getContext()->link->getAdminLink('AdminStats');
-        $action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
-        $action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
+        $action .= ($action && $table ? '&' . Tools::safeOutput($action) : '');
+        $action .= ($identifier && $id ? '&' . Tools::safeOutput($identifier) . '=' . (int) $id : '');
         $module = Tools::getValue('module');
-        $action .= ($module ? '&module='.Tools::safeOutput($module) : '');
-        $action .= (($id_product = Tools::getValue('id_product')) ? '&id_product='.Tools::safeOutput($id_product) : '');
+        $action .= ($module ? '&module=' . Tools::safeOutput($module) : '');
+        $action .= (($id_product = Tools::getValue('id_product')) ? '&id_product=' . Tools::safeOutput($id_product) : '');
         $tpl->assign(array(
             'current' => self::$currentIndex,
             'token' => $token,
@@ -107,7 +106,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             'id' => $id,
             'translations' => $translations,
             'datepickerFrom' => Tools::getValue('datepickerFrom', $context->employee->stats_date_from),
-            'datepickerTo' => Tools::getValue('datepickerTo', $context->employee->stats_date_to)
+            'datepickerTo' => Tools::getValue('datepickerTo', $context->employee->stats_date_to),
         ));
 
         return $tpl->fetch();
@@ -119,10 +118,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $tpl = $this->createTemplate('engines.tpl');
 
         $autoclean_period = array(
-            'never' =>    $this->trans('Never', array(), 'Admin.Global'),
-            'week' =>    $this->trans('Week', array(), 'Admin.Global'),
-            'month' =>    $this->trans('Month', array(), 'Admin.Global'),
-            'year' =>    $this->trans('Year', array(), 'Admin.Global')
+            'never' => $this->trans('Never', array(), 'Admin.Global'),
+            'week' => $this->trans('Week', array(), 'Admin.Global'),
+            'month' => $this->trans('Month', array(), 'Admin.Global'),
+            'year' => $this->trans('Year', array(), 'Admin.Global'),
         );
 
         $tpl->assign(array(
@@ -161,7 +160,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
             'current_module_name' => Tools::getValue('module', 'statsforecast'),
             'token' => $this->token,
             'modules' => $modules,
-            'module_instance' => $module_instance
+            'module_instance' => $module_instance,
         ));
 
         return $tpl->fetch();
@@ -169,19 +168,20 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
     public function checkModulesNames($a, $b)
     {
-        return (bool)($a['displayName'] > $b['displayName']);
+        return (bool) ($a['displayName'] > $b['displayName']);
     }
 
     protected function getModules()
     {
         $sql = 'SELECT h.`name` AS hook, m.`name`
-				FROM `'._DB_PREFIX_.'module` m
-				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+				FROM `' . _DB_PREFIX_ . 'module` m
+				LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
+				LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \'displayAdminStatsModules\'
 					AND m.`active` = 1
 				GROUP BY hm.id_module
 				ORDER BY hm.`position`';
+
         return Db::getInstance()->executeS($sql);
     }
 
@@ -208,7 +208,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $tpl->assign(array(
             'module_name' => $module_name,
             'module_instance' => isset($module_instance) ? $module_instance : null,
-            'hook' => isset($hook) ? $hook : null
+            'hook' => isset($hook) ? $hook : null,
         ));
 
         return $tpl->fetch();
@@ -222,7 +222,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         if (Tools::getValue('submitSettings')) {
             if ($this->access('edit')) {
-                self::$currentIndex .= '&module='.Tools::getValue('module');
+                self::$currentIndex .= '&module=' . Tools::getValue('module');
                 Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
                 Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
                 Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
@@ -255,16 +255,16 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         if (Tools::isSubmit('submitDateMonthPrev')) {
             $m = (date('m') == 1 ? 12 : date('m') - 1);
             $y = ($m == 12 ? date('Y') - 1 : date('Y'));
-            $from = $y.'-'.$m.'-01';
-            $to = $y.'-'.$m.date('-t', mktime(12, 0, 0, $m, 15, $y));
+            $from = $y . '-' . $m . '-01';
+            $to = $y . '-' . $m . date('-t', mktime(12, 0, 0, $m, 15, $y));
         }
         if (Tools::isSubmit('submitDateYear')) {
             $from = date('Y-01-01');
             $to = date('Y-12-31');
         }
         if (Tools::isSubmit('submitDateYearPrev')) {
-            $from = (date('Y') - 1).date('-01-01');
-            $to = (date('Y') - 1).date('-12-31');
+            $from = (date('Y') - 1) . date('-01-01');
+            $to = (date('Y') - 1) . date('-12-31');
         }
         if (isset($from) && isset($to) && !count($this->errors)) {
             $this->context->employee->stats_date_from = $from;
@@ -286,13 +286,13 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
                     'has_errors' => true,
                     'errors' => array($this->errors),
                     'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to)
+                    'date_to' => $this->context->employee->stats_date_to, )
                 ));
             } else {
                 die(json_encode(array(
                     'has_errors' => false,
                     'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to)
+                    'date_to' => $this->context->employee->stats_date_to, )
                     ));
             }
         }
@@ -303,6 +303,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         $year = isset($this->context->cookie->stats_year) ? $this->context->cookie->stats_year : date('Y');
         $month = isset($this->context->cookie->stats_month) ? sprintf('%02d', $this->context->cookie->stats_month) : '%';
         $day = isset($this->context->cookie->stats_day) ? sprintf('%02d', $this->context->cookie->stats_day) : '%';
-        return $year.'-'.$month.'-'.$day;
+
+        return $year . '-' . $month . '-' . $day;
     }
 }

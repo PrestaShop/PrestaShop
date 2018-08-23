@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,22 +26,22 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
-use PrestaShop\PrestaShop\Core\Grid\Row\RowCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 
 /**
- * Class GridData is responsible for storing grid data
+ * Class GridData is responsible for storing grid data.
  */
 final class GridData implements GridDataInterface
 {
     /**
      * @var array
      */
-    private $rows;
+    private $records;
 
     /**
      * @var int
      */
-    private $rowsTotal;
+    private $recordsTotal;
 
     /**
      * @var string
@@ -49,31 +49,31 @@ final class GridData implements GridDataInterface
     private $query;
 
     /**
-     * @param RowCollectionInterface  $rows      Filtered & paginated rows data
-     * @param int                     $rowsTotal Total number of rows (without pagination)
-     * @param string                  $query     Query used to get rows
+     * @param RecordCollectionInterface $records Filtered & paginated rows data
+     * @param int $recordsTotal Total number of rows (without pagination)
+     * @param string $query Query used to get rows
      */
-    public function __construct(RowCollectionInterface $rows, $rowsTotal, $query = '')
+    public function __construct(RecordCollectionInterface $records, $recordsTotal, $query = '')
     {
-        $this->rows = $rows;
-        $this->rowsTotal = $rowsTotal;
+        $this->records = $records;
+        $this->recordsTotal = $recordsTotal;
         $this->query = $query;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRows()
+    public function getRecords()
     {
-        return $this->rows;
+        return $this->records;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRowsTotal()
+    public function getRecordsTotal()
     {
-        return $this->rowsTotal;
+        return $this->recordsTotal;
     }
 
     /**

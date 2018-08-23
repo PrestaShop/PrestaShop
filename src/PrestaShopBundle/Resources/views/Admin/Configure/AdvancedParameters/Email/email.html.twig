@@ -26,26 +26,26 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col">
-        {% if isEmailLogsEnabled %}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_logs_grid.html.twig' %}
-        {% endif %}
-
-        {{ form_start(emailConfigurationForm, {'action': path('admin_email_process')}) }}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
-
-          {% block email_configuration_form_rest %}
-            {{ form_rest(emailConfigurationForm) }}
-          {% endblock %}
-        {{ form_end(emailConfigurationForm) }}
-
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/test_email_sending.html.twig' %}
-      </div>
+  {% if isEmailLogsEnabled %}
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_logs_grid.html.twig' %}
     </div>
   </div>
+  {% endif %}
+
+  {{ form_start(emailConfigurationForm, {'action': path('admin_email_process')}) }}
+  <div class="row justify-content-center">
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig' %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/smtp_configuration.html.twig' %}
+
+    {% block email_configuration_form_rest %}
+      {{ form_rest(emailConfigurationForm) }}
+    {% endblock %}
+  </div>
+  {{ form_end(emailConfigurationForm) }}
+
+  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Email/Blocks/test_email_sending.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

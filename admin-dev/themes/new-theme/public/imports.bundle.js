@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "04739d9d0a05b299e088"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ad45789801c39aad8ed7"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 6;
+/******/ 			var chunkId = 7;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,17 +706,17 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(464)(__webpack_require__.s = 464);
+/******/ 	return hotCreateRequire(465)(__webpack_require__.s = 465);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 232:
+/***/ 236:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImportPage__ = __webpack_require__(279);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImportPage__ = __webpack_require__(280);
 /**
  * 2007-2018 PrestaShop
  *
@@ -747,12 +747,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var $ = window.$;
 
 $(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__ImportPage__["a" /* default */]().init();
+  new __WEBPACK_IMPORTED_MODULE_0__ImportPage__["a" /* default */]();
 });
 
 /***/ }),
 
-/***/ 278:
+/***/ 279:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -800,16 +800,13 @@ var entityStoreContacts = 8;
 var FormFieldToggle = function () {
   function FormFieldToggle() {
     _classCallCheck(this, FormFieldToggle);
+
+    $('.js-entity-select').on('change', this.toggleForm.bind(this));
+
+    this.toggleForm();
   }
 
   _createClass(FormFieldToggle, [{
-    key: 'init',
-    value: function init() {
-      $('.js-entity-select').on('change', this.toggleForm.bind(this));
-
-      this.toggleForm();
-    }
-  }, {
     key: 'toggleForm',
     value: function toggleForm() {
       var selectedOption = $('#entity').find('option:selected');
@@ -891,8 +888,10 @@ var FormFieldToggle = function () {
   }, {
     key: 'loadAvailableFields',
     value: function loadAvailableFields(entity) {
+      var url = -1 === window.location.href.indexOf('index.php') ? '../../../ajax.php' : '../../../../ajax.php';
+
       $.ajax({
-        url: '../../../ajax.php',
+        url: url,
         data: {
           getAvailableFields: 1,
           entity: entity
@@ -920,11 +919,11 @@ var FormFieldToggle = function () {
 
 /***/ }),
 
-/***/ 279:
+/***/ 280:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__ = __webpack_require__(279);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -960,33 +959,47 @@ var $ = window.$;
 
 var ImportPage = function () {
   function ImportPage() {
+    var _this = this;
+
     _classCallCheck(this, ImportPage);
+
+    new __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__["a" /* default */]();
+
+    $('.js-from-files-history-btn').on('click', function () {
+      return _this.showFilesHistoryHandler();
+    });
+    $('.js-close-files-history-block-btn').on('click', function () {
+      return _this.closeFilesHistoryHandler();
+    });
+    $('#fileHistoryTable').on('click', '.js-use-file-btn', function (event) {
+      return _this.useFileFromFilesHistory(event);
+    });
+    $('.js-change-import-file-btn').on('click', function () {
+      return _this.changeImportFileHandler();
+    });
+    $('.js-import-file').on('change', function () {
+      return _this.uploadFile();
+    });
+
+    this.toggleSelectedFile();
+    this.handleSubmit();
   }
 
+  /**
+   * Handle submit and add confirm box in case the toggle button about
+   * deleting all entities before import is checked
+   */
+
+
   _createClass(ImportPage, [{
-    key: 'init',
-    value: function init() {
-      var _this = this;
-
-      new __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__["a" /* default */]().init();
-
-      $('.js-from-files-history-btn').on('click', function () {
-        return _this.showFilesHistoryHandler();
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      $('.js-import-form').on('submit', function () {
+        var $this = $(this);
+        if ($this.find('input[name="truncate"]:checked').val() === '1') {
+          return confirm($this.data('delete-confirm-message') + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?');
+        }
       });
-      $('.js-close-files-history-block-btn').on('click', function () {
-        return _this.closeFilesHistoryHandler();
-      });
-      $('#fileHistoryTable').on('click', '.js-use-file-btn', function (event) {
-        return _this.useFileFromFilesHistory(event);
-      });
-      $('.js-change-import-file-btn').on('click', function () {
-        return _this.changeImportFileHandler();
-      });
-      $('.js-import-file').on('change', function () {
-        return _this.uploadFile();
-      });
-
-      this.toggleSelectedFile();
     }
 
     /**
@@ -1197,11 +1210,9 @@ var ImportPage = function () {
       var data = new FormData();
       data.append('file', uploadedFile);
 
-      var url = $('.js-import-form').data('file-upload-url');
-
       $.ajax({
         type: 'POST',
-        url: url,
+        url: $('.js-import-form').data('file-upload-url'),
         data: data,
         cache: false,
         contentType: false,
@@ -1262,10 +1273,10 @@ var ImportPage = function () {
 
 /***/ }),
 
-/***/ 464:
+/***/ 465:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(232);
+module.exports = __webpack_require__(236);
 
 
 /***/ })

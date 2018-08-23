@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class PrestaShopLoggerCore
+ * Class PrestaShopLoggerCore.
  */
 class PrestaShopLoggerCore extends ObjectModel
 {
@@ -77,7 +77,7 @@ class PrestaShopLoggerCore extends ObjectModel
     protected static $is_present = array();
 
     /**
-     * Send e-mail to the shop owner only if the minimal severity level has been reached
+     * Send e-mail to the shop owner only if the minimal severity level has been reached.
      *
      * @param Logger
      * @param PrestaShopLogger $log
@@ -102,14 +102,14 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     * add a log item to the database and send a mail if configured for this $severity
+     * add a log item to the database and send a mail if configured for this $severity.
      *
-     * @param string $message        the log message
-     * @param int    $severity
-     * @param int    $errorCode
+     * @param string $message the log message
+     * @param int $severity
+     * @param int $errorCode
      * @param string $objectType
-     * @param int    $objectId
-     * @param bool   $allowDuplicate if set to true, can log several time the same information (not recommended)
+     * @param int $objectId
+     * @param bool $allowDuplicate if set to true, can log several time the same information (not recommended)
      *
      * @return bool true if succeed
      */
@@ -127,12 +127,12 @@ class PrestaShopLoggerCore extends ObjectModel
         }
 
         if ($idEmployee !== null) {
-            $log->id_employee = (int)$idEmployee;
+            $log->id_employee = (int) $idEmployee;
         }
 
         if (!empty($objectType) && !empty($objectId)) {
             $log->object_type = pSQL($objectType);
-            $log->object_id = (int)$objectId;
+            $log->object_id = (int) $objectId;
         }
 
         if ($objectType != 'Swift_Message') {
@@ -152,14 +152,14 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id)
+     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id).
      *
      * @return string hash
      */
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id);
+            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id);
         }
 
         return $this->hash;
@@ -167,7 +167,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     public static function eraseAllLogs()
     {
-        return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
+        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
     }
 
     /**
@@ -189,13 +189,13 @@ class PrestaShopLoggerCore extends ObjectModel
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'log`
+				FROM `' . _DB_PREFIX_ . 'log`
 				WHERE
-					`message` = \''.$this->message.'\'
-					AND `severity` = \''.$this->severity.'\'
-					AND `error_code` = \''.$this->error_code.'\'
-					AND `object_type` = \''.$this->object_type.'\'
-					AND `object_id` = \''.$this->object_id.'\'
+					`message` = \'' . $this->message . '\'
+					AND `severity` = \'' . $this->severity . '\'
+					AND `error_code` = \'' . $this->error_code . '\'
+					AND `object_type` = \'' . $this->object_type . '\'
+					AND `object_id` = \'' . $this->object_id . '\'
 				');
         }
 

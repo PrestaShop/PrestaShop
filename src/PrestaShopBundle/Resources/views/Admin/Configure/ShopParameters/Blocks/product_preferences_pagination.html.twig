@@ -26,34 +26,42 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
-<div class="col">
-    <div class="card" id="configuration_fieldset_order_by_pagination">
-        <h3 class="card-header">
-            <i class="material-icons">view_headline</i> {{ 'Pagination'|trans }}
-        </h3>
-        <div class="card-block">
-            <div class="card-text">
-                <div class="form-group">
-                    {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(paginationForm.products_per_page) }}
-                    {{ form_widget(paginationForm.products_per_page) }}
-                </div>
-                <div class="form-group">
-                    {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(paginationForm.default_order_by) }}
-                    {{ form_widget(paginationForm.default_order_by) }}
-                </div>
-                <div class="form-group">
-                    {{ ps.label_with_help(('Default order method'|trans), ('Default order method for product list.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(paginationForm.default_order_way) }}
-                    {{ form_widget(paginationForm.default_order_way) }}
-                </div>
-            </div>
+{% block product_preferences_pagination %}
+<div class="col-xl-10">
+  <div class="card" id="configuration_fieldset_order_by_pagination">
+    <h3 class="card-header">
+      <i class="material-icons">view_headline</i> {{ 'Pagination'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(paginationForm.products_per_page) }}
+            {{ form_widget(paginationForm.products_per_page) }}
+          </div>
         </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(paginationForm.default_order_by) }}
+            {{ form_widget(paginationForm.default_order_by) }}
+          </div>
         </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Default order method'|trans), ('Default order method for product list.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(paginationForm.default_order_way) }}
+            {{ form_widget(paginationForm.default_order_way) }}
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}

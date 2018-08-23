@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
@@ -33,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Cart;
 use Configuration;
 use Context;
-use HistoryController;
 use Order;
 use TaxConfiguration;
 use Currency;
@@ -60,6 +58,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
 
     /**
      * OrderSubtotalLazyArray constructor.
+     *
      * @param Order $order
      */
     public function __construct(Order $order)
@@ -75,24 +74,27 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getProducts()
     {
         $totalProducts = ($this->includeTaxes) ? $this->order->total_products_wt : $this->order->total_products;
+
         return array(
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
             'amount' => $totalProducts,
             'value' => $this->priceFormatter->format(
                 $totalProducts,
-                Currency::getCurrencyInstance((int)$this->order->id_currency)
+                Currency::getCurrencyInstance((int) $this->order->id_currency)
             ),
         );
     }
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getDiscounts()
@@ -107,7 +109,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
                 'amount' => $discountAmount,
                 'value' => $this->priceFormatter->format(
                     $discountAmount,
-                    Currency::getCurrencyInstance((int)$this->order->id_currency)
+                    Currency::getCurrencyInstance((int) $this->order->id_currency)
                 ),
             );
         }
@@ -116,12 +118,13 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
             'type' => 'discount',
             'label' => null,
             'amount' => null,
-            'value' => ''
+            'value' => '',
         );
     }
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getShipping()
@@ -130,13 +133,14 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
         if (!$cart->isVirtualCart()) {
             $shippingCost = ($this->includeTaxes)
                 ? $this->order->total_shipping_tax_incl : $this->order->total_shipping_tax_excl;
+
             return array(
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
                 'amount' => $shippingCost,
                 'value' => $shippingCost != 0 ? $this->priceFormatter->format(
                     $shippingCost,
-                    Currency::getCurrencyInstance((int)$this->order->id_currency)
+                    Currency::getCurrencyInstance((int) $this->order->id_currency)
                 )
                     : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
             );
@@ -146,12 +150,13 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
             'type' => 'shipping',
             'label' => null,
             'amount' => null,
-            'value' => ''
+            'value' => '',
         );
     }
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getTax()
@@ -164,7 +169,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
                 'amount' => $tax,
                 'value' => $this->priceFormatter->format(
                     $tax,
-                    Currency::getCurrencyInstance((int)$this->order->id_currency)
+                    Currency::getCurrencyInstance((int) $this->order->id_currency)
                 ),
             );
         }
@@ -179,6 +184,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getGiftWrapping()
@@ -187,13 +193,14 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
             $giftWrapping = ($this->includeTaxes)
                 ? $this->order->total_wrapping_tax_incl
                 : $this->order->total_wrapping_tax_excl;
+
             return array(
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
                 'amount' => $giftWrapping,
                 'value' => $this->priceFormatter->format(
                     $giftWrapping,
-                    Currency::getCurrencyInstance((int)$this->order->id_currency)
+                    Currency::getCurrencyInstance((int) $this->order->id_currency)
                 ),
             );
         }
@@ -205,7 +212,6 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
             'value' => '',
         );
     }
-
 
     /**
      * @return bool

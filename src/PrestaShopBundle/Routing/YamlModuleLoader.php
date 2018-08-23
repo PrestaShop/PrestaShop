@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Routing;
 
 use Symfony\Component\Config\Loader\Loader;
@@ -35,12 +36,12 @@ use RuntimeException;
 class YamlModuleLoader extends Loader
 {
     /**
-     * @var array $activeModules The list of activated modules.
+     * @var array the list of activated modules
      */
     private $activeModulesPaths;
 
     /**
-     * @var bool $isLoaded We load the route collection only once per request.
+     * @var bool we load the route collection only once per request
      */
     private $isLoaded = false;
 
@@ -61,7 +62,7 @@ class YamlModuleLoader extends Loader
         $routes = new RouteCollection();
 
         foreach ($this->activeModulesPaths as $modulePath) {
-            $routingFile = $modulePath.'/config/routes.yml';
+            $routingFile = $modulePath . '/config/routes.yml';
             if (file_exists($routingFile)) {
                 $loadedRoutes = $this->import($routingFile, 'yaml');
 

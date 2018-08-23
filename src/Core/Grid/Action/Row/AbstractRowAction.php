@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,10 +25,11 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row;
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class AbstractRowAction
+ * Class AbstractRowAction.
  */
 abstract class AbstractRowAction implements RowActionInterface
 {
@@ -84,7 +85,6 @@ abstract class AbstractRowAction implements RowActionInterface
         return $this->icon;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -137,7 +137,7 @@ abstract class AbstractRowAction implements RowActionInterface
     }
 
     /**
-     * Resolve action options
+     * Resolve action options.
      *
      * @param array $options
      */

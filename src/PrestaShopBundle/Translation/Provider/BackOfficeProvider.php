@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -88,6 +88,6 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }

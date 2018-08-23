@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -49,19 +49,19 @@ class AdminWebserviceControllerCore extends AdminController
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->fields_list = array(
             'key' => array(
                 'title' => $this->trans('Key', array(), 'Admin.Advparameters.Feature'),
-                'class' => 'fixed-width-md'
+                'class' => 'fixed-width-md',
             ),
             'description' => array(
                 'title' => $this->trans('Key description', array(), 'Admin.Advparameters.Feature'),
                 'align' => 'left',
-                'orderby' => false
+                'orderby' => false,
             ),
             'active' => array(
                 'title' => $this->trans('Enabled', array(), 'Admin.Global'),
@@ -69,24 +69,24 @@ class AdminWebserviceControllerCore extends AdminController
                 'active' => 'status',
                 'type' => 'bool',
                 'orderby' => false,
-                'class' => 'fixed-width-xs'
-            )
+                'class' => 'fixed-width-xs',
+            ),
         );
 
         $this->fields_options = array(
                 'general' => array(
-                    'title' =>    $this->trans('Configuration', array(), 'Admin.Global'),
-                    'fields' =>    array(
+                    'title' => $this->trans('Configuration', array(), 'Admin.Global'),
+                    'fields' => array(
                         'PS_WEBSERVICE' => array('title' => $this->trans('Enable PrestaShop\'s webservice', array(), 'Admin.Advparameters.Feature'),
-                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help').
+                            'desc' => $this->trans('Before activating the webservice, you must be sure to: ', array(), 'Admin.Advparameters.Help') .
                                                 '<ol>
-													<li>'.$this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help').'</li>
-													<li>'.$this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help').'</li>
+													<li>' . $this->trans('Check that URL rewriting is available on this server.', array(), 'Admin.Advparameters.Help') . '</li>
+													<li>' . $this->trans('Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.', array(), 'Admin.Advparameters.Help') . '</li>
 												</ol>',
                             'cast' => 'intval',
-                            'type' => 'bool'),
+                            'type' => 'bool', ),
                     ),
-                    'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
+                    'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
                 ),
             );
 
@@ -95,7 +95,7 @@ class AdminWebserviceControllerCore extends AdminController
                 'title' => $this->trans('Enable CGI mode for PHP', array(), 'Admin.Advparameters.Feature'),
                 'desc' => $this->trans('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.', array(), 'Admin.Advparameters.Help'),
                 'cast' => 'intval',
-                'type' => 'bool'
+                'type' => 'bool',
             );
         }
     }
@@ -104,15 +104,14 @@ class AdminWebserviceControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_webservice'] = array(
-                'href' => self::$currentIndex.'&addwebservice_account&token='.$this->token,
+                'href' => self::$currentIndex . '&addwebservice_account&token=' . $this->token,
                 'desc' => $this->trans('Add new webservice key', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
         parent::initPageHeaderToolbar();
     }
-
 
     protected function processUpdateOptions()
     {
@@ -125,7 +124,7 @@ class AdminWebserviceControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Webservice Accounts', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'icon-lock'
+                'icon' => 'icon-lock',
             ),
             'input' => array(
                 array(
@@ -138,9 +137,9 @@ class AdminWebserviceControllerCore extends AdminController
                     'button' => array(
                         'label' => $this->trans('Generate!', array(), 'Admin.Advparameters.Feature'),
                         'attributes' => array(
-                            'onclick' => 'gencode(32)'
-                        )
-                    )
+                            'onclick' => 'gencode(32)',
+                        ),
+                    ),
                 ),
                 array(
                     'type' => 'textarea',
@@ -160,21 +159,21 @@ class AdminWebserviceControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
-                    )
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                        ),
+                    ),
                 ),
                 array(
                     'type' => 'resources',
                     'label' => $this->trans('Permissions', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'resources',
-                )
-            )
+                ),
+            ),
         );
 
         if (Shop::isFeatureActive()) {
@@ -198,7 +197,7 @@ class AdminWebserviceControllerCore extends AdminController
 
         $this->tpl_form_vars = array(
             'ressources' => $ressources,
-            'permissions' => $permissions
+            'permissions' => $permissions,
         );
 
         return parent::renderForm();
@@ -214,7 +213,7 @@ class AdminWebserviceControllerCore extends AdminController
     }
 
     /**
-     * Function used to render the options for this controller
+     * Function used to render the options for this controller.
      */
     public function renderOptions()
     {
@@ -224,7 +223,7 @@ class AdminWebserviceControllerCore extends AdminController
             $helper->toolbar_scroll = true;
             $helper->toolbar_btn = array('save' => array(
                                 'href' => '#',
-                                'desc' => $this->trans('Save', array(), 'Admin.Actions')
+                                'desc' => $this->trans('Save', array(), 'Admin.Actions'),
                             ));
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
@@ -251,6 +250,7 @@ class AdminWebserviceControllerCore extends AdminController
         if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account')) {
             $this->errors[] = $this->trans('This key already exists.', array(), 'Admin.Advparameters.Notification');
         }
+
         return parent::postProcess();
     }
 

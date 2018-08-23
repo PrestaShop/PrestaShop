@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -77,11 +77,11 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Perform validations on form data
+     * Perform validations on form data.
      *
      * @param array $data
      *
-     * @return array    Array of errors if any
+     * @return array Array of errors if any
      */
     private function validate(array $data)
     {

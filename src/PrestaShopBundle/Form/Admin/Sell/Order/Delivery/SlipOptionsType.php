@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class generates the "Options" form in Delivery slips page
+ * This form class generates the "Options" form in Delivery slips page.
  */
 class SlipOptionsType extends TranslatorAwareType
 {

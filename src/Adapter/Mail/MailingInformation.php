@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,8 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Mail;
 use Configuration;
 
 /**
- * Retrieve mailing information
- *
+ * Retrieve mailing information.
  */
 class MailingInformation
 {

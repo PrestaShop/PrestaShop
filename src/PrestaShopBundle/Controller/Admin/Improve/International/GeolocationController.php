@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,16 +35,16 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class GeolocationController is responsible for "Improve > International > Localization > Geolocation" page
+ * Class GeolocationController is responsible for "Improve > International > Localization > Geolocation" page.
  */
 class GeolocationController extends FrameworkBundleAdminController
 {
     /**
-     * Show geolocation page
+     * Show geolocation page.
      *
      * @Template("@PrestaShop/Admin/Improve/International/Geolocation/geolocation.html.twig")
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -67,10 +67,10 @@ class GeolocationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process geolocation configuration form
+     * Process geolocation configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')",
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation"
      * )

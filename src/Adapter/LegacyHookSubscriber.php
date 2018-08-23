@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -239,7 +240,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 $moduleListeners = array();
                 $modules = array();
                 //SF2 cache clear bug fix : call bqSQL alias function
-                if (function_exists("bqSQL")) {
+                if (function_exists('bqSQL')) {
                     $modules = Hook::getHookModuleExecList($name);
                 }
 
@@ -256,6 +257,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 $listeners[$name] = $moduleListeners;
             }
         }
+
         return $listeners;
     }
 
@@ -267,19 +269,20 @@ class LegacyHookSubscriber implements EventSubscriberInterface
      *
      * @param string $name The method called
      * @param array $args The HookEvent, and then the hook name (eventName)
+     *
      * @throws \BadMethodCallException
      */
     public function __call($name, $args)
     {
         if (strpos($name, 'call_') !== 0) {
-            throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
+            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
         }
 
         $ids = explode('_', $name);
         array_shift($ids); // remove 'call'
 
         if (count($ids) !== 2) {
-            throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
+            throw new \BadMethodCallException('The call to \'' . $name . '\' is not recognized.');
         }
 
         $moduleId = (int) $ids[1];

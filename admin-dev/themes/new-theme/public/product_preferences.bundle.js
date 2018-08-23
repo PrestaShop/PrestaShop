@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "04739d9d0a05b299e088"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ad45789801c39aad8ed7"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 7;
+/******/ 			var chunkId = 8;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,88 +706,18 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(470)(__webpack_require__.s = 470);
+/******/ 	return hotCreateRequire(471)(__webpack_require__.s = 471);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 23:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = window.$;
-
-var TranslatableInput = function () {
-    function TranslatableInput() {
-        _classCallCheck(this, TranslatableInput);
-
-        $('body').on('click', '.js-locale-item', this.toggleInputs);
-    }
-
-    /**
-     * Toggle all translatable inputs in form in which locale was changed
-     *
-     * @param {Event} event
-     */
-
-
-    _createClass(TranslatableInput, [{
-        key: 'toggleInputs',
-        value: function toggleInputs(event) {
-            var localeItem = $(event.target);
-            var form = localeItem.closest('form');
-            var selectedLocale = localeItem.data('locale');
-
-            form.find('.js-locale-btn').text(selectedLocale);
-
-            form.find('input.js-locale-input').addClass('d-none');
-            form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
-        }
-    }]);
-
-    return TranslatableInput;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (TranslatableInput);
-
-/***/ }),
-
-/***/ 238:
+/***/ 242:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(282);
 /**
  * 2007-2018 PrestaShop
  *
@@ -825,7 +755,7 @@ $(function () {
 
 /***/ }),
 
-/***/ 281:
+/***/ 282:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -933,10 +863,80 @@ var StockManagementOptionHandler = function () {
 
 /***/ }),
 
-/***/ 470:
+/***/ 29:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+var TranslatableInput = function () {
+    function TranslatableInput() {
+        _classCallCheck(this, TranslatableInput);
+
+        $('body').on('click', '.js-locale-item', this.toggleInputs);
+    }
+
+    /**
+     * Toggle all translatable inputs in form in which locale was changed
+     *
+     * @param {Event} event
+     */
+
+
+    _createClass(TranslatableInput, [{
+        key: 'toggleInputs',
+        value: function toggleInputs(event) {
+            var localeItem = $(event.target);
+            var form = localeItem.closest('form');
+            var selectedLocale = localeItem.data('locale');
+
+            form.find('.js-locale-btn').text(selectedLocale);
+
+            form.find('input.js-locale-input').addClass('d-none');
+            form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
+        }
+    }]);
+
+    return TranslatableInput;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (TranslatableInput);
+
+/***/ }),
+
+/***/ 471:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(238);
+module.exports = __webpack_require__(242);
 
 
 /***/ })

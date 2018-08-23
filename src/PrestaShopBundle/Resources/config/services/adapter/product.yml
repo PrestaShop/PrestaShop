@@ -16,7 +16,7 @@ services:
         decorates: prestashop.core.admin.data_updater.product_interface
         public: false
         arguments:
-            - "@prestashop.hook.dispatcher"
+            - "@prestashop.core.hook.dispatcher"
             - "@prestashop.static_cache.adapter"
 
     prestashop.adapter.admin.wrapper.product:
@@ -25,3 +25,9 @@ services:
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+
+    prestashop.adapter.product.filter_categories_request_purifier:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier'
+
+    prestashop.adapter.product.filter_parameters_updater:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater'

@@ -1,17 +1,21 @@
 {
-  "name": "prestashop-core-theme-js",
-  "version": "0.0.1",
-  "description": "Tools to manage minimal assets for themes",
-  "main": "index.js",
-  "scripts": {
-    "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
-    "watch": "webpack --progress --colors --debug --display-chunks --watch"
-  },
-  "author": "PrestaShop",
-  "license": "OSL-3.0",
-  "devDependencies": {
-    "jquery": "^2.1.4",
-    "babel-loader": "^5.3.2",
-    "webpack": "^1.12.2"
-  }
+    "name": "prestashop-core-theme-js",
+    "version": "1.7.5",
+    "description": "Tools to manage minimal assets for themes",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack --progress --mode production",
+        "watch": "webpack --progress -w --mode development"
+    },
+    "author": "PrestaShop",
+    "license": "OSL-3.0",
+    "devDependencies": {
+        "@babel/core": "^7.0.0-rc.1",
+        "@babel/preset-env": "^7.0.0-rc.1",
+        "babel-loader": "^8.0.0-beta.4",
+        "jquery": "^2.2.4",
+        "path": "^0.12.7",
+        "webpack": "^4.17.0",
+        "webpack-cli": "^3.1.0"
+    }
 }

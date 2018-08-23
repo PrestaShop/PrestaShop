@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class ChartCore
 {
     protected static $poolId = 0;
@@ -45,6 +44,7 @@ class ChartCore
     {
         if (!self::$poolId) {
             ++self::$poolId;
+
             return true;
         }
     }
@@ -58,8 +58,8 @@ class ChartCore
     /** @prototype void public function setSize(int $width, int $height) */
     public function setSize($width, $height)
     {
-        $this->width = (int)$width;
-        $this->height = (int)$height;
+        $this->width = (int) $width;
+        $this->height = (int) $height;
     }
 
     /** @prototype void public function setTimeMode($from, $to, $granularity) */
@@ -97,6 +97,7 @@ class ChartCore
         if (!array_key_exists($i, $this->curves)) {
             $this->curves[$i] = new Curve();
         }
+
         return $this->curves[$i];
     }
 
@@ -109,10 +110,10 @@ class ChartCore
     public function fetch()
     {
         if ($this->timeMode) {
-            $options = 'xaxis:{mode:"time",timeformat:\''.addslashes($this->format).'\',min:'.$this->from.'000,max:'.$this->to.'000}';
+            $options = 'xaxis:{mode:"time",timeformat:\'' . addslashes($this->format) . '\',min:' . $this->from . '000,max:' . $this->to . '000}';
             if ($this->granularity == 'd') {
                 foreach ($this->curves as $curve) {
-                    /** @var Curve $curve */
+                    /* @var Curve $curve */
                     for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i)) {
                         if (!$curve->getPoint($i)) {
                             $curve->setPoint($i, 0);
@@ -129,10 +130,10 @@ class ChartCore
 
         if (count($jsCurves)) {
             return '
-			<div id="flot'.self::$poolId.'" style="width:'.$this->width.'px;height:'.$this->height.'px"></div>
+			<div id="flot' . self::$poolId . '" style="width:' . $this->width . 'px;height:' . $this->height . 'px"></div>
 			<script type="text/javascript">
 				$(function () {
-					$.plot($(\'#flot'.self::$poolId.'\'), ['.implode(',', $jsCurves).'], {'.$options.'});
+					$.plot($(\'#flot' . self::$poolId . '\'), [' . implode(',', $jsCurves) . '], {' . $options . '});
 				});
 			</script>';
         } else {

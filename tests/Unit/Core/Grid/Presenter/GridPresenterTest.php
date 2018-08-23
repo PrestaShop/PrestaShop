@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -55,13 +56,14 @@ class GridPresenterTest extends TestCase
     {
         $presentedGrid = $this->gridPresenter->present($this->createGridMock());
 
-        $struct = [
+        $expectedPresentedGrid = [
             'id' => [],
             'name' => [],
             'filter_form' => [],
             'columns' => [],
+            'column_filters' => [],
             'actions' => ['grid', 'bulk'],
-            'data' => ['rows', 'rows_total', 'query'],
+            'data' => ['records', 'records_total', 'query'],
             'pagination' => ['offset', 'limit'],
             'sorting' => ['order_by', 'order_way'],
             'filters' => [],
@@ -69,7 +71,7 @@ class GridPresenterTest extends TestCase
 
         $this->assertInternalType('array', $presentedGrid);
 
-        foreach ($struct as $itemName => $innerStruct) {
+        foreach ($expectedPresentedGrid as $itemName => $innerStruct) {
             $this->assertArrayHasKey($itemName, $presentedGrid);
 
             foreach ($innerStruct as $innerItemName) {
@@ -81,6 +83,7 @@ class GridPresenterTest extends TestCase
     private function createGridMock()
     {
         $data = $this->createMock(GridDataInterface::class);
+
         $definition = $this->createMock(DefinitionInterface::class);
         $definition->method('getColumns')
             ->willReturn((new ColumnCollection())
@@ -92,7 +95,11 @@ class GridPresenterTest extends TestCase
             ->willReturn(new BulkActionCollection());
         $definition->method('getGridActions')
             ->willReturn(new GridActionCollection());
+        $definition->method('getFilters')
+            ->willReturn(new FilterCollection());
+
         $criteria = $this->createMock(SearchCriteriaInterface::class);
+
         $filterForm = $this->createMock(FormInterface::class);
         $filterForm->method('createView')
             ->willReturn(new FormView());

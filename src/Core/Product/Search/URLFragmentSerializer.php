@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class URLFragmentSerializer
@@ -32,7 +31,7 @@ class URLFragmentSerializer
     private function serializeListOfStrings($separator, $escape, array $list)
     {
         return implode($separator, array_map(function ($item) use ($separator, $escape) {
-            return str_replace($separator, $escape.$separator, $item);
+            return str_replace($separator, $escape . $separator, $item);
         }, $list));
     }
 

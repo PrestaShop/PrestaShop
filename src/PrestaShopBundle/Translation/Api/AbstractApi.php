@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,12 +47,12 @@ abstract class AbstractApi
         foreach ($this->getTranslations() as $key => $translation) {
             $all[] = array(
                 'translation_id' => $key,
-                'name' => $translation
+                'name' => $translation,
             );
         }
 
         return $all;
     }
 
-    abstract function getTranslations();
+    abstract public function getTranslations();
 }

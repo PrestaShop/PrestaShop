@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Grid\DataProvider;
 
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Row\RowCollection;
+use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineGridDataProvider is responsible for returning grid data using Doctrine query builders
+ * Class DoctrineGridDataProvider is responsible for returning grid data using Doctrine query builders.
  */
 final class DoctrineGridDataProvider implements GridDataProviderInterface
 {
@@ -58,14 +58,14 @@ final class DoctrineGridDataProvider implements GridDataProviderInterface
         $searchQueryBuilder = $this->gridQueryBuilder->getSearchQueryBuilder($searchCriteria);
         $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
-        $rows = $searchQueryBuilder->execute()->fetchAll();
-        $rowsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
+        $records = $searchQueryBuilder->execute()->fetchAll();
+        $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
-        $rows = new RowCollection($rows);
+        $records = new RecordCollection($records);
 
         return new GridData(
-            $rows,
-            $rowsTotal,
+            $records,
+            $recordsTotal,
             $searchQueryBuilder->getSQL()
         );
     }

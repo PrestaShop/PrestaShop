@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Email;
 
 /**
- * Interface EmailConfigurationTesterInterface defines contract for email configuration tester
+ * Interface EmailConfigurationTesterInterface defines contract for email configuration tester.
  */
 interface EmailConfigurationTesterInterface
 {
     /**
-     * Test email configuration
+     * Test email configuration.
      *
      * @param array $config
      *

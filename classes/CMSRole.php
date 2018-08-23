@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,13 +25,13 @@
  */
 
 /**
- * Class CMSRoleCore
+ * Class CMSRoleCore.
  */
 class CMSRoleCore extends ObjectModel
 {
     /** @var string name */
     public $name;
-    /** @var integer id_cms */
+    /** @var int id_cms */
     public $id_cms;
 
     /**
@@ -41,8 +41,8 @@ class CMSRoleCore extends ObjectModel
         'table' => 'cms_role',
         'primary' => 'id_cms_role',
         'fields' => array(
-            'name'        =>    array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 50),
-            'id_cms'    =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 50),
+            'id_cms' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
         ),
     );
 

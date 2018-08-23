@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -86,6 +86,6 @@ class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInter
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }

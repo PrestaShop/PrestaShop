@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Crypto\Hashing as Crypto;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -43,7 +41,7 @@ class CustomerPersisterCore
         $guest_allowed
     ) {
         $this->context = $context;
-        $this->crypto  = $crypto;
+        $this->crypto = $crypto;
         $this->translator = $translator;
         $this->guest_allowed = $guest_allowed;
     }
@@ -74,8 +72,9 @@ class CustomerPersisterCore
                 [],
                 'Shop.Notifications.Error'
             );
-            $this->errors['email'][]    = $msg;
+            $this->errors['email'][] = $msg;
             $this->errors['password'][] = $msg;
+
             return false;
         }
 
@@ -89,7 +88,6 @@ class CustomerPersisterCore
         if ($customer->is_guest || !$passwordRequired) {
             // TODO SECURITY: Audit requested
             if ($customer->id != $this->context->customer->id) {
-
                 // Since we're updating a customer without
                 // checking the password, we need to check that
                 // the customer being updated is the one from the
@@ -104,6 +102,7 @@ class CustomerPersisterCore
                     [],
                     'Shop.Notifications.Error'
                 );
+
                 return false;
             }
         }
@@ -127,6 +126,7 @@ class CustomerPersisterCore
                     [],
                     'Shop.Notifications.Error'
                 );
+
                 return false;
             }
         }
@@ -156,6 +156,7 @@ class CustomerPersisterCore
                     [],
                     'Shop.Notifications.Error'
                 );
+
                 return false;
             }
 
@@ -183,6 +184,7 @@ class CustomerPersisterCore
                 [],
                 'Shop.Notifications.Error'
             );
+
             return false;
         }
 
@@ -220,7 +222,7 @@ class CustomerPersisterCore
                 '{email}' => $customer->email,
             ),
             $customer->email,
-            $customer->firstname.' '.$customer->lastname
+            $customer->firstname . ' ' . $customer->lastname
         );
     }
 }
