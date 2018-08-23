@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageValidator;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
 
 /**
@@ -53,12 +54,12 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
 
     /**
      * @param array $languagePackList
-     * @param LanguageValidator $languageValidator
+     * @param LanguageValidatorInterface $languageValidator
      * @param LanguageDataProvider $languageProvider
      */
     public function __construct(
         array $languagePackList,
-        LanguageValidator $languageValidator,
+        LanguageValidatorInterface $languageValidator,
         LanguageDataProvider $languageProvider
     ) {
         $this->languageValidator = $languageValidator;
@@ -72,7 +73,6 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
     public function getChoices()
     {
         $choices = [];
-
         foreach (array_keys($this->languagePackList) as $locale) {
             if ($this->languageValidator->isInstalledByLocale($locale)) {
                 continue;
