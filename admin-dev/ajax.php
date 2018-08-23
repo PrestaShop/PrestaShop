@@ -153,9 +153,10 @@ if (Tools::isSubmit('getZones')) {
     $_GET['action'] = 'zones';
 }
 
-//if (Tools::isSubmit('getEmailHTML') && $email = Tools::getValue('email')) {
-//    $email_html = AdminTranslationsController::getEmailHTML($email);
-//    die($email_html);
-//}
+if (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminTranslations';
+    $_GET['action'] = 'emailHTML';
+}
 
 require_once dirname(__FILE__).'/index.php';
