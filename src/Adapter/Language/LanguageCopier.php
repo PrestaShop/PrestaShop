@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeCollection;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfigInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -53,18 +55,26 @@ final class LanguageCopier implements LanguageCopierInterface
     private $filesystem;
 
     /**
+     * @var ThemeCollection
+     */
+    private $themeCollection;
+
+    /**
      * @param LanguageDataProvider $languageDataProvider
      * @param TranslatorInterface $translator
      * @param Filesystem $filesystem
+     * @param ThemeCollection $themeCollection
      */
     public function __construct(
         LanguageDataProvider $languageDataProvider,
         TranslatorInterface $translator,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        ThemeCollection $themeCollection
     ) {
         $this->languageDataProvider = $languageDataProvider;
         $this->translator = $translator;
         $this->filesystem = $filesystem;
+        $this->themeCollection = $themeCollection;
     }
 
     /**
@@ -72,7 +82,12 @@ final class LanguageCopier implements LanguageCopierInterface
      */
     public function copy(LanguageCopierConfigInterface $config)
     {
-        $errors = [];
+        $errors = $this->validateConfig($config);
+
+        if (!empty($errors)) {
+            return $errors;
+        }
+
         $languageFiles = $this->languageDataProvider->getFilesList(
             $config->getLanguageFrom(),
             $config->getThemeFrom(),
@@ -84,27 +99,27 @@ final class LanguageCopier implements LanguageCopierInterface
             try {
                 $this->filesystem->mkdir(dirname($destination));
             } catch (IOExceptionInterface $exception) {
-                $errors[] = $this->translator->trans(
-                    'Cannot create the folder "%folder%". Please check your directory writing permissions.',
-                    [
+                $errors[] = [
+                    'key' => 'Cannot create the folder "%folder%". Please check your directory writing permissions.',
+                    'domain' => 'Admin.International.Notification',
+                    'parameters' => [
                         '%folder%' => $destination,
                     ],
-                    'Admin.International.Notification'
-                );
+                ];
                 continue;
             }
 
             try {
                 $this->filesystem->copy($source, $destination);
             } catch (IOExceptionInterface $exception) {
-                $errors[] = $this->translator->trans(
-                    'Impossible to copy "%source%" to "%dest%".',
-                    [
+                $errors[] = [
+                    'key' => 'Impossible to copy "%source%" to "%dest%".',
+                    'domain' => 'Admin.International.Notification',
+                    'parameters' => [
                         '%source%' => $source,
                         '%dest%' => $destination,
                     ],
-                    'Admin.International.Notification'
-                );
+                ];
                 continue;
             }
 
@@ -116,23 +131,89 @@ final class LanguageCopier implements LanguageCopierInterface
                 );
 
                 if (!$changedModuleTranslationKeys) {
-                    $errors[] = $this->translator->trans(
-                        'Impossible to translate "%dest%".',
-                        [
+                    $errors[] = [
+                        'key' => 'Impossible to translate "%dest%".',
+                        'domain' => 'Admin.International.Notification',
+                        'parameters' => [
                             '%dest%' => $destination,
                         ],
-                        'Admin.International.Notification'
-                    );
+                    ];
                 }
             }
         }
 
         if (!empty($errors)) {
-            $errors[] = $this->translator->trans(
-                'A part of the data has been copied but some of the language files could not be found.',
-                [],
-                'Admin.International.Notification'
-            );
+            $errors[] = [
+                'key' => 'A part of the data has been copied but some of the language files could not be found.',
+                'domain' => 'Admin.International.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Validates given configuration
+     *
+     * @param LanguageCopierConfigInterface $config
+     *
+     * @return array of errors
+     */
+    private function validateConfig(LanguageCopierConfigInterface $config)
+    {
+        $errors = [];
+
+        $languageFrom = $config->getLanguageFrom();
+        $languageTo = $config->getLanguageTo();
+        $themeFrom = $config->getThemeFrom();
+        $themeTo = $config->getThemeTo();
+
+        if (empty($languageFrom) || empty($languageTo)) {
+            $errors[] =  [
+                'key' => 'You must select two languages in order to copy data from one to another.',
+                'domain' => 'Admin.International.Notification',
+                'parameters' => [],
+            ];
+        } elseif (empty($themeFrom) || empty($themeTo)) {
+            $errors[] =  [
+                'key' => 'You must select two themes in order to copy data from one to another.',
+                'domain' => 'Admin.International.Notification',
+                'parameters' => [],
+            ];
+        } elseif (
+            $themeFrom === $themeTo &&
+            $languageFrom === $languageTo
+        ) {
+            $errors[] =  [
+                'key' => 'There is nothing to copy (same language and theme).',
+                'domain' => 'Admin.International.Notification',
+                'parameters' => [],
+            ];
+        } else {
+            $fromThemeFound = false;
+            $toThemeFound = false;
+
+            /** @var Theme $theme */
+            foreach ($this->themeCollection as $theme) {
+                // Checking if "From" theme exists by name
+                if ($theme->getName() === $themeFrom) {
+                    $fromThemeFound = true;
+                }
+
+                // Checking if "To" theme exists by name
+                if ($theme->getName() === $themeTo) {
+                    $toThemeFound = true;
+                }
+            }
+
+            if (!$fromThemeFound || !$toThemeFound) {
+                $errors[] =  [
+                    'key' => 'Theme(s) not found',
+                    'domain' => 'Admin.International.Notification',
+                    'parameters' => [],
+                ];
+            }
         }
 
         return $errors;

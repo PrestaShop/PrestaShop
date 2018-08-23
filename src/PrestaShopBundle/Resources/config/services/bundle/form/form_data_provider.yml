@@ -130,8 +130,3 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
         arguments:
             - '@prestashop.adapter.webservice.configuration'
-
-    prestashop.admin.translations.copy_language.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageDataProvider'
-        arguments:
-            - '@prestashop.core.addon.theme.repository'

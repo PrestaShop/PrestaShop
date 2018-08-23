@@ -138,6 +138,7 @@ services:
             - '@prestashop.adapter.data_provider.language'
             - '@translator'
             - '@filesystem'
+            - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
