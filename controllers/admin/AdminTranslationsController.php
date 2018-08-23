@@ -3305,4 +3305,14 @@ class AdminTranslationsControllerCore extends AdminController
 
         return $email_html;
     }
+
+    /**
+     * Display the HTML content of an email
+     */
+    public function displayAjaxEmailHTML()
+    {
+        $email = Tools::getValue('email');
+        $this->ajaxRender(
+            AdminTranslationsController::getEmailHTML($email));
+    }
 }
