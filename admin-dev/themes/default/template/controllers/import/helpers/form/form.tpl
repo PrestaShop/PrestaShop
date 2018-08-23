@@ -547,9 +547,11 @@
 			$("#entitie").html($("#entity > option:selected").text().toLowerCase());
 
 			$.ajax({
-				url: 'ajax.php',
+				url: 'index.php',
 				data: {
-					getAvailableFields:1,
+					ajax: 1,
+					controller: 'AdminImport',
+					action: 'availableFields',
 					entity: $("#entity").val(),
 					token: window.token
 				},

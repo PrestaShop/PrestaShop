@@ -130,12 +130,14 @@ export default class FormFieldToggle {
    * @param {int} entity
    */
   loadAvailableFields(entity) {
-    const url = -1 === window.location.href.indexOf('index.php') ? '../../../ajax.php' : '../../../../ajax.php';
+    const url = -1 === window.location.href.indexOf('index.php') ? '../../../index.php' : '../../../../index.php';
 
     $.ajax({
       url: url,
       data: {
-        getAvailableFields: 1,
+        ajax: 1,
+        controller: 'AdminImport',
+        action: 'availableFields',
         entity: entity,
         token: window.token
       },
