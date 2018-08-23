@@ -134,6 +134,8 @@ class InstallManager
         $this->deleteDirectoryWithItsContent($this->downloadDirectoryPath);
         $this->deleteDirectoryWithItsContent($this->extractDirectoryPath);
 
+        $this->download->clearFileCache();
+
         return true;
     }
 

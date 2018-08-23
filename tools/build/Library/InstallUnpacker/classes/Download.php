@@ -36,12 +36,25 @@ class PrestashopCouldNotDownloadLatestVersionException extends \Exception
  */
 class Download
 {
-    const ADDONS_API_RELEASES_XML_FEED = 'https://api.prestashop.com/xml/channel.xml';
+    const PRESTASHOP_API_RELEASES_XML_FEED = 'https://api.prestashop.com/xml/channel.xml';
+    const CACHED_FEED_FILENAME = 'XMLFeed';
 
     /**
-     * @var string
+     * @var BasicFileCache
      */
-    private $xmlFeedStoredInCache;
+    private $cachingSystem;
+
+    /**
+     * @param BasicFileCache $cachingSystem optional FileCache
+     */
+    public function __construct(BasicFileCache $cachingSystem = null)
+    {
+        if (null === $cachingSystem) {
+            $cachingSystem = new BasicFileCache();
+        }
+
+        $this->cachingSystem = $cachingSystem;
+    }
 
     /**
      * @param string $source
@@ -129,6 +142,11 @@ class Download
         return (string)$branch->download->link;
     }
 
+    public function clearFileCache()
+    {
+        $this->cachingSystem->delete(self::CACHED_FEED_FILENAME);
+    }
+
     /**
      * @return SimpleXMLElement
      *
@@ -136,24 +154,25 @@ class Download
      */
     private function getFeed()
     {
-        if (null === $this->xmlFeedStoredInCache) {
+        if (false === $this->isXmlFeedStoredInCache()) {
 
-            $feed = @file_get_contents(self::ADDONS_API_RELEASES_XML_FEED);
+            $feed = @file_get_contents(self::PRESTASHOP_API_RELEASES_XML_FEED);
 
             if (false === $feed) {
                 throw new PrestashopCouldNotDownloadLatestVersionException('Could not fetch API releases xml feed');
             }
 
-            $xml = simplexml_load_string($feed);
-
-            if (false === $xml) {
-                throw new PrestashopCouldNotDownloadLatestVersionException('Could not read API releases xml feed');
-            }
-
-            $this->xmlFeedStoredInCache = $xml;
+            $this->storeFeedIntoFileCache($feed);
         }
 
-        return $this->xmlFeedStoredInCache;
+        $feed = $this->getXmlFeedFromCache();
+        $xml = simplexml_load_string($feed);
+
+        if (false === $xml) {
+            throw new PrestashopCouldNotDownloadLatestVersionException('Could not parse API releases xml feed');
+        }
+
+        return $xml;
     }
 
     /**
@@ -193,5 +212,35 @@ class Download
         }
 
         throw new PrestashopCouldNotDownloadLatestVersionException('Could not find latest stable version from API releases xml feed');
+    }
+
+    /**
+     * @return bool
+     */
+    private function isXmlFeedStoredInCache()
+    {
+        return $this->cachingSystem->isCached(self::CACHED_FEED_FILENAME);
+    }
+
+    /**
+     * @return string
+     *
+     * @throws Exception
+     */
+    private function getXmlFeedFromCache()
+    {
+        return $this->cachingSystem->get(self::CACHED_FEED_FILENAME);
+    }
+
+    /**
+     * @param string $xml
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function storeFeedIntoFileCache($xml)
+    {
+        return $this->cachingSystem->save($xml, self::CACHED_FEED_FILENAME);
     }
 }
