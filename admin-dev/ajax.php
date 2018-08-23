@@ -59,6 +59,15 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
 }
 
 /**
+ * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
+ * Not moved / Not duplicated
+ */
+if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
+    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
+    die(json_encode($children_categories));
+}
+
+/**
  * Import controller: Fields available for a given entity
  * -> Moved in Symfony
  */
@@ -87,17 +96,18 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
 //    }
 //    die('['.implode(',', $jsonArray).']');
 //}
-//
-//if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
-//    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
-//    die(json_encode($children_categories));
-//}
-//
-//if (Tools::isSubmit('getNotifications')) {
-//    $notification = new Notification;
-//    die(json_encode($notification->getLastElements()));
-//}
-//
+
+/**
+ * List notifications for an employee
+ * i.e: recent orders, new customers...
+ *
+ * -> Duplicated (NOT MOVED) in Symfony
+ */
+if (Tools::isSubmit('getNotifications')) {
+    $notification = new Notification;
+    die(json_encode($notification->getLastElements()));
+}
+
 //if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
 //    $notification = new Notification;
 //    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
