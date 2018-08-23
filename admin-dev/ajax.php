@@ -142,17 +142,22 @@ if (Tools::isSubmit('searchCategory')) {
     }
 }
 
-//if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
-//    $category = new Category((int)$id_category);
-//    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
-//    $output = array();
-//    foreach ($results as $result) {
-//        $output[] = $result;
-//    }
-//
-//    die(json_encode($output));
-//}
-//
+/**
+ * Return all parent categories IDs
+ * 
+ * -> TODO in Symfony stack
+ */
+if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
+    $category = new Category((int)$id_category);
+    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
+    $output = array();
+    foreach ($results as $result) {
+        $output[] = $result;
+    }
+
+    die(json_encode($output));
+}
+
 //if (Tools::isSubmit('getZones')) {
 //    $html = '<select id="zone_to_affect" name="zone_to_affect">';
 //    foreach (Zone::getZones() as $z) {
