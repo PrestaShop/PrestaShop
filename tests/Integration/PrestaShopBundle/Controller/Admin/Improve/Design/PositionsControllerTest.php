@@ -34,21 +34,6 @@ use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
  */
 class PositionsControllerTest extends WebTestCase
 {
-    public function testIndexAction()
-    {
-        $this->client->request(
-            'GET',
-            $this->router->generate(
-                'admin_modules_positions'
-            )
-        );
-
-        $this->assertEquals(
-            Response::HTTP_OK,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
-
     public function testUnhooksListAction()
     {
         $this->client->request(

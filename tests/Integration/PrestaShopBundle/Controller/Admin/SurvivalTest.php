@@ -96,7 +96,8 @@ class SurvivalTest extends WebTestCase
          *    // then display 'error.html' in a web browser.
          * }
          */
-        self::assertTrue($response->isSuccessful(),
+        self::assertTrue(
+            $response->isSuccessful(),
             sprintf(
                 '%s page should be available, but status code is %s',
                 $pageName,
@@ -136,6 +137,7 @@ class SurvivalTest extends WebTestCase
             'admin_geolocation' => ['Geolocation', 'admin_geolocation'],
             'admin_localization_show_settings' => ['Localization', 'admin_localization_show_settings'],
             'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
+            'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
         ];
     }
 
