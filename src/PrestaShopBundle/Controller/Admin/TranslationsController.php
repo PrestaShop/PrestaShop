@@ -243,9 +243,9 @@ class TranslationsController extends FrameworkBundleAdminController
                     $data['copy_language']['to_theme'],
                     $data['copy_language']['to_language']
                 );
-                $languageCopier->copyLanguage($languageCopierConfig);
+                $errors = $languageCopier->copy($languageCopierConfig);
 
-                if ($errors = $languageCopier->getErrors()) {
+                if ($errors) {
                     foreach ($errors as $error) {
                         $this->addFlash('error', $error);
                     }
