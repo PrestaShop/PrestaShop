@@ -97,4 +97,4 @@ services:
     prestashop.core.form.choice_provider.module_by_name:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
         arguments:
-            - '@prestashop.core.admin.module.repository'
+            - '@=service("prestashop.core.admin.module.repository").getInstalledModulesCollection()'
