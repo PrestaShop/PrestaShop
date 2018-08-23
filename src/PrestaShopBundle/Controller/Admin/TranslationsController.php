@@ -62,6 +62,8 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract theme using locale and theme name.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return BinaryFileResponse
@@ -89,7 +91,7 @@ class TranslationsController extends FrameworkBundleAdminController
      * Show translations settings page.
      *
      * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -122,7 +124,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Modify translations action
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
      * @param Request $request
      *
@@ -142,7 +144,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Add language pack for new languages and updates for the existing ones action
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this."))
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')"))
      *
      * @param Request $request
      *
@@ -180,7 +182,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract theme using locale and theme name.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')")
      *
      * @param Request $request
      *
@@ -216,7 +218,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Copy language action
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')", message="You do not have permission to add this.")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')")
      *
      * @param Request $request
      *
