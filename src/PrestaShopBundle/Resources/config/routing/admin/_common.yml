@@ -4,6 +4,12 @@ admin_common_notifications:
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAction'
 
+admin_common_notifications_ack:
+    path:     /notifications/ack
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAckAction'
+
 admin_common_pagination:
     path:     /pagination/{offset}/{limit}/{total}/{view}
     methods:  [GET]
