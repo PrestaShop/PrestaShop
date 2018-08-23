@@ -90,9 +90,11 @@ class ModifyTranslationsType extends TranslatorAwareType
         $builder
             ->add('translation_type', ChoiceType::class, [
                 'choices' => $this->translationTypeChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('email_content_type', ChoiceType::class, [
                 'choices' => $this->emailContentTypeChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('theme', ChoiceType::class, [
                 'choices' =>
@@ -103,14 +105,17 @@ class ModifyTranslationsType extends TranslatorAwareType
                         'class' => 'js-no-theme'
                     ],
                 ],
+                'choice_translation_domain' => false,
             ])
             ->add('module', ChoiceType::class, [
                 'placeholder' => '---',
                 'choices' => $this->moduleChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('language', ChoiceType::class, [
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
+                'choice_translation_domain' => false,
             ])
         ;
     }
