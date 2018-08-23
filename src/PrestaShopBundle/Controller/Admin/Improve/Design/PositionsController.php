@@ -58,9 +58,6 @@ class PositionsController extends FrameworkBundleAdminController
     {
         $moduleAdapter = $this->get('prestashop.adapter.legacy.module');
         $hookProvider = $this->get('prestashop.adapter.legacy.hook');
-        $context = $this->getContext();
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-        $admin_dir = basename(_PS_ADMIN_DIR_);
         $installedModules = $moduleAdapter->getModulesInstalled();
 
         $selectedModule = $request->get('show_modules');
