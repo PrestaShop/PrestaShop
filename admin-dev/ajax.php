@@ -102,7 +102,7 @@ if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_par
  * List notifications for an employee
  * i.e: recent orders, new customers...
  *
- * -> Duplicated in Symfony
+ * -> Duplicated (NOT MOVED) in Symfony
  */
 if (Tools::isSubmit('getNotifications')) {
     $notification = new Notification;

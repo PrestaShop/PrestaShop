@@ -1,3 +1,9 @@
+admin_common_notifications:
+    path:     /notifications
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAction'
+
 admin_common_pagination:
     path:     /pagination/{offset}/{limit}/{total}/{view}
     methods:  [GET]
