@@ -48,7 +48,23 @@
           {{ 'Load a data matching configuration'|trans }}
         </label>
         <div class="col-sm">
-          {{ form_widget(dataConfigurationForm.matches) }}
+          <div class="form-row">
+            <div class="col">
+              {{ form_widget(dataConfigurationForm.matches) }}
+            </div>
+            <div class="col">
+              <button
+                class="btn btn-primary-reverse btn-outline-primary light-button js-load-match">
+                {#todo: implement#}
+                <i class="material-icons">settings</i> {{ 'Load'|trans({}, 'Admin.Actions') }}
+              </button>
+              <button
+                class="btn btn-primary-reverse btn-outline-primary light-button js-load-match">
+                {#todo: implement#}
+                <i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="form-group row">
@@ -57,13 +73,14 @@
         </label>
         <div class="col-sm">
           <div class="form-row">
-            <div class="col-xs-12 col-md-8">
+            <div class="col">
               {{ form_widget(dataConfigurationForm.match_name, {'attr': {'class': 'js-import-match-input', 'type': 'button'}}) }}
             </div>
             <div class="col">
               <button
                 class="btn btn-primary-reverse btn-outline-primary light-button js-save-import-match"
                 data-url="{{ path('admin_import_save_import_match') }}">
+                {#todo: finish implementation#}
                 <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
@@ -76,6 +93,7 @@
         </label>
         <div class="col-sm">
           {{ form_widget(dataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
+          <small class="form-text">{{ 'Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'|trans }}</small>
         </div>
       </div>
     </div>
