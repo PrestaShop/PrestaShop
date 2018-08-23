@@ -79,14 +79,25 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Check if the feature is enabled
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
      * Enable / disable the PrestaTrust feature
      *
-     * @param bool $enable
+     * @param bool $enabled
      * @return $this
      */
-    public function toggleService($enable)
+    public function setEnabled($enabled)
     {
-        $this->enabled = (bool) $enable;
+        $this->enabled = (bool) $enabled;
+
         return $this;
     }
 }
