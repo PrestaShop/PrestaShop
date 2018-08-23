@@ -77,7 +77,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
         if (!empty($result)) {
             return $result;
         }
-        
+
         $this->updateCldr($isoCode);
 
         return [];
