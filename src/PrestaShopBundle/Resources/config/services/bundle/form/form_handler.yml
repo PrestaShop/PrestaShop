@@ -242,5 +242,5 @@ services:
     prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormDataProvider'
         arguments:
-            - '@prestashop.core.command_bus.command'
-            - '@prestashop.core.command_bus.query'
+            - '@prestashop.core.cqrs.tactician_command_bus'
+            - '@prestashop.core.cqrs.tactician_query_bus'

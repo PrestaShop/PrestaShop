@@ -13,7 +13,7 @@ services:
         arguments:
             - '@prestashop.core.export.dir'
             - '@prestashop.adapter.legacy.configuration'
-            - '@prestashop.core.command_bus.query'
+            - '@prestashop.core.cqrs.tactician_query_bus'
 
     prestashop.adapter.sql_manager.request_sql_form_data_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator'

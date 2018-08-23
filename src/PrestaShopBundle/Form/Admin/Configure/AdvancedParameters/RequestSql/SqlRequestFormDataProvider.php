@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
 
-use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\Cqrs\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
@@ -44,22 +44,22 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 class SqlRequestFormDataProvider
 {
     /**
-     * @var CommandBus
+     * @var CommandBusInterface
      */
     private $commandBus;
 
     /**
-     * @var CommandBus
+     * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
-     * @param CommandBus $commandBus
-     * @param CommandBus $queryBus
+     * @param CommandBusInterface $commandBus
+     * @param CommandBusInterface $queryBus
      */
     public function __construct(
-        CommandBus $commandBus,
-        CommandBus $queryBus
+        CommandBusInterface $commandBus,
+        CommandBusInterface $queryBus
     ) {
         $this->commandBus = $commandBus;
         $this->queryBus = $queryBus;
