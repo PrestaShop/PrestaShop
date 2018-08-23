@@ -235,7 +235,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.backup.form_data_provider'
             -
               'backup_options': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupOptionsType'
