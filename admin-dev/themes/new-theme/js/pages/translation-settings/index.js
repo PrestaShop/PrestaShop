@@ -28,5 +28,5 @@ import TranslationSettingsPage from './TranslationSettingsPage';
 const $ = window.$;
 
 $(() => {
-    new TranslationSettingsPage().init();
+    new TranslationSettingsPage();
 });
