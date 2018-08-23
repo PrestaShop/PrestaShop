@@ -37,9 +37,9 @@ module.exports = {
     product_information: '//*[@id="orderProducts"]/tbody/tr[1]/td[2]/a',
     empty_page_logo: '//*[@id="documents_table"]//div[@class="list-empty-msg"]',
     pdf_icon: '//*[@id="table-order"]/tbody/tr[%ORDER]//td[11]//i',
-    invoice_document:'//table//td[3]/a',
+    invoice_document: '//table//td[3]/a',
     product_quantity: '//*[@id="orderProducts"]//span[contains(@class,"product_quantity_show")]',
-    product_name_tab:'//*[@id="orderProducts"]//span[contains(@class,"productName")]',
+    product_name_tab: '//*[@id="orderProducts"]//span[contains(@class,"productName")]',
     product_unit_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_excl"]',
     product_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_incl"]',
     total_order_price: '//*[@id="total_order"]/td[2]/strong',
@@ -49,7 +49,7 @@ module.exports = {
     total_tax: '//*[@id="total_taxes"]/td[2]',
     carrier: '//*[@id="shipping_table"]/tbody/tr/td[3]',
     payment_method: '//*[@id="formAddPayment"]/div/table/tbody/tr[1]/td[2]'
- },
+  },
 
   CreateOrder: {
     new_order_button: '//*[@id="page-header-desc-order-new_order"]',
@@ -97,8 +97,18 @@ module.exports = {
   Invoices: {
     disable_enable_invoice: '//label[@for="form_invoice_options_enable_invoices_%STATUS"]',
     disable_enable_image: '//label[@for="form_invoice_options_enable_product_images_%STATUS"]',
+    disable_enable_current_number: '//label[@for="form_invoice_options_add_current_year_%STATUS"]',
     disable_enable_tax_breakdown: '//label[@for="form_invoice_options_enable_tax_breakdown_%STATUS"]',
     save_button: '//*[@id="main-div"]//button[contains(text(),"Save")]',
-    success_msg: '//*[@id="main-div"]//div[@class="alert-text"]/p'
+    success_msg: '//*[@id="main-div"]//div[@class="alert-text"]/p',
+    invoice_prefix_input: '//*[@id="form_invoice_options_invoice_prefix_1"]',
+    position_year_date_after: '//*[@id="form_invoice_options_year_position"]/div[1]/label',
+    position_year_date_before: '//*[@id="form_invoice_options_year_position"]/div[2]/label',
+    invoice_number_input: '//*[@id="form_invoice_options_invoice_number"]',
+    invoice_number_info: '(//*[@id="main-div"]//span[@class="help-box"])[8]',
+    invoice_actual_number: '//div[@class="popover-body"]',
+    legal_free_text_input: '//*[@id="form_invoice_options_legal_free_text_1"]',
+    footer_text_input: '//*[@id="form_invoice_options_footer_text_1"]',
+    cache_pdf_option: '//*[@id="form_invoice_options_use_disk_cache_1"]'
   }
 };

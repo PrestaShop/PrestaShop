@@ -28,6 +28,12 @@ class Order extends CommonClient {
       .then((order) => global.order_status = order)
   }
 
+  getDocumentName(selector) {
+    return this.client
+      .then(() => this.client.getText(selector))
+      .then((name) => global.invoiceFileName = name.replace('#', ''))
+  }
+
   downloadDocument(selector) {
     return this.client
       .waitForExistAndClick(selector)
@@ -54,8 +60,7 @@ class Order extends CommonClient {
   getShoppingCartNumber(selector) {
     return this.client
       .execute(function (selector) {
-        let count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
-        return count;
+        return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
       }, selector)
       .then((count) => {
         global.shoppingCartsNumber = count.value;
