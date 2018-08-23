@@ -24,150 +24,155 @@
  */
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const keepLicense = require('uglify-save-license');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
-let config = {
-  entry: {
-    main: [
-      'prestakit/dist/js/prestashop-ui-kit.js',
-      'jquery-ui-dist/jquery-ui.js',
-      'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
-      'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
-      'jwerty/jwerty.js',
-      'magnific-popup/dist/jquery.magnific-popup.js',
-      'dropzone/dist/dropzone.js',
-      'typeahead.js/dist/typeahead.jquery.js',
-      'typeahead.js/dist/bloodhound.min.js',
-      // 'bootstrap-slider/dist/bootstrap-slider.js',
-      'sprintf-js/src/sprintf.js',
-      './js/theme.js',
-    ],
-    catalog: [
-      './js/app/pages/catalog',
-    ],
-    stock: [
-      './js/app/pages/stock',
-    ],
-    translations: [
-      './js/app/pages/translations',
-    ],
-    logs: [
-      './js/app/pages/logs',
-    ],
-    order_preferences: [
-      './js/pages/order-preferences',
-    ],
-    product_preferences: [
-      './js/pages/product-preferences',
-    ],
-    order_delivery: [
-      './js/pages/order/delivery',
-    ],
-    imports: [
-      './js/pages/import'
-    ],
-    localization: [
-      './js/pages/localization'
-    ],
-    invoices: [
+module.exports = (env, argv) => {
+  const devMode = argv.mode === 'development';
+
+  const config = {
+    entry: {
+      main: [
+        'prestakit/dist/js/prestashop-ui-kit.js',
+        'jquery-ui-dist/jquery-ui.js',
+        'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
+        'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+        'jwerty/jwerty.js',
+        'magnific-popup/dist/jquery.magnific-popup.js',
+        'dropzone/dist/dropzone.js',
+        'typeahead.js/dist/typeahead.jquery.js',
+        'typeahead.js/dist/bloodhound.min.js',
+        // 'bootstrap-slider/dist/bootstrap-slider.js',
+        'sprintf-js/src/sprintf.js',
+        './js/theme.js',
+      ],
+      catalog: [
+        './js/app/pages/catalog',
+      ],
+      stock: [
+        './js/app/pages/stock',
+      ],
+      translations: [
+        './js/app/pages/translations',
+      ],
+      logs: [
+        './js/app/pages/logs',
+      ],
+      order_preferences: [
+        './js/pages/order-preferences',
+      ],
+      product_preferences: [
+        './js/pages/product-preferences',
+      ],
+      order_delivery: [
+        './js/pages/order/delivery',
+      ],
+      imports: [
+        './js/pages/import'
+      ],
+      localization: [
+        './js/pages/localization'
+      ],
+      invoices: [
         './js/pages/invoices',
-    ],
-    geolocation: [
-      './js/pages/geolocation',
-    ],
-    payment_preferences: [
-      './js/pages/payment-preferences',
-    ],
-    email: [
-      './js/pages/email'
-    ],
-    sql_manager: [
-      './js/pages/sql-manager',
-    ]
-  },
-  output: {
-    path: path.resolve(__dirname, 'public'),
-    filename: '[name].bundle.js'
-  },
-  devServer: {
-    hot: true,
-    contentBase: path.resolve(__dirname, 'public'),
-    publicPath: '/'
-  },
-  //devtool: 'source-map', // uncomment me to build source maps (really slow)
-  resolve: {
-    extensions: ['.js', '.vue', '.json'],
-    alias: {
-      vue$: 'vue/dist/vue.common.js',
-      app: path.resolve(__dirname, 'js/app')
-    }
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        include: path.resolve(__dirname, 'js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['es2015', { modules: false }]
-            ]
-          }
-        }]
-      },
-      {
-        test: /jquery-ui\.js/,
-        use: "imports-loader?define=>false&this=>window"
-      }, {
-        test: /jquery\.magnific-popup\.js/,
-        use: "imports-loader?define=>false&exports=>false&this=>window"
-      }, {
-        test: /bloodhound\.min\.js/,
-        use: [
-          {
-            loader: 'expose-loader',
-            query: 'Bloodhound'
-          }
-        ]
-      }, {
-        test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null'
-      }, {
-        test: require.resolve('moment'),
-        loader: 'imports-loader?define=>false&this=>window',
-      }, {
-        test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window'
-      }, {
-        test: /bootstrap-tokenfield\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window'
-      }, {
-        test: /bootstrap-datetimepicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window'
-      }, {
-        test: /jwerty\/jwerty\.js/,
-        loader: 'imports-loader?this=>window&module=>false'
-      }, {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader'
-          },
-        }
-      }, {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader']
-        })
-      }, {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
+      ],
+      geolocation: [
+        './js/pages/geolocation',
+      ],
+      payment_preferences: [
+        './js/pages/payment-preferences',
+      ],
+      email: [
+        './js/pages/email'
+      ],
+      sql_manager: [
+        './js/pages/sql-manager',
+      ]
+    },
+    output: {
+      path: path.resolve(__dirname, 'public'),
+      filename: '[name].bundle.js'
+    },
+    devServer: {
+      hot: true,
+      contentBase: path.resolve(__dirname, 'public'),
+      publicPath: '/'
+    },
+    //devtool: 'source-map', // uncomment me to build source maps (really slow)
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        vue$: 'vue/dist/vue.common.js',
+        app: path.resolve(__dirname, 'js/app')
+      }
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          include: path.resolve(__dirname, 'js'),
+          use: [{
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', {modules: false}]
+              ]
+            }
+          }]
+        },
+        {
+          test: /jquery-ui\.js/,
+          use: "imports-loader?define=>false&this=>window"
+        }, {
+          test: /jquery\.magnific-popup\.js/,
+          use: "imports-loader?define=>false&exports=>false&this=>window"
+        }, {
+          test: /bloodhound\.min\.js/,
           use: [
+            {
+              loader: 'expose-loader',
+              query: 'Bloodhound'
+            }
+          ]
+        }, {
+          test: /dropzone\/dist\/dropzone\.js/,
+          loader: 'imports-loader?this=>window&module=>null'
+        }, {
+          test: require.resolve('moment'),
+          loader: 'imports-loader?define=>false&this=>window',
+        }, {
+          test: /typeahead\.jquery\.js/,
+          loader: 'imports-loader?define=>false&exports=>false&this=>window'
+        }, {
+          test: /bootstrap-tokenfield\.js/,
+          loader: 'imports-loader?define=>false&exports=>false&this=>window'
+        }, {
+          test: /bootstrap-datetimepicker\.js/,
+          loader: 'imports-loader?define=>false&exports=>false&this=>window'
+        }, {
+          test: /jwerty\/jwerty\.js/,
+          loader: 'imports-loader?this=>window&module=>false'
+        }, {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+        }, {
+          test: /\.css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader'
+          ]
+        }, {
+          test: /\.scss$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader
+            },
+            /*{
+              loader: 'vue-style-loader',
+            },*/
             {
               loader: 'css-loader',
               options: {
@@ -188,44 +193,48 @@ let config = {
               }
             }
           ]
-        })
-      }, {
-        test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
-        use: 'file-loader?name=[hash].[ext]'
-      }
+        }, {
+          test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
+          use: 'file-loader?name=[hash].[ext]'
+        }
+      ]
+    },
+    optimization: {
+
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'theme.css'
+      }),
+      new webpack.ProvidePlugin({
+        moment: 'moment', // needed for bootstrap datetime picker
+      }),
+      new VueLoaderPlugin()
     ]
-  },
-  plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new webpack.ProvidePlugin({
-      moment: 'moment', // needed for bootstrap datetime picker
-    })
-  ]
+  };
+
+  if (!devMode) {
+    config.optimization.minimizer = [
+      new UglifyJsPlugin({
+        sourceMap: false,
+        uglifyOptions: {
+          compress: {
+            drop_console: true
+          },
+          output: {
+            comments: keepLicense
+          }
+        },
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ];
+  } else {
+    config.plugins.push(
+      new webpack.HotModuleReplacementPlugin()
+    );
+    config.entry.stock.push('webpack/hot/only-dev-server');
+    config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
+  }
+
+  return config;
 };
-
-if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: keepLicense
-      }
-    })
-  );
-} else {
-  config.plugins.push(
-    new webpack.HotModuleReplacementPlugin()
-  );
-  config.entry.stock.push('webpack/hot/only-dev-server');
-  config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
-}
-
-module.exports = config;
