@@ -57,7 +57,7 @@ export default class SaveImportMatchConfiguration
     // todo: uncomment const matchTypes = ImportMatchTypeProvider.getTypes as json string
     const url = $button.attr('data-url');
     const data = new FormData();
-    data.append('data_matching_configuration', name);
+    data.append('match_name', name);
     data.append('rows_skip', rowsToSkip);
 
     $.ajax({

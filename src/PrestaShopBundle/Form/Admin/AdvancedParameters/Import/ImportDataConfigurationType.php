@@ -17,7 +17,7 @@ class ImportDataConfigurationType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('data_matching_configuration', TextType::class)
+            ->add('match_name', TextType::class)
             ->add('rows_skip', IntegerType::class, [
                 'data' => 1
             ]);
