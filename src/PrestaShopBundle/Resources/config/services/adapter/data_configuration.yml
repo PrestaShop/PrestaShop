@@ -123,8 +123,8 @@ services:
     prestashop.adapter.language.activator:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
 
-    prestashop.adapter.language.language_pack:
-        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePack'
+    prestashop.adapter.language.language_pack_installer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
         arguments:
             - '@prestashop.core.foundation.version'
 

@@ -28,11 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\Language;
 
 use Language;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
+use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 
 /**
- * Class LanguagePack is responsible for the language pack actions
+ * Class LanguagePack is responsible for the language pack actions regarding installation
  */
-class LanguagePack
+class LanguagePackInstaller implements LanguagePackInstallerInterface
 {
     /**
      * @var Version
@@ -50,12 +51,7 @@ class LanguagePack
     }
 
     /**
-     * Downloads and installs language pack data
-     *
-     * @param string $iso -3166-2 alpha-2 format code
-     *
-     * @return array|bool - if false is returned then iso code is not valid.
-     * If array is returned then it contains errors. If true then everything went fine
+     * {@inheritdoc}
      */
     public function downloadAndInstallLanguagePack($iso)
     {

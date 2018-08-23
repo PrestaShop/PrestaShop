@@ -29,8 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Language\Pack\Import;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\Language\LanguagePack;
+use PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 
 /**
  * Class LanguagePackImporter is responsible for importing language pack
@@ -38,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Cldr\Update;
 final class LanguagePackImporter implements LanguagePackImporterInterface
 {
     /**
-     * @var LanguagePack
+     * @var LanguagePackInstaller
      */
     private $languagePack;
     /**
@@ -51,12 +52,12 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     private $cacheClearer;
 
     /**
-     * @param LanguagePack $languagePack
+     * @param LanguagePackInstallerInterface $languagePack
      * @param LanguageDataProvider $languageProvider
      * @param CacheClearer $cacheClearer
      */
     public function __construct(
-        LanguagePack $languagePack,
+        LanguagePackInstallerInterface $languagePack,
         LanguageDataProvider $languageProvider,
         CacheClearer $cacheClearer
     ) {
