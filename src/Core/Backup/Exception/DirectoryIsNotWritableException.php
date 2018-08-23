@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Backup\Exception;
 
 /**
- * Class DirectoryIsNotWritableException is thrown when backup directory is not writable
+ * Class DirectoryIsNotWritableException is thrown when backup directory is not writable.
  */
 class DirectoryIsNotWritableException extends BackupException
 {

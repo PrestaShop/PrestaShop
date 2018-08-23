@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Backup\Exception;
 use Exception;
 
 /**
- * Class BackupException is thrown whenever backup fails
+ * Class BackupException is thrown whenever backup fails.
  */
 class BackupException extends Exception implements ExceptionInterface
 {

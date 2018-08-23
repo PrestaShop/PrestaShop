@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Backup\Manager;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Interface BackupCreatorInterface defines contract for backup creator
+ * Interface BackupCreatorInterface defines contract for backup creator.
  */
 interface BackupCreatorInterface
 {
     /**
-     * Create new backup
+     * Create new backup.
      *
      * @return BackupInterface
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Backup;
 
 /**
- * Interface BackupCollectionInterface defines contract for backup collection
+ * Interface BackupCollectionInterface defines contract for backup collection.
  */
 interface BackupCollectionInterface
 {
     /**
-     * Add backup to collection
+     * Add backup to collection.
      *
      * @param BackupInterface $backup
      *
@@ -41,7 +41,7 @@ interface BackupCollectionInterface
     public function add(BackupInterface $backup);
 
     /**
-     * Get all backups
+     * Get all backups.
      *
      * @return BackupInterface[]
      */

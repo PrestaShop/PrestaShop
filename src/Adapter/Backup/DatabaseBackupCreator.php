@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Backup\Exception\DirectoryIsNotWritableException;
 use PrestaShop\PrestaShop\Core\Backup\Manager\BackupCreatorInterface;
 
 /**
- * Class DatabaseBackupCreator is responsible for creating database backups
+ * Class DatabaseBackupCreator is responsible for creating database backups.
  *
  * @internal
  */

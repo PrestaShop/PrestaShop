@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Class Backup represents single database backup
+ * Class Backup represents single database backup.
  *
  * @internal
  */
@@ -95,6 +95,6 @@ final class Backup implements BackupInterface
     {
         list($timestamp) = explode('-', $this->fileName);
 
-        return new DateTimeImmutable('@'.$timestamp);
+        return new DateTimeImmutable('@' . $timestamp);
     }
 }

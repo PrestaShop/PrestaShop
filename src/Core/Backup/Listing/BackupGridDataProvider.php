@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\TimeDefinition;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class BackupGridDataProvider provides backups for listing in grid
+ * Class BackupGridDataProvider provides backups for listing in grid.
  */
 final class BackupGridDataProvider implements GridDataProviderInterface
 {
@@ -114,7 +114,7 @@ final class BackupGridDataProvider implements GridDataProviderInterface
     }
 
     /**
-     * Get formatted age
+     * Get formatted age.
      *
      * @param BackupInterface $backup
      *
@@ -144,7 +144,7 @@ final class BackupGridDataProvider implements GridDataProviderInterface
     }
 
     /**
-     * Get formatted backup size
+     * Get formatted backup size.
      *
      * @param BackupInterface $backup
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
 /**
- * Class TimeDefinition defines common time intervals in different formats
+ * Class TimeDefinition defines common time intervals in different formats.
  */
 final class TimeDefinition
 {

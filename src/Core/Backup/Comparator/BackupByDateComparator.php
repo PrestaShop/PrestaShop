@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Backup\Comparator;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Class BackupByDateComparator compares 2 backups by creation date
+ * Class BackupByDateComparator compares 2 backups by creation date.
  */
 final class BackupByDateComparator implements BackupComparatorInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Backup\Repository;
 use PrestaShop\PrestaShop\Core\Backup\BackupCollectionInterface;
 
 /**
- * Interface BackupRepositoryInterface defines contract for backup repository
+ * Interface BackupRepositoryInterface defines contract for backup repository.
  */
 interface BackupRepositoryInterface
 {
     /**
-     * Get available backups
+     * Get available backups.
      *
      * @return BackupCollectionInterface
      */

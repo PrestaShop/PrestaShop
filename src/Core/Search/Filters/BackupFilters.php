@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class BackupFilters defines filters for 'Configure > Advanced Parameters > Database > Backup' listing
+ * Class BackupFilters defines filters for 'Configure > Advanced Parameters > Database > Backup' listing.
  */
 final class BackupFilters extends Filters
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Backup\Exception;
 
 /**
- * Interface ExceptionInterface is implemented by backup exceptions
+ * Interface ExceptionInterface is implemented by backup exceptions.
  */
 interface ExceptionInterface
 {

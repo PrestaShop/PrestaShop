@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 use PrestaShop\PrestaShop\Core\Backup\Manager\BackupRemoverInterface;
 
 /**
- * Class BackupRemover deletes given backup
+ * Class BackupRemover deletes given backup.
  *
  * @internal
  */

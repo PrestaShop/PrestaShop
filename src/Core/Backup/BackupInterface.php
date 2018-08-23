@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,40 +29,40 @@ namespace PrestaShop\PrestaShop\Core\Backup;
 use DateTimeInterface;
 
 /**
- * Interface BackupInterface defines contract for backup
+ * Interface BackupInterface defines contract for backup.
  */
 interface BackupInterface
 {
     /**
-     * Get backup filename
+     * Get backup filename.
      *
      * @return string
      */
     public function getFileName();
 
     /**
-     * Get URL to backup
+     * Get URL to backup.
      *
      * @return string
      */
     public function getUrl();
 
     /**
-     * Get backup file size in bytes
+     * Get backup file size in bytes.
      *
      * @return string
      */
     public function getSize();
 
     /**
-     * Get backup age in seconds
+     * Get backup age in seconds.
      *
      * @return int
      */
     public function getAge();
 
     /**
-     * Get backup creation date
+     * Get backup creation date.
      *
      * @return DateTimeInterface
      */

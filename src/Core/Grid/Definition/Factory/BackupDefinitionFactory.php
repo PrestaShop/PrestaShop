@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
- * Class BackupDefinitionFactory is responsible for defining 'Configure > Advanced Parameters > Database > Backup' grid
+ * Class BackupDefinitionFactory is responsible for defining 'Configure > Advanced Parameters > Database > Backup' grid.
  */
 final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -121,8 +121,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                                     'Admin.Notifications.Warning'
                                 ),
                             ])
-                        )
-                    ,
+                        ),
                 ])
             )
         ;
@@ -138,7 +137,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_backup_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;

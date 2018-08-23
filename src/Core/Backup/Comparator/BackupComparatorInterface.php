@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Backup\Comparator;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 
 /**
- * Interface BackupComparatorInterface defines contract for backups comparator
+ * Interface BackupComparatorInterface defines contract for backups comparator.
  */
 interface BackupComparatorInterface
 {
     /**
-     * Compare 2 backups
+     * Compare 2 backups.
      *
      * @param BackupInterface $backup1
      * @param BackupInterface $backup2

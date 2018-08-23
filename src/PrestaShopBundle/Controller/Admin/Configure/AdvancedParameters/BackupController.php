@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,12 +39,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class BackupController is responsible of "Configure > Advanced Parameters > Database > Backup" page
+ * Class BackupController is responsible of "Configure > Advanced Parameters > Database > Backup" page.
  */
 class BackupController extends FrameworkBundleAdminController
 {
     /**
-     * Show backup page
+     * Show backup page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
@@ -88,13 +88,13 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show file download view
+     * Show file download view.
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller')~'_')")
      * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param Request $request
-     * @param string  $downloadFileName
+     * @param string $downloadFileName
      *
      * @return Response
      */
@@ -114,7 +114,7 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process backup options saving
+     * Process backup options saving.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')")
      * @DemoRestricted(redirectRoute="admin_backup")
@@ -144,7 +144,7 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
-     * Create new backup
+     * Create new backup.
      *
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller')~'_')")
      * @DemoRestricted(redirectRoute="admin_backup")
@@ -182,7 +182,7 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process backup file deletion
+     * Process backup file deletion.
      *
      * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')")
      * @DemoRestricted(redirectRoute="admin_backup")
@@ -215,7 +215,7 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process bulk backup deletion
+     * Process bulk backup deletion.
      *
      * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')")
      * @DemoRestricted(redirectRoute="admin_backup")
@@ -273,7 +273,7 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get backup form handler
+     * Get backup form handler.
      *
      * @return FormHandlerInterface
      */

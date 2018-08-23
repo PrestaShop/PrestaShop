@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class SubmitRowAction defines row action as form submit
+ * Class SubmitRowAction defines row action as form submit.
  */
 final class SubmitRowAction extends AbstractRowAction
 {
