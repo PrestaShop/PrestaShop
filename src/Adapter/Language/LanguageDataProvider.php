@@ -71,7 +71,13 @@ class LanguageDataProvider
      */
     public function getLanguageDetails($locale)
     {
-        return (array) Language::getJsonLanguageDetails($locale);
+        $result = Language::getJsonLanguageDetails($locale);
+
+        if (false === $result) {
+            return [];
+        }
+        
+        return $result;
     }
 
     /**
