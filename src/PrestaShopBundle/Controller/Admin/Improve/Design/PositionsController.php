@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Improve\Design\PositionsFormDataProvider;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -68,6 +67,8 @@ class PositionsController extends FrameworkBundleAdminController
         if ($selectedModule && strval($selectedModule) != 'all') {
             $this->selectedModule = (int) $selectedModule;
         }
+
+        $this->manageLegacyFlashes($request->query->get('conf'));
 
         $modules = [];
         foreach ($installedModules as $installedModule) {
@@ -198,5 +199,30 @@ class PositionsController extends FrameworkBundleAdminController
         return $this->redirect(
             $this->generateUrl('admin_modules_positions')
         );
+    }
+
+    /**
+     * Manage legacy flashes, this code must be removed
+     * when legacy edit will be migrated.
+     *
+     * @param int $conf
+     */
+    private function manageLegacyFlashes($conf)
+    {
+        if (empty($conf)) {
+            return;
+        }
+
+        $messages = [
+            16 => $this->trans('The module transplanted successfully to the hook.', 'Admin.Modules.Notification'),
+            17 => $this->trans('The module was successfully removed from the hook.', 'Admin.Modules.Notification'),
+        ];
+
+        if (isset($messages[$conf])) {
+            $this->addFlash(
+                'success',
+                $messages[$conf]
+            );
+        }
     }
 }

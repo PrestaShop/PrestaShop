@@ -27,8 +27,6 @@
 namespace PrestaShopBundle\Controller\Api\Improve\Design;
 
 use PrestaShopBundle\Controller\Api\ApiController;
-use PrestaShopBundle\Exception;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
