@@ -102,5 +102,13 @@ class PositionsControllerTest extends WebTestCase
             'error',
             $messages
         );
+        $this->assertArrayHasKey(
+            'success',
+            $messages
+        );
+        $this->assertContains(
+            'The module was successfully removed from the hook.',
+            $messages['success']
+        );
     }
 }

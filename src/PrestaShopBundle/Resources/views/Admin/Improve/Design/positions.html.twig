@@ -139,7 +139,7 @@
                         {% endif %}
 
                         <div class="module-column-icon">
-                          <img src="/modules/{{ moduleInstance.name }}/logo.png" alt="{{ moduleInstance.displayName| escape }}" />
+                          <img src="{{ asset('/modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}" />
                         </div>
 
                         <div class="module-column-infos">

@@ -185,6 +185,14 @@ class PositionsController extends FrameworkBundleAdminController
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans(
+                    'The module was successfully removed from the hook.',
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         return $this->redirect(
