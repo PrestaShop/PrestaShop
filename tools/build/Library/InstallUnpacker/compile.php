@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Validate input
+ * Validate input.
  *
  * Die if input is not valid
  *
@@ -68,7 +68,6 @@ if ($handle = opendir(__DIR__ . '/content')) {
                     "getFileContent('$content', false)",
                     $template
                 );
-
             } else {
                 echo "\033[0;31mFile not present on the template\033[0m\n";
             }
@@ -93,7 +92,7 @@ if ($handle = opendir(__DIR__ . '/classes')) {
 
             $content = file_get_contents($filePath);
             $contentWithoutPHPTag = str_replace('<?php', '', $content);
-            $inlineContent .= PHP_EOL.PHP_EOL.$contentWithoutPHPTag;
+            $inlineContent .= PHP_EOL . PHP_EOL . $contentWithoutPHPTag;
         }
     }
 }

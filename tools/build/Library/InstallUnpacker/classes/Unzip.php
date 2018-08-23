@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class PrestashopCouldNotUnzipLatestVersionException extends \Exception
 {
 }
 
 /**
- * In charge of unzipping the latest Prestashop Version
+ * In charge of unzipping the latest Prestashop Version.
  *
  * Most methods are copied from https://github.com/PrestaShop/autoupgrade/blob/master/classes/TaskRunner/Upgrade/Unzip.php
  */
@@ -95,7 +94,6 @@ class Unzip
         $zip = $this->openWithZipArchive($fromFile);
         if ($zip === false) {
             throw new PrestashopCouldNotUnzipLatestVersionException('Unzip operation failed');
-
         }
 
         if (false === $zip->extractTo($toDir)) {

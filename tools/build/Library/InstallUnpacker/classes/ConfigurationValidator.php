@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class ConfigurationValidator
 {
     /**
@@ -49,11 +48,11 @@ class ConfigurationValidator
         }
 
         // @todo: be able to use fallback util directories
-        $downloadDirPath = __DIR__.DIRECTORY_SEPARATOR.'download';
+        $downloadDirPath = __DIR__ . DIRECTORY_SEPARATOR . 'download';
         if (is_dir($downloadDirPath) || file_exists($downloadDirPath)) {
             $errors[] = "Directory 'download' already exists.";
         }
-        $downloadDirPath = __DIR__.DIRECTORY_SEPARATOR.'extracted';
+        $downloadDirPath = __DIR__ . DIRECTORY_SEPARATOR . 'extracted';
         if (is_dir($downloadDirPath) || file_exists($downloadDirPath)) {
             $errors[] = "Directory 'extracted' already exists.";
         }
@@ -79,7 +78,7 @@ class ConfigurationValidator
 
     /**
      * Test whether files and directories can be manipulated by php on given system
-     * by performing multiple file operations
+     * by performing multiple file operations.
      *
      * @return string[]
      */
@@ -120,7 +119,7 @@ class ConfigurationValidator
     }
 
     /**
-     * Choose a random available directory name
+     * Choose a random available directory name.
      *
      * @return string
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class PrestashopCouldNotInstallLatestVersionException extends \Exception
 {
 }
@@ -128,7 +127,7 @@ class InstallManager
         // replace files
         $this->replaceInstallFile('Install_PrestaShop.html');
         $this->replaceInstallFile('prestashop.zip');
-        $this->replaceInstallFile( 'index.php');
+        $this->replaceInstallFile('index.php');
 
         // delete 2 util directories
         $this->deleteDirectoryWithItsContent($this->downloadDirectoryPath);
@@ -175,7 +174,7 @@ class InstallManager
      */
     private function deleteDirectoryWithItsContent($directoryPath)
     {
-        $deleteDirectoryContentResult = array_map('unlink', glob($directoryPath . DIRECTORY_SEPARATOR . "*.*"));
+        $deleteDirectoryContentResult = array_map('unlink', glob($directoryPath . DIRECTORY_SEPARATOR . '*.*'));
 
         $deleteDirectoryResult = @rmdir($directoryPath);
 

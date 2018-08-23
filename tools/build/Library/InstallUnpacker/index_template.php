@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 set_time_limit(0);
 
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50600);
@@ -35,7 +34,7 @@ define('TARGET_FOLDER', __DIR__ . '/');
 define('BATCH_SIZE', 500);
 
 // bust cache, or else it won't load the installer after the extraction is done
-header("Cache-Control: no-cache, no-store, must-revalidate");
+header('Cache-Control: no-cache, no-store, must-revalidate');
 
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
     die('You need at least PHP ' . _PS_INSTALL_MINIMUM_PHP_VERSION_ . ' to install PrestaShop. Your current PHP version is ' . PHP_VERSION);
@@ -46,35 +45,34 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 
 // --------------------------------------------------------------------------------
 
-
-
 function getFileContent($fileOrContent, $debug)
 {
     if ($debug) {
         return file_get_contents('content/' . $fileOrContent);
     }
+
     return base64_decode($fileOrContent);
 }
 
 function getZipErrorMessage($errorCode)
 {
     $errors = [
-        ZipArchive::ER_EXISTS => "File already exists.",
-        ZipArchive::ER_INCONS => "Zip archive inconsistent or corrupted. Double check your uploaded files.",
-        ZipArchive::ER_INVAL => "Invalid argument.",
-        ZipArchive::ER_MEMORY => "Allocation error. Out of memory?",
-        ZipArchive::ER_NOENT => "Unable to find the release zip file. Make sure that the prestashop.zip file has been uploaded and is located in the same directory as this dezipper.",
-        ZipArchive::ER_NOZIP => "The release file is not a zip file or it is corrupted. Double check your uploaded files.",
+        ZipArchive::ER_EXISTS => 'File already exists.',
+        ZipArchive::ER_INCONS => 'Zip archive inconsistent or corrupted. Double check your uploaded files.',
+        ZipArchive::ER_INVAL => 'Invalid argument.',
+        ZipArchive::ER_MEMORY => 'Allocation error. Out of memory?',
+        ZipArchive::ER_NOENT => 'Unable to find the release zip file. Make sure that the prestashop.zip file has been uploaded and is located in the same directory as this dezipper.',
+        ZipArchive::ER_NOZIP => 'The release file is not a zip file or it is corrupted. Double check your uploaded files.',
         ZipArchive::ER_OPEN => "Can't open file. Make sure PHP has read access to the prestashop.zip file.",
-        ZipArchive::ER_READ => "Read error.",
-        ZipArchive::ER_SEEK => "Seek error.",
+        ZipArchive::ER_READ => 'Read error.',
+        ZipArchive::ER_SEEK => 'Seek error.',
     ];
 
     if (isset($errors[$errorCode])) {
-        return "Unzipping error - " . $errors[$errorCode];
+        return 'Unzipping error - ' . $errors[$errorCode];
     }
 
-    return "An unknown error was found while reading the zip file";
+    return 'An unknown error was found while reading the zip file';
 }
 
 $selfUri = basename(__FILE__);
@@ -88,30 +86,28 @@ if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
         $isThisTheLatestAvailableVersion = (_PS_VERSION_ === $latestVersionAvailable);
         if ($isThisTheLatestAvailableVersion) {
             die(json_encode([
-                'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false
+                'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
             ]));
         }
 
         $possibleInstallIssues = $installManager->testDownloadCapabilities();
         if (false === empty($possibleInstallIssues)) {
             die(json_encode([
-                'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false
+                'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
             ]));
         }
 
         die(json_encode([
-            'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => true
+            'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => true,
         ]));
-
     } catch (\Exception $e) {
         die(json_encode([
-            'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false
+            'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
         ]));
     }
 }
 
 if ((isset($_POST['downloadLatest'])) && ($_POST['downloadLatest'] === 'true')) {
-
     try {
         $installManager = new InstallManager();
 
@@ -127,7 +123,7 @@ if ((isset($_POST['downloadLatest'])) && ($_POST['downloadLatest'] === 'true')) 
     }
 }
 
-$startId = (isset($_POST['startId'])) ? (int)$_POST['startId'] : 0;
+$startId = (isset($_POST['startId'])) ? (int) $_POST['startId'] : 0;
 
 if (isset($_POST['extract'])) {
     if (!extension_loaded('zip')) {
@@ -148,7 +144,7 @@ if (isset($_POST['extract'])) {
     if (!is_writable(TARGET_FOLDER)) {
         die(json_encode([
             'error' => true,
-            'message' => "You need to grant write permissions for PHP on the following directory: "
+            'message' => 'You need to grant write permissions for PHP on the following directory: '
                 . realpath(TARGET_FOLDER),
         ]));
     }
@@ -157,14 +153,14 @@ if (isset($_POST['extract'])) {
     $lastId = $startId + BATCH_SIZE;
 
     $fileList = array();
-    for ($id = $startId; $id < min($numFiles, $lastId); $id++) {
+    for ($id = $startId; $id < min($numFiles, $lastId); ++$id) {
         $currentFile = $zip->getNameIndex($id);
         if (in_array($currentFile, ['/index.php', 'index.php'])) {
             $indexContent = $zip->getFromIndex($id);
             if (!file_put_contents(getcwd() . '/index.php.temp', $indexContent)) {
                 die(json_encode([
                     'error' => true,
-                    'message' => "Unable to write to file " . getcwd() . '/index.php.temp'
+                    'message' => 'Unable to write to file ' . getcwd() . '/index.php.temp',
                 ]));
             }
         } else {
@@ -206,7 +202,6 @@ if (isset($_POST['extract'])) {
     ]));
 }
 
-
 if (isset($_GET['element'])) {
     switch ($_GET['element']) {
         case 'font':
@@ -243,16 +238,16 @@ if (isset($_GET['element'])) {
   <head>
       <meta charset="UTF-8">
       <title>PrestaShop installation</title>
-      <link rel="stylesheet" type="text/css" href="<?= $selfUri ?>?element=css">
+      <link rel="stylesheet" type="text/css" href="<?= $selfUri; ?>?element=css">
   </head>
   <body>
     <div id="content-install-in-progress"
-       data-extract-url="<?= $selfUri ?>"
-       data-check-version-url="<?= $selfUri ?>?run=check-version"
-       data-download-latest-url="<?= $selfUri ?>">
+       data-extract-url="<?= $selfUri; ?>"
+       data-check-version-url="<?= $selfUri; ?>?run=check-version"
+       data-download-latest-url="<?= $selfUri; ?>">
         <div>
-            <img id="spinner" src="<?= $selfUri ?>?element=gif"/>
-            <div id="versionPanel" style="display: none;">Installing Prestashop <?= _PS_VERSION_ ?></div>
+            <img id="spinner" src="<?= $selfUri; ?>?element=gif"/>
+            <div id="versionPanel" style="display: none;">Installing Prestashop <?= _PS_VERSION_; ?></div>
             <div id="initializationMessage">Initialization ...</div>
             <div id="progressContainer">
                 <div class="progressNumber">0 %</div>
@@ -267,7 +262,7 @@ if (isset($_GET['element'])) {
     </div>
     <div id="content-install-form" style="display: none">
       <div>
-        <img id="puffin" src="<?= $selfUri ?>?element=png-installer"/>
+        <img id="puffin" src="<?= $selfUri; ?>?element=png-installer"/>
         <div id="header">
           The version you’re about to install is not
           the latest version of PrestaShop
@@ -289,7 +284,7 @@ if (isset($_GET['element'])) {
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="<?= $selfUri ?>?element=jquery"></script>
-    <script type="text/javascript" src="<?= $selfUri ?>?element=js-runner"></script>
+    <script type="text/javascript" src="<?= $selfUri; ?>?element=jquery"></script>
+    <script type="text/javascript" src="<?= $selfUri; ?>?element=js-runner"></script>
   </body>
 </html>

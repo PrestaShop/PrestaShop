@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class PrestashopCouldNotDownloadLatestVersionException extends \Exception
 {
 }
 
 /**
- * In charge of downloading the latest Prestashop Version
+ * In charge of downloading the latest Prestashop Version.
  *
  * Most methods are copied from https://github.com/PrestaShop/autoupgrade/blob/master/classes/TaskRunner/Upgrade/Download.php
  * and https://github.com/PrestaShop/autoupgrade/blob/master/classes/Tools14.php
@@ -124,7 +123,7 @@ class Download
         $feed = $this->getFeed();
 
         $branch = $this->getLatestStableBranchObjectFromFeed($feed);
-        $versionNumberAsString = (string)$branch->num;
+        $versionNumberAsString = (string) $branch->num;
         $versionNumber = VersionNumber::fromString($versionNumberAsString);
 
         return $versionNumber->__toString();
@@ -139,7 +138,7 @@ class Download
 
         $branch = $this->getLatestStableBranchObjectFromFeed($feed);
 
-        return (string)$branch->download->link;
+        return (string) $branch->download->link;
     }
 
     public function clearFileCache()
@@ -155,7 +154,6 @@ class Download
     private function getFeed()
     {
         if (false === $this->isXmlFeedStoredInCache()) {
-
             $feed = @file_get_contents(self::PRESTASHOP_API_RELEASES_XML_FEED);
 
             if (false === $feed) {
@@ -185,15 +183,12 @@ class Download
     private function getLatestStableBranchObjectFromFeed($feed)
     {
         foreach ($feed->channel as $channel) {
-
-            $channelName = (string)$channel['name'];
+            $channelName = (string) $channel['name'];
             if ('stable' === $channelName) {
-
                 $maxStableVersion = null;
                 $maxStableBranch = null;
                 foreach ($channel->branch as $branch) {
-
-                    $versionNumberAsString = (string)$branch->num;
+                    $versionNumberAsString = (string) $branch->num;
                     $versionNumber = VersionNumber::fromString($versionNumberAsString);
 
                     if (null === $maxStableVersion) {
