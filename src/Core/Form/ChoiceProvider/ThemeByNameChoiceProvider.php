@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeCollection;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -36,16 +36,16 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var ThemeRepository
+     * @var ThemeCollection collection of themes
      */
-    private $themeRepository;
+    private $themeCollection;
 
     /**
-     * @param ThemeRepository $themeRepository
+     * @param ThemeCollection $themeCollection
      */
-    public function __construct(ThemeRepository $themeRepository)
+    public function __construct(ThemeCollection $themeCollection)
     {
-        $this->themeRepository = $themeRepository;
+        $this->themeCollection = $themeCollection;
     }
 
     /**
@@ -56,7 +56,7 @@ final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
         $themeChoices = [];
 
         /** @var Theme $theme */
-        foreach ($this->themeRepository->getList() as $theme) {
+        foreach ($this->themeCollection as $theme) {
             $themeChoices[$theme->getName()] = $theme->getName();
         }
 
