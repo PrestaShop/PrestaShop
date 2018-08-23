@@ -51,10 +51,11 @@
 	<script type="text/javascript">
 		function updateConversionRate(id_product)
 		{
-			$.getJSON('ajax.php',
+			$.getJSON('index.php',
 				{
-					ajaxReferrers:1,
-					ajaxProductFilter:1,
+					ajax: 1,
+					controller: 'AdminReferrers',
+					action: 'productFilter',
 					id_employee:{$id_employee},
 					token:'{$token|escape:'html':'UTF-8'}',
 					id_referrer:{$referrer->id},
@@ -72,10 +73,11 @@
 		{
 			var form = document.layers ? document.forms.product_referrers : document.product_referrers;
 			var filter = form.filterProduct.value;
-			$.getJSON('ajax.php',
+			$.getJSON('index.php',
 				{
-					ajaxReferrers:1,
-					ajaxFillProducts:1,
+					ajax: 1,
+					controller: 'AdminReferrers',
+					action: 'fillProducts',
 					id_employee:{$id_employee},
 					token:'{$token|escape:'html':'UTF-8'}',
 					id_lang:{$id_lang},
