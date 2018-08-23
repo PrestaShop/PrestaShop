@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Language\Pack\Loader\LanguagePackLoaderInterface;
  * Class NonInstalledLocalizationChoiceProvider provides non installed localization choices
  * with name keys and iso code values.
  */
-class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterface
+final class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var LanguageValidator
@@ -78,7 +78,7 @@ class NonInstalledLocalizationChoiceProvider implements FormChoiceProviderInterf
                 continue;
             }
 
-            $languageDetails = $this->languageProvider->getJsonLanguageDetails($locale);
+            $languageDetails = $this->languageProvider->getLanguageDetails($locale);
 
             if (isset($languageDetails['iso_code'], $languageDetails['name'])) {
                 $choices[$languageDetails['name']] = $languageDetails['iso_code'];

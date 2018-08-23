@@ -65,13 +65,13 @@ class LanguageDataProvider
      *
      * @param string $locale
      *
-     * @return bool|mixed
+     * @return array
      *
      * @throws Exception
      */
-    public function getJsonLanguageDetails($locale)
+    public function getLanguageDetails($locale)
     {
-        return Language::getJsonLanguageDetails($locale);
+        return (array) Language::getJsonLanguageDetails($locale);
     }
 
     /**
