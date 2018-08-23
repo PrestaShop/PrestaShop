@@ -27,33 +27,60 @@
 
 {% set dataConfigurationForm = importDataConfigurationForm.import_data_configuration %}
 
-<div class="col-xs-12 col-md-6">
-  <div class="form-group">
-    {{ form_widget(dataConfigurationForm.matches) }}
-  </div>
-  <div class="form-group">
-    <label class="form-control-label">
-      {{ 'Save your data matching configuration'|trans }}
-    </label>
-    <div class="form-row">
-      <div class="col-xs-12 col-md-8">
-        {{ form_widget(dataConfigurationForm.match_name, {'attr': {'class': 'js-import-match-input'}}) }}
+{{ form_start(dataConfigurationForm) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">list</i> {{ ' Match your data'|trans }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'Please match each column of your source file to one of the destination columns.'|trans }}
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="col">
-        <button
-          class="btn btn-primary-reverse btn-outline-primary light-button js-save-import-match"
-          data-url="{{ path('admin_import_save_import_match') }}">
-          <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Load a data matching configuration'|trans }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(dataConfigurationForm.matches) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Save your data matching configuration'|trans }}
+        </label>
+        <div class="col-sm">
+          <div class="form-row">
+            <div class="col-xs-12 col-md-8">
+              {{ form_widget(dataConfigurationForm.match_name, {'attr': {'class': 'js-import-match-input'}}) }}
+            </div>
+            <div class="col">
+              <button
+                class="btn btn-primary-reverse btn-outline-primary light-button js-save-import-match"
+                data-url="{{ path('admin_import_save_import_match') }}">
+                <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Rows to skip'|trans }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(dataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
+        </div>
       </div>
     </div>
   </div>
-  <div class="form-group">
-    {{ form_errors(dataConfigurationForm.rows_skip) }}
-    <label class="form-control-label">
-      {{ 'Rows to skip'|trans }}
-    </label>
-    {{ form_widget(dataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
-  </div>
 </div>
+{{ form_rest(dataConfigurationForm) }}
+{{ form_end(dataConfigurationForm) }}
 
