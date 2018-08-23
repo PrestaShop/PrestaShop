@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -588,6 +589,18 @@ class ModuleRepository implements ModuleRepositoryInterface
             ->setStatus(AddonListFilterStatus::INSTALLED);
 
         return $this->getFilteredList($filters);
+    }
+
+    /**
+     * Gets all installed modules as a collection
+     *
+     * @return AddonsCollection
+     */
+    public function getInstalledModulesCollection()
+    {
+        $installedModules = $this->getInstalledModules();
+
+        return AddonsCollection::createFrom($installedModules);
     }
 
     /**

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -36,16 +36,16 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var ModuleRepository
+     * @var AddonsCollection collection of installed modules
      */
-    private $moduleRepository;
+    private $installedModules;
 
     /**
-     * @param ModuleRepository $moduleRepository
+     * @param AddonsCollection $installedModules
      */
-    public function __construct(ModuleRepository $moduleRepository)
+    public function __construct(AddonsCollection $installedModules)
     {
-        $this->moduleRepository = $moduleRepository;
+        $this->installedModules = $installedModules;
     }
 
     /**
@@ -56,7 +56,7 @@ final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
         $moduleChoices = [];
 
         /** @var Module $module */
-        foreach ($this->moduleRepository->getInstalledModules() as $module) {
+        foreach ($this->installedModules as $module) {
             $moduleChoices[$module->get('displayName')] = $module->get('name');
         }
 
