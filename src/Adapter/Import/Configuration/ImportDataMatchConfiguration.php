@@ -4,6 +4,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
 
 use Db;
+use DbQuery;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -54,6 +55,15 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
                 'Admin.Advparameters.Feature'
             );
         }
+
+        if ($this->isConfigurationNameExists($configuration['match_name'])) {
+            $errors[] = $this->translator->trans(
+                'This name already exists.',
+                [],
+                'Admin.Design.Notification'
+            );
+        }
+
         return $errors;
     }
 
@@ -77,5 +87,23 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
             true,
             Db::INSERT_IGNORE
         );
+    }
+
+    /**
+     * Checks if the configuration is already saved with the same name
+     *
+     * @param string $matchName
+     *
+     * @return bool
+     */
+    private function isConfigurationNameExists($matchName)
+    {
+        $query = new DbQuery();
+        $query->select('`id_import_match`');
+        $query->from('import_match');
+        $query->where('`name`="'.pSQL($matchName).'"');
+        $result = Db::getInstance()->getValue($query);
+
+        return $result ? true : false;
     }
 }
