@@ -1146,4 +1146,20 @@ class AdminCategoriesControllerCore extends AdminController
         }
         $this->ajaxRender($echo);
     }
+
+    /**
+     * Return all parent categories IDs
+     */
+    public function displayAjaxParentCategories()
+    {
+        $id_category = Tools::getValue('id_category');
+        $category = new Category((int)$id_category);
+        $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
+        $output = array();
+        foreach ($results as $result) {
+            $output[] = $result;
+        }
+
+        $this->ajaxRender(json_encode($output));
+    }
 }
