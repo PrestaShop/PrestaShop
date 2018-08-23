@@ -757,6 +757,9 @@ class AdminImportControllerCore extends AdminController
         die(json_encode($_FILES));
     }
 
+    /**
+     * List the columns which can be imported by the controller for a given entity
+     */
     public function displayAjaxAvailableFields()
     {
         $fields = array_map(function ($elem) {
