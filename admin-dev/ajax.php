@@ -143,7 +143,7 @@ if (Tools::isSubmit('searchCategory')) {
 }
 
 /**
- * Return all parent categories IDs
+ * Get all parents of a given category
  * 
  * -> TODO in Symfony stack
  */
@@ -158,16 +158,18 @@ if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('
     die(json_encode($output));
 }
 
-//if (Tools::isSubmit('getZones')) {
-//    $html = '<select id="zone_to_affect" name="zone_to_affect">';
-//    foreach (Zone::getZones() as $z) {
-//        $html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
-//    }
-//    $html .= '</select>';
-//    $array = array('hasError' => false, 'errors' => '', 'data' => $html);
-//    die(json_encode($array));
-//}
-//
+/**
+ * Get all zones stored on the shop
+ * Json content with an html attribute in it.
+ *
+ * -> Moved in legacy
+ */
+if (Tools::isSubmit('getZones')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminZones';
+    $_GET['action'] = 'zones';
+}
+
 //if (Tools::isSubmit('getEmailHTML') && $email = Tools::getValue('email')) {
 //    $email_html = AdminTranslationsController::getEmailHTML($email);
 //    die($email_html);
