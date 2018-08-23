@@ -5,7 +5,7 @@ services:
     prestashop.core.language.pack.import.language_importer:
         class: 'PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporter'
         arguments:
-            - '@prestashop.adapter.language.language_pack'
+            - '@prestashop.adapter.language.language_pack_installer'
             - '@prestashop.adapter.data_provider.language'
             - '@prestashop.adapter.cache_clearer'
 
