@@ -84,7 +84,7 @@ final class BackupGridDataProvider implements GridDataProviderInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        $backups = $this->backupRepository->get()->all();
+        $backups = $this->backupRepository->retrieveBackups()->all();
         usort($backups, [$this->backupByDateComparator, 'compare']);
 
         $paginatedBackups = null !== $searchCriteria->getOffset() && null !== $searchCriteria->getLimit() ?

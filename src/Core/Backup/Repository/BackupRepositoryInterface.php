@@ -38,5 +38,5 @@ interface BackupRepositoryInterface
      *
      * @return BackupCollectionInterface
      */
-    public function get();
+    public function retrieveBackups();
 }

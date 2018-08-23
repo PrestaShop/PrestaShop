@@ -42,7 +42,7 @@ final class BackupRepository implements BackupRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function get()
+    public function retrieveBackups()
     {
         $backupFinder = (new Finder())
             ->files()
