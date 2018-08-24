@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,21 +21,23 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% set id_property_name = column.options.toggle_field %}
-{% set record_id = record[id_property_name] %}
+ */
 
-{% set valid = (record[column.id] is same as('1')) %}
+import ColumnToggling from '../../../app/utils/column-toggling';
 
-<i
-    class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
-    data-toggle-field-name="{{ column.options.field }}"
-    data-toggle-field-id="{{ record_id }}"
-    data-toggle-url="{{ column.options.url }}"
->
-{% if valid == true %}
-    check
-{% else %}
-    clear
-{% endif %}
-</i>
+/**
+ * Class ReloadListExtension extends grid with "Column toggling" feature
+ */
+export default class ColumnTogglingExtension {
+
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    const $table = grid.getContainer().find('table.table');
+
+    new ColumnToggling($table).attach();
+  }
+}
