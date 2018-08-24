@@ -25,11 +25,15 @@
 
 import Grid from "../../components/grid/grid";
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
+import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
 
 const $ = window.$;
 
 $(() => {
   const webserviceGrid = new Grid('webservice');
 
+  webserviceGrid.addExtension(new ReloadListActionExtension());
+  webserviceGrid.addExtension(new ExportToSqlManagerExtension());
   webserviceGrid.addExtension(new FiltersResetExtension());
 });
