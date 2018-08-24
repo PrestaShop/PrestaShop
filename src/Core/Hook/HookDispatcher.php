@@ -77,7 +77,12 @@ final class HookDispatcher implements HookDispatcherInterface
             $hook->getParameters()
         );
 
-        return new RenderedHook($hook, $event->getContent());
+        $content = $event->getContent();
+        array_walk($content, function (&$partialContent) {
+            $partialContent = empty($partialContent) ? '' : current($partialContent);
+        });
+
+        return new RenderedHook($hook, $content);
     }
 
     /**
