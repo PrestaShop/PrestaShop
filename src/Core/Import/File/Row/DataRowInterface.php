@@ -24,40 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Import\File\Row;
 
-
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\File\Cell\DataCellInterface;
+use ArrayAccess;
 
 /**
- * Class ImportMatchConfigurationChoiceProvider is responsible for providing choices
- * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration
+ * Interface DataRowInterface describes a data row from imported file
  */
-final class ImportMatchConfigurationChoiceProvider implements FormChoiceProviderInterface
+interface DataRowInterface extends ArrayAccess
 {
     /**
-     * @var array
+     * Add a cell to this row
+     *
+     * @param DataCellInterface $cell
+     *
+     * @return self
      */
-    private $matchConfigurations;
+    public function addCell(DataCellInterface $cell);
 
     /**
-     * @param array $matchConfigurations
+     * Create a data row from given array
+     *
+     * @param array $data
+     *
+     * @return self
      */
-    public function __construct(array $matchConfigurations)
-    {
-        $this->matchConfigurations = $matchConfigurations;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices()
-    {
-        $result = [];
-        foreach ($this->matchConfigurations as $configuration) {
-            $result[$configuration['name']] = $configuration['id_import_match'];
-        }
-
-        return $result;
-    }
+    public static function createFromArray(array $data);
 }

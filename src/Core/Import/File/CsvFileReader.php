@@ -24,40 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Import\File;
 
-
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\File\Row\DataRow;
+use SplFileInfo;
 
 /**
- * Class ImportMatchConfigurationChoiceProvider is responsible for providing choices
- * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration
+ * Class CsvFileReader defines a CSV file reader
  */
-final class ImportMatchConfigurationChoiceProvider implements FormChoiceProviderInterface
+class CsvFileReader implements FileReaderInterface
 {
     /**
-     * @var array
+     * @var string the data delimiter in the CSV row
      */
-    private $matchConfigurations;
+    private $delimiter = ';';
 
     /**
-     * @param array $matchConfigurations
+     * @param string $delimiter
      */
-    public function __construct(array $matchConfigurations)
+    public function __construct($delimiter)
     {
-        $this->matchConfigurations = $matchConfigurations;
+        $this->delimiter = $delimiter;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChoices()
+    public function read(SplFileInfo $file)
     {
-        $result = [];
-        foreach ($this->matchConfigurations as $configuration) {
-            $result[$configuration['name']] = $configuration['id_import_match'];
+        $handle = fopen($file->getFilename(), 'r');
+
+        while ($row = fgetcsv($handle, 0, $this->delimiter)) {
+            yield DataRow::createFromArray($row);
         }
 
-        return $result;
+        fclose($handle);
     }
 }

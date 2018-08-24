@@ -483,6 +483,6 @@ services:
     form.type.import.import_data_configuration:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType'
         arguments:
-            - '@prestashop.core.form.import.choice_provider.import_match_configuration'
+            - '@=service("prestashop.core.form.import.choice_provider.import_match_configuration").getChoices()'
         tags:
             - { name: form.type }
