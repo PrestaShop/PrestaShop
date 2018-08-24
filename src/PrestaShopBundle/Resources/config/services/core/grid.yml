@@ -66,7 +66,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@prestashop.core.form.choice_provider.status'
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
             - "@=service('router').generate('admin_webservice')"
         public: true
 
