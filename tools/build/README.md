@@ -45,13 +45,13 @@ This will:
 
 The output is a zip archive which contains:
 - PrestaShop pre-installer
-- the prestashop zip archive
+- the PrestaShop zip archive
 - an HTML documentation
 
-This is what is given to merchants who download Prestashop from the prestashop website
+This is what is given to merchants who download PrestaShop from the PrestaShop website
 in order to install it on their server.
 
-## Prestashop pre-installer
+## PrestaShop pre-installer
 
 PrestaShop pre-installer is a single `index.php` file in charge of unzipping the shop code from
 the zip archive (which contains PrestaShop code and PrestaShop installer).

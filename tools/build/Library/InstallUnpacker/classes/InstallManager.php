@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-class PrestashopCouldNotInstallLatestVersionException extends \Exception
-{
-}
 
 /**
  * Gateway, manager and DIC for install util classes: download, unzip ...

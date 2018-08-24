@@ -73,9 +73,7 @@ class BasicFileCache
             throw new \Exception(sprintf('Could not cache file %s', $filepath));
         }
 
-        file_put_contents($filepath, $data);
-
-        return true;
+        return (bool) file_put_contents($filepath, $data);
     }
 
     /**
@@ -87,9 +85,7 @@ class BasicFileCache
     {
         $filepath = $this->computeCacheFilepath($filename);
 
-        unlink($filepath);
-
-        return true;
+        return unlink($filepath);
     }
 
     /**
@@ -99,8 +95,6 @@ class BasicFileCache
      */
     private function computeCacheFilepath($filename)
     {
-        $filepath = __DIR__ . DIRECTORY_SEPARATOR . $filename . '.cache';
-
-        return $filepath;
+        return __DIR__ . DIRECTORY_SEPARATOR . $filename . '.cache';
     }
 }

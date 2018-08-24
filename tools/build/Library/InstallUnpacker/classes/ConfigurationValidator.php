@@ -126,9 +126,8 @@ class ConfigurationValidator
     private function getRandomDirectoryPath()
     {
         $randomDirectoryName = 'test-' . uniqid();
-        $dirPath = __DIR__ . DIRECTORY_SEPARATOR . $randomDirectoryName;
 
-        return $dirPath;
+        return __DIR__ . DIRECTORY_SEPARATOR . $randomDirectoryName;
     }
 
     /**
@@ -138,9 +137,7 @@ class ConfigurationValidator
      */
     private function createDirectoryTest($dirPath)
     {
-        $createDirectoryResult = @mkdir($dirPath);
-
-        return $createDirectoryResult;
+        return @mkdir($dirPath);
     }
 
     /**
@@ -153,7 +150,7 @@ class ConfigurationValidator
         $fileCreationTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-file.php';
         $createFileResult = @file_put_contents($fileCreationTestPath, "<?php echo 'Hello world !';");
 
-        return array($fileCreationTestPath, $createFileResult);
+        return [$fileCreationTestPath, $createFileResult];
     }
 
     /**
@@ -166,9 +163,8 @@ class ConfigurationValidator
         $downloadTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-download.txt';
         // @todo: use another file from the network ?
         $target = 'https://raw.githubusercontent.com/PrestaShop/PrestaShop/develop/robots.txt';
-        $downloadFileResult = @file_put_contents($downloadTestPath, Download::fileGetContents($target));
 
-        return $downloadFileResult;
+        return (bool) @file_put_contents($downloadTestPath, Download::fileGetContents($target));
     }
 
     /**
@@ -183,7 +179,7 @@ class ConfigurationValidator
         $fileMoveTestPath = __DIR__ . DIRECTORY_SEPARATOR . 'test-move.php';
         $moveResult = @rename($fileCreationTestPath, $fileMoveTestPath);
 
-        return array($fileMoveTestPath, $moveResult);
+        return [$fileMoveTestPath, $moveResult];
     }
 
     /**
@@ -193,9 +189,7 @@ class ConfigurationValidator
      */
     private function deleteFileTest($fileMoveTestPath)
     {
-        $deleteFileResult = unlink($fileMoveTestPath);
-
-        return $deleteFileResult;
+        return unlink($fileMoveTestPath);
     }
 
     /**
@@ -208,7 +202,7 @@ class ConfigurationValidator
         $deleteDirectoryContentResult = array_map('unlink', glob($dirPath . DIRECTORY_SEPARATOR . '*.*'));
         $deleteDirectoryResult = @rmdir($dirPath);
 
-        return array($deleteDirectoryContentResult, $deleteDirectoryResult);
+        return [$deleteDirectoryContentResult, $deleteDirectoryResult];
     }
 
     /**

@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-class PrestashopCouldNotDownloadLatestVersionException extends \Exception
-{
-}
 
 /**
  * In charge of downloading the latest Prestashop Version.
@@ -124,9 +121,8 @@ class Download
 
         $branch = $this->getLatestStableBranchObjectFromFeed($feed);
         $versionNumberAsString = (string) $branch->num;
-        $versionNumber = VersionNumber::fromString($versionNumberAsString);
 
-        return $versionNumber->__toString();
+        return VersionNumber::fromString($versionNumberAsString)->__toString();
     }
 
     /**

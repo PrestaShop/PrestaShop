@@ -33,13 +33,7 @@
  */
 function validateInput($argv)
 {
-    $isValid = false;
-
-    if (count($argv) === 2) {
-        $isValid = true;
-    }
-
-    if (!$isValid) {
+    if (count($argv) !== 2) {
         echo 'php compile.php <PS_VERSION>' . PHP_EOL;
         die(1);
     }

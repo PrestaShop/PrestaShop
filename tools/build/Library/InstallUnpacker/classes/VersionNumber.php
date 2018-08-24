@@ -71,13 +71,11 @@ class VersionNumber
             ));
         }
 
-        $versionNumber = new VersionNumber(
+        return new VersionNumber(
             $matches[1],
             $matches[2],
             $matches[3]
         );
-
-        return $versionNumber;
     }
 
     /**
