@@ -24,40 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
-
-
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+namespace PrestaShop\PrestaShop\Core\Import\File\Cell;
 
 /**
- * Class ImportMatchConfigurationChoiceProvider is responsible for providing choices
- * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration
+ * Interface DataCellInterface describes a data cell from imported file
  */
-final class ImportMatchConfigurationChoiceProvider implements FormChoiceProviderInterface
+interface DataCellInterface
 {
     /**
-     * @var array
+     * Get the value of the cell
+     *
+     * @return string
      */
-    private $matchConfigurations;
+    public function getValue();
 
     /**
-     * @param array $matchConfigurations
+     * Get the key of the cell
+     *
+     * @return string
      */
-    public function __construct(array $matchConfigurations)
-    {
-        $this->matchConfigurations = $matchConfigurations;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices()
-    {
-        $result = [];
-        foreach ($this->matchConfigurations as $configuration) {
-            $result[$configuration['name']] = $configuration['id_import_match'];
-        }
-
-        return $result;
-    }
+    public function getKey();
 }
