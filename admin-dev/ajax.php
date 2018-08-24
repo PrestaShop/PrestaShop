@@ -133,15 +133,7 @@ if (1 === $_GET['ajax']) {
  * From this line, the code could not be moved outside this file. It still requires the core to work.
  */
 
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
-}
-
-if (!defined('PS_ADMIN_DIR')) {
-    define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
-}
-
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require_once dirname(__FILE__).'/bootstrap.php';
 
 $context = Context::getContext();
 
