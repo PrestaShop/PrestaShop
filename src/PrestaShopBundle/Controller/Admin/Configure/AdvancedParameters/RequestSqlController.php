@@ -170,7 +170,6 @@ class RequestSqlController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         $requestSqlFormHandler = $this->getRequestSqlFormHandler();
-        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
         $requestSqlData = [];
 
