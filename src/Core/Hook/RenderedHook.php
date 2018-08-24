@@ -75,7 +75,7 @@ final class RenderedHook implements RenderedHookInterface
         $output = '';
 
         foreach ($this->content as $partialContent) {
-            $output .= array_values($partialContent)[0];
+            $output .= array_slice($partialContent, 0, 1);
         }
 
         return $output;

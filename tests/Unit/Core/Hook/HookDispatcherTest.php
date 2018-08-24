@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,8 +32,9 @@ use PrestaShop\PrestaShop\Core\Hook\HookInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
 use PrestaShop\PrestaShop\Core\Hook\Hook;
+use PHPUnit\Framework\TestCase;
 
-class HookDispatcherTest extends \PHPUnit_Framework_TestCase
+class HookDispatcherTest extends TestCase
 {
     /**
      * @var HookDispatcherAdapter
@@ -64,7 +65,6 @@ class HookDispatcherTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->hookDispatcher->dispatchHook($hook);
-
     }
 
     public function testDispatchWithParameters()
