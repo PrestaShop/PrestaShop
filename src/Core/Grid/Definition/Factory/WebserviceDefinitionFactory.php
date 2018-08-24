@@ -24,9 +24,24 @@ class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $statusChoices;
 
-    public function __construct(FormChoiceProviderInterface $statusChoices)
-    {
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectionUrl;
+
+    public function __construct(
+        FormChoiceProviderInterface $statusChoices,
+        $resetActionUrl,
+        $redirectionUrl
+    ) {
         $this->statusChoices = $statusChoices;
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectionUrl = $redirectionUrl;
     }
 
     /**
@@ -105,8 +120,8 @@ class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'data-url' => '',
-                        'data-redirect' => ''
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectionUrl
                     ]
                 ])
                 ->setAssociatedColumn('actions')
