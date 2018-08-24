@@ -119,7 +119,7 @@
 									    <ul style="margin: 0; padding: 0; list-style-type: none;">
 									    {foreach from=$datas key='index' item='data'}
 											    <li style="display: inline; margin: 2px;">
-												    <a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
+												    <a href="{$link->getAdminLink('AdminCarts')}&ajax=1&action=customizationImage&img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
 												    <img src="{$pic_dir}{$data.value}_small" alt="" /></a>
 											    </li>
 									    {/foreach}
