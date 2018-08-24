@@ -50,6 +50,9 @@ class AdminModulesPositionsControllerCore extends AdminController
         ));
 
         $baseUrl = $this->context->link->getAdminLink('AdminModulesPositions');
+        if (strpos($baseUrl, '?') === false) {
+            $baseUrl .= '?';
+        }
 
         // Change position in hook
         if (array_key_exists('changePosition', $_GET)) {
@@ -59,7 +62,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                 $module = Module::getInstanceById($id_module);
                 if (Validate::isLoadedObject($module)) {
                     $module->updatePosition($id_hook, (int) Tools::getValue('direction'));
-                    Tools::redirectAdmin($baseUrl . '?' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
+                    Tools::redirectAdmin($baseUrl . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                 } else {
                     $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
                 }
@@ -105,7 +108,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         }
                     }
                     if (!$this->errors) {
-                        Tools::redirectAdmin($baseUrl . '?conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
+                        Tools::redirectAdmin($baseUrl . '&conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                     }
                 }
             } else {
@@ -159,7 +162,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         }
 
                         if (!$this->errors) {
-                            Tools::redirectAdmin($baseUrl . '?conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
+                            Tools::redirectAdmin($baseUrl . '&conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                         }
                     } else {
                         $exceptions = explode(',', str_replace(' ', '', $exceptions));
@@ -176,7 +179,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         if (!$module->editExceptions($id_hook, $exceptions, Shop::getContextListShopID())) {
                             $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
                         } else {
-                            Tools::redirectAdmin($baseUrl . '?conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
+                            Tools::redirectAdmin($baseUrl . '&conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                         }
                     }
                 }
@@ -199,7 +202,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         || !$module->unregisterExceptions($id_hook, Shop::getContextListShopID())) {
                         $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', array(), 'Admin.Modules.Notification');
                     } else {
-                        Tools::redirectAdmin($baseUrl . '?conf=17' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
+                        Tools::redirectAdmin($baseUrl . '&conf=17' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                     }
                 }
             } else {
@@ -226,7 +229,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     }
                 }
                 if (!count($this->errors)) {
-                    Tools::redirectAdmin($baseUrl . '?conf=17' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
+                    Tools::redirectAdmin($baseUrl . '&conf=17' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                 }
             }
         } else {
