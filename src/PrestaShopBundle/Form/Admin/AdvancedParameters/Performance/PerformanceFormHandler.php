@@ -79,7 +79,7 @@ final class PerformanceFormHandler extends AbstractFormHandler
             ->add('add_memcache_server', MemcacheServerType::class)
             ->setData($this->formDataProvider->getData());
 
-        $this->hookDispatcher->dispatchForParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
+        $this->hookDispatcher->dispatchWithParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
 
         return $formBuilder->setData($formBuilder->getData())->getForm();
     }
@@ -90,7 +90,7 @@ final class PerformanceFormHandler extends AbstractFormHandler
     public function save(array $data)
     {
         $errors = $this->formDataProvider->setData($data);
-        $this->hookDispatcher->dispatchForParameters(
+        $this->hookDispatcher->dispatchWithParameters(
             'actionPerformancePageFormSave',
             ['errors' => &$errors, 'form_data' => &$data]
         );

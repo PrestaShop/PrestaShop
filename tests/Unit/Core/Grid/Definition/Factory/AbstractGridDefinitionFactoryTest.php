@@ -72,14 +72,14 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             ->expects($this->once())
             ->method('dispatchWithParameters')
             ->withConsecutive(
-                [$this->equalTo('modifyGridDefinition')],
+                [$this->equalTo('actiontest_idGridDefinitionModifier')],
                 [$this->isType('array'), $this->arrayHasKey('definition')]
             )
         ;
 
         $this->definitionFactory->setHookDispatcher($hookDispatcherMock);
 
-        $definition = $this->definitionFactory->create();
+        $definition = $this->definitionFactory->getDefinition();
 
         $this->assertInstanceOf(DefinitionInterface::class, $definition);
         $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());

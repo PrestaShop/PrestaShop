@@ -24,19 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Exception;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use Exception;
 
-/**
- * Interface GridDefinitionFactoryInterface defines contract for creating grid.
- */
-interface GridDefinitionFactoryInterface
+class InvalidDataException extends Exception implements ExceptionInterface
 {
-    /**
-     * Create new grid definition.
-     *
-     * @return DefinitionInterface
-     */
-    public function getDefinition();
 }
