@@ -37,7 +37,7 @@
         </div>
       </div>
     {% endblock %}
-    
+
     {% block webservice_form_configuration %}
       <div class="col-xl-10">
         <div class="card">
@@ -90,4 +90,10 @@
 
   </div>
   {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/webservice.bundle.js') }}"></script>
 {% endblock %}
