@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Cqrs;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
-use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
 
 /**
- * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract
+ * Interface SaveSqlRequestSettingsHandlerInterface
  */
-final class TacticianCommandBusAdapter implements CommandBusInterface
+interface SaveSqlManagerSettingsHandlerInterface
 {
     /**
-     * @var CommandBus
+     * @param SaveSqlRequestSettingsCommand $command
      */
-    private $bus;
-
-    /**
-     * @param CommandBus $bus
-     */
-    public function __construct(CommandBus $bus)
-    {
-        $this->bus = $bus;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle($command)
-    {
-        return $this->bus->handle($command);
-    }
+    public function handle(SaveSqlRequestSettingsCommand $command);
 }

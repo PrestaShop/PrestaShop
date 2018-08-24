@@ -13,7 +13,7 @@ services:
         arguments:
             - '@prestashop.core.export.dir'
             - '@prestashop.adapter.legacy.configuration'
-            - '@prestashop.core.cqrs.tactician_query_bus'
+            - '@prestashop.core.command_bus.tactician_query_bus_adapter'
 
     prestashop.adapter.sql_manager.request_sql_form_data_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator'
@@ -45,6 +45,13 @@ services:
       tags:
           - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand' }
 
+    prestashop.adapter.sql_manager.command_handler.save_settings:
+      class: 'PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler\SaveSqlRequestSettingsHandler'
+      arguments:
+          - '@prestashop.adapter.legacy.configuration'
+      tags:
+          - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand' }
+
     # Query handlers
     prestashop.adapter.sql_manager.query_handler.get_request_sql_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestForEditingHandler'
@@ -55,3 +62,10 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestExecutionResultHandler'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery' }
+
+    prestashop.adapter.sql_manager.query_handler.get_request_sql_settings:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestSettingsHandler'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery' }

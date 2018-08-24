@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.command_bus.tactician_command_bus_adapter:
+        class: 'PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter'
+        arguments:
+            - '@tactician.commandbus.default'
+
+    prestashop.core.command_bus.tactician_query_bus_adapter:
+        class: 'PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter'
+        arguments:
+            - '@tactician.commandbus.default'

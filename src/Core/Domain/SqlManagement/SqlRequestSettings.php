@@ -24,17 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
 /**
- * Interface SaveSqlRequestSettingsHandlerInterface
+ * Class SqlRequestSettings stores SqlRequest settings
  */
-interface SaveSqlRequestSettingsHandlerInterface
+class SqlRequestSettings
 {
     /**
-     * @param SaveSqlRequestSettingsCommand $command
+     * @var string Encoding in which downloaded SqlRequest SQL query result files will be encoded
      */
-    public function handle(SaveSqlRequestSettingsCommand $command);
+    private $fileEncoding;
+
+    /**
+     * @param $fileEncoding
+     */
+    public function __construct($fileEncoding)
+    {
+        $this->setFileEncoding($fileEncoding);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileEncoding()
+    {
+        return $this->fileEncoding;
+    }
+
+    /**
+     * @param string $fileEncoding
+     */
+    private function setFileEncoding($fileEncoding)
+    {
+        $this->fileEncoding = $fileEncoding;
+    }
 }

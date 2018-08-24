@@ -26,25 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Configuration;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestSettingsConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 
 /**
  * Class RequestSqlConfiguration is responsible for RequestSql configuration
  */
-class RequestSqlConfiguration implements DataConfigurationInterface
+final class RequestSqlConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var CommandBusInterface
      */
-    private $configuration;
+    private $commandBus;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var CommandBusInterface
      */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(
+        CommandBusInterface $commandBus,
+        CommandBusInterface $queryBus
+    ) {
+        $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -52,8 +65,11 @@ class RequestSqlConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        /** @var SqlRequestSettings $sqlRequestSettings */
+        $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettingsQuery());
+
         return [
-            'default_file_encoding' => $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL'),
+            'default_file_encoding' => $sqlRequestSettings->getFileEncoding(),
         ];
     }
 
@@ -62,11 +78,21 @@ class RequestSqlConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
+        $errors = [];
+
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $configuration['default_file_encoding']);
+            try {
+                $command = new SaveSqlRequestSettingsCommand(
+                    $configuration['default_file_encoding']
+                );
+
+                $this->commandBus->handle($command);
+            } catch (SqlRequestSettingsConstraintException $e) {
+                $errors = $this->handleUpdateException($e);
+            }
         }
 
-        return [];
+        return $errors;
     }
 
     /**
@@ -75,5 +101,32 @@ class RequestSqlConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         return isset($configuration['default_file_encoding']);
+    }
+
+    /**
+     * Handle exception when configuration update fails
+     *
+     * @param SqlRequestSettingsConstraintException $e
+     *
+     * @return array Array of errors
+     */
+    private function handleUpdateException(SqlRequestSettingsConstraintException $e)
+    {
+        $code = $e->getCode();
+
+        $errorMessages = [
+            SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING => [
+                'key' => 'The %s field is invalid.',
+                'parameters' => ['default_file_encoding'],
+                'domain' => 'Admin.Notifications.Error',
+            ],
+            SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING => [
+                'key' => 'The %s field is invalid.',
+                'parameters' => ['default_file_encoding'],
+                'domain' => 'Admin.Notifications.Error',
+            ],
+        ];
+
+        return $errorMessages[$code];
     }
 }

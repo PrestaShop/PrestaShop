@@ -24,17 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Cqrs;
+namespace PrestaShop\PrestaShop\Core\CommandBus;
+
+use League\Tactician\CommandBus;
 
 /**
- * Interface CommandBusInterface defines contract for Commands bus
+ * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract
  */
-interface CommandBusInterface
+final class TacticianCommandBusAdapter implements CommandBusInterface
 {
     /**
-     * Handle command
-     *
-     * @param object $command
+     * @var CommandBus
      */
-    public function handle($command);
+    private $bus;
+
+    /**
+     * @param CommandBus $bus
+     */
+    public function __construct(CommandBus $bus)
+    {
+        $this->bus = $bus;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle($command)
+    {
+        return $this->bus->handle($command);
+    }
 }

@@ -357,20 +357,20 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Get commands bus to execute commands
      *
-     * @return \League\Tactician\CommandBus
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
      */
     protected function getCommandBus()
     {
-        return $this->get('prestashop.core.cqrs.tactician_command_bus');
+        return $this->get('prestashop.core.command_bus.tactician_command_bus_adapter');
     }
 
     /**
      * Get query bus to execute queries
      *
-     * @return \League\Tactician\CommandBus
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
      */
     protected function getQueryBus()
     {
-        return $this->get('prestashop.core.cqrs.tactician_query_bus');
+        return $this->get('prestashop.core.command_bus.tactician_query_bus_adapter');
     }
 }
