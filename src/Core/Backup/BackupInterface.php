@@ -41,6 +41,13 @@ interface BackupInterface
     public function getFileName();
 
     /**
+     * Get complete path to the backup file.
+     *
+     * @return string
+     */
+    public function getFilePath();
+
+    /**
      * Get URL to backup.
      *
      * @return string

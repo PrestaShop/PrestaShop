@@ -26,6 +26,13 @@ admin_backup_view_download:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:downloadView'
         _legacy_controller: 'AdminBackup'
 
+admin_backup_download:
+    path: /download/{downloadFileName}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:downloadContent'
+        _legacy_controller: 'AdminBackup'
+
 admin_backup_delete:
     path: /{deleteFileName}
     methods: [DELETE]

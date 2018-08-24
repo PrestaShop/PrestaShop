@@ -65,7 +65,7 @@ class ProductSeo extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $remoteUrls = [
-            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $$this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getAdminLink('AdminProducts') . '&ajax=1&action=productsList&forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
             ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
