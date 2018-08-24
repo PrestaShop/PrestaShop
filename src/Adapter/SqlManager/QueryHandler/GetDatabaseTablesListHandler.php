@@ -24,11 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetDatabaseTablesListHandlerInterface;
+use RequestSql;
 
-interface GetSqlRequestSettingsQueryHandlerInterface
+/**
+ * Class GetDatabaseTablesListHandler
+ */
+class GetDatabaseTablesListHandler implements GetDatabaseTablesListHandlerInterface
 {
-    public function handle(GetSqlRequestSettingsQuery $query);
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(GetDatabaseTablesListQuery $query)
+    {
+        $dbTables = (new RequestSql())->getTables();
+
+        return new DatabaseTablesList($dbTables);
+    }
 }

@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsQueryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
-final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsQueryHandlerInterface
+final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandlerInterface
 {
     /**
      * @var ConfigurationInterface

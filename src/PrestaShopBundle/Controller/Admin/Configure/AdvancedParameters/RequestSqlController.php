@@ -28,9 +28,11 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -205,7 +207,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $requestSqlForm->createView(),
-            'dbTableNames' => $dataProvider->getTables(),
+            'dbTableNames' => $this->getDatabaseTables(),
         ]);
     }
 
@@ -256,7 +258,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $editRequestSqlForm->createView(),
-            'dbTableNames' => $this->get('prestashop.adapter.sql_manager.request_sql_data_provider')->getTables(),
+            'dbTableNames' => $this->getDatabaseTables(),
         ]);
     }
 
@@ -409,16 +411,6 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get request sql repository
-     *
-     * @return \PrestaShopBundle\Entity\Repository\RequestSqlRepository
-     */
-    protected function getRepository()
-    {
-        return $this->get('prestashop.core.admin.request_sql.repository');
-    }
-
-    /**
      * Get Request SQL settings form handler
      *
      * @return FormHandlerInterface
@@ -473,5 +465,16 @@ class RequestSqlController extends FrameworkBundleAdminController
         }
 
         return $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @return string[] Array of database tables
+     */
+    protected function getDatabaseTables()
+    {
+        /** @var DatabaseTablesList $databaseTablesList */
+        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesListQuery());
+
+        return $databaseTablesList->getTables();
     }
 }

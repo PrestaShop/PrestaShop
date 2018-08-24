@@ -69,3 +69,11 @@ services:
             - '@prestashop.adapter.legacy.configuration'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery' }
+
+    prestashop.adapter.sql_manager.query_handler.get_database_tables_list:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetDatabaseTablesListHandler'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery' }
+
