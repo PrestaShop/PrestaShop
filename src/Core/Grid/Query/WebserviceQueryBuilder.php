@@ -65,6 +65,18 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix.'webservice_account', 'wa');
+
+        foreach ($filters as $filterName => $value) {
+            if ('active' === $filterName && is_numeric($value)) {
+                $qb->andWhere('wa.`active`='.(int) $value);
+
+                continue;
+            }
+
+            $qb->andWhere('wa.`'.$filterName.'` LIKE :'.$filterName);
+            $qb->setParameter($filterName, '%' . $value . '%');
+        }
+
         return $qb;
     }
 }

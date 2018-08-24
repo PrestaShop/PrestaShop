@@ -5,8 +5,15 @@ admin_webservice:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
         _legacy_controller: AdminWebservice
 
+admin_webservice_search:
+  path: /
+  methods: POST
+  defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
+        _legacy_controller: AdminWebservice
+
 admin_webservice_save:
-    path: /
+    path: /settings
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processForm'
