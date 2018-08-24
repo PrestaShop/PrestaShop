@@ -107,7 +107,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get one specific price list for a product
+     * Get one specific price list for a product.
      *
      * @Template("@PrestaShop/Admin/Product/ProductPage/Forms/form_specific_price.html.twig")
      *
@@ -127,13 +127,14 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'Admin.Catalog.Notification',
                 ['price' => $idSpecificPrice]
             );
+
             return new Response($message, Response::HTTP_BAD_REQUEST);
         }
         $formData = $this->formatSpecificPriceToPrefillForm($idSpecificPrice, $price);
 
         $options = [
             'id_product' => $price->id_product,
-            'selected_product_attribute' => $price->id_product_attribute
+            'selected_product_attribute' => $price->id_product_attribute,
         ];
 
         $formBuilder = $this->createFormBuilder();
@@ -143,7 +144,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $form->setData($formData);
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct((int)$price->id_product);
+        $product = $productAdapter->getProduct((int) $price->id_product);
 
         return [
             'form' => $form->createView()->offsetGet('modal'),
@@ -153,7 +154,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update specific price Form process
+     * Update specific price Form process.
      *
      * @param int idSpecificPrice
      * @param Request $request
@@ -180,7 +181,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $response;
     }
 
-
     /**
      * Delete a specific price.
      *
@@ -205,7 +205,6 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $response;
     }
 
-
     /**
      * @param int $id
      * @param \SpecificPrice $price
@@ -215,7 +214,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private function formatSpecificPriceToPrefillForm($id, $price)
     {
         if ($price->reduction_type === 'percentage') {
-            $reduction = $price->reduction*100;
+            $reduction = $price->reduction * 100;
         } else {
             $reduction = $price->reduction;
         }
@@ -246,6 +245,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
             return $item;
         }, $formattedFormData);
+
         return ['modal' => $cleanedFormData];
     }
 
@@ -266,6 +266,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             throw new EntityDataInconsistencyException(sprintf('Found bad date for specific price: %s', $dateAsString));
         }
+
         return $dateTime->format('Y-m-d');
     }
 }

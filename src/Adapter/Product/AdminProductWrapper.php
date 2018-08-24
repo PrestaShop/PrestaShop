@@ -298,16 +298,16 @@ class AdminProductWrapper
             $specificPrice = new SpecificPrice();
         }
 
-        $specificPrice->id_product = (int)$id_product;
-        $specificPrice->id_product_attribute = (int)$id_product_attribute;
-        $specificPrice->id_shop = (int)$id_shop;
-        $specificPrice->id_currency = (int)($id_currency);
-        $specificPrice->id_country = (int)($id_country);
-        $specificPrice->id_group = (int)($id_group);
-        $specificPrice->id_customer = (int)$id_customer;
-        $specificPrice->price = (float)($price);
-        $specificPrice->from_quantity = (int)($from_quantity);
-        $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+        $specificPrice->id_product = (int) $id_product;
+        $specificPrice->id_product_attribute = (int) $id_product_attribute;
+        $specificPrice->id_shop = (int) $id_shop;
+        $specificPrice->id_currency = (int) ($id_currency);
+        $specificPrice->id_country = (int) ($id_country);
+        $specificPrice->id_group = (int) ($id_group);
+        $specificPrice->id_customer = (int) $id_customer;
+        $specificPrice->price = (float) ($price);
+        $specificPrice->from_quantity = (int) ($from_quantity);
+        $specificPrice->reduction = (float) ($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
         $specificPrice->reduction_tax = $reduction_tax;
         $specificPrice->reduction_type = $reduction_type;
         $specificPrice->from = $from;
@@ -322,7 +322,6 @@ class AdminProductWrapper
         if (false === $dataSavingResult) {
             $this->errors[] = $this->translator->trans('An error occurred while updating the specific price.', array(), 'Admin.Catalog.Notification');
         }
-
 
         return $this->errors;
     }
@@ -345,8 +344,7 @@ class AdminProductWrapper
         $to,
         $id_combination = 0,
         $isThisAnUpdate = false
-    )
-    {
+    ) {
         if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
         } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction))) {
@@ -357,7 +355,7 @@ class AdminProductWrapper
             $this->errors[] = 'Please select a discount type (amount or percentage).';
         } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = 'The from/to date is invalid.';
-        } elseif (!$isThisAnUpdate && SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (!$isThisAnUpdate && SpecificPrice::exists((int) $id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {
             return true;
@@ -503,6 +501,7 @@ class AdminProductWrapper
         if (null === $price->id) {
             throw new EntityNotFoundException(sprintf('Cannot find specific price with id %d', $id));
         }
+
         return $price;
     }
 
