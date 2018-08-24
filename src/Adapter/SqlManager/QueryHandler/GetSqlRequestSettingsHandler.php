@@ -24,14 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\SaveSqlManagerSettingsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsQueryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
-final class SaveSqlRequestSettingsHandler implements SaveSqlManagerSettingsHandlerInterface
+final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsQueryHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -49,25 +50,30 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlManagerSettingsHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(SaveSqlRequestSettingsCommand $command)
+    public function handle(GetSqlRequestSettingsQuery $query)
     {
-        $this->configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $this->getEncodingFileValue($command));
+        $fileEncodingIntValue = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL');
+
+        return new SqlRequestSettings(
+            $this->getFileEncoding($fileEncodingIntValue)
+        );
     }
+
 
     /**
      * File encodings are saved as integer values in databases
      *
-     * @param SaveSqlRequestSettingsCommand $command
+     * @param int $intValue
      *
-     * @return int
+     * @return string
      */
-    private function getEncodingFileValue(SaveSqlRequestSettingsCommand $command)
+    private function getFileEncoding($intValue)
     {
         $valuesMapping = [
-            CharsetEncoding::UTF_8 => 1,
-            CharsetEncoding::ISO_8859_1 => 2,
+            1 => CharsetEncoding::UTF_8,
+            2 => CharsetEncoding::ISO_8859_1,
         ];
 
-        return $valuesMapping[$command->getFileEncoding()];
+        return $valuesMapping[$intValue];
     }
 }

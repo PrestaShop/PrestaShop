@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestSettings
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
- * Class SaveDefaultFileEncodingSettingsCommand saves default file encoding settings
+ * Class SaveSqlManagerSettingsCommand saves default file encoding settings
  * for SqlRequest's query result export file
  */
 class SaveSqlRequestSettingsCommand
@@ -61,6 +61,8 @@ class SaveSqlRequestSettingsCommand
     /**
      * @param string $fileEncoding
      *
+     * @return self
+     *
      * @throws SqlRequestSettingsConstraintException
      */
     private function setFileEncoding($fileEncoding)
@@ -89,5 +91,7 @@ class SaveSqlRequestSettingsCommand
         }
 
         $this->fileEncoding = $fileEncoding;
+
+        return $this;
     }
 }

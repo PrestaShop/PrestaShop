@@ -202,7 +202,8 @@ services:
     prestashop.adapter.sql_manager_settings.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
         arguments:
-            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.command_bus'
+            - '@prestashop.core.query_bus'
 
     prestashop.adapter.webservice.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'

@@ -41,8 +41,8 @@ class SqlRequestSettingsType extends AbstractType
         $builder
             ->add('default_file_encoding', ChoiceType::class, [
                 'choices' => [
-                    CharsetEncoding::UTF_8 => 1,
-                    CharsetEncoding::ISO_8859_1 => 2,
+                    CharsetEncoding::UTF_8 => CharsetEncoding::UTF_8,
+                    CharsetEncoding::ISO_8859_1 => CharsetEncoding::ISO_8859_1,
                 ],
                 'translation_domain' => false,
             ])

@@ -24,33 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\CommandBus;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
-use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
 
-/**
- * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract
- */
-final class TacticianCommandBusAdapter implements CommandBusInterface
+interface GetSqlRequestSettingsQueryHandlerInterface
 {
-    /**
-     * @var CommandBus
-     */
-    private $bus;
-
-    /**
-     * @param CommandBus $bus
-     */
-    public function __construct(CommandBus $bus)
-    {
-        $this->bus = $bus;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle($command)
-    {
-        return $this->bus->handle($command);
-    }
+    public function handle(GetSqlRequestSettingsQuery $query);
 }

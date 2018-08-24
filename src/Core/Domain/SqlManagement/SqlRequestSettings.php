@@ -24,17 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Cqrs;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
 /**
- * Interface CommandBusInterface defines contract for Commands bus
+ * Class SqlRequestSettings stores SqlRequest settings
  */
-interface CommandBusInterface
+class SqlRequestSettings
 {
     /**
-     * Handle command
-     *
-     * @param object $command
+     * @var string Encoding in which downloaded SqlRequest SQL query result files will be encoded
      */
-    public function handle($command);
+    private $fileEncoding;
+
+    /**
+     * @param $fileEncoding
+     */
+    public function __construct($fileEncoding)
+    {
+        $this->setFileEncoding($fileEncoding);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileEncoding()
+    {
+        return $this->fileEncoding;
+    }
+
+    /**
+     * @param string $fileEncoding
+     */
+    private function setFileEncoding($fileEncoding)
+    {
+        $this->fileEncoding = $fileEncoding;
+    }
 }

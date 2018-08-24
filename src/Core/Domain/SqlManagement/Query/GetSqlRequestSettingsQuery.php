@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
 /**
- * Interface SaveSqlRequestSettingsHandlerInterface
+ * Class GetSqlRequestSettingsQuery gets SqlRequest settings
  */
-interface SaveSqlRequestSettingsHandlerInterface
+class GetSqlRequestSettingsQuery
 {
-    /**
-     * @param SaveSqlRequestSettingsCommand $command
-     */
-    public function handle(SaveSqlRequestSettingsCommand $command);
 }

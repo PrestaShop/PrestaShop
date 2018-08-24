@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-use League\Tactician\CommandBus;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
@@ -52,19 +52,19 @@ class RequestSqlExporter
     private $configuration;
 
     /**
-     * @var CommandBus
+     * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
      * @param ExportDirectory $exportDirectory
      * @param ConfigurationInterface $configuration
-     * @param CommandBus $queryBus
+     * @param CommandBusInterface $queryBus
      */
     public function __construct(
         ExportDirectory $exportDirectory,
         ConfigurationInterface $configuration,
-        CommandBus $queryBus
+        CommandBusInterface $queryBus
     ) {
         $this->exportDirectory = $exportDirectory;
         $this->configuration = $configuration;
