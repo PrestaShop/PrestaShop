@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class loads and saves data configuration for the Maintenance page
+ * This class loads and saves data configuration for the Maintenance page.
  */
 class MaintenanceConfiguration implements DataConfigurationInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class ImageManagerCore
+ * Class ImageManagerCore.
  *
  * This class includes functions for image manipulation
  *
@@ -34,20 +34,20 @@
 class ImageManagerCore
 {
     const ERROR_FILE_NOT_EXIST = 1;
-    const ERROR_FILE_WIDTH     = 2;
-    const ERROR_MEMORY_LIMIT   = 3;
+    const ERROR_FILE_WIDTH = 2;
+    const ERROR_MEMORY_LIMIT = 3;
 
     /**
-     * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc)
+     * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
      *
-     * @param string $image        Real image filename
-     * @param string $cacheImage   Cached filename
-     * @param int    $size         Desired size
-     * @param string $imageType    Image type
-     * @param bool   $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
-     * @param bool   $regenerate   When turned on and the file already exist, the file will be regenerated
+     * @param string $image Real image filename
+     * @param string $cacheImage Cached filename
+     * @param int $size Desired size
+     * @param string $imageType Image type
+     * @param bool $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
+     * @param bool $regenerate When turned on and the file already exist, the file will be regenerated
      *
-*@return string
+     *@return string
      */
     public static function thumbnail($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = true, $regenerate = false)
     {
@@ -55,11 +55,11 @@ class ImageManagerCore
             return '';
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_.$cacheImage) && $regenerate) {
-            @unlink(_PS_TMP_IMG_DIR_.$cacheImage);
+        if (file_exists(_PS_TMP_IMG_DIR_ . $cacheImage) && $regenerate) {
+            @unlink(_PS_TMP_IMG_DIR_ . $cacheImage);
         }
 
-        if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cacheImage)) {
+        if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_ . $cacheImage)) {
             $infos = getimagesize($image);
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
@@ -73,7 +73,7 @@ class ImageManagerCore
 
             // Size is already ok
             if ($y < $size && $x <= $maxX) {
-                copy($image, _PS_TMP_IMG_DIR_.$cacheImage);
+                copy($image, _PS_TMP_IMG_DIR_ . $cacheImage);
             } else {
                 // We need to resize */
                 $ratioX = $x / ($y / $size);
@@ -82,31 +82,32 @@ class ImageManagerCore
                     $size = $y / ($x / $maxX);
                 }
 
-                ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cacheImage, $ratioX, $size, $imageType);
+                ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, $ratioX, $size, $imageType);
             }
         }
 
-        return '<img src="'.self::getThumbnailPath($cacheImage, $disableCache).'" alt="" class="imgm img-thumbnail" />';
+        return '<img src="' . self::getThumbnailPath($cacheImage, $disableCache) . '" alt="" class="imgm img-thumbnail" />';
     }
 
     /**
      * @param $cacheImage
      * @param $disableCache
+     *
      * @return string
      */
     public static function getThumbnailPath($cacheImage, $disableCache)
     {
-        $cacheParam = $disableCache ? '?time='.time() : '';
+        $cacheParam = $disableCache ? '?time=' . time() : '';
 
         if (Context::getContext()->controller->controller_type == 'admin') {
-            return '../img/tmp/'.$cacheImage.$cacheParam;
+            return '../img/tmp/' . $cacheImage . $cacheParam;
         }
 
-        return _PS_TMP_IMG_.$cacheImage.$cacheParam;
+        return _PS_TMP_IMG_ . $cacheImage . $cacheParam;
     }
 
     /**
-     * Check if memory limit is too long or not
+     * Check if memory limit is too long or not.
      *
      * @param mixed $image
      *
@@ -137,22 +138,22 @@ class ImageManagerCore
     }
 
     /**
-     * Resize, cut and optimize image
+     * Resize, cut and optimize image.
      *
-     * @param string $sourceFile        Image object from $_FILE
-     * @param string $destinationFile   Destination filename
-     * @param int    $destinationWidth  Desired width (optional)
-     * @param int    $destinationHeight Desired height (optional)
-     * @param string $fileType          Desired file_type (may be override by PS_IMAGE_QUALITY)
-     * @param bool   $forceType         Don't override $file_type
-     * @param int    $error             Out error code
-     * @param int    $targetWidth       Needed by AdminImportController to speed up the import process
-     * @param int    $targetHeight      Needed by AdminImportController to speed up the import process
-     * @param int    $quality           Needed by AdminImportController to speed up the import process
-     * @param int    $sourceWidth       Needed by AdminImportController to speed up the import process
-     * @param int    $sourceHeight      Needed by AdminImportController to speed up the import process
+     * @param string $sourceFile Image object from $_FILE
+     * @param string $destinationFile Destination filename
+     * @param int $destinationWidth Desired width (optional)
+     * @param int $destinationHeight Desired height (optional)
+     * @param string $fileType Desired file_type (may be override by PS_IMAGE_QUALITY)
+     * @param bool $forceType Don't override $file_type
+     * @param int $error Out error code
+     * @param int $targetWidth Needed by AdminImportController to speed up the import process
+     * @param int $targetHeight Needed by AdminImportController to speed up the import process
+     * @param int $quality Needed by AdminImportController to speed up the import process
+     * @param int $sourceWidth Needed by AdminImportController to speed up the import process
+     * @param int $sourceHeight Needed by AdminImportController to speed up the import process
      *
-*@return bool Operation result
+     *@return bool Operation result
      */
     public static function resize(
         $sourceFile,
@@ -253,7 +254,7 @@ class ImageManagerCore
             return !($error = self::ERROR_MEMORY_LIMIT);
         }
 
-        $targetWidth  = $destinationWidth;
+        $targetWidth = $destinationWidth;
         $targetHeight = $destinationHeight;
 
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
@@ -292,16 +293,16 @@ class ImageManagerCore
     }
 
     /**
-     * @param     $dstImage
-     * @param     $srcImage
-     * @param     $dstX
-     * @param     $dstY
-     * @param     $srcX
-     * @param     $srcY
-     * @param     $dstW
-     * @param     $dstH
-     * @param     $srcW
-     * @param     $srcH
+     * @param $dstImage
+     * @param $srcImage
+     * @param $dstX
+     * @param $dstY
+     * @param $srcX
+     * @param $srcY
+     * @param $dstW
+     * @param $dstH
+     * @param $srcW
+     * @param $srcH
      * @param int $quality
      *
      * @return bool
@@ -348,11 +349,11 @@ class ImageManagerCore
     }
 
     /**
-     * Check if file is a real image
+     * Check if file is a real image.
      *
-     * @param string $filename     File path to check
+     * @param string $filename File path to check
      * @param string $fileMimeType File known mime type (generally from $_FILES)
-     * @param array  $mimeTypeList Allowed MIME types
+     * @param array $mimeTypeList Allowed MIME types
      *
      * @return bool
      */
@@ -381,12 +382,12 @@ class ImageManagerCore
         } elseif (function_exists('mime_content_type')) {
             $mimeType = mime_content_type($filename);
         } elseif (function_exists('exec')) {
-            $mimeType = trim(exec('file -b --mime-type '.escapeshellarg($filename)));
+            $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
             if (!$mimeType) {
-                $mimeType = trim(exec('file --mime '.escapeshellarg($filename)));
+                $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
             }
             if (!$mimeType) {
-                $mimeType = trim(exec('file -bi '.escapeshellarg($filename)));
+                $mimeType = trim(exec('file -bi ' . escapeshellarg($filename)));
             }
         }
 
@@ -405,9 +406,9 @@ class ImageManagerCore
     }
 
     /**
-     * Check if image file extension is correct
+     * Check if image file extension is correct.
      *
-     * @param string     $filename Real filename
+     * @param string $filename Real filename
      * @param array|null $authorizedExtensions
      *
      * @return bool True if it's correct
@@ -432,10 +433,10 @@ class ImageManagerCore
     }
 
     /**
-     * Validate image upload (check image type and weight)
+     * Validate image upload (check image type and weight).
      *
-     * @param array $file        Upload $_FILE value
-     * @param int   $maxFileSize Maximum upload size
+     * @param array $file Upload $_FILE value
+     * @param int $maxFileSize Maximum upload size
      *
      * @return bool|string Return false if no error encountered
      */
@@ -455,10 +456,10 @@ class ImageManagerCore
     }
 
     /**
-     * Validate icon upload
+     * Validate icon upload.
      *
-     * @param array $file        Upload $_FILE value
-     * @param int   $maxFileSize Maximum upload size
+     * @param array $file Upload $_FILE value
+     * @param int $maxFileSize Maximum upload size
      *
      * @return bool|string Return false if no error encountered
      */
@@ -478,15 +479,15 @@ class ImageManagerCore
     }
 
     /**
-     * Cut image
+     * Cut image.
      *
-     * @param array  $srcFile   Origin filename
-     * @param string $dstFile   Destination filename
-     * @param int    $dstWidth  Desired width
-     * @param int    $dstHeight Desired height
+     * @param array $srcFile Origin filename
+     * @param string $dstFile Destination filename
+     * @param int $dstWidth Desired width
+     * @param int $dstHeight Desired height
      * @param string $fileType
-     * @param int    $dstX
-     * @param int    $dstY
+     * @param int $dstX
+     * @param int $dstY
      *
      * @return bool Operation result
      */
@@ -523,10 +524,11 @@ class ImageManagerCore
     }
 
     /**
-     * Create an image with GD extension from a given type
+     * Create an image with GD extension from a given type.
      *
      * @param string $type
      * @param string $filename
+     *
      * @return resource
      */
     public static function create($type, $filename)
@@ -548,10 +550,11 @@ class ImageManagerCore
     }
 
     /**
-     * Create an empty image with white background
+     * Create an empty image with white background.
      *
      * @param int $width
      * @param int $height
+     *
      * @return resource
      */
     public static function createWhiteImage($width, $height)
@@ -564,7 +567,7 @@ class ImageManagerCore
     }
 
     /**
-     * Generate and write image
+     * Generate and write image.
      *
      * @param string $type
      * @param resource $resource
@@ -610,7 +613,7 @@ class ImageManagerCore
     }
 
     /**
-     * Return the mime type by the file extension
+     * Return the mime type by the file extension.
      *
      * @param string $fileName
      *

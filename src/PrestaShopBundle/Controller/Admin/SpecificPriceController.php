@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,12 +38,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Admin controller for the attribute / attribute group
+ * Admin controller for the attribute / attribute group.
  */
 class SpecificPriceController extends FrameworkBundleAdminController
 {
     /**
-     * get specific price list for a product
+     * get specific price list for a product.
      *
      * @param $idProduct The product ID
      *
@@ -64,9 +64,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $groups = $this->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
 
         //get product
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+
             return $response;
         }
 
@@ -83,7 +84,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Add specific price Form process
+     * Add specific price Form process.
      *
      * @param Request $request The request
      *
@@ -181,7 +182,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
 
     /**
-     * Delete a specific price
+     * Delete a specific price.
      *
      * @param int $idSpecificPrice The specific price ID
      * @param Request $request The request
@@ -200,6 +201,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
 
         $response->setData($res['message']);
+
         return $response;
     }
 

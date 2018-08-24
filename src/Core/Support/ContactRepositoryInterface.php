@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Support;
 
 /**
- * Interface ContactRepositoryInterface defines contract for shop contact repository
+ * Interface ContactRepositoryInterface defines contract for shop contact repository.
  */
 interface ContactRepositoryInterface
 {
     /**
-     * Get shop contacts
+     * Get shop contacts.
      *
      * @param int $langId Language ID in which contacts should be returned
      *

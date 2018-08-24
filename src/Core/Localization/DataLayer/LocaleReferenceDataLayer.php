@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
 
 /**
- * Locale reference data layer
+ * Locale reference data layer.
  *
  * Provides reference data for locale, number specification, currencies...
  * Data comes from CLDR official data files, and is read only.
@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
 class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
-     * CLDR files reader
+     * CLDR files reader.
      *
      * Provides LocaleData objects
      *
@@ -49,7 +49,7 @@ class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLa
     protected $reader;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
     {
@@ -59,15 +59,15 @@ class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLa
     }
 
     /**
-     * Actually read a LocaleData object into the current layer
+     * Actually read a LocaleData object into the current layer.
      *
      * Data is read from official CLDR file (via the CLDR files reader)
      *
      * @param string $localeCode
-     *  The LocaleData object identifier
+     *                           The LocaleData object identifier
      *
      * @return LocaleData|null
-     *  The wanted LocaleData object (null if not found)
+     *                         The wanted LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -78,12 +78,9 @@ class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLa
      * CLDR files are read only. Nothing can be written there.
      *
      * @param string $localeCode
-     *  The LocaleData object identifier
-     *
+     *                           The LocaleData object identifier
      * @param LocaleData $data
-     *  The LocaleData object to be written
-     *
-     * @return void
+     *                         The LocaleData object to be written
      */
     protected function doWrite($localeCode, $data)
     {

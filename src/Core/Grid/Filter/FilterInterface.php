@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,26 +27,26 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Interface FilterInterface defines contract for grid filter
+ * Interface FilterInterface defines contract for grid filter.
  */
 interface FilterInterface
 {
     /**
-     * Get filter type to use
+     * Get filter type to use.
      *
      * @return string Fully qualified filter type class name
      */
     public function getType();
 
     /**
-     * Get filter name
+     * Get filter name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Set filter type options
+     * Set filter type options.
      *
      * @param array $filterTypeOptions
      *
@@ -55,14 +55,14 @@ interface FilterInterface
     public function setTypeOptions(array $filterTypeOptions);
 
     /**
-     * Get filter type options
+     * Get filter type options.
      *
      * @return array
      */
     public function getTypeOptions();
 
     /**
-     * Set column ID if filter is associated with column
+     * Set column ID if filter is associated with column.
      *
      * @param string $columnId
      *
@@ -71,7 +71,7 @@ interface FilterInterface
     public function setAssociatedColumn($columnId);
 
     /**
-     * Get associated column
+     * Get associated column.
      *
      * @return string|null
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Export;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * ImportDirectory class is responsible for returning export directory & data related to it
+ * ImportDirectory class is responsible for returning export directory & data related to it.
  */
 final class ExportDirectory
 {
@@ -47,7 +47,7 @@ final class ExportDirectory
     }
 
     /**
-     * Get path to import directory
+     * Get path to import directory.
      *
      * @return string
      */
@@ -55,11 +55,11 @@ final class ExportDirectory
     {
         return ($this->configuration->get('_PS_HOST_MODE_') ?
             $this->configuration->get('_PS_ROOT_DIR_') :
-            $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'export'.DIRECTORY_SEPARATOR;
+            $this->configuration->get('_PS_ADMIN_DIR_')) . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR;
     }
 
     /**
-     * Use export directory object as a string
+     * Use export directory object as a string.
      *
      * @return string
      */

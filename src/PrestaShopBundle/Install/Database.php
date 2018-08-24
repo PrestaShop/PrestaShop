@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Install;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
@@ -33,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Db;
 class Database extends AbstractInstall
 {
     /**
-     * Check database configuration and try a connection
+     * Check database configuration and try a connection.
      *
      * @param string $server
      * @param string $database
@@ -42,6 +41,7 @@ class Database extends AbstractInstall
      * @param string $prefix
      * @param string $engine
      * @param bool $clear
+     *
      * @return array List of errors
      */
     public function testDatabaseSettings($server, $database, $login, $password, $prefix, $clear = false)
@@ -66,12 +66,12 @@ class Database extends AbstractInstall
         }
 
         if (!$errors) {
-            $dbtype = ' ('.Db::getClass().')';
+            $dbtype = ' (' . Db::getClass() . ')';
             // Try to connect to database
             switch (Db::checkConnection($server, $login, $password, $database, true)) {
                 case 0:
                     if (!Db::checkEncoding($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install').$dbtype;
+                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install') . $dbtype;
                     }
 
                     // Check if a table with same prefix already exists
@@ -82,7 +82,7 @@ class Database extends AbstractInstall
                         $errors[] = $this->translator->trans('The values of auto_increment increment and offset must be set to 1', array(), 'Install');
                     }
                     if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true) {
-                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', array('%database%' =>$database), 'Install');
+                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', array('%database%' => $database), 'Install');
                         if ($create_error != false) {
                             $errors[] = $create_error;
                         }
@@ -90,13 +90,13 @@ class Database extends AbstractInstall
                     break;
 
                 case 1:
-                    $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', array(), 'Install').$dbtype;
+                    $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', array(), 'Install') . $dbtype;
                     break;
 
                 case 2:
-                    $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', array('%database%' => $database), 'Install').$dbtype;
+                    $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', array('%database%' => $database), 'Install') . $dbtype;
                     if ($this->createDatabase($server, $database, $login, $password, true)) {
-                        $error .= '<p>'.sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', array(), 'Install')).'</p>
+                        $error .= '<p>' . sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', array(), 'Install')) . '</p>
 						<script type="text/javascript">bindCreateDB();</script>';
                     }
                     $errors[] = $error;
@@ -107,21 +107,24 @@ class Database extends AbstractInstall
         if (count($errors)) {
             $this->setError($errors);
         }
+
         return $errors;
     }
 
     public function createDatabase($server, $database, $login, $password, $dropit = false)
     {
-        $class = '\\'.Db::getClass();
+        $class = '\\' . Db::getClass();
+
         return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
     }
 
     public function getBestEngine($server, $database, $login, $password)
     {
-        $class = '\\'.Db::getClass();
+        $class = '\\' . Db::getClass();
         $instance = new $class($server, $login, $password, $database, true);
         $engine = $instance->getBestEngine();
         unset($instance);
+
         return $engine;
     }
 }

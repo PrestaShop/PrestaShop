@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
- * This class will manage Smarty configuration for a Shop
+ * This class will manage Smarty configuration for a Shop.
  */
 class SmartyCacheConfiguration implements DataConfigurationInterface
 {

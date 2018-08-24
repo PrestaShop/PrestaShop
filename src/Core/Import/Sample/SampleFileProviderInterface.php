@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Import\Sample;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Interface SampleFileProviderInterface defines contract for sample import file provider
+ * Interface SampleFileProviderInterface defines contract for sample import file provider.
  */
 interface SampleFileProviderInterface
 {
     /**
-     * Get sample import file
+     * Get sample import file.
      *
      * @param string $sampleFileName
      *

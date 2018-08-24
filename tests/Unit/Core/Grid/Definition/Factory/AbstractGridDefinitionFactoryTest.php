@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,8 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 class AbstractGridDefinitionFactoryTest extends TestCase
 {
@@ -68,17 +67,17 @@ class AbstractGridDefinitionFactoryTest extends TestCase
 
     public function testItCreatesDefinitionAndDispatchesHookToAllowDefinitionModification()
     {
-        $hookDispatcherMock = $this->createMock(HookDispatcher::class);
+        $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $hookDispatcherMock
             ->expects($this->once())
-            ->method('dispatchForParameters')
+            ->method('dispatchWithParameters')
             ->withConsecutive(
                 [$this->equalTo('modifyGridDefinition')],
                 [$this->isType('array'), $this->arrayHasKey('definition')]
             )
         ;
 
-        $this->definitionFactory->setDispatcher($hookDispatcherMock);
+        $this->definitionFactory->setHookDispatcher($hookDispatcherMock);
 
         $definition = $this->definitionFactory->create();
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,14 +27,13 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to generate the product price form
+ * This form class is responsible to generate the product price form.
  */
 class ProductPrice extends CommonAbstractType
 {
@@ -50,7 +49,7 @@ class ProductPrice extends CommonAbstractType
     private $customerDataprovider;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $taxDataProvider
@@ -101,8 +100,8 @@ class ProductPrice extends CommonAbstractType
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Type(['type' => 'float'])
-                ]
+                    new Assert\Type(['type' => 'float']),
+                ],
             ]
         )
             ->add(
@@ -124,7 +123,7 @@ class ProductPrice extends CommonAbstractType
                     'currency' => $this->currency->iso_code,
                     'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'float'])
+                        new Assert\Type(['type' => 'float']),
                     ],
                     'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
                 ]
@@ -183,7 +182,7 @@ class ProductPrice extends CommonAbstractType
                 FormType\TextType::class,
                 [
                     'required' => false,
-                    'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')]
+                    'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')],
                 ]
             )
             ->add('specific_price',
@@ -209,14 +208,13 @@ class ProductPrice extends CommonAbstractType
             $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',
         ];
 
-
-        for ($i=0, $iMax = count($specificPricePriorityChoices); $i < $iMax; $i++) {
+        for ($i = 0, $iMax = count($specificPricePriorityChoices); $i < $iMax; ++$i) {
             $builder->add(
                 'specificPricePriority_' . $i,
                 FormType\ChoiceType::class,
                 [
                     'choices' => $specificPricePriorityChoices,
-                    'required' => true
+                    'required' => true,
                 ]
             );
         }

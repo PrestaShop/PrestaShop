@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,6 +61,7 @@ abstract class AbstractFormCore implements FormInterface
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -76,6 +75,7 @@ abstract class AbstractFormCore implements FormInterface
         foreach ($this->formFields as $field) {
             $this->errors[$field->getName()] = $field->getErrors();
         }
+
         return $this->errors;
     }
 
@@ -86,6 +86,7 @@ abstract class AbstractFormCore implements FormInterface
                 return true;
             }
         }
+
         return false;
     }
 
@@ -94,6 +95,7 @@ abstract class AbstractFormCore implements FormInterface
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -194,6 +196,7 @@ abstract class AbstractFormCore implements FormInterface
     public function setValue($field_name, $value)
     {
         $this->getField($field_name)->setValue($value);
+
         return $this;
     }
 }

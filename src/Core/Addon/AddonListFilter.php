@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,17 +29,17 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 class AddonListFilter
 {
     /**
-     * @var int $type AddonListFilterType Specify the addon type like theme only or module only or all
+     * @var int AddonListFilterType Specify the addon type like theme only or module only or all
      */
     public $type = AddonListFilterType::ALL;
 
     /**
-     * @var int $status AddonListFilterStatus Specify if you want enabled only, disabled only or all addons
+     * @var int AddonListFilterStatus Specify if you want enabled only, disabled only or all addons
      */
     public $status = AddonListFilterStatus::ALL;
 
     /**
-     * @var int $origin AddonListFilterOrigin Specify if you want an addon from a specific source
+     * @var int AddonListFilterOrigin Specify if you want an addon from a specific source
      */
     public $origin = AddonListFilterOrigin::ALL;
 
@@ -50,63 +50,73 @@ class AddonListFilter
 
     /**
      * @param int $origin
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function addOrigin($origin)
     {
         $this->origin &= $origin;
+
         return $this;
     }
 
     /**
      * @param int $status
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function addStatus($status)
     {
         $this->status &= $status;
+
         return $this;
     }
 
     /**
      * @param int $type
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function addType($type)
     {
         $this->type &= $type;
+
         return $this;
     }
 
     /**
      * @param int $origin
+     *
      * @return bool
      */
     public function hasOrigin($origin)
     {
-        return ($this->origin & $origin);
+        return $this->origin & $origin;
     }
 
     /**
      * @param int $status
+     *
      * @return bool
      */
     public function hasStatus($status)
     {
-        return ($this->status & $status);
+        return $this->status & $status;
     }
 
     /**
      * @param int $type
+     *
      * @return bool
      */
     public function hasType($type)
     {
-        return ($this->type & $type);
+        return $this->type & $type;
     }
 
     /**
      * @param int $origin
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function removeOrigin($origin)
@@ -116,6 +126,7 @@ class AddonListFilter
 
     /**
      * @param int $status
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function removeStatus($status)
@@ -124,8 +135,8 @@ class AddonListFilter
     }
 
     /**
-     *
      * @param int $type
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function removeType($type)
@@ -135,37 +146,44 @@ class AddonListFilter
 
     /**
      * @param int $origin
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
+
         return $this;
     }
 
     /**
      * @param int $type
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
      * @param int $status
+     *
      * @return \PrestaShop\PrestaShop\Core\Addon\AddonListFilter
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
     public function setExclude(array $exclude)
     {
         $this->exclude = $exclude;
+
         return $this;
     }
 }

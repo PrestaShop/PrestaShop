@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -75,8 +75,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         TokenStorageInterface $tokenStorage,
         AdminFilterRepository $adminFilterRepository,
         $shopId
-    )
-    {
+    ) {
         $this->searchParameters = $searchParameters;
         $this->adminFilterRepository = $adminFilterRepository;
         $this->employee = $this->getEmployee($tokenStorage);
@@ -95,6 +94,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */

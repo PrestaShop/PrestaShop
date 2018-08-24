@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class GridFactory is responsible for creating final Grid instance
+ * Class GridFactory is responsible for creating final Grid instance.
  */
 final class GridFactory implements GridFactoryInterface
 {
@@ -53,8 +53,8 @@ final class GridFactory implements GridFactoryInterface
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface      $dataProvider
-     * @param FilterFormFactoryInterface     $filterFormFactory
+     * @param GridDataProviderInterface $dataProvider
+     * @param FilterFormFactoryInterface $filterFormFactory
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,

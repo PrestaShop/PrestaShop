@@ -27,7 +27,7 @@ The PrestaShop documentation features a thorough explanation of the [complete pr
 
 If you don't feel comfortable forking the project or using Git, you can also either:
 * Edit a file directly within GitHub: browse to the target file, click the "Edit" button, make your changes in the editor then click on "Propose File Change". Github will automatically create a new fork and branch on your own Github account, then suggest to create a pull request to PrestaShop. Once the pull request is submitted, you just have to wait for a core developer to answer you.
-* Submit an issue using the Forge: [PrestaShop Forge][5] is the official ticket-tracker for PrestaShop, and the best place to write a bug ticket or request an improvement, while not having to be a developer at all. You will need to create an account on the Forge: [follow these instructions][6], then wait for our team to answer you.
+* [Submit an issue using GitHub][5]: this is the official ticket-tracker for PrestaShop, and the best place to write a bug ticket or request an improvement, while not having to be a developer at all. You will need to [create an account on GitHub][6].
 
 Thank you for your help in making PrestaShop even better!
 
@@ -42,8 +42,8 @@ Thank you for your help in making PrestaShop even better!
 [2]: https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/
 [3]: https://help.github.com/articles/using-pull-requests
 [4]: http://doc.prestashop.com/display/PS16/Contributing+code+to+PrestaShop
-[5]: http://forge.prestashop.com/
-[6]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/
+[5]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
+[6]: https://github.com/join
 [7]: http://opensource.org/licenses/OSL-3.0
 [8]: http://opensource.org/licenses/AFL-3.0
 

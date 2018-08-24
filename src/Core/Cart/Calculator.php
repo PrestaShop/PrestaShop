@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,11 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 use Cart;
 
 /**
- * provides methods to process cart calculation
+ * provides methods to process cart calculation.
  */
 class Calculator
 {
-
     /**
      * @var \Cart
      */
@@ -60,7 +59,7 @@ class Calculator
     protected $fees;
 
     /**
-     * indicates if cart was already processed
+     * indicates if cart was already processed.
      *
      * @var bool
      */
@@ -70,13 +69,13 @@ class Calculator
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
-        $this->cartRows  = new CartRowCollection();
-        $this->fees      = new Fees();
+        $this->cartRows = new CartRowCollection();
+        $this->fees = new Fees();
         $this->cartRules = new CartRuleCollection();
     }
 
     /**
-     * insert a new cart row in the calculator
+     * insert a new cart row in the calculator.
      *
      * @param CartRow $cartRow cart item row (product+qty informations)
      *
@@ -93,7 +92,7 @@ class Calculator
     }
 
     /**
-     * insert a new cart rule in the calculator
+     * insert a new cart rule in the calculator.
      *
      * @param \PrestaShop\PrestaShop\Core\Cart\CartRuleData $cartRule
      *
@@ -110,7 +109,7 @@ class Calculator
     }
 
     /**
-     * run the whole calculation process: calculate rows, discounts, fees
+     * run the whole calculation process: calculate rows, discounts, fees.
      *
      * @param int $computePrecision
      *
@@ -134,6 +133,7 @@ class Calculator
      * @param bool $withTaxes
      *
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getTotal()
@@ -142,7 +142,7 @@ class Calculator
             throw new \Exception('Cart must be processed before getting its total');
         }
 
-        $amount = new AmountImmutable;
+        $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
             $rowPrice = $cartRow->getFinalTotalPrice();
             $amount = $amount->add($rowPrice);
@@ -157,11 +157,12 @@ class Calculator
 
     /**
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getRowTotal()
     {
-        $amount = new AmountImmutable;
+        $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
             $amount = $amount->add($cartRow->getFinalTotalPrice());
         }
@@ -171,11 +172,12 @@ class Calculator
 
     /**
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getDiscountTotal()
     {
-        $amount = new AmountImmutable;
+        $amount = new AmountImmutable();
         foreach ($this->cartRules as $cartRule) {
             $amount = $amount->add($cartRule->getDiscountApplied());
         }
@@ -230,7 +232,7 @@ class Calculator
     }
 
     /**
-     * Calculate row total
+     * Calculate row total.
      *
      * @param CartRow $cartRow
      */
@@ -240,7 +242,7 @@ class Calculator
     }
 
     /**
-     * calculate only product rows
+     * calculate only product rows.
      */
     public function calculateRows()
     {
@@ -250,7 +252,7 @@ class Calculator
     }
 
     /**
-     * calculate only cart rules (rows and fees have to be calculated first)
+     * calculate only cart rules (rows and fees have to be calculated first).
      */
     public function calculateCartRules()
     {
@@ -262,7 +264,7 @@ class Calculator
     }
 
     /**
-     * calculate wrapping and shipping fees (rows have to be calculated first)
+     * calculate wrapping and shipping fees (rows have to be calculated first).
      *
      * @param int $computePrecision
      */

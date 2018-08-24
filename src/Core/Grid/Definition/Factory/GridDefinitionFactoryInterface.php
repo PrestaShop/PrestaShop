@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 
 /**
- * Interface GridDefinitionFactoryInterface defines contract for creating grid
+ * Interface GridDefinitionFactoryInterface defines contract for creating grid.
  */
 interface GridDefinitionFactoryInterface
 {
     /**
-     * Create new grid definition
+     * Create new grid definition.
      *
      * @return DefinitionInterface
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -55,13 +55,13 @@ class SearchControllerCore extends ProductListingFrontController
         $this->context->smarty->assign(
             array(
                 'search_string' => $this->search_string,
-                'search_tag'    => $this->search_tag,
+                'search_tag' => $this->search_tag,
             )
         );
     }
 
     /**
-     * Performs the search
+     * Performs the search.
      */
     public function initContent()
     {

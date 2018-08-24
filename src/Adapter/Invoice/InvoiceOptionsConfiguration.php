@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class InvoiceOptionsConfiguration is responsible for saving & loading invoice configuration
+ * Class InvoiceOptionsConfiguration is responsible for saving & loading invoice configuration.
  */
 final class InvoiceOptionsConfiguration implements DataConfigurationInterface
 {

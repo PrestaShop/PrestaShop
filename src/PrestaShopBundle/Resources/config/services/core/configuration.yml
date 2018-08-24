@@ -7,3 +7,11 @@ services:
 
     prestashop.core.configuration.php_extension_checker:
         class: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'
+        public: true
+
+    prestashop.core.configuration.webservice_can_be_enabled_configuration_checker:
+        class: 'PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker'
+        public: true
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.legacy.configuration'

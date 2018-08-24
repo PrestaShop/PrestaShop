@@ -186,3 +186,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.webservice.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

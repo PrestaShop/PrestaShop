@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Encoding;
 
 /**
- * Class CharsetEncoding defines file chartset encoding constants
+ * Class CharsetEncoding defines file chartset encoding constants.
  */
 final class CharsetEncoding
 {

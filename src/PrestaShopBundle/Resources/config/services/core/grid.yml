@@ -29,7 +29,7 @@ services:
         abstract: true
         calls:
             - [setTranslator, ['@translator']]
-            - [setDispatcher, ['@prestashop.hook.dispatcher']]
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     prestashop.core.grid.definition.factory.logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
@@ -56,6 +56,11 @@ services:
             - "@=service('router').generate('admin_request_sql')"
         public: true
 
+    prestashop.core.grid.definition.factory.backup:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BackupDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -63,7 +68,7 @@ services:
             - '@prestashop.core.grid.definition.factory.logs'
             - '@prestashop.core.grid.data_provider.log'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -71,13 +76,21 @@ services:
             - '@prestashop.core.grid.definition.factory.email_logs'
             - '@prestashop.core.grid.data_provider.email_logs'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.factory.request_sql:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.request_sql'
             - '@prestashop.core.grid.data_provider.request_sql'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.backup:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.backup'
+            - '@prestashop.core.backup.listing.grid_data_provider'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.hook.dispatcher'
 

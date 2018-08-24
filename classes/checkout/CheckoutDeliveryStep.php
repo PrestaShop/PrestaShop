@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class CheckoutDeliveryStepCore extends AbstractCheckoutStep
@@ -204,6 +202,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'completed' => &$isComplete,
             ),
             Module::getModuleIdByName($currentDeliveryOption['external_module_name']));
+
         return $isComplete;
     }
 }

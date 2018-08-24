@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminDashboardControllerCore extends AdminController
@@ -46,11 +45,11 @@ class AdminDashboardControllerCore extends AdminController
 
         $this->addJqueryUI('ui.datepicker');
         $this->addJS(array(
-            _PS_JS_DIR_.'vendor/d3.v3.min.js',
-            __PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.min.js',
-            _PS_JS_DIR_.'/admin/dashboard.js',
+            _PS_JS_DIR_ . 'vendor/d3.v3.min.js',
+            __PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/nv.d3.min.js',
+            _PS_JS_DIR_ . '/admin/dashboard.js',
         ));
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css');
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/nv.d3.css');
     }
 
     public function initPageHeaderToolbar()
@@ -58,8 +57,8 @@ class AdminDashboardControllerCore extends AdminController
         $this->page_header_toolbar_title = $this->trans('Dashboard', array(), 'Admin.Dashboard.Feature');
         $this->page_header_toolbar_btn['switch_demo'] = array(
             'desc' => $this->trans('Demo mode', array(), 'Admin.Dashboard.Feature'),
-            'icon' => 'process-icon-toggle-'.(Configuration::get('PS_DASHBOARD_SIMULATION') ? 'on' : 'off'),
-            'help' => $this->trans('This mode displays sample data so you can try your dashboard without real numbers.', array(), 'Admin.Dashboard.Help')
+            'icon' => 'process-icon-toggle-' . (Configuration::get('PS_DASHBOARD_SIMULATION') ? 'on' : 'off'),
+            'help' => $this->trans('This mode displays sample data so you can try your dashboard without real numbers.', array(), 'Admin.Dashboard.Help'),
         );
 
         parent::initPageHeaderToolbar();
@@ -78,7 +77,7 @@ class AdminDashboardControllerCore extends AdminController
         $forms = array(
             'payment' => array('title' => $this->trans('Average bank fees per payment method', array(), 'Admin.Dashboard.Feature'), 'id' => 'payment'),
             'carriers' => array('title' => $this->trans('Average shipping fees per shipping method', array(), 'Admin.Dashboard.Feature'), 'id' => 'carriers'),
-            'other' => array('title' => $this->trans('Other settings', array(), 'Admin.Dashboard.Feature'), 'id' => 'other')
+            'other' => array('title' => $this->trans('Other settings', array(), 'Admin.Dashboard.Feature'), 'id' => 'other'),
         );
         foreach ($forms as &$form) {
             $form['icon'] = 'tab-preferences';
@@ -93,7 +92,7 @@ class AdminDashboardControllerCore extends AdminController
                     continue;
                 }
 
-                $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
+                $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_FIXED'] = array(
                     'title' => $module->displayName,
                     'desc' => $this->trans(
                         'Choose a fixed fee for each order placed in %currency% with %module%.',
@@ -107,9 +106,9 @@ class AdminDashboardControllerCore extends AdminController
                     'cast' => 'floatval',
                     'type' => 'text',
                     'defaultValue' => '0',
-                    'suffix' => $currency->iso_code
+                    'suffix' => $currency->iso_code,
                 );
-                $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR'] = array(
+                $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_VAR'] = array(
                     'title' => $module->displayName,
                     'desc' => $this->trans(
                         'Choose a variable fee for each order placed in %currency% with %module%. It will be applied on the total paid with taxes.',
@@ -123,25 +122,25 @@ class AdminDashboardControllerCore extends AdminController
                     'cast' => 'floatval',
                     'type' => 'text',
                     'defaultValue' => '0',
-                    'suffix' => '%'
+                    'suffix' => '%',
                 );
 
                 if (Currency::isMultiCurrencyActivated()) {
-                    $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED_FOREIGN'] = array(
+                    $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_FIXED_FOREIGN'] = array(
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a fixed fee for each order placed with a foreign currency with %module%.',
                             array(
-                                '%module%' => $module->displayName
+                                '%module%' => $module->displayName,
                             ),
                             'Admin.Dashboard.Help'),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',
                         'defaultValue' => '0',
-                        'suffix' => $currency->iso_code
+                        'suffix' => $currency->iso_code,
                     );
-                    $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_VAR_FOREIGN'] = array(
+                    $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_VAR_FOREIGN'] = array(
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
@@ -152,14 +151,14 @@ class AdminDashboardControllerCore extends AdminController
                         'cast' => 'floatval',
                         'type' => 'text',
                         'defaultValue' => '0',
-                        'suffix' => '%'
+                        'suffix' => '%',
                     );
                 }
             }
         }
 
         foreach ($carriers as $carrier) {
-            $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
+            $forms['carriers']['fields']['CONF_' . strtoupper($carrier['id_reference']) . '_SHIP'] = array(
                 'title' => $carrier['name'],
                 'desc' => $this->trans(
                     'For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.',
@@ -172,9 +171,9 @@ class AdminDashboardControllerCore extends AdminController
                 'cast' => 'floatval',
                 'type' => 'text',
                 'defaultValue' => '0',
-                'suffix' => '%'
+                'suffix' => '%',
             );
-            $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP_OVERSEAS'] = array(
+            $forms['carriers']['fields']['CONF_' . strtoupper($carrier['id_reference']) . '_SHIP_OVERSEAS'] = array(
                 'title' => $carrier['name'],
                 'desc' => $this->trans(
                     'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',
@@ -187,7 +186,7 @@ class AdminDashboardControllerCore extends AdminController
                 'cast' => 'floatval',
                 'type' => 'text',
                 'defaultValue' => '0',
-                'suffix' => '%'
+                'suffix' => '%',
             );
         }
 
@@ -200,7 +199,7 @@ class AdminDashboardControllerCore extends AdminController
             'cast' => 'intval',
             'type' => 'text',
             'defaultValue' => '0',
-            'suffix' => '%'
+            'suffix' => '%',
         );
 
         $forms['other']['fields']['CONF_ORDER_FIXED'] = array(
@@ -210,7 +209,7 @@ class AdminDashboardControllerCore extends AdminController
             'cast' => 'floatval',
             'type' => 'text',
             'defaultValue' => '0',
-            'suffix' => $currency->iso_code
+            'suffix' => $currency->iso_code,
         );
 
         Media::addJsDef(array(
@@ -295,12 +294,11 @@ class AdminDashboardControllerCore extends AdminController
 
         $params = array(
             'date_from' => $this->context->employee->stats_date_from,
-            'date_to' => $this->context->employee->stats_date_to
+            'date_to' => $this->context->employee->stats_date_to,
         );
 
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
-
 
         $this->tpl_view_vars = array(
             'date_from' => $this->context->employee->stats_date_from,
@@ -310,21 +308,22 @@ class AdminDashboardControllerCore extends AdminController
             //'translations' => $translations,
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
-            'new_version_url' => Tools::getCurrentUrlProtocolPrefix()._PS_API_DOMAIN_.'/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code.'&autoupgrade='.(int)($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')).'&hosted_mode='.(int)defined('_PS_HOST_MODE_'),
+            'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
             'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
             'calendar' => $calendar_helper->generate(),
             'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),
             'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
             'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to),
-            'preselect_date_range' => Tools::getValue('preselectDateRange', $this->context->employee->preselect_date_range)
+            'preselect_date_range' => Tools::getValue('preselectDateRange', $this->context->employee->preselect_date_range),
         );
+
         return parent::renderView();
     }
 
     public function postProcess()
     {
         if (Tools::isSubmit('submitDateRealTime')) {
-            if ($use_realtime = (int)Tools::getValue('submitDateRealTime')) {
+            if ($use_realtime = (int) Tools::getValue('submitDateRealTime')) {
                 $this->context->employee->stats_date_from = date('Y-m-d');
                 $this->context->employee->stats_date_to = date('Y-m-d');
                 $this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
@@ -379,34 +378,35 @@ class AdminDashboardControllerCore extends AdminController
 
         $shop = Context::getContext()->shop;
         if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false && !defined('_PS_HOST_MODE_')) {
-            $warning = $this->trans('You are currently connected under the following domain name:', array(), 'Admin.Dashboard.Notification').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
+            $warning = $this->trans('You are currently connected under the following domain name:', array(), 'Admin.Dashboard.Notification') . ' <span style="color: #CC0000;">' . $_SERVER['HTTP_HOST'] . '</span><br />';
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
                 $warning .= $this->trans(
                     'This is different from the shop domain name set in the Multistore settings: "%s".',
                     array(
-                        '%s' => $shop->domain
+                        '%s' => $shop->domain,
                     ),
                     'Admin.Dashboard.Notification'
-                ).$this->trans(
+                ) . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     array(
-                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">',
+                        '{link}' => '<a href="index.php?controller=AdminShopUrl&id_shop_url=' . (int) $shop->id . '&updateshop_url&token=' . Tools::getAdminTokenLite('AdminShopUrl') . '">',
                         '{/link}' => '</a>',
                     ),
                     'Admin.Dashboard.Notification'
                 );
             } else {
-                $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', array(), 'Admin.Dashboard.Notification').'
-				'.$this->trans(
+                $warning .= $this->trans('This is different from the domain name set in the "SEO & URLs" tab.', array(), 'Admin.Dashboard.Notification') . '
+				' . $this->trans(
                     'If this is your main domain, please {link}change it now{/link}.',
                     array(
-                        '{link}' => '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">',
-                        '{/link}' => '</a>'
+                        '{link}' => '<a href="index.php?controller=AdminMeta&token=' . Tools::getAdminTokenLite('AdminMeta') . '#meta_fieldset_shop_url">',
+                        '{/link}' => '</a>',
                     ),
                     'Admin.Dashboard.Notification'
                 );
             }
         }
+
         return $warning;
     }
 
@@ -425,37 +425,37 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to,
             'compare_from' => $this->context->employee->stats_compare_from,
             'compare_to' => $this->context->employee->stats_compare_to,
-            'dashboard_use_push' => (int)Tools::getValue('dashboard_use_push'),
-            'extra' => (int)Tools::getValue('extra')
+            'dashboard_use_push' => (int) Tools::getValue('dashboard_use_push'),
+            'extra' => (int) Tools::getValue('extra'),
         );
 
-        die(json_encode(Hook::exec('dashboardData', $params, $id_module, true, true, (int)Tools::getValue('dashboard_use_push'))));
+        die(json_encode(Hook::exec('dashboardData', $params, $id_module, true, true, (int) Tools::getValue('dashboard_use_push'))));
     }
 
     public function ajaxProcessSetSimulationMode()
     {
-        Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int)Tools::getValue('PS_DASHBOARD_SIMULATION'));
-        die('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
+        Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int) Tools::getValue('PS_DASHBOARD_SIMULATION'));
+        die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
     }
 
     public function ajaxProcessGetBlogRss()
     {
         $return = array('has_errors' => false, 'rss' => array());
-        if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 86400)) {
-            if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', _PS_API_URL_.'/rss/blog/blog-'.$this->context->language->iso_code.'.xml')) {
+        if (!$this->isFresh('/config/xml/blog-' . $this->context->language->iso_code . '.xml', 86400)) {
+            if (!$this->refresh('/config/xml/blog-' . $this->context->language->iso_code . '.xml', _PS_API_URL_ . '/rss/blog/blog-' . $this->context->language->iso_code . '.xml')) {
                 $return['has_errors'] = true;
             }
         }
 
         if (!$return['has_errors']) {
-            $rss = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
+            $rss = @simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/blog-' . $this->context->language->iso_code . '.xml');
             if (!$rss) {
                 $return['has_errors'] = true;
             }
             $articles_limit = 2;
             if ($rss) {
                 foreach ($rss->channel->item as $item) {
-                    if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description)
+                    if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
                         && isset($item->link) && isset($item->title)) {
                         if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                             $utm_content = 'cloud';
@@ -463,36 +463,35 @@ class AdminDashboardControllerCore extends AdminController
                             $utm_content = 'download';
                         }
 
-                        $shop_default_country_id = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-                        $shop_default_iso_country = (string)Tools::strtoupper(Country::getIsoById($shop_default_country_id));
+                        $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
+                        $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
                         $analytics_params = array('utm_source' => 'back-office',
                                                 'utm_medium' => 'rss',
-                                                'utm_campaign' => 'back-office-'.$shop_default_iso_country,
-                                                'utm_content' => $utm_content
-
+                                                'utm_campaign' => 'back-office-' . $shop_default_iso_country,
+                                                'utm_content' => $utm_content,
                                             );
                         $url_query = parse_url($item->link, PHP_URL_QUERY);
                         parse_str($url_query, $link_query_params);
 
                         if ($link_query_params) {
                             $full_url_params = array_merge($link_query_params, $analytics_params);
-                            $base_url = explode('?', (string)$item->link);
-                            $base_url = (string)$base_url[0];
-                            $article_link = $base_url.'?'.http_build_query($full_url_params);
+                            $base_url = explode('?', (string) $item->link);
+                            $base_url = (string) $base_url[0];
+                            $article_link = $base_url . '?' . http_build_query($full_url_params);
                         } else {
-                            $article_link = (string)$item->link.'?'.http_build_query($analytics_params);
+                            $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
                         }
 
                         $return['rss'][] = array(
-                            'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
-                            'title' => (string)Tools::htmlentitiesUTF8($item->title),
-                            'short_desc' => Tools::truncateString(strip_tags((string)$item->description), 150),
-                            'link' => (string)$article_link,
+                            'date' => Tools::displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
+                            'title' => (string) Tools::htmlentitiesUTF8($item->title),
+                            'short_desc' => Tools::truncateString(strip_tags((string) $item->description), 150),
+                            'link' => (string) $article_link,
                         );
                     } else {
                         break;
                     }
-                    $articles_limit --;
+                    --$articles_limit;
                 }
             }
         }
@@ -508,7 +507,7 @@ class AdminDashboardControllerCore extends AdminController
 
         $params = array(
             'date_from' => $this->context->employee->stats_date_from,
-            'date_to' => $this->context->employee->stats_date_to
+            'date_to' => $this->context->employee->stats_date_to,
         );
 
         if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module)) {

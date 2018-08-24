@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 
 /**
- * Class OrderInvoiceRepository
+ * Class OrderInvoiceRepository.
  */
 class OrderInvoiceRepository
 {
@@ -53,7 +53,7 @@ class OrderInvoiceRepository
     }
 
     /**
-     * Count number of orders grouped by order state
+     * Count number of orders grouped by order state.
      *
      * @param array $shopIds
      *

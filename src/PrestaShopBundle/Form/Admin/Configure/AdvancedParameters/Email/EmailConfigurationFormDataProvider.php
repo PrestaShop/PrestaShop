@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Class EmailConfigurationFormDataProvider
+ * Class EmailConfigurationFormDataProvider.
  */
 final class EmailConfigurationFormDataProvider implements FormDataProviderInterface
 {
@@ -85,7 +85,7 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
     }
 
     /**
-     * Check if SMTP is configured if SMTP mail method is selected
+     * Check if SMTP is configured if SMTP mail method is selected.
      *
      * @param array $config
      *

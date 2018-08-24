@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Filter\FrontEndObject;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 /**
- * Filters Product objects for search results
+ * Filters Product objects for search results.
  */
 class SearchResultProductFilter extends HashMapWhitelistFilter
 {

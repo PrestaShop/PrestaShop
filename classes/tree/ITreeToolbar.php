@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,21 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 interface ITreeToolbarCore
 {
     public function __toString();
+
     public function setActions($value);
+
     public function getActions();
+
     public function setContext($value);
+
     public function getContext();
+
     public function setData($value);
+
     public function getData();
+
     public function setTemplate($value);
+
     public function getTemplate();
+
     public function setTemplateDirectory($value);
+
     public function getTemplateDirectory();
+
     public function addAction($action);
+
     public function removeActions();
+
     public function render();
 }

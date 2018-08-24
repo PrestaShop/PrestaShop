@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class LocalizationConfigurationType is responsible for building 'Improve > International > Localization' page
- * 'Configuration' form
+ * 'Configuration' form.
  */
 class LocalizationConfigurationType extends AbstractType
 {

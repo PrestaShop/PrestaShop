@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 interface DoctrineQueryBuilderInterface
 {
     /**
-     * Get query that searches grid rows
+     * Get query that searches grid rows.
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *
@@ -44,7 +44,7 @@ interface DoctrineQueryBuilderInterface
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null);
 
     /**
-     * Get query that counts grid rows
+     * Get query that counts grid rows.
      *
      * @param SearchCriteriaInterface|null $searchCriteria
      *

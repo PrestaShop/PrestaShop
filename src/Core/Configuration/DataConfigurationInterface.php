@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
-
 /**
- * Retrieve and Manage configuration (used to manage forms in "Configure" section of back office)
+ * Retrieve and Manage configuration (used to manage forms in "Configure" section of back office).
  */
 interface DataConfigurationInterface
 {
@@ -38,6 +38,7 @@ interface DataConfigurationInterface
 
     /**
      * @param array $configuration
+     *
      * @return array if not empty, populated by validation errors
      */
     public function updateConfiguration(array $configuration);
@@ -46,6 +47,7 @@ interface DataConfigurationInterface
      * Ensure the parameters passed are valid.
      *
      * @param array $configuration
+     *
      * @return bool Returns true if no exception are thrown
      */
     public function validateConfiguration(array $configuration);

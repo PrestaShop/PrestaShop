@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * ProductSupplierCore class
+ * ProductSupplierCore class.
  *
  * @since 1.5.0
  */
@@ -112,11 +112,11 @@ class ProductSupplierCore extends ObjectModel
     }
 
     /**
-     * For a given product and supplier, gets the product supplier reference
+     * For a given product and supplier, gets the product supplier reference.
      *
-     * @param int $idProduct          Product ID
+     * @param int $idProduct Product ID
      * @param int $idProductAttribute Product Attribute ID
-     * @param int $idSupplier         Supplier ID
+     * @param int $idSupplier Supplier ID
      *
      * @return string Product Supplier reference
      */
@@ -126,21 +126,21 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.product_supplier_reference');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int) $idProduct.'
-			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
-			AND ps.id_supplier = '.(int) $idSupplier
+        $query->where('ps.id_product = ' . (int) $idProduct . '
+			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+			AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
-     * For a given product and supplier, gets the product supplier unit price
+     * For a given product and supplier, gets the product supplier unit price.
      *
-     * @param int  $idProduct          Product ID
-     * @param int  $idProductAttribute Product Attribute ID
-     * @param int  $idSupplier         Supplier ID
-     * @param bool $withCurrency       Optional With currency
+     * @param int $idProduct Product ID
+     * @param int $idProductAttribute Product Attribute ID
+     * @param int $idSupplier Supplier ID
+     * @param bool $withCurrency Optional With currency
      *
      * @return array
      */
@@ -153,9 +153,9 @@ class ProductSupplierCore extends ObjectModel
             $query->select('ps.id_currency');
         }
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int) $idProduct.'
-			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
-			AND ps.id_supplier = '.(int) $idSupplier
+        $query->where('ps.id_product = ' . (int) $idProduct . '
+			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+			AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         if (!$withCurrency) {
@@ -171,7 +171,7 @@ class ProductSupplierCore extends ObjectModel
     }
 
     /**
-     * For a given product and supplier, gets corresponding ProductSupplier ID
+     * For a given product and supplier, gets corresponding ProductSupplier ID.
      *
      * @param int $idProduct
      * @param int $idProductAttribute
@@ -185,16 +185,16 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.id_product_supplier');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int) $idProduct.'
-			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
-			AND ps.id_supplier = '.(int) $idSupplier
+        $query->where('ps.id_product = ' . (int) $idProduct . '
+			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+			AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
-     * For a given product, retrieves its suppliers
+     * For a given product, retrieves its suppliers.
      *
      * @param int $idProduct
      * @param int $groupBySupplier
@@ -214,11 +214,11 @@ class ProductSupplierCore extends ObjectModel
     }
 
     /**
-     * For a given Supplier, Product, returns the purchased price
+     * For a given Supplier, Product, returns the purchased price.
      *
-     * @param int  $idProduct
-     * @param int  $idProductAttribute Optional
-     * @param bool $convertedPrice     Optional
+     * @param int $idProduct
+     * @param int $idProductAttribute Optional
+     * @param bool $convertedPrice Optional
      *
      * @return array keys: price_te, id_currency
      */
@@ -231,8 +231,8 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('product_supplier_price_te as price_te, id_currency');
         $query->from('product_supplier');
-        $query->where('id_product = '.(int) $idProduct.' AND id_product_attribute = '.(int) $idProductAttribute);
-        $query->where('id_supplier = '.(int) $idSupplier);
+        $query->where('id_product = ' . (int) $idProduct . ' AND id_product_attribute = ' . (int) $idProductAttribute);
+        $query->where('id_supplier = ' . (int) $idSupplier);
 
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         if ($convertedPrice) {
@@ -243,7 +243,7 @@ class ProductSupplierCore extends ObjectModel
     }
 
     /**
-     * For a given product and supplier, gets the product supplier datas
+     * For a given product and supplier, gets the product supplier datas.
      *
      * @param int $idProduct Product ID
      * @param int $idProductAttribute Product Attribute ID
@@ -257,9 +257,9 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.product_supplier_reference, ps.product_supplier_price_te as price, ps.id_currency');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int) $idProduct.'
-			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
-			AND ps.id_supplier = '.(int) $idSupplier
+        $query->where('ps.id_product = ' . (int) $idProduct . '
+			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
+			AND ps.id_supplier = ' . (int) $idSupplier
         );
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

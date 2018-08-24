@@ -87,6 +87,9 @@ let config = {
     ],
     catalog_product: [
       './js/pages/catalog/product'
+    ],
+    backup: [
+      './js/pages/backup'
     ]
   },
   output: {

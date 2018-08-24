@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk;
 use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class BulkActionCollection holds bulk action collection available for grid
+ * Class BulkActionCollection holds bulk action collection available for grid.
  *
  * @property BulkActionInterface[] $items
  */
