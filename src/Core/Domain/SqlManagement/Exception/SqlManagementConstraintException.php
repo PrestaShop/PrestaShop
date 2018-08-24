@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
-class SqlRequestException extends SqlManagementException
+class SqlManagementConstraintException extends SqlManagementException
 {
+    const INVALID_DATABASE_TABLE_NAME = 10;
 }

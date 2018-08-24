@@ -28,10 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableAttributes;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
@@ -340,9 +342,9 @@ class RequestSqlController extends FrameworkBundleAdminController
     public function viewAction(Request $request, $requestSqlId)
     {
         try {
-            $command = new GetSqlRequestExecutionResultQuery($requestSqlId);
+            $query = new GetSqlRequestExecutionResultQuery($requestSqlId);
 
-            $sqlRequestExecutionResult = $this->getQueryBus()->handle($command);
+            $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));
 
@@ -378,7 +380,10 @@ class RequestSqlController extends FrameworkBundleAdminController
         $response = $requestSqlExporter->export($requestSqlId);
 
         if (null === $response) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
 
             return $this->redirectToRoute('admin_request_sql');
         }
@@ -395,19 +400,11 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function ajaxTableColumnsAction($mySqlTableName)
     {
-        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+        $query = new GetAttributesForDatabaseTableQuery($mySqlTableName);
+        /** @var DatabaseTableAttributes $attributes */
+        $attributes = $this->getQueryBus()->handle($query);
 
-        $columns = [];
-
-        $tableColumns = $dataProvider->getTableColumns($mySqlTableName);
-        foreach ($tableColumns as $tableColumn) {
-            $columns[] = [
-                'name' => $tableColumn['Field'],
-                'type' => $tableColumn['Type'],
-            ];
-        }
-
-        return $this->json(['columns' => $columns]);
+        return $this->json(['columns' => $attributes->getAttributes()]);
     }
 
     /**
