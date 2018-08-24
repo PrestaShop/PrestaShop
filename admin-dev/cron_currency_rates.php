@@ -23,19 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated. Use a controller instead.', E_USER_DEPRECATED);
 
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
-}
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+$_GET['ajax'] = 1;
+$_GET['controller'] = 'AdminCurrencies';
+$_GET['action'] = 'currencyRates';
 
-if (isset($_GET['secure_key'])) {
-    $secureKey = md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
-    if (!empty($secureKey) && $secureKey === $_GET['secure_key']) {
-        $shop_ids = Shop::getCompleteListOfShopsID();
-        foreach ($shop_ids as $shop_id) {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)$shop_id);
-            Currency::refreshCurrencies();
-        }
-    }
-}
+require_once dirname(__FILE__).'/index.php';
