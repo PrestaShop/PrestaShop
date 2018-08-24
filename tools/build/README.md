@@ -45,7 +45,7 @@ This will:
 
 The output is a zip archive which contains:
 - PrestaShop pre-installer
-- the prestashop shop zip archive
+- the prestashop zip archive
 - an HTML documentation
 
 This is what is given to merchants who download Prestashop from the prestashop website
@@ -67,7 +67,7 @@ Consequently all AJAX queries target the same file, with different `GET` and `PO
 In details:
 - `index.php` call runs the php file which outputs HTML and javascript to be run by the browser
 - the browser then loads assets using URLs such as `index.php?element=jquery`, `index.php?element=css`,
-`index.php?element=css`
+`index.php?element=gif`
 - the browser runs the javascript code which performs ajax calls such as `POST index.php` which
 triggers php routines on backend side
 
