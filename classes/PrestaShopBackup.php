@@ -155,10 +155,13 @@ class PrestaShopBackupCore
      * Get the URL used to retrieve this backup file.
      *
      * @return string The url used to request the backup file
+     *
+     * @deprecated As the call has been duplicated in the new Controller. Get the URL from the router instead.
      */
     public function getBackupURL()
     {
-        return Context::getContext()->link->getAdminLink('AdminBackup') . '&action=backupContent&ajax=1&filename=' . basename($this->id);
+        // Additionnal parameters (action, filename, ajax) are kept for backward compatibility, in case we disable the new controller
+        return Context::getContext()->link->getAdminLink('AdminBackup', true, ['route' => 'admin_backup_download', 'downloadFileName' => basename($this->id)]) . '&action=backupContent&ajax=1&filename=' . basename($this->id);
     }
 
     /**

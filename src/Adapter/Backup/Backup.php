@@ -67,6 +67,14 @@ final class Backup implements BackupInterface
     /**
      * {@inheritdoc}
      */
+    public function getFilePath()
+    {
+        return $this->legacyBackup->getBackupPath() . $this->getFileName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getUrl()
     {
         return $this->legacyBackup->getBackupURL();
