@@ -70,7 +70,7 @@ final class FilterFormFactory implements FilterFormFactoryInterface
             );
         }
 
-        $this->hookDispatcher->dispatchForParameters('action' . $definition->getId() . 'GridFormBuilderModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridFormBuilderModifier', [
             'formBuilder' => $formBuilder,
         ]);
 

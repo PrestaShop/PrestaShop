@@ -8,6 +8,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactory'
         arguments:
             - '@form.factory'
+        calls:
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
@@ -99,6 +101,8 @@ services:
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
 
     # Query builder
     prestashop.core.grid.abstract_query_builder:

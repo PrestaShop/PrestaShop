@@ -140,7 +140,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.
      *
-     * Wrapper to: @see HookDispatcher::dispatchForParameters()
+     * Wrapper to: @see HookDispatcher::dispatchWithParameters()
      *
      * @param string $hookName The hook name
      * @param array $parameters The hook parameters
