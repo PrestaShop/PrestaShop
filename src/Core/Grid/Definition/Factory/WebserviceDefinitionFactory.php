@@ -4,6 +4,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -126,5 +129,32 @@ class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('actions')
             );
+    }
+
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add((new SubmitGridAction('add_webservice'))
+                ->setName($this->trans('Add new', [], 'Admin.Actions'))
+                ->setIcon('add')
+                ->setOptions([
+                    'submit_route' => 'admin_webservice', //todo: change to add webservice link
+                    'submit_method' => 'GET'
+                ])
+            )
+            ->add((new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
+            )
+            ;
+
     }
 }
