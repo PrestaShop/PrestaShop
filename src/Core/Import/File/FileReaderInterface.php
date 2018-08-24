@@ -24,40 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Import\File;
 
-
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Generator;
+use SplFileInfo;
 
 /**
- * Class ImportMatchConfigurationChoiceProvider is responsible for providing choices
- * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration
+ * Interface FileReaderInterface describes a file reader
  */
-final class ImportMatchConfigurationChoiceProvider implements FormChoiceProviderInterface
+interface FileReaderInterface
 {
     /**
-     * @var array
+     * Read the file
+     *
+     * @param SplFileInfo $file
+     *
+     * @return Generator
      */
-    private $matchConfigurations;
-
-    /**
-     * @param array $matchConfigurations
-     */
-    public function __construct(array $matchConfigurations)
-    {
-        $this->matchConfigurations = $matchConfigurations;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices()
-    {
-        $result = [];
-        foreach ($this->matchConfigurations as $configuration) {
-            $result[$configuration['name']] = $configuration['id_import_match'];
-        }
-
-        return $result;
-    }
+    public function read(SplFileInfo $file);
 }
