@@ -296,7 +296,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
             && 0 !== $moduleId
             && !empty($content)
         ) {
-            $event->setContent(array_values($content)[0], array_keys($content)[0]);
+            $event->setContent([array_values($content)[0]], array_keys($content)[0]);
         }
     }
 }

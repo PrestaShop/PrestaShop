@@ -113,7 +113,7 @@ class HookExtension extends \Twig_Extension
      *
      * @throws \Exception if the hookName is missing
      *
-     * @return array[string] All listener's reponses, ordered by the listeners' priorities
+     * @return array[string] All listener's responses, ordered by the listeners' priorities
      */
     public function renderHooksArray($hookName, $hookParameters = array())
     {
@@ -151,7 +151,7 @@ class HookExtension extends \Twig_Extension
      *
      * @throws \Exception if the hookName is missing
      *
-     * @return string all listener's reponses, concatened in a simple string, ordered by the listeners' priorities
+     * @return string all listener's responses, concatenated in a simple string, ordered by the listeners' priorities
      */
     public function renderHook($hookName, $hookParameters = array())
     {
@@ -163,7 +163,15 @@ class HookExtension extends \Twig_Extension
             ->getContent()
         ;
 
-        return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
+        $output = '';
+
+        foreach ($hookRenders as $hookRender) {
+            if (!empty($hookRender)) {
+                $output .= array_values($hookRender)[0];
+            }
+        }
+
+        return $output;
     }
 
     /**
