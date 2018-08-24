@@ -79,7 +79,7 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Check if the feature is enabled
+     * Check if the feature is enabled.
      *
      * @return bool
      */
@@ -89,9 +89,10 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Enable / disable the PrestaTrust feature
+     * Enable / disable the PrestaTrust feature.
      *
      * @param bool $enabled
+     *
      * @return $this
      */
     public function setEnabled($enabled)
