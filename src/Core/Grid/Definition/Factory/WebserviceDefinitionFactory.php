@@ -3,14 +3,32 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 
 /**
  * Class WebserviceDefinitionFactory is responsible for creating grid definition for Webservice grid
  */
 class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $statusChoices;
+
+    public function __construct(FormChoiceProviderInterface $statusChoices)
+    {
+        $this->statusChoices = $statusChoices;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -33,6 +51,11 @@ class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
+            ->add((new BulkActionColumn('bulk_action'))
+                ->setOptions([
+                    'bulk_field' => 'id_webservice_account'
+                ])
+            )
             ->add((new DataColumn('key'))
                 ->setName($this->trans('Key', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
@@ -50,6 +73,43 @@ class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active'
                 ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+            );
+    }
+
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('key', TextType::class))
+                ->setTypeOptions([
+                    'required' => false
+                ])
+                ->setAssociatedColumn('key')
+            )
+            ->add((new Filter('description', TextType::class))
+                ->setTypeOptions([
+                    'required' => false
+                ])
+                ->setAssociatedColumn('description')
+            )
+            ->add((new Filter('active', ChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'choices' => $this->statusChoices->getChoices(),
+                    'choice_translation_domain' => false,
+                ])
+                ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => '',
+                        'data-redirect' => ''
+                    ]
+                ])
+                ->setAssociatedColumn('actions')
             );
     }
 }

@@ -71,3 +71,8 @@ services:
         arguments:
             - '@prestashop.adapter.contact.repository'
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+    prestashop.core.form.choice_provider.status:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\StatusChoiceProvider'
+        arguments:
+            - '@translator'
