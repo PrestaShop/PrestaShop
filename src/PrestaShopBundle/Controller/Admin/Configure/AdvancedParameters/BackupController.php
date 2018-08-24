@@ -35,6 +35,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -111,6 +112,23 @@ class BackupController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
+    }
+
+    /**
+     * Return a backup content as a download
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller')~'_')")
+     * @DemoRestricted(redirectRoute="admin_backup")
+     *
+     * @param string $downloadFileName
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadContentAction($downloadFileName)
+    {
+        $backup = new Backup($downloadFileName);
+
+        return new BinaryFileResponse($backup->getFilePath());
     }
 
     /**
