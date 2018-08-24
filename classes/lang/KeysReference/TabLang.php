@@ -134,6 +134,7 @@ trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');
 
 // subtab
-trans('Selection', 'Admin.Navigation.Menu');
-trans('Installed modules', 'Admin.Navigation.Menu');
-trans('Notifications', 'Admin.Navigation.Menu');
+trans('Catalog', 'Admin.Navigation.Menu');
+trans('Modules', 'Admin.Navigation.Menu');
+trans('Updates', 'Admin.Navigation.Menu');
+trans('Alerts', 'Admin.Navigation.Menu');

@@ -44,23 +44,55 @@ function ps_1750_update_module_tabs()
 
 
     // STEP 2: Rename Notifications as Alerts
+    include_once 'clean_tabs_15.php';
     $adminModulesNotificationsTabId = Db::getInstance()->getValue(
         'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminModulesNotifications"'
     );
-    if (empty($adminModulesNotificationsTabId)) {
-        return;
+    if (!empty($adminModulesNotificationsTabId)) {
+        renameTab(
+            $adminModulesNotificationsTabId,
+            [
+                'fr' => 'Alertes',
+                'es' => 'Alertas',
+                'en' => 'Alerts',
+                'gb' => 'Alerts',
+                'de' => 'Benachrichtigungen',
+                'it' => 'Avvisi',
+            ]
+        );
     }
 
-    include_once 'clean_tabs_15.php';
-    renameTab(
-        $adminModulesNotificationsTabId,
-        [
-            'fr' => 'Alertes',
-            'es' => 'Alertas',
-            'en' => 'Alerts',
-            'gb' => 'Alerts',
-            'de' => 'Benachrichtigungen',
-            'it' => 'Avvisi',
-        ]
+    $adminModulesCatalogTabId = Db::getInstance()->getValue(
+        'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminModulesCatalog"'
     );
+    if (!empty($adminModulesCatalogTabId)) {
+        renameTab(
+            $adminModulesCatalogTabId,
+            [
+                'fr' => 'Catalogue',
+                'es' => 'Catálogo',
+                'en' => 'Catalog',
+                'gb' => 'Catalog',
+                'de' => 'Catalogus',
+                'it' => 'Catalogo',
+            ]
+        );
+    }
+
+    $adminModulesManageTabId = Db::getInstance()->getValue(
+        'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminModulesManage"'
+    );
+    if (!empty($adminModulesManageTabId)) {
+        renameTab(
+            $adminModulesManageTabId,
+            [
+                'fr' => 'Modules',
+                'es' => 'módulos',
+                'en' => 'Modules',
+                'gb' => 'Modules',
+                'de' => 'Modules',
+                'it' => 'Moduli',
+            ]
+        );
+    }
 }
