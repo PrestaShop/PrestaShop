@@ -41,6 +41,13 @@ This will:
 * Add the installer if no --no-installer arg
 * Move the generated release to {project_root}/tools/build/releases or another directory if --destination-dir arg provided
 
+#### Tests
+
+Run unit tests using phpunit binary:
+```
+php ./vendor/bin/phpunit
+```
+
 ### Output: release zip archive
 
 The output is a zip archive which contains:
