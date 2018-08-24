@@ -113,28 +113,31 @@ class VersionNumber
     /**
      * @param VersionNumber $otherNumber
      *
-     * @return bool
+     * @return int 1 if this version number is higher, -1 if lower, 0 if equal
      */
-    public function isHigherThan(VersionNumber $otherNumber)
+    public function compare(VersionNumber $otherNumber)
     {
         if ($this->major > $otherNumber->getMajor()) {
-            return true;
+            return 1;
         }
         if ($this->major < $otherNumber->getMajor()) {
-            return false;
+            return -1;
         }
 
         if ($this->minor > $otherNumber->getMinor()) {
-            return true;
+            return 1;
         }
         if ($this->minor < $otherNumber->getMinor()) {
-            return false;
+            return -1;
         }
 
         if ($this->patch > $otherNumber->getPatch()) {
-            return true;
+            return 1;
+        }
+        if ($this->patch < $otherNumber->getPatch()) {
+            return -1;
         }
 
-        return false;
+        return 0;
     }
 }

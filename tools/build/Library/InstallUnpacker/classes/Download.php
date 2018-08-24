@@ -191,7 +191,7 @@ class Download
                         $maxStableVersion = $versionNumber;
                         $maxStableBranch = $branch;
                     } else {
-                        if ($versionNumber->isHigherThan($maxStableVersion)) {
+                        if (1 === $versionNumber->compare($maxStableVersion)) {
                             $maxStableVersion = $versionNumber;
                             $maxStableBranch = $branch;
                         }

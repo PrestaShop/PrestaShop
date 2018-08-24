@@ -1,0 +1,25 @@
+{
+  "name": "PrestaShop/BuildTools",
+  "type": "project",
+  "require": {
+    "phpunit/phpunit": "^7.3"
+  },
+  "autoload": {
+    "classmap": [
+      "Exception/",
+      "Library/",
+      "CreateRelease.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "PrestaShop SA",
+      "email": "contact@prestashop.com"
+    },
+    {
+      "name": "PrestaShop Community",
+      "homepage": "http://contributors.prestashop.com/"
+    }
+  ],
+  "license": "OSL-3.0"
+}

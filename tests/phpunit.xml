@@ -1,26 +1,26 @@
 <phpunit bootstrap="bootstrap.php">
-    <php>
-        <server name="KERNEL_CLASS" value="AppKernel" />
-        <env name="SYMFONY_ENV" value="test"/>
-        <env name="kernel.environment" value="test" />
-    </php>
-    <listeners>
-        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
-    </listeners>
-    <groups>
-        <exclude>
-            <group>admin</group>
-            <group>demo</group>
-            <group>api</group>
-            <group>sf</group>
-        </exclude>
-    </groups>
-    <testsuites>
-        <testsuite name="Unit">
-            <directory>Unit</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>Integration</directory>
-        </testsuite>
-    </testsuites>
+<php>
+    <server name="KERNEL_CLASS" value="AppKernel" />
+    <env name="SYMFONY_ENV" value="test"/>
+    <env name="kernel.environment" value="test" />
+</php>
+<listeners>
+    <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
+</listeners>
+<groups>
+    <exclude>
+        <group>admin</group>
+        <group>demo</group>
+        <group>api</group>
+        <group>sf</group>
+    </exclude>
+</groups>
+<testsuites>
+    <testsuite name="Unit">
+        <directory>Unit</directory>
+    </testsuite>
+    <testsuite name="Integration">
+        <directory>Integration</directory>
+    </testsuite>
+</testsuites>
 </phpunit>
