@@ -139,10 +139,20 @@ class HookDispatcherTest extends TestCase
         return $hookStub;
     }
 
+    /**
+     * The event dispatcher puts every parameter dispatched in an array.
+     * @param array $parameters
+     * @return \PHPUnit_Framework_MockObject_MockObject|RenderingHookEvent
+     */
     private function createRenderingHookEvent($parameters = [])
     {
+        $parametersDispatched = [];
+        foreach ($parameters as $key => $parameter) {
+            $parametersDispatched[$key] = empty($parameter) ? [] : [$parameter];
+        }
+
         $renderingHookEventStub = $this->createMock(RenderingHookEvent::class);
-        $renderingHookEventStub->method('getContent')->willReturn($parameters);
+        $renderingHookEventStub->method('getContent')->willReturn($parametersDispatched);
 
         return $renderingHookEventStub;
     }
