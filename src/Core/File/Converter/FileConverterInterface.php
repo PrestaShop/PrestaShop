@@ -24,40 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\File\Converter;
 
-
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use SplFileInfo;
 
 /**
- * Class ImportMatchConfigurationChoiceProvider is responsible for providing choices
- * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration
+ * Interface FileConverterInterface defines a file converter
  */
-final class ImportMatchConfigurationChoiceProvider implements FormChoiceProviderInterface
+interface FileConverterInterface
 {
     /**
-     * @var array
+     * Converts a file to a different format
+     *
+     * @param SplFileInfo $sourceFile file to convert
+     *
+     * @return SplFileInfo converted file
      */
-    private $matchConfigurations;
-
-    /**
-     * @param array $matchConfigurations
-     */
-    public function __construct(array $matchConfigurations)
-    {
-        $this->matchConfigurations = $matchConfigurations;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices()
-    {
-        $result = [];
-        foreach ($this->matchConfigurations as $configuration) {
-            $result[$configuration['name']] = $configuration['id_import_match'];
-        }
-
-        return $result;
-    }
+    public function convert(SplFileInfo $sourceFile);
 }
