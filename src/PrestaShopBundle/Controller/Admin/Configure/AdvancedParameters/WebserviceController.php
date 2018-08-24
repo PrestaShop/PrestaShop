@@ -94,7 +94,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);
 
         $searchParametersForm->handleRequest($request);
-        $filters = array();
+        $filters = [];
 
         // todo: $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
