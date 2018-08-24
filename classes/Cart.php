@@ -1290,7 +1290,7 @@ class CartCore extends ObjectModel
         }
 
         if (Context::getContext()->customer->id) {
-            if ($id_address_delivery == 0 && (int)$this->id_address_delivery) {
+            if ($id_address_delivery == 0 && (int) $this->id_address_delivery) {
                 // The $id_address_delivery is null, use the cart delivery address
                 $id_address_delivery = $this->id_address_delivery;
             } elseif ($id_address_delivery == 0) {
@@ -1396,28 +1396,28 @@ class CartCore extends ObjectModel
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
                 ) {
-                    return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization);
                 }
             } else {
                 return false;
             }
 
             Db::getInstance()->execute(
-                'UPDATE `'._DB_PREFIX_.'cart_product`
+                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = `quantity` ' . $updateQuantity . '
-                    WHERE `id_product` = '.(int)$id_product.
-                ' AND `id_customization` = '.(int)$id_customization.
-                (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                    AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
+                    WHERE `id_product` = ' . (int) $id_product .
+                ' AND `id_customization` = ' . (int) $id_customization .
+                (!empty($id_product_attribute) ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
+                    AND `id_cart` = ' . (int) $this->id . (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = ' . (int) $id_address_delivery : '') . '
                     LIMIT 1'
             );
         } elseif ($operator == 'up') {
             /* Add product to the cart */
 
             $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
-                        FROM '._DB_PREFIX_.'product p
-                        '.Product::sqlStock('p', $id_product_attribute, true, $shop).'
-                        WHERE p.id_product = '.$id_product;
+                        FROM ' . _DB_PREFIX_ . 'product p
+                        ' . Product::sqlStock('p', $id_product_attribute, true, $shop) . '
+                        WHERE p.id_product = ' . $id_product;
 
             $result2 = Db::getInstance()->getRow($sql);
 
@@ -1426,25 +1426,25 @@ class CartCore extends ObjectModel
                 $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
             }
 
-            if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
-                if ((int)$quantity > $result2['quantity']) {
+            if (!Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
+                if ((int) $quantity > $result2['quantity']) {
                     return false;
                 }
             }
 
-            if ((int)$quantity < $minimal_quantity) {
+            if ((int) $quantity < $minimal_quantity) {
                 return -1;
             }
 
             $result_add = Db::getInstance()->insert('cart_product', array(
-                'id_product' =>            (int)$id_product,
-                'id_product_attribute' =>    (int)$id_product_attribute,
-                'id_cart' =>                (int)$this->id,
-                'id_address_delivery' =>    (int)$id_address_delivery,
-                'id_shop' =>                $shop->id,
-                'quantity' =>                (int)$quantity,
-                'date_add' =>                date('Y-m-d H:i:s'),
-                'id_customization' =>       (int)$id_customization,
+                'id_product' => (int) $id_product,
+                'id_product_attribute' => (int) $id_product_attribute,
+                'id_cart' => (int) $this->id,
+                'id_address_delivery' => (int) $id_address_delivery,
+                'id_shop' => $shop->id,
+                'quantity' => (int) $quantity,
+                'date_add' => date('Y-m-d H:i:s'),
+                'id_customization' => (int) $id_customization,
             ));
 
             if (!$result_add) {
@@ -1464,11 +1464,11 @@ class CartCore extends ObjectModel
 
         if ($product->customizable) {
             return $this->_updateCustomizationQuantity(
-                (int)$quantity,
-                (int)$id_customization,
-                (int)$id_product,
-                (int)$id_product_attribute,
-                (int)$id_address_delivery,
+                (int) $quantity,
+                (int) $id_customization,
+                (int) $id_product,
+                (int) $id_product_attribute,
+                (int) $id_address_delivery,
                 $operator
             );
         }
