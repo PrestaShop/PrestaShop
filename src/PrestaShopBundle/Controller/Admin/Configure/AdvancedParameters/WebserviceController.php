@@ -52,6 +52,7 @@ class WebserviceController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $form = $this->getFormHandler()->getForm();
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
 
         $configurationWarnings = $this->lookForWarnings($request);
 
