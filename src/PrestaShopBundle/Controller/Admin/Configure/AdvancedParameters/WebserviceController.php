@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,10 +50,14 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(WebserviceFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
         $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
+        $grid = $gridWebserviceFactory->createUsingSearchCriteria($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
 
         $configurationWarnings = $this->lookForWarnings($request);
 
@@ -71,6 +76,7 @@ class WebserviceController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
+            'grid' => $presentedGrid
         ];
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
