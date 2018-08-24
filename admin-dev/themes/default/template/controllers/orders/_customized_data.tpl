@@ -128,7 +128,7 @@
 									<div class="form-group">
 										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #' d='Admin.Orderscustomers.Feature'}{$data@iteration}{/if}</strong></span>
 										<div class="col-lg-8">
-											<a href="displayImage.php?img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" class="_blank">
+											<a href="{$link->getAdminLink('AdminCarts')}&ajax=1&action=customizationImage&img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" class="_blank">
 												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt=""/>
 											</a>
 										</div>

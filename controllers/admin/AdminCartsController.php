@@ -832,6 +832,26 @@ class AdminCartsControllerCore extends AdminController
         unset($this->toolbar_btn['new']);
     }
 
+    /**
+     * Display an image as a download
+     */
+    public function displayAjaxCustomizationImage()
+    {
+        if (!Tools::isSubmit('img') || !Tools::isSubmit('name')) {
+            return;
+        }
+
+        $img = Tools::getValue('img');
+        $name = Tools::getValue('name');
+        $path = _PS_UPLOAD_DIR_.$img;
+
+        if (Validate::isMd5($img) && Validate::isGenericName($path)) {
+            header('Content-type: image/jpeg');
+            header('Content-Disposition: attachment; filename="' . $name . '.jpg"');
+            echo file_get_contents($path);
+        }
+    }
+
     public function displayAjaxGetSummary()
     {
         echo json_encode($this->ajaxReturnVars());

@@ -82,7 +82,7 @@
 											<div class="form-group">
 												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
 												<div class="col-lg-9">
-													<a href="displayImage.php?img={$data['value']}&amp;name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" class="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
+													<a href="{$link->getAdminLink('AdminCarts')}&ajax=1&action=customizationImage&img={$data['value']}&amp;name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" class="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
 												</div>
 											</div>
 										{/foreach}
