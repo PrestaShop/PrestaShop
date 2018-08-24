@@ -158,7 +158,7 @@ class PrestaShopBackupCore
      */
     public function getBackupURL()
     {
-        return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/backup.php?filename=' . basename($this->id);
+        return Context::getContext()->link->getAdminLink('AdminBackup') . '&action=backupContent&ajax=1&filename=' . basename($this->id);
     }
 
     /**

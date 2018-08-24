@@ -23,88 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated. Use a controller instead.', E_USER_DEPRECATED);
 
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
-}
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+$_GET['ajax'] = 1;
+$_GET['controller'] = 'AdminBackup';
+$_GET['action'] = 'backupContent';
 
-if (!Context::getContext()->employee->isLoggedBack()) {
-    Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
-}
-
-$tabAccess = Profile::getProfileAccess(
-    Context::getContext()->employee->id_profile,
-    Tab::getIdFromClassName('AdminBackup')
-);
-
-if ($tabAccess['view'] !== '1') {
-    die(Context::getContext()->getTranslator()->trans(
-        'You do not have permission to view this.',
-        array(),
-        'Admin.Advparameters.Notification'
-    ));
-}
-
-$backupdir = realpath(PrestaShopBackup::getBackupPath());
-
-if ($backupdir === false) {
-    die(Context::getContext()->getTranslator()->trans(
-        'There is no "/backup" directory.',
-        array(),
-        'Admin.Advparameters.Notification'
-    ));
-}
-
-if (!$backupfile = Tools::getValue('filename')) {
-    die(Context::getContext()->getTranslator()->trans(
-        'No file has been specified.',
-        array(),
-        'Admin.Advparameters.Notification'
-    ));
-}
-
-// Check the realpath so we can validate the backup file is under the backup directory
-$backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
-
-if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
-    die(Tools::dieOrLog('The backup file does not exist.'));
-}
-
-if (substr($backupfile, -4) == '.bz2') {
-    $contentType = 'application/x-bzip2';
-} elseif (substr($backupfile, -3) == '.gz') {
-    $contentType = 'application/x-gzip';
-} else {
-    $contentType = 'text/x-sql';
-}
-$fp = @fopen($backupfile, 'r');
-
-if ($fp === false) {
-    die(Context::getContext()->getTranslator()->trans(
-            'Unable to open backup file(s).',
-            array(),
-            'Admin.Advparameters.Notification'
-        ).' "'.addslashes($backupfile).'"'
-    );
-}
-
-// Add the correct headers, this forces the file is saved
-header('Content-Type: '.$contentType);
-header('Content-Disposition: attachment; filename="'.Tools::getValue('filename'). '"');
-
-if (ob_get_level() && ob_get_length() > 0) {
-    ob_clean();
-}
-$ret = @fpassthru($fp);
-
-fclose($fp);
-
-if ($ret === false) {
-    die(Context::getContext()->getTranslator()->trans(
-            'Unable to display backup file(s).',
-            array(),
-            'Admin.Advparameters.Notification'
-        ).' "'.addslashes($backupfile).'"'
-    );
-}
+require_once dirname(__FILE__).'/index.php';

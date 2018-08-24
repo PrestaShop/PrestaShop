@@ -318,4 +318,83 @@ class AdminBackupControllerCore extends AdminController
         return $this->_orderWay == 'ASC' ? strcmp($a[$this->sort_by], $b[$this->sort_by]) :
             strcmp($b[$this->sort_by], $a[$this->sort_by]);
     }
+
+    /**
+     * Reads and output the content of a backup file
+     *
+     * Expected query parameter {filename}
+     */
+    public function displayAjaxBackupContent()
+    {
+        $backupdir = realpath(PrestaShopBackup::getBackupPath());
+
+        if ($backupdir === false) {
+            $this->ajaxRender(
+                $this->trans(
+                    'There is no "/backup" directory.',
+                    array(),
+                    'Admin.Advparameters.Notification'
+            ));
+            return;
+        }
+
+        if (!$backupfile = Tools::getValue('filename')) {
+            $this->ajaxRender(
+                $this->trans(
+                    'No file has been specified.',
+                    array(),
+                    'Admin.Advparameters.Notification'
+            ));
+            return;
+        }
+
+        // Check the realpath so we can validate the backup file is under the backup directory
+        $backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
+
+        if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
+            Tools::dieOrLog('The backup file does not exist.');
+            return;
+        }
+
+        if (substr($backupfile, -4) == '.bz2') {
+            $contentType = 'application/x-bzip2';
+        } elseif (substr($backupfile, -3) == '.gz') {
+            $contentType = 'application/x-gzip';
+        } else {
+            $contentType = 'text/x-sql';
+        }
+        $fp = @fopen($backupfile, 'r');
+
+        if ($fp === false) {
+            $this->ajaxRender(
+                $this->trans(
+                    'Unable to open backup file(s).',
+                    array(),
+                    'Admin.Advparameters.Notification'
+                ).' "'.addslashes($backupfile).'"'
+            );
+            return;
+        }
+
+        // Add the correct headers, this forces the file is saved
+        header('Content-Type: '.$contentType);
+        header('Content-Disposition: attachment; filename="'.Tools::getValue('filename'). '"');
+
+        if (ob_get_level() && ob_get_length() > 0) {
+            ob_clean();
+        }
+        $ret = @fpassthru($fp);
+
+        fclose($fp);
+
+        if ($ret === false) {
+            $this->ajaxRender(
+                $this->trans(
+                    'Unable to display backup file(s).',
+                    array(),
+                    'Admin.Advparameters.Notification'
+                ).' "'.addslashes($backupfile).'"'
+            );
+        }
+    }
 }
