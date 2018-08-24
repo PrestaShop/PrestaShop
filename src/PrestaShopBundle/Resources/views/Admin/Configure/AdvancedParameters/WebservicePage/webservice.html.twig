@@ -30,6 +30,14 @@
 {% block content %}
   {{ form_start(form, {'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
   <div class="row justify-content-center">
+    {% block webservice_grid %}
+      <div class="col-md-12">
+        <div class="col">
+          {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+        </div>
+      </div>
+    {% endblock %}
+    
     {% block webservice_form_configuration %}
       <div class="col-xl-10">
         <div class="card">
