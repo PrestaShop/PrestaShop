@@ -121,7 +121,7 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
             if (!$errors = $formHandler->save($data)) {
                 //todo: remove legacy request to get the new request available
-                return $this->fowardRequestToLegacyResponse($request);
+//                return $this->fowardRequestToLegacyResponse($request);
                 return $this->redirectToRoute(
                     'admin_import_show_data',
                     [
