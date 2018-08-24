@@ -124,16 +124,17 @@ class HookExtension extends \Twig_Extension
         // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
         // modules.
         ob_start();
-        $hookRenders = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters)->getContent();
+        $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters);
+        $renderedHook->outputContent();
         ob_clean();
 
         $render = [];
-        foreach ($hookRenders as $module => $hookRender) {
+        foreach ($renderedHook->getContent() as $module => $hookRender) {
             $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
-                'content' => $hookRender,
+                'content' => array_values($hookRender)[0],
                 'attributes' => $moduleAttributes->all(),
             ];
         }
@@ -158,20 +159,11 @@ class HookExtension extends \Twig_Extension
         if ($hookName == '') {
             throw new \Exception('Hook name missing');
         }
-        $hookRenders = $this->hookDispatcher
+
+        return $this->hookDispatcher
             ->dispatchRenderingWithParameters($hookName, $hookParameters)
-            ->getContent()
+            ->outputContent()
         ;
-
-        $output = '';
-
-        foreach ($hookRenders as $hookRender) {
-            if (!empty($hookRender)) {
-                $output .= array_values($hookRender)[0];
-            }
-        }
-
-        return $output;
     }
 
     /**

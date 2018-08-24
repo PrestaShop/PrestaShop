@@ -66,4 +66,18 @@ final class RenderedHook implements RenderedHookInterface
     {
         return $this->content;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function outputContent()
+    {
+        $output = '';
+
+        foreach ($this->content as $partialContent) {
+            $output .= array_values($partialContent)[0];
+        }
+
+        return $output;
+    }
 }
