@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShopBundle\Twig;
 
 /**
- * This class is used by Twig_Environment and provide some methods callable from a twig template
+ * This class is used by Twig_Environment and provide some methods callable from a twig template.
  */
 class DataFormatterExtension extends \Twig_Extension
 {
     /**
-     * Define available filters
+     * Define available filters.
      *
      * @return array Twig_SimpleFilter
      */
@@ -46,7 +46,7 @@ class DataFormatterExtension extends \Twig_Extension
     }
 
     /**
-     * Define available functions
+     * Define available functions.
      *
      * @return array Twig_SimpleFunction
      */
@@ -60,7 +60,7 @@ class DataFormatterExtension extends \Twig_Extension
     }
 
     /**
-     * Cast to array the variable given
+     * Cast to array the variable given.
      *
      * @param mixed $toCast Mixed value to be casted into an array
      *
@@ -68,11 +68,11 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function arrayCast($toCast)
     {
-        return (array)$toCast;
+        return (array) $toCast;
     }
 
     /**
-     * Cast to int the variable given
+     * Cast to int the variable given.
      *
      * @param mixed $toCast Mixed value to be casted into an int
      *
@@ -80,19 +80,19 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function intCast($toCast)
     {
-        return (int)$toCast;
+        return (int) $toCast;
     }
 
     /**
-     * PHP 'unset()' exposed through twig template engine
+     * PHP 'unset()' exposed through twig template engine.
      *
      * @param string $array Array containing Element to unset
      * @param string $key Element to be unset
-     *
      */
     public function unsetElement($array, $key)
     {
         unset($array[$key]);
+
         return $array;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class HandlingConfiguration is responsible for saving and loading Handling options configuration
+ * Class HandlingConfiguration is responsible for saving and loading Handling options configuration.
  */
 class HandlingConfiguration implements DataConfigurationInterface
 {
@@ -41,7 +41,7 @@ class HandlingConfiguration implements DataConfigurationInterface
 
     /**
      * HandlingConfiguration constructor.
-     * 
+     *
      * @param Configuration $configuration
      */
     public function __construct(Configuration $configuration)

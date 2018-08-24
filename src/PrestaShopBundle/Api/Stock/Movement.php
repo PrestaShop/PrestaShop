@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ class Movement
     public function __construct(ProductIdentity $productIdentity, $delta)
     {
         $this->productIdentity = $productIdentity;
-        $this->delta = (int)$delta;
+        $this->delta = (int) $delta;
     }
 
     /**

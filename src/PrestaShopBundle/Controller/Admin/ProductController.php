@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
@@ -55,7 +56,6 @@ use Psr\Log\LoggerInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
@@ -89,12 +89,15 @@ class ProductController extends FrameworkBundleAdminController
      * URL example: /product/catalog/40/20/id_product/asc
      *
      * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
+     *
      * @param Request $request
-     * @param integer $limit The size of the listing
-     * @param integer $offset The offset of the listing
+     * @param int $limit The size of the listing
+     * @param int $offset The offset of the listing
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
+     *
      * @return array|Template|RedirectResponse|Response
+     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      * @throws \LogicException
@@ -156,6 +159,7 @@ class ProductController extends FrameworkBundleAdminController
         ) {
             // no filter, total filtered == 0, and then total count == 0 too.
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
+
             return $this->render(
                 'PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig',
                 [
@@ -171,7 +175,7 @@ class ProductController extends FrameworkBundleAdminController
             if (!empty($persistedFilterParameters['filter_category'])) {
                 $categoriesForm->setData(
                     array(
-                        'tree' => array(0 => $persistedFilterParameters['filter_category'])
+                        'tree' => array(0 => $persistedFilterParameters['filter_category']),
                     )
                 );
             }
@@ -220,15 +224,17 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Get only the list of products to display on the main Admin Product page.
      * The full page that shows products list will subcall this action (from catalogAction).
-     * URL example: /product/list/html/40/20/id_product/asc
+     * URL example: /product/list/html/40/20/id_product/asc.
      *
      * @Template("@PrestaShop/Admin/Product/CatalogPage/Lists/list.html.twig")
+     *
      * @param Request $request
-     * @param integer $limit The size of the listing
-     * @param integer $offset The offset of the listing
+     * @param int $limit The size of the listing
+     * @param int $offset The offset of the listing
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      * @param string $view full|quicknav To change default template used to render the content
+     *
      * @return array|Template|Response
      */
     public function listAction(
@@ -257,7 +263,7 @@ class ProductController extends FrameworkBundleAdminController
             /**
              * 2 hooks are triggered here:
              * - actionAdminProductsListingFieldsModifier
-             * - actionAdminProductsListingResultsModifier
+             * - actionAdminProductsListingResultsModifier.
              */
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
             $lastSql = $productProvider->getLastCompiledSql();
@@ -276,7 +282,7 @@ class ProductController extends FrameworkBundleAdminController
                 'admin_product_unit_action',
                 [
                     'action' => 'duplicate',
-                    'id' => $product['id_product']
+                    'id' => $product['id_product'],
                 ]
             );
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
@@ -299,11 +305,12 @@ class ProductController extends FrameworkBundleAdminController
                 'total' => $totalCount,
             ]));
         }
+
         return $vars;
     }
 
     /**
-     * Gets the header toolbar buttons
+     * Gets the header toolbar buttons.
      *
      * @return array
      */
@@ -316,14 +323,16 @@ class ProductController extends FrameworkBundleAdminController
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
         );
+
         return $toolbarButtons;
     }
 
     /**
      * Create a new basic product
-     * Then return to form action
+     * Then return to form action.
      *
      * @return RedirectResponse
+     *
      * @throws \LogicException
      * @throws \PrestaShopException
      */
@@ -366,12 +375,15 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Product form
+     * Product form.
      *
      * @Template("@PrestaShop/Admin/Product/ProductPage/product.html.twig")
+     *
      * @param int $id The product ID
      * @param Request $request
+     *
      * @return array|Response Template vars
+     *
      * @throws \LogicException
      */
     public function formAction($id, Request $request)
@@ -491,7 +503,7 @@ class ProductController extends FrameworkBundleAdminController
 
                     $response->setData([
                         'product' => $product,
-                        'customization_fields_ids' => $customizationFieldsIds
+                        'customization_fields_ids' => $customizationFieldsIds,
                     ]);
                 }
 
@@ -501,6 +513,7 @@ class ProductController extends FrameworkBundleAdminController
             } elseif ($request->isXmlHttpRequest()) {
                 $response->setStatusCode(400);
                 $response->setData($this->getFormErrorsForJS($form));
+
                 return $response;
             }
         }
@@ -565,16 +578,17 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Builds the product form
+     * Builds the product form.
      *
      * @param Product $product
      * @param AdminModelAdapter $modelMapper
+     *
      * @return FormInterface
+     *
      * @throws \Symfony\Component\Process\Exception\LogicException
      */
     private function createProductForm(Product $product, AdminModelAdapter $modelMapper)
     {
-
         $formBuilder = $this->createFormBuilder(
             $modelMapper->getFormData($product),
             ['allow_extra_fields' => true]
@@ -598,7 +612,7 @@ class ProductController extends FrameworkBundleAdminController
         if (is_array($combinations)) {
             $maxInputVars = (int) ini_get('max_input_vars');
             $combinationsCount = count($combinations) * 25;
-            $combinationsInputs = ceil($combinationsCount/1000)*1000;
+            $combinationsInputs = ceil($combinationsCount / 1000) * 1000;
 
             if ($combinationsInputs > $maxInputVars) {
                 $this->addFlash('error', $this->trans(
@@ -610,7 +624,7 @@ class ProductController extends FrameworkBundleAdminController
 
             foreach ($combinations as $combination) {
                 $formBuilder->add(
-                    'combination_'.$combination['id_product_attribute'],
+                    'combination_' . $combination['id_product_attribute'],
                     ProductCombination::class
                 );
             }
@@ -624,7 +638,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param string $action The action to apply on the selected products
-     * @throws Exception If action not properly set or unknown.
+     *
+     * @throws Exception if action not properly set or unknown
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bulkAction(Request $request, $action)
@@ -643,7 +659,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_list_id' => $productIdList];
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -721,7 +737,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     break;
                 default:
-                    /**
+                    /*
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
@@ -747,7 +763,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param string $action The action to apply on the selected products
-     * @throws Exception If action not properly set or unknown.
+     *
+     * @throws Exception if action not properly set or unknown
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function massEditAction(Request $request, $action)
@@ -771,7 +789,7 @@ class ProductController extends FrameworkBundleAdminController
         $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -793,7 +811,7 @@ class ProductController extends FrameworkBundleAdminController
 
                     $this->addFlash(
                         'success',
-                        $this->trans('Products successfully sorted.','Admin.Catalog.Notification')
+                        $this->trans('Products successfully sorted.', 'Admin.Catalog.Notification')
                     );
                     $logger->info(
                         'Products sorted: (' . implode(',', $productIdList) .
@@ -806,7 +824,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     break;
                 default:
-                    /**
+                    /*
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
@@ -824,6 +842,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $urlGenerator = $this->get('prestashop.core.admin.url_generator');
+
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
@@ -831,8 +850,10 @@ class ProductController extends FrameworkBundleAdminController
      * Do action on one product at a time. Can be used at many places in the controller's page.
      *
      * @param string $action The action to apply on the selected product
-     * @param integer $id The product ID to apply the action on.
-     * @throws Exception If action not properly set or unknown.
+     * @param int $id the product ID to apply the action on
+     *
+     * @throws Exception if action not properly set or unknown
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function unitAction($action, $id)
@@ -850,7 +871,7 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_id' => $id];
-        $hookDispatcher = $this->get('prestashop.hook.dispatcher');
+        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
         try {
@@ -917,7 +938,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     break;
                 default:
-                    /**
+                    /*
                      * should never happens since the route parameters are
                      * restricted to a set of action values in YML file.
                      */
@@ -939,6 +960,7 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * @return CsvResponse
+     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function exportAction()
@@ -951,8 +973,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog_filters/42/last/32
      *
-     * @param integer|string $quantity The quantity to set on the catalog filters persistence.
-     * @param string $active The activation state to set on the catalog filters persistence.
+     * @param int|string $quantity the quantity to set on the catalog filters persistence
+     * @param string $active the activation state to set on the catalog filters persistence
+     *
      * @return RedirectResponse
      */
     public function catalogFiltersAction($quantity = 'none', $active = 'none')
@@ -965,7 +988,7 @@ class ProductController extends FrameworkBundleAdminController
         // we merge empty filter set with given values, to reset the other filters!
         $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), [
             'filter_column_sav_quantity' => ($quantity == 'none') ? '' : $quantity,
-            'filter_column_active' => ($active == 'none') ? '' : $active
+            'filter_column_active' => ($active == 'none') ? '' : $active,
         ]));
 
         return $this->redirectToRoute('admin_product_catalog');
@@ -973,6 +996,7 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * @deprecated since 1.7.5.0, to be removed in 1.8 rely on CommonController::renderFieldAction
+     *
      * @throws \OutOfBoundsException
      * @throws \LogicException
      * @throws \PrestaShopException
@@ -1018,9 +1042,10 @@ class ProductController extends FrameworkBundleAdminController
                 break;
             case 'default':
         }
+
         return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
-            'formId' => $step . '_' . $fieldName . '_rendered'
+            'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
     }
 }

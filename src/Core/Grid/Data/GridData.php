@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 
 /**
- * Class GridData is responsible for storing grid data
+ * Class GridData is responsible for storing grid data.
  */
 final class GridData implements GridDataInterface
 {

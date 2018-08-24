@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class Grid is responsible for holding final Grid data
+ * Class Grid is responsible for holding final Grid data.
  */
 final class Grid implements GridInterface
 {

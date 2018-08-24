@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -71,7 +71,7 @@ final class PerformanceFormHandler extends AbstractFormHandler
             ->add('smarty', SmartyType::class)
             ->add('debug_mode', DebugModeType::class)
             ->add('optional_features', OptionalFeaturesType::class, [
-                'are_combinations_used' => $this->combinationFeature->isUsed()
+                'are_combinations_used' => $this->combinationFeature->isUsed(),
             ])
             ->add('ccc', CombineCompressCacheType::class)
             ->add('media_servers', MediaServersType::class)

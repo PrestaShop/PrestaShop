@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Class RequestSqlExporter exports given Request SQL data
+ * Class RequestSqlExporter exports given Request SQL data.
  */
 class RequestSqlExporter
 {
@@ -68,7 +68,7 @@ class RequestSqlExporter
     }
 
     /**
-     * Export request sql data
+     * Export request sql data.
      *
      * @param int $requestSqlId
      *
@@ -82,7 +82,7 @@ class RequestSqlExporter
         }
 
         $fileName = sprintf('request_sql_%s.csv', $requestSqlId);
-        if (!($csv = fopen($this->exportDirectory.$fileName, 'w'))) {
+        if (!($csv = fopen($this->exportDirectory . $fileName, 'w'))) {
             return null;
         }
 
@@ -92,13 +92,13 @@ class RequestSqlExporter
             fputcsv($csv, $row, ';');
         }
 
-        if (!file_exists($this->exportDirectory.$fileName)) {
+        if (!file_exists($this->exportDirectory . $fileName)) {
             return null;
         }
 
         $charset = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL') ?: CharsetEncoding::UTF_8;
 
-        $response = new BinaryFileResponse($this->exportDirectory.$fileName);
+        $response = new BinaryFileResponse($this->exportDirectory . $fileName);
         $response->setCharset($charset);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
 

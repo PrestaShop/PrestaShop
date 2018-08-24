@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutPaymentStepCore extends AbstractCheckoutStep
@@ -53,7 +51,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
                 null,
                 $this->context->language->id,
                 array(
-                    'action' => 'show'
+                    'action' => 'show',
                 ),
                 false,
                 null,
@@ -77,6 +75,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
 
     /**
      * @param array $extraParams
+     *
      * @return string
      */
     public function render(array $extraParams = array())

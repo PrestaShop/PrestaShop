@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Exception;
 use LogicException;
 
 /**
- * Class MissingColumnInRowException
+ * Class MissingColumnInRowException.
  */
 class MissingColumnInRowException extends LogicException implements ExceptionInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,13 +28,12 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
- * Class RequestSqlRepository is responsible for retrieving RequestSql data from database
+ * Class RequestSqlRepository is responsible for retrieving RequestSql data from database.
  */
 class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderInterface
 {
@@ -57,7 +56,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->requestSqlTable = $dbPrefix.'request_sql';
+        $this->requestSqlTable = $dbPrefix . 'request_sql';
     }
 
     /**
@@ -71,9 +70,9 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     }
 
     /**
-     * Get count of all request sql's
+     * Get count of all request sql's.
      *
-     * @return int  Number of request sql rows
+     * @return int Number of request sql rows
      */
     public function getCount()
     {
@@ -109,7 +108,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
     }
 
     /**
-     * Build partial query by search criteria
+     * Build partial query by search criteria.
      *
      * @param SearchCriteriaInterface $criteria
      *
@@ -132,7 +131,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
             }
 
             $qb->andWhere("`$filterName` LIKE :$filterName");
-            $qb->setParameter($filterName, '%'.$value.'%');
+            $qb->setParameter($filterName, '%' . $value . '%');
         }
 
         return $qb;

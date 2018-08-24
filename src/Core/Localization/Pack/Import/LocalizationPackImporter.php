@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderIn
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class LocalizationPackImporter is responsible for importing localization pack
+ * Class LocalizationPackImporter is responsible for importing localization pack.
  */
 final class LocalizationPackImporter implements LocalizationPackImporterInterface
 {
@@ -125,7 +125,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
     }
 
     /**
-     * Check if configuration is valid
+     * Check if configuration is valid.
      *
      * @param LocalizationPackImportConfig $config
      *
@@ -166,7 +166,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
     }
 
     /**
-     * Translate message
+     * Translate message.
      *
      * @param string $message
      * @param string $domain

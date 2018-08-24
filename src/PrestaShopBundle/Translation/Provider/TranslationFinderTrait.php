@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,9 @@ trait TranslationFinderTrait
      * @param $paths
      * @param $locale
      * @param null $pattern
+     *
      * @return MessageCatalogue
+     *
      * @throws \Exception
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
@@ -57,7 +59,7 @@ trait TranslationFinderTrait
             if (strpos($file->getBasename('.xlf'), $locale) !== false) {
                 $domain = $file->getBasename('.xlf');
             } else {
-                $domain = $file->getBasename('.xlf').'.'.$locale;
+                $domain = $file->getBasename('.xlf') . '.' . $locale;
             }
 
             $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);

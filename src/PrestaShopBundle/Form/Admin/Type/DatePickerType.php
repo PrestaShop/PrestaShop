@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a date picker field
+ * This form class is responsible to create a date picker field.
  */
 class DatePickerType extends AbstractType
 {
@@ -49,7 +49,7 @@ class DatePickerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'widget' => 'single_text'
+            'widget' => 'single_text',
         ]);
     }
 

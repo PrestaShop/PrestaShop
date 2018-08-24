@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 
 /**
- * Interface GridDataFactoryInterface defines contract for grid data providers
+ * Interface GridDataFactoryInterface defines contract for grid data factories.
  */
 interface GridDataFactoryInterface
 {

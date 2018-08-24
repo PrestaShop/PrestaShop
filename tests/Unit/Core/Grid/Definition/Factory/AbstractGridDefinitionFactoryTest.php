@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,8 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 class AbstractGridDefinitionFactoryTest extends TestCase
 {
@@ -64,6 +63,34 @@ class AbstractGridDefinitionFactoryTest extends TestCase
         ;
 
         $this->definitionFactory = $definitionFactory;
+    }
+
+    public function testItCreatesDefinitionAndDispatchesHookToAllowDefinitionModification()
+    {
+        $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
+        $hookDispatcherMock
+            ->expects($this->once())
+            ->method('dispatchWithParameters')
+            ->withConsecutive(
+                [$this->equalTo('actiontest_idGridDefinitionModifier')],
+                [$this->isType('array'), $this->arrayHasKey('definition')]
+            )
+        ;
+
+        $this->definitionFactory->setHookDispatcher($hookDispatcherMock);
+
+        $definition = $this->definitionFactory->create();
+
+        $this->assertInstanceOf(DefinitionInterface::class, $definition);
+        $this->assertInstanceOf(BulkActionCollectionInterface::class, $definition->getBulkActions());
+        $this->assertInstanceOf(GridActionCollectionInterface::class, $definition->getGridActions());
+
+        $this->assertEquals($definition->getId(), 'test_id');
+        $this->assertEquals($definition->getName(), 'Test name');
+        $this->assertCount(3, $definition->getColumns());
+        $this->assertCount(0, $definition->getGridActions());
+        $this->assertCount(0, $definition->getBulkActions());
+        $this->assertCount(0, $definition->getFilters()->all());
     }
 
     private function getColumns()

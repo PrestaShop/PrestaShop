@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Contact;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
- * Class ContactRepository is responsible for retrieving contact data from database
+ * Class ContactRepository is responsible for retrieving contact data from database.
  *
  * @internal
  */

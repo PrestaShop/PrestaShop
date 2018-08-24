@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Product;
 
 use PrestaShopBundle\Component\CsvResponse;
@@ -53,8 +54,11 @@ final class ProductCsvExporter implements ProductExporterInterface
 
     /**
      * In this specific case, we don't need to pass a products list.
+     *
      * @param array $products
+     *
      * @return CsvResponse
+     *
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
@@ -92,10 +96,13 @@ final class ProductCsvExporter implements ProductExporterInterface
     }
 
     /**
-     * Translator helper
+     * Translator helper.
+     *
      * @param $key
      * @param $domain
+     *
      * @return string
+     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     private function trans($key, $domain)

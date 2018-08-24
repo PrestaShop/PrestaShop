@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Group;
 use Group;
 
 /**
- * This class will provide data from DB / ORM about Group
+ * This class will provide data from DB / ORM about Group.
  */
 class GroupDataProvider
 {
     /**
-     * Return available groups
+     * Return available groups.
      *
      * @param int $id_lang
      * @param bool $id_shop
@@ -48,7 +48,7 @@ class GroupDataProvider
 
     /**
      * Return current group object
-     * Use context
+     * Use context.
      *
      * @return Group Group object
      */

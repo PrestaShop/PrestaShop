@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -65,8 +66,8 @@ class SslMiddleware
     private function redirectToSsl(GetResponseEvent $event)
     {
         $event->stopPropagation();
-        $redirect = "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        header("HTTP/1.1 302 Found");
+        $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 302 Found');
         header("Location: $redirect");
         exit();
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class SmartyDevTemplateCore extends Smarty_Internal_Template
 {
     /** @var SmartyCustom|null */
@@ -38,7 +37,7 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
         }
 
         return "\n<!-- begin $tpl -->\n"
-            .parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter)
-            ."\n<!-- end $tpl -->\n";
+            . parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter)
+            . "\n<!-- end $tpl -->\n";
     }
 }

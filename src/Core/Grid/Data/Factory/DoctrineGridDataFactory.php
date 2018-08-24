@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders
+ * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders.
  */
 final class DoctrineGridDataFactory implements GridDataFactoryInterface
 {

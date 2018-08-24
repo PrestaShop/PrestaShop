@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 @ini_set('max_execution_time', 0);
 /**
  * @property PrestaShopBackup $object
@@ -45,25 +44,25 @@ class AdminBackupControllerCore extends AdminController
             'date' => array('title' => $this->trans('Date', array(), 'Admin.Global'), 'type' => 'datetime', 'class' => 'fixed-width-lg', 'orderby' => false, 'search' => false),
             'age' => array('title' => $this->trans('Age', array(), 'Admin.Advparameters.Feature'), 'orderby' => false, 'search' => false),
             'filename' => array('title' => $this->trans('Filename', array(), 'Admin.Global'), 'orderby' => false, 'search' => false),
-            'filesize' => array('title' => $this->trans('File size', array(), 'Admin.Advparameters.Feature'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false)
+            'filesize' => array('title' => $this->trans('File size', array(), 'Admin.Advparameters.Feature'), 'class' => 'fixed-width-sm', 'orderby' => false, 'search' => false),
         );
 
         $this->bulk_actions = array('delete' => array(
             'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
-            'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'), 'icon' => 'icon-trash')
+            'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'), 'icon' => 'icon-trash', ),
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Backup options', array(), 'Admin.Advparameters.Feature'),
-                'fields' =>    array(
+                'title' => $this->trans('Backup options', array(), 'Admin.Advparameters.Feature'),
+                'fields' => array(
                     'PS_BACKUP_ALL' => array(
                         'title' => $this->trans('Ignore statistics tables', array(), 'Admin.Advparameters.Feature'),
-                        'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.Advparameters.Help').'
-							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_
-                            .'connections_source, '._DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
+                        'desc' => $this->trans('Drop existing tables during import.', array(), 'Admin.Advparameters.Help') . '
+							<br />' . _DB_PREFIX_ . 'connections, ' . _DB_PREFIX_ . 'connections_page, ' . _DB_PREFIX_
+                            . 'connections_source, ' . _DB_PREFIX_ . 'guest, ' . _DB_PREFIX_ . 'statssearch',
                         'cast' => 'intval',
-                        'type' => 'bool'
+                        'type' => 'bool',
                     ),
                     'PS_BACKUP_DROP_TABLE' => array(
                         'title' => $this->trans('Drop existing tables during import', array(), 'Admin.Advparameters.Feature'),
@@ -72,10 +71,10 @@ class AdminBackupControllerCore extends AdminController
                             $this->trans('(ie. "DROP TABLE IF EXISTS")', array(), 'Admin.Advparameters.Help'),
                         ),
                         'cast' => 'intval',
-                        'type' => 'bool'
-                    )
+                        'type' => 'bool',
+                    ),
                 ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
         );
     }
@@ -106,7 +105,7 @@ class AdminBackupControllerCore extends AdminController
 
     public function initViewDownload()
     {
-        $this->tpl_folder = $this->tpl_folder.'download/';
+        $this->tpl_folder = $this->tpl_folder . 'download/';
 
         return parent::renderView();
     }
@@ -118,14 +117,14 @@ class AdminBackupControllerCore extends AdminController
             case 'edit':
             case 'view':
                 $this->toolbar_btn['cancel'] = array(
-                    'href' => self::$currentIndex.'&token='.$this->token,
-                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions')
+                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions'),
                 );
                 break;
             case 'options':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->trans('Save', array(), 'Admin.Actions')
+                    'desc' => $this->trans('Save', array(), 'Admin.Actions'),
                 );
                 break;
         }
@@ -144,8 +143,10 @@ class AdminBackupControllerCore extends AdminController
      * Load class object using identifier in $_GET (if possible)
      * otherwise return an empty object
      * This method overrides the one in AdminTab because AdminTab assumes the id is a UnsignedInt
-     * "Backups" Directory in admin directory must be writeable (CHMOD 777)
+     * "Backups" Directory in admin directory must be writeable (CHMOD 777).
+     *
      * @param bool $opt Return an empty object if load fail
+     *
      * @return object
      */
     protected function loadObject($opt = false)
@@ -165,6 +166,7 @@ class AdminBackupControllerCore extends AdminController
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+
             return;
         }
         /* PrestaShop demo mode*/
@@ -180,7 +182,7 @@ class AdminBackupControllerCore extends AdminController
                     $this->context->smarty->assign(array(
                             'conf' => $this->trans('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.', array(), 'Admin.Advparameters.Notification'),
                             'backup_url' => $object->getBackupURL(),
-                            'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
+                            'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', ''),
                         ));
                 }
             }
@@ -202,16 +204,16 @@ class AdminBackupControllerCore extends AdminController
         }
 
         if (empty($order_by)) {
-            $order_by = Tools::getValue($this->table.'Orderby', $this->_defaultOrderBy);
+            $order_by = Tools::getValue($this->table . 'Orderby', $this->_defaultOrderBy);
         }
 
         if (empty($order_way)) {
-            $order_way = Tools::getValue($this->table.'Orderway', 'ASC');
+            $order_way = Tools::getValue($this->table . 'Orderway', 'ASC');
         }
 
         // Try and obtain getList arguments from $_GET
-        $order_by = Tools::getValue($this->table.'Orderby');
-        $order_way = Tools::getValue($this->table.'Orderway');
+        $order_by = Tools::getValue($this->table . 'Orderby');
+        $order_way = Tools::getValue($this->table . 'Orderway');
 
         // Validate the orderBy and orderWay fields
         switch ($order_by) {
@@ -231,18 +233,18 @@ class AdminBackupControllerCore extends AdminController
                 $order_way = 'desc';
         }
         if (empty($limit)) {
-            $limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit =
-                $this->context->cookie->{$this->table.'_pagination'});
+            $limit = ((!isset($this->context->cookie->{$this->table . '_pagination'})) ? $this->_pagination[0] : $limit =
+                $this->context->cookie->{$this->table . '_pagination'});
         }
-        $limit = (int)Tools::getValue('pagination', $limit);
-        $this->context->cookie->{$this->table.'_pagination'} = $limit;
+        $limit = (int) Tools::getValue('pagination', $limit);
+        $this->context->cookie->{$this->table . '_pagination'} = $limit;
 
         /* Determine offset from current page */
-        if (!empty($_POST['submitFilter'.$this->list_id]) && is_numeric($_POST['submitFilter'.$this->list_id])) {
-            $start = (int)$_POST['submitFilter'.$this->list_id] - 1 * $limit;
+        if (!empty($_POST['submitFilter' . $this->list_id]) && is_numeric($_POST['submitFilter' . $this->list_id])) {
+            $start = (int) $_POST['submitFilter' . $this->list_id] - 1 * $limit;
         }
 
-        $this->_lang = (int)$id_lang;
+        $this->_lang = (int) $id_lang;
         $this->_orderBy = $order_by;
         $this->_orderWay = strtoupper($order_way);
         $this->_list = array();
@@ -252,31 +254,32 @@ class AdminBackupControllerCore extends AdminController
 
         if ($dh === false) {
             $this->errors[] = $this->trans('Unable to open your backup directory', array(), 'Admin.Advparameters.Notification');
+
             return;
         }
         while (($file = readdir($dh)) !== false) {
             if (preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches) == 0) {
                 continue;
             }
-            $timestamp = (int)$matches[1];
+            $timestamp = (int) $matches[1];
             $date = date('Y-m-d H:i:s', $timestamp);
             $age = time() - $timestamp;
             if ($age < 3600) {
-                $age = '< 1 '.$this->trans('Hour', array(), 'Admin.Global');
+                $age = '< 1 ' . $this->trans('Hour', array(), 'Admin.Global');
             } elseif ($age < 86400) {
                 $age = floor($age / 3600);
-                $age = $age.' '.(($age == 1) ? $this->trans('Hour', array(), 'Admin.Global') :
+                $age = $age . ' ' . (($age == 1) ? $this->trans('Hour', array(), 'Admin.Global') :
                     $this->trans('Hours', array(), 'Admin.Global'));
             } else {
                 $age = floor($age / 86400);
-                $age = $age.' '.(($age == 1) ? $this->trans('Day', array(), 'Admin.Global') : $this->trans('Days', array(), 'Admin.Global'));
+                $age = $age . ' ' . (($age == 1) ? $this->trans('Day', array(), 'Admin.Global') : $this->trans('Days', array(), 'Admin.Global'));
             }
             $size = filesize(PrestaShopBackup::getBackupPath($file));
             $this->_list[] = array(
                 'filename' => $file,
                 'age' => $age,
                 'date' => $date,
-                'filesize' => number_format($size / 1000, 2).' Kb',
+                'filesize' => number_format($size / 1000, 2) . ' Kb',
                 'timestamp' => $timestamp,
                 'filesize_sort' => $size,
             );

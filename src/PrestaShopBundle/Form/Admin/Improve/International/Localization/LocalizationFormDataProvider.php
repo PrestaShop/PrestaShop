@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * Class LocalizationFormDataProvider is responsible for handling
- * 'Improve > International > Localization' page form data
+ * 'Improve > International > Localization' page form data.
  */
 class LocalizationFormDataProvider implements FormDataProviderInterface
 {

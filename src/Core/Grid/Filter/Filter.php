@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Class Filter defines single filter for grid
+ * Class Filter defines single filter for grid.
  */
 final class Filter implements FilterInterface
 {

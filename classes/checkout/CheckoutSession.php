@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class CheckoutSessionCore
 {
     protected $context;
@@ -105,15 +103,15 @@ class CheckoutSessionCore
     private function _updateMessage($messageContent)
     {
         if ($messageContent) {
-            if ($oldMessage = Message::getMessageByCartId((int)$this->context->cart->id)) {
-                $message = new Message((int)$oldMessage['id_message']);
+            if ($oldMessage = Message::getMessageByCartId((int) $this->context->cart->id)) {
+                $message = new Message((int) $oldMessage['id_message']);
                 $message->message = $messageContent;
                 $message->update();
             } else {
                 $message = new Message();
                 $message->message = $messageContent;
-                $message->id_cart = (int)$this->context->cart->id;
-                $message->id_customer = (int)$this->context->cart->id_customer;
+                $message->id_cart = (int) $this->context->cart->id;
+                $message->id_customer = (int) $this->context->cart->id_customer;
                 $message->add();
             }
         } else {

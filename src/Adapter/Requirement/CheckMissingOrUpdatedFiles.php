@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,6 +37,7 @@ class CheckMissingOrUpdatedFiles
     /**
      * @param string|null $dir
      * @param string $path
+     *
      * @return array
      */
     public function getListOfUpdatedFiles($dir = null, $path = '')
@@ -45,9 +46,9 @@ class CheckMissingOrUpdatedFiles
             'missing' => array(),
             'updated' => array(),
         );
-        
+
         if (is_null($dir)) {
-            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5-'.AppKernel::MAJOR_VERSION.'/'.AppKernel::VERSION.'.xml');
+            $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');
             if (!$xml) {
                 return $fileList;
             }
@@ -66,13 +67,13 @@ class CheckMissingOrUpdatedFiles
 
             if (!file_exists(_PS_ROOT_DIR_ . '/' . $filename)) {
                 $fileList['missing'][] = $filename;
-            } elseif (md5_file(_PS_ROOT_DIR_ . '/' . $filename) !== (string)$file) {
+            } elseif (md5_file(_PS_ROOT_DIR_ . '/' . $filename) !== (string) $file) {
                 $fileList['updated'][] = $filename;
             }
         }
 
         foreach ($dir->dir as $subdir) {
-            $this->getListOfUpdatedFiles($subdir, $path.$subdir['name'].'/');
+            $this->getListOfUpdatedFiles($subdir, $path . $subdir['name'] . '/');
         }
 
         return $fileList;

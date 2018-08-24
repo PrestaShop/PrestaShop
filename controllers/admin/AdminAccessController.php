@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -49,12 +49,13 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * AdminController::renderForm() override
+     * AdminController::renderForm() override.
+     *
      * @see AdminController::renderForm()
      */
     public function renderForm()
     {
-        $current_profile = (int)$this->getCurrentProfileId();
+        $current_profile = (int) $this->getCurrentProfileId();
         $profiles = Profile::getProfiles($this->context->language->id);
         $tabs = Tab::getTabs($this->context->language->id);
 
@@ -71,7 +72,7 @@ class AdminAccessControllerCore extends AdminController
             }
 
             foreach ($this->accesses_black_list as $id_tab) {
-                if ($tab['id_tab'] == (int)$id_tab) {
+                if ($tab['id_tab'] == (int) $id_tab) {
                     unset($tabs[$key]);
                 }
             }
@@ -87,11 +88,11 @@ class AdminAccessControllerCore extends AdminController
         $this->tpl_form_vars = array(
             'profiles' => $profiles,
             'accesses' => $accesses,
-            'id_tab_parentmodule' => (int)Tab::getIdFromClassName('AdminParentModules'),
-            'id_tab_module' => (int)Tab::getIdFromClassName('AdminModules'),
+            'id_tab_parentmodule' => (int) Tab::getIdFromClassName('AdminParentModules'),
+            'id_tab_module' => (int) Tab::getIdFromClassName('AdminModules'),
             'tabs' => $this->displayTabs($tabs),
-            'current_profile' => (int)$current_profile,
-            'admin_profile' => (int)_PS_ADMIN_PROFILE_,
+            'current_profile' => (int) $current_profile,
+            'admin_profile' => (int) _PS_ADMIN_PROFILE_,
             'access_edit' => $this->access('edit'),
             'perms' => array('view', 'add', 'edit', 'delete'),
             'id_perms' => array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4),
@@ -104,7 +105,8 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * AdminController::initContent() override
+     * AdminController::initContent() override.
+     *
      * @see AdminController::initContent()
      */
     public function initContent()
@@ -143,18 +145,18 @@ class AdminAccessControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
-            $access = new Access;
+            $access = new Access();
             $perm = Tools::getValue('perm');
             if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {
                 throw new PrestaShopException('permission does not exist');
             }
 
-            $enabled = (int)Tools::getValue('enabled');
-            $id_tab = (int)Tools::getValue('id_tab');
-            $id_profile = (int)Tools::getValue('id_profile');
-            $addFromParent = (int)Tools::getValue('addFromParent');
+            $enabled = (int) Tools::getValue('enabled');
+            $id_tab = (int) Tools::getValue('id_tab');
+            $id_profile = (int) Tools::getValue('id_profile');
+            $addFromParent = (int) Tools::getValue('addFromParent');
 
-            die($access->updateLgcAccess((int)$id_profile, $id_tab, $perm, $enabled, $addFromParent));
+            die($access->updateLgcAccess((int) $id_profile, $id_tab, $perm, $enabled, $addFromParent));
         }
     }
 
@@ -168,28 +170,28 @@ class AdminAccessControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('changeModuleAccess')) {
-            $access = new Access;
+            $access = new Access();
             $perm = Tools::getValue('perm');
-            $enabled = (int)Tools::getValue('enabled');
-            $id_module = (int)Tools::getValue('id_module');
-            $id_profile = (int)Tools::getValue('id_profile');
+            $enabled = (int) Tools::getValue('enabled');
+            $id_module = (int) Tools::getValue('id_module');
+            $id_profile = (int) Tools::getValue('id_profile');
 
             if (!in_array($perm, array('view', 'configure', 'uninstall'))) {
                 throw new PrestaShopException('permission does not exist');
             }
 
-            die($access->updateLgcModuleAccess((int)$id_profile, $id_module, $perm, $enabled));
+            die($access->updateLgcModuleAccess((int) $id_profile, $id_module, $perm, $enabled));
         }
     }
 
     /**
-    * Get the current profile id
-    *
-    * @return int the $_GET['profile'] if valid, else 1 (the first profile id)
-    */
+     * Get the current profile id.
+     *
+     * @return int the $_GET['profile'] if valid, else 1 (the first profile id)
+     */
     public function getCurrentProfileId()
     {
-        return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int)$_GET['id_profile'] : 1;
+        return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int) $_GET['id_profile'] : 1;
     }
 
     private function sortModuleByName($a, $b)
@@ -198,8 +200,7 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * return human readable Tabs hierarchy for display
-     *
+     * return human readable Tabs hierarchy for display.
      */
     private function displayTabs(array $tabs)
     {
@@ -219,6 +220,7 @@ class AdminAccessControllerCore extends AdminController
                 $children[$id]['children'] = $this->getChildrenTab($tabs, $id);
             }
         }
+
         return $children;
     }
 }

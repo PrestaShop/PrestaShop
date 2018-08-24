@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Class SampleFileProvider is responsible for providing sample import files
+ * Class SampleFileProvider is responsible for providing sample import files.
  */
 final class SampleFileProvider implements SampleFileProviderInterface
 {

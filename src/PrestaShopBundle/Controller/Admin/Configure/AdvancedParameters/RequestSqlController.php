@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,19 +39,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page
+ * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
  */
 class RequestSqlController extends FrameworkBundleAdminController
 {
     /**
-     * Show list of saved SQL's
+     * Show list of saved SQL's.
      *
      * @AdminSecurity(
      *     "is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')",
      *      message="Access denied."
      * )
      *
-     * @param Request           $request
+     * @param Request $request
      * @param RequestSqlFilters $filters
      *
      * @return Response
@@ -115,7 +115,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Request SQL settings save
+     * Process Request SQL settings save.
      *
      * @DemoRestricted(redirectRoute="admin_request_sql")
      * @AdminSecurity(
@@ -145,7 +145,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show Request SQL create page
+     * Show Request SQL create page.
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller')~'_')",
@@ -203,14 +203,14 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show Request SQL edit page
+     * Show Request SQL edit page.
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int     $requestSqlId
+     * @param int $requestSqlId
      * @param Request $request
      *
      * @return Response
@@ -258,7 +258,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete selected Request SQL
+     * Delete selected Request SQL.
      *
      * @AdminSecurity(
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
@@ -293,7 +293,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process bulk action delete of RequestSql's
+     * Process bulk action delete of RequestSql's.
      *
      * @AdminSecurity(
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
@@ -336,7 +336,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * View Request SQL query data
+     * View Request SQL query data.
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
@@ -344,7 +344,7 @@ class RequestSqlController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int     $requestSqlId
+     * @param int $requestSqlId
      *
      * @return Response
      */
@@ -370,7 +370,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Export Request SQL data
+     * Export Request SQL data.
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
@@ -397,7 +397,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get MySQL table columns data
+     * Get MySQL table columns data.
      *
      * @param string $mySqlTableName Database tabe name
      *
@@ -421,7 +421,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get request sql repository
+     * Get request sql repository.
      *
      * @return \PrestaShopBundle\Entity\Repository\RequestSqlRepository
      */
@@ -431,7 +431,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get Request SQL settings form handler
+     * Get Request SQL settings form handler.
      *
      * @return FormHandlerInterface
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
@@ -66,7 +67,7 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        return ($this->session->has('should_use_legacy_page_for_'.$page) && $this->session->get('should_use_legacy_page_for_'.$page, 0) == 1);
+        return $this->session->has('should_use_legacy_page_for_' . $page) && $this->session->get('should_use_legacy_page_for_' . $page, 0) == 1;
     }
 
     /**
@@ -78,10 +79,10 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        if ((bool)$useLegacy) {
-            $this->session->set('should_use_legacy_page_for_'.$page, 1);
+        if ((bool) $useLegacy) {
+            $this->session->set('should_use_legacy_page_for_' . $page, 1);
         } else {
-            $this->session->remove('should_use_legacy_page_for_'.$page);
+            $this->session->remove('should_use_legacy_page_for_' . $page);
         }
     }
 
@@ -95,7 +96,7 @@ class PagePreference implements AdminPagePreferenceInterface
             return true;
         }
 
-        $version = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
+        $version = Db::getInstance()->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
         if (!$version) {
             return false;
         }

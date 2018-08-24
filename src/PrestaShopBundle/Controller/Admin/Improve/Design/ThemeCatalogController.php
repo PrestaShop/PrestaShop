@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Displays themes from Addons under "Improve > Design > Themes Catalog"
+ * Displays themes from Addons under "Improve > Design > Themes Catalog".
  */
 class ThemeCatalogController extends FrameworkBundleAdminController
 {
     /**
-     * Displays themes from Addons under "Improve > Design > Themes Catalog"
+     * Displays themes from Addons under "Improve > Design > Themes Catalog".
      *
      * @param Request $request
      *
@@ -60,6 +60,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     *
      * @return string
      */
     private function getAddonsUrl(Request $request)
@@ -78,6 +79,6 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             . "&isoCountry=$countryCode"
             . "&activity=$activity"
             . "&parentUrl=$parent_domain"
-            . "&onlyThemes=1";
+            . '&onlyThemes=1';
     }
 }

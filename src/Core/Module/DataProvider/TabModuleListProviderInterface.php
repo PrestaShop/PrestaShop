@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Module\DataProvider;
 
 /**
- * Interface TabModuleListProviderInterface defines contract for tab module provider
+ * Interface TabModuleListProviderInterface defines contract for tab module provider.
  */
 interface TabModuleListProviderInterface
 {
     /**
-     * Get tab modules
+     * Get tab modules.
      *
      * @param string $tabClassName
      *

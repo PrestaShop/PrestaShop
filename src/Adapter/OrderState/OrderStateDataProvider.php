@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use OrderState;
 use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 
 /**
- * Class OrderStateDataProvider provides OrderState data using legacy code
+ * Class OrderStateDataProvider provides OrderState data using legacy code.
  */
 final class OrderStateDataProvider implements OrderStateDataProviderInterface
 {

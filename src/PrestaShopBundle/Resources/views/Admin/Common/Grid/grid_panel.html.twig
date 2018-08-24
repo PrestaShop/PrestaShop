@@ -25,9 +25,9 @@
 
 <div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
   {% block grid_header %}
-    <div class="card-header">
-      <h3>{{ grid.name }} ({{ grid.data.records_total }})</h3>
-    </div>
+    <h3 class="card-header">
+        {{ grid.name }} ({{ grid.data.records_total }})
+    </h3>
   {% endblock %}
 
   {% block grid_body %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
- * Class FilterCollection manages filters collection for grid
+ * Class FilterCollection manages filters collection for grid.
  */
 final class FilterCollection implements FilterCollectionInterface
 {

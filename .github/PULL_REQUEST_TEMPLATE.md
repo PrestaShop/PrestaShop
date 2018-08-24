@@ -15,7 +15,7 @@ https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/#pull-requ
 | Category?     | FO / BO / CO / IN / WS / TE
 | BC breaks?    | Does it break backward compatibility? yes/no
 | Deprecations? | Does it deprecate an existing feature? yes/no
-| Fixed ticket? | (optional) If this PR fixes a [Forge](http://forge.prestashop.com/) ticket, please add its complete Forge URL.
+| Fixed ticket? | (optional) If this PR fixes an [Issue](https://github.com/PrestaShop/PrestaShop/issues), please write "Fixes #[issue number]" here.
 | How to test?  | Please indicate how to best verify that this PR is correct.
 
 <!-- Click the form's "Preview" button to make sure the table is functional in GitHub. Thank you! -->

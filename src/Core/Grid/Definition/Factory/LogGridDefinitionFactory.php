@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,22 +43,23 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition
+ * Class LogGridDefinitionFactory is responsible for creating new instance of Log grid definition.
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string the URL to reset Grid filters.
+     * @var string the URL to reset Grid filters
      */
     private $resetActionUrl;
 
     /**
-     * @var string the URL for redirection.
+     * @var string the URL for redirection
      */
     private $redirectionUrl;
 
     /**
      * LogGridDefinitionFactory constructor.
+     *
      * @param string $resetActionUrl
      * @param string $redirectionUrl
      */
@@ -228,7 +229,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('delete')
                 ->setOptions([
                     'submit_route' => 'admin_logs_delete',
-                    'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning')
+                    'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
                 ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))
