@@ -149,6 +149,7 @@ class WebTestCase extends TestCase
                 'getRootUrl',
                 'getLanguages',
                 'getLanguage',
+                'getAdminLink',
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()

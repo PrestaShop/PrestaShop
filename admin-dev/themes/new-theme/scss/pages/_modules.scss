@@ -94,7 +94,7 @@
 }
 
 .module-short-list {
-    margin: 2em;
+  margin: 2em;
 }
 
 /**
@@ -172,12 +172,12 @@
 }
 
 .module-item-wrapper-grid .module-quick-action-grid {
-    .spinner {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      margin-left: -20px;
-    }
+  .spinner {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -20px;
+  }
   .form-action-button-container {
     display: flex;
     justify-content: flex-end;
@@ -203,8 +203,8 @@
 }
 
 /**
-* Addons Module Cast (List view)
-**/
+ * Addons Module Cast (List view);
+ **/
 .module-addons-item-list {
   display: none;
   -webkit-touch-callout: none;
@@ -221,29 +221,29 @@
 
     > .module-icon-addons-exit-list {
       > img {
-          height: 3em;
+        height: 3em;
       }
     }
   }
 }
 
 /**
-* Error message on catalog loading
-**/
+ * Error message on catalog loading
+ **/
 
 .module-placeholders-failure {
-    display: none;
+  display: none;
 
-    .module-placeholders-failure-wrapper {
-        text-align: center;
-        margin-top: 40px;
-    }
-    .module-placeholders-failure-msg {
-        color: red;
-    }
-    #module-placeholders-failure-retry {
-        margin-top: 10px;
-    }
+  .module-placeholders-failure-wrapper {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .module-placeholders-failure-msg {
+    color: red;
+  }
+  #module-placeholders-failure-retry {
+    margin-top: 10px;
+  }
 }
 
 
@@ -395,8 +395,8 @@
 }
 
 /**
-* Module import
-**/
+ * Module import
+ **/
 
 .module-import-processing {
   display: none;
@@ -475,10 +475,140 @@ form#importDropzone {
 }
 
 /**
-* PrestaTrust modal
-**/
+ * PrestaTrust modal
+ **/
 
 #pstrust-img {
-    max-height: 64px;
-    max-width: 64px;
+  max-height: 64px;
+  max-width: 64px;
+}
+
+/**
+ * Module positions
+ */
+
+#modules-position-selection-panel {
+  position: relative;
+  display: none;
+}
+
+.hook-panel {
+  margin-bottom: 10px !important;
+  border: solid #E6E6E6 1px;
+  box-shadow: rgba(black,0.10) 0 -2px 0 inset;
+  border-radius: 3px;
+  padding: 10px 10px 5px 10px;
+
+  .highlight {
+    background-color: #F7E69F !important;
+  }
+
+  .hook-panel-header {
+    margin: 0 -10px 0 -10px;
+    padding: 0 10px 10px 10px;
+
+    .hook-name {
+      font-size: 1.4em;
+      color: $brand-primary;
+      background-color: white;
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+    .hook_title {
+      @extend .text-muted;
+    }
+    .hook_description {
+      @extend .text-muted;
+      padding: 3px 0 0 3px;
+    }
+  }
+}
+
+.modules_list_container_tab {
+  img {
+    max-width: 66px;
+  }
+}
+
+.module-list {
+  .module-item {
+    display: table;
+    width: 100%;
+    padding: 5px 0;
+    margin-bottom: -1px;
+    border: solid 1px #9ed0ec;
+    background: #fff;
+
+    &.draggable {
+      cursor: pointer;
+    }
+  }
+
+  .module-column-select {
+    display: table-cell;
+    width: 22px;
+    min-height: 35px;
+    vertical-align: middle;
+    text-align: center;
+    border-right: 1px solid #ddd;
+  }
+
+  .module-column-position {
+    display: table-cell;
+    width: 80px;
+    vertical-align: middle;
+    text-align: right;
+
+    .index-position {
+      border: solid 1px #ccc;
+      background-color: #eee;
+      padding: 0 5px;
+      font-size: 1em;
+      color: #aaa;
+      text-shadow: white 1px 1px;
+      border-radius: 3px;
+      box-shadow: rgba(0,0,0,0.2) 0 1px 3px inset;
+    }
+  }
+
+  .module-column-icon {
+    display: table-cell;
+    width: 75px;
+    text-align: center;
+    vertical-align: middle;
+    img {
+      max-width: 57px;
+    }
+  }
+
+  .module-column-infos {
+    display: table-cell;
+    height: 50px;
+    vertical-align: middle;
+    .module-name {
+      font-size: 1.2em;
+    }
+
+    .module-description {
+      @extend .text-muted;
+    }
+  }
+
+  .module-column-actions {
+    display: table-cell;
+    padding: 0 10px;
+    vertical-align: middle;
+    text-align: right;
+    .btn-group {
+      text-align: right;
+    }
+  }
+
+  .dropdown-menu {
+    min-width: auto;
+  }
+}
+
+#unhook-button-position-bottom {
+  display: none;
 }

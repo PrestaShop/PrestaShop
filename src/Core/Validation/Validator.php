@@ -58,4 +58,12 @@ final class Validator implements ValidatorInterface
 
         return $this->validate->isCleanHtml($html, $options['allow_iframe']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isModuleName($name)
+    {
+        return $this->validate->isModuleName($name);
+    }
 }

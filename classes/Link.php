@@ -61,7 +61,10 @@ class LinkCore
         }
 
         if (Link::$category_disable_rewrite === null) {
-            Link::$category_disable_rewrite = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
+            Link::$category_disable_rewrite = array(
+                Configuration::get('PS_HOME_CATEGORY'),
+                Configuration::get('PS_ROOT_CATEGORY'),
+            );
         }
 
         $this->ssl_enable = Configuration::get('PS_SSL_ENABLED');
@@ -572,8 +575,18 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($supplier)) {
-            if ($alias !== null && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop) && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)) {
-                return $url . $dispatcher->createUrl('supplier_rule', $idLang, array('id' => (int) $supplier, 'rewrite' => (string) $alias), $this->allow, '', $idShop);
+            if ($alias !== null &&
+                !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop) &&
+                !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
+            ) {
+                return $url . $dispatcher->createUrl(
+                    'supplier_rule',
+                    $idLang,
+                    array('id' => (int) $supplier, 'rewrite' => (string) $alias),
+                    $this->allow,
+                    '',
+                    $idShop
+                );
             }
             $supplier = new Supplier($supplier, $idLang);
         }
@@ -711,12 +724,14 @@ class LinkCore
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
                         if (array_key_exists('deleteproduct', $sfRouteParams)) {
-                            return $sfRouter->generate('admin_product_unit_action',
+                            return $sfRouter->generate(
+                                'admin_product_unit_action',
                                 array('action' => 'delete', 'id' => $sfRouteParams['id_product'])
                             );
                         }
                         //default: if (array_key_exists('updateproduct', $sfRouteParams))
-                        return $sfRouter->generate('admin_product_form',
+                        return $sfRouter->generate(
+                            'admin_product_form',
                             array('id' => $sfRouteParams['id_product'])
                         );
                     }
@@ -750,12 +765,13 @@ class LinkCore
                     'AdminModulesCatalog' => 'admin_module_catalog',
                     'AdminModulesManage' => 'admin_module_manage',
                     'AdminModulesNotifications' => 'admin_module_notification',
+                    'AdminModulesPositions' => 'admin_modules_positions',
                     'AdminModulesSf' => 'admin_module_manage',
                     'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminShipping' => 'admin_shipping_preferences',
-                    'AdminPerformance' => 'admin_performance',
                     'AdminPPreferences' => 'admin_product_preferences',
+                    'AdminPerformance' => 'admin_performance',
                     'AdminPreferences' => 'admin_preferences',
+                    'AdminShipping' => 'admin_shipping_preferences',
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminThemesCatalog' => 'admin_theme_catalog',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
