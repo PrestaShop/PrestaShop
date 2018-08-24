@@ -54,6 +54,19 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->_group .= 'GROUP BY a.id_currency';
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function checkToken()
+    {
+        // Specific check for cron task updating currency rates.
+        if (Tools::isSubmit('secure_key')) {
+            return Tools::getValue('secure_key') === md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
+        }
+
+        return parent::checkToken();
+    }
+
     public function renderList()
     {
         $this->addRowAction('edit');
@@ -336,5 +349,19 @@ class AdminCurrenciesControllerCore extends AdminController
         }
 
         die(json_encode(array()));
+    }
+
+    /**
+     * Triggers a refresh of the currency rates.
+     *
+     * Does not display anything.
+     */
+    public function ajaxProcessCurrencyRates()
+    {
+        $shop_ids = Shop::getCompleteListOfShopsID();
+        foreach ($shop_ids as $shop_id) {
+            Shop::setContext(Shop::CONTEXT_SHOP, (int)$shop_id);
+            Currency::refreshCurrencies();
+        }
     }
 }
