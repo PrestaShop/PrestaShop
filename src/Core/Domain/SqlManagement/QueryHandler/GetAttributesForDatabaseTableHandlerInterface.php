@@ -24,8 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
-class SqlRequestException extends SqlManagementException
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery;
+
+interface GetAttributesForDatabaseTableHandlerInterface
 {
+    public function handle(GetAttributesForDatabaseTableQuery $query);
 }

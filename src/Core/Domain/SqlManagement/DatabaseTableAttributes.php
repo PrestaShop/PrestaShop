@@ -24,8 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
-class SqlRequestException extends SqlManagementException
+class DatabaseTableAttributes
 {
+    /**
+     * @var string[]
+     */
+    private $attributes;
+
+    /**
+     * @param string[] $attributes
+     */
+    public function __construct(array $attributes)
+    {
+        $this->setAttributes($attributes);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param string[] $attributes
+     *
+     * @return self
+     */
+    private function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
 }

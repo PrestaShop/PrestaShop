@@ -26,6 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
-class SqlRequestException extends SqlManagementException
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+
+/**
+ * Class SqlManagementException base exception of SqlManagement bounded context
+ */
+class SqlManagementException extends DomainException
 {
 }

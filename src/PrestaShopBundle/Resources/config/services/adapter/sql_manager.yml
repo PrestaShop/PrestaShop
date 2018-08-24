@@ -77,3 +77,7 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery' }
 
+    prestashop.adapter.sql_manager.query_handler.get_database_table_attributes_list:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetAttributesForDatabaseTableHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery' }
