@@ -28,9 +28,9 @@ global.install_shop = !!argv.INSTALL;
 global.downloadsFolderPath = argv.DIR;                   // Download directory
 global.UrlLastStableVersion = argv.URLLASTSTABLEVERSION; // URL of last stable version of prestashop
 
-global.rcLink = argv.RCLINK  || '' ; // Link for download The RC
-global.rcTarget = argv.RCTARGET    ; // Last stable version location directory
-global.filename = argv.FILENAME  || ''  ; // RC file name
+global.rcLink = argv.RCLINK || ''; // Link for download The RC
+global.rcTarget = argv.RCTARGET; // Last stable version location directory
+global.filename = argv.FILENAME || ''; // RC file name
 
 global.headless = argv.HEADLESS || false;
 
@@ -45,6 +45,7 @@ global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
 
 global.onboarding = false;
 global.invoiceFileName = '';
+global.creditSlip = '';
 global.basic_price = '';
 global.indexText = 0;
 global.categoryID = '';

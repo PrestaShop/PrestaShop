@@ -23,6 +23,7 @@ module.exports = {
     page_category: '//*[@id="wrapper"]//a/span[contains(text(),"%CATEGORY")]',
     review_page_link: '//*[@id="content"]//a[contains(text(),"%PAGENAME")]',
     not_found_erreur_message: '//*[@id="main"]//h1',
+    account:'//*[@id="_desktop_user_info"]/div[@class="user-info"]/a[@class="account"]/span',
     footer_block: '//*[@id="footer"]//p[contains(text(),"%FOOTERBLOCKNAME")]',
     second_footer_block: '//*[@id="footer"]//div[@class="col-md-6 wrapper"][2]/p',
     footer_block_link_widget: '//*[@class="footer-container"]//p[contains(text(),"%FOOTERBLOCKNAME")]',

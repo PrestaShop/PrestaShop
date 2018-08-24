@@ -1,5 +1,6 @@
 const {getClient} = require('../common.webdriverio.js');
-const {languageFO} = require('../selectors/FO/index');
+const {languageFO} = require('../../test/selectors/FO/index');
+const {selector} = require('../globals.webdriverio.js');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
@@ -90,7 +91,7 @@ class CommonClient {
       });
   }
 
-  isVisibleWithinViewport(selector){
+  isVisibleWithinViewport(selector) {
     return this.client
       .isVisibleWithinViewport(selector);
   }
@@ -130,7 +131,7 @@ class CommonClient {
     return this.client.end();
   }
 
-  closeWindow(id){
+  closeWindow(id) {
     return this.client.closeWindow(id);
   }
 
@@ -307,7 +308,8 @@ class CommonClient {
    */
   checkDocument(folderPath, fileName, text) {
     pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
-      global.indexText = data.indexOf(text)
+      global.data = global.data + data;
+      global.indexText = global.data.indexOf(text)
     });
 
     return this.client
@@ -546,12 +548,6 @@ class CommonClient {
     }
   }
 
-/*  middleClick(selector,) {
-    return this.client
-      .waitForExist(selector, 9000)
-      .middleClick(selector);
-  }*/
-
   getParamFromURL(param, pause = 0) {
     return this.client
       .pause(pause)
@@ -561,6 +557,23 @@ class CommonClient {
         expect(current_url).to.contain(param);
         global.param[param] = current_url.split(param + '=')[1].split("&")[0];
       });
+  }
+
+  displayHiddenBlock(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementsByClassName(selector).style = '';
+      })
+  }
+
+  changeOrderState(selector, state) {
+    return this.client
+      .waitForExist(selector.order_state_select, 90000)
+      .execute(function () {
+        document.querySelector('#id_order_state').style = "";
+      })
+      .selectByVisibleText(selector.order_state_select, state)
+      .waitForExistAndClick(selector.update_status_button)
   }
 
   dragAndDrop(sourceElement, destinationElement) {
@@ -578,7 +591,6 @@ class CommonClient {
       .waitForExist(selector, timeout)
       .selectByVisibleText(selector, text)
   }
-
 
 }
 
