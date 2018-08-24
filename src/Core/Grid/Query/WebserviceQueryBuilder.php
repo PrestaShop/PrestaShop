@@ -31,14 +31,23 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Class WebserviceQueryBuilder
  */
-final class WebserviceQueryBuilder implements DoctrineQueryBuilderInterface
+final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * {@inheritdoc}
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
-        // TODO: Implement getSearchQueryBuilder() method.
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb->select('wa.`id_webservice_account`, wa.`key`, wa.`description`, wa.`active`')
+            ->orderBy(
+            $searchCriteria->getOrderBy(),
+            $searchCriteria->getOrderWay()
+            )
+            ->setFirstResult($searchCriteria->getOffset())
+            ->setMaxResults($searchCriteria->getLimit());
+
+        return $qb;
     }
 
     /**
@@ -46,6 +55,16 @@ final class WebserviceQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
-        // TODO: Implement getCountQueryBuilder() method.
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb->select('COUNT(wa.`id_webservice_account`)');
+        return $qb;
+    }
+
+    private function getQueryBuilder(array $filters)
+    {
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix.'webservice_account', 'wa');
+        return $qb;
     }
 }
