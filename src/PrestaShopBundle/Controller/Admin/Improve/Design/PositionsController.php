@@ -202,11 +202,11 @@ class PositionsController extends FrameworkBundleAdminController
      * Manage legacy flashes, this code must be removed
      * when legacy edit will be migrated.
      *
-     * @param int $conf
+     * @param int $messageId The message id from legacy context
      */
-    private function manageLegacyFlashes($conf)
+    private function manageLegacyFlashes($messageId)
     {
-        if (empty($conf)) {
+        if (empty($messageId)) {
             return;
         }
 
@@ -215,10 +215,10 @@ class PositionsController extends FrameworkBundleAdminController
             17 => $this->trans('The module was successfully removed from the hook.', 'Admin.Modules.Notification'),
         ];
 
-        if (isset($messages[$conf])) {
+        if (isset($messages[$messageId])) {
             $this->addFlash(
                 'success',
-                $messages[$conf]
+                $messages[$messageId]
             );
         }
     }
