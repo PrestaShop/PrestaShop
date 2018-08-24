@@ -19,7 +19,6 @@ dist: trusty
 
 php:
   - 5.6
-  - 7.0
   - 7.2
 
 env:
@@ -32,8 +31,6 @@ env:
 
 matrix:
   include:
-    - php: 7.1
-      env: EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=e2e
     - php: 7.2
       env: EXTRA_DEPS=phpHigh EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=unit
 
