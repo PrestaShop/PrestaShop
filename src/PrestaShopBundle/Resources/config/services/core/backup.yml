@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.backup.options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Backup\Configuration\BackupOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.backup.listing.grid_data_provider:
+        class: 'PrestaShop\PrestaShop\Core\Backup\Listing\BackupGridDataProvider'
+        arguments:
+            - '@prestashop.adapter.backup.backup_provider'
+            - '@prestashop.core.backup.comparator.backup_by_date_comparator'
+            - '@translator'
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
+
+    prestashop.core.backup.comparator.backup_by_date_comparator:
+        class: 'PrestaShop\PrestaShop\Core\Backup\Comparator\BackupByDateComparator'

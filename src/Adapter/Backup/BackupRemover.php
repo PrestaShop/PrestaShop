@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Adapter\Backup;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopBackup;
+use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
+use PrestaShop\PrestaShop\Core\Backup\Manager\BackupRemoverInterface;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Class BackupRemover deletes given backup.
+ *
+ * @internal
+ */
+final class BackupRemover implements BackupRemoverInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function remove(BackupInterface $backup)
+    {
+        $legacyBackup = new PrestaShopBackup($backup->getFileName());
+
+        return $legacyBackup->delete();
+    }
+}

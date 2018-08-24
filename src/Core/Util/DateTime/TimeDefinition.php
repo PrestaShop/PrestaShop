@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * Class TimeDefinition defines common time intervals in different formats.
+ */
+final class TimeDefinition
+{
+    const HOUR_IN_SECONDS = 3600;
+    const DAY_IN_SECONDS = 86400;
 
-header('Location: ../../../../../../../../');
-exit;
+    /**
+     * Object is not suppose to be initialized as it's responsibility is to define time constants.
+     */
+    private function __construct()
+    {
+    }
+}
