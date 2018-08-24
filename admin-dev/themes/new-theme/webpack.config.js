@@ -92,6 +92,9 @@ const config = {
     backup: [
       './js/pages/backup'
     ],
+    module_card: [
+      './js/app/pages/module-card'
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'public'),
