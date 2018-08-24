@@ -783,6 +783,7 @@ class LinkCore
                     'AdminEmails' => 'admin_email',
                     'AdminRequestSql' => 'admin_request_sql',
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
+                    'AdminBackup' => 'admin_backup',
                 );
 
                 if (isset($routes[$controller])) {

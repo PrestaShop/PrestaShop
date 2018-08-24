@@ -80,9 +80,7 @@ export default function() {
         if (currentCount < idsCount) {
           getCombinations(combinationsImages);
         } else {
-          $jsCombinationsBulkForm.removeClass('inactive');
-          $('#loading-attribute').fadeOut(1000).remove();
-          $('[data-toggle="popover"]').popover();
+          activateCombinationsBulk();
         }
       });
     };
@@ -105,6 +103,15 @@ export default function() {
         );
     };
   });
+
+  const activateCombinationsBulk = () => {
+    let $jsCombinationsBulkForm = $('#combinations-bulk-form');
+    if ($jsCombinationsBulkForm.hasClass('inactive')) {
+      $jsCombinationsBulkForm.removeClass('inactive');
+      $('#loading-attribute').fadeOut(1000).remove();
+      $('[data-toggle="popover"]').popover();
+    }
+  }
 
   const refreshImagesCombination = (combinationsImages, idsProductAttribute) => {
     $.each(idsProductAttribute, function (index, value) {
@@ -193,6 +200,7 @@ export default function() {
       },
       complete: function() {
         $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
+        activateCombinationsBulk();
         supplierCombinations.refresh();
         warehouseCombinations.refresh();
       }

@@ -87,7 +87,10 @@ let config = {
     ],
     sql_manager: [
       './js/pages/sql-manager',
-    ]
+    ],
+    backup: [
+      './js/pages/backup'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
