@@ -23,6 +23,11 @@ services:
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
 
+    prestashop.core.grid.data_provider.webservice:
+        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        arguments:
+            - '@prestashop.core.grid.query_builder.webservice'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -56,6 +61,12 @@ services:
             - "@=service('router').generate('admin_request_sql')"
         public: true
 
+    prestashop.core.grid.definition.factory.webservice:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -81,6 +92,14 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.factory.webservice:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.webservice'
+            - '@prestashop.core.grid.data_provider.webservice'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
@@ -95,5 +114,10 @@ services:
 
     prestashop.core.grid.query_builder.email_logs:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\EmailLogsQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+
+    prestashop.core.grid.query_builder.webservice:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
