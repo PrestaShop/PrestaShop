@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,14 +30,13 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Performance" page display
+ * Responsible of "Configure > Advanced Parameters > Performance" page display.
  */
 class PerformanceController extends FrameworkBundleAdminController
 {
@@ -45,19 +44,23 @@ class PerformanceController extends FrameworkBundleAdminController
 
     /**
      * Displays the Performance main page.
+     *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param FormInterface $form
+     *
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
     {
-        $toolbarButtons['clear_cache'] = array(
-            'href' => $this->generateUrl('admin_clear_cache'),
-            'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
-            'icon' => 'delete',
-        );
+        $toolbarButtons = [
+            'clear_cache' => [
+                'href' => $this->generateUrl('admin_clear_cache'),
+                'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
+                'icon' => 'delete',
+            ],
+        ];
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
@@ -77,10 +80,12 @@ class PerformanceController extends FrameworkBundleAdminController
 
     /**
      * Process the Performance configuration form.
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.")
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)

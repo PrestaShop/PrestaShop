@@ -23,69 +23,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TableSorting from '../../utils/table-sorting';
-import SqlManager from '../../utils/sql-manager';
+import Grid from '../../../components/grid/grid';
+import ReloadListActionExtension from '../../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
+import SortingExtension from '../../../components/grid/extension/sorting-extension';
 
 const $ = global.$;
 
-class LogsPage {
-
-  init() {
-    const $sortableTables = $('table.table');
-    const $deleteAllLogsButton = $('#logs-deleteAll');
-    const $refreshButton = $('#logs-refresh');
-    const $showSqlQueryButton = $('#logs-showSqlQuery');
-    const $exportSqlManagerButton = $('#logs-exportSqlManager');
-
-    this.sqlManager = new SqlManager();
-
-    new TableSorting($sortableTables).attach();
-
-    $deleteAllLogsButton.on('click', this._onDeleteAllLogsClick.bind(this));
-    $refreshButton.on('click', this._onRefreshClick.bind(this));
-    $showSqlQueryButton.on('click', this._onShowSqlQueryClick.bind(this));
-    $exportSqlManagerButton.on('click', this._onExportSqlManagerClick.bind(this));
-  }
-
-  /**
-   * Invoked when clicking on the "delete all logs" toolbar button
-   * @param {jQuery.Event} event
-   * @private
-   */
-  _onDeleteAllLogsClick(event) {
-    const clickedButton = $(event.delegateTarget);
-    const confirmationMessage = clickedButton.data('confirmMessage');
-    const form = clickedButton.closest('form');
-    if (global.confirm(confirmationMessage)) {
-      form.submit();
-    }
-  }
-
-  /**
-   * Invoked when clicking on the "reload" toolbar button
-   * @private
-   */
-  _onRefreshClick() {
-    location.reload();
-  }
-
-  /**
-   * Invoked when clicking on the "show sql query" toolbar button
-   * @private
-   */
-  _onShowSqlQueryClick() {
-    this.sqlManager.showLastSqlQuery();
-  }
-
-  /**
-   * Invoked when clicking on the "export to the sql query" toolbar button
-   * @private
-   */
-  _onExportSqlManagerClick() {
-    this.sqlManager.sendLastSqlQuery(this.sqlManager.createSqlQueryName());
-  }
-}
-
 $(() => {
-  new LogsPage().init();
+  const grid = new Grid('logs');
+
+  grid.addExtension(new ReloadListActionExtension());
+  grid.addExtension(new ExportToSqlManagerExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new SortingExtension());
 });

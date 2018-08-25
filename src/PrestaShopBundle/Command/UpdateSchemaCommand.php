@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -49,19 +49,18 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')
-            ->setDescription("Update the database");
+            ->setDescription('Update the database');
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = include(__DIR__.'/../../../app/config/parameters.php');
+        $config = include __DIR__ . '/../../../app/config/parameters.php';
         if ($input->getOption('env') === 'test') {
-            $this->dbName = 'test_'.$config['parameters']['database_name'];
+            $this->dbName = 'test_' . $config['parameters']['database_name'];
         } else {
             $this->dbName = $config['parameters']['database_name'];
         }
@@ -82,16 +81,16 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             'SELECT CONSTRAINT_NAME, TABLE_NAME 
                 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
                 WHERE CONSTRAINT_TYPE = "FOREIGN KEY" 
-                    AND TABLE_SCHEMA = "'.$this->dbName.'"
-                    AND TABLE_NAME LIKE "'.$this->dbPrefix.'%" '
+                    AND TABLE_SCHEMA = "' . $this->dbName . '"
+                    AND TABLE_NAME LIKE "' . $this->dbPrefix . '%" '
         );
-        
+
         $results = $query->fetchAll();
         foreach ($results as $result) {
-            $drop = 'ALTER TABLE '.$result['TABLE_NAME'].' DROP FOREIGN KEY '.$result['CONSTRAINT_NAME'];
+            $drop = 'ALTER TABLE ' . $result['TABLE_NAME'] . ' DROP FOREIGN KEY ' . $result['CONSTRAINT_NAME'];
             $output->writeln('Executing: ' . $drop);
             $conn->executeQuery($drop);
-            $sqls++;
+            ++$sqls;
         }
 
         $schemaTool = new SchemaTool($this->em);
@@ -168,13 +167,13 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         $originalFieldName = $fieldName;
                         $fieldName = str_replace('`', '', $fieldName);
                         // get old default value
-                        $query = $conn->query('SHOW FULL COLUMNS FROM '.$tableName.' WHERE Field="'.$fieldName.'"');
+                        $query = $conn->query('SHOW FULL COLUMNS FROM ' . $tableName . ' WHERE Field="' . $fieldName . '"');
                         $results = $query->fetchAll();
                         $oldDefaultValue = $results[0]['Default'];
                         $extra = $results[0]['Extra'];
                         if ($oldDefaultValue !== null
                             && strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
-                            $oldDefaultValue = "'".$oldDefaultValue."'";
+                            $oldDefaultValue = "'" . $oldDefaultValue . "'";
                         }
                         if ($oldDefaultValue === null) {
                             $oldDefaultValue = 'NULL';
@@ -188,15 +187,15 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         ) {
                             if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                                 $matches[0][$matchKey] =
-                                    preg_replace('/DEFAULT (.+?)(,|$)/', 'DEFAULT '.
-                                        $oldDefaultValue.'$2'.' '.$extra, $matches[0][$matchKey]);
+                                    preg_replace('/DEFAULT (.+?)(,|$)/', 'DEFAULT ' .
+                                        $oldDefaultValue . '$2' . ' ' . $extra, $matches[0][$matchKey]);
                             } else {
                                 $matches[0][$matchKey] =
-                                    preg_replace('/(.+?)(,|$)/uis', '$1 DEFAULT '.
-                                        $oldDefaultValue.' '.$extra.'$2', $matches[0][$matchKey]);
+                                    preg_replace('/(.+?)(,|$)/uis', '$1 DEFAULT ' .
+                                        $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
                             }
                         }
-                        $updateSchemaSql[$key] = preg_replace('/ CHANGE '.$originalFieldName.' (.+?)(,|$)/uis',
+                        $updateSchemaSql[$key] = preg_replace('/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
                             $matches[0][$matchKey], $updateSchemaSql[$key]);
                     }
                 }

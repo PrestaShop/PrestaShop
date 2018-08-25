@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Feature;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -34,7 +35,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This Class is responsible to generate the product Features form
+ * This Class is responsible to generate the product Features form.
  */
 class ProductFeature extends CommonAbstractType
 {
@@ -45,7 +46,7 @@ class ProductFeature extends CommonAbstractType
     private $features;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -71,36 +72,36 @@ class ProductFeature extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('feature', FormType\ChoiceType::class, array(
-            'label' => $this->translator->trans('Feature', array(), 'Admin.Catalog.Feature'),
-            'choices' =>  $this->features,
-            'required' =>  false,
-            'attr' => array(
-                'data-action' => $this->router->generate('admin_feature_get_feature_values', array('idFeature' => 1)),
+        $builder->add('feature', FormType\ChoiceType::class, [
+            'label' => $this->translator->trans('Feature', [], 'Admin.Catalog.Feature'),
+            'choices' => $this->features,
+            'required' => false,
+            'attr' => [
+                'data-action' => $this->router->generate('admin_feature_get_feature_values', ['idFeature' => 1]),
                 'data-toggle' => 'select2',
                 'data-minimumResultsForSearch' => '7',
                 'class' => 'feature-selector',
-            ),
-            'placeholder' => $this->translator->trans('Choose a feature', array(), 'Admin.Catalog.Feature'),
-        ))
-        ->add('value', FormType\ChoiceType::class, array(
-            'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
-            'required' =>  false,
-            'attr' => array(
-                'class' => 'feature-value-selector',
-                'data-minimumResultsForSearch' => '7',
-            ),
-            'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
-            'disabled' => true,
-        ))
-        ->add('custom_value', TranslateType::class, array(
-            'type' => FormType\TextType::class,
-            'options' => [],
-            'locales' => $this->locales,
-            'hideTabs' => true,
-            'required' =>  false,
-            'label' => $this->translator->trans('OR Customized value', array(), 'Admin.Catalog.Feature'),
-        ));
+            ],
+            'placeholder' => $this->translator->trans('Choose a feature', [], 'Admin.Catalog.Feature'),
+        ])
+            ->add('value', FormType\ChoiceType::class, [
+                'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),
+                'required' => false,
+                'attr' => [
+                    'class' => 'feature-value-selector',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+                'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),
+                'disabled' => true,
+            ])
+            ->add('custom_value', TranslateType::class, [
+                'type' => FormType\TextType::class,
+                'options' => [],
+                'locales' => $this->locales,
+                'hideTabs' => true,
+                'required' => false,
+                'label' => $this->translator->trans('OR Customized value', [], 'Admin.Catalog.Feature'),
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
@@ -139,17 +140,17 @@ class ProductFeature extends CommonAbstractType
 
     private function updateValueField(Form $form, $choices)
     {
-        $form->add('value', FormType\ChoiceType::class, array(
-            'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
-            'required' =>  false,
-            'attr' => array(
+        $form->add('value', FormType\ChoiceType::class, [
+            'label' => $this->translator->trans('Pre-defined value', [], 'Admin.Catalog.Feature'),
+            'required' => false,
+            'attr' => [
                 'class' => 'feature-value-selector',
                 'data-minimumResultsForSearch' => '7',
                 'data-toggle' => 'select2',
-            ),
+            ],
             'choices' => $choices,
-            'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
-        ));
+            'placeholder' => $this->translator->trans('Choose a value', [], 'Admin.Catalog.Feature'),
+        ]);
     }
 
     /**

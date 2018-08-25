@@ -196,7 +196,7 @@
                         </p>
                         <ul>
                             {% for key, value in requirements.testsRequired %}
-                                {% if 'fail' == value and key in requirements.testsErrors|keys %}
+                                {% if 'fail' == value %}
                                     <li>{{ requirements.testsErrors[key] }}</li>
                                 {% endif %}
                             {% endfor %}
@@ -213,7 +213,7 @@
                             </p>
                             <ul>
                                 {% for key, value in requirements.testsOptional %}
-                                    {% if 'fail' == value and testsErrors[key] is defined %}
+                                    {% if 'fail' == value %}
                                         <li>{{ requirements.testsErrors[key] }}</li>
                                     {% endif %}
                                 {% endfor %}

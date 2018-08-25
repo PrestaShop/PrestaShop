@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,7 +38,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     private $translator;
 
     /**
-     * All languages available on shop. Used for translations
+     * All languages available on shop. Used for translations.
      *
      * @param array $locales
      */
@@ -50,7 +51,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Get the translated chain from key
+     * Get the translated chain from key.
      *
      * @param $key the key to be translated
      * @param $domain the domain to be selected
@@ -58,13 +59,13 @@ abstract class TranslatorAwareType extends CommonAbstractType
      *
      * @returns string
      */
-    protected function trans($key, $domain, $parameters = array())
+    protected function trans($key, $domain, $parameters = [])
     {
         return $this->translator->trans($key, $parameters, $domain);
     }
 
     /**
-     * Get locales to be used in form type
+     * Get locales to be used in form type.
      *
      * @return array
      */

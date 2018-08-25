@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,6 +33,7 @@ class TranslationRepository extends EntityRepository
     /**
      * @param $language
      * @param $theme
+     *
      * @return array
      */
     public function findByLanguageAndTheme($language, $theme = null)

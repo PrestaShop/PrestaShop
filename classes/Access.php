@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class AccessCore
+ * Class AccessCore.
  */
 class AccessCore extends ObjectModel
 {
@@ -50,10 +50,11 @@ class AccessCore extends ObjectModel
     /**
      * Is access granted to this Role?
      *
-     * @param string $role      Role name ("Superadministrator", "sales", "translator", etc.)
-     * @param int    $idProfile Profile ID
+     * @param string $role Role name ("Superadministrator", "sales", "translator", etc.)
+     * @param int $idProfile Profile ID
      *
      * @return bool Whether access is granted
+     *
      * @throws Exception
      */
     public static function isGranted($role, $idProfile)
@@ -66,22 +67,22 @@ class AccessCore extends ObjectModel
             );
 
             if (isset($matches['type']) && $matches['type'] == 'TAB') {
-                $joinTable = _DB_PREFIX_.'access';
+                $joinTable = _DB_PREFIX_ . 'access';
             } elseif (isset($matches['type']) && $matches['type'] == 'MODULE') {
-                $joinTable = _DB_PREFIX_.'module_access';
+                $joinTable = _DB_PREFIX_ . 'module_access';
             } else {
-                throw new Exception('The slug '.$currentRole.' is invalid');
+                throw new Exception('The slug ' . $currentRole . ' is invalid');
             }
 
             $currentRole = Db::getInstance()->escape($currentRole);
 
             $isCurrentGranted = (bool) Db::getInstance()->getRow('
                 SELECT t.`id_authorization_role`
-                FROM `'._DB_PREFIX_.'authorization_role` t
-                LEFT JOIN '.$joinTable.' j
+                FROM `' . _DB_PREFIX_ . 'authorization_role` t
+                LEFT JOIN ' . $joinTable . ' j
                 ON j.`id_authorization_role` = t.`id_authorization_role`
-                WHERE `slug` = "'.$currentRole.'"
-                AND j.`id_profile` = "'. (int) $idProfile.'"
+                WHERE `slug` = "' . $currentRole . '"
+                AND j.`id_profile` = "' . (int) $idProfile . '"
             ');
 
             if (!$isCurrentGranted) {
@@ -93,7 +94,7 @@ class AccessCore extends ObjectModel
     }
 
     /**
-     * Get all roles for the Profile ID
+     * Get all roles for the Profile ID.
      *
      * @param int $idProfile Profile ID
      *
@@ -102,29 +103,32 @@ class AccessCore extends ObjectModel
     public static function getRoles($idProfile)
     {
         $idProfile = (int) $idProfile;
-        $result =  Db::getInstance()->executeS('
+
+        $accesses = Db::getInstance()->executeS('
             SELECT r.`slug`
-            FROM `'._DB_PREFIX_.'authorization_role` r
-            WHERE r.`id_authorization_role` IN (
-                SELECT a.`id_authorization_role`
-                FROM `'._DB_PREFIX_.'access` a
-                WHERE a.`id_profile` = "'.$idProfile.'"
-                union all
-                SELECT ma.`id_authorization_role`
-                FROM `'._DB_PREFIX_.'module_access` ma 
-                WHERE ma.`id_profile` = "'.$idProfile.'"
-            )
+            FROM `' . _DB_PREFIX_ . 'authorization_role` r
+            INNER JOIN `' . _DB_PREFIX_ . 'access` a ON a.`id_authorization_role` = r.`id_authorization_role`
+            WHERE a.`id_profile` = "' . $idProfile . '"
         ');
 
-        foreach ((array) $result as $key => $role) {
-            $result[$key] = $role['slug'];
+        $accessesFromModules = Db::getInstance()->executeS('
+            SELECT r.`slug`
+            FROM `' . _DB_PREFIX_ . 'authorization_role` r
+            INNER JOIN `' . _DB_PREFIX_ . 'module_access` ma ON ma.`id_authorization_role` = r.`id_authorization_role`
+            WHERE ma.`id_profile` = "' . $idProfile . '"
+        ');
+
+        $roles = array_merge($accesses, $accessesFromModules);
+
+        foreach ($roles as $key => $role) {
+            $roles[$key] = $role['slug'];
         }
 
-        return $result;
+        return $roles;
     }
 
     /**
-     * Find Tab ID by slug
+     * Find Tab ID by slug.
      *
      * @param string $authSlug Slug
      *
@@ -141,15 +145,15 @@ class AccessCore extends ObjectModel
 
         $result = Db::getInstance()->getRow('
             SELECT `id_tab`
-            FROM `'._DB_PREFIX_.'tab`
-            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE UCASE(`class_name`) = "' . $matches['classname'] . '"
         ');
 
         return $result['id_tab'];
     }
 
     /**
-     * Find slug by Tab ID
+     * Find slug by Tab ID.
      *
      * @param int $idTab Tab ID
      *
@@ -159,14 +163,15 @@ class AccessCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT `class_name`
-            FROM `'._DB_PREFIX_.'tab`
-            WHERE `id_tab` = "'.(int) $idTab.'"
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE `id_tab` = "' . (int) $idTab . '"
         ');
+
         return self::sluggifyTab($result);
     }
 
     /**
-     * Find slug by Parent Tab ID
+     * Find slug by Parent Tab ID.
      *
      * @param int $idParentTab Tab ID
      *
@@ -176,13 +181,13 @@ class AccessCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
             SELECT `class_name`
-            FROM `'._DB_PREFIX_.'tab`
-            WHERE `id_parent` = "'.(int) $idParentTab.'"
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE `id_parent` = "' . (int) $idParentTab . '"
         ');
     }
 
     /**
-     * Find slug by Module ID
+     * Find slug by Module ID.
      *
      * @param int $idModule Module ID
      *
@@ -192,16 +197,17 @@ class AccessCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
             SELECT `name`
-            FROM `'._DB_PREFIX_.'module`
-            WHERE `id_module` = "'.(int) $idModule.'"
+            FROM `' . _DB_PREFIX_ . 'module`
+            WHERE `id_module` = "' . (int) $idModule . '"
         ');
+
         return self::sluggifyModule($result);
     }
 
     /**
-     * Sluggify tab
+     * Sluggify tab.
      *
-     * @param string $tab           Tab class name
+     * @param string $tab Tab class name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      *
      * @return string Full slug for tab
@@ -212,9 +218,9 @@ class AccessCore extends ObjectModel
     }
 
     /**
-     * Sluggify module
+     * Sluggify module.
      *
-     * @param string $module        Module name
+     * @param string $module Module name
      * @param string $authorization 'CREATE'|'READ'|'UPDATE'|'DELETE'
      *
      * @return string Full slug for module
@@ -225,7 +231,7 @@ class AccessCore extends ObjectModel
     }
 
     /**
-     * Get legacy authorization
+     * Get legacy authorization.
      *
      * @param string $legacyAuth Legacy authorization
      *
@@ -248,87 +254,88 @@ class AccessCore extends ObjectModel
     }
 
     /**
-     * Add access
+     * Add access.
      *
      * @param int $idProfile Profile ID
-     * @param int $idRole    Role ID
+     * @param int $idRole Role ID
      *
      * @return string Whether access has been successfully granted ("ok", "error")
      */
     public function addAccess($idProfile, $idRole)
     {
         $sql = '
-            INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
-            VALUES ('.(int) $idProfile.','.(int) $idRole.')
+            INSERT IGNORE INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_authorization_role`)
+            VALUES (' . (int) $idProfile . ',' . (int) $idRole . ')
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
 
     /**
-     * Remove access
+     * Remove access.
      *
      * @param int $idProfile Profile ID
-     * @param int $idRole    Role ID
+     * @param int $idRole Role ID
      *
      * @return string Whether access has been successfully removed ("ok", "error")
      */
     public function removeAccess($idProfile, $idRole)
     {
         $sql = '
-            DELETE FROM `'._DB_PREFIX_.'access`
-            WHERE `id_profile` = "'.(int) $idProfile.'"
-            AND `id_authorization_role` = "'.(int) $idRole.'"
+            DELETE FROM `' . _DB_PREFIX_ . 'access`
+            WHERE `id_profile` = "' . (int) $idProfile . '"
+            AND `id_authorization_role` = "' . (int) $idRole . '"
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
 
     /**
-     * Add module access
+     * Add module access.
      *
      * @param int $idProfile Profile ID
-     * @param int $idRole    Role ID
+     * @param int $idRole Role ID
      *
      * @return string Whether module access has been successfully granted ("ok", "error")
      */
     public function addModuleAccess($idProfile, $idRole)
     {
         $sql = '
-            INSERT IGNORE INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_authorization_role`)
-            VALUES ('.(int)$idProfile.','.(int) $idRole.')
+            INSERT IGNORE INTO `' . _DB_PREFIX_ . 'module_access` (`id_profile`, `id_authorization_role`)
+            VALUES (' . (int) $idProfile . ',' . (int) $idRole . ')
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
 
     /**
-     *
      * @param int $idProfile
      * @param int $idRole
+     *
      * @return string 'ok'|'error'
      */
     public function removeModuleAccess($idProfile, $idRole)
     {
         $sql = '
-            DELETE FROM `'._DB_PREFIX_.'module_access`
-            WHERE `id_profile` = "'.(int) $idProfile.'"
-            AND `id_authorization_role` = "'.(int) $idRole.'"
+            DELETE FROM `' . _DB_PREFIX_ . 'module_access`
+            WHERE `id_profile` = "' . (int) $idProfile . '"
+            AND `id_authorization_role` = "' . (int) $idRole . '"
         ';
 
         return Db::getInstance()->execute($sql) ? 'ok' : 'error';
     }
 
     /**
-     * Update legacy access
+     * Update legacy access.
      *
-     * @param int    $idProfile     Profile ID
-     * @param int    $idTab         Tab ID
-     * @param string $lgcAuth       Legacy authorization
-     * @param int    $enabled       Whether access should be granted
-     * @param int    $addFromParent Child from parents
+     * @param int $idProfile Profile ID
+     * @param int $idTab Tab ID
+     * @param string $lgcAuth Legacy authorization
+     * @param int $enabled Whether access should be granted
+     * @param int $addFromParent Child from parents
      *
      * @return string Whether legacy access has been successfully updated ("ok", "error")
+     *
      * @throws Exception
      */
     public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled, $addFromParent = 0)
@@ -345,24 +352,24 @@ class AccessCore extends ObjectModel
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-            $slugLike = Db::getInstance()->escape($slug.$auth);
-            $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
+            $slugLike = Db::getInstance()->escape($slug . $auth);
+            $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
         }
 
         if ($addFromParent == 1) {
             foreach (self::findSlugByIdParentTab($idTab) as $child) {
                 $child = self::sluggifyTab($child);
                 foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-                    $slugLike = Db::getInstance()->escape($child.$auth);
-                    $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
+                    $slugLike = Db::getInstance()->escape($child . $auth);
+                    $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
                 }
             }
         }
 
         $roles = Db::getInstance()->executeS('
             SELECT `id_authorization_role`
-            FROM `'._DB_PREFIX_.'authorization_role` t
-            WHERE '.implode(' OR ', $whereClauses).'
+            FROM `' . _DB_PREFIX_ . 'authorization_role` t
+            WHERE ' . implode(' OR ', $whereClauses) . '
         ');
 
         if (empty($roles)) {
@@ -382,12 +389,12 @@ class AccessCore extends ObjectModel
     }
 
     /**
-     * Update (legacy) Module access
+     * Update (legacy) Module access.
      *
-     * @param int    $idProfile Profile ID
-     * @param int    $idModule  Module ID
-     * @param string $lgcAuth   Legacy authorization
-     * @param int    $enabled   Whether module access should be granted
+     * @param int $idProfile Profile ID
+     * @param int $idModule Module ID
+     * @param string $lgcAuth Legacy authorization
+     * @param int $enabled Whether module access should be granted
      *
      * @return string Whether module access has been succesfully changed ("ok", "error")
      */
@@ -405,14 +412,14 @@ class AccessCore extends ObjectModel
         $whereClauses = array();
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
-            $slugLike = Db::getInstance()->escape($slug.$auth);
-            $whereClauses[] = ' `slug` LIKE "'.$slugLike.'"';
+            $slugLike = Db::getInstance()->escape($slug . $auth);
+            $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
         }
 
         $roles = Db::getInstance()->executeS('
             SELECT `id_authorization_role`
-            FROM `'._DB_PREFIX_.'authorization_role` t
-            WHERE '.implode(' OR ', $whereClauses).'
+            FROM `' . _DB_PREFIX_ . 'authorization_role` t
+            WHERE ' . implode(' OR ', $whereClauses) . '
         ');
 
         $res = array();

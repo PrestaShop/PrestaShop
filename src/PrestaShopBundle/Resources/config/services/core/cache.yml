@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        public: true
+
+    # Cache adapter
+    prestashop.static_cache.adapter:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+        tags:
+          - { name: monolog.logger, channel: cache }
+          - { name: cache.pool, clearer: cache.default_clearer }
+        calls:
+          - ['setLogger', ['@logger']]

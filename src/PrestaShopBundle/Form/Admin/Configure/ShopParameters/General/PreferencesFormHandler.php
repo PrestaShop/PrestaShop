@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -54,8 +55,7 @@ final class PreferencesFormHandler implements FormHandlerInterface
         FormFactoryInterface $formFactory,
         PreferencesFormDataProvider $formDataProvider,
         Configuration $configuration
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->formDataProvider = $formDataProvider;
         $this->configuration = $configuration;
@@ -71,8 +71,7 @@ final class PreferencesFormHandler implements FormHandlerInterface
                 'is_ssl_enabled' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
             ])
             ->setData($this->formDataProvider->getData())
-            ->getForm()
-        ;
+            ->getForm();
     }
 
     /**

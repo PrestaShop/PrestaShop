@@ -1,0 +1,71 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% if grid.actions.grid|length > 0 %}
+  {% set gridActionsButtonId = grid.id ~ '-grid-actions-button' %}
+
+  <div class="dropdown text-right">
+    <button class="btn btn-text dropdown-toggle tool-button"
+            id="{{ gridActionsButtonId }}"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            title="{{ 'Settings'|trans({}, 'Admin.Global') }}"
+    >
+      <span class="sr-only">{{ 'Settings'|trans({}, 'Admin.Global') }}</span>
+    </button>
+
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ gridActionsButtonId }}">
+      {% for action in grid.actions.grid %}
+        {{ include('@PrestaShop/Admin/Common/Grid/Actions/Grid/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
+      {% endfor %}
+    </div>
+
+    {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+      'id': grid.id ~ '_grid_common_show_query_modal',
+      'title': "SQL query"|trans({}, 'Admin.Global'),
+      'closable': true,
+      'actions': [{
+        'type': 'button',
+        'label': "Export to SQL Manager"|trans({}, 'Admin.Actions'),
+        'value': 'sql_manager',
+        'class': 'btn btn-primary btn-lg btn-sql-submit',
+      }],
+    } %}
+      {% block content %}
+          <div class="modal-body">
+            <form method="post"
+                  action="{{ path('admin_request_sql_create') }}"
+                  id="{{ grid.id ~ '_common_show_query_modal_form' }}"
+            >
+              <div class="form-group">
+                <textarea name="sql" rows="10" cols="65" title="" class="form-control"></textarea>
+                <input type="hidden" name="name" value="" />
+              </div>
+            </form>
+          </div>
+      {% endblock %}
+    {% endembed %}
+  </div>
+{% endif %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,19 +23,80 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Validate as ValidateLegacy;
 
+/**
+ * Adapter for Validate Legacy class.
+ */
 class Validate
 {
+    /**
+     * @param mixed $way
+     *
+     * @return bool
+     */
     public static function isOrderWay($way)
     {
         return ValidateLegacy::isOrderWay($way);
     }
 
+    /**
+     * @param mixed $order
+     *
+     * @return bool
+     */
     public static function isOrderBy($order)
     {
         return ValidateLegacy::isOrderBy($order);
+    }
+
+    /**
+     * @param mixed $date
+     *
+     * @return bool
+     */
+    public static function isDate($date)
+    {
+        return ValidateLegacy::isDate($date);
+    }
+
+    /**
+     * Check if HTML content is clean.
+     *
+     * @param string $html
+     * @param bool $allowIframe
+     *
+     * @return bool
+     */
+    public function isCleanHtml($html, $allowIframe = false)
+    {
+        return ValidateLegacy::isCleanHtml($html, $allowIframe);
+    }
+
+    /**
+     * Check for module name validity.
+     *
+     * @param string $name Module name to validate
+     *
+     * @return bool
+     */
+    public function isModuleName($name)
+    {
+        return ValidateLegacy::isModuleName($name);
+    }
+
+    /**
+     * Check if object has been correctly loaded.
+     *
+     * @param object $object Object to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isLoadedObject($object)
+    {
+        return ValidateLegacy::isLoadedObject($object);
     }
 }

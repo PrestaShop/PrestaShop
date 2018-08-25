@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AddressesControllerCore extends FrontController
 {
     public $auth = true;
@@ -32,7 +31,8 @@ class AddressesControllerCore extends FrontController
     public $ssl = true;
 
     /**
-     * Initialize addresses controller
+     * Initialize addresses controller.
+     *
      * @see FrontController::init()
      */
     public function init()
@@ -45,13 +45,14 @@ class AddressesControllerCore extends FrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         if (count($this->context->customer->getSimpleAddresses()) <= 0) {
-            $link = '<a href="'.$this->context->link->getPageLink('address', true).'">'.$this->trans('Add a new address', array(), 'Shop.Theme.Actions').'</a>';
+            $link = '<a href="' . $this->context->link->getPageLink('address', true) . '">' . $this->trans('Add a new address', array(), 'Shop.Theme.Actions') . '</a>';
             $this->warning[] = $this->trans('No addresses are available. %s', array($link), 'Shop.Notifications.Success');
         }
 

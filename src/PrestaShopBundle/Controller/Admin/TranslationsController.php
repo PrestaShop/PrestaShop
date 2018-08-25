@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,6 +79,7 @@ class TranslationsController extends FrameworkBundleAdminController
      * List translations keys and corresponding editable values.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function listAction(Request $request)
@@ -105,6 +107,7 @@ class TranslationsController extends FrameworkBundleAdminController
      * List translations keys and corresponding editable values for one module.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function moduleAction(Request $request)
@@ -120,6 +123,7 @@ class TranslationsController extends FrameworkBundleAdminController
      * Extract theme using locale and theme name.
      *
      * @param Request $request
+     *
      * @return BinaryFileResponse
      */
     public function exportThemeAction(Request $request)
@@ -131,7 +135,7 @@ class TranslationsController extends FrameworkBundleAdminController
         $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
         $themeExporter = $this->get('prestashop.translation.theme.exporter');
-        $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_.DIRECTORY_SEPARATOR);
+        $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR);
 
         $response = new BinaryFileResponse($zipFile);
         $response->deleteFileAfterSend(true);
@@ -139,5 +143,28 @@ class TranslationsController extends FrameworkBundleAdminController
         $themeExporter->cleanArtifacts($themeName);
 
         return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+    }
+
+    /**
+     * Show translations settings page.
+     *
+     * @Template("@PrestaShop/Admin/Improve/International/Translations/translations_settings.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function showSettingsAction(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
+
+        return [
+            'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'kpiRow' => $kpiRowFactory->build(),
+        ];
     }
 }

@@ -1,0 +1,13 @@
+admin_product_preferences:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:index'
+        _legacy_controller: AdminPPreferences
+
+admin_product_preferences_process:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:process'
+        _legacy_controller: AdminPPreferences

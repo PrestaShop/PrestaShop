@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class TreeToolbarCore implements ITreeToolbarCore
 {
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
-    const DEFAULT_TEMPLATE           = 'tree_toolbar.tpl';
+    const DEFAULT_TEMPLATE = 'tree_toolbar.tpl';
 
     private $_actions;
     private $_context;
@@ -63,6 +62,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     public function setContext($value)
     {
         $this->_context = $value;
+
         return $this;
     }
 
@@ -82,6 +82,7 @@ class TreeToolbarCore implements ITreeToolbarCore
         }
 
         $this->_data = $value;
+
         return $this;
     }
 
@@ -93,6 +94,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     public function setTemplate($value)
     {
         $this->_template = $value;
+
         return $this;
     }
 
@@ -108,6 +110,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     public function setTemplateDirectory($value)
     {
         $this->_template_directory = $this->_normalizeDirectory($value);
+
         return $this;
     }
 
@@ -128,24 +131,24 @@ class TreeToolbarCore implements ITreeToolbarCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
+                $this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    .$this->getTemplateDirectory().$template;
+                    . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } else {
-            return $this->getTemplateDirectory().$template;
+            return $this->getTemplateDirectory() . $template;
         }
     }
 
@@ -153,6 +156,7 @@ class TreeToolbarCore implements ITreeToolbarCore
      * @param ITreeToolbarButton $action
      *
      * @return TreeToolbar
+     *
      * @throws PrestaShopException
      */
     public function addAction($action)
@@ -176,19 +180,21 @@ class TreeToolbarCore implements ITreeToolbarCore
         }
 
         $this->_actions[] = $action;
+
         return $this;
     }
 
     public function removeActions()
     {
         $this->_actions = null;
+
         return $this;
     }
 
     public function render()
     {
         foreach ($this->getActions() as $action) {
-            /** @var ITreeToolbarButton $action */
+            /* @var ITreeToolbarButton $action */
             $action->setAttribute('data', $this->getData());
         }
 
@@ -204,10 +210,12 @@ class TreeToolbarCore implements ITreeToolbarCore
 
         if (in_array($last, array('/', '\\'))) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+
             return $directory;
         }
 
         $directory .= DIRECTORY_SEPARATOR;
+
         return $directory;
     }
 }

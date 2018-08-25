@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -53,19 +53,19 @@ class TemplateFinderCore
 
         foreach ($this->directories as $dir) {
             foreach ($templates as $tpl) {
-                if (!empty($locale) && is_file($dir.$locale.DIRECTORY_SEPARATOR.$tpl.$this->extension)) {
-                    return $locale.DIRECTORY_SEPARATOR.$tpl.$this->extension;
+                if (!empty($locale) && is_file($dir . $locale . DIRECTORY_SEPARATOR . $tpl . $this->extension)) {
+                    return $locale . DIRECTORY_SEPARATOR . $tpl . $this->extension;
                 }
-                if (is_file($dir.$tpl.$this->extension)) {
-                    return $tpl.$this->extension;
+                if (is_file($dir . $tpl . $this->extension)) {
+                    return $tpl . $this->extension;
                 }
-                if (is_file($dir.$tpl) && false !== strpos($tpl, $this->extension)) {
+                if (is_file($dir . $tpl) && false !== strpos($tpl, $this->extension)) {
                     return $tpl;
                 }
             }
         }
 
-        throw new PrestaShopException('No template found for '.$template);
+        throw new PrestaShopException('No template found for ' . $template);
     }
 
     private function getTemplateHierarchy($template, $entity, $id)
@@ -75,20 +75,20 @@ class TemplateFinderCore
 
         if (in_array($entity, $this->getProductListEntities())) {
             $templates = array(
-                'catalog/listing/'.$entity.'-'.$id,
-                'catalog/listing/'.$entity,
+                'catalog/listing/' . $entity . '-' . $id,
+                'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
             );
         } elseif (in_array($entity, $this->getProductListSearchEntities())) {
             $templates = array(
-                'catalog/listing/'.$entity,
+                'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
             );
         } elseif (in_array($entity, $this->getProductEntities())) {
             $templates = array(
-                'catalog/'.$entity.'-'.$id,
+                'catalog/' . $entity . '-' . $id,
                 $template,
                 'catalog/product',
             );
@@ -99,7 +99,7 @@ class TemplateFinderCore
             );
         } elseif ('cms' === $entity) {
             $templates = array(
-                'cms/page-'.$id,
+                'cms/page-' . $id,
                 $template,
                 'cms/page',
             );

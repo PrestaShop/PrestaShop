@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This class subscribes to the events module installation / uninstallation
- * in order to install or remove its tabs as well
+ * in order to install or remove its tabs as well.
  */
 class ModuleTabManagementSubscriber implements EventSubscriberInterface
 {
@@ -40,16 +40,19 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
      */
     private $moduleTabRegister;
     /**
-     * @var ModuleTabDeregister
+     * @var ModuleTabUnregister
      */
     private $moduleTabUnregister;
-    
+
     public function __construct(ModuleTabRegister $moduleTabRegister, ModuleTabUnregister $moduleTabUnregister)
     {
         $this->moduleTabRegister = $moduleTabRegister;
         $this->moduleTabUnregister = $moduleTabUnregister;
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -58,11 +61,17 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param ModuleManagementEvent $event
+     */
     public function onModuleInstall(ModuleManagementEvent $event)
     {
         $this->moduleTabRegister->registerTabs($event->getModule());
     }
-    
+
+    /**
+     * @param ModuleManagementEvent $event
+     */
     public function onModuleUninstall(ModuleManagementEvent $event)
     {
         $this->moduleTabUnregister->unregisterTabs($event->getModule());

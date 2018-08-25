@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class AliasCore
+ * Class AliasCore.
  */
 class AliasCore extends ObjectModel
 {
@@ -49,10 +49,10 @@ class AliasCore extends ObjectModel
     /**
      * AliasCore constructor.
      *
-     * @param int|null    $id     Alias ID
-     * @param string|null $alias  Alias
+     * @param int|null $id Alias ID
+     * @param string|null $alias Alias
      * @param string|null $search Search string
-     * @param int|null    $idLang Language ID
+     * @param int|null $idLang Language ID
      */
     public function __construct($id = null, $alias = null, $search = null, $idLang = null)
     {
@@ -68,8 +68,8 @@ class AliasCore extends ObjectModel
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
-				FROM `'._DB_PREFIX_.'alias` a
-				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
+				FROM `' . _DB_PREFIX_ . 'alias` a
+				WHERE `alias` = \'' . pSQL($alias) . '\' AND `active` = 1');
 
                 if ($row) {
                     $this->id = (int) $row['id_alias'];
@@ -117,7 +117,7 @@ class AliasCore extends ObjectModel
     }
 
     /**
-     * Get all found aliases from DB with search query
+     * Get all found aliases from DB with search query.
      *
      * @return string Comma separated aliases
      */
@@ -129,8 +129,8 @@ class AliasCore extends ObjectModel
 
         $aliases = Db::getInstance()->executeS('
 		SELECT a.alias
-		FROM `'._DB_PREFIX_.'alias` a
-		WHERE `search` = \''.pSQL($this->search).'\'');
+		FROM `' . _DB_PREFIX_ . 'alias` a
+		WHERE `search` = \'' . pSQL($this->search) . '\'');
 
         $aliases = array_map('implode', $aliases);
 
@@ -138,7 +138,8 @@ class AliasCore extends ObjectModel
     }
 
     /**
-     * This method is allow to know if a feature is used or active
+     * This method is allow to know if a feature is used or active.
+     *
      * @since 1.5.0.1
      *
      * @return bool
@@ -149,11 +150,12 @@ class AliasCore extends ObjectModel
     }
 
     /**
-     * This method is allow to know if a alias exist for AdminImportController
+     * This method is allow to know if a alias exist for AdminImportController.
      *
      * @param int $idAlias Alias ID
      *
      * @return bool
+     *
      * @since 1.5.6.0
      */
     public static function aliasExists($idAlias)
@@ -161,7 +163,7 @@ class AliasCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('a.`id_alias`');
         $sql->from('alias', 'a');
-        $sql->where('a.`id_alias` = '.(int) $idAlias);
+        $sql->where('a.`id_alias` = ' . (int) $idAlias);
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         return isset($row['id_alias']);

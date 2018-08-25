@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
@@ -53,7 +54,7 @@ class PrestaShopBundle extends Bundle
     {
         $container->addCompilerPass(new DynamicRolePass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
-        $container->addCompilerPass(new LoadServicesFromModulesPass(), PassConfig::TYPE_BEFORE_REMOVING);
+        $container->addCompilerPass(new LoadServicesFromModulesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());

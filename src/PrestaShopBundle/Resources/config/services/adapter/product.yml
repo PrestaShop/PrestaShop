@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.admin.data_provider.product:
+            class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+            decorates: prestashop.core.admin.data_provider.product_interface
+            arguments:
+                - "@doctrine.orm.entity_manager"
+                - "@prestashop.adapter.image_manager"
+                - "@prestashop.static_cache.adapter"
+            public: false
+
+    prestashop.adapter.admin.data_updater.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
+        decorates: prestashop.core.admin.data_updater.product_interface
+        public: false
+        arguments:
+            - "@prestashop.core.hook.dispatcher"
+            - "@prestashop.static_cache.adapter"
+
+    prestashop.adapter.admin.wrapper.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
+        arguments: ["@translator", "@prestashop.adapter.legacy.context"]
+
+    prestashop.adapter.admin.controller.attribute_generator:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+
+    prestashop.adapter.product.filter_categories_request_purifier:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier'
+
+    prestashop.adapter.product.filter_parameters_updater:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,15 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
-use Configuration;
 use Exception;
-use Tools;
 use PhpEncryption;
 
 /**
@@ -41,14 +40,29 @@ use PhpEncryption;
  */
 class AddonsDataProvider implements AddonsInterface
 {
+    /**
+     * @var bool
+     */
     protected static $is_addons_up = true;
 
+    /**
+     * @var ApiClient
+     */
     private $marketplaceClient;
 
+    /**
+     * @var ModuleZipManager
+     */
     private $zipManager;
 
+    /**
+     * @var PhpEncryption
+     */
     private $encryption;
 
+    /**
+     * @var string the cache directory location
+     */
     public $cacheDir;
 
     public function __construct(ApiClient $apiClient, ModuleZipManager $zipManager)
@@ -58,6 +72,13 @@ class AddonsDataProvider implements AddonsInterface
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
+    /**
+     * @param $module_id
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public function downloadModule($module_id)
     {
         $params = array(
@@ -79,13 +100,18 @@ class AddonsDataProvider implements AddonsInterface
         $temp_filename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
             $this->zipManager->storeInModulesFolder($temp_filename);
+
             return true;
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
         }
     }
 
-    /** Does this function should be in a User related class ? **/
+    /**
+     * @return bool
+     *
+     * @todo Does this function should be in a User related class ?
+     */
     public function isAddonsAuthenticated()
     {
         $request = Request::createFromGlobals();
@@ -147,6 +173,7 @@ class AddonsDataProvider implements AddonsInterface
                             ->setPassword($params['password_addons'])
                             ->getModuleZip($params['id_module']);
                     }
+
                     return $this->marketplaceClient->getModuleZip($params['id_module']);
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
@@ -161,6 +188,11 @@ class AddonsDataProvider implements AddonsInterface
         }
     }
 
+    /**
+     * @return array
+     *
+     * @throws Exception
+     */
     protected function getAddonsCredentials()
     {
         $request = Request::createFromGlobals();

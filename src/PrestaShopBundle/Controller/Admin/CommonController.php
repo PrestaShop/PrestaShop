@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,18 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
- *
  */
 class CommonController extends FrameworkBundleAdminController
 {
@@ -55,21 +58,23 @@ class CommonController extends FrameworkBundleAdminController
      *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
      *
      * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
+     *
      * @param Request $request
-     * @param integer $limit
-     * @param integer $offset
-     * @param integer $total
+     * @param int $limit
+     * @param int $offset
+     * @param int $total
      * @param string $view full|quicknav To change default template used to render the content
-     * @return array|\Symfony\Component\HttpFoundation\Response
+     *
+     * @return array|Response
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
         $limit = max($limit, 10);
 
-        $currentPage = floor($offset/$limit)+1;
-        $pageCount = ceil($total/$limit);
+        $currentPage = floor($offset / $limit) + 1;
+        $pageCount = ceil($total / $limit);
         $from = $offset;
-        $to = $offset+$limit-1;
+        $to = $offset + $limit - 1;
 
         // urls from route
         $callerParameters = $request->attributes->get('caller_parameters', array());
@@ -79,47 +84,47 @@ class CommonController extends FrameworkBundleAdminController
             }
         }
         $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
-        $nextPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
+        $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => min($total-1, $offset+$limit),
-                'limit' => $limit
+                'offset' => min($total - 1, $offset + $limit),
+                'limit' => $limit,
             )
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => max(0, $offset-$limit),
-                'limit' => $limit
+                'offset' => max(0, $offset - $limit),
+                'limit' => $limit,
             )
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
-                'limit' => $limit
+                'limit' => $limit,
             )
         ));
-        $lastPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
+        $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
-                'offset' => ($pageCount-1)*$limit,
-                'limit' => $limit
+                'offset' => ($pageCount - 1) * $limit,
+                'limit' => $limit,
             )
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
-                'limit' => '_limit'
+                'limit' => '_limit',
             )
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 999999,
-                'limit' => $limit
+                'limit' => $limit,
             )
         ));
         $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
@@ -141,8 +146,9 @@ class CommonController extends FrameworkBundleAdminController
             'limit_choices' => $limitChoices,
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', $vars);
+            return $this->render('PrestaShopBundle:Admin:Common/pagination_' . $view . '.html.twig', $vars);
         }
+
         return $vars;
     }
 
@@ -150,9 +156,11 @@ class CommonController extends FrameworkBundleAdminController
      * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
      *
      * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
+     *
      * @param string $domain
-     * @param integer $limit
-     * @param integer $randomize
+     * @param int $limit
+     * @param int $randomize
+     *
      * @return array Template vars
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
@@ -190,12 +198,13 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * Render a right sidebar with content from an URL
+     * Render a right sidebar with content from an URL.
      *
      * @param $url
      * @param string $title
      * @param string $footer
-     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @return Response
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {
@@ -205,6 +214,67 @@ class CommonController extends FrameworkBundleAdminController
             'footer' => $tools->purifyHTML($footer),
             'title' => $title,
             'url' => urldecode($url),
+        ]);
+    }
+
+    /**
+     * Renders a KPI row.
+     *
+     * @param KpiRowInterface $kpiRow
+     *
+     * @return Response
+     */
+    public function renderKpiRowAction(KpiRowInterface $kpiRow)
+    {
+        $presenter = $this->get('prestashop.core.kpi_row.presenter');
+
+        return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', [
+            'kpiRow' => $presenter->present($kpiRow),
+        ]);
+    }
+
+    /**
+     * @param string $controller
+     * @param string $action
+     *
+     * @return JsonResponse
+     *
+     * @throws \LogicException
+     */
+    public function resetSearchAction($controller, $action)
+    {
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
+
+        $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * Specific action to render a specific field twice.
+     *
+     * @param $formName the form name
+     * @param $formType the form type FQCN
+     * @param $fieldName the field name
+     * @param $fieldData the field data
+     *
+     * @return Response
+     */
+    public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
+    {
+        $formData = array(
+            $formName => array(
+                $fieldName => $fieldData,
+            ),
+        );
+
+        $form = $this->createFormBuilder($formData);
+        $form->add($formName, $formType);
+
+        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+            'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
+            'formId' => $formName . '_' . $fieldName . '_rendered',
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,20 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig;
 
-use PrestaShopBundle\Service\Hook\HookDispatcher;
-use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 
 /**
- * This class is used by Twig_Environment and provide some methods callable from a twig template
+ * This class is used by Twig_Environment and provide some methods callable from a twig template.
  */
 class HookExtension extends \Twig_Extension
 {
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
     private $hookDispatcher;
 
@@ -53,11 +53,11 @@ class HookExtension extends \Twig_Extension
     /**
      * Constructor.
      *
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      * @param ModuleDataProvider $moduleDataProvider
      */
     public function __construct(
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         ModuleDataProvider $moduleDataProvider,
         ModuleRepository $moduleRepository = null
     ) {
@@ -67,7 +67,7 @@ class HookExtension extends \Twig_Extension
     }
 
     /**
-     * Defines available filters
+     * Defines available filters.
      *
      * @return array Twig_SimpleFilter
      */
@@ -75,12 +75,12 @@ class HookExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('renderhook', array($this, 'renderHook'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('renderhooksarray', array($this, 'renderHooksArray'), array('is_safe' => array('html')))
+            new \Twig_SimpleFilter('renderhooksarray', array($this, 'renderHooksArray'), array('is_safe' => array('html'))),
         );
     }
 
     /**
-     * Defines available functions
+     * Defines available functions.
      *
      * @return array Twig_SimpleFilter
      */
@@ -89,7 +89,7 @@ class HookExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('renderhook', array($this, 'renderHook'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('renderhooksarray', array($this, 'renderHooksArray'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('hookcount', array($this, 'hookCount'))
+            new \Twig_SimpleFunction('hookcount', array($this, 'hookCount')),
         );
     }
 
@@ -108,10 +108,12 @@ class HookExtension extends \Twig_Extension
      *
      * The listeners will then return html data to display in the Twig template.
      *
-     * @param string $hookName The name of the hook to trigger.
-     * @param array $hookParameters The parameters to send to the Hook.
-     * @throws \Exception If the hookName is missing.
-     * @return array[string] All listener's reponses, ordered by the listeners' priorities.
+     * @param string $hookName the name of the hook to trigger
+     * @param array $hookParameters the parameters to send to the Hook
+     *
+     * @throws \Exception if the hookName is missing
+     *
+     * @return array[string] All listener's reponses, ordered by the listeners' priorities
      */
     public function renderHooksArray($hookName, $hookParameters = array())
     {
@@ -122,7 +124,7 @@ class HookExtension extends \Twig_Extension
         // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
         // modules.
         ob_start();
-        $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
+        $hookRenders = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters)->getContent();
         ob_clean();
 
         $render = [];
@@ -144,17 +146,23 @@ class HookExtension extends \Twig_Extension
      *
      * The listeners will then return html data to display in the Twig template.
      *
-     * @param string $hookName The name of the hook to trigger.
-     * @param array $hookParameters The parameters to send to the Hook.
-     * @throws \Exception If the hookName is missing.
-     * @return string All listener's reponses, concatened in a simple string, ordered by the listeners' priorities.
+     * @param string $hookName the name of the hook to trigger
+     * @param array $hookParameters the parameters to send to the Hook
+     *
+     * @throws \Exception if the hookName is missing
+     *
+     * @return string all listener's reponses, concatened in a simple string, ordered by the listeners' priorities
      */
     public function renderHook($hookName, $hookParameters = array())
     {
         if ($hookName == '') {
             throw new \Exception('Hook name missing');
         }
-        $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
+        $hookRenders = $this->hookDispatcher
+            ->dispatchRenderingWithParameters($hookName, $hookParameters)
+            ->getContent()
+        ;
+
         return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
     }
 
@@ -163,7 +171,8 @@ class HookExtension extends \Twig_Extension
      * Does not trigger the hook, so maybe some listeners could not add a response to the result.
      *
      * @param string $hookName
-     * @return number The listeners count that will respond to the hook name.
+     *
+     * @return number the listeners count that will respond to the hook name
      */
     public function hookCount($hookName)
     {

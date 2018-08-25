@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class WebserviceOutputXMLCore implements WebserviceOutputInterface
 {
     public $docUrl = '';
@@ -36,6 +35,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
         if (is_string($schema)) {
             $this->schemaToDisplay = $schema;
         }
+
         return $this;
     }
 
@@ -47,61 +47,72 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     public function setWsUrl($url)
     {
         $this->wsUrl = $url;
+
         return $this;
     }
+
     public function getWsUrl()
     {
         return $this->wsUrl;
     }
+
     public function getContentType()
     {
         return 'text/xml';
     }
+
     public function __construct($languages = array())
     {
         $this->languages = $languages;
     }
+
     public function setLanguages($languages)
     {
         $this->languages = $languages;
+
         return $this;
     }
+
     public function renderErrorsHeader()
     {
-        return '<errors>'."\n";
+        return '<errors>' . "\n";
     }
+
     public function renderErrorsFooter()
     {
-        return '</errors>'."\n";
+        return '</errors>' . "\n";
     }
+
     public function renderErrors($message, $code = null)
     {
-        $str_output = '<error>'."\n";
+        $str_output = '<error>' . "\n";
         if ($code !== null) {
-            $str_output .= '<code><![CDATA['.$code.']]></code>'."\n";
+            $str_output .= '<code><![CDATA[' . $code . ']]></code>' . "\n";
         }
-        $str_output .= '<message><![CDATA['.$message.']]></message>'."\n";
-        $str_output .= '</error>'."\n";
+        $str_output .= '<message><![CDATA[' . $message . ']]></message>' . "\n";
+        $str_output .= '</error>' . "\n";
+
         return $str_output;
     }
+
     public function renderField($field)
     {
         $ret = '';
         $node_content = '';
-        $ret .= '<'.$field['sqlId'];
+        $ret .= '<' . $field['sqlId'];
         // display i18n fields
         if (isset($field['i18n']) && $field['i18n']) {
             foreach ($this->languages as $language) {
                 $more_attr = '';
                 if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value']))) {
-                    $more_attr .= ' xlink:href="'.$this->getWsUrl().'languages/'.$language.'"';
+                    $more_attr .= ' xlink:href="' . $this->getWsUrl() . 'languages/' . $language . '"';
                     if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank') {
                         $more_attr .= ' format="isUnsignedId" ';
                     }
                 }
-                $node_content .= '<language id="'.$language.'"'.$more_attr.'>';
-                if (isset($field['value']) &&  is_array($field['value']) &&  isset($field['value'][$language])) {
-                    $node_content .= '<![CDATA['.$field['value'][$language].']]>';
+                $node_content .= '<language id="' . $language . '"' . $more_attr . '>';
+                if (isset($field['value']) && is_array($field['value']) && isset($field['value'][$language])) {
+                    $node_content .= '<![CDATA[' . $field['value'][$language] . ']]>';
                 }
                 $node_content .= '</language>';
             }
@@ -109,10 +120,10 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
             // display not i18n fields value
             if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank') {
                 if (!is_array($field['xlink_resource'])) {
-                    $ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource'].'/'.$field['value'].'"';
+                    $ret .= ' xlink:href="' . $this->getWsUrl() . $field['xlink_resource'] . '/' . $field['value'] . '"';
                 } else {
-                    $ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource']['resourceName'].'/'.
-                    (isset($field['xlink_resource']['subResourceName']) ? $field['xlink_resource']['subResourceName'].'/'.$field['object_id'].'/' : '').$field['value'].'"';
+                    $ret .= ' xlink:href="' . $this->getWsUrl() . $field['xlink_resource']['resourceName'] . '/' .
+                    (isset($field['xlink_resource']['subResourceName']) ? $field['xlink_resource']['subResourceName'] . '/' . $field['object_id'] . '/' : '') . $field['value'] . '"';
                 }
             }
 
@@ -125,67 +136,78 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
             }
 
             if ($field['value'] != '') {
-                $node_content .= '<![CDATA['.$field['value'].']]>';
+                $node_content .= '<![CDATA[' . $field['value'] . ']]>';
             }
         }
 
         if (isset($field['encode'])) {
-            $ret .= ' encode="'.$field['encode'].'"';
+            $ret .= ' encode="' . $field['encode'] . '"';
         }
 
         if (isset($field['synopsis_details']) && !empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank') {
             foreach ($field['synopsis_details'] as $name => $detail) {
-                $ret .= ' '.$name.'="'.(is_array($detail) ? implode(' ', $detail) : $detail).'"';
+                $ret .= ' ' . $name . '="' . (is_array($detail) ? implode(' ', $detail) : $detail) . '"';
             }
         }
         $ret .= '>';
         $ret .= $node_content;
-        $ret .= '</'.$field['sqlId'].'>'."\n";
+        $ret .= '</' . $field['sqlId'] . '>' . "\n";
+
         return $ret;
     }
+
     public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
     {
         $string_attr = '';
         if (is_array($more_attr)) {
             foreach ($more_attr as $key => $attr) {
                 if ($key === 'xlink_resource') {
-                    $string_attr .= ' xlink:href="'.$attr.'"';
+                    $string_attr .= ' xlink:href="' . $attr . '"';
                 } else {
-                    $string_attr .= ' '.$key.'="'.$attr.'"';
+                    $string_attr .= ' ' . $key . '="' . $attr . '"';
                 }
             }
         }
         $end_tag = (!$has_child) ? '/>' : '>';
-        return '<'.$node_name.$string_attr.$end_tag."\n";
+
+        return '<' . $node_name . $string_attr . $end_tag . "\n";
     }
+
     public function getNodeName($params)
     {
         $node_name = '';
         if (isset($params['objectNodeName'])) {
             $node_name = $params['objectNodeName'];
         }
+
         return $node_name;
     }
+
     public function renderNodeFooter($node_name, $params)
     {
-        return '</'.$node_name.'>'."\n";
+        return '</' . $node_name . '>' . "\n";
     }
+
     public function overrideContent($content)
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-        $xml .= '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">'."\n";
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">' . "\n";
         $xml .= $content;
-        $xml .= '</prestashop>'."\n";
+        $xml .= '</prestashop>' . "\n";
+
         return $xml;
     }
+
     public function renderAssociationWrapperHeader()
     {
-        return '<associations>'."\n";
+        return '<associations>' . "\n";
     }
+
     public function renderAssociationWrapperFooter()
     {
-        return '</associations>'."\n";
+        return '</associations>' . "\n";
     }
+
     public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false)
     {
         $end_tag = ($closed_tags) ? '/>' : '>';
@@ -194,21 +216,23 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
             if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter']) {
                 $more .= ' readOnly="true"';
             }
-            $more .= ' nodeType="'.$params['associations'][$assoc_name]['resource'].'"';
+            $more .= ' nodeType="' . $params['associations'][$assoc_name]['resource'] . '"';
             if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity']) {
                 $more .= ' virtualEntity="true"';
             } else {
                 if (isset($params['associations'][$assoc_name]['api'])) {
-                    $more .= ' api="'.$params['associations'][$assoc_name]['api'].'"';
+                    $more .= ' api="' . $params['associations'][$assoc_name]['api'] . '"';
                 } else {
-                    $more .= ' api="'.$assoc_name.'"';
+                    $more .= ' api="' . $assoc_name . '"';
                 }
             }
         }
-        return '<'.$assoc_name.$more.$end_tag."\n";
+
+        return '<' . $assoc_name . $more . $end_tag . "\n";
     }
+
     public function renderAssociationFooter($obj, $params, $assoc_name)
     {
-        return '</'.$assoc_name.'>'."\n";
+        return '</' . $assoc_name . '>' . "\n";
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,34 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Product;
 use Context;
 
+/**
+ * Access Product price depending on taxes, eco tax, reductions.
+ */
 class PriceCalculator
 {
     /**
      * @param int $idProduct Product id
      * @param bool $useTax With taxes or not (optional)
      * @param int|null $idProductAttribute Product attribute id (optional).
-     *     If set to false, do not apply the combination price impact.
-     *     NULL does apply the default combination price impact.
+     *                                     If set to false, do not apply the combination price impact.
+     *                                     NULL does apply the default combination price impact.
      * @param int $decimals Number of decimals (optional)
      * @param int|null $divisor Useful when paying many time without fees (optional)
      * @param bool $onlyReduc Returns only the reduction amount
      * @param bool $useReduc Set if the returned amount will include reduction
      * @param int $quantity Required for quantity discount application (default value: 1)
      * @param bool $forceAssociatedTax DEPRECATED - NOT USED Force to apply the associated tax.
-     *     Only works when the parameter $usetax is true
+     *                                 Only works when the parameter $usetax is true
      * @param int|null $idCustomer Customer ID (for customer group reduction)
      * @param int|null $idCart Cart ID. Required when the cookie is not accessible
-     *     (e.g., inside a payment module, a cron task...)
+     *                         (e.g., inside a payment module, a cron task...)
      * @param int|null $idAddress Customer address ID. Required for price (tax included)
-     *     calculation regarding the guest localization
+     *                            calculation regarding the guest localization
      * @param null $specificPriceOutput If a specific price applies regarding the previous parameters,
-     *     this variable is filled with the corresponding SpecificPrice object
-     * @param bool $withEcotax Insert ecotax in price output.
+     *                                  this variable is filled with the corresponding SpecificPrice object
+     * @param bool $withEcotax insert ecotax in price output
      * @param bool $useGroupReduction
      * @param Context|null $context
      * @param bool $useCustomerPrice
@@ -101,30 +105,30 @@ class PriceCalculator
     }
 
     /**
-     * Price calculation / Get product price
+     * Price calculation / Get product price.
      *
-     * @param int    $idShop Shop id
-     * @param int    $idProduct Product id
-     * @param int    $idProductAttribute Product attribute id
-     * @param int    $idCountry Country id
-     * @param int    $idState State id
+     * @param int $idShop Shop id
+     * @param int $idProduct Product id
+     * @param int $idProductAttribute Product attribute id
+     * @param int $idCountry Country id
+     * @param int $idState State id
      * @param string $zipCode
-     * @param int    $idCurrency Currency id
-     * @param int    $idGroup Group id
-     * @param int    $quantity Quantity Required for Specific prices : quantity discount application
-     * @param bool   $useTax with (1) or without (0) tax
-     * @param int    $decimals Number of decimals returned
-     * @param bool   $onlyReduc Returns only the reduction amount
-     * @param bool   $useReduc Set if the returned amount will include reduction
-     * @param bool   $withEcotax insert ecotax in price output.
-     * @param null   $specificPrice If a specific price applies regarding the previous parameters,
-     *                               this variable is filled with the corresponding SpecificPrice object
-     * @param bool   $useGroupReduction
-     * @param int    $idCustomer
-     * @param bool   $useCustomerPrice
-     * @param int    $idCart
-     * @param int    $realQuantity
-     * @param int    $idCustomization
+     * @param int $idCurrency Currency id
+     * @param int $idGroup Group id
+     * @param int $quantity Quantity Required for Specific prices : quantity discount application
+     * @param bool $useTax with (1) or without (0) tax
+     * @param int $decimals Number of decimals returned
+     * @param bool $onlyReduc Returns only the reduction amount
+     * @param bool $useReduc Set if the returned amount will include reduction
+     * @param bool $withEcotax insert ecotax in price output
+     * @param null $specificPrice If a specific price applies regarding the previous parameters,
+     *                            this variable is filled with the corresponding SpecificPrice object
+     * @param bool $useGroupReduction
+     * @param int $idCustomer
+     * @param bool $useCustomerPrice
+     * @param int $idCart
+     * @param int $realQuantity
+     * @param int $idCustomization
      *
      * @return float Product price
      **/
@@ -150,7 +154,7 @@ class PriceCalculator
         $idCart = 0,
         $realQuantity = 0,
         $idCustomization = 0
-    ){
+    ) {
         return Product::priceCalculation(
             $idShop,
             $idProduct,

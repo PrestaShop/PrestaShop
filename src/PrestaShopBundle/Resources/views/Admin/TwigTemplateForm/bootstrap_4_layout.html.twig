@@ -302,6 +302,38 @@
     {% endspaceless %}
 {% endblock date_picker_widget %}
 
+{% block date_range_widget %}
+  {% spaceless %}
+    {{ form_widget(form.from) }}
+    {{ form_widget(form.to) }}
+  {% endspaceless %}
+{% endblock date_range_widget %}
+
+{% block search_and_reset_widget %}
+    {% spaceless %}
+        <button type="submit"
+                class="btn btn-primary d-block"
+                title="{{ 'Search'|trans({}, 'Admin.Global') }}"
+                name="{{ full_name }}[search]"
+        >
+          <i class="material-icons">search</i>
+          {{ 'Search'|trans({}, 'Admin.Global') }}
+        </button>
+
+        {% if show_reset_button %}
+            <button type="reset"
+                    name="{{ full_name }}[reset]"
+                    class="btn btn-link js-reset-search btn d-block"
+                    data-url="{{ form.vars.attr['data-url'] }}"
+                    data-redirect="{{ form.vars.attr['data-redirect'] }}"
+            >
+              <i class="material-icons">clear</i>
+              {{ 'Reset'|trans({}, 'Admin.Global') }}
+            </button>
+        {% endif %}
+    {% endspaceless %}
+{% endblock search_and_reset_widget %}
+
 {% block switch_widget %}
     {% spaceless %}
     <span class="ps-switch">
@@ -369,19 +401,30 @@
 {% block checkbox_radio_label %}
     {# Do not display the label if widget is not defined in order to prevent double label rendering #}
     {% if widget is defined %}
-        {% if required %}
-    {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
-{% endif %}
-        {% if parent_label_class is defined %}
-    {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
-{% endif %}
-        {% if label is not same as(false) and label is empty %}
-    {% set label = name|humanize %}
-{% endif %}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            {{- widget|raw -}}
-            {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
-        </label>
+      {% if required %}
+        {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
+      {% endif %}
+      {% if parent_label_class is defined %}
+          {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+      {% endif %}
+      {% if label is not same as(false) and label is empty %}
+          {% set label = name|humanize %}
+      {% endif %}
+
+      {% if material_design is defined %}
+        <div class="md-checkbox md-checkbox-inline">
+          <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+          {{- widget|raw -}}
+          <i class="md-checkbox-control"></i>
+          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+          </label>
+        </div>
+      {% else %}
+      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{- widget|raw -}}
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+      </label>
+      {% endif %}
     {% endif %}
 {% endblock checkbox_radio_label %}
 
@@ -466,3 +509,90 @@
     </div>
     {%- endif %}
 {%- endblock form_errors %}
+
+
+{# Material design widgets #}
+
+{% block material_choice_table_widget %}
+  {% spaceless %}
+    <div class="choice-table">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th class="checkbox">
+              <div class="md-checkbox">
+                <label>
+                  <input type="checkbox" class="js-choice-table-select-all">
+                  <i class="md-checkbox-control"></i>
+                  {{ 'Select all'|trans({}, 'Admin.Actions') }}
+                </label>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for child in form %}
+          <tr>
+            <td>
+              {{ form_widget(child, {'material_design': true}) }}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endspaceless %}
+{% endblock material_choice_table_widget %}
+
+{% block material_multiple_choice_table_widget %}
+  {% spaceless %}
+    <div class="choice-table table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ label }}</th>
+            {% for child_choice in form %}
+              <th class="text-center">
+                {% if child_choice.vars.multiple %}
+                  <a href="#"
+                     class="js-multiple-choice-table-select-column"
+                     data-column-num="{{ loop.index + 1 }}"
+                     data-column-checked="false"
+                  >
+                    {{ child_choice.vars.label }}
+                  </a>
+                {% else %}
+                  {{ child_choice.vars.label }}
+                {% endif %}
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for choice_name, choice_value in choices %}
+          <tr>
+            <td>
+              {{ choice_name }}
+            </td>
+            {% for child_choice_name, child_choice in form %}
+              <td class="text-center">
+                {% if child_choice_entry_index_mapping[choice_value][child_choice_name] is defined %}
+                  {% set entry_index = child_choice_entry_index_mapping[choice_value][child_choice_name] %}
+
+                  {% if child_choice.vars.multiple %}
+                    {{ form_widget(child_choice[entry_index], {'material_design': true}) }}
+                  {% else %}
+                    {{ form_widget(child_choice[entry_index]) }}
+                  {% endif %}
+                {% else %}
+                  --
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endspaceless %}
+{% endblock material_multiple_choice_table_widget %}

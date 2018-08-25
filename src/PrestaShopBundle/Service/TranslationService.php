@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -41,6 +41,7 @@ class TranslationService
 
     /**
      * @param $lang
+     *
      * @return mixed
      */
     public function langToLocale($lang)
@@ -52,7 +53,9 @@ class TranslationService
 
     /**
      * @param $locale
+     *
      * @return mixed
+     *
      * @throws Exception
      */
     public function findLanguageByLocale($locale)
@@ -70,6 +73,7 @@ class TranslationService
 
     /**
      * @return mixed
+     *
      * @throws Exception
      */
     private function getLangToLocalesMapping()
@@ -136,12 +140,13 @@ class TranslationService
     }
 
     /**
-     * List translation for domain
+     * List translation for domain.
      *
      * @param $locale
      * @param $domain
      * @param null $theme
      * @param null $search
+     *
      * @return array
      */
     public function listDomainTranslation($locale, $domain, $theme = null, $search = null)
@@ -186,8 +191,8 @@ class TranslationService
         foreach ($defaultCatalog as $key => $message) {
             $data = array(
                 'default' => $key,
-                'xliff' => (array_key_exists($key, (array)$xliffCatalog) ? $xliffCatalog[$key] : null),
-                'database' => (array_key_exists($key, (array)$dbCatalog) ? $dbCatalog[$key] : null),
+                'xliff' => (array_key_exists($key, (array) $xliffCatalog) ? $xliffCatalog[$key] : null),
+                'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
             );
 
@@ -196,7 +201,7 @@ class TranslationService
                 if (empty($data['xliff']) && empty($data['database'])) {
                     array_unshift($domains['data'], $data);
                 } else {
-                    array_push($domains['data'], $data);
+                    $domains['data'][] = $data;
                 }
             }
         }
@@ -205,16 +210,18 @@ class TranslationService
     }
 
     /**
-     * Check if data contains search word
+     * Check if data contains search word.
      *
      * @param $search
      * @param $data
+     *
      * @return bool
      */
     private function dataContainsSearchWord($search, $data)
     {
         if (is_string($search)) {
             $search = strtolower($search);
+
             return false !== strpos(strtolower($data['default']), $search) ||
                 false !== strpos(strtolower($data['xliff']), $search) ||
                 false !== strpos(strtolower($data['database']), $search);
@@ -235,15 +242,15 @@ class TranslationService
         return false;
     }
 
-
     /**
-     * Save a translation in database
+     * Save a translation in database.
      *
      * @param $lang
      * @param $domain
      * @param $key
      * @param $translationValue
      * @param null $theme
+     *
      * @return bool
      */
     public function saveTranslationMessage($lang, $domain, $key, $translationValue, $theme = null)
@@ -261,7 +268,7 @@ class TranslationService
                 'lang' => $lang,
                 'domain' => $domain,
                 'key' => $key,
-                'theme' => $theme
+                'theme' => $theme,
             ));
 
         if (is_null($translation)) {
@@ -286,6 +293,7 @@ class TranslationService
             foreach ($violations as $violation) {
                 $logger->error($violation->getMessage());
             }
+
             return false;
         }
 
@@ -304,12 +312,13 @@ class TranslationService
     }
 
     /**
-     * Reset translation from database
+     * Reset translation from database.
      *
      * @param $lang
      * @param $domain
      * @param $key
      * @param null $theme
+     *
      * @return bool
      */
     public function resetTranslationMessage($lang, $domain, $key, $theme = null)

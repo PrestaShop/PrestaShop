@@ -10,16 +10,16 @@ let employeeData = [
   {
     firstname: 'Demo',
     lastname: "Prestashop",
-    email: 'demo@prestashop.com',
-    password: 'prestashop_demo',
+    email: global.credentials.email,
+    password: global.credentials.password,
     profile: '4',
     language: 'Tiếng Việt (Vietnamese)'
   },
   {
     firstname: 'Demo',
     lastname: "Prestashop",
-    email: 'demo@prestashop.com',
-    password: 'prestashop_demo',
+    email: global.credentials.email,
+    password: global.credentials.password,
     profile: '4',
     language: 'English (English)'
   }

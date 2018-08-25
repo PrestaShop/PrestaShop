@@ -24,52 +24,67 @@
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
-<div class="col">
-    <div class="card" id="configuration_fieldset_products">
-        <h3 class="card-header">
-            <i class="material-icons">settings</i> {{ 'Products (general)'|trans }}
-        </h3>
-        <div class="card-block">
-            <div class="card-text">
-                <div class="form-group">
-                    {{ ps.label_with_help(('Catalog mode'|trans), ('The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.catalog_mode) }}
-                    {{ form_widget(generalForm.catalog_mode) }}
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label">
-                        {{ 'Number of days for which the product is considered \'new\''|trans }}
-                    </label>
-                    {{ form_errors(generalForm.new_days_number) }}
-                    {{ form_widget(generalForm.new_days_number) }}
-                </div>
-                <div class="form-group">
-                    {{ ps.label_with_help(('Max size of product summary'|trans), ('Set the maximum size of the summary of your product description (in characters).'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.short_description_limit) }}
-                    {{ form_widget(generalForm.short_description_limit) }}
-                </div>
-                <div class="form-group">
-                    {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.quantity_discount) }}
-                    {{ form_widget(generalForm.quantity_discount) }}
-                </div>
-                <div class="form-group">
-                    {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.force_friendly_url) }}
-                    {{ form_widget(generalForm.force_friendly_url) }}
-                </div>
-                <div class="form-group">
-                    {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                    {{ form_errors(generalForm.default_status) }}
-                    {{ form_widget(generalForm.default_status) }}
-                </div>
-            </div>
+{% block product_preferences_general %}
+<div class="col-xl-10">
+  <div class="card" id="configuration_fieldset_products">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Products (general)'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          {{ ps.label_with_help(('Catalog mode'|trans), ('The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.catalog_mode) }}
+            {{ form_widget(generalForm.catalog_mode) }}
+          </div>
         </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Number of days for which the product is considered \'new\''|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(generalForm.new_days_number) }}
+            {{ form_widget(generalForm.new_days_number) }}
+          </div>
         </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Max size of product summary'|trans), ('Set the maximum size of the summary of your product description (in characters).'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.short_description_limit) }}
+            {{ form_widget(generalForm.short_description_limit) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.quantity_discount) }}
+            {{ form_widget(generalForm.quantity_discount) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.force_friendly_url) }}
+            {{ form_widget(generalForm.force_friendly_url) }}
+          </div>
+        </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.default_status) }}
+            {{ form_widget(generalForm.default_status) }}
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}

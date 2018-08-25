@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Upload;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
@@ -72,20 +74,23 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
     /**
      * Update the file upload limit if possible.
      *
-     * @return array the errors list during the update operation.
-     * @throws \Exception
+     * @return array the errors list during the update operation
+     *
+     * @throws Exception
      */
     private function updateFileUploadConfiguration(array $configuration)
     {
         $uploadMaxSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
-        $postMaxSize = (int) str_replace('M', '', ini_get('post_max_size'));
-        $maxSize = min($uploadMaxSize, $postMaxSize);
+        $sizes = [
+            'max_size_attached_files' => $uploadMaxSize,
+            'max_size_downloadable_product' => (int) str_replace('M', '', ini_get('post_max_size')),
+            'max_size_product_image' => $uploadMaxSize,
+        ];
 
         $errors = array();
-
         foreach ($configuration as $configurationKey => $configurationValue) {
-            if (in_array($configurationKey, array_keys($this->getConfiguration(), true), true)) {
-                if ($configurationValue > $maxSize) {
+            if (array_key_exists($configurationKey, $this->getConfiguration())) {
+                if ((int) $configurationValue > $sizes[$configurationKey]) {
                     $errors[] = array(
                         'key' => 'The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.',
                         'domain' => 'Admin.Advparameters.Notification',
@@ -93,7 +98,10 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
                     );
                 }
 
-                $this->configuration->set($this->getConfigurationKey($configurationKey), $configurationValue);
+                $this->configuration->set(
+                    $this->getConfigurationKey($configurationKey),
+                    max((int) $configurationValue, 1)
+                );
             }
         }
 
@@ -104,7 +112,8 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      * Map array key to the related configuration property.
      *
      * @param string the array key
-     * @return string the related configuration key.
+     *
+     * @return string the related configuration key
      */
     private function getConfigurationKey($key)
     {

@@ -93,7 +93,7 @@
             <th colspan="3" class="text-sm-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
           </tr>
         </thead>
-        <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes', { 'idProduct': 1 }) }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination', { 'idProduct': 1 }) }}"  data-id-product= {{ id_product }} data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form', { 'combinationIds': 1 }) }}">
+        <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes', { 'idProduct': 1 }) }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination', { 'idProduct': 1 }) }}"  data-id-product= {{ id_product }} data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form', { 'combinationIds': ':numbers' }) }}">
           {% if has_combinations %}
             <tr class="combination loading timeline-wrapper" id="loading-attribute">
               <td class="timeline-item" width="1%">
@@ -117,7 +117,7 @@
               {% endif %}
               <td colspan="6"></td>
             </tr>
-          {%  endif %}
+          {% endif %}
         </tbody>
       </table>
     </div>

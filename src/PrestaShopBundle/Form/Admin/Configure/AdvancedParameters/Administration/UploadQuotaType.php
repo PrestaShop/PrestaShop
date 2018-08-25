@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -38,19 +39,30 @@ class UploadQuotaType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('max_size_attached_files', TextWithUnitType::class, array(
-                'required' => true,
-                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-            ))
-            ->add('max_size_downloadable_product', TextWithUnitType::class, array(
-                'required' => true,
-                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-            ))
-            ->add('max_size_product_image', TextWithUnitType::class, array(
-                'required' => true,
-                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-            ))
-        ;
+            ->add(
+                'max_size_attached_files',
+                TextWithUnitType::class,
+                [
+                    'required' => true,
+                    'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                ]
+            )
+            ->add(
+                'max_size_downloadable_product',
+                TextWithUnitType::class,
+                [
+                    'required' => true,
+                    'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                ]
+            )
+            ->add(
+                'max_size_product_image',
+                TextWithUnitType::class,
+                [
+                    'required' => true,
+                    'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                ]
+            );
     }
 
     /**
@@ -58,9 +70,9 @@ class UploadQuotaType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ));
+        ]);
     }
 
     /**

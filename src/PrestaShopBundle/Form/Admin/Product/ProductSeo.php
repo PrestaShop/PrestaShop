@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
@@ -31,9 +32,10 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 /**
- * This form class is responsible to generate the product SEO form
+ * This form class is responsible to generate the product SEO form.
  */
 class ProductSeo extends CommonAbstractType
 {
@@ -42,7 +44,7 @@ class ProductSeo extends CommonAbstractType
     private $router;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -62,17 +64,17 @@ class ProductSeo extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $remoteUrls = array(
-            '301-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            '302-product' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            '301-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
-            '302-category' => $this->router->generate('admin_get_ajax_categories').'&query=%QUERY',
-        );
+        $remoteUrls = [
+            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
+            ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
+        ];
 
         $builder->add(
             'meta_title',
             TranslateType::class,
-            array(
+            [
                 'type' => FormType\TextType::class,
                 'options' => [
                     'attr' => [
@@ -80,7 +82,7 @@ class ProductSeo extends CommonAbstractType
                         'counter' => 70,
                         'counter_type' => 'recommended',
                     ],
-                    'required' => false
+                    'required' => false,
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
@@ -90,85 +92,87 @@ class ProductSeo extends CommonAbstractType
                     'popover_placement' => 'right',
                     'class' => 'px-0',
                 ],
-                'required' => false
-            )
-        )
-        ->add(
-            'meta_description',
-            TranslateType::class,
-            array(
-                'type' => FormType\TextareaType::class,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
-                        'counter' => 160,
-                        'counter_type' => 'recommended',
-                    ],
-                    'required' => false
-                ],
-                'locales' => $this->locales,
-                'hideTabs' => true,
-                'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
-                    'popover_placement' => 'right',
-                    'class' => 'px-0',
-                ],
-                'required' => false
-            )
-        )
-        ->add(
-            'link_rewrite',
-            TranslateType::class,
-            array(
-                'type' => FormType\TextType::class,
-                'options' => [],
-                'locales' => $this->locales,
-                'hideTabs' => true,
-                'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),
-            )
-        )
-        ->add(
-            'redirect_type',
-            FormType\ChoiceType::class,
-            array(
-                'choices'  => array(
-                    $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => '404',
-                    $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => '301-product',
-                    $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => '302-product',
-                    $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
-                    $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
-                ),
-                'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
-                    if (array_key_exists($index, $remoteUrls)) {
-                        return ['data-remoteurl' => $remoteUrls[$index]];
-                    }
-                    return [];
-                },
-                'required' => true,
-                'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
-                'attr' => array(
-                    'data-labelproduct' => $this->translator->trans('Target product', [], 'Admin.Catalog.Feature'),
-                    'data-placeholderproduct' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
-                    'data-labelcategory' => $this->translator->trans('Target category', [], 'Admin.Catalog.Feature'),
-                    'data-placeholdercategory' => $this->translator->trans('To which category the page should redirect?', [], 'Admin.Catalog.Help'),
-                ),
-            )
-        )
-        ->add(
-            'id_type_redirected',
-            TypeaheadProductCollectionType::class,
-            array(
-                'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-                'mapping_value' => 'id',
-                'mapping_name' => 'name',
-                'mapping_type' => $options['mapping_type'],
-                'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
-                'limit' => 1,
                 'required' => false,
-                'label' => $this->translator->trans('Target', [], 'Admin.Catalog.Feature'),
+            ]
+        )
+            ->add(
+                'meta_description',
+                TranslateType::class,
+                [
+                    'type' => FormType\TextareaType::class,
+                    'options' => [
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
+                            'counter' => 160,
+                            'counter_type' => 'recommended',
+                        ],
+                        'required' => false,
+                    ],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
+                    'label_attr' => [
+                        'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
+                        'popover_placement' => 'right',
+                        'class' => 'px-0',
+                    ],
+                    'required' => false,
+                ]
             )
-        );
+            ->add(
+                'link_rewrite',
+                TranslateType::class,
+                [
+                    'type' => FormType\TextType::class,
+                    'options' => [],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),
+                ]
+            )
+            ->add(
+                'redirect_type',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => [
+                        $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY,
+                        $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND,
+                        $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY,
+                        $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND,
+                        $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => ProductInterface::REDIRECT_TYPE_NOT_FOUND,
+                    ],
+                    'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
+                        if (array_key_exists($index, $remoteUrls)) {
+                            return ['data-remoteurl' => $remoteUrls[$index]];
+                        }
+
+                        return [];
+                    },
+                    'required' => true,
+                    'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
+                    'attr' => [
+                        'data-labelproduct' => $this->translator->trans('Target product', [], 'Admin.Catalog.Feature'),
+                        'data-placeholderproduct' => $this->translator->trans('To which product the page should redirect?', [], 'Admin.Catalog.Help'),
+                        'data-labelcategory' => $this->translator->trans('Target category', [], 'Admin.Catalog.Feature'),
+                        'data-placeholdercategory' => $this->translator->trans('To which category the page should redirect?', [], 'Admin.Catalog.Help'),
+                        'data-hintcategory' => $this->translator->trans('If no category is selected the Main Category is used', [], 'Admin.Catalog.Help'),
+                    ],
+                ]
+            )
+            ->add(
+                'id_type_redirected',
+                TypeaheadProductCollectionType::class,
+                [
+                    'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+                    'mapping_value' => 'id',
+                    'mapping_name' => 'name',
+                    'mapping_type' => $options['mapping_type'],
+                    'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
+                    'limit' => 1,
+                    'required' => false,
+                    'label' => $this->translator->trans('Target', [], 'Admin.Catalog.Feature'),
+                ]
+            );
     }
 
     /**
@@ -186,8 +190,8 @@ class ProductSeo extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'mapping_type' => 'product',
-        ));
+        ]);
     }
 }

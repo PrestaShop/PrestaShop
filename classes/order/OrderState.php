@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class OrderStateCore extends ObjectModel
 {
     /** @var string Name */
@@ -79,21 +78,21 @@ class OrderStateCore extends ObjectModel
         'fields' => array(
             'send_email' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'module_name' => array('type' => self::TYPE_STRING, 'validate' => 'isModuleName'),
-            'invoice' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'color' =>        array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-            'logable' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'shipped' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'unremovable' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'delivery' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'hidden' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'paid' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pdf_delivery' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pdf_invoice' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'invoice' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
+            'logable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'shipped' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'unremovable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'delivery' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'hidden' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'paid' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'pdf_delivery' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'pdf_invoice' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
-            'name' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'template' =>    array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+            'template' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
         ),
     );
 
@@ -105,50 +104,55 @@ class OrderStateCore extends ObjectModel
         ),
     );
 
-    const FLAG_NO_HIDDEN    = 1;  /* 00001 */
-    const FLAG_LOGABLE        = 2;  /* 00010 */
-    const FLAG_DELIVERY        = 4;  /* 00100 */
-    const FLAG_SHIPPED        = 8;  /* 01000 */
-    const FLAG_PAID        = 16; /* 10000 */
+    const FLAG_NO_HIDDEN = 1;  /* 00001 */
+    const FLAG_LOGABLE = 2;  /* 00010 */
+    const FLAG_DELIVERY = 4;  /* 00100 */
+    const FLAG_SHIPPED = 8;  /* 01000 */
+    const FLAG_PAID = 16; /* 10000 */
 
     /**
-    * Get all available order statuses
-    *
-    * @param int $id_lang Language id for status name
-    * @return array Order statuses
-    */
+     * Get all available order statuses.
+     *
+     * @param int $id_lang Language id for status name
+     *
+     * @return array Order statuses
+     */
     public static function getOrderStates($id_lang)
     {
-        $cache_id = 'OrderState::getOrderStates_'.(int)$id_lang;
+        $cache_id = 'OrderState::getOrderStates_' . (int) $id_lang;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `'._DB_PREFIX_.'order_state` os
-            LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$id_lang.')
+            FROM `' . _DB_PREFIX_ . 'order_state` os
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')
             WHERE deleted = 0
             ORDER BY `name` ASC');
             Cache::store($cache_id, $result);
+
             return $result;
         }
+
         return Cache::retrieve($cache_id);
     }
 
     /**
-    * Check if we can make a invoice when order is in this state
-    *
-    * @param int $id_order_state State ID
-    * @return bool availability
-    */
+     * Check if we can make a invoice when order is in this state.
+     *
+     * @param int $id_order_state State ID
+     *
+     * @return bool availability
+     */
     public static function invoiceAvailable($id_order_state)
     {
         $result = false;
         if (Configuration::get('PS_INVOICE')) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT `invoice`
-            FROM `'._DB_PREFIX_.'order_state`
-            WHERE `id_order_state` = '.(int)$id_order_state);
+            FROM `' . _DB_PREFIX_ . 'order_state`
+            WHERE `id_order_state` = ' . (int) $id_order_state);
         }
-        return (bool)$result;
+
+        return (bool) $result;
     }
 
     public function isRemovable()

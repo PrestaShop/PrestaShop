@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\NewProducts;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -36,9 +35,19 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use Symfony\Component\Translation\TranslatorInterface;
 use Product;
 
+/**
+ * Used to query the latest products, see NewProductsController in Front Office.
+ */
 class NewProductsProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -48,6 +57,13 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @param string $type
+     *
+     * @return array
+     */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
@@ -63,6 +79,9 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query

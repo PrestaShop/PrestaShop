@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+/**
+ * Value object used to represent a partial Module object during unzipping
+ * of a module archive.
+ */
 class ModuleZip
 {
     /**
@@ -50,30 +54,51 @@ class ModuleZip
         $this->source = $source;
     }
 
+    /**
+     * @return null|string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function getSource()
     {
         return $this->source;
     }
 
+    /**
+     * @return null|string
+     */
     public function getSandboxPath()
     {
         return $this->sandboxPath;
     }
 
+    /**
+     * @param $name
+     *
+     * @return $this
+     */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
+    /**
+     * @param $sandboxPath
+     *
+     * @return $this
+     */
     public function setSandboxPath($sandboxPath)
     {
         $this->sandboxPath = $sandboxPath;
+
         return $this;
     }
 }

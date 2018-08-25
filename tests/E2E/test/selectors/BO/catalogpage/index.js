@@ -3,6 +3,7 @@ module.exports = Object.assign(
     CatalogPage: {
       menu_button: '//*[@id="subtab-AdminCatalog"]/a',
       success_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
+      danger_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "danger")]',
       select_all_product_button: '//*[@id="bulk_action_select_all"]/..',
       action_group_button: '//*[@id="product_bulk_menu"]',
       action_button: '(//*[@id="main-div"]//div[contains(@class, "bulk-catalog")]//a)[%ID]',
@@ -22,5 +23,6 @@ module.exports = Object.assign(
   require('./attribute_submenu'),
   require('./Manufacturers'),
   require('./stocksubmenu'),
-  require('./discount_submenu')
+  require('./discount_submenu'),
+  require('./files')
 );

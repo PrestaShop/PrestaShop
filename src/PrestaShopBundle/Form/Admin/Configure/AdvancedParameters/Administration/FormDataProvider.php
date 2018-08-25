@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration;
@@ -51,13 +52,11 @@ final class FormDataProvider implements FormDataProviderInterface
      */
     private $notificationsConfiguration;
 
-
     public function __construct(
         GeneralConfiguration $generalConfiguration,
         UploadQuotaConfiguration $uploadConfiguration,
         NotificationsConfiguration $notificationsConfiguration
-    )
-    {
+    ) {
         $this->generalConfiguration = $generalConfiguration;
         $this->uploadConfiguration = $uploadConfiguration;
         $this->notificationsConfiguration = $notificationsConfiguration;
@@ -68,11 +67,11 @@ final class FormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return array(
+        return [
             'general' => $this->generalConfiguration->getConfiguration(),
             'upload_quota' => $this->uploadConfiguration->getConfiguration(),
             'notifications' => $this->notificationsConfiguration->getConfiguration(),
-        );
+        ];
     }
 
     /**
@@ -82,7 +81,6 @@ final class FormDataProvider implements FormDataProviderInterface
     {
         return $this->generalConfiguration->updateConfiguration($data['general']) +
             $this->uploadConfiguration->updateConfiguration($data['upload_quota']) +
-            $this->notificationsConfiguration->updateConfiguration($data['notifications'])
-        ;
+            $this->notificationsConfiguration->updateConfiguration($data['notifications']);
     }
 }

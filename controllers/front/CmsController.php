@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -66,7 +66,7 @@ class CmsControllerCore extends FrontController
 
         // assignCase (1 = CMS page, 2 = CMS category)
         if (Validate::isLoadedObject($this->cms)) {
-            $adtoken = Tools::getAdminToken('AdminCmsContent'.(int) Tab::getIdFromClassName('AdminCmsContent').(int) Tools::getValue('id_employee'));
+            $adtoken = Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) Tools::getValue('id_employee'));
             if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
                 $this->redirect_after = '404';
                 $this->redirect();
@@ -184,9 +184,9 @@ class CmsControllerCore extends FrontController
         $page = parent::getTemplateVarPage();
 
         if ($this->assignCase == 2) {
-            $page['body_classes']['cms-id-'.$this->cms_category->id] = true;
+            $page['body_classes']['cms-id-' . $this->cms_category->id] = true;
         } else {
-            $page['body_classes']['cms-id-'.$this->cms->id] = true;
+            $page['body_classes']['cms-id-' . $this->cms->id] = true;
             if (!$this->cms->indexation) {
                 $page['meta']['robots'] = 'noindex';
             }

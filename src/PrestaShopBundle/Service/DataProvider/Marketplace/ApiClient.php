@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -46,7 +46,8 @@ class ApiClient
         $locale,
         $isoCode,
         $toolsAdapter,
-        $domain
+        $domain,
+        $shopVersion
     ) {
         $this->addonsApiClient = $addonsApiClient;
         $this->toolsAdapter = $toolsAdapter;
@@ -55,7 +56,7 @@ class ApiClient
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
-            ->setVersion(_PS_VERSION_)
+            ->setVersion($shopVersion)
             ->setShopUrl($domain)
         ;
         $this->defaultQueryParameters = $this->queryParameters;
@@ -69,6 +70,7 @@ class ApiClient
 
     /**
      * @param Client $client
+     *
      * @return $this
      */
     public function setClient(Client $client)
@@ -79,7 +81,7 @@ class ApiClient
     }
 
     /**
-     * In case you reuse the Client, you may want to clean the previous parameters
+     * In case you reuse the Client, you may want to clean the previous parameters.
      */
     public function reset()
     {
@@ -87,7 +89,8 @@ class ApiClient
     }
 
     /**
-     * Check Addons client account credentials
+     * Check Addons client account credentials.
+     *
      * @return object
      */
     public function getCheckCustomer()
@@ -134,10 +137,11 @@ class ApiClient
     }
 
     /**
-     * Prepare and call API for PrestaTrust integrity and property module details
+     * Prepare and call API for PrestaTrust integrity and property module details.
      *
      * @param string $hash Hash of module files
      * @param string $sc_address Smart contract (Module licence)
+     *
      * @return object List of checks made and their results
      */
     public function getPrestaTrustCheck($hash, $sc_address)
@@ -147,6 +151,7 @@ class ApiClient
 
         $response = $this->setMethod('trust')
             ->getResponse();
+
         return json_decode($response);
     }
 
@@ -190,9 +195,10 @@ class ApiClient
     }
 
     /**
-     * Call API for module ZIP content (= download)
-     * 
+     * Call API for module ZIP content (= download).
+     *
      * @param int $moduleId
+     *
      * @return string binary content (zip format)
      */
     public function getModuleZip($moduleId)
@@ -217,11 +223,13 @@ class ApiClient
         if (!empty($responseArray->modules)) {
             return $responseArray->modules;
         }
+
         return array();
     }
 
     /**
-     * Get list of themes bought by customer
+     * Get list of themes bought by customer.
+     *
      * @return object
      */
     public function getCustomerThemes()
@@ -236,6 +244,7 @@ class ApiClient
         if (!empty($responseDecoded->themes)) {
             return $responseDecoded->themes;
         }
+
         return array();
     }
 

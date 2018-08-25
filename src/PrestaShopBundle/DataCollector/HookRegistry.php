@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,12 +37,12 @@ final class HookRegistry
     const HOOK_CALLED = 'called';
 
     /**
-     * @var array the current selected hook during the request.
+     * @var array the current selected hook during the request
      */
     private $currentHook = null;
 
     /**
-     * @var array the list of hooks data.
+     * @var array the list of hooks data
      */
     private $hooks;
 
@@ -57,8 +57,8 @@ final class HookRegistry
     /**
      * @param $hookName string
      * @param $hookArguments array
-     * @param $file string filepath where the "Hook::exec" call have been done.
-     * @param $line string position in file where the "Hook::exec" call have been done.
+     * @param $file string filepath where the "Hook::exec" call have been done
+     * @param $line string position in file where the "Hook::exec" call have been done
      */
     public function selectHook($hookName, $hookArguments, $file, $line)
     {
@@ -94,7 +94,7 @@ final class HookRegistry
      * A callback have been executed by the module during the Hook dispatch.
      *
      * @param ModuleInterface $module
-     * @param $args array All arguments passed to the Module callback.
+     * @param $args array All arguments passed to the Module callback
      */
     public function hookedByCallback(ModuleInterface $module, $args)
     {
@@ -107,7 +107,7 @@ final class HookRegistry
      * A widget have been rendered by the module during the Hook dispatch.
      *
      * @param ModuleInterface $module
-     * @param $args array All arguments passed to the Module callback.
+     * @param $args array All arguments passed to the Module callback
      */
     public function hookedByWidget(ModuleInterface $module, $args)
     {
@@ -117,7 +117,7 @@ final class HookRegistry
     }
 
     /**
-     * @return array the list of called hooks.
+     * @return array the list of called hooks
      */
     public function getCalledHooks()
     {
@@ -125,7 +125,7 @@ final class HookRegistry
     }
 
     /**
-     * @return array the list of uncalled hooks.
+     * @return array the list of uncalled hooks
      */
     public function getNotCalledHooks()
     {
@@ -133,7 +133,7 @@ final class HookRegistry
     }
 
     /**
-     * @return array the list of dispatched hooks.
+     * @return array the list of dispatched hooks
      */
     public function getHooks()
     {

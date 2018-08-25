@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Checkout;
 
 class TermsAndConditions
@@ -40,17 +39,20 @@ class TermsAndConditions
 
         $this->links = $links;
         $this->rawText = $rawText;
+
         return $this;
     }
 
     /**
      * Inserts links into the text, replacing all [something] with links to "something", taking
-     * URLs from $this->links
+     * URLs from $this->links.
+     *
      * @return an string of HTML
      */
     public function format()
     {
         $index = 0;
+
         return preg_replace_callback('/\[(.*?)\]/', function (array $match) use (&$index) {
             if (!isset($this->links[$index])) {
                 return $match[1];
@@ -58,6 +60,7 @@ class TermsAndConditions
 
             $replacement = '<a href="' . $this->links[$index] . '" id="' . $this->createLinkId($index) . '">' . $match[1] . '</a>';
             ++$index;
+
             return $replacement;
         }, $this->rawText);
     }
@@ -65,6 +68,7 @@ class TermsAndConditions
     public function setIdentifier($identifier)
     {
         $this->identifier = $identifier;
+
         return $this;
     }
 

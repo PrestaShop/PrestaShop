@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
  */
 class MediaServerConfiguration implements DataConfigurationInterface
 {
+    /**
+     * @var Configuration
+     */
     private $configuration;
 
     public function __construct(Configuration $configuration)

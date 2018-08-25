@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderDetailControllerCore extends FrontController
 {
@@ -36,13 +35,14 @@ class OrderDetailControllerCore extends FrontController
     protected $order_to_display;
 
     /**
-     * Start forms process
+     * Start forms process.
+     *
      * @see FrontController::postProcess()
      */
     public function postProcess()
     {
         if (Tools::isSubmit('submitMessage')) {
-            $idOrder = (int)Tools::getValue('id_order');
+            $idOrder = (int) Tools::getValue('id_order');
             $msgText = Tools::getValue('msgText');
 
             if (!$idOrder || !Validate::isUnsignedId($idOrder)) {
@@ -57,24 +57,24 @@ class OrderDetailControllerCore extends FrontController
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                     //check if a thread already exist
                     $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
-                    $id_product = (int)Tools::getValue('id_product');
+                    $id_product = (int) Tools::getValue('id_product');
                     $cm = new CustomerMessage();
                     if (!$id_customer_thread) {
                         $ct = new CustomerThread();
                         $ct->id_contact = 0;
-                        $ct->id_customer = (int)$order->id_customer;
-                        $ct->id_shop = (int)$this->context->shop->id;
+                        $ct->id_customer = (int) $order->id_customer;
+                        $ct->id_shop = (int) $this->context->shop->id;
                         if ($id_product && $order->orderContainProduct($id_product)) {
                             $ct->id_product = $id_product;
                         }
-                        $ct->id_order = (int)$order->id;
-                        $ct->id_lang = (int)$this->context->language->id;
+                        $ct->id_order = (int) $order->id;
+                        $ct->id_lang = (int) $this->context->language->id;
                         $ct->email = $this->context->customer->email;
                         $ct->status = 'open';
                         $ct->token = Tools::passwdGen(12);
                         $ct->add();
                     } else {
-                        $ct = new CustomerThread((int)$id_customer_thread);
+                        $ct = new CustomerThread((int) $id_customer_thread);
                         $ct->status = 'open';
                         $ct->update();
                     }
@@ -82,13 +82,13 @@ class OrderDetailControllerCore extends FrontController
                     $cm->id_customer_thread = $ct->id;
                     $cm->message = $msgText;
                     $client_ip_address = Tools::getRemoteAddr();
-                    $cm->ip_address = (int)ip2long($client_ip_address);
+                    $cm->ip_address = (int) ip2long($client_ip_address);
                     $cm->add();
 
                     if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE')) {
                         $to = strval(Configuration::get('PS_SHOP_EMAIL'));
                     } else {
-                        $to = new Contact((int)Configuration::get('PS_MAIL_EMAIL_MESSAGE'));
+                        $to = new Contact((int) Configuration::get('PS_MAIL_EMAIL_MESSAGE'));
                         $to = strval($to->email);
                     }
                     $toName = strval(Configuration::get('PS_SHOP_NAME'));
@@ -96,8 +96,8 @@ class OrderDetailControllerCore extends FrontController
 
                     $product = new Product($id_product);
                     $product_name = '';
-                    if (Validate::isLoadedObject($product) && isset($product->name[(int)$this->context->language->id])) {
-                        $product_name = $product->name[(int)$this->context->language->id];
+                    if (Validate::isLoadedObject($product) && isset($product->name[(int) $this->context->language->id])) {
+                        $product_name = $product->name[(int) $this->context->language->id];
                     }
 
                     if (Validate::isLoadedObject($customer)) {
@@ -113,15 +113,15 @@ class OrderDetailControllerCore extends FrontController
                                 '{lastname}' => $customer->lastname,
                                 '{firstname}' => $customer->firstname,
                                 '{email}' => $customer->email,
-                                '{id_order}' => (int)$order->id,
+                                '{id_order}' => (int) $order->id,
                                 '{order_name}' => $order->getUniqReference(),
                                 '{message}' => Tools::nl2br($msgText),
-                                '{product_name}' => $product_name
+                                '{product_name}' => $product_name,
                             ),
                             $to,
                             $toName,
                             strval(Configuration::get('PS_SHOP_EMAIL')),
-                            $customer->firstname.' '.$customer->lastname,
+                            $customer->firstname . ' ' . $customer->lastname,
                             null,
                             null,
                             _PS_MAIL_DIR_,
@@ -132,7 +132,7 @@ class OrderDetailControllerCore extends FrontController
                         );
                     }
 
-                    Tools::redirect('index.php?controller=order-detail&id_order='.$idOrder.'&messagesent');
+                    Tools::redirect('index.php?controller=order-detail&id_order=' . $idOrder . '&messagesent');
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();
@@ -142,7 +142,8 @@ class OrderDetailControllerCore extends FrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -151,7 +152,7 @@ class OrderDetailControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        $id_order = (int)Tools::getValue('id_order');
+        $id_order = (int) Tools::getValue('id_order');
         $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
 
         if (!$id_order) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class HelperCalendarCore extends Helper
 {
-    const DEFAULT_DATE_FORMAT    = 'Y-mm-dd';
+    const DEFAULT_DATE_FORMAT = 'Y-mm-dd';
     const DEFAULT_COMPARE_OPTION = 1;
 
     private $_actions;
@@ -53,6 +52,7 @@ class HelperCalendarCore extends Helper
         }
 
         $this->_actions = $value;
+
         return $this;
     }
 
@@ -72,6 +72,7 @@ class HelperCalendarCore extends Helper
         }
 
         $this->_compare_actions = $value;
+
         return $this;
     }
 
@@ -87,6 +88,7 @@ class HelperCalendarCore extends Helper
     public function setCompareDateFrom($value)
     {
         $this->_compare_date_from = $value;
+
         return $this;
     }
 
@@ -98,6 +100,7 @@ class HelperCalendarCore extends Helper
     public function setCompareDateTo($value)
     {
         $this->_compare_date_to = $value;
+
         return $this;
     }
 
@@ -108,7 +111,8 @@ class HelperCalendarCore extends Helper
 
     public function setCompareOption($value)
     {
-        $this->_compare_date_option = (int)$value;
+        $this->_compare_date_option = (int) $value;
+
         return $this;
     }
 
@@ -128,6 +132,7 @@ class HelperCalendarCore extends Helper
         }
 
         $this->_date_format = $value;
+
         return $this;
     }
 
@@ -151,6 +156,7 @@ class HelperCalendarCore extends Helper
         }
 
         $this->_date_from = $value;
+
         return $this;
     }
 
@@ -174,6 +180,7 @@ class HelperCalendarCore extends Helper
         }
 
         $this->_date_to = $value;
+
         return $this;
     }
 
@@ -188,7 +195,8 @@ class HelperCalendarCore extends Helper
 
     public function setRTL($value)
     {
-        $this->_rtl = (bool)$value;
+        $this->_rtl = (bool) $value;
+
         return $this;
     }
 
@@ -218,42 +226,43 @@ class HelperCalendarCore extends Helper
     {
         $context = Context::getContext();
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+        $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($context->employee)
             && $context->employee->bo_theme) ? $context->employee->bo_theme : 'default');
 
-        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-            .'template')) {
+        if (!file_exists(_PS_BO_ALL_THEMES_DIR_ . $bo_theme . DIRECTORY_SEPARATOR
+            . 'template')) {
             $bo_theme = 'default';
         }
 
         if ($context->controller->ajax) {
-            $html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-                .'/themes/'.$bo_theme.'/js/date-range-picker.js"></script>';
-            $html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
-                .'/themes/'.$bo_theme.'/js/calendar.js"></script>';
+            $html = '<script type="text/javascript" src="' . __PS_BASE_URI__ . $admin_webpath
+                . '/themes/' . $bo_theme . '/js/date-range-picker.js"></script>';
+            $html .= '<script type="text/javascript" src="' . __PS_BASE_URI__ . $admin_webpath
+                . '/themes/' . $bo_theme . '/js/calendar.js"></script>';
         } else {
             $html = '';
-            $context->controller->addJs(__PS_BASE_URI__.$admin_webpath
-                .'/themes/'.$bo_theme.'/js/date-range-picker.js');
-            $context->controller->addJs(__PS_BASE_URI__.$admin_webpath
-                .'/themes/'.$bo_theme.'/js/calendar.js');
+            $context->controller->addJs(__PS_BASE_URI__ . $admin_webpath
+                . '/themes/' . $bo_theme . '/js/date-range-picker.js');
+            $context->controller->addJs(__PS_BASE_URI__ . $admin_webpath
+                . '/themes/' . $bo_theme . '/js/calendar.js');
         }
 
         $this->tpl = $this->createTemplate($this->base_tpl);
         $this->tpl->assign(array(
-            'date_format'       => $this->getDateFormat(),
-            'date_from'         => $this->getDateFrom(),
-            'date_to'           => $this->getDateTo(),
+            'date_format' => $this->getDateFormat(),
+            'date_from' => $this->getDateFrom(),
+            'date_to' => $this->getDateTo(),
             'compare_date_from' => $this->getCompareDateFrom(),
-            'compare_date_to'   => $this->getCompareDateTo(),
-            'actions'           => $this->getActions(),
-            'compare_actions'   => $this->getCompareActions(),
-            'compare_option'    => $this->getCompareOption(),
-            'is_rtl'            => $this->isRTL()
+            'compare_date_to' => $this->getCompareDateTo(),
+            'actions' => $this->getActions(),
+            'compare_actions' => $this->getCompareActions(),
+            'compare_option' => $this->getCompareOption(),
+            'is_rtl' => $this->isRTL(),
         ));
 
         $html .= parent::generate();
+
         return $html;
     }
 

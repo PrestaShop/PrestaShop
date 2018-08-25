@@ -56,8 +56,7 @@ class ModuleManagerTest extends TestCase
             $this->moduleRepositoryS,
             $this->moduleZipManagerS,
             $this->translatorS,
-            $this->dispatcherS,
-            $this->employeeS
+            $this->dispatcherS
         );
     }
 

@@ -1,0 +1,260 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.performance.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.performance.form_provider'
+            -
+              'smarty': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
+              'debug_mode': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
+              'optional_features': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
+              'ccc': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
+              'media_servers': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
+              'caching': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
+              'add_memcache_server': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+            - 'PerformancePage'
+
+    prestashop.adapter.maintenance.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.maintenance.form_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
+            - 'MaintenancePage'
+
+    prestashop.adapter.administration.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.administration.form_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType'
+              'upload_quota': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType'
+              'notifications': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType'
+            - 'AdministrationPage'
+
+    prestashop.admin.shipping_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.shipping_preferences.data_provider'
+            -
+              'handling': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType'
+              'carrier_options': 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
+            - 'ShippingPreferencesPage'
+
+    prestashop.admin.order.invoices.by_date.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByDateFormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.order.invoices.by_date.data_provider'
+            -
+              'generate_by_date': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType'
+            - 'OrdersInvoicesByDate'
+            - '@prestashop.adapter.data_provider.order_invoice'
+            - '@prestashop.adapter.pdf.generator.invoice'
+
+    prestashop.admin.order.invoices.by_status.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.order.invoices.by_status.data_provider'
+            -
+              'generate_by_status': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType'
+            - 'OrdersInvoicesByStatus'
+            - '@prestashop.adapter.data_provider.order_invoice'
+            - '@prestashop.adapter.pdf.generator.invoice'
+
+    prestashop.admin.order.invoices.options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.order.invoices.options.data_provider'
+            -
+              'invoice_options': 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType'
+            - 'OrdersInvoicesOptions'
+
+    prestashop.admin.customer_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.customer_preferences.data_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
+            - 'CustomerPreferencesPage'
+        calls:
+            - method: setTabRepository
+              arguments:
+                  - '@prestashop.core.admin.tab.repository'
+
+    prestashop.admin.order_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.order_preferences.data_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
+              'gift_options': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType'
+            - 'OrderPreferencesPage'
+
+    prestashop.admin.product_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.product_preferences.data_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
+              'pagination': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType'
+              'page': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType'
+              'stock': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType'
+            - 'ProductPreferencesPage'
+        calls:
+            - method: setCacheClearer
+              arguments:
+                  - '@prestashop.adapter.cache_clearer'
+
+    prestashop.adapter.preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.preferences.form_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
+            - 'GeneralPage'
+
+    prestashop.adapter.logs.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.logs.form_provider'
+            -
+              'logs_by_email': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
+            - 'LogsPage'
+
+    prestashop.admin.import.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@prestashop.admin.import.form_builder'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.import.form_data_provider'
+            - []
+            - 'ImportPage'
+
+    prestashop.adapter.order.delivery.slip.options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.order.delivery.slip.options.form_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
+            - 'OrderDeliverySlipPage'
+
+    prestashop.adapter.order.delivery.slip.pdf.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.order.delivery.slip.pdf.form_provider'
+            -
+              'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
+            - 'OrderDeliverySlipPage'
+
+    prestashop.admin.geolocation.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.geolocation.form_data_provider'
+            -
+              'geolocation_by_id_address': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
+              'geolocation_ip_address_whitelist': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
+              'geolocation_options': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+            - 'GeolocationPage'
+
+    prestashop.admin.localization.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.localization.form_data_provider'
+            -
+              'configuration': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
+              'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
+              'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
+            - 'LocalizationPage'
+
+    prestashop.admin.payment_preferences.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.payment_preferences.form_data_provider'
+            -
+              'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+            - 'PaymentPreferences'
+
+    prestashop.admin.email_configuration.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.email_configuration.form_data_provider'
+            -
+              'email_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
+              'smtp_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
+            - 'EmailConfiguration'
+
+    prestashop.admin.request_sql_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.request_sql_settings.form_data_provider'
+            -
+              'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
+            - 'RequestSql'
+
+    prestashop.admin.backup.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.backup.form_data_provider'
+            -
+              'backup_options': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupOptionsType'
+            - 'Backup'
+
+    prestashop.adapter.webservice.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.webservice.form_data_provider'
+            -
+              'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceType'
+            - 'WebservicePage'
+
+    # Entity form handler
+    prestashop.admin.request_sql.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.sql_manager.request_sql_manager'
+            - '@prestashop.adapter.sql_manager.sql_query_validator'

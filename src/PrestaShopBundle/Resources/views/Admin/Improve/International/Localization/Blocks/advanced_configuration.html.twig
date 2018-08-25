@@ -1,0 +1,61 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.International.Feature' %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+
+{% block localization_advanced_configuration %}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i> {{ 'Advanced'|trans({}, 'Admin.Global') }}
+    </h3>
+
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          {{ ps.label_with_help(('Language identifier'|trans), ('The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).'|trans({}, 'Admin.International.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(advancedForm.language_identifier) }}
+            {{ form_widget(advancedForm.language_identifier) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          {{ ps.label_with_help(('Country identifier'|trans), ('The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).'|trans({}, 'Admin.International.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(advancedForm.country_identifier) }}
+            {{ form_widget(advancedForm.country_identifier) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}

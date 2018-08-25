@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,6 +33,7 @@ class TabRepository extends EntityRepository
 {
     /**
      * @param $moduleName
+     *
      * @return array
      */
     public function findByModule($moduleName)
@@ -42,25 +43,28 @@ class TabRepository extends EntityRepository
 
     /**
      * @param $idParent
+     *
      * @return array
      */
     public function findByParentId($idParent)
     {
         return $this->findBy(['idParent' => $idParent]);
     }
-    
+
     /**
      * @param $className
+     *
      * @return \PrestaShopBundle\Entity\Tab|null
      */
     public function findOneByClassName($className)
     {
         return $this->findOneBy(['className' => $className]);
     }
-    
+
     /**
      * @param $className
-     * @return integer|null
+     *
+     * @return int|null
      */
     public function findOneIdByClassName($className)
     {
@@ -68,11 +72,12 @@ class TabRepository extends EntityRepository
         if ($tab) {
             return $tab->getId();
         }
+
         return null;
     }
 
     /**
-     * Changes tab status
+     * Changes tab status.
      *
      * @param string $className tab's class name
      * @param bool $status wanted status for the tab

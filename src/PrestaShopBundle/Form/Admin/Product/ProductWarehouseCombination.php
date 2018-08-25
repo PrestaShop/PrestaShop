@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,16 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
- * This form class is responsible to generate the basic product Warehouse combinations form
+ * This form class is responsible to generate the basic product Warehouse combinations form.
  */
 class ProductWarehouseCombination extends CommonAbstractType
 {
@@ -40,7 +42,7 @@ class ProductWarehouseCombination extends CommonAbstractType
     private $contextLegacy;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -58,17 +60,18 @@ class ProductWarehouseCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('activated', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+        $builder->add('activated', CheckboxType::class, [
             'required' => false,
-            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature')
-        ))
-        ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
-        ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
-        ->add('warehouse_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
-        ->add('location', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Location (optional)', [], 'Admin.Catalog.Feature')
-        ));
+            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature'),
+        ])
+            ->add('id_product_attribute', HiddenType::class)
+            ->add('product_id', HiddenType::class)
+            ->add('warehouse_id', HiddenType::class)
+            ->add('location', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Location (optional)', [], 'Admin.Catalog.Feature'),
+                'empty_data' => '',
+            ]);
 
         //set default minimal values for collection prototype
         $builder->setData([
@@ -82,9 +85,9 @@ class ProductWarehouseCombination extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'id_warehouse' => null,
-        ));
+        ]);
     }
 
     /**

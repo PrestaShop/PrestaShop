@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ class AdminAddressesControllerCore extends AdminController
     {
         $this->bootstrap = true;
         $this->required_database = true;
-        $this->required_fields = array('company','address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
+        $this->required_fields = array('company', 'address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
         $this->table = 'address';
         $this->className = 'CustomerAddress';
         $this->lang = false;
@@ -51,8 +51,8 @@ class AdminAddressesControllerCore extends AdminController
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->allow_export = true;
@@ -73,14 +73,14 @@ class AdminAddressesControllerCore extends AdminController
             'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global')),
             'postcode' => array('title' => $this->trans('Zip/postal code', array(), 'Admin.Global'), 'align' => 'right'),
             'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
-            'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
+            'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'), );
 
         $this->_select = 'cl.`name` as country';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
+			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON a.id_customer = c.id_customer
 		';
-        $this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
+        $this->_where = 'AND a.id_customer != 0 ' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
         $this->_use_found_rows = false;
     }
 
@@ -90,8 +90,8 @@ class AdminAddressesControllerCore extends AdminController
 
         if (!$this->display && $this->can_import) {
             $this->toolbar_btn['import'] = array(
-                'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
-                'desc' => $this->trans('Import', array(), 'Admin.Actions')
+                'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=addresses',
+                'desc' => $this->trans('Import', array(), 'Admin.Actions'),
             );
         }
     }
@@ -100,9 +100,9 @@ class AdminAddressesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_address'] = array(
-                'href' => self::$currentIndex.'&addaddress&token='.$this->token,
+                'href' => self::$currentIndex . '&addaddress&token=' . $this->token,
                 'desc' => $this->trans('Add new address', array(), 'Admin.Orderscustomers.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
@@ -114,7 +114,7 @@ class AdminAddressesControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Addresses', array(), 'Admin.Orderscustomers.Feature'),
-                'icon' => 'icon-envelope-alt'
+                'icon' => 'icon-envelope-alt',
             ),
             'input' => array(
                 array(
@@ -129,7 +129,7 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'dni',
                     'required' => false,
                     'col' => '4',
-                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.Orderscustomers.Feature')
+                    'hint' => $this->trans('The national ID card number of this person, or a unique tax identification number.', array(), 'Admin.Orderscustomers.Feature'),
                 ),
                 array(
                     'type' => 'text',
@@ -137,7 +137,7 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'alias',
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'textarea',
@@ -146,11 +146,11 @@ class AdminAddressesControllerCore extends AdminController
                     'required' => false,
                     'cols' => 15,
                     'rows' => 3,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'hidden',
-                    'name' => 'id_order'
+                    'name' => 'id_order',
                 ),
                 array(
                     'type' => 'hidden',
@@ -158,29 +158,29 @@ class AdminAddressesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'hidden',
-                    'name' => 'back'
-                )
+                    'name' => 'back',
+                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
+            ),
         );
 
-        $this->fields_value['address_type'] = (int)Tools::getValue('address_type', 1);
+        $this->fields_value['address_type'] = (int) Tools::getValue('address_type', 1);
 
-        $id_customer = (int)Tools::getValue('id_customer');
+        $id_customer = (int) Tools::getValue('id_customer');
         if (!$id_customer && Validate::isLoadedObject($this->object)) {
             $id_customer = $this->object->id_customer;
         }
         if ($id_customer) {
-            $customer = new Customer((int)$id_customer);
-            $token_customer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
+            $customer = new Customer((int) $id_customer);
+            $token_customer = Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id);
         }
 
         $this->tpl_form_vars = array(
             'customer' => isset($customer) ? $customer : null,
             'tokenCustomer' => isset($token_customer) ? $token_customer : null,
-            'back_url' => urldecode(Tools::getValue('back'))
+            'back_url' => urldecode(Tools::getValue('back')),
         );
 
         // Order address fields depending on country format
@@ -204,18 +204,18 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'company',
                     'required' => in_array('company', $required_fields),
                     'col' => '4',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 );
                 $temp_fields[] = array(
                     'type' => 'text',
                     'label' => $this->trans('VAT number', array(), 'Admin.Orderscustomers.Feature'),
                     'col' => '2',
                     'name' => 'vat_number',
-                    'required' => in_array('vat_number', $required_fields)
+                    'required' => in_array('vat_number', $required_fields),
                 );
             } elseif ($addr_field_item == 'lastname') {
                 if (isset($customer) &&
-                    !Tools::isSubmit('submit'.strtoupper($this->table)) &&
+                    !Tools::isSubmit('submit' . strtoupper($this->table)) &&
                     Validate::isLoadedObject($customer) &&
                     !Validate::isLoadedObject($this->object)) {
                     $default_value = $customer->lastname;
@@ -229,12 +229,12 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'lastname',
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:',
                     'default_value' => $default_value,
                 );
             } elseif ($addr_field_item == 'firstname') {
                 if (isset($customer) &&
-                    !Tools::isSubmit('submit'.strtoupper($this->table)) &&
+                    !Tools::isSubmit('submit' . strtoupper($this->table)) &&
                     Validate::isLoadedObject($customer) &&
                     !Validate::isLoadedObject($this->object)) {
                     $default_value = $customer->firstname;
@@ -248,7 +248,7 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'firstname',
                     'required' => true,
                     'col' => '4',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&amp;lt;&amp;gt;,;?=+()@#"�{}_$%:',
                     'default_value' => $default_value,
                 );
             } elseif ($addr_field_item == 'address1') {
@@ -262,7 +262,7 @@ class AdminAddressesControllerCore extends AdminController
             } elseif ($addr_field_item == 'address2') {
                 $temp_fields[] = array(
                     'type' => 'text',
-                    'label' => $this->trans('Address', array(), 'Admin.Global').' (2)',
+                    'label' => $this->trans('Address', array(), 'Admin.Global') . ' (2)',
                     'name' => 'address2',
                     'col' => '6',
                     'required' => in_array('address2', $required_fields),
@@ -290,12 +290,12 @@ class AdminAddressesControllerCore extends AdminController
                     'name' => 'id_country',
                     'required' => in_array('Country:name', $required_fields) || in_array('country', $required_fields),
                     'col' => '4',
-                    'default_value' => (int)$this->context->country->id,
+                    'default_value' => (int) $this->context->country->id,
                     'options' => array(
                         'query' => Country::getCountries($this->context->language->id),
                         'id' => 'id_country',
-                        'name' => 'name'
-                    )
+                        'name' => 'name',
+                    ),
                 );
                 $temp_fields[] = array(
                     'type' => 'select',
@@ -306,8 +306,8 @@ class AdminAddressesControllerCore extends AdminController
                     'options' => array(
                         'query' => array(),
                         'id' => 'id_state',
-                        'name' => 'name'
-                    )
+                        'name' => 'name',
+                    ),
                 );
             } elseif ($addr_field_item == 'phone') {
                 $temp_fields[] = array(
@@ -322,7 +322,7 @@ class AdminAddressesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Mobile phone', array(), 'Admin.Global'),
                     'name' => 'phone_mobile',
-                    'required' =>  in_array('phone_mobile', $required_fields),
+                    'required' => in_array('phone_mobile', $required_fields),
                     'col' => '4',
                 );
             }
@@ -350,7 +350,7 @@ class AdminAddressesControllerCore extends AdminController
                 $this->errors[] = $this->trans('This email address is not registered.', array(), 'Admin.Orderscustomers.Notification');
             }
         } elseif ($id_customer = Tools::getValue('id_customer')) {
-            $customer = new Customer((int)$id_customer);
+            $customer = new Customer((int) $id_customer);
             if (Validate::isLoadedObject($customer)) {
                 $_POST['id_customer'] = $customer->id;
             } else {
@@ -364,22 +364,22 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         /* If the selected country does not contain states */
-        $id_state = (int)Tools::getValue('id_state');
-        $id_country = (int)Tools::getValue('id_country');
-        $country = new Country((int)$id_country);
-        if ($country && !(int)$country->contains_states && $id_state) {
+        $id_state = (int) Tools::getValue('id_state');
+        $id_country = (int) Tools::getValue('id_country');
+        $country = new Country((int) $id_country);
+        if ($country && !(int) $country->contains_states && $id_state) {
             $this->errors[] = $this->trans('You have selected a state for a country that does not contain states.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         /* If the selected country contains states, then a state have to be selected */
-        if ((int)$country->contains_states && !$id_state) {
+        if ((int) $country->contains_states && !$id_state) {
             $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Orderscustomers.Notification');
         }
 
         $postcode = Tools::getValue('postcode');
         /* Check zip code format */
         if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-            $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error').'<br />'.$this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+            $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
         } elseif (empty($postcode) && $country->need_zip_code) {
             $this->errors[] = $this->trans('A Zip/postal code is required.', array(), 'Admin.Notifications.Error');
         } elseif ($postcode && !Validate::isPostCode($postcode)) {
@@ -388,7 +388,7 @@ class AdminAddressesControllerCore extends AdminController
 
         /* If this address come from order's edition and is the same as the other one (invoice or delivery one)
         ** we delete its id_address to force the creation of a new one */
-        if ((int)Tools::getValue('id_order')) {
+        if ((int) Tools::getValue('id_order')) {
             $this->_redirect = false;
             if (isset($_POST['address_type'])) {
                 $_POST['id_address'] = '';
@@ -409,18 +409,19 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         /* Reassignation of the order's new (invoice or delivery) address */
-        $address_type = (int)Tools::getValue('address_type') == 2 ? 'invoice' : 'delivery';
+        $address_type = (int) Tools::getValue('address_type') == 2 ? 'invoice' : 'delivery';
 
-        if ($this->action == 'save' && ($id_order = (int)Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type)) {
-            if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order)) {
+        if ($this->action == 'save' && ($id_order = (int) Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type)) {
+            if (!Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'orders SET `id_address_' . bqSQL($address_type) . '` = ' . (int) $this->object->id . ' WHERE `id_order` = ' . (int) $id_order)) {
                 $this->errors[] = $this->trans('An error occurred while linking this address to its order.', array(), 'Admin.Orderscustomers.Notification');
             } else {
                 //update order shipping cost
                 $order = new Order($id_order);
                 $order->refreshShippingCost();
-                Tools::redirectAdmin(urldecode(Tools::getValue('back')).'&conf=4');
+                Tools::redirectAdmin(urldecode(Tools::getValue('back')) . '&conf=4');
             }
         }
+
         return $return;
     }
 
@@ -440,9 +441,9 @@ class AdminAddressesControllerCore extends AdminController
      */
     protected function processAddressFormat()
     {
-        $tmp_addr = new CustomerAddress((int)Tools::getValue('id_address'));
+        $tmp_addr = new CustomerAddress((int) Tools::getValue('id_address'));
 
-        $selected_country = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT');
+        $selected_country = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : (int) Configuration::get('PS_COUNTRY_DEFAULT');
         $adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
 
         $all_fields = array();
@@ -455,15 +456,16 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         foreach (array('inv', 'dlv') as $adr_type) {
-            $out[$adr_type.'_adr_fields'] = $adr_fields;
-            $out[$adr_type.'_all_fields'] = $all_fields;
+            $out[$adr_type . '_adr_fields'] = $adr_fields;
+            $out[$adr_type . '_all_fields'] = $all_fields;
         }
 
         return $out;
     }
 
     /**
-     * Method called when an ajax request is made
+     * Method called when an ajax request is made.
+     *
      * @see AdminController::postProcess()
      */
     public function ajaxProcess()
@@ -473,14 +475,14 @@ class AdminAddressesControllerCore extends AdminController
             $customer = Customer::searchByName($email);
             if (!empty($customer)) {
                 $customer = $customer['0'];
-                echo json_encode(array('infos' => pSQL($customer['firstname']).'_'.pSQL($customer['lastname']).'_'.pSQL($customer['company'])));
+                echo json_encode(array('infos' => pSQL($customer['firstname']) . '_' . pSQL($customer['lastname']) . '_' . pSQL($customer['company'])));
             }
         }
         die;
     }
 
     /**
-     * Object Delete
+     * Object Delete.
      */
     public function processDelete()
     {
@@ -494,14 +496,14 @@ class AdminAddressesControllerCore extends AdminController
         $res = parent::processDelete();
 
         if ($back = Tools::getValue('back')) {
-            $this->redirect_after = urldecode($back).'&conf=1';
+            $this->redirect_after = urldecode($back) . '&conf=1';
         }
 
         return $res;
     }
 
     /**
-     * Delete multiple items
+     * Delete multiple items.
      *
      * @return bool true if succcess
      */
@@ -510,7 +512,7 @@ class AdminAddressesControllerCore extends AdminController
         if (is_array($this->boxes) && !empty($this->boxes)) {
             $deleted = false;
             foreach ($this->boxes as $id) {
-                $to_delete = new Address((int)$id);
+                $to_delete = new Address((int) $id);
                 if ($to_delete->isUsed()) {
                     $deleted = true;
                     break;

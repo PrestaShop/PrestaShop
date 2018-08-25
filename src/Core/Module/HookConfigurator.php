@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,10 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Module;
-
-use PrestaShop\PrestaShop\Core\Module\HookRepository;
 
 class HookConfigurator
 {
@@ -37,7 +34,6 @@ class HookConfigurator
     {
         $this->hookRepository = $hookRepository;
     }
-
 
     /**
      * $hooks is a hook configuration description
@@ -55,10 +51,11 @@ class HookConfigurator
      *             "except_pages" => ["category", "product"]
      *         ]
      *     ]
-     * ]
+     * ].
      */
     public function getThemeHooksConfiguration(array $hooks)
     {
+        $hooks = array_filter($hooks, 'is_array');
         $uniqueModuleList = $this->getUniqueModuleToHookList($hooks);
         $currentHooks = $this->hookRepository->getDisplayHooksWithModules();
 
@@ -99,12 +96,14 @@ class HookConfigurator
         $this->hookRepository->persistHooksConfiguration(
             $this->getThemeHooksConfiguration($hooks)
         );
+
         return $this;
     }
 
     public function addHook($name, $title, $description)
     {
         $this->hookRepository->createHook($name, $title, $description);
+
         return $this;
     }
 

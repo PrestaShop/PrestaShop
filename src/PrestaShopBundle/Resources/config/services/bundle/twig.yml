@@ -1,0 +1,52 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.twig.modules.loader:
+        class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
+        arguments:
+          -
+            'PrestaShop': ''
+            'Product': '/Admin/Product'
+            'Twig': '/Admin/TwigTemplateForm'
+            'AdvancedParameters': '/Admin/Configure/AdvancedParameters'
+            'ShopParameters': '/Admin/Configure/ShopParameters'
+          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+        tags:
+          - { name: twig.loader, priority: 1}
+
+    # Extensions
+
+    prestashop.twig.extension.stringloader:
+        class: Twig_Extension_StringLoader
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.layout:
+        class: PrestaShopBundle\Twig\LayoutExtension
+        arguments: ["@prestashop.adapter.legacy.context", "%kernel.environment%"]
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.translation:
+        class: PrestaShopBundle\Twig\TranslationsExtension
+        arguments: ["@service_container", "@router"]
+        properties:
+            logger: "@logger"
+            translator: "@translator"
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.data_formatter:
+        class: PrestaShopBundle\Twig\DataFormatterExtension
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments:
+            - "@prestashop.core.hook.dispatcher"
+            - "@prestashop.adapter.data_provider.module"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
+        tags:
+            - { name: twig.extension }

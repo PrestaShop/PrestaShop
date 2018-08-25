@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,16 @@ namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 
+/**
+ * @todo: document what is the contract of this interface.
+ */
 interface ModuleComplexConfigurationInterface
 {
+    /**
+     * @param Module $module
+     * @param array $params
+     *
+     * @return mixed
+     */
     public function run(Module $module, array $params);
 }
