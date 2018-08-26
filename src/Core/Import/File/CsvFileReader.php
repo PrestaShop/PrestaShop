@@ -37,12 +37,12 @@ class CsvFileReader implements FileReaderInterface
     /**
      * @var string the data delimiter in the CSV row
      */
-    private $delimiter = ';';
+    private $delimiter;
 
     /**
      * @param string $delimiter
      */
-    public function __construct($delimiter)
+    public function __construct($delimiter = ';')
     {
         $this->delimiter = $delimiter;
     }
