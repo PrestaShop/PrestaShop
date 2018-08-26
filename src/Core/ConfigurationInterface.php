@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core;
 /**
  * Interface ConfigurationInterface defines contract for simple configuration
  *
- * @deprecated since 1.7.4.0. Use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface instead.
+ * @deprecated since 1.7.5.0. Use PrestaShop\PrestaShop\Core\Configuration\SimpleConfigurationInterface instead.
  */
 interface ConfigurationInterface
 {
