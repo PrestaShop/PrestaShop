@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
+use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature;
 use PrestaShop\PrestaShop\Core\Configuration\AdvancedConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -36,6 +38,8 @@ use Configuration as ConfigurationLegacy;
 
 /**
  * Class Configuration is responsible for managing shop configuration
+ *
+ * @internal
  */
 class Configuration extends ParameterBag implements AdvancedConfigurationInterface
 {
@@ -177,12 +181,12 @@ class Configuration extends ParameterBag implements AdvancedConfigurationInterfa
      *
      * @throws \Exception
      *
-     * @deprecated since version 1.7.4.0. Use $this->remove() instead.
+     * @deprecated since version 1.7.5.0. Use $this->remove() instead.
      */
     public function delete($key)
     {
         @trigger_error(
-            sprintf('%s::delete() is deprecated as of 1.7.4.0. Use %s::remove() instead.', __CLASS__, __CLASS__),
+            sprintf('%s::delete() is deprecated as of 1.7.5.0. Use %s::remove() instead.', __CLASS__, __CLASS__),
             E_USER_DEPRECATED
         );
 
@@ -209,9 +213,20 @@ class Configuration extends ParameterBag implements AdvancedConfigurationInterfa
      * Return if Feature feature is active or not
      *
      * @return bool
+     *
+     * @deprecated since 1.7.5.0. Use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature instead.
      */
     public function featureIsActive()
     {
+        @trigger_error(
+            sprintf(
+                '%s::featureIsActive() is deprecated as of 1.7.5.0. Use %s::isActive() instead.',
+                __CLASS__,
+                FeatureFeature::class
+            ),
+            E_USER_DEPRECATED
+        );
+
         return Feature::isFeatureActive();
     }
 
@@ -219,9 +234,20 @@ class Configuration extends ParameterBag implements AdvancedConfigurationInterfa
      * Return if Combination feature is active or not
      *
      * @return bool
+     *
+     * @deprecated since 1.7.5.0. Use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature instead.
      */
     public function combinationIsActive()
     {
+        @trigger_error(
+            sprintf(
+                '%s::combinationIsActive() is deprecated as of 1.7.5.0. Use %s::isActive() instead.',
+                __CLASS__,
+                CombinationFeature::class
+            ),
+            E_USER_DEPRECATED
+        );
+
         return  Combination::isFeatureActive();
     }
 
@@ -240,6 +266,6 @@ class Configuration extends ParameterBag implements AdvancedConfigurationInterfa
      */
     public function getBool($key, $default = false)
     {
-        return (bool) $this->getBoolean($key, $default);
+        return $this->getBoolean($key, $default);
     }
 }
