@@ -24,12 +24,16 @@
  */
 
 import Grid from "../../components/grid/grid";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
 
 const $ = window.$;
 
 $(() => {
   const webserviceGrid = new Grid('webservice');
 
-  webserviceGrid.addExtension(new FiltersResetExtension());
+    webserviceGrid.addExtension(new BulkActionCheckboxExtension());
+    webserviceGrid.addExtension(new SubmitBulkExtension());
+    webserviceGrid.addExtension(new FiltersResetExtension());
 });
