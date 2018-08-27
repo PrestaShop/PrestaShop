@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,20 +21,17 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+import Grid from '../../components/grid/grid';
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
 
-{% block content %}
-  <div class="col-md-12">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': categoryGrid }) }}
-    </div>
-  </div>
-{% endblock %}
+const $ = window.$;
 
-{% block javascripts %}
-  {{ parent() }}
+$(() => {
+  const categoriesGrid = new Grid('categories');
 
-  <script src="{{ asset('themes/new-theme/public/categories.bundle.js') }}"></script>
-{% endblock %}
+  categoriesGrid.addExtension(new FiltersResetExtension());
+  categoriesGrid.addExtension(new SortingExtension());
+});

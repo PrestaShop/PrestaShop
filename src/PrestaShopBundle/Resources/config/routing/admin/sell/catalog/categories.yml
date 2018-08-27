@@ -4,3 +4,9 @@ admin_category_listing:
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
         _legacy_controller: AdminCategories
+
+admin_category_listing_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:search
