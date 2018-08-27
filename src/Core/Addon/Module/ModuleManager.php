@@ -163,7 +163,7 @@ class ModuleManager implements AddonManagerInterface
      *
      * @return int
      *
-     * @deprecated since 1.7.4.0
+     * @deprecated since 1.7.5.0
      */
     public function countModulesWithNotifications()
     {

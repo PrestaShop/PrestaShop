@@ -94,7 +94,7 @@ class ModulePresenter implements PresenterInterface
      */
     public function presentCollection($modules)
     {
-        $presentedProducts = array();
+        $presentedProducts = [];
         foreach ($modules as $name => $product) {
             $presentedProducts[$name] = $this->present($product);
         }

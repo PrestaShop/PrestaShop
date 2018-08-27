@@ -6,8 +6,8 @@
     <tab id="DEFAULT" name="More" />
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
-    <tab id="Module_Page" name="Modules &amp; Services" />
-    <tab id="Module_Page_Catalog" name="Catalog" />
+    <tab id="Module_Page" name="Module Manager" />
+    <tab id="Module_Page_Catalog" name="Module Catalog" />
     <tab id="Module_Page_Manage" name="Modules" />
     <tab id="Module_Page_Notifications" name="Alerts" />
     <tab id="Module_Page_Updates" name="Updates" />

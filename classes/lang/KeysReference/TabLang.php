@@ -38,7 +38,7 @@ trans('Carriers', 'Admin.Navigation.Menu');
 trans('Carrier', 'Admin.Navigation.Menu');
 trans('Cart Rules', 'Admin.Navigation.Menu');
 trans('Catalog Price Rules', 'Admin.Navigation.Menu');
-trans('Catalog', 'Admin.Navigation.Menu');
+trans('Module Catalog', 'Admin.Navigation.Menu');
 trans('Categories', 'Admin.Navigation.Menu');
 trans('Page Categories', 'Admin.Navigation.Menu');
 trans('Pages', 'Admin.Navigation.Menu');
@@ -132,9 +132,9 @@ trans('Warehouses', 'Admin.Navigation.Menu');
 trans('Webservice', 'Admin.Navigation.Menu');
 trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');
+trans('Module manager', 'Admin.Navigation.Menu');
 
 // subtab
-trans('Catalog', 'Admin.Navigation.Menu');
 trans('Modules', 'Admin.Navigation.Menu');
 trans('Updates', 'Admin.Navigation.Menu');
 trans('Alerts', 'Admin.Navigation.Menu');
