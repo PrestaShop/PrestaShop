@@ -4,3 +4,8 @@ SET NAMES 'utf8';
 /* PHP:add_supplier_manufacturer_routes(); */;
 
 /* PHP:ps_1750_update_module_tabs(); */;
+
+DELETE FROM `PREFIX_tab` where `class_name` = 'AdminAddonsCatalog';
+
+ALTER TABLE `PREFIX_product` CHANGE `location` `isbn` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_product_attribute` CHANGE `location` `isbn` VARCHAR(255) NULL DEFAULT NULL;

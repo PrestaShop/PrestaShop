@@ -103,25 +103,36 @@
                     </div>
                 </div>
                 <h2 class="title">
-                  {{ 'Stock alerts'|trans({}, 'Admin.Catalog.Feature') }}
+                  {{ 'Stock'|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
-                <div class="row">
-                  <div class="col-md-3">
-                    <fieldset class="form-group">
-                      <label class="form-control-label">{{ form.attribute_low_stock_threshold.vars.label }}</label>
-                      {{ form_errors(form.attribute_low_stock_threshold) }}
-                      {{ form_widget(form.attribute_low_stock_threshold) }}
-                    </fieldset>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <fieldset class="form-group">
+                        <label class="form-control-label">{{ form.attribute_location.vars.label }}</label>
+                        {{ form_errors(form.attribute_location) }}
+                        {{ form_widget(form.attribute_location) }}
+                      </fieldset>
+                    </div>
                   </div>
-                  <div class="col-md-9">
-                    <fieldset class="form-group widget-checkbox-inline">
-                      <label class="form-control-label">&nbsp;</label>
-                      <div class="widget-checkbox-inline">
-                        {{ form_errors(form.attribute_low_stock_alert) }}
-                        {{ form_widget(form.attribute_low_stock_alert) }}
-                        <span class="help-box" data-toggle="popover" data-html="true" data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" ></span>
-                      </div>
-                    </fieldset>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <fieldset class="form-group">
+                        <label class="form-control-label">{{ form.attribute_low_stock_threshold.vars.label }}</label>
+                        {{ form_errors(form.attribute_low_stock_threshold) }}
+                        {{ form_widget(form.attribute_low_stock_threshold) }}
+                      </fieldset>
+                    </div>
+                    <div class="col-md-9">
+                      <fieldset class="form-group widget-checkbox-inline">
+                        <label class="form-control-label">&nbsp;</label>
+                        <div class="widget-checkbox-inline">
+                          {{ form_errors(form.attribute_low_stock_alert) }}
+                          {{ form_widget(form.attribute_low_stock_alert) }}
+                          <span class="help-box" data-toggle="popover" data-html="true"
+                                data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}"></span>
+                        </div>
+                      </fieldset>
+                    </div>
                   </div>
                 </div>
                 <h2 class="title">
