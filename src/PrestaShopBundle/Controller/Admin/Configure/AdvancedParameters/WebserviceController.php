@@ -37,15 +37,13 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Webservice" page display.
- *
- * @todo: add unit tests
  */
 class WebserviceController extends FrameworkBundleAdminController
 {
     /**
      * Displays the Webservice main page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param WebserviceFilters $filters - filters for webservice list
      * @param Request $request
@@ -72,7 +70,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $twigValues = [
             'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
-            'requireBulkActions' => false, // temporary
+            'requireBulkActions' => true,
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
@@ -84,7 +82,14 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
     }
 
-    //todo: check access
+    /**
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
@@ -96,8 +101,6 @@ class WebserviceController extends FrameworkBundleAdminController
         $searchParametersForm->handleRequest($request);
         $filters = [];
 
-        // todo: $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
-
         if ($searchParametersForm->isSubmitted()) {
             $filters = $searchParametersForm->getData();
         }
@@ -108,14 +111,18 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Process the Webservice configuration form.
      *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create','delete'], request.get('_legacy_controller'))",
+     *      message="You do not have permission to edit this."
+     * )
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {
-        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
-
         $form = $this->getFormHandler()->getForm();
         $form->handleRequest($request);
 
@@ -152,8 +159,6 @@ class WebserviceController extends FrameworkBundleAdminController
         /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
         $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
 
-        $warningMessages = $configurationChecker->getErrors($request);
-
-        return $warningMessages;
+        return $configurationChecker->getErrors($request);
     }
 }

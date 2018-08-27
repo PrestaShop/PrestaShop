@@ -90,7 +90,7 @@ class RequestSqlController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
-     * @DemoRestricted(redirectRoute="admin_logs")
+     * @DemoRestricted(redirectRoute="admin_request_sql")
      *
      * @param Request $request
      *
