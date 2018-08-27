@@ -115,6 +115,9 @@ services:
     prestashop.core.grid.definition.factory.category:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'category', 'action': 'index'})"
+            - "@=service('router').generate('admin_category_listing')"
         public: true
 
     # Grid factories
