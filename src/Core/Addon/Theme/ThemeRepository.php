@@ -83,7 +83,7 @@ class ThemeRepository implements AddonRepositoryInterface
     }
 
     /**
-     * Gets list of themes as a collection
+     * Gets list of themes as a collection.
      *
      * @return ThemeCollection
      */

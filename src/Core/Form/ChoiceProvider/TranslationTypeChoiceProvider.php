@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class TranslationTypeByNameChoiceProvider provides translation type choices
+ * Class TranslationTypeByNameChoiceProvider provides translation type choices.
  */
 final class TranslationTypeChoiceProvider implements FormChoiceProviderInterface
 {

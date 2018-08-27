@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Language\Copier;
 
 /**
- * Class LanguageCopierConfig provides configuration for language copier
+ * Class LanguageCopierConfig provides configuration for language copier.
  */
 final class LanguageCopierConfig implements LanguageCopierConfigInterface
 {

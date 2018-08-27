@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ExportThemeLanguageType is responsible for building export language form
- * in 'Improve > International > Translations' page
+ * in 'Improve > International > Translations' page.
  */
 class ExportThemeLanguageType extends TranslatorAwareType
 {
@@ -64,11 +64,11 @@ class ExportThemeLanguageType extends TranslatorAwareType
         $builder
             ->add('iso_code', ChoiceType::class, [
                 'choices' => $this->getLocaleChoices(),
-                'choice_translation_domain' => false
+                'choice_translation_domain' => false,
             ])
             ->add('theme_name', ChoiceType::class, [
                 'choices' => $this->themeChoices,
-                'choice_translation_domain' => false
+                'choice_translation_domain' => false,
             ]);
     }
 }

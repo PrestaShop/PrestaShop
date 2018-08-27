@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Language\Copier;
 
 /**
- * Interface LanguageCopierInterface defines a language copier
+ * Interface LanguageCopierInterface defines a language copier.
  */
 interface LanguageCopierInterface
 {
     /**
-     * Copies a language with given config
+     * Copies a language with given config.
      *
      * @param LanguageCopierConfigInterface $config
      *

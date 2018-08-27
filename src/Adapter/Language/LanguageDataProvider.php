@@ -49,7 +49,7 @@ class LanguageDataProvider
     }
 
     /**
-     * Returns language code by iso code
+     * Returns language code by iso code.
      *
      * @param string $isoCode - ISO 3166-2 alpha-2 format code
      *
@@ -61,7 +61,7 @@ class LanguageDataProvider
     }
 
     /**
-     * Gets language details from json file
+     * Gets language details from json file.
      *
      * @param string $locale
      *
@@ -81,7 +81,7 @@ class LanguageDataProvider
     }
 
     /**
-     * Gets the files list for given language, including files from modules
+     * Gets the files list for given language, including files from modules.
      *
      * @param string $isoFrom
      * @param string $themeFrom

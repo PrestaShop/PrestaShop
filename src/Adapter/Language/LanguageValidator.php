@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Language;
 use PrestaShop\PrestaShop\Core\Language\LanguageValidatorInterface;
 
 /**
- * Class LanguageValidator is responsible for supporting validations from legacy Language class part
+ * Class LanguageValidator is responsible for supporting validations from legacy Language class part.
  */
 final class LanguageValidator implements LanguageValidatorInterface
 {

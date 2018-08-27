@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class EmailContentTypeChoiceProvider provides email content type choices
+ * Class EmailContentTypeChoiceProvider provides email content type choices.
  */
 final class EmailContentTypeChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,7 +48,7 @@ final class EmailContentTypeChoiceProvider implements FormChoiceProviderInterfac
     }
 
     /**
-     * Get email content type choices
+     * Get email content type choices.
      *
      * @return array
      */

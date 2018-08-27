@@ -102,7 +102,7 @@ class Validate
     }
 
     /**
-     * Check for Language Iso Code
+     * Check for Language Iso Code.
      *
      * @param string $isoCode
      *

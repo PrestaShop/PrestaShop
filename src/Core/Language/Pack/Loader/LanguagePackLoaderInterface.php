@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
 
 /**
- * Interface LanguagePackLoaderInterface defines contract for language pack loader
+ * Interface LanguagePackLoaderInterface defines contract for language pack loader.
  */
 interface LanguagePackLoaderInterface
 {
     /**
-     * Gets language pack data
+     * Gets language pack data.
      *
      * @return array - array key is the language locale and the value is language name
      */

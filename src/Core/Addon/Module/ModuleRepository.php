@@ -602,7 +602,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Gets all installed modules as a collection
+     * Gets all installed modules as a collection.
      *
      * @return AddonsCollection
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeCollection;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class ThemeByNameChoiceProvider provides theme choices with name values
+ * Class ThemeByNameChoiceProvider provides theme choices with name values.
  */
 final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
 {

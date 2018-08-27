@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class ModuleByNameChoiceProvider provides module choices with name values
+ * Class ModuleByNameChoiceProvider provides module choices with name values.
  */
 final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
 {

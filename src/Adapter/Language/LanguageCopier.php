@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class LanguageCopier responsible for copying a language into another language
+ * Class LanguageCopier responsible for copying a language into another language.
  */
 final class LanguageCopier implements LanguageCopierInterface
 {
@@ -154,7 +154,7 @@ final class LanguageCopier implements LanguageCopierInterface
     }
 
     /**
-     * Validates given configuration
+     * Validates given configuration.
      *
      * @param LanguageCopierConfigInterface $config
      *
@@ -170,13 +170,13 @@ final class LanguageCopier implements LanguageCopierInterface
         $themeTo = $config->getThemeTo();
 
         if (empty($languageFrom) || empty($languageTo)) {
-            $errors[] =  [
+            $errors[] = [
                 'key' => 'You must select two languages in order to copy data from one to another.',
                 'domain' => 'Admin.International.Notification',
                 'parameters' => [],
             ];
         } elseif (empty($themeFrom) || empty($themeTo)) {
-            $errors[] =  [
+            $errors[] = [
                 'key' => 'You must select two themes in order to copy data from one to another.',
                 'domain' => 'Admin.International.Notification',
                 'parameters' => [],
@@ -185,7 +185,7 @@ final class LanguageCopier implements LanguageCopierInterface
             $themeFrom === $themeTo &&
             $languageFrom === $languageTo
         ) {
-            $errors[] =  [
+            $errors[] = [
                 'key' => 'There is nothing to copy (same language and theme).',
                 'domain' => 'Admin.International.Notification',
                 'parameters' => [],
@@ -208,7 +208,7 @@ final class LanguageCopier implements LanguageCopierInterface
             }
 
             if (!$fromThemeFound || !$toThemeFound) {
-                $errors[] =  [
+                $errors[] = [
                     'key' => 'Theme(s) not found',
                     'domain' => 'Admin.International.Notification',
                     'parameters' => [],
@@ -220,7 +220,7 @@ final class LanguageCopier implements LanguageCopierInterface
     }
 
     /**
-     * Checks if the source and destination paths are related to modules
+     * Checks if the source and destination paths are related to modules.
      *
      * @param string $source
      * @param string $destination
@@ -231,11 +231,11 @@ final class LanguageCopier implements LanguageCopierInterface
     private function isModuleContext($source, $destination, $language)
     {
         // Legacy condition
-        return false !== strpos($destination, 'modules') && basename($source) === $language.'.php';
+        return false !== strpos($destination, 'modules') && basename($source) === $language . '.php';
     }
 
     /**
-     * A legacy method to change modules translation keys
+     * A legacy method to change modules translation keys.
      *
      * @param string $path
      * @param string $themeFrom

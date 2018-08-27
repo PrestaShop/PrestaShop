@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class LanguagePack is responsible for the language pack actions regarding installation
+ * Class LanguagePack is responsible for the language pack actions regarding installation.
  */
 final class LanguagePackInstaller implements LanguagePackInstallerInterface
 {
@@ -71,7 +71,7 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
                     'Fatal error: ISO code is not correct',
                     [],
                     'Admin.International.Notification'
-                )
+                ),
             ];
         }
 

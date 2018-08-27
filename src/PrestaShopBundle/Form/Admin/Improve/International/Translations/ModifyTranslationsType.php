@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ModifyTranslationsType is responsible for building 'Modify translations' form
- * in 'Improve > International > Translations' page
+ * in 'Improve > International > Translations' page.
  */
 class ModifyTranslationsType extends TranslatorAwareType
 {
@@ -97,12 +97,11 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('theme', ChoiceType::class, [
-                'choices' =>
-                    [$noTheme => 0] +
+                'choices' => [$noTheme => 0] +
                     $this->themeChoices,
                 'choice_attr' => [
                     $noTheme => [
-                        'class' => 'js-no-theme'
+                        'class' => 'js-no-theme',
                     ],
                 ],
                 'choice_translation_domain' => false,

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,27 +33,27 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Class TranslationRouteFinder finds the correct route for translations
+ * Class TranslationRouteFinder finds the correct route for translations.
  */
 class TranslationRouteFinder
 {
     /**
-     * Mails translations type
+     * Mails translations type.
      */
     const MAILS = 'mails';
 
     /**
-     * Modules translations type
+     * Modules translations type.
      */
     const MODULES = 'modules';
 
     /**
-     * Email body translations type
+     * Email body translations type.
      */
     const BODY = 'body';
 
     /**
-     * Themes translations type
+     * Themes translations type.
      */
     const THEMES = 'themes';
 
@@ -88,7 +88,7 @@ class TranslationRouteFinder
     }
 
     /**
-     * Finds the correct translation route out of given query
+     * Finds the correct translation route out of given query.
      *
      * @param ParameterBag $query
      *
@@ -144,7 +144,7 @@ class TranslationRouteFinder
     }
 
     /**
-     * Finds parameters for translation route out of given query
+     * Finds parameters for translation route out of given query.
      *
      * @param ParameterBag $query
      *
@@ -193,7 +193,7 @@ class TranslationRouteFinder
     }
 
     /**
-     * Checks if module is using the new translation system
+     * Checks if module is using the new translation system.
      *
      * @param string $moduleName
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Language;
 
 /**
- * Interface LanguageValidatorInterface defines contract for LanguageValidator
+ * Interface LanguageValidatorInterface defines contract for LanguageValidator.
  */
 interface LanguageValidatorInterface
 {
     /**
-     * Checks if language is installed by comparing locale
+     * Checks if language is installed by comparing locale.
      *
      * @param string $locale
      *

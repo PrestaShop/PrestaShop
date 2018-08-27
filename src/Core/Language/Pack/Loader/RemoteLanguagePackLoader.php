@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 /**
- * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host
+ * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host.
  */
 final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
 {
     /**
-     * The link from which available languages are retrieved
+     * The link from which available languages are retrieved.
      */
     const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
 
@@ -52,7 +52,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLanguagePackList()
     {

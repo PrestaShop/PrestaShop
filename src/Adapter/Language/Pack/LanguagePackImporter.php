@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterfac
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 
 /**
- * Class LanguagePackImporter is responsible for importing language pack
+ * Class LanguagePackImporter is responsible for importing language pack.
  */
 final class LanguagePackImporter implements LanguagePackImporterInterface
 {
@@ -94,7 +94,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     }
 
     /**
-     * Fetches CLDR data for currently updated or added language
+     * Fetches CLDR data for currently updated or added language.
      *
      * @param $isoCode
      *
@@ -112,7 +112,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     }
 
     /**
-     * Gets language code in format of ISO 639-1
+     * Gets language code in format of ISO 639-1.
      *
      * @param string $languageCode - language code to format
      *

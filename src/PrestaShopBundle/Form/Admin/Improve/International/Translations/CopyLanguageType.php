@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CopyLanguageType is responsible for building 'Copy' form
- * in 'Improve > International > Translations' page
+ * in 'Improve > International > Translations' page.
  */
 class CopyLanguageType extends TranslatorAwareType
 {

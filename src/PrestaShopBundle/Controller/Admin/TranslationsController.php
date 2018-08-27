@@ -123,7 +123,7 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Modify translations action
+     * Modify translations action.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
@@ -139,11 +139,10 @@ class TranslationsController extends FrameworkBundleAdminController
 
         // If route parameters are empty we are redirecting to a legacy route
         return empty($routeParameters) ? $this->redirect($route) : $this->redirectToRoute($route, $routeParameters);
-
     }
 
     /**
-     * Add language pack for new languages and updates for the existing ones action
+     * Add language pack for new languages and updates for the existing ones action.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')"))
      *
@@ -204,12 +203,13 @@ class TranslationsController extends FrameworkBundleAdminController
             $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
             $themeExporter = $this->get('prestashop.translation.theme.exporter');
-            $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_.DIRECTORY_SEPARATOR);
+            $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR);
 
             $response = new BinaryFileResponse($zipFile);
             $response->deleteFileAfterSend(true);
 
             $themeExporter->cleanArtifacts($themeName);
+
             return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         }
 
@@ -217,7 +217,7 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Copy language action
+     * Copy language action.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')")
      *

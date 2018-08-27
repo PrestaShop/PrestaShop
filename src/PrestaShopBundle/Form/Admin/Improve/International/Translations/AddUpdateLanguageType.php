@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class AddUpdateLanguageType is responsible for building add / update language form
- * in 'Improve > International > Translations' page
+ * in 'Improve > International > Translations' page.
  */
 class AddUpdateLanguageType extends TranslatorAwareType
 {
@@ -64,9 +64,9 @@ class AddUpdateLanguageType extends TranslatorAwareType
         $builder->add('iso_localization_pack', ChoiceType::class, [
             'choices' => [
                 $this->trans('Update a language', 'Admin.International.Feature') => $this->getLocaleChoices(),
-                $this->trans('Add a language', 'Admin.International.Feature') => $this->nonInstalledLocalizationChoices
+                $this->trans('Add a language', 'Admin.International.Feature') => $this->nonInstalledLocalizationChoices,
             ],
-            'choice_translation_domain' => false
+            'choice_translation_domain' => false,
         ]);
     }
 }
