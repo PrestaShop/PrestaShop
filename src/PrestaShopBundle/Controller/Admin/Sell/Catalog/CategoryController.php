@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,10 +38,18 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing
      *
+     * @param CategoryFilters $filters
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(CategoryFilters $filters)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig');
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $categoryGridFactory = $this->get('prestashop.core.grid.factory.category');
+        $categoryGrid = $categoryGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
+            'categoryGrid' => $gridPresenter->present($categoryGrid),
+        ]);
     }
 }
