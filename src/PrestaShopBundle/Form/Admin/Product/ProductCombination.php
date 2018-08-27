@@ -150,6 +150,9 @@ class ProductCombination extends CommonAbstractType
                     new Assert\Type(['type' => 'numeric']),
                 ],
             ])
+            ->add('attribute_location', TextType::class, [
+                'label' => $this->translator->trans('Stock location', [], 'Admin.Catalog.Feature'),
+            ])
             ->add('attribute_low_stock_threshold', NumberType::class, [
                 'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
