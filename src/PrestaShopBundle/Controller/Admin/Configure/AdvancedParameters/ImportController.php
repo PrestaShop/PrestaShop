@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use Exception;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType;
@@ -162,16 +161,14 @@ class ImportController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return array
-     *
-     * @throws Exception
      */
     public function showImportDataAction(Request $request)
     {
-        $importDataConfigurationForm = $this->get('prestashop.admin.advanced_parameters.import_data.form_handler')
-            ->getForm();
+        $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
+        $form = $formHandler->getForm();
 
         return [
-            'importDataConfigurationForm' => $importDataConfigurationForm->createView()
+            'importDataConfigurationForm' => $form->createView(),
         ];
     }
 
