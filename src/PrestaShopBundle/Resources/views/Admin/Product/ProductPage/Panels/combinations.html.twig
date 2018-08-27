@@ -51,8 +51,15 @@
                 </div>
               </fieldset>
 
-              <h2>{{ 'Stock alerts'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+              <h2>{{ 'Stock'|trans({}, 'Admin.Catalog.Feature') }}</h2>
               <fieldset class="form-group">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="form-control-label">{{ formLocation.vars.label }}</label>
+                    {{ form_errors(formLocation) }}
+                    {{ form_widget(formLocation) }}
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-4">
                     <label class="form-control-label">{{ formLowStockThreshold.vars.label }}</label>

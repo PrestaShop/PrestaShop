@@ -165,6 +165,7 @@ class CombinationDataProvider
             'attribute_unit_impact' => $attribute_unity_price_impact,
             'attribute_unity' => $combination['unit_price_impact'],
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
+            'attribute_location' => $combination['location'],
             'attribute_low_stock_threshold' => $combination['low_stock_threshold'],
             'attribute_low_stock_alert' => (bool) $combination['low_stock_alert'],
             'available_date_attribute' => $combination['available_date'],

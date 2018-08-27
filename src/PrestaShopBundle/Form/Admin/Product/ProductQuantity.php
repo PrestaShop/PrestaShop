@@ -160,6 +160,13 @@ class ProductQuantity extends CommonAbstractType
                 ]
             )
             ->add(
+                'location',
+                FormType\TextType::class,
+                [
+                    'label' => $this->translator->trans('Stock location', [], 'Admin.Catalog.Feature'),
+                ]
+            )
+            ->add(
                 'low_stock_threshold',
                 FormType\NumberType::class,
                 [
