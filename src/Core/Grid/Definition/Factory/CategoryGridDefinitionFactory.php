@@ -26,13 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class CategoryGridDefinitionFactory builds Grid definition for Categories listing
  */
 final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectActionUrl;
+
+    /**
+     * @param string $resetActionUrl
+     * @param string $redirectActionUrl
+     */
+    public function __construct($resetActionUrl, $redirectActionUrl)
+    {
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectActionUrl = $redirectActionUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -83,6 +108,57 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_category', TextType::class))
+                ->setAssociatedColumn('id_category')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setAssociatedColumn('name')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('description', TextType::class))
+                ->setAssociatedColumn('description')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('position', TextType::class))
+                ->setAssociatedColumn('position')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('active', TextType::class))
+                ->setAssociatedColumn('active')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectActionUrl,
+                    ],
                 ])
             )
         ;
