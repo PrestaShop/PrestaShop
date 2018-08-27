@@ -31,6 +31,13 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
 
+    prestashop.core.form.choice_provider.non_installed_localization:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\NonInstalledLocalizationChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.language.pack.loader.remote").getLanguagePackList()'
+            - '@prestashop.adapter.language.validator'
+            - '@prestashop.adapter.data_provider.language'
+
     prestashop.core.form.choice_provider.country_by_iso_code:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
         arguments:
@@ -71,3 +78,23 @@ services:
         arguments:
             - '@prestashop.adapter.contact.repository'
             - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+    prestashop.core.form.choice_provider.translation_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TranslationTypeChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.email_content_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\EmailContentTypeChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.theme_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
+
+    prestashop.core.form.choice_provider.module_by_name:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.admin.module.repository").getInstalledModulesCollection()'
