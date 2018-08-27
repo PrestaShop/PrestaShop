@@ -132,6 +132,9 @@ class AdminProductWrapper
             $combination = new Combination($id_product_attribute);
             $combination->setImages(array());
         }
+        if (!isset($combinationValues['attribute_location'])) {
+            $combinationValues['attribute_location'] = false;
+        }
         if (!isset($combinationValues['attribute_low_stock_threshold'])) {
             $combinationValues['attribute_low_stock_threshold'] = null;
         }
