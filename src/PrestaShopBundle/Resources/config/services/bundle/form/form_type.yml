@@ -589,8 +589,9 @@ services:
             - { name: form.type }
 
     form.type.import.import_data_configuration:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportDataConfigurationType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType'
         arguments:
-            - '@=service("prestashop.core.form.import.choice_provider.import_match_configuration").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
+            - '@=service("prestashop.core.form.import.choice_provider_finder").find().getChoices()'
         tags:
             - { name: form.type }

@@ -114,7 +114,62 @@ services:
         arguments:
             - '@translator'
 
-    prestashop.core.form.import.choice_provider.import_match_configuration:
+    prestashop.core.form.choice_provider.import_match_configuration:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
         arguments:
             - '@=service("prestashop.adapter.import.import_data_match.provider").getImportMatchConfiguration()'
+
+    prestashop.core.form.choice_provider.product_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.product_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.category_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.category_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.combination_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.combination_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.customer_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.customer_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.address_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.address_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.supplier_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.supplier_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.alias_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.alias_field_collection.factory").create()'
+
+    prestashop.core.form.choice_provider.store_contact_import_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.store_contact_field_collection.factory").create()'
+
+    prestashop.core.form.import.choice_provider_finder:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportChoiceProviderFinder'
+        arguments:
+            - '@=service("session").get("entity")'
+            -
+              0: '@prestashop.core.form.choice_provider.category_import_field'
+              1: '@prestashop.core.form.choice_provider.product_import_field'
+              2: '@prestashop.core.form.choice_provider.combination_import_field'
+              3: '@prestashop.core.form.choice_provider.customer_import_field'
+              4: '@prestashop.core.form.choice_provider.address_import_field'
+              5: '@prestashop.core.form.choice_provider.supplier_import_field'
+              6: '@prestashop.core.form.choice_provider.supplier_import_field'
+              7: '@prestashop.core.form.choice_provider.alias_import_field'
+              8: '@prestashop.core.form.choice_provider.store_contact_import_field'
