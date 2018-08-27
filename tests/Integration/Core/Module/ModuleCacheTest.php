@@ -27,6 +27,7 @@
 namespace Tests\Integration\Core\Module;
 
 use Tests\TestCase\IntegrationTestCase;
+use Module;
 
 class ModuleCacheTest extends IntegrationTestCase
 {
@@ -37,12 +38,12 @@ class ModuleCacheTest extends IntegrationTestCase
 
     public function testCacheBehaviour()
     {
-        \Module::deleteTrustedXmlCache();
-        \Module::getModulesOnDisk();
+        Module::deleteTrustedXmlCache();
+        Module::getModulesOnDisk();
         $trustedFileCreationTime = filemtime(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml');
         sleep(1);
         clearstatcache();
-        \Module::getModulesOnDisk();
+        Module::getModulesOnDisk();
         $newTrustedFileCreationTime = filemtime(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml');
 
         // make sure the cache files are not regenerated
