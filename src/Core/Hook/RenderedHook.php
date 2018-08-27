@@ -66,4 +66,12 @@ final class RenderedHook implements RenderedHookInterface
     {
         return $this->content;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function outputContent()
+    {
+        return implode('', $this->content);
+    }
 }
