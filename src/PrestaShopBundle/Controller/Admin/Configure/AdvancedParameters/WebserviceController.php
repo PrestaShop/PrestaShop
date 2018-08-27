@@ -68,9 +68,15 @@ class WebserviceController extends FrameworkBundleAdminController
         }
 
         $twigValues = [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_webservice_create'),
+                    'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
             'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
-            'requireBulkActions' => true,
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
@@ -139,6 +145,23 @@ class WebserviceController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_webservice');
+    }
+
+    /**
+     * Show Webservice create page.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *      message="You do not have permission to create this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        // @todo: waiting for CQRS, should redirect to legacy page.g
     }
 
     /**

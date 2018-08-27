@@ -18,3 +18,24 @@ admin_webservice_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processForm'
         _legacy_controller: AdminWebservice
+
+admin_webservice_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:create'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_enable_bulk:
+    path: /bulk-enable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:bulkEnable'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_disable_bulk:
+    path: /bulk-disable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:bulkDisable'
+        _legacy_controller: AdminWebservice

@@ -5,6 +5,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -92,6 +94,26 @@ class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
             );
+    }
+
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('enable_all'))
+                ->setName($this->trans('Enable selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_webservice_enable_bulk',
+                    'submit_method' => 'POST'
+                ])
+            )
+            ->add((new SubmitBulkAction('disable_all'))
+                ->setName($this->trans('Disable selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_webservice_disable_bulk',
+                    'submit_method' => 'POST'
+                ])
+            )
+            ;
     }
 
     protected function getFilters()
