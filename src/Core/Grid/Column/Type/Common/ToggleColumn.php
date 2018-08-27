@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This Column is used to display booleans.
  * - it will display an icon instead of the value
- * - if user clicks on it, this triggers a toggle of the boolean value
+ * - if user clicks on it, this triggers a toggle of the boolean value.
  */
 final class ToggleColumn extends AbstractColumn
 {
