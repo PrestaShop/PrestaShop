@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,18 +22,25 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block content %}
-  <div class="col-md-12">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': categoryGrid }) }}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block javascripts %}
-  {{ parent() }}
-{% endblock %}
+class CategoryFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_category',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
+}
