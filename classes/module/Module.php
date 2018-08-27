@@ -811,7 +811,8 @@ abstract class ModuleCore implements ModuleInterface
 
     public function enableDevice($device)
     {
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
             UPDATE ' . _DB_PREFIX_ . 'module_shop
             SET enable_device = enable_device + ' . (int) $device . '
             WHERE (enable_device &~ ' . (int) $device . ' OR enable_device = 0) AND id_module=' . (int) $this->id .
@@ -1550,7 +1551,9 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        usort($module_list, function ($a, $b) { return strnatcasecmp($a->displayName, $b->displayName); });
+        usort($module_list, function ($a, $b) {
+            return strnatcasecmp($a->displayName, $b->displayName);
+        });
         if ($errors) {
             if (!isset(Context::getContext()->controller) && !Context::getContext()->controller->controller_name) {
                 echo '<div class="alert error"><h3>' . Context::getContext()->getTranslator()->trans('The following module(s) could not be loaded', array(), 'Admin.Modules.Notification') . ':</h3><ol>';
@@ -1710,7 +1713,8 @@ abstract class ModuleCore implements ModuleInterface
         // If the xml file exist, isn't empty, isn't too old
         // and if the theme hadn't change
         // we use the file, otherwise we regenerate it
-        if (!(file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)
+        if (!(
+            file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)
             && filesize(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
             && ((time() - filemtime(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
             )) {
