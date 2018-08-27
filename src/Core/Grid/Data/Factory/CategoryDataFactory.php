@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CategoryDataFactory
+ * Class CategoryDataFactory decorates DoctrineGridDataFactory configured for categories to modify category records
  */
 final class CategoryDataFactory implements GridDataFactoryInterface
 {
