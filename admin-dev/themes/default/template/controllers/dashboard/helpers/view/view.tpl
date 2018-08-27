@@ -119,7 +119,7 @@
 						<dd>{l s="Enhance your store with templates & modules" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://forge.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="The Forge" d='Admin.Dashboard.Feature'}</a></dt>
+						<dt><a href="https://github.com/PrestaShop/PrestaShop/issues" class="_blank">{l s="The Forge" d='Admin.Dashboard.Feature'}</a></dt>
 						<dd>{l s="Report issues in the Bug Tracker" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
