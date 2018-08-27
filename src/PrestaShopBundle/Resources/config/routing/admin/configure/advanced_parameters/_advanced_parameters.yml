@@ -29,3 +29,7 @@ _sql_manager:
 _webservice:
     resource: "webservice.yml"
     prefix: /webservice/
+
+_backup:
+    resource: "backup.yml"
+    prefix: /backup

@@ -55,7 +55,7 @@ class LogsController extends FrameworkBundleAdminController
     public function indexAction(LogsFilters $filters)
     {
         $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
-        $grid = $gridLogFactory->createUsingSearchCriteria($filters);
+        $grid = $gridLogFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
@@ -87,7 +87,7 @@ class LogsController extends FrameworkBundleAdminController
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.logs');
-        $logsDefinition = $definitionFactory->create();
+        $logsDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
         $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);

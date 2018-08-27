@@ -384,16 +384,22 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Parse error on module %module%. %error_details%',
                         array(
                             '%module%' => $name,
-                            '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                            '%error_details%' => $e->getMessage(),
+                        ),
+                        'Admin.Modules.Notification'
+                    )
+                );
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
                         'Unexpected exception on module %module%. %error_details%',
                         array(
                             '%module%' => $name,
-                            '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                            '%error_details%' => $e->getMessage(),
+                        ),
+                        'Admin.Modules.Notification'
+                    )
+                );
             }
         }
 
@@ -436,12 +442,15 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->translator->trans(
                     'Loading data from Addons failed. %error_details%',
                     array('%error_details%' => $e->getMessage()),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Now, we check that cache is up to date
-        if (isset($this->cache[$name]['disk']['filemtime']) && $this->cache[$name]['disk']['filemtime']
-            === $current_filemtime) {
+        if (isset($this->cache[$name]['disk']['filemtime']) &&
+            $this->cache[$name]['disk']['filemtime'] === $current_filemtime
+        ) {
             // OK, cache can be loaded and used directly
 
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
@@ -517,6 +526,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getModuleById($moduleId)
     {
         $moduleAttributes = $this->adminModuleProvider->getModuleAttributesById($moduleId);
+
         $module = $this->getModule($moduleAttributes['name']);
 
         foreach ($moduleAttributes as $name => $value) {

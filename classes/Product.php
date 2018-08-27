@@ -34,6 +34,7 @@ define('_CUSTOMIZE_FILE_', 0);
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductCore extends ObjectModel
 {
@@ -976,7 +977,7 @@ class ProductCore extends ObjectModel
         if ($this->active) {
             //case where active will be false after parent::toggleStatus()
             $this->id_type_redirected = 0;
-            $this->redirect_type = '404';
+            $this->redirect_type = ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY;
         } else {
             //case where active will be true after parent::toggleStatus()
             $this->id_type_redirected = 0;
@@ -6853,13 +6854,13 @@ class ProductCore extends ObjectModel
     public function getRedirectType()
     {
         switch ($this->redirect_type) {
-            case '301-category':
-            case '302-category':
+            case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
+            case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
                 return 'category';
                 break;
 
-            case '301-product':
-            case '302-product':
+            case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
+            case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
                 return 'product';
                 break;
         }

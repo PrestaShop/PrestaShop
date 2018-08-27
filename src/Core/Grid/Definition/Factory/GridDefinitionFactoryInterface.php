@@ -38,5 +38,5 @@ interface GridDefinitionFactoryInterface
      *
      * @return DefinitionInterface
      */
-    public function create();
+    public function getDefinition();
 }

@@ -1969,6 +1969,7 @@ abstract class ModuleCore implements ModuleInterface
                     break;
                 }
             }
+
             if (!isset($k) || !isset($res[$k]) || !isset($res[$k + 1])) {
                 return false;
             }
@@ -1976,14 +1977,18 @@ abstract class ModuleCore implements ModuleInterface
             $from = $res[$k];
             $to = $res[$k + 1];
 
-            if (isset($position) && !empty($position)) {
+            if (!empty($position)) {
                 $to['position'] = (int) $position;
             }
 
+            $minPosition = min((int) $from['position'], (int) $to['position']);
+            $maxPosition = max((int) $from['position'], (int) $to['position']);
+
             $sql = 'UPDATE `' . _DB_PREFIX_ . 'hook_module`
-                SET `position`= position ' . ($way ? '-1' : '+1') . '
-                WHERE position between ' . (int) (min(array($from['position'], $to['position']))) . ' AND ' . max(array($from['position'], $to['position'])) . '
+                SET position = position ' . ($way ? '- 1' : '+ 1') . '
+                WHERE position BETWEEN ' . $minPosition . ' AND ' . $maxPosition . '
                 AND `id_hook` = ' . (int) $from['id_hook'] . ' AND `id_shop` = ' . $shop_id;
+
             if (!Db::getInstance()->execute($sql)) {
                 return false;
             }

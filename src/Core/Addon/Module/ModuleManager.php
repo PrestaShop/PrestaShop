@@ -111,7 +111,7 @@ class ModuleManager implements AddonManagerInterface
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher
-        ) {
+    ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
         $this->moduleUpdater = $modulesUpdater;
@@ -266,7 +266,9 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'You are not allowed to install modules.',
                     array(),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         if (is_file($source)) {
@@ -315,7 +317,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -352,7 +356,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -393,7 +399,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -407,9 +415,13 @@ class ModuleManager implements AddonManagerInterface
                     'Error when disabling module %module%. %error_details%.',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'),
-                0, $e);
+                        '%error_details%' => $e->getMessage(),
+                    ),
+                    'Admin.Modules.Notification'
+                ),
+                0,
+                $e
+            );
         }
 
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
@@ -433,7 +445,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -445,9 +459,15 @@ class ModuleManager implements AddonManagerInterface
             throw new Exception(
                 $this->translator->trans(
                     'Error when enabling module %module%. %error_details%.',
-                    array('%module%' => $name,
-                        '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'), 0, $e);
+                    array(
+                        '%module%' => $name,
+                        '%error_details%' => $e->getMessage(),
+                    ),
+                    'Admin.Modules.Notification'
+                ),
+                0,
+                $e
+            );
         }
         $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
@@ -486,7 +506,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -500,9 +522,13 @@ class ModuleManager implements AddonManagerInterface
                     'Error when disabling module %module% on mobile. %error_details%',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'),
-                0, $e);
+                        '%error_details%' => $e->getMessage(),
+                    ),
+                    'Admin.Modules.Notification'
+                ),
+                0,
+                $e
+            );
         }
     }
 
@@ -538,7 +564,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -552,8 +580,13 @@ class ModuleManager implements AddonManagerInterface
                     'Error when enabling module %module% on mobile. %error_details%',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'), 0, $e);
+                        '%error_details%' => $e->getMessage(),
+                    ),
+                    'Admin.Modules.Notification'
+                ),
+                0,
+                $e
+            );
         }
     }
 
@@ -573,7 +606,9 @@ class ModuleManager implements AddonManagerInterface
                     array(
                         '%module%' => $name,
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $this->checkIsInstalled($name);
@@ -593,9 +628,13 @@ class ModuleManager implements AddonManagerInterface
                     'Error when resetting module %module%. %error_details%',
                     array(
                         '%module%' => $name,
-                        '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'),
-                0, $e);
+                        '%error_details%' => $e->getMessage(),
+                    ),
+                    'Admin.Modules.Notification'
+                ),
+                0,
+                $e
+            );
         }
 
         return $status;
@@ -661,9 +700,11 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if (empty($message)) {
-            $message = $this->translator->trans('Unfortunately, the module did not return additional details.',
+            $message = $this->translator->trans(
+                'Unfortunately, the module did not return additional details.',
                 array(),
-                'Admin.Modules.Notification');
+                'Admin.Modules.Notification'
+            );
         }
 
         return $message;
@@ -687,7 +728,9 @@ class ModuleManager implements AddonManagerInterface
                 $this->translator->trans(
                     'The module %module% must be installed first',
                     array('%module%' => $name),
-                'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 
@@ -703,7 +746,9 @@ class ModuleManager implements AddonManagerInterface
     {
         if ($action === 'install') {
             if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
-                throw (new UnconfirmedModuleActionException())->setModule($module)->setAction($action)->setSubject('PrestaTrust');
+                throw (new UnconfirmedModuleActionException())->setModule($module)
+                    ->setAction($action)
+                    ->setSubject('PrestaTrust');
             }
         }
     }

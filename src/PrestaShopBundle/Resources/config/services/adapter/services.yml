@@ -3,7 +3,7 @@ services:
         public: true
 
     prestashop.adapter.hosting_information:
-            class: 'PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
+        class: 'PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
 
     prestashop.adapter.shop_information:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopInformation'
@@ -31,6 +31,9 @@ services:
     prestashop.adapter.debug_mode:
         class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
 
+    prestashop.adapter.database:
+        class: 'PrestaShop\PrestaShop\Adapter\Database'
+
     prestashop.adapter.memcache_server.manager:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
         arguments: ['@database_connection', '%database_prefix%']
@@ -50,6 +53,9 @@ services:
 
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
+
+    prestashop.adapter.legacy.hook:
+        class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
 
     prestashop.adapter.validate:
         class: PrestaShop\PrestaShop\Adapter\Validate

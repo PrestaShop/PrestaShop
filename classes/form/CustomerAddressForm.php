@@ -36,13 +36,13 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CustomerAddressFormCore extends AbstractForm
 {
-    protected $language;
+    private $language;
 
     protected $template = 'customer/_partials/address-form.tpl';
 
-    protected $address;
+    private $address;
 
-    protected $persister;
+    private $persister;
 
     public function __construct(
         Smarty $smarty,
@@ -148,17 +148,35 @@ class CustomerAddressFormCore extends AbstractForm
             $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
         }
 
-        $this->address = $address;
+        Hook::exec('actionSubmitCustomerAddressForm', array('address' => &$address));
 
-        return $this->persister->save(
-            $this->address,
+        $this->setAddress($address);
+
+        return $this->getPersister()->save(
+            $address,
             $this->getValue('token')
         );
     }
 
+    /**
+     * @return Address
+     */
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * @return CustomerAddressPersister
+     */
+    protected function getPersister()
+    {
+        return $this->persister;
+    }
+
+    protected function setAddress(Address $address)
+    {
+        $this->address = $address;
     }
 
     public function getTemplateVariables()
