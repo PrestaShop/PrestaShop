@@ -1758,7 +1758,7 @@ abstract class ModuleCore implements ModuleInterface
             // Addons API and clear XML files to be regenerated next time
             self::deleteTrustedXmlCache();
 
-            return (int)Module::checkModuleFromAddonsApi($module_name);
+            return (int) Module::checkModuleFromAddonsApi($module_name);
         }
     }
 
