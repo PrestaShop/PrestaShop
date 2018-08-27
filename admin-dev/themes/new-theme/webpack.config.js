@@ -92,6 +92,9 @@ const config = {
     backup: [
       './js/pages/backup'
     ],
+    webservice: [
+      './js/pages/webservice'
+    ],
     module_card: [
       './js/app/pages/module-card'
     ]
