@@ -1,0 +1,6 @@
+admin_category_listing:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
+        _legacy_controller: AdminCategories
