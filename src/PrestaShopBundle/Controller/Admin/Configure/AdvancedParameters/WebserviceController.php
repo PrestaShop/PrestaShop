@@ -54,7 +54,7 @@ class WebserviceController extends FrameworkBundleAdminController
     {
         $form = $this->getFormHandler()->getForm();
         $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
-        $grid = $gridWebserviceFactory->createUsingSearchCriteria($filters);
+        $grid = $gridWebserviceFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
@@ -99,7 +99,7 @@ class WebserviceController extends FrameworkBundleAdminController
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
-        $webserviceDefinition = $definitionFactory->create();
+        $webserviceDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
         $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);
