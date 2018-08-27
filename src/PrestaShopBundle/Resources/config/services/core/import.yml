@@ -27,3 +27,43 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.import.product_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\ProductFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.category_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\CategoryFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.combination_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\CombinationFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.customer_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\CustomerFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.address_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\AddressFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.supplier_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\SupplierFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.alias_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\AliasFieldCollectionFactory'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.store_contact_field_collection.factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\StoreContactFieldCollectionFactory'
+        arguments:
+            - '@translator'
