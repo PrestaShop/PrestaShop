@@ -72,12 +72,6 @@ final class RenderedHook implements RenderedHookInterface
      */
     public function outputContent()
     {
-        $output = '';
-
-        foreach ($this->content as $partialContent) {
-            $output .= $partialContent;
-        }
-
-        return $output;
+        return implode('', $this->content);
     }
 }

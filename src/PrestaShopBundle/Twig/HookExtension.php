@@ -154,7 +154,7 @@ class HookExtension extends \Twig_Extension
      *
      * @return string all listener's responses, concatenated in a simple string, ordered by the listeners' priorities
      */
-    public function renderHook($hookName, $hookParameters = array())
+    public function renderHook($hookName, array $hookParameters = array())
     {
         if ($hookName == '') {
             throw new \Exception('Hook name missing');
