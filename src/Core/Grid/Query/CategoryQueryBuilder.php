@@ -118,16 +118,41 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        foreach ($filters as $name => $value) {
-            if ('id_lang' === $name) {
-                $qb->andWhere("l.id_lang = :$name");
-                $qb->setParameter($name, $value);
+        foreach ($filters as $filterName => $filterValue) {
+            if ('id_category' === $filterName) {
+                $qb->andWhere("c.id_category = :$filterName");
+                $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%' . $value . '%');
+            if ('name' === $filterName) {
+                $qb->andWhere("cl.name LIKE :$filterName");
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if ('description' === $filterName) {
+                $qb->andWhere("cl.description LIKE :$filterName");
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if ('position' === $filterName) {
+                $qb->andWhere("cs.position = :$filterName");
+                $qb->setParameter($filterName, $filterValue);
+
+                continue;
+            }
+
+            if ('active' === $filterName) {
+                $qb->andWhere("c.active = :$filterName");
+                $qb->setParameter($filterName, $filterValue);
+
+                continue;
+            }
         }
 
         return $qb;

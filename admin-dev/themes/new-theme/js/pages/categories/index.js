@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,18 +21,17 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<tr class="column-headers">
-  {% set orderBy, orderWay = grid.sorting.order_by, grid.sorting.order_way %}
+import Grid from '../../components/grid/grid';
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
 
-  {% for column in grid.columns %}
-    <th scope="col">
-      {% if column.options.sortable is defined and column.options.sortable and grid.data.records_total > 0 %}
-        {{ ps.sortable_column_header(column.name, column.options.field, orderBy, orderWay) }}
-      {% else %}
-        {{ column.name }}
-      {% endif %}
-    </th>
-  {% endfor %}
-</tr>
+const $ = window.$;
+
+$(() => {
+  const categoriesGrid = new Grid('categories');
+
+  categoriesGrid.addExtension(new FiltersResetExtension());
+  categoriesGrid.addExtension(new SortingExtension());
+});
