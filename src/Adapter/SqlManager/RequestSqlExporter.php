@@ -27,11 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
-use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -47,27 +47,19 @@ class RequestSqlExporter
     private $exportDirectory;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
      * @param ExportDirectory $exportDirectory
-     * @param ConfigurationInterface $configuration
      * @param CommandBusInterface $queryBus
      */
     public function __construct(
         ExportDirectory $exportDirectory,
-        ConfigurationInterface $configuration,
         CommandBusInterface $queryBus
     ) {
         $this->exportDirectory = $exportDirectory;
-        $this->configuration = $configuration;
         $this->queryBus = $queryBus;
     }
 
@@ -85,6 +77,8 @@ class RequestSqlExporter
 
             /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
             $sqlRequestExecutionResult = $this->queryBus->handle($query);
+            /** @var SqlRequestSettings $sqlRequestSettings */
+            $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettingsQuery());
         } catch (SqlRequestException $e) {
             return null;
         }
@@ -108,10 +102,8 @@ class RequestSqlExporter
             return null;
         }
 
-        $charset = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL') ?: CharsetEncoding::UTF_8;
-
-        $response = new BinaryFileResponse($this->exportDirectory . $fileName);
-        $response->setCharset($charset);
+        $response = new BinaryFileResponse($this->exportDirectory.$fileName);
+        $response->setCharset($sqlRequestSettings->getFileEncoding());
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
 
         return $response;
