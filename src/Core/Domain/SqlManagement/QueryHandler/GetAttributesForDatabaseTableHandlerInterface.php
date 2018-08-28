@@ -26,9 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableAttributes;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery;
 
+/**
+ * Interface GetAttributesForDatabaseTableHandlerInterface
+ */
 interface GetAttributesForDatabaseTableHandlerInterface
 {
+    /**
+     * @param GetAttributesForDatabaseTableQuery $query
+     *
+     * @return DatabaseTableAttributes
+     */
     public function handle(GetAttributesForDatabaseTableQuery $query);
 }

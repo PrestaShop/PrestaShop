@@ -28,7 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 
+/**
+ * Interface EditSqlRequestHandlerInterface defines contract SqlRequest editing handler
+ */
 interface EditSqlRequestHandlerInterface
 {
+    /**
+     * @param EditSqlRequestCommand $command
+     */
     public function handle(EditSqlRequestCommand $command);
 }

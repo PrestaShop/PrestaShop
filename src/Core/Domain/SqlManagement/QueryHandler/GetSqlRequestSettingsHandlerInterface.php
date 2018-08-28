@@ -27,8 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 
+/**
+ * Interface GetSqlRequestSettingsHandlerInterface
+ */
 interface GetSqlRequestSettingsHandlerInterface
 {
+    /**
+     * @param GetSqlRequestSettingsQuery $query
+     *
+     * @return SqlRequestSettings
+     */
     public function handle(GetSqlRequestSettingsQuery $query);
 }

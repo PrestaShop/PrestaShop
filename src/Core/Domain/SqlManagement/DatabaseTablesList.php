@@ -26,6 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+
+/**
+ * Class DatabaseTablesList stores list of database tables
+ */
 class DatabaseTablesList
 {
     /**
@@ -35,10 +40,12 @@ class DatabaseTablesList
 
     /**
      * @param string[] $dbTables
+     *
+     * @throws SqlRequestException
      */
     public function __construct(array $dbTables)
     {
-        $this->dbTables = $dbTables;
+        $this->setTables($dbTables);
     }
 
     /**
@@ -53,13 +60,17 @@ class DatabaseTablesList
      * @param array $tables
      *
      * @return self
+     *
+     * @throws SqlRequestException
      */
     private function setTables(array $tables)
     {
-        $onlyTables = array_filter($tables, 'is_string');
+        $filteredTables = array_filter($tables, 'is_string');
 
-        if ($onlyTables !== $tables) {
-
+        if ($filteredTables !== $tables) {
+            throw new SqlRequestException(
+                'Invalid database table list provided. Database tables list must contain string values only.'
+            );
         }
 
         $this->dbTables = $tables;

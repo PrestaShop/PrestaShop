@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettin
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\SaveSqlManagerSettingsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
+/**
+ * Class SaveSqlRequestSettingsHandler handles command to save SqlRequest settings
+ */
 final class SaveSqlRequestSettingsHandler implements SaveSqlManagerSettingsHandlerInterface
 {
     /**

@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
+/**
+ * Class SqlRequestExecutionResult stores result of SqlRequest SQL query execution result
+ */
 class SqlRequestExecutionResult
 {
     /**

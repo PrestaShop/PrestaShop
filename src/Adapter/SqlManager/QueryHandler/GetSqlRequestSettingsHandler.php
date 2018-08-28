@@ -32,6 +32,11 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSe
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
+/**
+ * Class GetSqlRequestSettingsHandler handles query to get SqlRequest settings
+ *
+ * @internal
+ */
 final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandlerInterface
 {
     /**

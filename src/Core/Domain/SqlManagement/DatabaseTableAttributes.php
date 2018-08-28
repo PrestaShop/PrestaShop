@@ -26,15 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
+/**
+ * Class DatabaseTableAttributes stores attributes of single database table
+ */
 class DatabaseTableAttributes
 {
     /**
-     * @var string[]
+     * @var array
      */
     private $attributes;
 
     /**
-     * @param string[] $attributes
+     * @param array $attributes
      */
     public function __construct(array $attributes)
     {
@@ -42,7 +45,7 @@ class DatabaseTableAttributes
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function getAttributes()
     {
@@ -50,7 +53,7 @@ class DatabaseTableAttributes
     }
 
     /**
-     * @param string[] $attributes
+     * @param array $attributes
      *
      * @return self
      */

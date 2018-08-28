@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 
+/**
+ * Interface AddSqlRequestHandlerInterface defines contract for SqlRequest creation handler
+ */
 interface AddSqlRequestHandlerInterface
 {
     /**
