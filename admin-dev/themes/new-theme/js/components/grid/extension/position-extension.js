@@ -23,17 +23,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import PositionExtension from "../../components/grid/extension/position-extension";
+import tableDnD from "tablednd/dist/jquery.tablednd.min";
 
 const $ = window.$;
 
-$(() => {
-  const categoriesGrid = new Grid('categories');
+/**
+ * Class FiltersResetExtension extends grid with filters resetting
+ */
+export default class PositionExtension {
 
-  categoriesGrid.addExtension(new FiltersResetExtension());
-  categoriesGrid.addExtension(new SortingExtension());
-  categoriesGrid.addExtension(new PositionExtension());
-});
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    this._addIdsToGridTableRows(grid);
+
+    grid.getContainer().find('.js-grid-table').tableDnD({
+      dragHandle: '.js-drag-handle',
+      onDrop: function(table, row) {
+        console.log(table, row);
+      },
+    });
+  }
+
+  /**
+   * Add ID's to Grid table rows to make tableDnD.onDrop() function work.
+   *
+   * @param {Grid} grid
+   *
+   * @private
+   */
+  _addIdsToGridTableRows(grid) {
+    grid.getContainer().find('.js-grid-table > tbody > tr').each((index, tableRow) => {
+      if (typeof $(tableRow).attr('id') === 'undefined') {
+        $(tableRow).attr('id', 'row-' + index);
+      }
+    });
+  }
+}
