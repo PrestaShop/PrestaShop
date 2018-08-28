@@ -64,7 +64,7 @@ class RequestSqlController extends FrameworkBundleAdminController
         }
 
         $gridLogFactory = $this->get('prestashop.core.grid.factory.request_sql');
-        $grid = $gridLogFactory->createUsingSearchCriteria($filters);
+        $grid = $gridLogFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
@@ -99,7 +99,7 @@ class RequestSqlController extends FrameworkBundleAdminController
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.request_sql');
-        $emailLogsDefinition = $definitionFactory->create();
+        $emailLogsDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
         $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);

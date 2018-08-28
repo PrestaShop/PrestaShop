@@ -76,3 +76,6 @@ services:
             - '@prestashop.core.admin.module.repository'
             - '@prestashop.bundle.repository.module'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+    prestashop.adapter.legacy.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\Module

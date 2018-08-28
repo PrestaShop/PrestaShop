@@ -47,7 +47,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     /**
      * {@inheritdoc}
      */
-    final public function create()
+    final public function getDefinition()
     {
         $definition = new Definition(
             $this->getId(),
@@ -58,7 +58,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getBulkActions()
         );
 
-        $this->hookDispatcher->dispatchWithParameters('modifyGridDefinition', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridDefinitionModifier', [
             'definition' => $definition,
         ]);
 

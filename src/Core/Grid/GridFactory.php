@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
@@ -42,9 +42,9 @@ final class GridFactory implements GridFactoryInterface
     private $definitionFactory;
 
     /**
-     * @var GridDataProviderInterface
+     * @var GridDataFactoryInterface
      */
-    private $dataProvider;
+    private $dataFactory;
 
     /**
      * @var FilterFormFactoryInterface
@@ -53,30 +53,29 @@ final class GridFactory implements GridFactoryInterface
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface $dataProvider
+     * @param GridDataFactoryInterface $dataFactory
      * @param FilterFormFactoryInterface $filterFormFactory
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
-        GridDataProviderInterface $dataProvider,
+        GridDataFactoryInterface $dataFactory,
         FilterFormFactoryInterface $filterFormFactory
     ) {
         $this->definitionFactory = $definitionFactory;
-        $this->dataProvider = $dataProvider;
+        $this->dataFactory = $dataFactory;
         $this->filterFormFactory = $filterFormFactory;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createUsingSearchCriteria(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria)
     {
-        $definition = $this->definitionFactory->create();
+        $definition = $this->definitionFactory->getDefinition();
+        $data = $this->dataFactory->getData($searchCriteria);
 
         $filterForm = $this->filterFormFactory->create($definition);
         $filterForm->setData($searchCriteria->getFilters());
-
-        $data = $this->dataProvider->getData($searchCriteria);
 
         return new Grid(
             $definition,

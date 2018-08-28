@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -35,6 +36,8 @@ use Symfony\Component\Form\FormFactoryInterface;
  */
 final class FilterFormFactory implements FilterFormFactoryInterface
 {
+    use HookDispatcherAwareTrait;
+
     /**
      * @var FormFactoryInterface
      */
@@ -66,6 +69,10 @@ final class FilterFormFactory implements FilterFormFactoryInterface
                 $filter->getTypeOptions()
             );
         }
+
+        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridFormBuilderModifier', [
+            'formBuilder' => $formBuilder,
+        ]);
 
         return $formBuilder->getForm();
     }

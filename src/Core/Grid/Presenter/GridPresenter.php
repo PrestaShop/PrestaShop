@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
@@ -36,6 +37,16 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 final class GridPresenter implements GridPresenterInterface
 {
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function present(GridInterface $grid)
@@ -43,8 +54,7 @@ final class GridPresenter implements GridPresenterInterface
         $definition = $grid->getDefinition();
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
-
-        return [
+        $presentedGrid = [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
@@ -69,6 +79,13 @@ final class GridPresenter implements GridPresenterInterface
             ],
             'filters' => $searchCriteria->getFilters(),
         ];
+
+        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
+            'presentedGrid' => $presentedGrid,
+            'grid' => $grid,
+        ]);
+
+        return $presentedGrid;
     }
 
     /**

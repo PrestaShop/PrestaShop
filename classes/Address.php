@@ -316,6 +316,10 @@ class AddressCore extends ObjectModel
      */
     public function isUsed()
     {
+        if ((int) $this->id <= 0) {
+            return false;
+        }
+
         $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(`id_order`) AS used
 		FROM `' . _DB_PREFIX_ . 'orders`

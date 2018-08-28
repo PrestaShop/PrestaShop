@@ -113,7 +113,7 @@ class HookExtension extends \Twig_Extension
      *
      * @throws \Exception if the hookName is missing
      *
-     * @return array[string] All listener's reponses, ordered by the listeners' priorities
+     * @return array[string] All listener's responses, ordered by the listeners' priorities
      */
     public function renderHooksArray($hookName, $hookParameters = array())
     {
@@ -124,16 +124,17 @@ class HookExtension extends \Twig_Extension
         // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
         // modules.
         ob_start();
-        $hookRenders = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters)->getContent();
+        $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters);
+        $renderedHook->outputContent();
         ob_clean();
 
         $render = [];
-        foreach ($hookRenders as $module => $hookRender) {
+        foreach ($renderedHook->getContent() as $module => $hookRender) {
             $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
-                'content' => $hookRender,
+                'content' => array_values($hookRender)[0],
                 'attributes' => $moduleAttributes->all(),
             ];
         }
@@ -151,19 +152,18 @@ class HookExtension extends \Twig_Extension
      *
      * @throws \Exception if the hookName is missing
      *
-     * @return string all listener's reponses, concatened in a simple string, ordered by the listeners' priorities
+     * @return string all listener's responses, concatenated in a simple string, ordered by the listeners' priorities
      */
-    public function renderHook($hookName, $hookParameters = array())
+    public function renderHook($hookName, array $hookParameters = array())
     {
         if ($hookName == '') {
             throw new \Exception('Hook name missing');
         }
-        $hookRenders = $this->hookDispatcher
-            ->dispatchRenderingWithParameters($hookName, $hookParameters)
-            ->getContent()
-        ;
 
-        return empty($hookRenders) ? '' : implode('<br class="hook-separator" />', $hookRenders);
+        return $this->hookDispatcher
+            ->dispatchRenderingWithParameters($hookName, $hookParameters)
+            ->outputContent()
+        ;
     }
 
     /**

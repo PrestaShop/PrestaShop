@@ -29,8 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Exception\InvalidDataException;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.).
@@ -137,5 +138,49 @@ final class Definition implements DefinitionInterface
     public function getFilters()
     {
         return $this->filters;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        if (!is_string($name)) {
+            throw new InvalidDataException('Definition name should be a string.');
+        }
+
+        $this->name = $name;
+    }
+
+    /**
+     * @param ColumnCollectionInterface $columns
+     */
+    public function setColumns($columns)
+    {
+        $this->columns = $columns;
+    }
+
+    /**
+     * @param GridActionCollectionInterface $gridActions
+     */
+    public function setGridActions(GridActionCollectionInterface $gridActions)
+    {
+        $this->gridActions = $gridActions;
+    }
+
+    /**
+     * @param BulkActionCollectionInterface $bulkActions
+     */
+    public function setBulkActions(BulkActionCollectionInterface $bulkActions)
+    {
+        $this->bulkActions = $bulkActions;
+    }
+
+    /**
+     * @param FilterCollectionInterface $filters
+     */
+    public function setFilters(FilterCollectionInterface $filters)
+    {
+        $this->filters = $filters;
     }
 }

@@ -79,7 +79,7 @@ class AdminProductDataUpdater implements ProductInterface
             }
             $product->active = ($activate ? 1 : 0);
             $product->update();
-            $this->hookDispatcher->dispatchForParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
+            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
         }
 
         if (count($failedIdList) > 0) {
@@ -212,7 +212,7 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }

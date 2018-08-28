@@ -1,3 +1,5 @@
+parameters:
+    prestashop.core.grid.data.factory.doctrine_grid_data_factory: PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory
 services:
     _defaults:
         public: true
@@ -6,20 +8,22 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactory'
         arguments:
             - '@form.factory'
+        calls:
+            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
 
     # Grid data providers
     prestashop.core.grid.data_provider.log:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.log.repository'
 
     prestashop.core.grid.data_provider.email_logs:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
 
     prestashop.core.grid.data_provider.request_sql:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
 
@@ -92,11 +96,13 @@ services:
             - '@prestashop.core.grid.definition.factory.backup'
             - '@prestashop.core.backup.listing.grid_data_provider'
             - '@prestashop.core.grid.filter.form_factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
 
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
 
     # Query builder
     prestashop.core.grid.abstract_query_builder:
