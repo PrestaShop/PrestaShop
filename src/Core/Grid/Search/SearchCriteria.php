@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Search;
 
+/**
+ * Class SearchCriteria stores search criteria for grid data
+ */
 final class SearchCriteria implements SearchCriteriaInterface
 {
     /**
@@ -70,42 +73,42 @@ final class SearchCriteria implements SearchCriteriaInterface
     }
 
     /**
-     * @return string|null Return order by or null to disable ordering
+     * {@inheritdoc}
      */
     public function getOrderBy()
     {
-        // TODO: Implement getOrderBy() method.
+        return $this->orderBy;
     }
 
     /**
-     * @return string|null Return order by or null to disable ordering
+     * {@inheritdoc}
      */
     public function getOrderWay()
     {
-        // TODO: Implement getOrderWay() method.
+        return $this->orderWay;
     }
 
     /**
-     * @return int|null Return offset or null to disable offset
+     * {@inheritdoc}
      */
     public function getOffset()
     {
-        // TODO: Implement getOffset() method.
+        return $this->offset;
     }
 
     /**
-     * @return int|null Return limit or null to disable limiting
+     * {@inheritdoc}
      */
     public function getLimit()
     {
-        // TODO: Implement getLimit() method.
+        return $this->limit;
     }
 
     /**
-     * @return array Return filters
+     * {@inheritdoc}
      */
     public function getFilters()
     {
-        // TODO: Implement getFilters() method.
+        return $this->filters;
     }
 }

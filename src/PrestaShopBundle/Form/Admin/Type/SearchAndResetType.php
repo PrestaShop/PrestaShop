@@ -40,10 +40,16 @@ class SearchAndResetType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $showResetButton = true;
+        $showResetButton = false;
 
-        if (null !== $form->getParent() && empty($form->getParent()->getData())) {
-            $showResetButton = false;
+        if (null !== $form->getParent()) {
+            $configuredTypeNames = array_keys($form->getParent()->all());
+            $availableValueNames = array_keys($form->getParent()->getData());
+
+            $configuredData = array_intersect($configuredTypeNames, $availableValueNames);
+            if (!empty($configuredData)) {
+                $showResetButton = true;
+            }
         }
 
         $view->vars['show_reset_button'] = $showResetButton;

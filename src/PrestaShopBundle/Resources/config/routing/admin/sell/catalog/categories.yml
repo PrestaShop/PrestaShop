@@ -11,4 +11,6 @@ admin_category_listing_search:
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
         gridDefinitionFactoryService: prestashop.core.grid.definition.factory.category
-        gridRedirectRoute: admin_category_listing
+        redirectRoute: admin_category_listing
+        redirectQueryParamsToKeep:
+            - 'id_category'
