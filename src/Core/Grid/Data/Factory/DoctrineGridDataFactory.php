@@ -80,7 +80,7 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
-        $this->hookDispatcher->dispatchWithParameters('modifyGridQueryBuilder', [
+        $this->hookDispatcher->dispatchWithParameters('action'. $this->gridId .'GridQueryBuilderModifier', [
             'grid_id' => $this->gridId,
             'search_query_builder' => $searchQueryBuilder,
             'count_query_builder' => $countQueryBuilder,
