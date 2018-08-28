@@ -24,11 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\SaveSqlRequestSettingsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**

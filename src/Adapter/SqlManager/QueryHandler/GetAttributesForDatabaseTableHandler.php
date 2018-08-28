@@ -26,15 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetAttributesForDatabaseTableHandlerInterface;
+use RequestSql;
 
 /**
  * Class GetAttributesForDatabaseTableHandler
+ *
+ * @internal
  */
-class GetAttributesForDatabaseTableHandler implements GetAttributesForDatabaseTableHandlerInterface
+final class GetAttributesForDatabaseTableHandler implements GetAttributesForDatabaseTableHandlerInterface
 {
     /**
      * {@inheritdoc}
