@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 class DoctrineGridDataFactoryTest extends TestCase
@@ -42,7 +43,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     {
         $hookDispatcher = $this->createHookDispatcherMock();
         $hookDispatcher->expects($this->once())
-            ->method('dispatchForParameters');
+            ->method('dispatchWithParameters');
 
         $doctrineGridDataFactory = new DoctrineGridDataFactory(
             $this->createDoctrineQueryBuilderMock(),
@@ -96,8 +97,8 @@ class DoctrineGridDataFactoryTest extends TestCase
 
     private function createHookDispatcherMock()
     {
-        $hookDispatcher = $this->createMock(HookDispatcher::class);
-        $hookDispatcher->method('dispatchForParameters')
+        $hookDispatcher = $this->createMock(HookDispatcherInterface::class);
+        $hookDispatcher->method('dispatchWithParameters')
             ->willReturn(null);
 
         return $hookDispatcher;

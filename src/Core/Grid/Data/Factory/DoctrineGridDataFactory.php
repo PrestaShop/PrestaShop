@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
@@ -55,12 +56,12 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
 
     /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
-     * @param HookDispatcher                $hookDispatcher
+     * @param HookDispatcherInterface       $hookDispatcher
      * @param string                        $gridId
      */
     public function __construct(
         DoctrineQueryBuilderInterface $gridQueryBuilder,
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         $gridId
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
@@ -79,7 +80,7 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
-        $this->hookDispatcher->dispatchForParameters('modifyGridQueryBuilder', [
+        $this->hookDispatcher->dispatchWithParameters('modifyGridQueryBuilder', [
             'grid_id' => $this->gridId,
             'search_query_builder' => $searchQueryBuilder,
             'count_query_builder' => $countQueryBuilder,
