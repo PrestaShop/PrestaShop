@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 use RequestSql;
 
 /**
- * Class RequestSqlFormDataValidator
+ * Class SqlRequestFormDataValidator validates SqlRequest data that is submitted via from
  *
  * @internal
  */

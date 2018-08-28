@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
+/**
+ * Class GetSqlRequestForEditingQuery gets SqlRequest data that can be edited
+ */
 class GetSqlRequestForEditingQuery
 {
     /**
