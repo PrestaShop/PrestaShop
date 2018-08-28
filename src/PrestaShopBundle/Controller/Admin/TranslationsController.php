@@ -27,10 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
