@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Interface DoctrineSearchCriteriaApplicatorInterface contract for doctrine query builder applicator
+ * Interface DoctrineSearchCriteriaApplicatorInterface contract for doctrine query builder applicator.
  */
 interface DoctrineSearchCriteriaApplicatorInterface
 {
     /**
-     * Apply pagination on query builder
+     * Apply pagination on query builder.
      *
      * @param SearchCriteriaInterface $searchCriteria
      * @param QueryBuilder $queryBuilder
@@ -45,7 +45,7 @@ interface DoctrineSearchCriteriaApplicatorInterface
     public function applyPagination(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder);
 
     /**
-     * Apply sorting on query builder
+     * Apply sorting on query builder.
      *
      * @param SearchCriteriaInterface $searchCriteria
      * @param QueryBuilder $queryBuilder
