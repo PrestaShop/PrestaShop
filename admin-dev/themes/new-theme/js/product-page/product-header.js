@@ -58,12 +58,12 @@ export default function() {
 
   $arrow.on('click', (e) => {
     if ($arrow.is(':visible')) {
-      $tabWidth = $navWidth - $tabs.width();
+      $tabWidth = $navWidth > $navWidth ? $navWidth - $tabs.width() : $tabs.width();
       $positions = $navTabs.position();
 
       $moveTo = '-=0';
       if ($(e.currentTarget).hasClass('right-arrow')) {
-        if ($navWidth - $positions.left < $widthWithTabs) {
+        if (($tabWidth - $positions.left) < $navWidth) {
           $moveTo = `-=${$tabWidth}`;
         }
       } else {
