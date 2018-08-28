@@ -16,21 +16,21 @@ services:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.log.repository'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - 'logs'
 
     prestashop.core.grid.data_provider.email_logs:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - 'email_logs'
 
     prestashop.core.grid.data_provider.request_sql:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.hook.dispatcher'
             - 'request_sql'
 
     prestashop.core.grid.data_provider.webservice:
