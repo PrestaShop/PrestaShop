@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
  * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders.
@@ -45,7 +44,7 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     private $gridQueryBuilder;
 
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
     private $hookDispatcher;
 
