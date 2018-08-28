@@ -36,6 +36,8 @@ use RequestSql;
 
 /**
  * Class GetSqlRequestForEditingHandler
+ *
+ * @internal
  */
 final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHandlerInterface
 {

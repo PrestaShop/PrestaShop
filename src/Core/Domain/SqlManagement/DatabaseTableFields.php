@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
 /**
- * Class DatabaseTableFields stores fields   of single database table
+ * Class DatabaseTableFields stores fields of single database table
  */
 class DatabaseTableFields
 {

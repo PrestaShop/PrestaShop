@@ -24,18 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
  * Class GetSqlRequestSettingsHandler handles query to get SqlRequest settings
- *
- * @internal
  */
 final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandlerInterface
 {
@@ -68,17 +65,21 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
     /**
      * File encodings are saved as integer values in databases
      *
-     * @param int $intValue
+     * @param int|null $rawValue
      *
      * @return string
      */
-    private function getFileEncoding($intValue)
+    private function getFileEncoding($rawValue)
     {
         $valuesMapping = [
             1 => CharsetEncoding::UTF_8,
             2 => CharsetEncoding::ISO_8859_1,
         ];
 
-        return $valuesMapping[$intValue];
+        if (isset($valuesMapping[$rawValue])) {
+            return $valuesMapping[$rawValue];
+        }
+
+        return CharsetEncoding::UTF_8;
     }
 }

@@ -37,6 +37,8 @@ use RequestSql;
 
 /**
  * Class GetSqlRequestExecutionResultHandler
+ *
+ * @internal
  */
 final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutionResultHandlerInterface
 {

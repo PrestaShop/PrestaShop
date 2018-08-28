@@ -33,8 +33,10 @@ use RequestSql;
 
 /**
  * Class GetDatabaseTablesListHandler
+ *
+ * @internal
  */
-class GetDatabaseTablesListHandler implements GetDatabaseTablesListHandlerInterface
+final class GetDatabaseTablesListHandler implements GetDatabaseTablesListHandlerInterface
 {
     /**
      * {@inheritdoc}
