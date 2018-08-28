@@ -614,6 +614,9 @@
       #categories-tree-expand {
         display: none;
       }
+      #categories-tree-expand, #categories-tree-reduce {
+        cursor: pointer;
+      }
     }
   }
 
