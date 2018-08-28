@@ -251,6 +251,18 @@ services:
               'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceType'
             - 'WebservicePage'
 
+    prestashop.admin.translations_settings.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            -
+              'modify_translations': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType'
+              'add_update_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType'
+              'export_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
+              'copy_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
+            - 'TranslationSettingsPage'
+
     # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'

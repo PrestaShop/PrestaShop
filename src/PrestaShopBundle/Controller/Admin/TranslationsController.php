@@ -27,10 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType;
-use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -103,21 +99,15 @@ class TranslationsController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
-
-        $modifyTranslationsForm = $this->createForm(ModifyTranslationsType::class);
-        $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
-        $copyLanguageForm = $this->createForm(CopyLanguageType::class);
-        $exportLanguageForm = $this->createForm(ExportThemeLanguageType::class);
+        $formHandler = $this->get('prestashop.admin.translations_settings.form_handler');
+        $form = $formHandler->getForm();
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'kpiRow' => $kpiRowFactory->build(),
-            'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
-            'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
-            'exportLanguageForm' => $exportLanguageForm->createView(),
-            'copyLanguageForm' => $copyLanguageForm->createView(),
+            'translationSettingsForm' => $form->createView(),
             'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
         ];
     }
@@ -152,12 +142,13 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function addUpdateLanguageAction(Request $request)
     {
-        $addUpdateLanguageForm = $this->createForm(AddUpdateLanguageType::class);
+        $formHandler = $this->get('prestashop.admin.translations_settings.form_handler');
+        $addUpdateLanguageForm = $formHandler->getForm();
         $addUpdateLanguageForm->handleRequest($request);
 
         if ($addUpdateLanguageForm->isSubmitted()) {
             $data = $addUpdateLanguageForm->getData();
-            $isoCode = $data['iso_localization_pack'];
+            $isoCode = $data['add_update_language']['iso_localization_pack'];
 
             $languagePackImporter = $this->get('prestashop.adapter.language.pack.importer');
             $errors = $languagePackImporter->import($isoCode);
@@ -190,14 +181,15 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function exportThemeLanguageAction(Request $request)
     {
-        $exportThemeLanguageForm = $this->createForm(ExportThemeLanguageType::class);
+        $formHandler = $this->get('prestashop.admin.translations_settings.form_handler');
+        $exportThemeLanguageForm = $formHandler->getForm();
         $exportThemeLanguageForm->handleRequest($request);
 
         if ($exportThemeLanguageForm->isSubmitted()) {
             $data = $exportThemeLanguageForm->getData();
 
-            $themeName = $data['theme_name'];
-            $isoCode = $data['iso_code'];
+            $themeName = $data['export_language']['theme_name'];
+            $isoCode = $data['export_language']['iso_code'];
 
             $langRepository = $this->get('prestashop.core.admin.lang.repository');
             $locale = $langRepository->getLocaleByIsoCode($isoCode);
@@ -227,17 +219,18 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function copyLanguageAction(Request $request)
     {
-        $form = $this->createForm(CopyLanguageType::class);
+        $formHandler = $this->get('prestashop.admin.translations_settings.form_handler');
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $languageCopier = $this->get('prestashop.adapter.language.copier');
             $data = $form->getData();
             $languageCopierConfig = new LanguageCopierConfig(
-                $data['from_theme'],
-                $data['from_language'],
-                $data['to_theme'],
-                $data['to_language']
+                $data['copy_language']['from_theme'],
+                $data['copy_language']['from_language'],
+                $data['copy_language']['to_theme'],
+                $data['copy_language']['to_language']
             );
 
             if ($errors = $languageCopier->copy($languageCopierConfig)) {

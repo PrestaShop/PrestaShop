@@ -96,7 +96,7 @@ class TranslationRouteFinder
      */
     public function findRoute(ParameterBag $query)
     {
-        $routeProperties = $query->get('modify_translations');
+        $routeProperties = $query->get('form')['modify_translations'];
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $route = 'admin_international_translation_overview';
 
@@ -152,7 +152,7 @@ class TranslationRouteFinder
      */
     public function findRouteParameters(ParameterBag $query)
     {
-        $routeProperties = $query->get('modify_translations');
+        $routeProperties = $query->get('form')['modify_translations'];
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $language = $propertyAccessor->getValue($routeProperties, '[language]');
 
