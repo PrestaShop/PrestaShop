@@ -52,6 +52,7 @@
           {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
         </div>
       </div>
+      {{ form_rest(addUpdateLanguageForm) }}
     </div>
   </div>
 
@@ -64,5 +65,5 @@
     </div>
   </div>
 </div>
-{{ form_rest(addUpdateLanguageForm) }}
+
 {{ form_end(addUpdateLanguageForm) }}
