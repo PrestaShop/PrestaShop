@@ -24,42 +24,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConstraintException;
 
 /**
- * Class DatabaseTableAttributes stores attributes of single database table
+ * Class GetAttributesForDatabaseTableQuery gets list of attributes for given database table name
  */
-class DatabaseTableAttributes
+class GetDatabaseTableFieldsListQuery
 {
     /**
-     * @var array
+     * @var string
      */
-    private $attributes;
+    private $tableName;
 
     /**
-     * @param array $attributes
+     * @param string $tableName
+     *
+     * @throws SqlManagementConstraintException
      */
-    public function __construct(array $attributes)
+    public function __construct($tableName)
     {
-        $this->setAttributes($attributes);
+        $this->setTableName($tableName);
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getAttributes()
+    public function getTableName()
     {
-        return $this->attributes;
+        return $this->tableName;
     }
 
     /**
-     * @param array $attributes
+     * @param string $tableName
      *
      * @return self
+     *
+     * @throws SqlManagementConstraintException
      */
-    private function setAttributes(array $attributes)
+    public function setTableName($tableName)
     {
-        $this->attributes = $attributes;
+        if (!is_string($tableName) || empty($tableName)) {
+            throw new SqlManagementConstraintException(
+                sprintf('Invalid database table name %s supplied', var_export($tableName, true)),
+                SqlManagementConstraintException::INVALID_DATABASE_TABLE_NAME
+            );
+        }
+
+        $this->tableName = $tableName;
 
         return $this;
     }

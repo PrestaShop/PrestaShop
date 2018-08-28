@@ -28,12 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableAttributes;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
@@ -400,8 +400,8 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     public function ajaxTableColumnsAction($mySqlTableName)
     {
-        $query = new GetAttributesForDatabaseTableQuery($mySqlTableName);
-        /** @var DatabaseTableAttributes $attributes */
+        $query = new GetDatabaseTableFieldsListQuery($mySqlTableName);
+        /** @var DatabaseTableFields $attributes */
         $attributes = $this->getQueryBus()->handle($query);
 
         return $this->json(['columns' => $attributes->getAttributes()]);
@@ -461,8 +461,8 @@ class SqlRequestController extends FrameworkBundleAdminController
                 $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
         ];
 
-        if (CannotDeleteSqlRequestException::class === $exceptionType &&
-            isset($deleteExceptionMessages[$code])
+        if (CannotDeleteSqlRequestException::class === $exceptionType
+            && isset($deleteExceptionMessages[$code])
         ) {
             return $deleteExceptionMessages[$code];
         }

@@ -1,6 +1,6 @@
 services:
     _defaults:
-        public: trueawesome
+        public: true
 
     prestashop.adapter.sql_manager.sql_query_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator'

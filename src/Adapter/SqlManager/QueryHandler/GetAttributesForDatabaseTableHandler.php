@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Entity\RequestSql;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableAttributes;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetAttributesForDatabaseTableHandlerInterface;
 
 /**
@@ -39,7 +39,7 @@ class GetAttributesForDatabaseTableHandler implements GetAttributesForDatabaseTa
     /**
      * {@inheritdoc}
      */
-    public function handle(GetAttributesForDatabaseTableQuery $query)
+    public function handle(GetDatabaseTableFieldsListQuery $query)
     {
         $attributes = (new RequestSql())->getAttributesByTable($query->getTableName());
         $attributesArray = [];
@@ -51,6 +51,6 @@ class GetAttributesForDatabaseTableHandler implements GetAttributesForDatabaseTa
             ];
         }
 
-        return new DatabaseTableAttributes($attributesArray);
+        return new DatabaseTableFields($attributesArray);
     }
 }
