@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -23,17 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import PositionExtension from "../../components/grid/extension/position-extension";
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-$(() => {
-  const categoriesGrid = new Grid('categories');
+/**
+ * Class PositionColumn
+ */
+final class PositionColumn extends AbstractColumn
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'position';
+    }
 
-  categoriesGrid.addExtension(new FiltersResetExtension());
-  categoriesGrid.addExtension(new SortingExtension());
-  categoriesGrid.addExtension(new PositionExtension());
-});
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'field',
+            ])
+            ->setDefaults([
+                'sortable' => true,
+            ])
+            ->setAllowedTypes('sortable', 'bool')
+            ->setAllowedTypes('field', 'string')
+        ;
+    }
+}
