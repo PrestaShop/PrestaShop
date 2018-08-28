@@ -283,12 +283,14 @@ class CommonController extends FrameworkBundleAdminController
      * Process Grid search
      *
      * @param Request $request
+     * @param string $gridDefinitionFactoryService
+     * @param string $gridRedirectRoute
      *
      * @return RedirectResponse
      */
-    public function searchGridAction(Request $request)
+    public function searchGridAction(Request $request, $gridDefinitionFactoryService, $gridRedirectRoute)
     {
-        $definitionFactory = $this->get($request->attributes->get('grid_definition_factory_service'));
+        $definitionFactory = $this->get($gridDefinitionFactoryService);
         $definition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -302,9 +304,6 @@ class CommonController extends FrameworkBundleAdminController
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute(
-            $request->attributes->get('grid_redirect_route'),
-            ['filters' => $filters]
-        );
+        return $this->redirectToRoute($gridRedirectRoute, ['filters' => $filters]);
     }
 }
