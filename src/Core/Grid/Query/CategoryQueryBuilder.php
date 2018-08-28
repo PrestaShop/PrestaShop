@@ -153,6 +153,13 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
+
+            if ('id_category_parent' === $filterName) {
+                $qb->andWhere("c.id_parent = :$filterName");
+                $qb->setParameter($filterName, $filterValue);
+
+                continue;
+            }
         }
 
         return $qb;
