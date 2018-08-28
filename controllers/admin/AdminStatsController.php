@@ -1035,4 +1035,70 @@ class AdminStatsControllerCore extends AdminStatsTabController
         }
         die(json_encode(array('has_errors' => true)));
     }
+
+    /**
+     * Display graphs on the stats page from module data.
+     */
+    public function displayAjaxGraphDraw()
+    {
+        $module = Tools::getValue('module');
+        $render = Tools::getValue('render');
+        $type = Tools::getValue('type');
+        $option = Tools::getValue('option');
+        $layers = Tools::getValue('layers');
+        $width = Tools::getValue('width');
+        $height = Tools::getValue('height');
+        $id_employee = Tools::getValue('id_employee');
+        $id_lang = Tools::getValue('id_lang');
+
+        $graph = Module::getInstanceByName($module);
+        if (false === $graph) {
+            $this->ajaxRender(Tools::displayError());
+            return;
+        }
+
+        $graph->setEmployee($id_employee);
+        $graph->setLang($id_lang);
+        if ($option) {
+            $graph->setOption($option, $layers);
+        }
+
+        $graph->create($render, $type, $width, $height, $layers);
+        $graph->draw();
+    }
+
+    /**
+     * Display grid with module data on the stats page
+     */
+    public function displayAjaxGraphGrid()
+    {
+        $module = Tools::getValue('module');
+        $render = Tools::getValue('render');
+        $type = Tools::getValue('type');
+        $option = Tools::getValue('option');
+        $width = (int)(Tools::getValue('width', 600));
+        $height = (int)(Tools::getValue('height', 920));
+        $start = (int)(Tools::getValue('start', 0));
+        $limit = (int)(Tools::getValue('limit', 40));
+        $sort = Tools::getValue('sort', 0); // Should be a String. Default value is an Integer because we don't know what can be the name of the column to sort.
+        $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
+        $id_employee = (int)(Tools::getValue('id_employee'));
+        $id_lang = (int)(Tools::getValue('id_lang'));
+
+
+        $grid = Module::getInstanceByName($module);
+        if (false === $grid) {
+            $this->ajaxRender(Tools::displayError());
+            return;
+        }
+
+        $grid->setEmployee($id_employee);
+        $grid->setLang($id_lang);
+        if ($option) {
+            $grid->setOption($option);
+        }
+
+        $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
+        $grid->render();
+    }
 }
