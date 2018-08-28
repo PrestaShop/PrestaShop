@@ -52,7 +52,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
  */
-class RequestSqlController extends FrameworkBundleAdminController
+class SqlRequestController extends FrameworkBundleAdminController
 {
     /**
      * Show list of saved SQL's.
@@ -85,7 +85,7 @@ class RequestSqlController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/list.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_request_sql_create'),
+                    'href' => $this->generateUrl('admin_sql_request_create'),
                     'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -122,13 +122,13 @@ class RequestSqlController extends FrameworkBundleAdminController
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_request_sql', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_sql_request', ['filters' => $filters]);
     }
 
     /**
      * Process Request SQL settings save.
      *
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      * @AdminSecurity(
      *     "is_granted(['update', 'create','delete'], request.get('_legacy_controller')~'_')",
      *      message="You do not have permission to edit this."
@@ -152,7 +152,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_request_sql');
+        return $this->redirectToRoute('admin_sql_request');
     }
 
     /**
@@ -182,13 +182,14 @@ class RequestSqlController extends FrameworkBundleAdminController
         }
 
         $requestSqlForm = $requestSqlFormHandler->getForm();
+        $requestSqlForm->setData($requestSqlData);
         $requestSqlForm->handleRequest($request);
 
         if ($requestSqlForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $errors = $requestSqlFormHandler->save($requestSqlForm->getData());
@@ -196,7 +197,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $this->flashErrors($errors);
@@ -220,23 +221,23 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $requestSqlId
+     * @param int     $sqlRequestId
      * @param Request $request
      *
      * @return Response
      */
-    public function editAction($requestSqlId, Request $request)
+    public function editAction($sqlRequestId, Request $request)
     {
         $requestSqlFormHandler = $this->getRequestSqlFormHandler();
 
-        $editRequestSqlForm = $requestSqlFormHandler->getFormFor($requestSqlId);
+        $editRequestSqlForm = $requestSqlFormHandler->getFormFor($sqlRequestId);
         $editRequestSqlForm->handleRequest($request);
 
         if ($editRequestSqlForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $errors = $requestSqlFormHandler->save($editRequestSqlForm->getData());
@@ -247,7 +248,7 @@ class RequestSqlController extends FrameworkBundleAdminController
                     $this->trans('Successful update.', 'Admin.Notifications.Success')
                 );
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $this->flashErrors($errors);
@@ -270,17 +271,17 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      *
-     * @param int $requestSqlId ID of selected Request SQL
+     * @param int $sqlRequestId ID of selected Request SQL
      *
      * @return RedirectResponse
      */
-    public function deleteAction($requestSqlId)
+    public function deleteAction($sqlRequestId)
     {
         try {
             $deleteSqlRequestCommand = new DeleteSqlRequestCommand(
-                new SqlRequestId($requestSqlId)
+                new SqlRequestId($sqlRequestId)
             );
 
             $this->getCommandBus()->handle($deleteSqlRequestCommand);
@@ -290,7 +291,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($e));
         }
 
-        return $this->redirectToRoute('admin_request_sql');
+        return $this->redirectToRoute('admin_sql_request');
     }
 
     /**
@@ -300,7 +301,7 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      *
      * @param Request $request
      *
@@ -322,7 +323,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($e));
         }
 
-        return $this->redirectToRoute('admin_request_sql');
+        return $this->redirectToRoute('admin_sql_request');
     }
 
     /**
@@ -334,20 +335,20 @@ class RequestSqlController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int $requestSqlId
+     * @param int     $sqlRequestId
      *
      * @return Response
      */
-    public function viewAction(Request $request, $requestSqlId)
+    public function viewAction(Request $request, $sqlRequestId)
     {
         try {
-            $query = new GetSqlRequestExecutionResultQuery($requestSqlId);
+            $query = new GetSqlRequestExecutionResultQuery($sqlRequestId);
 
             $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleException($e));
 
-            return $this->redirectToRoute('admin_request_sql');
+            return $this->redirectToRoute('admin_sql_request');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
@@ -367,16 +368,16 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
      *     message="Access denied."
      * )
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      *
-     * @param int $requestSqlId Request SQL id
+     * @param int $sqlRequestId Request SQL id
      *
      * @return RedirectResponse|BinaryFileResponse
      */
-    public function exportAction($requestSqlId)
+    public function exportAction($sqlRequestId)
     {
         $requestSqlExporter = $this->get('prestashop.adapter.sql_manager.request_sql_exporter');
-        $response = $requestSqlExporter->export($requestSqlId);
+        $response = $requestSqlExporter->export($sqlRequestId);
 
         if (null === $response) {
             $this->addFlash(
@@ -384,7 +385,7 @@ class RequestSqlController extends FrameworkBundleAdminController
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
             );
 
-            return $this->redirectToRoute('admin_request_sql');
+            return $this->redirectToRoute('admin_sql_request');
         }
 
         return $response;
