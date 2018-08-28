@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id:
+        class: 'PrestaShop\PrestaShop\Adapter\Grid\Search\Factory\SearchCriteriaWithCategoryParentIdFilterFactory'
