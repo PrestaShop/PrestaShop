@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConst
  */
 class GetAttributesForDatabaseTableQuery
 {
+    /**
+     * @var string
+     */
     private $tableName;
 
     /**
