@@ -10,5 +10,5 @@ admin_category_listing_search:
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
-        grid_definition_factory_service: prestashop.core.grid.definition.factory.category
-        grid_redirect_route: admin_category_listing
+        gridDefinitionFactoryService: prestashop.core.grid.definition.factory.category
+        gridRedirectRoute: admin_category_listing
