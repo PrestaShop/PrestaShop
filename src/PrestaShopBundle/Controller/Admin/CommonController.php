@@ -284,12 +284,17 @@ class CommonController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param string $gridDefinitionFactoryService
-     * @param string $gridRedirectRoute
+     * @param string $redirectRoute
+     * @param array $redirectQueryParamsToKeep
      *
      * @return RedirectResponse
      */
-    public function searchGridAction(Request $request, $gridDefinitionFactoryService, $gridRedirectRoute)
-    {
+    public function searchGridAction(
+        Request $request,
+        $gridDefinitionFactoryService,
+        $redirectRoute,
+        array $redirectQueryParamsToKeep
+    ) {
         $definitionFactory = $this->get($gridDefinitionFactoryService);
         $definition = $definitionFactory->getDefinition();
 
@@ -298,12 +303,18 @@ class CommonController extends FrameworkBundleAdminController
         $filtersForm = $gridFilterFormFactory->create($definition);
         $filtersForm->handleRequest($request);
 
-        $filters = [];
+        $redirectParams = [];
 
         if ($filtersForm->isSubmitted()) {
-            $filters = $filtersForm->getData();
+            $redirectParams['filters'] = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute($gridRedirectRoute, ['filters' => $filters]);
+        foreach ($redirectQueryParamsToKeep as $paramName) {
+            if ($request->query->has($paramName)) {
+                $redirectParams[$paramName] = $request->query->get($paramName);
+            }
+        }
+
+        return $this->redirectToRoute($redirectRoute, $redirectParams);
     }
 }
