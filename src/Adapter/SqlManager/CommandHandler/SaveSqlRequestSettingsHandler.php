@@ -28,13 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\SaveSqlManagerSettingsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\SaveSqlRequestSettingsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
  * Class SaveSqlRequestSettingsHandler handles command to save SqlRequest settings
  */
-final class SaveSqlRequestSettingsHandler implements SaveSqlManagerSettingsHandlerInterface
+final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandlerInterface
 {
     /**
      * @var ConfigurationInterface

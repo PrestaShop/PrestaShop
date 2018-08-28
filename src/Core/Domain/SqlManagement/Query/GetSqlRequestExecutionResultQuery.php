@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestExceptio
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * Class GetSqlRequestExecutionResultQuery gets SqlRequest SQL query execution result
+ * Class GetSqlRequestExecutionResultQuery returns the result of executing an SqlRequest query
  */
 class GetSqlRequestExecutionResultQuery
 {

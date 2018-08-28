@@ -81,10 +81,10 @@ class RequestSqlExporter
     public function export($requestSqlId)
     {
         try {
-            $command = new GetSqlRequestExecutionResultQuery($requestSqlId);
+            $query = new GetSqlRequestExecutionResultQuery($requestSqlId);
 
             /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
-            $sqlRequestExecutionResult = $this->queryBus->handle($command);
+            $sqlRequestExecutionResult = $this->queryBus->handle($query);
         } catch (SqlRequestException $e) {
             return null;
         }

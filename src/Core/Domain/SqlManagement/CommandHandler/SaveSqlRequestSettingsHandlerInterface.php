@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettin
 /**
  * Interface SaveSqlRequestSettingsHandlerInterface
  */
-interface SaveSqlManagerSettingsHandlerInterface
+interface SaveSqlRequestSettingsHandlerInterface
 {
     /**
      * @param SaveSqlRequestSettingsCommand $command
