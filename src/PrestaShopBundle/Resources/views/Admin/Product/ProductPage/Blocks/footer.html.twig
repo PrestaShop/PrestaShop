@@ -65,6 +65,14 @@
       {% endif %}
     </div>
     <div class="col-sm-5 col-lg-7 text-right">
+      <input
+        id="submit"
+        type="submit"
+        class="btn btn-primary save uppercase ml-3"
+        value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
+        data-toggle="pstooltip"
+        title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
+        />
       {% if is_shop_context %}
         <button
           type="button"
@@ -97,14 +105,6 @@
         >
         {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
-      <input
-        id="submit"
-        type="submit"
-        class="btn btn-primary save uppercase ml-3"
-        value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
-        data-toggle="pstooltip"
-        title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
-        />
 
         <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
         <div class="btn-group hide dropdown">
