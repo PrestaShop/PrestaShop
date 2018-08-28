@@ -26,6 +26,7 @@
 import Grid from '../../components/grid/grid';
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
+import PositionExtension from "../../components/grid/extension/position-extension";
 
 const $ = window.$;
 
@@ -34,4 +35,5 @@ $(() => {
 
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
+  categoriesGrid.addExtension(new PositionExtension());
 });
