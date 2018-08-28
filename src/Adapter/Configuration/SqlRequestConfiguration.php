@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 /**
  * Class RequestSqlConfiguration is responsible for RequestSql configuration.
  */
-final class RequestSqlConfiguration implements DataConfigurationInterface
+final class SqlRequestConfiguration implements DataConfigurationInterface
 {
     /**
      * @var CommandBusInterface

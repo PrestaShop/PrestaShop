@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 
+/**
+ * Class SqlRequestId is SqlRequest identifier
+ */
 class SqlRequestId
 {
     /**

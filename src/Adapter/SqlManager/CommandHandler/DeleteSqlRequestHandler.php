@@ -45,6 +45,7 @@ final class DeleteSqlRequestHandler implements DeleteSqlRequestHandlerInterface
      * {@inheritdoc}
      *
      * @throws CannotDeleteSqlRequestException
+     * @throws SqlRequestNotFoundException
      * @throws SqlRequestException
      */
     public function handle(DeleteSqlRequestCommand $command)

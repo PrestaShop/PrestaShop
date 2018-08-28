@@ -36,7 +36,7 @@ use PrestaShopException;
 use RequestSql;
 
 /**
- * Class GetSqlRequestResultForViewingHandler
+ * Class GetSqlRequestExecutionResultHandler
  */
 final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutionResultHandlerInterface
 {
