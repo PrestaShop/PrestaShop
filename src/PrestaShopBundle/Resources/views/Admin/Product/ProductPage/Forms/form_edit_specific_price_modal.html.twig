@@ -1,6 +1,4 @@
-/******/!function(n){function t(e){if(r[e])return r[e].exports;var o=r[e]={i:e,l:!1,exports:{}};return n[e].call(o.exports,o,o.exports,t),o.l=!0,o.exports}// webpackBootstrap
-/******/
-var r={};t.m=n,t.c=r,t.i=function(n){return n},t.d=function(n,r,e){t.o(n,r)||Object.defineProperty(n,r,{configurable:!1,enumerable:!0,get:e})},t.n=function(n){var r=n&&n.__esModule?function(){return n.default}:function(){return n};return t.d(r,"a",r),r},t.o=function(n,t){return Object.prototype.hasOwnProperty.call(n,t)},t.p="",t(t.s=397)}({197:function(n,t){/**
+{#**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -23,5 +21,24 @@ var r={};t.m=n,t.c=r,t.i=function(n){return n},t.d=function(n,r,e){t.o(n,r)||Obj
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-var r=window.$;r(function(){r("#form_configuration_default_currency").on("change",function(){alert(r(this).data("warning-message"))})})},397:function(n,t,r){n.exports=r(197)}});
+ *#}
+<div class="modal fade" id="edit-specific-price-modal" tabindex="1" role="dialog" aria-hidden="true">
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{ "Edit a specific price"|trans({}, 'Admin.Catalog.Feature') }}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div id="edit-specific-price-modal-form" class="modal-body" data-action="{{ path('admin_specific_price_update') }}" data-specific-price-id="0">
+      </div>
+    </div>
+  </div>
+
+</div>
