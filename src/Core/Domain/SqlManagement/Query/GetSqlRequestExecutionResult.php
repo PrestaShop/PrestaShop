@@ -26,9 +26,34 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+
 /**
- * Class GetDatabaseTablesListQuery gets list of database tables
+ * Class GetSqlRequestExecutionResultQuery returns the result of executing an SqlRequest query
  */
-class GetDatabaseTablesListQuery
+class GetSqlRequestExecutionResult
 {
+    /**
+     * @var SqlRequestId
+     */
+    private $requestSqlId;
+
+    /**
+     * @param int $requestSqlId
+     *
+     * @throws SqlRequestException
+     */
+    public function __construct($requestSqlId)
+    {
+        $this->requestSqlId = new SqlRequestId($requestSqlId);
+    }
+
+    /**
+     * @return SqlRequestId
+     */
+    public function getSqlRequestId()
+    {
+        return $this->requestSqlId;
+    }
 }

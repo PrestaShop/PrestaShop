@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestExecutionResultHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShopException;
@@ -48,7 +48,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
      * @throws SqlRequestNotFoundException
      * @throws SqlRequestException
      */
-    public function handle(GetSqlRequestExecutionResultQuery $query)
+    public function handle(GetSqlRequestExecutionResult $query)
     {
         try {
             $id = $query->getSqlRequestId()->getValue();

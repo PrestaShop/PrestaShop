@@ -24,35 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsListQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetAttributesForDatabaseTableHandlerInterface;
-use RequestSql;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
 
 /**
- * Class GetAttributesForDatabaseTableHandler
- *
- * @internal
+ * Interface GetAttributesForDatabaseTableHandlerInterface
  */
-final class GetAttributesForDatabaseTableHandler implements GetAttributesForDatabaseTableHandlerInterface
+interface GetDatabaseTableFieldsListHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param GetDatabaseTableFieldsList $query
+     *
+     * @return DatabaseTableFields
      */
-    public function handle(GetDatabaseTableFieldsListQuery $query)
-    {
-        $attributes = (new RequestSql())->getAttributesByTable($query->getTableName());
-        $attributesArray = [];
-
-        foreach ($attributes as $attribute) {
-            $attributesArray[] = [
-                'name' => $attribute['Field'],
-                'type' => $attribute['Type'],
-            ];
-        }
-
-        return new DatabaseTableFields($attributesArray);
-    }
+    public function handle(GetDatabaseTableFieldsList $query);
 }

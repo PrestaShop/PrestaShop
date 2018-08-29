@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 
 /**
@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 interface GetSqlRequestExecutionResultHandlerInterface
 {
     /**
-     * @param GetSqlRequestExecutionResultQuery $query
+     * @param GetSqlRequestExecutionResult $query
      *
      * @return SqlRequestExecutionResult
      */
-    public function handle(GetSqlRequestExecutionResultQuery $query);
+    public function handle(GetSqlRequestExecutionResult $query);
 }

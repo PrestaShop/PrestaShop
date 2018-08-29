@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
 /**
- * Class GetSqlRequestSettingsQuery gets SqlRequest settings
+ * Class GetDatabaseTablesListQuery gets list of database tables
  */
-class GetSqlRequestSettingsQuery
+class GetDatabaseTablesList
 {
 }

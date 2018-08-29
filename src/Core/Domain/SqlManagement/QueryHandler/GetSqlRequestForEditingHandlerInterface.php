@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing;
 
 interface GetSqlRequestForEditingHandlerInterface
 {
     /**
-     * @param GetSqlRequestForEditingQuery $query
+     * @param GetSqlRequestForEditing $query
      *
      * @return EditableSqlRequest
      */
-    public function handle(GetSqlRequestForEditingQuery $query);
+    public function handle(GetSqlRequestForEditing $query);
 }

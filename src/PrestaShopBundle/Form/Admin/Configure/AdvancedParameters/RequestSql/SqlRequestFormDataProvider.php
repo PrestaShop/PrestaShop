@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotEditSqlReque
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
@@ -75,7 +75,7 @@ class SqlRequestFormDataProvider
     public function getData($requestSqlId)
     {
         try {
-            $getRequestSqlForEditingQuery = new GetSqlRequestForEditingQuery($requestSqlId);
+            $getRequestSqlForEditingQuery = new GetSqlRequestForEditing($requestSqlId);
 
             /** @var EditableSqlRequest $editableRequestSql */
             $editableRequestSql = $this->queryBus->handle($getRequestSqlForEditingQuery);

@@ -26,34 +26,54 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConstraintException;
 
 /**
- * Class GetSqlRequestExecutionResultQuery returns the result of executing an SqlRequest query
+ * Class GetAttributesForDatabaseTableQuery gets list of attributes for given database table name
  */
-class GetSqlRequestExecutionResultQuery
+class GetDatabaseTableFieldsList
 {
     /**
-     * @var SqlRequestId
+     * @var string
      */
-    private $requestSqlId;
+    private $tableName;
 
     /**
-     * @param int $requestSqlId
+     * @param string $tableName
      *
-     * @throws SqlRequestException
+     * @throws SqlManagementConstraintException
      */
-    public function __construct($requestSqlId)
+    public function __construct($tableName)
     {
-        $this->requestSqlId = new SqlRequestId($requestSqlId);
+        $this->setTableName($tableName);
     }
 
     /**
-     * @return SqlRequestId
+     * @return string
      */
-    public function getSqlRequestId()
+    public function getTableName()
     {
-        return $this->requestSqlId;
+        return $this->tableName;
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return self
+     *
+     * @throws SqlManagementConstraintException
+     */
+    public function setTableName($tableName)
+    {
+        if (!is_string($tableName) || empty($tableName)) {
+            throw new SqlManagementConstraintException(
+                sprintf('Invalid database table name %s supplied', var_export($tableName, true)),
+                SqlManagementConstraintException::INVALID_DATABASE_TABLE_NAME
+            );
+        }
+
+        $this->tableName = $tableName;
+
+        return $this;
     }
 }

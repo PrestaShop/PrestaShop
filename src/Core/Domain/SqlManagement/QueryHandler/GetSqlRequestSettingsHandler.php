@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
@@ -52,7 +52,7 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(GetSqlRequestSettingsQuery $query)
+    public function handle(GetSqlRequestSettings $query)
     {
         $fileEncodingIntValue = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL');
 
