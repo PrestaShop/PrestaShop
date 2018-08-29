@@ -5,12 +5,6 @@ services:
     prestashop.adapter.sql_manager.sql_query_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator'
 
-    prestashop.adapter.sql_manager.request_sql_exporter:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlExporter'
-        arguments:
-            - '@prestashop.core.export.dir'
-            - '@prestashop.core.command_bus.tactician_query_bus_adapter'
-
     prestashop.adapter.sql_manager.request_sql_form_data_validator:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator'
         arguments:

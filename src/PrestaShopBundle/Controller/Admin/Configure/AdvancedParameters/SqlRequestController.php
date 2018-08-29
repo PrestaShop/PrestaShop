@@ -36,9 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFound
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
+use PrestaShop\PrestaShop\Core\SqlManager\Exception\SqlManagerExportException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -48,6 +51,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
@@ -376,17 +380,21 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     public function exportAction($sqlRequestId)
     {
-        $requestSqlExporter = $this->get('prestashop.adapter.sql_manager.request_sql_exporter');
-        $response = $requestSqlExporter->export($sqlRequestId);
+        try {
+            $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request');
+            $exportedFile = $requestSqlExporter->exportToFile($sqlRequestId);
 
-        if (null === $response) {
-            $this->addFlash(
-                'error',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
-            );
+            /** @var SqlRequestSettings $sqlRequestSettings */
+            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettingsQuery());
+        } catch (SqlManagerExportException $e) {
+            $this->addFlash('error', $this->handleExportException($e));
 
             return $this->redirectToRoute('admin_sql_request');
         }
+
+        $response = new BinaryFileResponse($exportedFile->getPathname());
+        $response->setCharset($sqlRequestSettings->getFileEncoding());
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $exportedFile->getFilename());
 
         return $response;
     }
@@ -472,6 +480,31 @@ class SqlRequestController extends FrameworkBundleAdminController
         }
 
         return $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @param SqlManagerExportException $e
+     *
+     * @return string Error message
+     */
+    protected function handleExportException(SqlManagerExportException $e)
+    {
+        $code = $e->getCode();
+
+        $errorsForException = [
+            SqlManagerExportException::SQL_REQUEST_ERROR =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlManagerExportException::SQL_REQUEST_HAS_NO_DATA =>
+                $this->trans('Sql query result has no data to export', 'Admin.Notifications.Error'),
+            SqlManagerExportException::FAILED_TO_CREATE_EXPORT_FILE =>
+                $this->trans('Failed to create export file', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errorsForException[$code])) {
+            return $errorsForException[$code];
+        }
+
+        return $this->trans('Unknown error.', 'Admin.Notifications.Error');
     }
 
     /**
