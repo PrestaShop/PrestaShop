@@ -49,7 +49,7 @@ class SqlRequestFormDataValidator
     }
 
     /**
-     * Validate RequestSql form data
+     * Validate SqlRequest form data
      *
      * @param array $data
      *

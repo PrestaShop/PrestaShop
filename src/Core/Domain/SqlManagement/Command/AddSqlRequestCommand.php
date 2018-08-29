@@ -86,7 +86,7 @@ class AddSqlRequestCommand
     {
         if (!is_string($name) || empty($name)) {
             throw new SqlRequestConstraintException(
-                sprintf('Invalid RequestSql name %s', var_export($name, true)),
+                sprintf('Invalid SqlRequest name %s', var_export($name, true)),
                 SqlRequestConstraintException::INVALID_NAME
             );
         }
@@ -109,7 +109,7 @@ class AddSqlRequestCommand
     {
         if (!is_string($sql) || empty($sql)) {
             throw new SqlRequestConstraintException(
-                sprintf('Invalid RequestSql SQL query %s', var_export($sql, true)),
+                sprintf('Invalid SqlRequest SQL query %s', var_export($sql, true)),
                 SqlRequestConstraintException::INVALID_SQL_QUERY
             );
         }

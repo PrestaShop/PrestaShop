@@ -35,7 +35,7 @@ use PrestaShopException;
 use RequestSql;
 
 /**
- * Class EditSqlRequestHandler is responsible for updating RequestSql
+ * Class EditSqlRequestHandler is responsible for updating SqlRequest
  *
  * @internal
  */
@@ -75,7 +75,7 @@ final class EditSqlRequestHandler implements EditSqlRequestHandlerInterface
             if (false === $entity->update()) {
                 throw new CannotEditSqlRequestException(
                     sprintf(
-                        'Error occurred when updating RequestSql with id "%s"',
+                        'Error occurred when updating SqlRequest with id "%s"',
                         $command->getSqlRequestId()->getValue()
                     )
                 );
@@ -83,7 +83,7 @@ final class EditSqlRequestHandler implements EditSqlRequestHandlerInterface
         } catch (PrestaShopException $e) {
             throw new SqlRequestException(
                 sprintf(
-                    'Error occurred when updating RequestSql with id "%s"',
+                    'Error occurred when updating SqlRequest with id "%s"',
                     $command->getSqlRequestId()->getValue()
                 )
             );

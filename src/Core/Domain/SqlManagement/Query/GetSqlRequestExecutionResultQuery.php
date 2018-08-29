@@ -52,7 +52,7 @@ class GetSqlRequestExecutionResultQuery
     /**
      * @return SqlRequestId
      */
-    public function getRequestSqlId()
+    public function getSqlRequestId()
     {
         return $this->requestSqlId;
     }
