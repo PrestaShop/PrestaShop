@@ -30,6 +30,7 @@ class SpecificPriceFormHandler {
   constructor() {
     this.prefixCreateForm = 'form_step2_specific_price_';
     this.prefixEditForm = 'form_modal_';
+    this.editModalIsOpen = false;
 
     this.$createPriceFormDefaultValues = new Object();
     this.storePriceFormDefaultValues();
@@ -41,6 +42,8 @@ class SpecificPriceFormHandler {
     this.configureEditPriceModalBehavior();
 
     this.configureDeletePriceButtonsBehavior();
+
+    this.configureMultipleModalsBehavior();
   }
 
   /**
@@ -214,6 +217,16 @@ class SpecificPriceFormHandler {
     });
   }
 
+  /**
+   * @see https://vijayasankarn.wordpress.com/2017/02/24/quick-fix-scrolling-and-focus-when-multiple-bootstrap-modals-are-open/
+   */
+  configureMultipleModalsBehavior() {
+    $('.modal').on('hidden.bs.modal', () => {
+      if (this.editModalIsOpen) {
+        $('body').addClass('modal-open');
+      }
+    });
+  }
 
   /**
    * @private
@@ -432,6 +445,7 @@ class SpecificPriceFormHandler {
     const url = $('#js-specific-price-list').data('actionEdit').replace(/form\/\d+/, 'form/' + specificPriceId);
 
     $('#edit-specific-price-modal').modal("show");
+    this.editModalIsOpen = true;
 
     $.ajax({
       type: 'GET',
@@ -452,6 +466,7 @@ class SpecificPriceFormHandler {
    */
   closeEditPriceModalAndRemoveForm() {
     $('#edit-specific-price-modal').modal("hide");
+    this.editModalIsOpen = false;
 
     var formLocationHolder = $('#edit-specific-price-modal-form');
 
