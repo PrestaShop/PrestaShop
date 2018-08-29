@@ -36,6 +36,17 @@ class AdminSearchControllerCore extends AdminController
         return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
     }
 
+    public function checkToken()
+    {
+        // Specific check for the ajax request 'searchCron'
+        if (Tools::isSubmit('action') && 'searchCron' === Tools::getValue('action')) {
+            if (substr(_COOKIE_KEY_, 34, 8) === Tools::getValue('token')) {
+                return true;
+            }
+        }
+        return parent::checkToken();
+    }
+
     public function postProcess()
     {
         $this->context = Context::getContext();
@@ -459,5 +470,26 @@ class AdminSearchControllerCore extends AdminController
         return isset($array[$key]) &&
             is_countable($array[$key]) &&
             count($array[$key]);
+    }
+
+    /**
+     * Request triggering the search indexation.
+     *
+     * Kept as GET request for backward compatibility purpose, but should be modified as POST when migrated.
+     * NOTE the token is different for that method, check the method checkToken() for more details.
+     */
+    public function displayAjaxSearchCron()
+    {
+        if (!Tools::getValue('id_shop')) {
+            Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
+        } else {
+            Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int)Tools::getValue('id_shop'));
+        }
+
+        ini_set('max_execution_time', 7200);
+        Search::indexation(Tools::getValue('full'));
+        if (Tools::getValue('redirect')) {
+            Tools::redirectAdmin($_SERVER['HTTP_REFERER'].'&conf=4');
+        }
     }
 }
