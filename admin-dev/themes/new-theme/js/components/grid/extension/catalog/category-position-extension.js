@@ -42,8 +42,28 @@ export default class CategoryPositionExtension {
 
     grid.getContainer().find('.js-grid-table').tableDnD({
       dragHandle: '.js-drag-handle',
-      onDrop: function(table, row) {
-        console.log(table, row);
+      onDragStart: () => {
+        this.originalPositions = decodeURIComponent($.tableDnD.serialize());
+      },
+      onDrop: (table, trElement) => {
+        const positions = decodeURIComponent($.tableDnD.serialize());
+        const way = (this.originalPositions.indexOf(trElement.id) < positions.indexOf(trElement.id)) ? 1 : 0;
+
+        const $categoryPositionContainer = $(trElement).find('.js-category-position:first');
+
+        const categoryId = $categoryPositionContainer.data('id-category');
+        const categoryParentId = $categoryPositionContainer.data('id-parent-category');
+        const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
+
+        let params = positions.replace(/_grid_table/g, '');
+        params +=  '&id_category_parent=' + categoryParentId + '&id_category_to_move=' + categoryId;
+        params += '&way=' + way;
+
+        if (positions.indexOf('_0&') !== -1) {
+          params += '&found_first=1';
+        }
+
+        this._updateCategoryPosition(positionUpdateUrl, params);
       },
     });
   }
@@ -56,10 +76,26 @@ export default class CategoryPositionExtension {
    * @private
    */
   _addIdsToGridTableRows(grid) {
-    grid.getContainer().find('.js-grid-table > tbody > tr').each((index, tableRow) => {
-      if (typeof $(tableRow).attr('id') === 'undefined') {
-        $(tableRow).attr('id', 'row-' + index);
-      }
+    grid.getContainer().find('.js-grid-table').find('.js-category-position').each((index, positionWrapper) => {
+      const $positionWrapper = $(positionWrapper);
+
+      const categoryId = $positionWrapper.data('id-category');
+      const categoryParentId = $positionWrapper.data('id-parent-category');
+      const position = $positionWrapper.find('.js-position').text().trim();
+
+      const id = 'tr_' + categoryParentId + '_' + categoryId + '_' + position;
+
+      $positionWrapper.closest('tr').attr('id', id);
+    });
+  }
+
+  _updateCategoryPosition(url, params) {
+    $.post({
+      url: url,
+      headers: {
+        'cache-control': 'no-cache'
+      },
+      data: params
     });
   }
 }

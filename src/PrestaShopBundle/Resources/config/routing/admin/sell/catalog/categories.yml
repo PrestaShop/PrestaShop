@@ -14,3 +14,9 @@ admin_category_listing_search:
         redirectRoute: admin_category_listing
         redirectQueryParamsToKeep:
             - 'id_category'
+
+admin_category_update_positions:
+    path: /categories/positions
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:ajaxProcessUpdatePositions

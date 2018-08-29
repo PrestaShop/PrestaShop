@@ -38,8 +38,8 @@ class CategoryFilters extends Filters
         return [
             'limit' => 50,
             'offset' => 0,
-            'orderBy' => 'id_category',
-            'sortOrder' => 'desc',
+            'orderBy' => 'position',
+            'sortOrder' => 'asc',
             'filters' => [],
         ];
     }

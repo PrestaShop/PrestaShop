@@ -52,6 +52,7 @@ final class CategoryPositionColumn extends AbstractColumn
                 'field',
                 'id_field',
                 'id_parent_field',
+                'position_update_route',
             ])
             ->setDefaults([
                 'sortable' => true,
@@ -60,6 +61,7 @@ final class CategoryPositionColumn extends AbstractColumn
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('id_parent_field', 'string')
+            ->setAllowedTypes('position_update_route', 'string')
         ;
     }
 }
