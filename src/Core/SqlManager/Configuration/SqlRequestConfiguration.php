@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQ
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 
 /**
- * Class RequestSqlConfiguration is responsible for RequestSql configuration
+ * Class SqlRequestConfiguration is responsible for SqlRequest configuration
  */
 final class SqlRequestConfiguration implements DataConfigurationInterface
 {
