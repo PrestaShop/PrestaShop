@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
@@ -38,14 +38,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @see admin-dev/themes/new-theme/js/components/grid/extension/position-extension.js
  * @see GridPositionUpdater
  */
-final class PositionColumn extends AbstractColumn
+final class CategoryPositionColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'position';
+        return 'category_position';
     }
 
     /**

@@ -67,7 +67,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('c.id_category, c.active, cl.name, cl.description, cs.position')
+        $qb->select('c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()
