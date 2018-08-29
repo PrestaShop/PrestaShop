@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,14 +32,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class PositionColumn
  */
-final class PositionColumn extends AbstractColumn
+final class CategoryPositionColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'position';
+        return 'category_position';
     }
 
     /**
@@ -50,12 +50,16 @@ final class PositionColumn extends AbstractColumn
         $resolver
             ->setRequired([
                 'field',
+                'id_field',
+                'id_parent_field',
             ])
             ->setDefaults([
                 'sortable' => true,
             ])
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('id_field', 'string')
+            ->setAllowedTypes('id_parent_field', 'string')
         ;
     }
 }

@@ -25,9 +25,10 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
+
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -99,10 +100,12 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'description',
                 ])
             )
-            ->add((new PositionColumn('position'))
+            ->add((new CategoryPositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'position',
+                    'id_field' => 'id_category',
+                    'id_parent_field' => 'id_parent',
                 ])
             )
             ->add((new DataColumn('active'))

@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,11 +21,45 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="js-drag-handle" style="cursor: move;">
-  <i class="material-icons">swap_vert</i>
-  <span class="badge badge-secondary rounded">
-    {{ record[column.options.field] }}
-  </span>
-</div>
+import tableDnD from "tablednd/dist/jquery.tablednd.min";
+
+const $ = window.$;
+
+/**
+ * Class CategoryPositionExtension extends reordering positions
+ */
+export default class CategoryPositionExtension {
+
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid) {
+    this._addIdsToGridTableRows(grid);
+
+    grid.getContainer().find('.js-grid-table').tableDnD({
+      dragHandle: '.js-drag-handle',
+      onDrop: function(table, row) {
+        console.log(table, row);
+      },
+    });
+  }
+
+  /**
+   * Add ID's to Grid table rows to make tableDnD.onDrop() function work.
+   *
+   * @param {Grid} grid
+   *
+   * @private
+   */
+  _addIdsToGridTableRows(grid) {
+    grid.getContainer().find('.js-grid-table > tbody > tr').each((index, tableRow) => {
+      if (typeof $(tableRow).attr('id') === 'undefined') {
+        $(tableRow).attr('id', 'row-' + index);
+      }
+    });
+  }
+}
