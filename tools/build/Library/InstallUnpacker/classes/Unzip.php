@@ -42,7 +42,10 @@ class Unzip
     public function unzipArchive($zipFilepath, $pathWhereToExtract)
     {
         if ((is_dir($pathWhereToExtract) || is_file($pathWhereToExtract))) {
-            throw new PrestashopCouldNotUnzipLatestVersionException(sprintf('Destination folder %s already exists', $pathWhereToExtract));
+            throw new PrestashopCouldNotUnzipLatestVersionException(sprintf(
+                'Destination folder %s already exists',
+                $pathWhereToExtract
+            ));
         }
 
         $this->extract($zipFilepath, $pathWhereToExtract);
@@ -92,12 +95,13 @@ class Unzip
         }
 
         if (false === $zip->extractTo($toDir)) {
-            throw new PrestashopCouldNotUnzipLatestVersionException(sprintf('zip->extractTo(): unable to use %s as extract destination.', $toDir));
+            throw new PrestashopCouldNotUnzipLatestVersionException(sprintf(
+                'zip->extractTo(): unable to use %s as extract destination.',
+                $toDir
+            ));
         }
 
-        $zip->close();
-
-        return true;
+        return $zip->close();
     }
 
     /**
@@ -109,7 +113,7 @@ class Unzip
      */
     private function openWithZipArchive($zipFile)
     {
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
 
         if ($zip->open($zipFile) !== true || empty($zip->filename)) {
             throw new PrestashopCouldNotUnzipLatestVersionException('Failed to open zip archive');

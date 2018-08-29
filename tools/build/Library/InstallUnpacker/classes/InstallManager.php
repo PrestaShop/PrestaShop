@@ -93,13 +93,19 @@ class InstallManager
     public function downloadUnzipAndReplaceLatestPSVersion()
     {
         if (is_dir($this->downloadDirectoryPath) || file_exists($this->downloadDirectoryPath)) {
-            throw new PrestashopCouldNotInstallLatestVersionException(sprintf('Directory %s already exists.', $this->downloadDirectoryPath));
+            throw new PrestashopCouldNotInstallLatestVersionException(sprintf(
+                'Directory %s already exists.',
+                $this->downloadDirectoryPath
+            ));
         }
 
         // create 'download' directory
         $createDirectoryResult = @mkdir($this->downloadDirectoryPath);
         if (false === $createDirectoryResult) {
-            throw new PrestashopCouldNotInstallLatestVersionException(sprintf('Could not create directory %s', $this->downloadDirectoryPath));
+            throw new PrestashopCouldNotInstallLatestVersionException(sprintf(
+                'Could not create directory %s',
+                $this->downloadDirectoryPath
+            ));
         }
 
         // download zip archive
@@ -108,7 +114,9 @@ class InstallManager
         Download::copy($link, $destinationPath);
 
         if (false === is_file($destinationPath)) {
-            throw new PrestashopCouldNotInstallLatestVersionException('Failed to download latest Prestashop release zip archive');
+            throw new PrestashopCouldNotInstallLatestVersionException(
+                'Failed to download latest Prestashop release zip archive'
+            );
         }
 
         // @todo: validate checksum ?
@@ -143,7 +151,10 @@ class InstallManager
     private function verifyUnzipFile($fileName)
     {
         if (false === is_file($this->extractDirectoryPath . DIRECTORY_SEPARATOR . $fileName)) {
-            throw new PrestashopCouldNotInstallLatestVersionException(sprintf('After unzip, missing %s file', $fileName));
+            throw new PrestashopCouldNotInstallLatestVersionException(sprintf(
+                'After unzip, missing %s file',
+                $fileName
+            ));
         }
     }
 
@@ -160,7 +171,10 @@ class InstallManager
         );
 
         if (false === $replaceFileResult) {
-            throw new PrestashopCouldNotInstallLatestVersionException(sprintf('Could not replace %s file', $fileName));
+            throw new PrestashopCouldNotInstallLatestVersionException(sprintf(
+                'Could not replace %s file',
+                $fileName
+            ));
         }
     }
 
@@ -171,12 +185,18 @@ class InstallManager
      */
     private function deleteDirectoryWithItsContent($directoryPath)
     {
-        $deleteDirectoryContentResult = array_map('unlink', glob($directoryPath . DIRECTORY_SEPARATOR . '*.*'));
+        $deleteDirectoryContentResult = array_map(
+            'unlink',
+            glob($directoryPath . DIRECTORY_SEPARATOR . '*.*')
+        );
 
         $deleteDirectoryResult = @rmdir($directoryPath);
 
         if ((false === $deleteDirectoryContentResult) || (false === $deleteDirectoryResult)) {
-            throw new PrestashopCouldNotInstallLatestVersionException(sprintf('Cannot delete directory %s', $directoryPath));
+            throw new PrestashopCouldNotInstallLatestVersionException(sprintf(
+                'Cannot delete directory %s',
+                $directoryPath
+            ));
         }
     }
 }

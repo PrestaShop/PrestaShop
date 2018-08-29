@@ -70,6 +70,18 @@ class VersionNumberTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $number = VersionNumber::fromString('a');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $number = VersionNumber::fromString('1......89.2');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $number = VersionNumber::fromString('1..7.5.0');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $number = VersionNumber::fromString('17.18.19..20');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $number = VersionNumber::fromString('17.18..19.29');
     }
 
     public function testCompareSameVersions()

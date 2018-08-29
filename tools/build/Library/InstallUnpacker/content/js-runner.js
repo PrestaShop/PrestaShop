@@ -68,8 +68,7 @@ function extractFiles(startId) {
  * If no, resume standard install (zip extraction process)
  */
 function checkWhetherThereIsAMoreRecentVersion() {
-  var request = $.ajax({
-    method: "GET",
+  var request = $.get({
     url: $('#content-install-in-progress').data('checkVersionUrl'),
     timeout: 20000
   });
@@ -181,10 +180,10 @@ function computeIssuesList(issues) {
   var issuesList = '<ul>';
 
   $.each(issues, function (key, issue) {
-    issuesList = issuesList + '<li>' + issue + '</li>';
+    issuesList += '<li>' + issue + '</li>';
   });
 
-  var issuesList = issuesList + '</ul>';
+  issuesList += '</ul>';
 
   return issuesList;
 }

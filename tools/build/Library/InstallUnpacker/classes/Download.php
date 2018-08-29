@@ -78,10 +78,12 @@ class Download
 
         $stream_context = null;
         if (preg_match('/^https?:\/\//', $url)) {
-            $stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout, 'header' => "User-Agent:MyAgent/1.0\r\n")));
+            $stream_context = @stream_context_create([
+                'http' => ['timeout' => $curl_timeout, 'header' => "User-Agent:MyAgent/1.0\r\n"],
+            ]);
         }
 
-        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url)) {
+        if (in_array(ini_get('allow_url_fopen'), ['On', 'on', '1']) || !preg_match('/^https?:\/\//', $url)) {
             $var = @file_get_contents($url, false, $stream_context);
 
             if ($var) {
@@ -180,29 +182,32 @@ class Download
     {
         foreach ($feed->channel as $channel) {
             $channelName = (string) $channel['name'];
-            if ('stable' === $channelName) {
-                $maxStableVersion = null;
-                $maxStableBranch = null;
-                foreach ($channel->branch as $branch) {
-                    $versionNumberAsString = (string) $branch->num;
-                    $versionNumber = VersionNumber::fromString($versionNumberAsString);
 
-                    if (null === $maxStableVersion) {
-                        $maxStableVersion = $versionNumber;
-                        $maxStableBranch = $branch;
-                    } else {
-                        if (1 === $versionNumber->compare($maxStableVersion)) {
-                            $maxStableVersion = $versionNumber;
-                            $maxStableBranch = $branch;
-                        }
-                    }
-                }
-
-                return $maxStableBranch;
+            if ('stable' !== $channelName) {
+                continue;
             }
+
+            $maxStableVersion = null;
+            $maxStableBranch = null;
+            foreach ($channel->branch as $branch) {
+                $versionNumberAsString = (string) $branch->num;
+                $versionNumber = VersionNumber::fromString($versionNumberAsString);
+
+                if (null === $maxStableVersion) {
+                    $maxStableVersion = $versionNumber;
+                    $maxStableBranch = $branch;
+                } elseif (1 === $versionNumber->compare($maxStableVersion)) {
+                    $maxStableVersion = $versionNumber;
+                    $maxStableBranch = $branch;
+                }
+            }
+
+            return $maxStableBranch;
         }
 
-        throw new PrestashopCouldNotDownloadLatestVersionException('Could not find latest stable version from API releases xml feed');
+        throw new PrestashopCouldNotDownloadLatestVersionException(
+            'Could not find latest stable version from API releases xml feed'
+        );
     }
 
     /**

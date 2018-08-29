@@ -59,13 +59,13 @@ class VersionNumber
      */
     public static function fromString($versionNumberAsString)
     {
-        $regexp = '#^([\d\.]+)\.(\d+)\.(\d+)$#';
+        $regexp = '#^(\d+\.\d+|\d+)\.(\d+)\.(\d+)$#';
         $matches = [];
 
         $matchingResult = preg_match($regexp, $versionNumberAsString, $matches);
 
         if (1 !== $matchingResult) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Failed to parse version number %s',
                 $versionNumberAsString
             ));
