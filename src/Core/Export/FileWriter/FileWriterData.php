@@ -24,24 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
-
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-use SplFileInfo;
+namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
 
 /**
- * Interface SqlRequestExporterInterface defines contract for SqlRequest exporter
+ * Class FileWriterData stores data that should be written to export file
  */
-interface SqlRequestExporterInterface
+final class FileWriterData implements FileWriterDataInterface
 {
     /**
-     * Export SqlRequest query execution result to file
-     *
-     * @param SqlRequestId $sqlRequestId
-     * @param SqlRequestExecutionResult $sqlRequestExecutionResult
-     *
-     * @return SplFileInfo
+     * @var array
      */
-    public function exportToFile(SqlRequestId $sqlRequestId, SqlRequestExecutionResult $sqlRequestExecutionResult);
+    private $headers;
+
+    /**
+     * @var array
+     */
+    private $rows;
+
+    /**
+     * @param array $headers
+     * @param array $rows
+     */
+    public function __construct(array $headers, array $rows)
+    {
+        $this->headers = $headers;
+        $this->rows = $rows;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRows()
+    {
+        return $this->rows;
+    }
 }

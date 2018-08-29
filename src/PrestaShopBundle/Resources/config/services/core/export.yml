@@ -6,3 +6,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Export\ExportDirectory'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.export.file_writer.csv_file_writer:
+        class: 'PrestaShop\PrestaShop\Core\Export\FileWriter\CsvFileWriter'
+        arguments:
+            - '@prestashop.core.export.dir'

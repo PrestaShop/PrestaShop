@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
@@ -37,11 +38,13 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFields
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use PrestaShop\PrestaShop\Core\Export\Exception\ExportException;
+use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
-use PrestaShop\PrestaShop\Core\SqlManager\Exception\SqlManagerExportException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -380,13 +383,21 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     public function exportAction($sqlRequestId)
     {
+        $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request');
+
         try {
-            $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request');
-            $exportedFile = $requestSqlExporter->exportToFile($sqlRequestId);
+            $query = new GetSqlRequestExecutionResult($sqlRequestId);
+            /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+            $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
+
+            $exportedFile = $requestSqlExporter->exportToFile(
+                $query->getSqlRequestId(),
+                $sqlRequestExecutionResult
+            );
 
             /** @var SqlRequestSettings $sqlRequestSettings */
             $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettings());
-        } catch (SqlManagerExportException $e) {
+        } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleExportException($e));
 
             return $this->redirectToRoute('admin_sql_request');
@@ -520,32 +531,40 @@ class SqlRequestController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param SqlManagerExportException $e
+     * @param Exception $e
      *
      * @return string Error message
      */
-    protected function handleExportException(SqlManagerExportException $e)
+    protected function handleExportException(Exception $e)
     {
+        $type = get_class($e);
         $code = $e->getCode();
 
-        $errorsForException = [
-            SqlManagerExportException::SQL_REQUEST_ERROR =>
+        if ($type === FileWritingException::class) {
+            $applicationErrors = [
+                FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING =>
+                    $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
+            ];
+
+            if (isset($applicationErrors[$code])) {
+                return $applicationErrors[$code];
+            }
+        }
+
+        $domainErrors = [
+            SqlRequestNotFoundException::class =>
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-            SqlManagerExportException::SQL_REQUEST_EMPTY_RESULT =>
-                $this->trans('Sql query result has no data to export', 'Admin.Notifications.Error'),
-            SqlManagerExportException::FAILED_TO_CREATE_EXPORT_FILE =>
-                $this->trans('Failed to create export file', 'Admin.Notifications.Error'),
         ];
 
-        if (isset($errorsForException[$code])) {
-            return $errorsForException[$code];
+        if (isset($domainErrors[$type])) {
+            return $domainErrors[$type];
         }
 
         return $this->trans(
             'An unexpected error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
             [
-                '%type%' => get_class($e),
+                '%type%' => $type,
                 '%code%' => $code,
             ]
         );
