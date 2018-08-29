@@ -34,32 +34,32 @@ class DatabaseTableFields
     /**
      * @var array
      */
-    private $attributes;
+    private $fields;
 
     /**
-     * @param array $attributes
+     * @param array $fields
      */
-    public function __construct(array $attributes)
+    public function __construct(array $fields)
     {
-        $this->setAttributes($attributes);
+        $this->setFields($fields);
     }
 
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getFields()
     {
-        return $this->attributes;
+        return $this->fields;
     }
 
     /**
-     * @param array $attributes
+     * @param array $fields
      *
      * @return self
      */
-    private function setAttributes(array $attributes)
+    private function setFields(array $fields)
     {
-        $this->attributes = $attributes;
+        $this->fields = $fields;
 
         return $this;
     }
