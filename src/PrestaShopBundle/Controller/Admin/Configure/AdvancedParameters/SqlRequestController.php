@@ -412,7 +412,7 @@ class SqlRequestController extends FrameworkBundleAdminController
         /** @var DatabaseTableFields $attributes */
         $attributes = $this->getQueryBus()->handle($query);
 
-        return $this->json(['columns' => $attributes->getAttributes()]);
+        return $this->json(['columns' => $attributes->getFields()]);
     }
 
     /**
