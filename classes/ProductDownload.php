@@ -252,11 +252,11 @@ class ProductDownloadCore extends ObjectModel
      */
     public function getTextLink($admin = true, $hash = false)
     {
+        if ($admin) {
+            return 'get-file-admin.php?file=' . $this->filename;
+        }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
-        $link = ($admin) ? 'get-file-admin.php?' : _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=get-file&';
-        $link .= ($admin) ? 'file=' . $this->filename : 'key=' . $key;
-
-        return $link;
+        return  _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=get-file&key=' . $key;
     }
 
     /**
