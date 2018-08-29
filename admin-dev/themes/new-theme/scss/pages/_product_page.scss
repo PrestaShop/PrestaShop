@@ -287,8 +287,6 @@
 
   // Dropzone & Image manager
   #product-images-dropzone {
-    height: 340px;
-    min-height: 340px;
     border: none;
     padding: 5px;
     margin-bottom: 0;
@@ -612,6 +610,12 @@
       .material-icons {
         font-size: 1.25rem;
         vertical-align: middle;
+      }
+      #categories-tree-expand {
+        display: none;
+      }
+      #categories-tree-expand, #categories-tree-reduce {
+        cursor: pointer;
       }
     }
   }
@@ -1082,5 +1086,17 @@
     .custom-width {
       width: 33%;
     }
+  }
+}
+
+#description_short {
+  #form_step1_description_short_1_ifr {
+    height: 80px !important;
+  }
+}
+
+#description {
+  #form_step1_description_1_ifr {
+    height: 80px !important;
   }
 }
