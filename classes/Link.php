@@ -781,6 +781,7 @@ class LinkCore
                     'AdminModulesCatalog' => 'admin_module_catalog',
                     'AdminModulesManage' => 'admin_module_manage',
                     'AdminModulesNotifications' => 'admin_module_notification',
+                    'AdminModulesUpdates' => 'admin_module_updates',
                     'AdminModulesPositions' => 'admin_modules_positions',
                     'AdminModulesSf' => 'admin_module_manage',
                     'AdminOrderPreferences' => 'admin_order_preferences',
