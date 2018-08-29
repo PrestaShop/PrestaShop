@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+@trigger_error('Using '.__FILE__.' to do template rendering is deprecated. Use a controller instead.', E_USER_DEPRECATED);
 
 $con = new AdminController();
 $tab = new Tab((int)Tab::getIdFromClassName(Tools::getValue('controller')));
