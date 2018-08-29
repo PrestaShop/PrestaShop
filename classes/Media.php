@@ -202,7 +202,7 @@ class MediaCore
             $css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
             $css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
             $css_content = str_replace('\'images_ie/', '\'images/', $css_content);
-            $css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+            $css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Media', 'replaceByAbsoluteURL'), $css_content);
             // Store all import url
             preg_match_all('#@(import|charset) .*?;#i', $css_content, $m);
             for ($i = 0, $total = count($m[0]); $i < $total; $i++) {
