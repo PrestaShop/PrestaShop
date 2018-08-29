@@ -29,10 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetDatabaseTableFieldsListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
 use RequestSql;
 
 /**
- * Class GetDatabaseTableFieldsListFieldsListHandler
+ * Class GetDatabaseTableFieldsListHandler
  *
  * @internal
  */
@@ -44,15 +45,15 @@ final class GetDatabaseTableFieldsListHandler implements GetDatabaseTableFieldsL
     public function handle(GetDatabaseTableFieldsList $query)
     {
         $attributes = (new RequestSql())->getAttributesByTable($query->getTableName());
-        $attributesArray = [];
+        $fields = [];
 
         foreach ($attributes as $attribute) {
-            $attributesArray[] = [
-                'name' => $attribute['Field'],
-                'type' => $attribute['Type'],
-            ];
+            $fields[] = new DatabaseTableField(
+                $attribute['Field'],
+                $attribute['Type']
+            );
         }
 
-        return new DatabaseTableFields($attributesArray);
+        return new DatabaseTableFields($fields);
     }
 }

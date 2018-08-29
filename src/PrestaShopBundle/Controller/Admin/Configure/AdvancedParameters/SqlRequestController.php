@@ -409,10 +409,10 @@ class SqlRequestController extends FrameworkBundleAdminController
     public function ajaxTableColumnsAction($mySqlTableName)
     {
         $query = new GetDatabaseTableFieldsList($mySqlTableName);
-        /** @var DatabaseTableFields $attributes */
-        $attributes = $this->getQueryBus()->handle($query);
+        /** @var DatabaseTableFields $databaseFields */
+        $databaseFields = $this->getQueryBus()->handle($query);
 
-        return $this->json(['columns' => $attributes->getFields()]);
+        return $this->json(['columns' => $databaseFields->getFields()]);
     }
 
     /**
@@ -469,7 +469,14 @@ class SqlRequestController extends FrameworkBundleAdminController
             return $exceptionMessages[$exceptionType];
         }
 
-        return $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => $exceptionType,
+                '%code%' => $code,
+            ]
+        );
     }
 
     /**
@@ -492,7 +499,14 @@ class SqlRequestController extends FrameworkBundleAdminController
             return $exceptionMessages[$exceptionType];
         }
 
-        return $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error');
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => $exceptionType,
+                '%code%' => $e->getCode(),
+            ]
+        );
     }
 
     /**
@@ -517,7 +531,14 @@ class SqlRequestController extends FrameworkBundleAdminController
             return $errorsForException[$code];
         }
 
-        return $this->trans('Unknown error.', 'Admin.Notifications.Error');
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => get_class($e),
+                '%code%' => $code,
+            ]
+        );
     }
 
     /**
