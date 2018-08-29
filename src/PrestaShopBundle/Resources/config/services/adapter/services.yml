@@ -117,6 +117,7 @@ services:
             - "@prestashop.adapter.data_provider.pack"
             - "@prestashop.adapter.shop.context"
             - "@prestashop.adapter.data_provider.tax"
+            - "@router"
 
     prestashop.adapter.translation_route_finder:
         class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder
