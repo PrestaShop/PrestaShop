@@ -31,6 +31,6 @@ use RuntimeException;
 class SqlManagerExportException extends RuntimeException
 {
     const SQL_REQUEST_ERROR = 1;
-    const SQL_REQUEST_HAS_NO_DATA = 2;
+    const SQL_REQUEST_EMPTY_RESULT = 2;
     const FAILED_TO_CREATE_EXPORT_FILE = 4;
 }

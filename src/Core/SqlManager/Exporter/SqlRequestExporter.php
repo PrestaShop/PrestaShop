@@ -95,7 +95,7 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
         if (empty($sqlRequestExecutionResult->getRows())) {
             throw new SqlManagerExportException(
                 sprintf('SqlRequest with id "%s" did not return any data to export', $sqlRequestId),
-                SqlManagerExportException::SQL_REQUEST_HAS_NO_DATA
+                SqlManagerExportException::SQL_REQUEST_EMPTY_RESULT
             );
         }
 
@@ -107,7 +107,7 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
      *
      * @return SplFileObject
      */
-    private function createExportFile($sqlRequestId)
+    private function getExportFile($sqlRequestId)
     {
         $fileName = sprintf('request_sql_%s.csv', $sqlRequestId);
         $filePath = $this->exportDirectory.$fileName;
@@ -134,7 +134,7 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
         $sqlRequestId,
         SqlRequestExecutionResult $result
     ) {
-        $exportFile = $this->createExportFile($sqlRequestId);
+        $exportFile = $this->getExportFile($sqlRequestId);
         $exportFile->fputcsv($result->getColumns(), ';');
 
         foreach ($result->getRows() as $row) {

@@ -517,7 +517,7 @@ class SqlRequestController extends FrameworkBundleAdminController
         $errorsForException = [
             SqlManagerExportException::SQL_REQUEST_ERROR =>
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-            SqlManagerExportException::SQL_REQUEST_HAS_NO_DATA =>
+            SqlManagerExportException::SQL_REQUEST_EMPTY_RESULT =>
                 $this->trans('Sql query result has no data to export', 'Admin.Notifications.Error'),
             SqlManagerExportException::FAILED_TO_CREATE_EXPORT_FILE =>
                 $this->trans('Failed to create export file', 'Admin.Notifications.Error'),
