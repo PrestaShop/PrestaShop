@@ -35,7 +35,7 @@ use PrestaShopException;
 use RequestSql;
 
 /**
- * Class AddSqlRequestHandler handles RequestSql creation command
+ * Class AddSqlRequestHandler handles SqlRequest creation command
  *
  * @internal
  */
@@ -65,7 +65,7 @@ final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
             return new SqlRequestId($entity->id);
         } catch (PrestaShopException $e) {
             throw new SqlRequestException(
-                'Failed to create RequestSql',
+                'Failed to create SqlRequest',
                 0,
                 $e
             );

@@ -51,7 +51,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
     public function handle(GetSqlRequestExecutionResultQuery $query)
     {
         try {
-            $id = $query->getRequestSqlId()->getValue();
+            $id = $query->getSqlRequestId()->getValue();
             $entity = new RequestSql($id);
 
             if (0 >= $entity->id) {

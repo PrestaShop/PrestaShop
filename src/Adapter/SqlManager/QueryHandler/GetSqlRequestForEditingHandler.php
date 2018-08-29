@@ -51,7 +51,7 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
     {
         $entity = $this->loadById($query->getRequestSqlId());
 
-        return $this->buildEditableRequestSql($entity);
+        return $this->buildEditableSqlRequest($entity);
     }
 
     /**
@@ -67,14 +67,14 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
 
         if (0 >= $entity->id) {
             throw new SqlRequestNotFoundException(
-                sprintf('RequestSql with id "%s" cannot be found', $requestSqlId->getValue())
+                sprintf('SqlRequest with id "%s" cannot be found', $requestSqlId->getValue())
             );
         }
 
         if ((int) $entity->id !== $requestSqlId->getValue()) {
             throw new SqlRequestNotFoundException(
                 sprintf(
-                    'The retrieved id "%s" does not match requested RequestSql id "%s"',
+                    'The retrieved id "%s" does not match requested SqlRequest id "%s"',
                     $entity->id,
                     $requestSqlId->getValue()
                 )
@@ -91,7 +91,7 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
      *
      * @throws SqlRequestException
      */
-    private function buildEditableRequestSql(RequestSql $entity)
+    private function buildEditableSqlRequest(RequestSql $entity)
     {
         return new EditableSqlRequest(
             new SqlRequestId($entity->id),

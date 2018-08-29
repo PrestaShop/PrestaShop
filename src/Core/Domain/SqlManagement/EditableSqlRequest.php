@@ -114,7 +114,7 @@ class EditableSqlRequest
     private function setName($name)
     {
         if (empty($name)) {
-            throw new SqlRequestException('RequestSql name cannot be empty');
+            throw new SqlRequestException('SqlRequest name cannot be empty');
         }
 
         $this->name = $name;
@@ -132,7 +132,7 @@ class EditableSqlRequest
     private function setSql($sql)
     {
         if (empty($sql)) {
-            throw new SqlRequestException('RequestSql SQL cannot be empty');
+            throw new SqlRequestException('SqlRequest SQL cannot be empty');
         }
 
         $this->sql = $sql;

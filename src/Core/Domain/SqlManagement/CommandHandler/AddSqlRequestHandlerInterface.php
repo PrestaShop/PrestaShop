@@ -36,7 +36,7 @@ interface AddSqlRequestHandlerInterface
     /**
      * @param AddSqlRequestCommand $command
      *
-     * @return int Created RequestSql id
+     * @return int Created SqlRequest id
      */
     public function handle(AddSqlRequestCommand $command);
 }
