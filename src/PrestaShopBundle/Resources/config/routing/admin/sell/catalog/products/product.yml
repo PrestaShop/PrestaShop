@@ -33,6 +33,14 @@ admin_product_virtual_remove_file_action:
     requirements:
         idProduct: \d+
 
+admin_product_virtual_download_file_action:
+    path:     /virtual/download-file/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle:Admin/VirtualProduct:downloadFile
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
 admin_product_virtual_remove_action:
     path:     /virtual/remove/{idProduct}
     defaults:
