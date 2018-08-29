@@ -24,24 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
+namespace PrestaShop\PrestaShop\Core\Export\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-use SplFileInfo;
-
-/**
- * Interface SqlRequestExporterInterface defines contract for SqlRequest exporter
- */
-interface SqlRequestExporterInterface
+class FileWritingException extends ExportException
 {
-    /**
-     * Export SqlRequest query execution result to file
-     *
-     * @param SqlRequestId $sqlRequestId
-     * @param SqlRequestExecutionResult $sqlRequestExecutionResult
-     *
-     * @return SplFileInfo
-     */
-    public function exportToFile(SqlRequestId $sqlRequestId, SqlRequestExecutionResult $sqlRequestExecutionResult);
+    const CANNOT_OPEN_FILE_FOR_WRITING = 10;
 }

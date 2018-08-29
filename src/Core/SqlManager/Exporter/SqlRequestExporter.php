@@ -26,121 +26,46 @@
 
 namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
-use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
-use PrestaShop\PrestaShop\Core\SqlManager\Exception\SqlManagerExportException;
-use SplFileObject;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterConfiguration;
+use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterData;
+use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterInterface;
 
 /**
- * Class SqlRequestExporter is responsible for exporting SqlRequest
+ * Class SqlRequestExporter exports SqlRequest query execution result into CSV file
  */
 final class SqlRequestExporter implements SqlRequestExporterInterface
 {
     /**
-     * @var ExportDirectory
+     * @var FileWriterInterface
      */
-    private $exportDirectory;
+    private $csvFileWriter;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
-     * @param ExportDirectory $exportDirectory
-     * @param CommandBusInterface $queryBus
+     * @param FileWriterInterface $csvFileWriter
      */
     public function __construct(
-        ExportDirectory $exportDirectory,
-        CommandBusInterface $queryBus
+        FileWriterInterface $csvFileWriter
     ) {
-        $this->exportDirectory = $exportDirectory;
-        $this->queryBus = $queryBus;
+        $this->csvFileWriter = $csvFileWriter;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function exportToFile($sqlRequestId)
+    public function exportToFile(SqlRequestId $sqlRequestId, SqlRequestExecutionResult $result)
     {
-        $sqlRequestExecutionResult = $this->getSqlRequestExecutionResult($sqlRequestId);
-        $exportFile = $this->exportSqlRequestExecutionResult($sqlRequestId, $sqlRequestExecutionResult);
+        $data = new FileWriterData(
+            $result->getColumns(),
+            $result->getRows()
+        );
 
-        return $exportFile;
-    }
+        $config = new FileWriterConfiguration(
+            sprintf('request_sql_%s.csv', $sqlRequestId->getValue()),
+            ';'
+        );
 
-    /**
-     * @param int $sqlRequestId
-     *
-     * @return SqlRequestExecutionResult
-     */
-    private function getSqlRequestExecutionResult($sqlRequestId)
-    {
-        try {
-            $query = new GetSqlRequestExecutionResult($sqlRequestId);
-
-            /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
-            $sqlRequestExecutionResult = $this->queryBus->handle($query);
-        } catch (SqlRequestException $e) {
-            throw new SqlManagerExportException(
-                'Cannot retrieve SqlRequest data',
-                SqlManagerExportException::SQL_REQUEST_ERROR
-            );
-        }
-
-        if (empty($sqlRequestExecutionResult->getRows())) {
-            throw new SqlManagerExportException(
-                sprintf('SqlRequest with id "%s" did not return any data to export', $sqlRequestId),
-                SqlManagerExportException::SQL_REQUEST_EMPTY_RESULT
-            );
-        }
-
-        return $sqlRequestExecutionResult;
-    }
-
-    /**
-     * @param int $sqlRequestId
-     *
-     * @return SplFileObject
-     */
-    private function getExportFile($sqlRequestId)
-    {
-        $fileName = sprintf('request_sql_%s.csv', $sqlRequestId);
-        $filePath = $this->exportDirectory.$fileName;
-
-        try {
-            $exportFile = new SplFileObject($filePath, 'w');
-        } catch (Exception $e) {
-            throw new SqlManagerExportException(
-                sprintf('Failed to create "%s" export file', $filePath),
-                SqlManagerExportException::FAILED_TO_CREATE_EXPORT_FILE
-            );
-        }
-
-        return $exportFile;
-    }
-
-    /**
-     * @param int $sqlRequestId
-     * @param SqlRequestExecutionResult $result
-     *
-     * @return SplFileObject
-     */
-    private function exportSqlRequestExecutionResult(
-        $sqlRequestId,
-        SqlRequestExecutionResult $result
-    ) {
-        $exportFile = $this->getExportFile($sqlRequestId);
-        $exportFile->fputcsv($result->getColumns(), ';');
-
-        foreach ($result->getRows() as $row) {
-            $exportFile->fputcsv($row, ';');
-        }
-
-        return $exportFile;
+        return $this->csvFileWriter->write($data, $config);
     }
 }

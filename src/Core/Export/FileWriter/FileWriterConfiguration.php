@@ -24,13 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\SqlManager\Exception;
+namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
 
-use RuntimeException;
-
-class SqlManagerExportException extends RuntimeException
+/**
+ * Class FileWriterConfiguration stores configuration for export file writer
+ */
+final class FileWriterConfiguration implements FileWriterConfigurationInterface
 {
-    const SQL_REQUEST_ERROR = 1;
-    const SQL_REQUEST_EMPTY_RESULT = 2;
-    const FAILED_TO_CREATE_EXPORT_FILE = 4;
+    /**
+     * @var string
+     */
+    private $fileName;
+
+    /**
+     * @var string
+     */
+    private $delimiter;
+
+    /**
+     * @param string $fileName
+     * @param string $delimiter
+     */
+    public function __construct($fileName, $delimiter)
+    {
+        $this->fileName = $fileName;
+        $this->delimiter = $delimiter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDelimiter()
+    {
+        return $this->delimiter;
+    }
 }

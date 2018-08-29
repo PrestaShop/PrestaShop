@@ -24,24 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
+namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use SplFileInfo;
 
 /**
- * Interface SqlRequestExporterInterface defines contract for SqlRequest exporter
+ * Interface FileWriterInterface
  */
-interface SqlRequestExporterInterface
+interface FileWriterInterface
 {
     /**
-     * Export SqlRequest query execution result to file
+     * Write data to file
      *
-     * @param SqlRequestId $sqlRequestId
-     * @param SqlRequestExecutionResult $sqlRequestExecutionResult
+     * @param FileWriterDataInterface $data
+     * @param FileWriterConfigurationInterface $config
      *
      * @return SplFileInfo
      */
-    public function exportToFile(SqlRequestId $sqlRequestId, SqlRequestExecutionResult $sqlRequestExecutionResult);
+    public function write(FileWriterDataInterface $data, FileWriterConfigurationInterface $config);
 }
