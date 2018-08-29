@@ -81,7 +81,8 @@ class SupplierController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax')
+            $this->get('prestashop.adapter.data_provider.tax'),
+            $this->get('router')
         );
         $allFormData = $modelMapper->getFormData($product);
 
