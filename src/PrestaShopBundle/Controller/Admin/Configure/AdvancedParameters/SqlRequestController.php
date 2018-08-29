@@ -292,7 +292,7 @@ class SqlRequestController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleException($e));
+            $this->addFlash('error', $this->handleDeleteException($e));
         }
 
         return $this->redirectToRoute('admin_sql_request');
@@ -324,7 +324,7 @@ class SqlRequestController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleException($e));
+            $this->addFlash('error', $this->handleDeleteException($e));
         }
 
         return $this->redirectToRoute('admin_sql_request');
@@ -350,7 +350,7 @@ class SqlRequestController extends FrameworkBundleAdminController
 
             $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleException($e));
+            $this->addFlash('error', $this->handleViewException($e));
 
             return $this->redirectToRoute('admin_sql_request');
         }
@@ -450,7 +450,7 @@ class SqlRequestController extends FrameworkBundleAdminController
      *
      * @return string Error message
      */
-    protected function handleException(SqlRequestException $e)
+    protected function handleDeleteException(SqlRequestException $e)
     {
         $code = $e->getCode();
         $exceptionType = get_class($e);
@@ -474,6 +474,29 @@ class SqlRequestController extends FrameworkBundleAdminController
         ) {
             return $deleteExceptionMessages[$code];
         }
+
+        if (isset($exceptionMessages[$exceptionType])) {
+            return $exceptionMessages[$exceptionType];
+        }
+
+        return $this->trans('An unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * Get error message when exception occurs on View action
+     *
+     * @param SqlRequestException $e
+     *
+     * @return string
+     */
+    protected function handleViewException(SqlRequestException $e)
+    {
+        $exceptionType = get_class($e);
+
+        $exceptionMessages = [
+            SqlRequestNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
 
         if (isset($exceptionMessages[$exceptionType])) {
             return $exceptionMessages[$exceptionType];
