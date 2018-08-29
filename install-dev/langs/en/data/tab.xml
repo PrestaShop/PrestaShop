@@ -6,6 +6,7 @@
     <tab id="DEFAULT" name="More" />
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
+    <tab id="Module_Catalog" name="Module Catalog" />
     <tab id="Module_Page" name="Module Manager" />
     <tab id="Module_Page_Catalog" name="Module Catalog" />
     <tab id="Module_Page_Manage" name="Modules" />
@@ -128,5 +129,5 @@
     <tab id="Warehouses" name="Warehouses" />
     <tab id="Webservice" name="Webservice" />
     <tab id="Zones" name="Zones" />
-    <tab id="Marketing_tools" name="Modules Catalog" />
+    <tab id="Marketing_tools" name="Modules Selections" />
 </entity_tab>
