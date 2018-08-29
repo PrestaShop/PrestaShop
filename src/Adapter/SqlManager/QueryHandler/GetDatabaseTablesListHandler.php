@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetDatabaseTablesListHandlerInterface;
 use RequestSql;
 
@@ -41,7 +41,7 @@ final class GetDatabaseTablesListHandler implements GetDatabaseTablesListHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(GetDatabaseTablesListQuery $query)
+    public function handle(GetDatabaseTablesList $query)
     {
         $dbTables = (new RequestSql())->getTables();
 

@@ -20,4 +20,4 @@ services:
             - '@prestashop.adapter.legacy.configuration'
         tags:
             - name: 'tactician.handler'
-              command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery'
+              command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings'

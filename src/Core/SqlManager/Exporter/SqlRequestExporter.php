@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
 use Exception;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
 use PrestaShop\PrestaShop\Core\SqlManager\Exception\SqlManagerExportException;
@@ -81,7 +81,7 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
     private function getSqlRequestExecutionResult($sqlRequestId)
     {
         try {
-            $query = new GetSqlRequestExecutionResultQuery($sqlRequestId);
+            $query = new GetSqlRequestExecutionResult($sqlRequestId);
 
             /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
             $sqlRequestExecutionResult = $this->queryBus->handle($query);

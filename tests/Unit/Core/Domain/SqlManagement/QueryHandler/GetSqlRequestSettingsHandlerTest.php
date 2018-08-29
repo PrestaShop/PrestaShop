@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Domain\SqlManagement\QueryHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler\GetSqlRequestSettingsHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
@@ -46,7 +46,7 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
             ->willReturn($configuredValue);
 
         $getSqlRequestSettingsHandler = new GetSqlRequestSettingsHandler($configuration);
-        $sqlRequestSettings = $getSqlRequestSettingsHandler->handle(new GetSqlRequestSettingsQuery());
+        $sqlRequestSettings = $getSqlRequestSettingsHandler->handle(new GetSqlRequestSettings());
 
         $this->assertInstanceOf(SqlRequestSettings::class, $sqlRequestSettings);
         $this->assertEquals($expectedValue, $sqlRequestSettings->getFileEncoding());

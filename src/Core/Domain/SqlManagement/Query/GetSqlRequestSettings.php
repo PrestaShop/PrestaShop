@@ -26,34 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-
 /**
- * Class GetSqlRequestForEditingQuery gets SqlRequest data that can be edited
+ * Class GetSqlRequestSettingsQuery gets SqlRequest settings
  */
-class GetSqlRequestForEditingQuery
+class GetSqlRequestSettings
 {
-    /**
-     * @var SqlRequestId
-     */
-    private $requestSqlId;
-
-    /**
-     * @param $requestSqlId
-     *
-     * @throws SqlRequestException
-     */
-    public function __construct($requestSqlId)
-    {
-        $this->requestSqlId = new SqlRequestId($requestSqlId);
-    }
-
-    /**
-     * @return SqlRequestId
-     */
-    public function getRequestSqlId()
-    {
-        return $this->requestSqlId;
-    }
 }

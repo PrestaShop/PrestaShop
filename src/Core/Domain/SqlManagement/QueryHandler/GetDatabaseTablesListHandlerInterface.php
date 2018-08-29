@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList;
 
 /**
  * Interface GetDatabaseTablesListHandlerInterface
@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQ
 interface GetDatabaseTablesListHandlerInterface
 {
     /**
-     * @param GetDatabaseTablesListQuery $query
+     * @param GetDatabaseTablesList $query
      *
      * @return DatabaseTablesList
      */
-    public function handle(GetDatabaseTablesListQuery $query);
+    public function handle(GetDatabaseTablesList $query);
 }

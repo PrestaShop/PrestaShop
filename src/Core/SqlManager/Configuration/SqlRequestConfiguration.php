@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestSettingsConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 
 /**
@@ -66,7 +66,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         /** @var SqlRequestSettings $sqlRequestSettings */
-        $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettingsQuery());
+        $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettings());
 
         return [
             'default_file_encoding' => $sqlRequestSettings->getFileEncoding(),

@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsListQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettingsQuery;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -346,7 +346,7 @@ class SqlRequestController extends FrameworkBundleAdminController
     public function viewAction(Request $request, $sqlRequestId)
     {
         try {
-            $query = new GetSqlRequestExecutionResultQuery($sqlRequestId);
+            $query = new GetSqlRequestExecutionResult($sqlRequestId);
 
             $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
         } catch (SqlRequestException $e) {
@@ -385,7 +385,7 @@ class SqlRequestController extends FrameworkBundleAdminController
             $exportedFile = $requestSqlExporter->exportToFile($sqlRequestId);
 
             /** @var SqlRequestSettings $sqlRequestSettings */
-            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettingsQuery());
+            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettings());
         } catch (SqlManagerExportException $e) {
             $this->addFlash('error', $this->handleExportException($e));
 
@@ -408,7 +408,7 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     public function ajaxTableColumnsAction($mySqlTableName)
     {
-        $query = new GetDatabaseTableFieldsListQuery($mySqlTableName);
+        $query = new GetDatabaseTableFieldsList($mySqlTableName);
         /** @var DatabaseTableFields $attributes */
         $attributes = $this->getQueryBus()->handle($query);
 
@@ -536,7 +536,7 @@ class SqlRequestController extends FrameworkBundleAdminController
     protected function getDatabaseTables()
     {
         /** @var DatabaseTablesList $databaseTablesList */
-        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesListQuery());
+        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesList());
 
         return $databaseTablesList->getTables();
     }

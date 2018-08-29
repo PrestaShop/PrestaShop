@@ -39,21 +39,21 @@ services:
     prestashop.adapter.sql_manager.query_handler.get_request_sql_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestForEditingHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditingQuery' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing' }
 
     prestashop.adapter.sql_manager.query_handler.get_request_sql_execution_result:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetSqlRequestExecutionResultHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResultQuery' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult' }
 
     prestashop.adapter.sql_manager.query_handler.get_database_tables_list:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetDatabaseTablesListHandler'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesListQuery' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList' }
 
-    prestashop.adapter.sql_manager.query_handler.get_database_table_attributes_list:
-        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetAttributesForDatabaseTableHandler'
+    prestashop.adapter.sql_manager.query_handler.get_database_table_fields_list:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\QueryHandler\GetDatabaseTableFieldsListHandler'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetAttributesForDatabaseTableQuery' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList' }
