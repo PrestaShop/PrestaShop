@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\SqlManager\Configuration;
+namespace PrestaShop\PrestaShop\Core\SqlRequest\Configuration;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
