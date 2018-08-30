@@ -34,7 +34,7 @@ use SplFileObject;
 /**
  * Class CsvFileWriter writes provided data into CSV file and saves it in export directory
  */
-final class CsvFileWriter implements FileWriterInterface
+final class ExportCsvFileWriter implements FileWriterInterface
 {
     /**
      * @var ExportDirectory
