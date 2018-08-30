@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
@@ -53,7 +54,7 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandl
      */
     public function handle(SaveSqlRequestSettingsCommand $command)
     {
-        $this->configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $this->getEncodingFileValue($command));
+        $this->configuration->set(SqlRequestSettings::FILE_ENCODING, $this->getEncodingFileValue($command));
     }
 
     /**
