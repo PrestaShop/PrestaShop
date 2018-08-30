@@ -56,7 +56,7 @@ class WebserviceController extends FrameworkBundleAdminController
     {
         $form = $this->getFormHandler()->getForm();
         $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
-        $grid = $gridWebserviceFactory->createUsingSearchCriteria($filters);
+        $grid = $gridWebserviceFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
