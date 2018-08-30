@@ -36,3 +36,15 @@ admin_webservice_status_toggle:
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleStatus'
+
+admin_webservice_bulk_enable:
+    path: /status/bulk/enable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:enableMultipleStatus'
+
+admin_webservice_bulk_disable:
+  path: /status/bulk/disable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:disableMultipleStatus'

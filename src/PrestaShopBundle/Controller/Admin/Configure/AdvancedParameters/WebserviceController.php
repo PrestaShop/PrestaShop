@@ -157,6 +157,26 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_webservice');
     }
 
+    public function enableMultipleStatusAction(Request $request)
+    {
+        $webserviceToEnable = $request->request->get('webservice_bulk_action');
+        $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
+
+        $statusModifier->toggleMultipleStatus($webserviceToEnable, 1);
+
+        return $this->redirectToRoute('admin_webservice');
+    }
+
+    public function disableMultipleStatusAction(Request $request)
+    {
+        $webserviceToEnable = $request->request->get('webservice_bulk_action');
+        $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
+
+        $statusModifier->toggleMultipleStatus($webserviceToEnable, 0);
+
+        return $this->redirectToRoute('admin_webservice');
+    }
+
     /**
      * todo: check access
      * @param int $idWebserviceAccount

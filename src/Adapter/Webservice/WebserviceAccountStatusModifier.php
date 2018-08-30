@@ -76,10 +76,32 @@ final class WebserviceAccountStatusModifier
         if (!$webserviceKey->toggleStatus()) {
             $error = $this->translator
                 ->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
-
             return [$error];
         }
 
         return [];
+    }
+
+    /**
+     * Updates status for multiple fields
+     *
+     * @param array $columnIds
+     * @param int $status
+     *
+     * @return bool
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function toggleMultipleStatus(array $columnIds, $status)
+    {
+        $result = true;
+        foreach ($columnIds as $columnId) {
+            $webserviceKey = new WebserviceKey($columnId);
+            $webserviceKey->active = $status;
+            $result &= $webserviceKey->update();
+        }
+
+        return $result;
     }
 }

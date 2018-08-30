@@ -217,13 +217,24 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('webservice_enable_selection'))
+                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_webservice_bulk_enable'
+                ])
+            )
+            ->add((new SubmitBulkAction('webservice_disable_selection'))
+                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_webservice_bulk_disable'
+                ])
+            )
             ->add((new SubmitBulkAction('delete_webservice'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_delete_multiple_webservice_log',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            )
-            ;
+            );
     }
 }
