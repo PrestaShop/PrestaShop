@@ -106,6 +106,15 @@
               </th>
             {% endfor %}
           </thead>
+          <tbody>
+            {% for row in dataRowCollection.rows %}
+              <tr>
+                {% for cell in row %}
+                  <td>{{ cell.value }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
         </table>
       </div>
       {{ form_rest(dataConfigurationForm) }}

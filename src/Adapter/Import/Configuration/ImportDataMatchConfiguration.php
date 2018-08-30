@@ -6,6 +6,9 @@ namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
 use Db;
 use DbQuery;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -24,13 +27,44 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     private $entityFieldChoices;
 
     /**
+     * @var string path to the import file
+     */
+    private $importFilePath;
+
+    /**
+     * @var DataRowCollectionFactoryInterface
+     */
+    private $dataRowCollectionFactory;
+
+    /**
+     * @var ImportDirectory
+     */
+    private $importDirectory;
+
+    /**
+     * @var string file name of the imported file
+     */
+    private $importFilename;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $entityFieldChoices
+     * @param ImportDirectory $importDirectory
+     * @param string $importFilename
+     * @param DataRowCollectionFactoryInterface $dataRowCollectionFactory
      */
-    public function __construct(TranslatorInterface $translator, array $entityFieldChoices)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $entityFieldChoices,
+        ImportDirectory $importDirectory,
+        $importFilename,
+        DataRowCollectionFactoryInterface $dataRowCollectionFactory
+    ) {
         $this->translator = $translator;
         $this->entityFieldChoices = $entityFieldChoices;
+        $this->dataRowCollectionFactory = $dataRowCollectionFactory;
+        $this->importDirectory = $importDirectory;
+        $this->importFilename = $importFilename;
     }
 
     /**
@@ -38,12 +72,30 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $importFile = new SplFileInfo($this->importDirectory.$this->importFilename);
+        $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
+        $rowSize = 0;
+
+        foreach ($dataRowCollection as $dataRow) {
+            // Getting the number of cells in a row
+            $rowSize = count($dataRow);
+            break;
+        }
+
         $configuration = [
             'type_value' => [],
         ];
 
+        $numberOfValuesAdded = 0;
+
         foreach ($this->entityFieldChoices as $choice) {
+            // If we already added the required number of values - stop adding them
+            if ($numberOfValuesAdded >= $rowSize) {
+                break;
+            }
+
             $configuration['type_value'][] = $choice;
+            $numberOfValuesAdded++;
         }
 
         return $configuration;

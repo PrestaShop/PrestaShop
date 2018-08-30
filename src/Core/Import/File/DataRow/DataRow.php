@@ -24,15 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File\Row;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
-use PrestaShop\PrestaShop\Core\Import\File\Cell\DataCell;
-use PrestaShop\PrestaShop\Core\Import\File\Cell\DataCellInterface;
+use ArrayIterator;
+use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCell;
+use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
 
 /**
  * Class DataRow defines a basic data row of imported file
  */
-class DataRow implements DataRowInterface
+final class DataRow implements DataRowInterface
 {
     /**
      * @var array of DataCellInterface objects
@@ -93,5 +94,21 @@ class DataRow implements DataRowInterface
     public function offsetUnset($offset)
     {
         unset($this->cells[$offset]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->cells);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->cells);
     }
 }
