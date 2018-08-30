@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve;
+namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
