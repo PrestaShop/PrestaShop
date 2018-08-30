@@ -35,9 +35,8 @@ use Twig_SimpleFunction as SimpleFunction;
 /**
  * Class GridExtension is responsible for providing twig functions:
  *
- * 1. column_content(record, column, grid) - renders column content based on column type
- * 2. column_header(column, grid) - renders column header based on column type
- * 3. column_filter(column, grid) - renders column filter based on column type
+ * column_content(column, record, grid) - renders column content based on column type
+ * column_header(column, grid) - renders column header based on column type
  */
 class GridExtension extends AbstractExtension
 {
