@@ -81,7 +81,7 @@ final class GridPresenter implements GridPresenterInterface
         ];
 
         $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
-            'presentedGrid' => $presentedGrid,
+            'presented_grid' => $presentedGrid,
             'grid' => $grid,
         ]);
 
