@@ -247,6 +247,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchConfiguration'
         arguments:
             - '@translator'
+            - '@=service("prestashop.core.form.import.choice_provider_finder").getChoices()'
 
     prestashop.adapter.import.import_data_match.provider:
         class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchProvider'

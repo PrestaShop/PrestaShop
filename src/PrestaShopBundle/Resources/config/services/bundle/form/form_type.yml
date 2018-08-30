@@ -590,6 +590,8 @@ services:
 
     form.type.import.import_data_configuration:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
             - '@=service("prestashop.core.form.import.choice_provider_finder").getChoices()'

@@ -96,9 +96,20 @@
           <small class="form-text">{{ 'Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'|trans }}</small>
         </div>
       </div>
+      <div class="row">
+        <table class="table table-bordered">
+          <thead>
+            {% for importEntityField in dataConfigurationForm.type_value %}
+              <th>
+                {{ form_errors(importEntityField) }}
+                {{ form_widget(importEntityField) }}
+              </th>
+            {% endfor %}
+          </thead>
+        </table>
+      </div>
+      {{ form_rest(dataConfigurationForm) }}
     </div>
   </div>
 </div>
-{{ form_rest(dataConfigurationForm) }}
 {{ form_end(dataConfigurationForm) }}
-
