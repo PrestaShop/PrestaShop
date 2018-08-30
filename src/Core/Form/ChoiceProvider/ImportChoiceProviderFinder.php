@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 /**
  * Class ImportChoiceProviderFinder finds the responsible import choice provider
  */
-class ImportChoiceProviderFinder
+final class ImportChoiceProviderFinder implements FormChoiceProviderInterface
 {
     /**
      * @var int the numeric representation of import entity (0-8)
@@ -55,11 +55,19 @@ class ImportChoiceProviderFinder
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        return $this->findChoiceProvider()->getChoices();
+    }
+
+    /**
      * Finds the choice provider for the import entity
      *
      * @return FormChoiceProviderInterface
      */
-    public function find()
+    private function findChoiceProvider()
     {
         if (!isset($this->importChoiceProviders[$this->importEntity])) {
             throw new InvalidArgumentException("Choice provider does not exist for entity $this->importEntity.");
