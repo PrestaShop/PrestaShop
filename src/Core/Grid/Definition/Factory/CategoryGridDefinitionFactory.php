@@ -106,7 +106,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'position',
                     'id_field' => 'id_category',
                     'id_parent_field' => 'id_parent',
-                    'position_update_route' => 'admin_category_update_positions',
+                    'position_update_route' => 'AdminCategories',
                 ])
             )
             ->add((new DataColumn('active'))
