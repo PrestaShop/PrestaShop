@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 use ArrayIterator;
 
 /**
- * Class DataRowCollection defines a collection of data rows
+ * Class DataRowCollection defines a collection of data rows.
  */
 final class DataRowCollection implements DataRowCollectionInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldInterface;
 
 /**
- * Class ImportEntityFieldChoiceProvider is responsible for providing entity import field choices
+ * Class ImportEntityFieldChoiceProvider is responsible for providing entity import field choices.
  */
 final class ImportEntityFieldChoiceProvider implements FormChoiceProviderInterface
 {

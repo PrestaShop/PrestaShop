@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
 
 use Db;
@@ -12,7 +11,7 @@ use SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ImportDataMatchConfiguration is responsible for saving and loading configuration of import step 2
+ * Class ImportDataMatchConfiguration is responsible for saving and loading configuration of import step 2.
  */
 class ImportDataMatchConfiguration implements DataConfigurationInterface
 {
@@ -72,7 +71,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        $importFile = new SplFileInfo($this->importDirectory.$this->importFilename);
+        $importFile = new SplFileInfo($this->importDirectory . $this->importFilename);
         $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
         $rowSize = 0;
 
@@ -95,7 +94,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
             }
 
             $configuration['type_value'][] = $choice;
-            $numberOfValuesAdded++;
+            ++$numberOfValuesAdded;
         }
 
         return $configuration;
@@ -141,7 +140,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Saves the import configuration match data
+     * Saves the import configuration match data.
      *
      * @param array $configuration
      *
@@ -154,7 +153,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
             [
                 'name' => pSQL($configuration['match_name']),
                 'match' => '', //todo : pSQL($configuration['match']),
-                'skip' => (int) $configuration['rows_skip']
+                'skip' => (int) $configuration['rows_skip'],
             ],
             false,
             true,
@@ -163,7 +162,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Checks if the configuration is already saved with the same name
+     * Checks if the configuration is already saved with the same name.
      *
      * @param string $matchName
      *
@@ -174,7 +173,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
         $query = new DbQuery();
         $query->select('`id_import_match`');
         $query->from('import_match');
-        $query->where('`name`="'.pSQL($matchName).'"');
+        $query->where('`name`="' . pSQL($matchName) . '"');
         $result = Db::getInstance()->getValue($query);
 
         return $result ? true : false;
