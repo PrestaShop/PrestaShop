@@ -28,9 +28,15 @@ import tableDnD from "tablednd/dist/jquery.tablednd.min";
 const $ = window.$;
 
 /**
- * Class CategoryPositionExtension extends reordering positions
+ * Class CategoryPositionExtension extends Grid with reorderable category positions
  */
 export default class CategoryPositionExtension {
+
+  constructor() {
+    return {
+      extend: (grid) => this.extend(grid),
+    }
+  }
 
   /**
    * Extend grid
@@ -38,50 +44,59 @@ export default class CategoryPositionExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    this._addIdsToGridTableRows(grid);
+    this.grid = grid;
+
+    this._addIdsToGridTableRows();
 
     grid.getContainer().find('.js-grid-table').tableDnD({
       dragHandle: '.js-drag-handle',
       onDragStart: () => {
         this.originalPositions = decodeURIComponent($.tableDnD.serialize());
       },
-      onDrop: (table, trElement) => {
-        const positions = decodeURIComponent($.tableDnD.serialize());
-        const way = (this.originalPositions.indexOf(trElement.id) < positions.indexOf(trElement.id)) ? 1 : 0;
-
-        const $categoryPositionContainer = $(trElement).find('.js-category-position:first');
-
-        const categoryId = $categoryPositionContainer.data('id-category');
-        const categoryParentId = $categoryPositionContainer.data('id-parent-category');
-        const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
-
-        let params = positions.replace(new RegExp(grid.getId() + '_grid_table', 'g'), 'category');
-        params +=  '&id_category_parent=' + categoryParentId + '&id_category_to_move=' + categoryId;
-        params += '&way=' + way + '&ajax=1&action=updatePositions';
-
-        if (positions.indexOf('_0&') !== -1) {
-          params += '&found_first=1';
-        }
-
-        this._updateCategoryPosition(positionUpdateUrl, params);
-      },
+      onDrop: (table, row) => this._handleCategoryPositionChange(row),
     });
+  }
+
+  /**
+   * When position is changed handle update
+   *
+   * @param {HTMLElement} row
+   *
+   * @private
+   */
+  _handleCategoryPositionChange(row) {
+    const positions = decodeURIComponent($.tableDnD.serialize());
+    const way = (this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)) ? 1 : 0;
+
+    const $categoryPositionContainer = $(row).find('.js-category-position:first');
+
+    const categoryId = $categoryPositionContainer.data('id-category');
+    const categoryParentId = $categoryPositionContainer.data('id-parent-category');
+    const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
+
+    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'category');
+    params +=  '&id_category_parent=' + categoryParentId + '&id_category_to_move=' + categoryId;
+    params += '&way=' + way + '&ajax=1&action=updatePositions';
+
+    if (positions.indexOf('_0&') !== -1) {
+      params += '&found_first=1';
+    }
+
+    this._updateCategoryPosition(positionUpdateUrl, params);
   }
 
   /**
    * Add ID's to Grid table rows to make tableDnD.onDrop() function work.
    *
-   * @param {Grid} grid
-   *
    * @private
    */
-  _addIdsToGridTableRows(grid) {
-    grid.getContainer().find('.js-grid-table').find('.js-category-position').each((index, positionWrapper) => {
+  _addIdsToGridTableRows() {
+    this.grid.getContainer().find('.js-grid-table').find('.js-category-position').each((index, positionWrapper) => {
       const $positionWrapper = $(positionWrapper);
 
       const categoryId = $positionWrapper.data('id-category');
       const categoryParentId = $positionWrapper.data('id-parent-category');
-      const position = $positionWrapper.find('.js-position').text().trim();
+      const position = $positionWrapper.data('position');
 
       const id = 'tr_' + categoryParentId + '_' + categoryId + '_' + position;
 
@@ -89,6 +104,35 @@ export default class CategoryPositionExtension {
     });
   }
 
+  /**
+   * Update categories listing with new positions
+   *
+   * @private
+   */
+  _updateCategoryIdsAndPositions() {
+    this.grid.getContainer().find('.js-grid-table').find('.js-category-position').each((index, positionWrapper) => {
+      const $positionWrapper = $(positionWrapper);
+      const $row = $positionWrapper.closest('tr');
+
+      const offset = $positionWrapper.data('pagination-offset');
+      const newPosition = offset > 0 ? index + offset : index;
+
+      const oldId = $row.attr('id');
+      $row.attr('id', oldId.replace(/_[0-9]$/g, '_' + newPosition));
+
+      $positionWrapper.find('.js-position').text(newPosition + 1);
+      $positionWrapper.data('position', newPosition);
+    });
+  }
+
+  /**
+   * Process categories positions update
+   *
+   * @param {String} url
+   * @param {String} params
+   *
+   * @private
+   */
   _updateCategoryPosition(url, params) {
     $.post({
       url: url,
@@ -96,6 +140,6 @@ export default class CategoryPositionExtension {
         'cache-control': 'no-cache'
       },
       data: params
-    });
+    }).then(() => this._updateCategoryIdsAndPositions());
   }
 }
