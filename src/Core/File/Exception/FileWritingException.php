@@ -24,46 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
+namespace PrestaShop\PrestaShop\Core\File\Writer\Exception;
 
-/**
- * Class FileWriterConfiguration stores configuration for export file writer
- */
-final class FileWriterConfiguration implements FileWriterConfigurationInterface
+class FileWritingException extends FileException
 {
-    /**
-     * @var string
-     */
-    private $fileName;
-
-    /**
-     * @var string
-     */
-    private $delimiter;
-
-    /**
-     * @param string $fileName
-     * @param string $delimiter
-     */
-    public function __construct($fileName, $delimiter)
-    {
-        $this->fileName = $fileName;
-        $this->delimiter = $delimiter;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileName()
-    {
-        return $this->fileName;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDelimiter()
-    {
-        return $this->delimiter;
-    }
+    const CANNOT_OPEN_FILE_FOR_WRITING = 10;
 }

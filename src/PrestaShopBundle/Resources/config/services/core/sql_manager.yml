@@ -5,7 +5,7 @@ services:
     prestashop.core.sql_manager.exporter.sql_request:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Exporter\SqlRequestExporter'
         arguments:
-            - '@prestashop.core.export.file_writer.csv_file_writer'
+            - '@prestashop.core.file.writer.csv_file_writer'
 
     prestashop.core.sql_manager.configuration.sql_request:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Configuration\SqlRequestConfiguration'
