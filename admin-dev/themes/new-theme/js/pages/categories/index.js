@@ -27,6 +27,8 @@ import Grid from '../../components/grid/grid';
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
 import CategoryPositionExtension from "../../components/grid/extension/catalog/category-position-extension";
+import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import ReloadListExtension from "../../components/grid/extension/reload-list-extension";
 
 const $ = window.$;
 
@@ -36,4 +38,6 @@ $(() => {
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
   categoriesGrid.addExtension(new CategoryPositionExtension());
+  categoriesGrid.addExtension(new ExportToSqlManagerExtension());
+  categoriesGrid.addExtension(new ReloadListExtension());
 });
