@@ -88,7 +88,7 @@ class WebserviceController extends FrameworkBundleAdminController
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
-        $webserviceDefinition = $definitionFactory->create();
+        $webserviceDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
         $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);

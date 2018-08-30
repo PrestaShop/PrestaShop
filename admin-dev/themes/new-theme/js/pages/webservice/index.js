@@ -27,6 +27,8 @@ import Grid from "../../components/grid/grid";
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
 import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 
 const $ = window.$;
 
@@ -35,5 +37,7 @@ $(() => {
 
   webserviceGrid.addExtension(new ReloadListActionExtension());
   webserviceGrid.addExtension(new ExportToSqlManagerExtension());
+  webserviceGrid.addExtension(new BulkActionCheckboxExtension());
+  webserviceGrid.addExtension(new SubmitBulkActionExtension());
   webserviceGrid.addExtension(new FiltersResetExtension());
 });
