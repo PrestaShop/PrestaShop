@@ -59,4 +59,38 @@ class CategoryController extends FrameworkBundleAdminController
             'categoriesKpi' => $categoriesKpiFactory->build(),
         ]);
     }
+
+    /**
+     * Show category for editing
+     *
+     * @param int $categoryId
+     *
+     * @return Response
+     */
+    public function editAction($categoryId)
+    {
+        return $this->redirect(
+            $this->getAdminLink('AdminCategories', [
+                'id_category' => $categoryId,
+                'updatecategory' => 1,
+            ])
+        );
+    }
+
+    /**
+     * View child categories
+     *
+     * @param int $categoryId
+     *
+     * @return Response
+     */
+    public function viewAction($categoryId)
+    {
+        return $this->redirect(
+            $this->getAdminLink('AdminCategories', [
+                'id_category' => $categoryId,
+                'viewcategory' => 1,
+            ])
+        );
+    }
 }
