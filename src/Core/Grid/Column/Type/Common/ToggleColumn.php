@@ -51,17 +51,16 @@ final class ToggleColumn extends AbstractColumn
     {
         $resolver
             ->setRequired([
-                'field', // field which is the boolean to display
-                'toggle_field', // field which can be used as ID to perform the toggle
+                'field',
+                'primary_field',
                 'route',
-            ])
-            ->setDefaults([
-                'method' => 'POST'
+                'route_param_id',
+                'route_param_status'
             ])
             ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('toggle_field', 'string')
+            ->setAllowedTypes('primary_field', 'string')
             ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('method', 'string')
-        ;
+            ->setAllowedTypes('route_param_id', 'string')
+            ->setAllowedTypes('route_param_status', 'string');
     }
 }

@@ -125,8 +125,10 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
-                    'toggle_field' => 'active',
-                    'route' => 'admin_webservice_status_toggle'
+                    'primary_field' => 'id_webservice_account',
+                    'route' => 'admin_webservice_status_toggle',
+                    'route_param_id' => 'idWebserviceAccount',
+                    'route_param_status' => 'status'
                 ])
             )
             ->add((new ActionColumn('actions'))
