@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\CategoryPositionColumn;
@@ -73,7 +75,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Category', [], 'Admin.Catalog.Feature');
+        return $this->trans('Categories', [], 'Admin.Global');
     }
 
     /**
@@ -117,6 +119,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => $this->getRowActions(),
+                ])
             )
         ;
     }
@@ -164,6 +169,33 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectActionUrl,
                     ],
+                ])
+            )
+        ;
+    }
+
+    /**
+     * @return RowActionCollection
+     */
+    private function getRowActions()
+    {
+        return (new RowActionCollection())
+            ->add((new LinkRowAction('view'))
+                ->setName($this->trans('View', [], 'Admin.Actions'))
+                ->setIcon('search')
+                ->setOptions([
+                    'route' => 'admin_category_view',
+                    'route_param_name' => 'categoryId',
+                    'route_param_field' => 'id_category',
+                ])
+            )
+            ->add((new LinkRowAction('edit'))
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_category_edit',
+                    'route_param_name' => 'categoryId',
+                    'route_param_field' => 'id_category',
                 ])
             )
         ;
