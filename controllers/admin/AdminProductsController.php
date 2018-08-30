@@ -3239,24 +3239,24 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-     * Returns in an homemade JSON with the content of a products pack
+     * Returns in an homemade JSON with the content of a products pack.
      */
     public function displayAjaxProductPackItems()
     {
         $jsonArray = array();
         $products = Db::getInstance()->executeS('
             SELECT p.`id_product`, pl.`name`
-            FROM `'._DB_PREFIX_.'product` p
-            NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-            WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
-            '.Shop::addSqlRestrictionOnLang('pl').'
-            AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
-            AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
+            FROM `' . _DB_PREFIX_ . 'product` p
+            NATURAL LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
+            WHERE pl.`id_lang` = ' . (int) (Tools::getValue('id_lang')) . '
+            ' . Shop::addSqlRestrictionOnLang('pl') . '
+            AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'pack` WHERE `id_product_pack` = p.`id_product`)
+            AND p.`id_product` != ' . (int) (Tools::getValue('id_product')));
 
         foreach ($products as $packItem) {
-            $jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
+            $jsonArray[] = '{"value": "' . (int) ($packItem['id_product']) . '-' . addslashes($packItem['name']) . '", "text":"' . (int) ($packItem['id_product']) . ' - ' . addslashes($packItem['name']) . '"}';
         }
-        $this->ajaxRender('['.implode(',', $jsonArray).']');
+        $this->ajaxRender('[' . implode(',', $jsonArray) . ']');
     }
 
     /**
@@ -3291,36 +3291,36 @@ class AdminProductsControllerCore extends AdminController
         // Excluding downloadable products from packs because download from pack is not supported
         $forceJson = Tools::getValue('forceJson', false);
         $disableCombination = Tools::getValue('disableCombination', false);
-        $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', true);
-        $exclude_packs = (bool)Tools::getValue('exclude_packs', true);
+        $excludeVirtuals = (bool) Tools::getValue('excludeVirtuals', true);
+        $exclude_packs = (bool) Tools::getValue('exclude_packs', true);
 
         $context = Context::getContext();
 
         $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, image_shop.`id_image` id_image, il.`legend`, p.`cache_default_attribute`
-                FROM `'._DB_PREFIX_.'product` p
-                '.Shop::addSqlAssociation('product', 'p').'
-                LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.(int)$context->language->id.Shop::addSqlRestrictionOnLang('pl').')
-                LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
-                    ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
-                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$context->language->id.')
-                WHERE (pl.name LIKE \'%'.pSQL($query).'%\' OR p.reference LIKE \'%'.pSQL($query).'%\')'.
-                (!empty($excludeIds) ? ' AND p.id_product NOT IN ('.$excludeIds.') ' : ' ').
-                ($excludeVirtuals ? 'AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))' : '').
-                ($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '').
+                FROM `' . _DB_PREFIX_ . 'product` p
+                ' . Shop::addSqlAssociation('product', 'p') . '
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = ' . (int) $context->language->id . Shop::addSqlRestrictionOnLang('pl') . ')
+                LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
+                    ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+                LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $context->language->id . ')
+                WHERE (pl.name LIKE \'%' . pSQL($query) . '%\' OR p.reference LIKE \'%' . pSQL($query) . '%\')' .
+                (!empty($excludeIds) ? ' AND p.id_product NOT IN (' . $excludeIds . ') ' : ' ') .
+                ($excludeVirtuals ? 'AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'product_download` pd WHERE (pd.id_product = p.id_product))' : '') .
+                ($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '') .
                 ' GROUP BY p.id_product';
 
         $items = Db::getInstance()->executeS($sql);
 
-        if ($items && ($disableCombination ||$excludeIds)) {
+        if ($items && ($disableCombination || $excludeIds)) {
             $results = [];
             foreach ($items as $item) {
                 if (!$forceJson) {
                     $item['name'] = str_replace('|', '&#124;', $item['name']);
-                    $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
+                    $results[] = trim($item['name']) . (!empty($item['reference']) ? ' (ref: ' . $item['reference'] . ')' : '') . '|' . (int) ($item['id_product']);
                 } else {
                     $results[] = array(
                         'id' => $item['id_product'],
-                        'name' => $item['name'].(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : ''),
+                        'name' => $item['name'] . (!empty($item['reference']) ? ' (ref: ' . $item['reference'] . ')' : ''),
                         'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                         'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
                     );
@@ -3340,15 +3340,15 @@ class AdminProductsControllerCore extends AdminController
                 if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
                     $sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
                                 a.`id_attribute`
-                            FROM `'._DB_PREFIX_.'product_attribute` pa
-                            '.Shop::addSqlAssociation('product_attribute', 'pa').'
-                            LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
-                            LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-                            LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-                            LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$context->language->id.')
-                            LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$context->language->id.')
-                            LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` pai ON pai.`id_product_attribute` = pa.`id_product_attribute`
-                            WHERE pa.`id_product` = '.(int)$item['id_product'].'
+                            FROM `' . _DB_PREFIX_ . 'product_attribute` pa
+                            ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
+                            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $context->language->id . ')
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $context->language->id . ')
+                            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` pai ON pai.`id_product_attribute` = pa.`id_product_attribute`
+                            WHERE pa.`id_product` = ' . (int) $item['id_product'] . '
                             GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
                             ORDER BY pa.`id_product_attribute`';
 
@@ -3357,8 +3357,8 @@ class AdminProductsControllerCore extends AdminController
                         foreach ($combinations as $k => $combination) {
                             $results[$combination['id_product_attribute']]['id'] = $item['id_product'];
                             $results[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
-                            !empty($results[$combination['id_product_attribute']]['name']) ? $results[$combination['id_product_attribute']]['name'] .= ' '.$combination['group_name'].'-'.$combination['attribute_name']
-                            : $results[$combination['id_product_attribute']]['name'] = $item['name'].' '.$combination['group_name'].'-'.$combination['attribute_name'];
+                            !empty($results[$combination['id_product_attribute']]['name']) ? $results[$combination['id_product_attribute']]['name'] .= ' ' . $combination['group_name'] . '-' . $combination['attribute_name']
+                            : $results[$combination['id_product_attribute']]['name'] = $item['name'] . ' ' . $combination['group_name'] . '-' . $combination['attribute_name'];
                             if (!empty($combination['reference'])) {
                                 $results[$combination['id_product_attribute']]['ref'] = $combination['reference'];
                             } else {

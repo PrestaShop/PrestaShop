@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -108,7 +107,7 @@ class ProductDownload
     private $isShareable;
 
     /**
-     * Download ID, different from product ID
+     * Download ID, different from product ID.
      *
      * @return int
      */
@@ -118,7 +117,7 @@ class ProductDownload
     }
 
     /**
-     * Related product ID
+     * Related product ID.
      *
      * @return int
      */
@@ -128,7 +127,7 @@ class ProductDownload
     }
 
     /**
-     * Virtual filename, used for display on download
+     * Virtual filename, used for display on download.
      *
      * @return string
      */
@@ -138,7 +137,7 @@ class ProductDownload
     }
 
     /**
-     * Get actual filename on the shop filesystem
+     * Get actual filename on the shop filesystem.
      *
      * @return string
      */
@@ -148,7 +147,7 @@ class ProductDownload
     }
 
     /**
-     * Date when the download was added
+     * Date when the download was added.
      *
      * @return \DateTime
      */
@@ -158,7 +157,7 @@ class ProductDownload
     }
 
     /**
-     * Date until the product can be downloaded
+     * Date until the product can be downloaded.
      *
      * @return string
      */
@@ -168,7 +167,7 @@ class ProductDownload
     }
 
     /**
-     * Number of days (after order) the product can be downloaded
+     * Number of days (after order) the product can be downloaded.
      *
      * @return int
      */
@@ -178,7 +177,7 @@ class ProductDownload
     }
 
     /**
-     * The number of downloads of a product can be limited
+     * The number of downloads of a product can be limited.
      *
      * @return int
      */
@@ -203,60 +202,70 @@ class ProductDownload
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     public function setIdProduct($idProduct)
     {
         $this->idProduct = $idProduct;
+
         return $this;
     }
 
     public function setDisplayFilename($displayFilename)
     {
         $this->displayFilename = $displayFilename;
+
         return $this;
     }
 
     public function setFilename($filename)
     {
         $this->filename = $filename;
+
         return $this;
     }
 
     public function setDateAdd(\DateTime $dateAdd)
     {
         $this->dateAdd = $dateAdd;
+
         return $this;
     }
 
     public function setDateExpiration(\DateTime $dateExpiration)
     {
         $this->dateExpiration = $dateExpiration;
+
         return $this;
     }
 
     public function setNbDaysAccessible($nbDaysAccessible)
     {
         $this->nbDaysAccessible = $nbDaysAccessible;
+
         return $this;
     }
 
     public function setNbDownloadable($nbDownloadable)
     {
         $this->nbDownloadable = $nbDownloadable;
+
         return $this;
     }
 
     public function setActive($active)
     {
         $this->active = $active;
+
         return $this;
     }
 
     public function setIsShareable($isShareable)
     {
         $this->isShareable = $isShareable;
+
         return $this;
     }
 
