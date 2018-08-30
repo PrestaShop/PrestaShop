@@ -230,7 +230,7 @@ $(document).ready(() => {
 
     // There should be a valid product quantity in cart
     const targetValue = $target.val();
-    if (targetValue != parseInt(targetValue) || targetValue < 0 || isNaN(targetValue)) {
+    if (targetValue != parseInt(targetValue) || targetValue <= 0 || isNaN(targetValue)) {
       $target.val(baseValue);
       return;
     }
@@ -239,6 +239,10 @@ $(document).ready(() => {
     const qty = targetValue - baseValue;
     if (qty === 0) {
       return;
+    }
+    
+    if (targetValue == 0) {
+        qty = baseValue;
     }
 
     $target.attr('value', targetValue);
