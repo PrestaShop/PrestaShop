@@ -53,11 +53,15 @@ final class ToggleColumn extends AbstractColumn
             ->setRequired([
                 'field', // field which is the boolean to display
                 'toggle_field', // field which can be used as ID to perform the toggle
-                'url', // URL called when user clicks on togglable row
+                'route',
+            ])
+            ->setDefaults([
+                'method' => 'POST'
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('toggle_field', 'string')
-            ->setAllowedTypes('url', 'string')
+            ->setAllowedTypes('route', 'string')
+            ->setAllowedTypes('method', 'string')
         ;
     }
 }

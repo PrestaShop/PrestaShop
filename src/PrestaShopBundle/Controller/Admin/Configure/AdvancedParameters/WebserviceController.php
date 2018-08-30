@@ -129,6 +129,10 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_webservice');
     }
 
+    public function toggleStatusAction()
+    {
+    }
+
     /**
      * Process the Webservice configuration form.
      *
