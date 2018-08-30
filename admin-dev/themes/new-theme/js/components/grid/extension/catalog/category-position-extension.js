@@ -32,9 +32,9 @@ const $ = window.$;
  */
 export default class PositionExtension {
     constructor() {
-        return {
-            extend: (grid) => this.extend(grid),
-        }
+      return {
+        extend: (grid) => this.extend(grid),
+      }
     }
 
     /**
