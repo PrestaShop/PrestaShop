@@ -44,6 +44,7 @@ class AdminSearchControllerCore extends AdminController
                 return true;
             }
         }
+
         return parent::checkToken();
     }
 
@@ -483,13 +484,13 @@ class AdminSearchControllerCore extends AdminController
         if (!Tools::getValue('id_shop')) {
             Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
         } else {
-            Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int)Tools::getValue('id_shop'));
+            Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int) Tools::getValue('id_shop'));
         }
 
         ini_set('max_execution_time', 7200);
         Search::indexation(Tools::getValue('full'));
         if (Tools::getValue('redirect')) {
-            Tools::redirectAdmin($_SERVER['HTTP_REFERER'].'&conf=4');
+            Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '&conf=4');
         }
     }
 }

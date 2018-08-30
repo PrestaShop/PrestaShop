@@ -3325,7 +3325,7 @@ class AdminTranslationsControllerCore extends AdminController
     }
 
     /**
-     * Display the HTML content of an email
+     * Display the HTML content of an email.
      */
     public function displayAjaxEmailHTML()
     {
