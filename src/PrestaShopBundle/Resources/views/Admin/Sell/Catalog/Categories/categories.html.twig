@@ -27,19 +27,23 @@
 
 {% block content %}
   {% block categories_kpis_row %}
-    <div class="row">
-      {{ render(controller(
-        'PrestaShopBundle:Admin\\Common:renderKpiRow',
-        { 'kpiRow': categoriesKpi }
-      )) }}
+    <div class="col-md-12">
+      <div class="card">
+        <div class="row">
+          {{ render(controller(
+            'PrestaShopBundle:Admin\\Common:renderKpiRow',
+            { 'kpiRow': categoriesKpi }
+          )) }}
+        </div>
+      </div>
     </div>
   {% endblock %}
 
-  <div class="col-md-12">
-    <div class="col">
+  {% block categories_listing %}
+    <div class="col-md-12">
       {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': categoriesGrid }) }}
     </div>
-  </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

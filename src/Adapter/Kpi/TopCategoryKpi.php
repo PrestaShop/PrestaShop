@@ -78,7 +78,7 @@ final class TopCategoryKpi implements KpiInterface
     {
         $helper = new HelperKpi();
         $helper->id = 'box-top-category';
-        $helper->icon = 'icon-money';
+        $helper->icon = 'money';
         $helper->color = 'color3';
         $helper->title = $this->translator->trans('Top Category', [], 'Admin.Catalog.Feature');
         $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
