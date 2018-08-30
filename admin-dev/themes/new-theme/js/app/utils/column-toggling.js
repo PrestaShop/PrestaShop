@@ -31,40 +31,48 @@ const $ = global.$;
  */
 class ColumnToggling {
 
-    /**
-     * @param {jQuery} table
-     */
-    constructor(table) {
-        this.selector = '.ps-togglable-row';
-        this.rows = table.find(this.selector);
-    }
+  /**
+   * @param {jQuery} table
+   */
+  constructor(table) {
+    this.selector = '.ps-togglable-row';
+    this.rows = table.find(this.selector);
+  }
 
-    /**
-     * Attaches the listeners
-     */
-    attach() {
-        this.rows.on('click', (e) => {
-            this._toggleValue($(e.delegateTarget));
-        });
-    }
+  /**
+   * Attaches the listeners
+   */
+  attach() {
+    this.rows.on('click', (e) => {
+      e.preventDefault();
+      this._toggleValue($(e.delegateTarget));
+    });
+  }
 
-    /**
-     * @param {jQuery} row
-     * @private
-     */
-    _toggleValue(row) {
-        var row_id = row.data('toggleFieldId');
-        var urlForToggling = row.data('toggleUrl');
+  /**
+   * @param {jQuery} row
+   * @private
+   */
+  _toggleValue(row) {
+    const toggleUrl = row.data('toggleUrl');
 
-        $.post(urlForToggling, {'row_id': row_id }, function () {
-        })
-        .done(function () {
-            location.reload();
-        })
-        .fail(function () {
-            console.log('Failed to toggle row value ' + row_id + ' ' + row.data('toggleFieldName'));
-        });
-    }
+    this._submitAsForm(toggleUrl);
+  }
+
+  /**
+   * Submits request url as form
+   *
+   * @param {string} toggleUrl
+   * @private
+   */
+  _submitAsForm(toggleUrl) {
+    const $form = $('<form>', {
+      action: toggleUrl,
+      method: 'POST',
+    }).appendTo('body');
+
+    $form.submit();
+  }
 }
 
 export default ColumnToggling;

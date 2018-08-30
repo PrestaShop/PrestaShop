@@ -31,6 +31,7 @@ import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-ac
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 
 const $ = window.$;
 
@@ -40,6 +41,7 @@ $(() => {
   webserviceGrid.addExtension(new ReloadListActionExtension());
   webserviceGrid.addExtension(new ExportToSqlManagerExtension());
   webserviceGrid.addExtension(new FiltersResetExtension());
+  webserviceGrid.addExtension(new ColumnTogglingExtension());
   webserviceGrid.addExtension(new SortingExtension());
   webserviceGrid.addExtension(new SubmitBulkActionExtension());
   webserviceGrid.addExtension(new SubmitRowActionExtension());
