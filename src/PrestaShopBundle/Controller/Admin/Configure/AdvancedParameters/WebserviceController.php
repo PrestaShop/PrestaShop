@@ -129,6 +129,43 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_webservice');
     }
 
+    /**
+     * todo: check access
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     *
+     * @throws \PrestaShopException
+     */
+    public function deleteMultipleWebserviceAction(Request $request)
+    {
+        $webserviceToDelete = $request->request->get('webservice_bulk_action');
+
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.eraser');
+        $errors = $webserviceEraser->erase($webserviceToDelete);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_webservice');
+    }
+
+    /**
+     * todo: check access
+     * @param int $idWebserviceAccount
+     *
+     * @return RedirectResponse
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
     public function toggleStatusAction($idWebserviceAccount)
     {
         $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');

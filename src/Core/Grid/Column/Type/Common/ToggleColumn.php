@@ -59,6 +59,6 @@ final class ToggleColumn extends AbstractColumn
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('primary_field', 'string')
             ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_param_id', 'string')
+            ->setAllowedTypes('route_param_id', 'string');
     }
 }
