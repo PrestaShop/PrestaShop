@@ -836,7 +836,7 @@ class LinkCore
      */
     private function searchRouteFromModules($controller)
     {
-        $modulesRoutes = Hook::exec('symfonyModuleRoutes', array(), null, true);
+        $modulesRoutes = Hook::exec('actionSymfonyModuleRoutes', array(), null, true);
         if (is_array($modulesRoutes) && count($modulesRoutes) > 0) {
             foreach ($modulesRoutes as $moduleName => $moduleRoutes) {
                 foreach ($moduleRoutes as $moduleRoute) {
