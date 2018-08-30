@@ -537,18 +537,61 @@ class SqlRequestController extends FrameworkBundleAdminController
     protected function handleExportException(Exception $e)
     {
         $type = get_class($e);
+
+        if ($e instanceof FileWritingException) {
+            return $this->handleApplicationExportException($e);
+        }
+
+        if ($e instanceof SqlRequestException) {
+            return $this->handleDomainExportException($e);
+        }
+
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => $type,
+                '%code%' => $e->getCode(),
+            ]
+        );
+    }
+
+    /**
+     * @param FileWritingException $e
+     *
+     * @return string Error message
+     */
+    protected function handleApplicationExportException(FileWritingException $e)
+    {
         $code = $e->getCode();
 
-        if ($type === FileWritingException::class) {
-            $applicationErrors = [
-                FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING =>
-                    $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
-            ];
+        $applicationErrors = [
+            FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING =>
+                $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
+        ];
 
-            if (isset($applicationErrors[$code])) {
-                return $applicationErrors[$code];
-            }
+        if (isset($applicationErrors[$code])) {
+            return $applicationErrors[$code];
         }
+
+        return $this->trans(
+            'An unexpected application error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => get_class($e),
+                '%code%' => $e->getCode(),
+            ]
+        );
+    }
+
+    /**
+     * @param SqlRequestException $e
+     *
+     * @return string
+     */
+    protected function handleDomainExportException(SqlRequestException $e)
+    {
+        $type = get_class($e);
 
         $domainErrors = [
             SqlRequestNotFoundException::class =>
@@ -560,11 +603,11 @@ class SqlRequestController extends FrameworkBundleAdminController
         }
 
         return $this->trans(
-            'An unexpected error occurred. [%type% code %code%]',
+            'An unexpected domain error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
             [
                 '%type%' => $type,
-                '%code%' => $code,
+                '%code%' => $e->getCode(),
             ]
         );
     }
