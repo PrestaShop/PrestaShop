@@ -26,17 +26,22 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Webservice;
 
-use PrestaShop\PrestaShop\Core\Webservice\WebserviceAccountEraserInterface;
 use PrestaShopCollection;
 use WebserviceKey;
 
 /**
  * Class WebserviceEraser is responsible for deleting the records from webservice account table
  */
-final class WebserviceAccountEraser implements WebserviceAccountEraserInterface
+final class WebserviceAccountEraser
 {
     /**
-     * {@inheritdoc}
+     * Erase given webservice accounts.
+     *
+     * @param int[] $webServiceAccountIds
+     *
+     * @return string[] - array of errors. If array is empty then erase operation succeeded.
+     *
+     * @throws \PrestaShopException
      */
     public function erase(array $webServiceAccountIds)
     {

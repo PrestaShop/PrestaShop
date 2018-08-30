@@ -54,13 +54,15 @@ final class ToggleColumn extends AbstractColumn
                 'field',
                 'primary_field',
                 'route',
-                'route_param_id',
-                'route_param_status'
+                'route_param_id'
+            ])
+            ->setDefaults([
+                'use_ajax' => false
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('primary_field', 'string')
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_id', 'string')
-            ->setAllowedTypes('route_param_status', 'string');
+            ->setAllowedTypes('use_ajax', 'bool');
     }
 }

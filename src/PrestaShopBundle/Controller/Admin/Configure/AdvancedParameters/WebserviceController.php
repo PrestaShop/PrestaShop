@@ -129,8 +129,21 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_webservice');
     }
 
-    public function toggleStatusAction($idWebserviceAccount, $status)
+    public function toggleStatusAction($idWebserviceAccount)
     {
+        $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
+        $errors = $statusModifier->toggleStatus($idWebserviceAccount);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_webservice');
     }
 
     /**

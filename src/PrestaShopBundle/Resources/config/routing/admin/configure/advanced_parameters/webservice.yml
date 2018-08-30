@@ -26,7 +26,7 @@ admin_delete_single_webservice_log:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteSingleWebservice'
 
 admin_webservice_status_toggle:
-    path: /status/{idWebserviceAccount}/{status}
+    path: /status/{idWebserviceAccount}
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleStatus'

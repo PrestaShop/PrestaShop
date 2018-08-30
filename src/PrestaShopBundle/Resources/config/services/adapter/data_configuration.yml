@@ -219,3 +219,8 @@ services:
 
     prestashop.adapter.webservice.eraser:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountEraser'
+
+    prestashop.adapter.webservice.status_modifier:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountStatusModifier'
+        arguments:
+            - '@translator'
