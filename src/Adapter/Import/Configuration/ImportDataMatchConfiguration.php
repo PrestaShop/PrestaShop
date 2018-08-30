@@ -6,11 +6,10 @@ namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
 use Db;
 use DbQuery;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ImportDataMatchConfiguration is responsible for savi
+ * Class ImportDataMatchConfiguration is responsible for saving and loading configuration of import step 2
  */
 class ImportDataMatchConfiguration implements DataConfigurationInterface
 {
@@ -20,20 +19,39 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     private $translator;
 
     /**
-     * ImportDataMatchConfiguration constructor.
-     *
-     * @param TranslatorInterface $translator
+     * @var array
      */
-    public function __construct(TranslatorInterface $translator)
+    private $entityFieldChoices;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $entityFieldChoices
+     */
+    public function __construct(TranslatorInterface $translator, array $entityFieldChoices)
     {
         $this->translator = $translator;
+        $this->entityFieldChoices = $entityFieldChoices;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getConfiguration()
     {
-        return [];
+        $configuration = [
+            'type_value' => [],
+        ];
+
+        foreach ($this->entityFieldChoices as $choice) {
+            $configuration['type_value'][] = $choice;
+        }
+
+        return $configuration;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function updateConfiguration(array $configuration)
     {
         $errors = $this->validateConfiguration($configuration);
@@ -45,6 +63,9 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
         return $errors;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function validateConfiguration(array $configuration)
     {
         $errors = [];
@@ -56,7 +77,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
             );
         }
 
-        if ($this->isConfigurationNameExists($configuration['match_name'])) {
+        if ($this->configurationNameExists($configuration['match_name'])) {
             $errors[] = $this->translator->trans(
                 'This name already exists.',
                 [],
@@ -96,7 +117,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      *
      * @return bool
      */
-    private function isConfigurationNameExists($matchName)
+    private function configurationNameExists($matchName)
     {
         $query = new DbQuery();
         $query->select('`id_import_match`');

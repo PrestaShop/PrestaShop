@@ -1,20 +1,44 @@
 <?php
-
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ImportDataConfigurationType is responsible for displaying the configuration of the
  * Advanced Parameters -> Import -> second step list
  */
-class ImportDataConfigurationType extends AbstractType
+class ImportDataConfigurationType extends TranslatorAwareType
 {
     /**
      * @var array choices for data matches
@@ -27,11 +51,19 @@ class ImportDataConfigurationType extends AbstractType
     private $entityFieldChoices;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $dataMatchChoices
      * @param array $entityFieldChoices
      */
-    public function __construct(array $dataMatchChoices, array $entityFieldChoices)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $dataMatchChoices,
+        array $entityFieldChoices
+    ) {
+        parent::__construct($translator, $locales);
+
         $this->dataMatchChoices = $dataMatchChoices;
         $this->entityFieldChoices = $entityFieldChoices;
     }
@@ -44,15 +76,24 @@ class ImportDataConfigurationType extends AbstractType
         $builder
             ->add('matches', ChoiceType::class, [
                 'choices' => $this->dataMatchChoices,
-                'choice_translation_domain' => false
+                'choice_translation_domain' => false,
             ])
             ->add('match_name', TextType::class)
             ->add('rows_skip', IntegerType::class, [
-                'data' => 1
+                'data' => 1,
             ])
-            ->add('available_fields', ChoiceType::class, [
-                'choices' => $this->entityFieldChoices,
-                'choice_translation_domain' => false,
+            ->add('type_value', CollectionType::class, [
+                'entry_type' => ChoiceType::class,
+                'entry_options' => [
+                    'choices' =>
+                        [
+                            $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
+                        ] +
+                        $this->entityFieldChoices,
+                    'choice_translation_domain' => false,
+                    'label' => false,
+                ],
+                'label' => false,
             ])
         ;
     }
