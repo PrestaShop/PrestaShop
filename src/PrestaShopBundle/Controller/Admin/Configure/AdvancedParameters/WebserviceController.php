@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use http\Env\Response;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,13 +47,19 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
+     * @param WebserviceFilters $filters - filters for webservice list
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(WebserviceFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
+        $grid = $gridWebserviceFactory->getGrid($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
 
         $configurationWarnings = $this->lookForWarnings($request);
 
@@ -70,9 +78,31 @@ class WebserviceController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
+            'grid' => $presentedGrid
         ];
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
+    }
+
+    //todo: check access
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
+        $webserviceDefinition = $definitionFactory->create();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);
+
+        $searchParametersForm->handleRequest($request);
+        $filters = [];
+
+        // todo: $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
+
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_webservice', ['filters' => $filters]);
     }
 
     /**
