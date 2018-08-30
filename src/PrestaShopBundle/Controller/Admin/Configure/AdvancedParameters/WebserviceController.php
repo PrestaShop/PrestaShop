@@ -70,6 +70,13 @@ class WebserviceController extends FrameworkBundleAdminController
         }
 
         $twigValues = [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_webservice'), //todo: should point to ws creation page
+                    'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
             'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false, // temporary

@@ -135,8 +135,17 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
-                    'actions' =>  (new RowActionCollection())
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_delete_single_webservice_log', //todo: change to edit parameters
+                                'route_param_name' => 'webserviceAccountId',
+                                'route_param_field' => 'id_webservice_account',
+                            ])
+                        )
                         ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
@@ -149,7 +158,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                                     'Admin.Notifications.Warning'
                                 ),
                             ])
-                        ),
+                        )
                 ])
             );
     }
@@ -191,14 +200,6 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SubmitGridAction('add_webservice'))
-                ->setName($this->trans('Add new', [], 'Admin.Actions'))
-                ->setIcon('add')
-                ->setOptions([
-                    'submit_route' => 'admin_webservice', //todo: change to add webservice link
-                    'submit_method' => 'GET'
-                ])
-            )
             ->add((new SimpleGridAction('common_refresh_list'))
                 ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
