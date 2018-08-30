@@ -1112,8 +1112,8 @@ class AdminCategoriesControllerCore extends AdminController
     }
 
     /**
-     * Display children categories
-     * 
+     * Display children categories.
+     *
      * Required request params:
      * - id_category_parent
      * - selectedCat
@@ -1132,38 +1132,38 @@ class AdminCategoriesControllerCore extends AdminController
 
     /**
      * Look for a category having a part of the given query {q} in its name.
-     * Results are limited by the {limit} parameter
+     * Results are limited by the {limit} parameter.
      */
     public function displayAjaxSearchCategory()
     {
         $q = Tools::getValue('q');
         $limit = Tools::getValue('limit');
         $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
-            FROM `'._DB_PREFIX_.'category` c
-            LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-            WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
-            AND cl.`name` LIKE \'%'.pSQL($q).'%\'
+            FROM `' . _DB_PREFIX_ . 'category` c
+            LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
+            WHERE cl.`id_lang` = ' . (int) $context->language->id . ' AND c.`level_depth` <> 0
+            AND cl.`name` LIKE \'%' . pSQL($q) . '%\'
             GROUP BY c.id_category
             ORDER BY c.`position`
-            LIMIT '.(int)$limit
+            LIMIT ' . (int) $limit
         );
         $echo = '';
         if ($results) {
             foreach ($results as $result) {
-                $echo .= trim($result['name']).'|'.(int)$result['id_category'].PHP_EOL;
+                $echo .= trim($result['name']) . '|' . (int) $result['id_category'] . PHP_EOL;
             }
         }
         $this->ajaxRender($echo);
     }
 
     /**
-     * Return all parent categories IDs
+     * Return all parent categories IDs.
      */
     public function displayAjaxParentCategories()
     {
         $id_category = Tools::getValue('id_category');
-        $category = new Category((int)$id_category);
-        $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
+        $category = new Category((int) $id_category);
+        $results = Db::getInstance()->executeS('SELECT `id_category` FROM `' . _DB_PREFIX_ . 'category` c WHERE c.`nleft` < ' . (int) $category->nleft . ' AND c.`nright` > ' . (int) $category->nright . '');
         $output = array();
         foreach ($results as $result) {
             $output[] = $result;
