@@ -23,41 +23,71 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 export default function() {
-  let tabWidth = 0;
-  let navWidth = 50;
+  const $defaultArrowWidth = 35;
+  const $arrow = $('.js-arrow');
+  const $tabs = $('.js-tabs');
+  const $navTabs = $('.js-nav-tabs');
 
-  $('.js-nav-tabs li').each((index, item) => {
-    navWidth += $(item).width();
+  let $positions;
+  let $moveTo = 0;
+  let $tabWidth = 0;
+  let $navWidth = $defaultArrowWidth;
+  let $widthWithTabs = 0;
+
+  $navTabs.find('li').each((index, item) => {
+    $navWidth += $(item).width();
   });
-  $('.js-nav-tabs').width(navWidth);
 
-  $('.js-nav-tabs [data-toggle="tab"]').on('click', (e) => {
+  $navTabs.width($navWidth);
+
+  $widthWithTabs = $navWidth + ($defaultArrowWidth * 2);
+
+  $navTabs.find('[data-toggle="tab"]').on('click', (e) => {
     if (!$(e.target).hasClass('active')) {
       $('#form_content > .form-contenttab').removeClass('active');
     }
     if ($(e.target).attr('href') === '#step1') {
-      setTimeout(_=> {
+      setTimeout(() => {
         $('#description_short, #tab_description_short .description-tab').addClass('active');
-      }, 100); 
+      }, 100);
     }
   });
 
-  $('.js-arrow').on('click', (e) => {
-    tabWidth = navWidth - $('.js-tabs').width();
+  $arrow.on('click', (e) => {
+    if ($arrow.is(':visible')) {
+      $tabWidth = $navWidth > $navWidth ? $navWidth - $tabs.width() : $tabs.width();
+      $positions = $navTabs.position();
 
-    if ($('.js-arrow').is(':visible')) {
-      $('.js-nav-tabs').animate({
-        left: $(e.currentTarget).hasClass('right-arrow') ? `-=${tabWidth}` : 0
-      }, 400, 'easeOutQuad', () => {
-        if ($(e.currentTarget).hasClass('right-arrow')) {
-          $('.left-arrow').addClass('visible');
-          $('.right-arrow').removeClass('visible');
-        } else {
-          $('.right-arrow').addClass('visible');
-          $('.left-arrow').removeClass('visible');
+      $moveTo = '-=0';
+      if ($(e.currentTarget).hasClass('right-arrow')) {
+        if (($tabWidth - $positions.left) < $navWidth) {
+          $moveTo = `-=${$tabWidth}`;
         }
-      });
+      } else {
+        if ($positions.left < $defaultArrowWidth) {
+          $moveTo = `+=${$tabWidth}`;
+        }
+      }
+
+      $navTabs.animate(
+        {
+          left: $moveTo
+        },
+        400,
+        'easeOutQuad',
+        () => {
+          if ($(e.currentTarget).hasClass('right-arrow')) {
+            $('.left-arrow').addClass('visible');
+            $('.right-arrow').removeClass('visible');
+          } else {
+            $('.right-arrow').addClass('visible');
+            $('.left-arrow').removeClass('visible');
+          }
+        }
+      );
     }
   });
 }

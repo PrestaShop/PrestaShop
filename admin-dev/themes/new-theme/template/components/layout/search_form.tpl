@@ -45,7 +45,7 @@
         <a class="dropdown-item" data-item="{l s='Customers'} {l s='by name'}" href="#" data-value="2" data-placeholder="{l s='Email, name...'}" data-icon="icon-group"><i class="material-icons">group</i> {l s='Customers'} {l s='by name'}</a>
         <a class="dropdown-item" data-item="{l s='Customers'} {l s='by ip address'}" href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop"><i class="material-icons">desktop_mac</i> {l s='Customers'} {l s='by IP address'}</a>
         <a class="dropdown-item" data-item="{l s='Orders'}" href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card"><i class="material-icons">shopping_basket</i> {l s='Orders'}</a>
-        <a class="dropdown-item" data-item="{l s='Invoices'}" href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book"><i class="material-icons">book</i></i> {l s='Invoices'}</a>
+        <a class="dropdown-item" data-item="{l s='Invoices'}" href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book"><i class="material-icons">book</i> {l s='Invoices'}</a>
         <a class="dropdown-item" data-item="{l s='Carts'}" href="#" data-value="5" data-placeholder="{l s='Cart ID'}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {l s='Carts'}</a>
         <a class="dropdown-item" data-item="{l s='Modules'}" href="#" data-value="7" data-placeholder="{l s='Module name'}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {l s='Modules'}</a>
       </div>
