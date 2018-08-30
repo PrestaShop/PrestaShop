@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormInterface;
 /**
  * Interface FilterFormFactoryInterface.
  */
-interface FilterFormFactoryInterface
+interface GridFilterFormFactoryInterface
 {
     /**
      * Create filters form for grid definition.

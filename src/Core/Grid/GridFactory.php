@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -47,19 +47,19 @@ final class GridFactory implements GridFactoryInterface
     private $dataFactory;
 
     /**
-     * @var FilterFormFactoryInterface
+     * @var GridFilterFormFactoryInterface
      */
     private $filterFormFactory;
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
      * @param GridDataFactoryInterface $dataFactory
-     * @param FilterFormFactoryInterface $filterFormFactory
+     * @param GridFilterFormFactoryInterface $filterFormFactory
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
         GridDataFactoryInterface $dataFactory,
-        FilterFormFactoryInterface $filterFormFactory
+        GridFilterFormFactoryInterface $filterFormFactory
     ) {
         $this->definitionFactory = $definitionFactory;
         $this->dataFactory = $dataFactory;

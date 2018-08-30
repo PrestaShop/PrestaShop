@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Class FilterFormFactory is responsible for creating grid filter form.
  */
-final class FilterFormFactory implements FilterFormFactoryInterface
+final class GridFilterFormFactory implements GridFilterFormFactoryInterface
 {
     use HookDispatcherAwareTrait;
 
