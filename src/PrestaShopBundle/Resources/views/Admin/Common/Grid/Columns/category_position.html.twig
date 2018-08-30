@@ -23,16 +23,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="js-drag-handle js-category-position"
-     style="cursor: move;"
-     data-id-category="{{ record[column.options.id_field] }}"
-     data-id-parent-category="{{ record[column.options.id_parent_field] }}"
-     data-position="{{ record[column.options.field] }}"
-     data-position-update-url="{{ getAdminLink(column.options.position_update_route) }}"
-     data-pagination-offset="{{ grid.pagination.offset }}"
->
-  <i class="material-icons">swap_vert</i>
-  <span class="badge badge-secondary rounded js-position">
+{% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
+  <div class="js-drag-handle js-category-position"
+       style="cursor: move;"
+       data-id-category="{{ record[column.options.id_field] }}"
+       data-id-parent-category="{{ record[column.options.id_parent_field] }}"
+       data-position="{{ record[column.options.field] }}"
+       data-position-update-url="{{ getAdminLink(column.options.position_update_route) }}"
+       data-pagination-offset="{{ grid.pagination.offset }}"
+  >
+    <i class="material-icons">swap_vert</i>
+    <span class="badge badge-secondary rounded js-position">
+      {{ record[column.options.field] + 1 }}
+    </span>
+  </div>
+{% else %}
+  <div class="text-center">
     {{ record[column.options.field] + 1 }}
-  </span>
-</div>
+  </div>
+{% endif %}
