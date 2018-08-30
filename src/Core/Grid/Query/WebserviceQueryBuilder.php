@@ -89,7 +89,7 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * Gets modified order by which includes an alias
+     * Gets modified order by which includes an alias for reserved keyword
      *
      * @param string $orderBy - original order by value
      *
@@ -97,6 +97,6 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getModifiedOrderBy($orderBy)
     {
-        return $orderBy === 'key' ? 'wa.`key`' : '';
+        return $orderBy === 'key' ? 'wa.`key`' : $orderBy;
     }
 }

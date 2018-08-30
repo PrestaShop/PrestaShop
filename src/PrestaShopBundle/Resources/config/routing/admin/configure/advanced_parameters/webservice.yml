@@ -18,3 +18,9 @@ admin_webservice_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processForm'
         _legacy_controller: AdminWebservice
+
+admin_delete_single_webservice_log:
+    path: /delete/{webserviceAccountId}
+    methods: DELETE
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteSingleWebservice'

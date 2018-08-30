@@ -106,6 +106,30 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
+     * todo: check access
+     *
+     * @param int $webserviceAccountId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteSingleWebserviceAction($webserviceAccountId)
+    {
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.eraser');
+        $errors = $webserviceEraser->erase([$webserviceAccountId]);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_webservice');
+    }
+
+    /**
      * Process the Webservice configuration form.
      *
      * @param Request $request

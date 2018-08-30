@@ -29,7 +29,8 @@ import ReloadListActionExtension from "../../components/grid/extension/reload-li
 import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
-import SubmitGridExtension from "../../components/grid/extension/submit-grid-action-extension";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 const $ = window.$;
 
@@ -38,9 +39,9 @@ $(() => {
 
   webserviceGrid.addExtension(new ReloadListActionExtension());
   webserviceGrid.addExtension(new ExportToSqlManagerExtension());
-  webserviceGrid.addExtension(new BulkActionCheckboxExtension());
-  webserviceGrid.addExtension(new SubmitBulkActionExtension());
-  webserviceGrid.addExtension(new SubmitGridExtension());
-  webserviceGrid.addExtension(new ExportToSqlManagerExtension());
   webserviceGrid.addExtension(new FiltersResetExtension());
+  webserviceGrid.addExtension(new SortingExtension());
+  webserviceGrid.addExtension(new SubmitBulkActionExtension());
+  webserviceGrid.addExtension(new SubmitRowActionExtension());
+  webserviceGrid.addExtension(new BulkActionCheckboxExtension());
 });
