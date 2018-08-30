@@ -56,9 +56,4 @@ class CategoryController extends FrameworkBundleAdminController
             'categoryGrid' => $gridPresenter->present($categoryGrid),
         ]);
     }
-
-    public function ajaxProcessUpdatePositionsAction()
-    {
-        //@todo
-    }
 }
