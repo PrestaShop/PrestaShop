@@ -23,12 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-/**
- * Exception thrown when creating a release by tools/build.
- */
-class BuildException extends Exception
+class PrestashopCouldNotInstallLatestVersionException extends \Exception
 {
-    /** @var string */
-    protected $message = 'Can not build the release';
 }
