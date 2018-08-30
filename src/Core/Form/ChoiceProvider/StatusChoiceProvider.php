@@ -55,7 +55,6 @@ final class StatusChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         return [
-            '--' => '',
             $this->translator->trans('Yes', [], 'Admin.Global') => 1,
             $this->translator->trans('No', [], 'Admin.Global') => 0
         ];
