@@ -758,7 +758,7 @@ class AdminImportControllerCore extends AdminController
     }
 
     /**
-     * List the columns which can be imported by the controller for a given entity
+     * List the columns which can be imported by the controller for a given entity.
      */
     public function displayAjaxAvailableFields()
     {
