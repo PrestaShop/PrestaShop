@@ -24,32 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory;
 
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
+use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollection;
+use PrestaShop\PrestaShop\Core\Import\File\FileReaderInterface;
 use SplFileInfo;
 
 /**
- * Class CsvFileReader defines a CSV file reader
+ * Class DataRowCollectionFactory defines a data row collection factory
  */
-final class CsvFileReader implements FileReaderInterface
+final class DataRowCollectionFactory implements DataRowCollectionFactoryInterface
 {
     /**
-     * @var string the data delimiter in the CSV row
+     * @var FileReaderInterface
      */
-    private $delimiter = ';';
+    private $fileReader;
+
+    /**
+     * @param FileReaderInterface $fileReader
+     */
+    public function __construct(FileReaderInterface $fileReader)
+    {
+        $this->fileReader = $fileReader;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function read(SplFileInfo $file)
+    public function buildFromFile(SplFileInfo $file, $maxRowsInCollection = null)
     {
-        $handle = fopen($file->getPathname(), 'r');
+        $dataRowCollection = new DataRowCollection();
+        $rowIndex = 0;
 
-        while ($row = fgetcsv($handle, 0, $this->delimiter)) {
-            yield DataRow::createFromArray($row);
+        foreach ($this->fileReader->read($file) as $dataRow) {
+            if (null !== $maxRowsInCollection && $rowIndex >= $maxRowsInCollection) {
+                break;
+            }
+
+            $dataRowCollection->addDataRow($dataRow);
+            $rowIndex++;
         }
 
-        fclose($handle);
+        return $dataRowCollection;
     }
 }

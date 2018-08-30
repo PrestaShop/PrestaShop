@@ -24,46 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File\Cell;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
 /**
- * Class DataCell defines a data cell of imported file
+ * Interface DataRowPresenterInterface describes a data row presenter
  */
-class DataCell implements DataCellInterface
+interface DataRowPresenterInterface
 {
     /**
-     * @var string key of the data
+     * Present a data row
+     *
+     * @param DataRowInterface $dataRow
+     *
+     * @return array
      */
-    private $key;
-
-    /**
-     * @var string data value
-     */
-    private $value;
-
-    /**
-     * @param string $key
-     * @param string $value
-     */
-    public function __construct($key, $value)
-    {
-        $this->key = $key;
-        $this->value = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
+    public function present(DataRowInterface $dataRow);
 }
