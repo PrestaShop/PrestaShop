@@ -78,7 +78,7 @@ final class EmptyCategoriesKpi implements KpiInterface
     {
         $helper = new HelperKpi();
         $helper->id = 'box-empty-categories';
-        $helper->icon = 'icon-bookmark-empty';
+        $helper->icon = 'bookmark';
         $helper->color = 'color2';
         $helper->href = $this->hrefUrl;
         $helper->title = $this->translator->trans('Empty Categories', [], 'Admin.Catalog.Feature');
