@@ -67,7 +67,7 @@ class ModuleController extends ModuleAbstractController
             'PrestaShopBundle:Admin/Module:catalog.html.twig',
             [
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
