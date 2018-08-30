@@ -24,46 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
+namespace PrestaShop\PrestaShop\Core\File\Writer;
 
 /**
- * Class FileWriterData stores data that should be written to export file
+ * Interface FileWriterConfigurationInterface
  */
-final class FileWriterData implements FileWriterDataInterface
+interface FileWriterConfigurationInterface
 {
     /**
-     * @var array
+     * Export file name
+     *
+     * @return string
      */
-    private $headers;
-
-    /**
-     * @var array
-     */
-    private $rows;
-
-    /**
-     * @param array $headers
-     * @param array $rows
-     */
-    public function __construct(array $headers, array $rows)
-    {
-        $this->headers = $headers;
-        $this->rows = $rows;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRows()
-    {
-        return $this->rows;
-    }
+    public function getFileName();
 }

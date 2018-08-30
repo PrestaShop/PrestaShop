@@ -24,24 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
+namespace PrestaShop\PrestaShop\Core\File\Writer;
+
+use SplFileInfo;
 
 /**
- * Interface FileWriterDataInterface
+ * Interface FileWriterInterface
  */
-interface FileWriterDataInterface
+interface FileWriterInterface
 {
     /**
-     * Headers data
+     * Write data to file
      *
-     * @return string[]
-     */
-    public function getHeaders();
-
-    /**
-     * Rows data
+     * @param FileWriterDataInterface $data
+     * @param FileWriterConfigurationInterface $config
      *
-     * @return array[]
+     * @return SplFileInfo
      */
-    public function getRows();
+    public function write(FileWriterDataInterface $data, FileWriterConfigurationInterface $config);
 }

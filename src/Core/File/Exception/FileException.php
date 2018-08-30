@@ -24,24 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
+namespace PrestaShop\PrestaShop\Core\File\Writer\Exception;
 
-/**
- * Interface FileWriterConfigurationInterface
- */
-interface FileWriterConfigurationInterface
+use Exception;
+
+class FileException extends Exception
 {
-    /**
-     * Export file name
-     *
-     * @return string
-     */
-    public function getFileName();
-
-    /**
-     * Delimiter to use when writing file
-     *
-     * @return string
-     */
-    public function getDelimiter();
 }

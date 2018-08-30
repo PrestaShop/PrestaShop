@@ -24,10 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Export\Exception;
+namespace PrestaShop\PrestaShop\Core\File\Writer;
 
-use Exception;
-
-class ExportException extends Exception
+/**
+ * Interface FileWriterDataInterface
+ */
+interface FileWriterDataInterface
 {
+    /**
+     * Headers data
+     *
+     * @return string[]
+     */
+    public function getHeaders();
+
+    /**
+     * Rows data
+     *
+     * @return array[]
+     */
+    public function getRows();
 }

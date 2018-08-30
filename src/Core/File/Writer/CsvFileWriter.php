@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
+namespace PrestaShop\PrestaShop\Core\File\Writer;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
+use PrestaShop\PrestaShop\Core\File\Writer\Exception\FileWritingException;
 use SplFileObject;
 
 /**
@@ -70,10 +70,10 @@ final class CsvFileWriter implements FileWriterInterface
             );
         }
 
-        $exportFile->fputcsv($data->getHeaders(), $config->getDelimiter());
+        $exportFile->fputcsv($data->getHeaders(), ';');
 
         foreach ($data->getRows() as $row) {
-            $exportFile->fputcsv($row, $config->getDelimiter());
+            $exportFile->fputcsv($row, ';');
         }
 
         return $exportFile;

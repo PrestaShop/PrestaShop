@@ -28,12 +28,12 @@ namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterConfiguration;
-use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterData;
-use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterInterface;
+use PrestaShop\PrestaShop\Core\File\Writer\FileWriterConfiguration;
+use PrestaShop\PrestaShop\Core\File\Writer\FileWriterData;
+use PrestaShop\PrestaShop\Core\File\Writer\FileWriterInterface;
 
 /**
- * Class SqlRequestExporter exports SqlRequest query execution result into CSV file
+ * Class SqlRequestExporter exports SqlRequest query execution result into CSV file under export directory
  */
 final class SqlRequestExporter implements SqlRequestExporterInterface
 {
@@ -45,9 +45,8 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
     /**
      * @param FileWriterInterface $csvFileWriter
      */
-    public function __construct(
-        FileWriterInterface $csvFileWriter
-    ) {
+    public function __construct(FileWriterInterface $csvFileWriter)
+    {
         $this->csvFileWriter = $csvFileWriter;
     }
 
@@ -62,8 +61,7 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
         );
 
         $config = new FileWriterConfiguration(
-            sprintf('request_sql_%s.csv', $sqlRequestId->getValue()),
-            ';'
+            sprintf('request_sql_%s.csv', $sqlRequestId->getValue())
         );
 
         return $this->csvFileWriter->write($data, $config);
