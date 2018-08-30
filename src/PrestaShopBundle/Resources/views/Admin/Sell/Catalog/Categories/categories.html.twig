@@ -26,9 +26,18 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% block categories_kpis_row %}
+    <div class="row">
+      {{ render(controller(
+        'PrestaShopBundle:Admin\\Common:renderKpiRow',
+        { 'kpiRow': categoriesKpi }
+      )) }}
+    </div>
+  {% endblock %}
+
   <div class="col-md-12">
     <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': categoryGrid }) }}
+      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': categoriesGrid }) }}
     </div>
   </div>
 {% endblock %}
