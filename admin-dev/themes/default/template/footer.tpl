@@ -59,7 +59,7 @@
 			/&nbsp;
 			<a href="https://github.com/PrestaShop/PrestaShop/issues" class="footer_link _blank">
 				<i class="icon-bug"></i>
-				{l s='Bug Tracker' d='Admin.Navigation.Footer'}
+				{l s='Bug Tracker' d='Admin.Global'}
 			</a>
 			/&nbsp;
 			<a href="https://www.prestashop.com/club/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
