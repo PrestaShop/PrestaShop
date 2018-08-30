@@ -7,7 +7,7 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.core.backup.listing.grid_data_provider:
+    prestashop.core.backup.listing.grid_data_factory:
         class: 'PrestaShop\PrestaShop\Core\Backup\Listing\BackupGridDataProvider'
         arguments:
             - '@prestashop.adapter.backup.backup_provider'

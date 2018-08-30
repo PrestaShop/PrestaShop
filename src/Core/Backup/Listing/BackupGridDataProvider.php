@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Backup\Listing;
 use PrestaShop\PrestaShop\Core\Backup\BackupInterface;
 use PrestaShop\PrestaShop\Core\Backup\Comparator\BackupComparatorInterface;
 use PrestaShop\PrestaShop\Core\Backup\Repository\BackupRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridData;
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\TimeDefinition;
@@ -39,7 +39,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class BackupGridDataProvider provides backups for listing in grid.
  */
-final class BackupGridDataProvider implements GridDataProviderInterface
+final class BackupGridDataProvider implements GridDataFactoryInterface
 {
     /**
      * @var BackupRepositoryInterface
