@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 /**
  * Class Definition is responsible for storing grid definition (columns, row actions & etc.).
  */
-final class Definition implements DefinitionInterface
+final class GridDefinition implements GridDefinitionInterface
 {
     /**
      * @var string Unique grid identifier

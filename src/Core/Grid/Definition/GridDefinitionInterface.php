@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 /**
  * Interface GridDefinitionInterface defines contract for grid definition.
  */
-interface DefinitionInterface
+interface GridDefinitionInterface
 {
     /**
      * Get unique grid identifier.

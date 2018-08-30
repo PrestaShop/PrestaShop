@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -54,7 +54,7 @@ final class FilterFormFactory implements FilterFormFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create(DefinitionInterface $definition)
+    public function create(GridDefinitionInterface $definition)
     {
         $formBuilder = $this->formFactory->createNamedBuilder(
             $definition->getId(),

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 
 /**
  * Interface GridDefinitionFactoryInterface defines contract for creating grid.
@@ -36,7 +36,7 @@ interface GridDefinitionFactoryInterface
     /**
      * Create new grid definition.
      *
-     * @return DefinitionInterface
+     * @return GridDefinitionInterface
      */
     public function getDefinition();
 }

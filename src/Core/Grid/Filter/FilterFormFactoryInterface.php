@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -37,9 +37,9 @@ interface FilterFormFactoryInterface
     /**
      * Create filters form for grid definition.
      *
-     * @param DefinitionInterface $definition
+     * @param GridDefinitionInterface $definition
      *
      * @return FormInterface
      */
-    public function create(DefinitionInterface $definition);
+    public function create(GridDefinitionInterface $definition);
 }

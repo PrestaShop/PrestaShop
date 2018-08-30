@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Grid\Presenter;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
@@ -86,7 +86,7 @@ class GridPresenterTest extends TestCase
     {
         $data = $this->createMock(GridDataInterface::class);
 
-        $definition = $this->createMock(DefinitionInterface::class);
+        $definition = $this->createMock(GridDefinitionInterface::class);
         $definition->method('getColumns')
             ->willReturn((new ColumnCollection())
                 ->add($this->createColumnMock('test_1'))
