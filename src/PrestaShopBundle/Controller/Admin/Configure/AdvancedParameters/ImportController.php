@@ -146,7 +146,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Shows import data page where the configuration of importable data and the final step of import is handled
+     * Shows import data page where the configuration of importable data and the final step of import is handled.
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import_data.html.twig")
      *
@@ -163,7 +163,7 @@ class ImportController extends FrameworkBundleAdminController
         $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
         $dataRowCollectionPresenter = $this->get('prestashop.core.import.data_row.collection_presenter');
 
-        $importFile = new SplFileInfo($importDirectory.$request->getSession()->get('csv'));
+        $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
         $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, 10);
 
         return [
@@ -274,8 +274,9 @@ class ImportController extends FrameworkBundleAdminController
         $form->setData($requestData['form']['import_data_configuration']);
 
         $errors = $formHandler->save($form->getData());
+
         return $this->json([
-            'errors' => $errors
+            'errors' => $errors,
         ]);
     }
 
@@ -325,7 +326,7 @@ class ImportController extends FrameworkBundleAdminController
 
     /**
      * todo: remove
-     * Fowards submitted form data to legacy import page
+     * Fowards submitted form data to legacy import page.
      *
      * @param Request $request
      *
@@ -334,8 +335,9 @@ class ImportController extends FrameworkBundleAdminController
     private function fowardRequestToLegacyResponse(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext =  $this->get('prestashop.adapter.legacy.context');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
+
         return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
 }

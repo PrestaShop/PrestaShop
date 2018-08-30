@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * Class ImportDataConfigurationFormDataProvider is responsible for providing or updating
- * data for import match configuration
+ * data for import match configuration.
  */
 final class ImportDataConfigurationFormDataProvider implements FormDataProviderInterface
 {
@@ -54,7 +54,7 @@ final class ImportDataConfigurationFormDataProvider implements FormDataProviderI
     public function getData()
     {
         return [
-            'import_data_configuration' => $this->dataConfiguration->getConfiguration()
+            'import_data_configuration' => $this->dataConfiguration->getConfiguration(),
         ];
     }
 

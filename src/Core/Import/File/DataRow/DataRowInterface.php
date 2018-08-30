@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,12 +32,12 @@ use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
 use ArrayAccess;
 
 /**
- * Interface DataRowInterface describes a data row from imported file
+ * Interface DataRowInterface describes a data row from imported file.
  */
 interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
 {
     /**
-     * Add a cell to this row
+     * Add a cell to this row.
      *
      * @param DataCellInterface $cell
      *
@@ -46,7 +46,7 @@ interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
     public function addCell(DataCellInterface $cell);
 
     /**
-     * Create a data row from given array
+     * Create a data row from given array.
      *
      * @param array $data
      *

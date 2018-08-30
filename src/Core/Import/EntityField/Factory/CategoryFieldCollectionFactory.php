@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class CategoryFieldCollectionFactory defines a category field collection factory
+ * Class CategoryFieldCollectionFactory defines a category field collection factory.
  */
 final class CategoryFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
 {
@@ -80,7 +80,7 @@ final class CategoryFieldCollectionFactory implements EntityFieldCollectionFacto
     }
 
     /**
-     * A shorter name method for translations
+     * A shorter name method for translations.
      *
      * @param string $id translation ID
      * @param string $domain translation domain

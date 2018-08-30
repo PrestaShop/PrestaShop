@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use Generator;
 use SplFileInfo;
 
 /**
- * Interface FileReaderInterface describes a file reader
+ * Interface FileReaderInterface describes a file reader.
  */
 interface FileReaderInterface
 {
     /**
-     * Read the file
+     * Read the file.
      *
      * @param SplFileInfo $file
      *

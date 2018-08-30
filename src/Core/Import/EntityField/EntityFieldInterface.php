@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,33 +27,33 @@
 namespace PrestaShop\PrestaShop\Core\Import\EntityField;
 
 /**
- * Interface EntityFieldInterface describes an entity field
+ * Interface EntityFieldInterface describes an entity field.
  */
 interface EntityFieldInterface
 {
     /**
-     * Get field's name
+     * Get field's name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Get field's label
+     * Get field's label.
      *
      * @return string
      */
     public function getLabel();
 
     /**
-     * Get field's description
+     * Get field's description.
      *
      * @return string
      */
     public function getDescription();
 
     /**
-     * Checks if the field is required
+     * Checks if the field is required.
      *
      * @return bool
      */

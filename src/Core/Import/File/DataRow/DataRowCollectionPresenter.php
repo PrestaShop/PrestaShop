@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,11 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
-use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCell;
 use PrestaShop\PrestaShop\Core\Import\File\DataCell\EmptyDataCell;
 
 /**
- * Class DataRowCollectionPresenter presents a data row collection
+ * Class DataRowCollectionPresenter presents a data row collection.
  */
 final class DataRowCollectionPresenter implements DataRowCollectionPresenterInterface
 {
@@ -42,7 +41,8 @@ final class DataRowCollectionPresenter implements DataRowCollectionPresenterInte
     /**
      * @param DataRowPresenterInterface $dataRowPresenter
      */
-    public function __construct(DataRowPresenterInterface $dataRowPresenter) {
+    public function __construct(DataRowPresenterInterface $dataRowPresenter)
+    {
         $this->dataRowPresenter = $dataRowPresenter;
     }
 
@@ -53,12 +53,11 @@ final class DataRowCollectionPresenter implements DataRowCollectionPresenterInte
     {
         $presentedCollection = [
             'rows' => [],
-            'biggest_row_size' => $dataRowCollection->getBiggestRowSize(),
         ];
 
         /** @var DataRowInterface $dataRow */
         foreach ($dataRowCollection as $dataRow) {
-            $this->normalizeDataRow($dataRow, $presentedCollection['biggest_row_size']);
+            $this->normalizeDataRow($dataRow, $dataRowCollection->getBiggestRowSize());
             $presentedCollection['rows'][] = $this->dataRowPresenter->present($dataRow);
         }
 
@@ -67,6 +66,7 @@ final class DataRowCollectionPresenter implements DataRowCollectionPresenterInte
 
     /**
      * Normalize the data row by adding empty data cells until the expected row size is reached.
+     * This allows all rows to be equal in size.
      *
      * @param DataRowInterface $dataRow
      * @param int $expectedRowSize number of columns this row will reach

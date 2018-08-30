@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Import\EntityField;
 use ArrayIterator;
 
 /**
- * Class EntityFieldCollection defines an entity field collection
+ * Class EntityFieldCollection defines an entity field collection.
  */
 class EntityFieldCollection implements EntityFieldCollectionInterface
 {
