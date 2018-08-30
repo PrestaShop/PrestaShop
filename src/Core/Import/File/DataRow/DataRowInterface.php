@@ -24,32 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
-use SplFileInfo;
+use Countable;
+use IteratorAggregate;
+use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
+use ArrayAccess;
 
 /**
- * Class CsvFileReader defines a CSV file reader
+ * Interface DataRowInterface describes a data row from imported file
  */
-final class CsvFileReader implements FileReaderInterface
+interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
 {
     /**
-     * @var string the data delimiter in the CSV row
+     * Add a cell to this row
+     *
+     * @param DataCellInterface $cell
+     *
+     * @return self
      */
-    private $delimiter = ';';
+    public function addCell(DataCellInterface $cell);
 
     /**
-     * {@inheritdoc}
+     * Create a data row from given array
+     *
+     * @param array $data
+     *
+     * @return self
      */
-    public function read(SplFileInfo $file)
-    {
-        $handle = fopen($file->getPathname(), 'r');
-
-        while ($row = fgetcsv($handle, 0, $this->delimiter)) {
-            yield DataRow::createFromArray($row);
-        }
-
-        fclose($handle);
-    }
+    public static function createFromArray(array $data);
 }

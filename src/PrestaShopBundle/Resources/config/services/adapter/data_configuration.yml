@@ -248,6 +248,9 @@ services:
         arguments:
             - '@translator'
             - '@=service("prestashop.core.form.import.choice_provider_finder").getChoices()'
+            - '@=service("prestashop.core.import.dir")'
+            - '@=service("session").get("csv")'
+            - '@prestashop.core.import.factory.data_row.collection_factory'
 
     prestashop.adapter.import.import_data_match.provider:
         class: 'PrestaShop\PrestaShop\Adapter\Import\Configuration\ImportDataMatchProvider'
