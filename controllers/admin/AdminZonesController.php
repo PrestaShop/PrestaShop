@@ -142,13 +142,13 @@ class AdminZonesControllerCore extends AdminController
     }
 
     /**
-     * Get all zones displayed in a select input
+     * Get all zones displayed in a select input.
      */
     public function displayAjaxZones()
     {
         $html = '<select id="zone_to_affect" name="zone_to_affect">';
         foreach (Zone::getZones() as $z) {
-            $html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
+            $html .= '<option value="' . $z['id_zone'] . '">' . $z['name'] . '</option>';
         }
         $html .= '</select>';
         $array = array('hasError' => false, 'errors' => '', 'data' => $html);

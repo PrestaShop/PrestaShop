@@ -55,13 +55,13 @@ class AdminCurrenciesControllerCore extends AdminController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function checkToken()
     {
         // Specific check for cron task updating currency rates.
         if (Tools::isSubmit('secure_key')) {
-            return Tools::getValue('secure_key') === md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
+            return Tools::getValue('secure_key') === md5(_COOKIE_KEY_ . Configuration::get('PS_SHOP_NAME'));
         }
 
         return parent::checkToken();
@@ -360,7 +360,7 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         $shop_ids = Shop::getCompleteListOfShopsID();
         foreach ($shop_ids as $shop_id) {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)$shop_id);
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) $shop_id);
             Currency::refreshCurrencies();
         }
     }

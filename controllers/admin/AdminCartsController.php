@@ -833,7 +833,7 @@ class AdminCartsControllerCore extends AdminController
     }
 
     /**
-     * Display an image as a download
+     * Display an image as a download.
      */
     public function displayAjaxCustomizationImage()
     {
@@ -843,7 +843,7 @@ class AdminCartsControllerCore extends AdminController
 
         $img = Tools::getValue('img');
         $name = Tools::getValue('name');
-        $path = _PS_UPLOAD_DIR_.$img;
+        $path = _PS_UPLOAD_DIR_ . $img;
 
         if (Validate::isMd5($img) && Validate::isGenericName($path)) {
             header('Content-type: image/jpeg');

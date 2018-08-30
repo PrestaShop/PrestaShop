@@ -256,6 +256,7 @@ class ProductDownloadCore extends ObjectModel
             return 'get-file-admin.php?file=' . $this->filename;
         }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
+
         return  _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=get-file&key=' . $key;
     }
 
