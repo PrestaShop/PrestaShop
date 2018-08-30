@@ -160,7 +160,7 @@ services:
             - '@=service("prestashop.core.import.store_contact_field_collection.factory").create()'
 
     prestashop.core.form.import.choice_provider_finder:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportChoiceProviderFinder'
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportChoiceProviderFinder'
         arguments:
             - '@=service("session").get("entity")'
             -
