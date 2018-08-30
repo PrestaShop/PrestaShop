@@ -74,7 +74,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - '@prestashop.core.form.choice_provider.status'
+            - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'webservice', 'action': 'index'})"
             - "@=service('router').generate('admin_webservice')"
         public: true

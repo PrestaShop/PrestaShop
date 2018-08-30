@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 /**
  * Class WebserviceFilters
  */
-class WebserviceFilters extends Filters
+final class WebserviceFilters extends Filters
 {
     /**
      * {@inheritdoc}

@@ -32,13 +32,18 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class StatusChoiceProvider is responsible for providing choices for list statuses filter criteria
  */
-class StatusChoiceProvider implements FormChoiceProviderInterface
+final class StatusChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
+    /**
+     * StatusChoiceProvider constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -60,6 +61,13 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * Gets query builder with the common sql used for displaying webservice list and applying filter actions
+     *
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
     private function getQueryBuilder(array $filters)
     {
         $qb = $this->connection
