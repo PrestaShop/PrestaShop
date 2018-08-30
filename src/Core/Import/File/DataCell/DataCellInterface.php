@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Import\File\DataCell;
 
 /**
- * Interface DataCellInterface describes a data cell from imported file
+ * Interface DataCellInterface describes a data cell from imported file.
  */
 interface DataCellInterface
 {
     /**
-     * Get the value of the cell
+     * Get the value of the cell.
      *
      * @return string
      */
     public function getValue();
 
     /**
-     * Get the key of the cell
+     * Get the key of the cell.
      *
      * @return string
      */

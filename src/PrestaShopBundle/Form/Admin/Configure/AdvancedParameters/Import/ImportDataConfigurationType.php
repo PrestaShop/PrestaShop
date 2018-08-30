@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ImportDataConfigurationType is responsible for displaying the configuration of the
- * Advanced Parameters -> Import -> second step list
+ * Advanced Parameters -> Import -> second step list.
  */
 class ImportDataConfigurationType extends TranslatorAwareType
 {
@@ -85,8 +85,7 @@ class ImportDataConfigurationType extends TranslatorAwareType
             ->add('type_value', CollectionType::class, [
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
-                    'choices' =>
-                        [
+                    'choices' => [
                             $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
                         ] +
                         $this->entityFieldChoices,

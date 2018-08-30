@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
 /**
- * Interface DataRowCollectionPresenterInterface describes a data row collection presenter
+ * Interface DataRowCollectionPresenterInterface describes a data row collection presenter.
  */
 interface DataRowCollectionPresenterInterface
 {
     /**
-     * Present a data row collection into array
+     * Present a data row collection into array.
      *
      * @param DataRowCollectionInterface $dataRowCollection
      *

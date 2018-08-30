@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Import\File\FileReaderInterface;
 use SplFileInfo;
 
 /**
- * Class DataRowCollectionFactory defines a data row collection factory
+ * Class DataRowCollectionFactory defines a data row collection factory.
  */
 final class DataRowCollectionFactory implements DataRowCollectionFactoryInterface
 {
@@ -62,7 +62,7 @@ final class DataRowCollectionFactory implements DataRowCollectionFactoryInterfac
             }
 
             $dataRowCollection->addDataRow($dataRow);
-            $rowIndex++;
+            ++$rowIndex;
         }
 
         return $dataRowCollection;

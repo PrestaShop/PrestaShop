@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use ArrayAccess;
 use IteratorAggregate;
 
 /**
- * Interface DataRowCollectionInterface describes a collection of data rows
+ * Interface DataRowCollectionInterface describes a collection of data rows.
  */
 interface DataRowCollectionInterface extends ArrayAccess, IteratorAggregate
 {
     /**
-     * Add a data row to this collection
+     * Add a data row to this collection.
      *
      * @param DataRowInterface $dataRow
      *
@@ -44,7 +44,7 @@ interface DataRowCollectionInterface extends ArrayAccess, IteratorAggregate
     public function addDataRow(DataRowInterface $dataRow);
 
     /**
-     * Get the number of cells in the biggest row of collection
+     * Get the number of cells in the biggest row of collection.
      *
      * @return int
      */

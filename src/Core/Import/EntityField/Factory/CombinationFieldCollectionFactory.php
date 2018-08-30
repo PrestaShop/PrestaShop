@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class CombinationFieldCollectionFactory defines a combination field collection factory
+ * Class CombinationFieldCollectionFactory defines a combination field collection factory.
  */
 final class CombinationFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
 {
@@ -98,14 +98,13 @@ final class CombinationFieldCollectionFactory implements EntityFieldCollectionFa
                 $this->trans('Warehouse'),
                 $this->trans('ID of the warehouse to set as storage.', 'Admin.Advparameters.Help')
             ),
-
         ];
 
         return EntityFieldCollection::createFromArray($fields);
     }
 
     /**
-     * A shorter name method for translations
+     * A shorter name method for translations.
      *
      * @param string $id translation ID
      * @param string $domain translation domain

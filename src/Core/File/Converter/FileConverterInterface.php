@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\File\Converter;
 use SplFileInfo;
 
 /**
- * Interface FileConverterInterface defines a file converter
+ * Interface FileConverterInterface defines a file converter.
  */
 interface FileConverterInterface
 {
     /**
-     * Converts a file to a different format
+     * Converts a file to a different format.
      *
      * @param SplFileInfo $sourceFile file to convert
      *

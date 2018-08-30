@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCell;
 use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
 
 /**
- * Class DataRow defines a basic data row of imported file
+ * Class DataRow defines a basic data row of imported file.
  */
 final class DataRow implements DataRowInterface
 {
