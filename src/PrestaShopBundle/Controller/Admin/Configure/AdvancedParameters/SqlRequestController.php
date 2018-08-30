@@ -382,7 +382,7 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     public function exportAction($sqlRequestId)
     {
-        $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request');
+        $requestSqlExporter = $this->get('prestashop.core.sql_request.exporter.sql_request_exporter');
 
         try {
             $query = new GetSqlRequestExecutionResult($sqlRequestId);
