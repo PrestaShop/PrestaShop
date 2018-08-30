@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,12 +31,12 @@ use Countable;
 use IteratorAggregate;
 
 /**
- * Interface EntityFieldCollectionInterface describes a collection of entity fields
+ * Interface EntityFieldCollectionInterface describes a collection of entity fields.
  */
 interface EntityFieldCollectionInterface extends ArrayAccess, Countable, IteratorAggregate
 {
     /**
-     * Add an entity field to the collection
+     * Add an entity field to the collection.
      *
      * @param EntityFieldInterface $entityField
      *
@@ -45,7 +45,7 @@ interface EntityFieldCollectionInterface extends ArrayAccess, Countable, Iterato
     public function addEntityField(EntityFieldInterface $entityField);
 
     /**
-     * Creates a collection from array of entity fields
+     * Creates a collection from array of entity fields.
      *
      * @param array $entityFields array of objects implementing EntityFieldInterface
      *

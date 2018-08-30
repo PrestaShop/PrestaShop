@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
 use SplFileInfo;
 
 /**
- * Class CsvFileReader defines a CSV file reader
+ * Class CsvFileReader defines a CSV file reader.
  */
 final class CsvFileReader implements FileReaderInterface
 {

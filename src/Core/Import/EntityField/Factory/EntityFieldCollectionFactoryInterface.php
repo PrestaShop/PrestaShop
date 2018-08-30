@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
 
 /**
- * Interface EntityFieldCollectionFactoryInterface describes an entity field collection factory
+ * Interface EntityFieldCollectionFactoryInterface describes an entity field collection factory.
  */
 interface EntityFieldCollectionFactoryInterface
 {
     /**
-     * Create the entity field collection
+     * Create the entity field collection.
      *
      * @return EntityFieldCollectionInterface
      */

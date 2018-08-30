@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,12 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class ImportMatchConfigurationChoiceProvider is responsible for providing choices
- * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration
+ * in Advanced parameters -> Import -> Step 2 -> Load a data matching configuration.
  */
 final class ImportMatchConfigurationChoiceProvider implements FormChoiceProviderInterface
 {
