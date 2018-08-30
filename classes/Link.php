@@ -810,6 +810,14 @@ class LinkCore
                 }
         }
 
+        if (is_null($routeName)) {
+            $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
+        }
+
+        if (is_null($routeName)) {
+            $routeName = $this->searchRouteFromModules($controller);
+        }
+
         if (!is_null($routeName)) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
@@ -819,6 +827,51 @@ class LinkCore
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * @param string $controller
+     * @return string|null
+     * @throws PrestaShopException
+     */
+    private function searchRouteFromModules($controller)
+    {
+        $modulesRoutes = Hook::exec('symfonyModuleRoutes', array(), null, true);
+        if (is_array($modulesRoutes) && count($modulesRoutes) > 0) {
+            foreach ($modulesRoutes as $moduleName => $moduleRoutes) {
+                foreach ($moduleRoutes as $moduleRoute) {
+                    if (isset($moduleRoute['route_name']) && isset($moduleRoute['controller']) && $moduleRoute['controller'] == $controller) {
+                        return $moduleRoute['route_name'];
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \Symfony\Component\Routing\RouterInterface $sfRouter
+     * @param string $controller
+     *
+     * @return string|null
+     */
+    private function searchRouteFromRouter(\Symfony\Component\Routing\RouterInterface $sfRouter, $controller)
+    {
+        /**
+         * @var string $routeName
+         * @var \Symfony\Component\Routing\Route $route
+         */
+        foreach ($sfRouter->getRouteCollection() as $routeName => $route) {
+            if (in_array('GET', $route->getMethods())) {
+                $routeDefaults = $route->getDefaults();
+                if (isset($routeDefaults['_legacy_link']) && $controller == $routeDefaults['_legacy_link']) {
+                    return $routeName;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
