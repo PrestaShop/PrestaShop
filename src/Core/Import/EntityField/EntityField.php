@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\EntityField;
 
 /**
- * Class EntityField defines an entity field
+ * Class EntityField defines an entity field.
  */
 final class EntityField implements EntityFieldInterface
 {
@@ -74,7 +74,7 @@ final class EntityField implements EntityFieldInterface
     }
 
     /**
-     * Get field's label
+     * Get field's label.
      *
      * @return string
      */
@@ -84,7 +84,7 @@ final class EntityField implements EntityFieldInterface
     }
 
     /**
-     * Get field's description
+     * Get field's description.
      *
      * @return string
      */

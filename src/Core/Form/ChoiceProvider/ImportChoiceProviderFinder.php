@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class ImportChoiceProviderFinder finds the responsible import choice provider
+ * Class ImportChoiceProviderFinder finds the responsible import choice provider.
  */
 final class ImportChoiceProviderFinder implements FormChoiceProviderInterface
 {
@@ -63,7 +63,7 @@ final class ImportChoiceProviderFinder implements FormChoiceProviderInterface
     }
 
     /**
-     * Finds the choice provider for the import entity
+     * Finds the choice provider for the import entity.
      *
      * @return FormChoiceProviderInterface
      */

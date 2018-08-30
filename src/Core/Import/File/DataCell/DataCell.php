@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\File\DataCell;
 
 /**
- * Class DataCell defines a data cell of imported file
+ * Class DataCell defines a data cell of imported file.
  */
 final class DataCell implements DataCellInterface
 {

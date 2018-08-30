@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\File\DataCell;
 
 /**
- * Class EmptyDataCell defines an empty data cell
+ * Class EmptyDataCell defines an empty data cell.
  */
 final class EmptyDataCell implements DataCellInterface
 {

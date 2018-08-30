@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class ImportDataConfigurationFormHandler defines a form handler for import data configuration form
+ * Class ImportDataConfigurationFormHandler defines a form handler for import data configuration form.
  */
 final class ImportDataConfigurationFormHandler implements FormHandlerInterface
 {
@@ -75,7 +75,7 @@ final class ImportDataConfigurationFormHandler implements FormHandlerInterface
 
         $this->formBuilder->setData($this->formDataProvider->getData());
         $this->hookDispatcher->dispatchWithParameters(
-            "actionImportDataConfigurationForm",
+            'actionImportDataConfigurationForm',
             [
                 'form_builder' => $this->formBuilder,
             ]
@@ -92,7 +92,7 @@ final class ImportDataConfigurationFormHandler implements FormHandlerInterface
         $errors = $this->formDataProvider->setData($data);
 
         $this->hookDispatcher->dispatchWithParameters(
-            "actionImportDataConfigurationSave",
+            'actionImportDataConfigurationSave',
             [
                 'errors' => &$errors,
                 'form_data' => &$data,

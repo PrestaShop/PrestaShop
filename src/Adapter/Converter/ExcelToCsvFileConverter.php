@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Class ExcelToCsvFileConverter defines an excel to CSV file converter
+ * Class ExcelToCsvFileConverter defines an excel to CSV file converter.
  */
 class ExcelToCsvFileConverter implements FileConverterInterface
 {
@@ -77,13 +77,13 @@ class ExcelToCsvFileConverter implements FileConverterInterface
             $this->filesystem->mkdir($this->excelDirectory);
         }
 
-        $destinationFilename = basename($sourceFile->getFilename(), $sourceFile->getExtension()).'.csv';
-        $destinationFilePath = $this->excelDirectory.$destinationFilename;
+        $destinationFilename = basename($sourceFile->getFilename(), $sourceFile->getExtension()) . '.csv';
+        $destinationFilePath = $this->excelDirectory . $destinationFilename;
 
         if (!$this->filesystem->exists($destinationFilePath)) {
             $excelReader = PHPExcel_IOFactory::createReaderForFile($sourceFile->getFilename());
             $excelReader->setReadDataOnly(true);
-            $excelFile = $excelReader->load($sourceFile->getFilename().$destinationFilename);
+            $excelFile = $excelReader->load($sourceFile->getFilename() . $destinationFilename);
             $csvWriter = PHPExcel_IOFactory::createWriter($excelFile, 'CSV');
             $csvWriter->setSheetIndex(0);
             $csvWriter->setDelimiter(';');

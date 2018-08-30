@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,12 +31,13 @@ use DbQuery;
 
 /**
  * Class ImportDataMatchProvider is responsible for getting import data match configuration which are used to load
- * different kind of configurations for import list in Advanced parameters -> Import -> step 2
+ * different kind of configurations for import list in Advanced parameters -> Import -> step 2.
  */
 class ImportDataMatchProvider
 {
     /**
-     * Gets import match configuration which contains id and name of the configuration
+     * Gets import match configuration which contains id and name of the configuration.
+     *
      * @return array
      *
      * @throws \PrestaShopDatabaseException
