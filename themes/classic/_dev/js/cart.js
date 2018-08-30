@@ -236,9 +236,13 @@ $(document).ready(() => {
     }
 
     // There should be a new product quantity in cart
-    const qty = targetValue - baseValue;
+    let qty = targetValue - baseValue;
     if (qty === 0) {
       return;
+    }
+    
+    if (targetValue == 0) {
+        qty = baseValue;
     }
 
     $target.attr('value', targetValue);
