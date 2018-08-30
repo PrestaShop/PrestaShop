@@ -24,24 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File\Cell;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory;
+
+use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollectionInterface;
+use SplFileInfo;
 
 /**
- * Interface DataCellInterface describes a data cell from imported file
+ * Interface DataRowCollectionFactoryInterface describes a data row collection factory
  */
-interface DataCellInterface
+interface DataRowCollectionFactoryInterface
 {
     /**
-     * Get the value of the cell
+     * Builds a data row collection
      *
-     * @return string
-     */
-    public function getValue();
-
-    /**
-     * Get the key of the cell
+     * @param SplFileInfo $file
+     * @param int $maxRowsInCollection maximum number of rows this collection can have. Unlimited if not provided.
      *
-     * @return string
+     * @return DataRowCollectionInterface
      */
-    public function getKey();
+    public function buildFromFile(SplFileInfo $file, $maxRowsInCollection = null);
 }

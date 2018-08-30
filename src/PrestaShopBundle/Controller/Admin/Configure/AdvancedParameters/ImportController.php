@@ -34,6 +34,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use SplFileInfo;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -167,8 +168,16 @@ class ImportController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
         $form = $formHandler->getForm();
 
+        $importDirectory = $this->get('prestashop.core.import.dir');
+        $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
+        $dataRowCollectionPresenter = $this->get('prestashop.core.import.data_row.collection_presenter');
+
+        $importFile = new SplFileInfo($importDirectory.$request->getSession()->get('csv'));
+        $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, 10);
+
         return [
             'importDataConfigurationForm' => $form->createView(),
+            'dataRowCollection' => $dataRowCollectionPresenter->present($dataRowCollection),
         ];
     }
 

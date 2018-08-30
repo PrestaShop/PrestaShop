@@ -24,31 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File\Row;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
-use PrestaShop\PrestaShop\Core\Import\File\Cell\DataCellInterface;
 use ArrayAccess;
+use IteratorAggregate;
 
 /**
- * Interface DataRowInterface describes a data row from imported file
+ * Interface DataRowCollectionInterface describes a collection of data rows
  */
-interface DataRowInterface extends ArrayAccess
+interface DataRowCollectionInterface extends ArrayAccess, IteratorAggregate
 {
     /**
-     * Add a cell to this row
+     * Add a data row to this collection
      *
-     * @param DataCellInterface $cell
+     * @param DataRowInterface $dataRow
      *
      * @return self
      */
-    public function addCell(DataCellInterface $cell);
+    public function addDataRow(DataRowInterface $dataRow);
 
     /**
-     * Create a data row from given array
+     * Get the number of cells in the biggest row of collection
      *
-     * @param array $data
-     *
-     * @return self
+     * @return int
      */
-    public static function createFromArray(array $data);
+    public function getBiggestRowSize();
 }
