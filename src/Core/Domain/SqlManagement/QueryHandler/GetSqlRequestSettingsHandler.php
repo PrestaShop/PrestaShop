@@ -54,7 +54,7 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
      */
     public function handle(GetSqlRequestSettings $query)
     {
-        $fileEncodingIntValue = $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL');
+        $fileEncodingIntValue = $this->configuration->get(SqlRequestSettings::FILE_ENCODING);
 
         return new SqlRequestSettings(
             $this->getFileEncoding($fileEncodingIntValue)

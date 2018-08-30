@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
  */
 class SqlRequestSettings
 {
+    const FILE_ENCODING = 'PS_ENCODING_FILE_MANAGER_SQL';
+
     /**
      * @var string Encoding in which downloaded SqlRequest SQL query result files will be encoded
      */
