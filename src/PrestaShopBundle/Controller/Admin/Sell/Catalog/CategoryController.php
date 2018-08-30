@@ -52,7 +52,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryGridFactory = $this->get('prestashop.core.grid.factory.category');
         $categoryGrid = $categoryGridFactory->getGrid($searchCriteria);
 
-        $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
+        $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
             'categoriesGrid' => $gridPresenter->present($categoryGrid),
