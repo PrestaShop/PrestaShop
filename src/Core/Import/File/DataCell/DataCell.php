@@ -24,32 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File;
-
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
-use SplFileInfo;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataCell;
 
 /**
- * Class CsvFileReader defines a CSV file reader
+ * Class DataCell defines a data cell of imported file
  */
-final class CsvFileReader implements FileReaderInterface
+final class DataCell implements DataCellInterface
 {
     /**
-     * @var string the data delimiter in the CSV row
+     * @var string key of the data
      */
-    private $delimiter = ';';
+    private $key;
+
+    /**
+     * @var string data value
+     */
+    private $value;
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function __construct($key, $value)
+    {
+        $this->key = $key;
+        $this->value = $value;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function read(SplFileInfo $file)
+    public function getValue()
     {
-        $handle = fopen($file->getPathname(), 'r');
+        return $this->value;
+    }
 
-        while ($row = fgetcsv($handle, 0, $this->delimiter)) {
-            yield DataRow::createFromArray($row);
-        }
-
-        fclose($handle);
+    /**
+     * {@inheritdoc}
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 }

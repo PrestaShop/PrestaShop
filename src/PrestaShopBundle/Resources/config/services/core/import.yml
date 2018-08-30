@@ -28,6 +28,22 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
+    prestashop.core.import.csv_file_reader:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\CsvFileReader'
+
+    prestashop.core.import.data_row.presenter:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowPresenter'
+
+    prestashop.core.import.data_row.collection_presenter:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollectionPresenter'
+        arguments:
+            - '@prestashop.core.import.data_row.presenter'
+
+    prestashop.core.import.factory.data_row.collection_factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactory'
+        arguments:
+            - '@prestashop.core.import.csv_file_reader'
+
     prestashop.core.import.product_field_collection.factory:
         class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\ProductFieldCollectionFactory'
         arguments:
