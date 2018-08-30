@@ -55,9 +55,9 @@ export default class CategoryPositionExtension {
         const categoryParentId = $categoryPositionContainer.data('id-parent-category');
         const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-        let params = positions.replace(/_grid_table/g, '');
+        let params = positions.replace(new RegExp(grid.getId() + '_grid_table', 'g'), 'category');
         params +=  '&id_category_parent=' + categoryParentId + '&id_category_to_move=' + categoryId;
-        params += '&way=' + way;
+        params += '&way=' + way + '&ajax=1&action=updatePositions';
 
         if (positions.indexOf('_0&') !== -1) {
           params += '&found_first=1';
