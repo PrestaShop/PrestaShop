@@ -47,26 +47,26 @@ class CommonController extends FrameworkBundleAdminController
      * This includes:
      * - Created orders
      * - Registered customers
-     * - New messages
+     * - New messages.
      *
      * @return JsonResponse
      */
     public function notificationsAction()
     {
         // Adapter needed here?
-        return new JsonResponse((new \Notification)->getLastElements());
+        return new JsonResponse((new \Notification())->getLastElements());
     }
 
     /**
-     * Update the last time a notification type has been seen
-     * 
+     * Update the last time a notification type has been seen.
+     *
      * @param Request $request
      */
     public function notificationsAckAction(Request $request)
     {
         $type = $request->request->get('type');
         // Adapter needed here?
-        return new JsonResponse((new \Notification)->updateEmployeeLastElement($type));
+        return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
     }
 
     /**

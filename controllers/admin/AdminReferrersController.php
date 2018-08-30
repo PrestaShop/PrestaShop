@@ -374,9 +374,9 @@ class AdminReferrersControllerCore extends AdminController
     {
         $this->ajaxRender(
             Referrer::getAjaxProduct(
-                (int)Tools::getValue('id_referrer'),
-                (int)Tools::getValue('id_product'),
-                new Employee((int)Tools::getValue('id_employee'))
+                (int) Tools::getValue('id_referrer'),
+                (int) Tools::getValue('id_product'),
+                new Employee((int) Tools::getValue('id_employee'))
         ));
     }
 
@@ -385,17 +385,17 @@ class AdminReferrersControllerCore extends AdminController
         $json_array = array();
         $result = Db::getInstance()->executeS('
             SELECT p.id_product, pl.name
-            FROM '._DB_PREFIX_.'product p
-            LEFT JOIN '._DB_PREFIX_.'product_lang pl
-                ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)Tools::getValue('id_lang').')
-            '.(Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%'.pSQL(Tools::getValue('filter')).'%"' : '')
+            FROM ' . _DB_PREFIX_ . 'product p
+            LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl
+                ON (p.id_product = pl.id_product AND pl.id_lang = ' . (int) Tools::getValue('id_lang') . ')
+            ' . (Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%' . pSQL(Tools::getValue('filter')) . '%"' : '')
         );
 
         foreach ($result as $row) {
-            $json_array[] = '{id_product:'.(int)$row['id_product'].',name:\''.addslashes($row['name']).'\'}';
+            $json_array[] = '{id_product:' . (int) $row['id_product'] . ',name:\'' . addslashes($row['name']) . '\'}';
         }
 
-        $this->ajaxRender('['.implode(',', $json_array).']');
+        $this->ajaxRender('[' . implode(',', $json_array) . ']');
     }
 
     public function displayCalendar($action = null, $table = null, $identifier = null, $id = null)

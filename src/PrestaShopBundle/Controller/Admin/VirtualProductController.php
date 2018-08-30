@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -76,7 +75,7 @@ class VirtualProductController extends FrameworkBundleAdminController
                 $router->generate(
                     'admin_product_virtual_download_file_action',
                     ['idProduct' => $idProduct]
-                ):
+                ) :
                 '';
 
             $product->is_virtual = 1;
@@ -92,9 +91,10 @@ class VirtualProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Download the content of the virtual product
-     * 
+     * Download the content of the virtual product.
+     *
      * @param int $idProduct
+     *
      * @return BinaryFileResponse
      */
     public function downloadFileAction($idProduct)
