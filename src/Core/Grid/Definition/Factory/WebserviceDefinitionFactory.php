@@ -113,13 +113,15 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('description'))
                 ->setName($this->trans('Key description', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
-                    'field' => 'description'
+                    'field' => 'description',
+                    'sortable' => false
                 ])
             )
             ->add((new DataColumn('active'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'active'
+                    'field' => 'active',
+                    'sortable' => false
                 ])
             )
             ->add((new ActionColumn('actions'))

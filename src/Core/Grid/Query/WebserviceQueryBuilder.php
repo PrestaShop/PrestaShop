@@ -42,7 +42,7 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('wa.`id_webservice_account`, wa.`key`, wa.`description`, wa.`active`')
             ->orderBy(
-            $searchCriteria->getOrderBy(),
+            $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
             $searchCriteria->getOrderWay()
             )
             ->setFirstResult($searchCriteria->getOffset())
@@ -86,5 +86,17 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $qb;
+    }
+
+    /**
+     * Gets modified order by which includes an alias
+     *
+     * @param string $orderBy - original order by value
+     *
+     * @return string
+     */
+    private function getModifiedOrderBy($orderBy)
+    {
+        return $orderBy === 'key' ? 'wa.`key`' : '';
     }
 }
