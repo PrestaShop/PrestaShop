@@ -32,6 +32,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Performance" servers block management.
@@ -66,7 +67,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
             return new JsonResponse(array('test' => $isValid));
         }
 
-        return new JsonResponse(array('errors' => 'error'), 400);
+        return new JsonResponse(array('errors' => 'error'), Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -87,16 +88,19 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            return new JsonResponse(array(
-                'errors' => array($this->trans('You do not have permission to create this.', 'Admin.Notifications.Error'),
+            return new JsonResponse(
+                array(
+                    'errors' => array(
+                        $this->trans('You do not have permission to create this.', 'Admin.Notifications.Error'),
+                    ),
                 ),
-            ), 400);
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $postValues = $request->request;
 
-        if (
-            $postValues->has('server_ip')
+        if ($postValues->has('server_ip')
             && $postValues->has('server_port')
             && $postValues->has('server_weight')
             && $this->getMemcacheManager()->testConfiguration(
@@ -107,7 +111,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
             $server = $this->getMemcacheManager()
                 ->addServer(
                     $postValues->get('server_ip'),
-                    $postValues->get('server_port'),
+                    $postValues->getInt('server_port'),
                     $postValues->get('server_weight')
                 )
             ;
@@ -115,9 +119,14 @@ class MemcacheServerController extends FrameworkBundleAdminController
             return new JsonResponse($server, 201);
         }
 
-        return new JsonResponse(array('errors' => array(
-            $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification'),
-        )), 400);
+        return new JsonResponse(
+            array(
+                'errors' => array(
+                    $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification'),
+                ),
+            ),
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
     /**
@@ -138,21 +147,33 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            return new JsonResponse(array(
-                'errors' => array($this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
+            return new JsonResponse(
+                array(
+                    'errors' => array(
+                        $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
+                    ),
                 ),
-            ), 400);
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         if ($request->request->has('server_id')) {
             $this->getMemcacheManager()->deleteServer($request->request->get('server_id'));
 
-            return new JsonResponse(array(), 204);
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }
 
-        return new JsonResponse(array('errors' => array(
-            $this->trans('There was an error when attempting to delete the Memcached server.', 'Admin.Advparameters.Notification'),
-        )), 400);
+        return new JsonResponse(
+            array(
+                'errors' => array(
+                    $this->trans(
+                        'There was an error when attempting to delete the Memcached server.',
+                        'Admin.Advparameters.Notification'
+                    ),
+                ),
+            ),
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
     /**
