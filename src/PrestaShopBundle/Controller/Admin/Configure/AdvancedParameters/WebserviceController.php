@@ -72,7 +72,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $twigValues = [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_webservice'), //todo: should point to ws creation page
+                    'href' => $this->generateUrl('admin_webservice_list_create'),
                     'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -91,6 +91,32 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
     }
 
+    public function listCreateAction()
+    {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        //@todo: this action should point to new add page
+        $legacyLink = $legacyContext->getAdminLink(
+                'AdminWebservice'
+            ).'&addwebservice_account';
+
+        return $this->redirect($legacyLink);
+    }
+
+    public function listEditAction($webserviceAccountId)
+    {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        //@todo: this action should point to new edit page
+        $legacyLink = $legacyContext->getAdminLink(
+            'AdminWebservice',
+            true,
+            [
+                'id_webservice_account' => $webserviceAccountId
+            ]
+        ).'&updatewebservice_account';
+
+        return $this->redirect($legacyLink);
+    }
+
     //todo: check access
     public function searchAction(Request $request)
     {
@@ -102,8 +128,6 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $searchParametersForm->handleRequest($request);
         $filters = [];
-
-        // todo: $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
         if ($searchParametersForm->isSubmitted()) {
             $filters = $searchParametersForm->getData();
@@ -186,17 +210,17 @@ class WebserviceController extends FrameworkBundleAdminController
 
     /**
      * todo: check access
-     * @param int $idWebserviceAccount
+     * @param int $webserviceAccountId
      *
      * @return RedirectResponse
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function toggleStatusAction($idWebserviceAccount)
+    public function toggleStatusAction($webserviceAccountId)
     {
         $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
-        $errors = $statusModifier->toggleStatus($idWebserviceAccount);
+        $errors = $statusModifier->toggleStatus($webserviceAccountId);
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -216,6 +240,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
+     *
+     * @throws \Exception
      */
     public function processFormAction(Request $request)
     {

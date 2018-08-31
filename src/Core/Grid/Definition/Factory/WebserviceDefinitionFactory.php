@@ -129,7 +129,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
                     'route' => 'admin_webservice_status_toggle',
-                    'route_param_id' => 'idWebserviceAccount'
+                    'route_param_id' => 'webserviceAccountId'
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -139,7 +139,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_delete_single_webservice_log', //todo: change to edit parameters
+                                'route' => 'admin_webservice_list_edit',
                                 'route_param_name' => 'webserviceAccountId',
                                 'route_param_field' => 'id_webservice_account',
                             ])
