@@ -48,7 +48,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     /**
      * @var array
      */
-    private $renderingContent = array();
+    private $renderingContent = [];
 
     /**
      * @var bool
@@ -129,7 +129,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         }
         if ($event instanceof RenderingHookEvent) {
             $event->setContent($this->renderingContent);
-            $this->renderingContent = array();
+            $this->renderingContent = [];
         }
     }
 
@@ -143,7 +143,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @throws \Exception
      */
-    public function dispatchForParameters($eventName, array $parameters = array())
+    public function dispatchForParameters($eventName, array $parameters = [])
     {
         $event = new HookEvent();
         $event->setHookParameters($parameters);
@@ -161,7 +161,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @throws \Exception
      */
-    public function renderForParameters($eventName, array $parameters = array())
+    public function renderForParameters($eventName, array $parameters = [])
     {
         $event = new RenderingHookEvent();
         $event->setHookParameters($parameters);
