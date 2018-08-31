@@ -61,6 +61,10 @@ final class DataRowCollection implements DataRowCollectionInterface
      */
     public function offsetGet($offset)
     {
+        if (!$this->offsetExists($offset)) {
+            return null;
+        }
+
         return $this->dataRows[$offset];
     }
 

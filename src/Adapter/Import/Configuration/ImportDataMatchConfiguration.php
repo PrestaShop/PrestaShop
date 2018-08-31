@@ -73,13 +73,9 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     {
         $importFile = new SplFileInfo($this->importDirectory . $this->importFilename);
         $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
-        $rowSize = 0;
 
-        foreach ($dataRowCollection as $dataRow) {
-            // Getting the number of cells in a row
-            $rowSize = count($dataRow);
-            break;
-        }
+        // Getting the number of cells in the first row
+        $rowSize = count($dataRowCollection->offsetGet(0));
 
         $configuration = [
             'type_value' => [],
@@ -87,6 +83,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
 
         $numberOfValuesAdded = 0;
 
+        // Add as many values to the configuration as the are cells in the row
         foreach ($this->entityFieldChoices as $choice) {
             // If we already added the required number of values - stop adding them
             if ($numberOfValuesAdded >= $rowSize) {
