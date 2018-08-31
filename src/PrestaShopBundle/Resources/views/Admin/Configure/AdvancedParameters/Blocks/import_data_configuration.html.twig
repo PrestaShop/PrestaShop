@@ -99,23 +99,40 @@
       <div class="row">
         <table class="table table-bordered">
           <thead>
-            {% for importEntityField in dataConfigurationForm.type_value %}
-              <th>
-                {{ form_errors(importEntityField) }}
-                {{ form_widget(importEntityField) }}
-              </th>
-            {% endfor %}
+            <tr>
+              {% for importEntityField in dataConfigurationForm.type_value %}
+                <th{% if loop.index > maxVisibleColumns %} class="d-none"{% endif %}>
+                  {{ form_errors(importEntityField) }}
+                  {{ form_widget(importEntityField) }}
+                </th>
+              {% endfor %}
+            </tr>
           </thead>
           <tbody>
             {% for row in dataRowCollection.rows %}
               <tr>
                 {% for cell in row %}
-                  <td>{{ cell.value }}</td>
+                  <td{% if loop.index > maxVisibleColumns %} class="d-none"{% endif %}>{{ cell.value }}</td>
                 {% endfor %}
               </tr>
             {% endfor %}
           </tbody>
         </table>
+      </div>
+      <div class="row">
+        <div class="col text-left">
+          <button class="btn btn-outline-primary js-import-previous-page d-none" type="button">
+            <i class="material-icons">arrow_back</i>
+          </button>
+        </div>
+        <div class="col text-right">
+          <button
+            class="btn btn-outline-primary js-import-previous-page{% if not showPagingArrows %} d-none{% endif %}"
+            type="button"
+          >
+            <i class="material-icons">arrow_forward</i>
+          </button>
+        </div>
       </div>
       {{ form_rest(dataConfigurationForm) }}
     </div>

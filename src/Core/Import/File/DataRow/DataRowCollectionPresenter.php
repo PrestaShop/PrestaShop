@@ -53,6 +53,7 @@ final class DataRowCollectionPresenter implements DataRowCollectionPresenterInte
     {
         $presentedCollection = [
             'rows' => [],
+            'row_size' => $dataRowCollection->getBiggestRowSize(),
         ];
 
         /** @var DataRowInterface $dataRow */
