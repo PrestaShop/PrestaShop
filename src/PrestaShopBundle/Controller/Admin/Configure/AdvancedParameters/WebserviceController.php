@@ -230,7 +230,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     *
+     * 
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
