@@ -38,7 +38,7 @@
     {% endblock %}
 
     {% block webservice_form_configuration %}
-      {{ form_start(form, {'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+      {{ form_start(form, {'action': path('admin_webservice_settings_save') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
         <div class="col-xl-10">
           <div class="card">
             <h3 class="card-header">
@@ -86,6 +86,7 @@
             </div>
           </div>
         </div>
+      {{ form_rest(form) }}
       {{ form_end(form) }}
     {% endblock %}
   </div>

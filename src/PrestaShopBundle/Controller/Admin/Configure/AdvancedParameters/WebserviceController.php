@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -45,7 +46,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Displays the Webservice main page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
      * @param WebserviceFilters $filters - filters for webservice list
      * @param Request $request
@@ -91,6 +92,13 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
     }
 
+    /**
+     * Redirects to webservice account form where new webservice account record can be created
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     *
+     * @return RedirectResponse
+     */
     public function listCreateAction()
     {
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
@@ -102,6 +110,15 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    /**
+     * Redirects to webservice account form where existing webservice account record can be edited
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     *
+     * @param $webserviceAccountId
+     *
+     * @return RedirectResponse
+     */
     public function listEditAction($webserviceAccountId)
     {
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
@@ -117,7 +134,15 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    //todo: check access
+    /**
+     * Searches for specific records
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
@@ -137,11 +162,16 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * todo: check access
+     * Deletes single record
+     *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to delete this.")
      *
      * @param int $webserviceAccountId
      *
      * @return RedirectResponse
+     *
+     * @throws \PrestaShopException
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
@@ -161,7 +191,10 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * todo: check access
+     * Deletes selected records
+     *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to delete this.")
      *
      * @param Request $request
      *
@@ -188,6 +221,18 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_webservice');
     }
 
+    /**
+     * Enables status for selected rows
+     *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
     public function enableMultipleStatusAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_bulk_action');
@@ -198,6 +243,18 @@ class WebserviceController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_webservice');
     }
 
+    /**
+     * Disables status for selected rows
+     *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
     public function disableMultipleStatusAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_bulk_action');
@@ -209,7 +266,11 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * todo: check access
+     * Toggles webservice account status
+     *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     *
      * @param int $webserviceAccountId
      *
      * @return RedirectResponse
@@ -237,13 +298,16 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Process the Webservice configuration form.
      *
+     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
      *
      * @throws \Exception
      */
-    public function processFormAction(Request $request)
+    public function processSettingsFormAction(Request $request)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
 
