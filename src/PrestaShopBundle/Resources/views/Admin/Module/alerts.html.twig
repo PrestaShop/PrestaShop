@@ -1,0 +1,47 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/Module/common.html.twig' %}
+
+{% block content %}
+    {# Addons connect modal #}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+    {# PrestaTrust modal #}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
+    {# Contains toolbar-nav for module page #}
+    {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+    {# Actual Page Content #}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div id="module-short-list-configure" class="module-short-list">
+                <span class="module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules|length}, 'Admin.Modules.Feature') }}</span>
+                <span class="help-box" data-toggle="popover"
+                      data-title="{{ "Modules to configure"|trans({}, 'Admin.Modules.Feature') }}"
+                      data-content="{{ "These modules require your attention: you need to take some action to ensure they are fully operational."|trans({}, 'Admin.Modules.Help') }}">
+                </span>
+            </div>
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules': modules, 'display_type': 'list', id: 'notification'  } %}
+        </div>
+    </div>
+{% endblock %}

@@ -82,16 +82,17 @@ class MemcacheServerManager
      *
      * @return bool
      */
-    public function testConfiguration($serverIp, $serverHost)
+    public function testConfiguration($serverIp, $serverPort)
     {
         if (extension_loaded('memcached')) {
             $memcached = new Memcached();
-            $memcached->addServer($serverIp, $serverHost);
+            $memcached->addServer($serverIp, $serverPort);
+            $version = $memcached->getVersion();
 
-            return false === in_array('255.255.255', $memcached->getVersion(), true);
+            return is_array($version) && false === in_array('255.255.255', $version, true);
         }
 
-        return true === @memcache_connect($serverIp, $serverHost);
+        return true === @memcache_connect($serverIp, $serverPort);
     }
 
     /**

@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "webpack --progress",
     "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
     "watch": "webpack --progress --colors --debug --display-chunks --watch",
     "start-dev-server": "webpack-dev-server --config webpack.config.js",

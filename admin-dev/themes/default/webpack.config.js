@@ -22,11 +22,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = {
+const config = {
   entry: [
     './js/theme.js'
   ],
@@ -75,6 +75,11 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('theme.css'),
+  ]
+};
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
@@ -89,5 +94,9 @@ module.exports = {
         comments: false
       }
     })
-  ]
-};
+  );
+} else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
+}
+
+module.exports = config;

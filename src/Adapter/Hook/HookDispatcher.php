@@ -45,7 +45,14 @@ use PrestaShop\PrestaShop\Core\Hook\Hook;
  */
 class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
 {
+    /**
+     * @var array
+     */
     private $renderingContent = array();
+
+    /**
+     * @var bool
+     */
     private $propagationStoppedCalledBy = false;
 
     /**
@@ -175,7 +182,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     public function dispatchRendering(HookInterface $hook)
     {
-        $event = $this->hookDispatcherService->renderForParameters(
+        $event = $this->renderForParameters(
             $hook->getName(),
             $hook->getParameters()
         );

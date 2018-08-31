@@ -291,8 +291,12 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         /* @var $event HookEvent */
         $content = Hook::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
 
-        if ($event instanceof RenderingHookEvent && 0 !== $moduleId) {
-            $event->setContent(array_values($content)[0], array_keys($content)[0]);
+        if (
+            $event instanceof RenderingHookEvent
+            && 0 !== $moduleId
+            && !empty($content)
+        ) {
+            $event->setContent([array_values($content)[0]], array_keys($content)[0]);
         }
     }
 }

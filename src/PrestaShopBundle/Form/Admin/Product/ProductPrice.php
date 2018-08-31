@@ -30,12 +30,17 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the product price form.
  */
 class ProductPrice extends CommonAbstractType
 {
+    // When the form is used to create, the product does not yet exists
+    // however the ID is required for some fields so we use a default one:
+    const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
+
     private $translator;
     private $tax_rules;
     private $tax_rules_rates;
@@ -180,7 +185,12 @@ class ProductPrice extends CommonAbstractType
                     'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')],
                 ]
             )
-            ->add('specific_price', ProductSpecificPrice::class)
+            ->add('specific_price',
+                ProductSpecificPrice::class,
+                [
+                    'id_product' => $options['id_product'],
+                ]
+            )
             ->add(
                 'specificPricePriorityToAll',
                 FormType\CheckboxType::class,
@@ -208,6 +218,16 @@ class ProductPrice extends CommonAbstractType
                 ]
             );
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'id_product' => self::DEFAULT_PRODUCT_ID_FOR_FORM_CREATION,
+        ]);
     }
 
     /**

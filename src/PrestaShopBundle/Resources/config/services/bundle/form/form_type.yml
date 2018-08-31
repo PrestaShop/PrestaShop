@@ -479,3 +479,42 @@ services:
             - '@prestashop.core.form.choice_provider.contact_by_id'
         tags:
             - { name: form.type }
+
+    form.type.translations.modify:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.translation_type").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.email_content_type").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.module_by_name").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.translations.add_update_language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.non_installed_localization").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.translations.export_language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.translations.copy_language:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+        tags:
+            - { name: form.type }

@@ -75,4 +75,41 @@ class Validate
     {
         return ValidateLegacy::isCleanHtml($html, $allowIframe);
     }
+
+    /**
+<<<<<<< HEAD
+     * Check for module name validity.
+     *
+     * @param string $name Module name to validate
+     *
+     * @return bool
+     */
+    public function isModuleName($name)
+    {
+        return ValidateLegacy::isModuleName($name);
+    }
+
+    /**
+     * Check if object has been correctly loaded.
+     *
+     * @param object $object Object to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isLoadedObject($object)
+    {
+        return ValidateLegacy::isLoadedObject($object);
+    }
+
+    /**
+     * Check for Language Iso Code.
+     *
+     * @param string $isoCode
+     *
+     * @return bool
+     */
+    public function isLangIsoCode($isoCode)
+    {
+        return ValidateLegacy::isLangIsoCode($isoCode);
+    }
 }

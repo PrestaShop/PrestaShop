@@ -1,0 +1,80 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.International.Feature' %}
+
+{{ form_start(exportLanguageForm, {action: path('admin_international_translations_export_theme')}) }}
+
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">cloud_upload</i> {{ 'Export a language'|trans }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      <div class="row">
+        <div class="col-sm">
+          <div class="alert alert-info" role="alert">
+            <div class="alert-text">
+              {{ 'Export data from one language to a file (language pack).'|trans({}, 'Admin.International.Help') }} <br>
+              {{ 'Select which theme you would like to export your translations to.'|trans({}, 'Admin.International.Help') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Language'|trans({}, 'Admin.Global') }}
+        </label>
+        <div class="col-sm">
+          {{ form_errors(exportLanguageForm.iso_code) }}
+          {{ form_widget(exportLanguageForm.iso_code) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Select your theme'|trans }}
+        </label>
+        <div class="col-sm">
+          {{ form_errors(exportLanguageForm.theme_name) }}
+          {{ form_widget(exportLanguageForm.theme_name) }}
+        </div>
+      </div>
+      {{ form_rest(exportLanguageForm) }}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary">
+        <i class="material-icons">cloud_download</i>
+        <span>{{ 'Export'|trans({}, 'Admin.Actions') }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+{{ form_end(exportLanguageForm) }}

@@ -1250,7 +1250,12 @@ class CartCore extends ObjectModel
      */
     public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
-        $result = $this->getProductQuantity($id_product, $id_product_attribute, $id_customization, $id_address_delivery);
+        $result = $this->getProductQuantity(
+            $id_product,
+            $id_product_attribute,
+            $id_customization,
+            $id_address_delivery
+        );
 
         if (empty($result['quantity'])) {
             return false;
@@ -1285,11 +1290,16 @@ class CartCore extends ObjectModel
         }
 
         if (Context::getContext()->customer->id) {
-            if ($id_address_delivery == 0 && (int) $this->id_address_delivery) { // The $id_address_delivery is null, use the cart delivery address
+            if ($id_address_delivery == 0 && (int) $this->id_address_delivery) {
+                // The $id_address_delivery is null, use the cart delivery address
                 $id_address_delivery = $this->id_address_delivery;
-            } elseif ($id_address_delivery == 0) { // The $id_address_delivery is null, get the default customer address
-                $id_address_delivery = (int) Address::getFirstCustomerAddressId((int) Context::getContext()->customer->id);
-            } elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) { // The $id_address_delivery must be linked with customer
+            } elseif ($id_address_delivery == 0) {
+                // The $id_address_delivery is null, get the default customer address
+                $id_address_delivery = (int) Address::getFirstCustomerAddressId(
+                    (int) Context::getContext()->customer->id
+                );
+            } elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) {
+                // The $id_address_delivery must be linked with customer
                 $id_address_delivery = 0;
             }
         }
@@ -1343,85 +1353,102 @@ class CartCore extends ObjectModel
 
         if ((int) $quantity <= 0) {
             return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization);
-        } elseif (!$product->available_for_order
-                || (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_'))
+        }
+
+        if (!$product->available_for_order
+            || (
+                Configuration::isCatalogMode()
+                && !defined('_PS_ADMIN_DIR_')
+            )
         ) {
             return false;
-        } else {
-            /* Check if the product is already in the cart */
-            $cartProductQuantity = $this->getProductQuantity($id_product, $id_product_attribute, (int) $id_customization, (int) $id_address_delivery);
+        }
 
-            /* Update quantity if product already exist */
-            if (!empty($cartProductQuantity['quantity'])) {
-                $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
-                $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
+        /* Check if the product is already in the cart */
+        $cartProductQuantity = $this->getProductQuantity(
+            $id_product,
+            $id_product_attribute,
+            (int) $id_customization,
+            (int) $id_address_delivery
+        );
 
-                if ($operator == 'up') {
-                    $updateQuantity = '+ ' . $quantity;
-                    $newProductQuantity = $productQuantity - $quantity;
+        /* Update quantity if product already exist */
+        if (!empty($cartProductQuantity['quantity'])) {
+            $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
 
-                    if ($newProductQuantity < 0 && !$availableOutOfStock && !$skipAvailabilityCheckOutOfStock) {
-                        return false;
-                    }
-                } elseif ($operator == 'down') {
-                    $cartFirstLevelProductQuantity = $this->getProductQuantity((int) $id_product, (int) $id_product_attribute, $id_customization);
-                    $updateQuantity = '- ' . $quantity;
-                    $newProductQuantity = $productQuantity + $quantity;
+            if ($operator == 'up') {
+                $updateQuantity = '+ ' . $quantity;
+                $newProductQuantity = $productQuantity - $quantity;
 
-                    if ($cartFirstLevelProductQuantity['quantity'] <= 1) {
-                        return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization);
-                    }
-                } else {
+                if ($newProductQuantity < 0 && !$availableOutOfStock && !$skipAvailabilityCheckOutOfStock) {
                     return false;
                 }
-                Db::getInstance()->execute(
-                    'UPDATE `' . _DB_PREFIX_ . 'cart_product`
+            } elseif ($operator == 'down') {
+                $cartFirstLevelProductQuantity = $this->getProductQuantity(
+                    (int) $id_product,
+                    (int) $id_product_attribute,
+                    $id_customization
+                );
+                $updateQuantity = '- ' . $quantity;
+                $newProductQuantity = $productQuantity + $quantity;
+
+                if ($cartFirstLevelProductQuantity['quantity'] <= 1
+                    || $cartProductQuantity['quantity'] - $quantity <= 0
+                ) {
+                    return $this->deleteProduct((int) $id_product, (int) $id_product_attribute, (int) $id_customization);
+                }
+            } else {
+                return false;
+            }
+
+            Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'cart_product`
                     SET `quantity` = `quantity` ' . $updateQuantity . '
                     WHERE `id_product` = ' . (int) $id_product .
-                    ' AND `id_customization` = ' . (int) $id_customization .
-                    (!empty($id_product_attribute) ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
+                ' AND `id_customization` = ' . (int) $id_customization .
+                (!empty($id_product_attribute) ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '') . '
                     AND `id_cart` = ' . (int) $this->id . (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = ' . (int) $id_address_delivery : '') . '
                     LIMIT 1'
-                );
-            } elseif ($operator == 'up') {
-                /* Add product to the cart */
+            );
+        } elseif ($operator == 'up') {
+            /* Add product to the cart */
 
-                $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
+            $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM ' . _DB_PREFIX_ . 'product p
                         ' . Product::sqlStock('p', $id_product_attribute, true, $shop) . '
                         WHERE p.id_product = ' . $id_product;
 
-                $result2 = Db::getInstance()->getRow($sql);
+            $result2 = Db::getInstance()->getRow($sql);
 
-                // Quantity for product pack
-                if (Pack::isPack($id_product)) {
-                    $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
-                }
+            // Quantity for product pack
+            if (Pack::isPack($id_product)) {
+                $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
+            }
 
-                if (!Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
-                    if ((int) $quantity > $result2['quantity']) {
-                        return false;
-                    }
-                }
-
-                if ((int) $quantity < $minimal_quantity) {
-                    return -1;
-                }
-
-                $result_add = Db::getInstance()->insert('cart_product', array(
-                    'id_product' => (int) $id_product,
-                    'id_product_attribute' => (int) $id_product_attribute,
-                    'id_cart' => (int) $this->id,
-                    'id_address_delivery' => (int) $id_address_delivery,
-                    'id_shop' => $shop->id,
-                    'quantity' => (int) $quantity,
-                    'date_add' => date('Y-m-d H:i:s'),
-                    'id_customization' => (int) $id_customization,
-                ));
-
-                if (!$result_add) {
+            if (!Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
+                if ((int) $quantity > $result2['quantity']) {
                     return false;
                 }
+            }
+
+            if ((int) $quantity < $minimal_quantity) {
+                return -1;
+            }
+
+            $result_add = Db::getInstance()->insert('cart_product', array(
+                'id_product' => (int) $id_product,
+                'id_product_attribute' => (int) $id_product_attribute,
+                'id_cart' => (int) $this->id,
+                'id_address_delivery' => (int) $id_address_delivery,
+                'id_shop' => $shop->id,
+                'quantity' => (int) $quantity,
+                'date_add' => date('Y-m-d H:i:s'),
+                'id_customization' => (int) $id_customization,
+            ));
+
+            if (!$result_add) {
+                return false;
             }
         }
 
@@ -1436,10 +1463,17 @@ class CartCore extends ObjectModel
         }
 
         if ($product->customizable) {
-            return $this->_updateCustomizationQuantity((int) $quantity, (int) $id_customization, (int) $id_product, (int) $id_product_attribute, (int) $id_address_delivery, $operator);
-        } else {
-            return true;
+            return $this->_updateCustomizationQuantity(
+                (int) $quantity,
+                (int) $id_customization,
+                (int) $id_product,
+                (int) $id_product_attribute,
+                (int) $id_address_delivery,
+                $operator
+            );
         }
+
+        return true;
     }
 
     /**

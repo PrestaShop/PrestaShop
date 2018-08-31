@@ -58,10 +58,11 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
         if (!array_key_exists('kpi_controller', $event->getHookParameters())) {
             throw new \Exception('The legacy_kpi hook need a kpi_controller parameter (legacy controller full class name).');
         }
+
         $controller = $event->getHookParameters()['kpi_controller'];
-
         $controller = new $controller('new-theme');
+        $renderKpis = $controller->renderKpis() !== null ? $controller->renderKpis() : [];
 
-        $event->setContent($controller->renderKpis());
+        $event->setContent($renderKpis);
     }
 }
