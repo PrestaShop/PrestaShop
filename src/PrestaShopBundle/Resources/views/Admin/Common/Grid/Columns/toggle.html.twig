@@ -28,13 +28,16 @@
 
 {% set valid = (record[column.id] is same as('1')) %}
 
-<i
+<div class="text-center">
+  <i
     class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
     data-toggle-url="{{ path(column.options.route, {(column.options.route_param_id) : id_primary_key})}}"
->
-{% if valid == true %}
-    check
-{% else %}
-    clear
-{% endif %}
-</i>
+  >
+    {% if valid == true %}
+      check
+    {% else %}
+      clear
+    {% endif %}
+  </i>
+</div>
+
