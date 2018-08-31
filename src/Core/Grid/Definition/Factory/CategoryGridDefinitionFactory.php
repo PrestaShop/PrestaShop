@@ -207,8 +207,8 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('View', [], 'Admin.Actions'))
                 ->setIcon('search')
                 ->setOptions([
-                    'route' => 'admin_category_view',
-                    'route_param_name' => 'categoryId',
+                    'route' => 'admin_category_listing',
+                    'route_param_name' => 'id_category',
                     'route_param_field' => 'id_category',
                 ])
             )

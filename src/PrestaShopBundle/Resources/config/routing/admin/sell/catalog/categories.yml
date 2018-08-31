@@ -22,11 +22,3 @@ admin_category_edit:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:edit
     requirements:
         categoryId: \d+
-
-admin_category_view:
-  path: /view/{categoryId}
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:view
-  requirements:
-    categoryId: \d+
