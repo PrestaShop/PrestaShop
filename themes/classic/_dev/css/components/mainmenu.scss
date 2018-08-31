@@ -73,8 +73,7 @@
 }
 
 #mobile_top_menu_wrapper {
-  margin: .625rem 0 0;
-  padding-bottom: 0.625rem;
+  padding: 15px;
   background: white;
   #top-menu {
     margin-bottom: 0.625rem;
@@ -121,7 +120,7 @@
       margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: $gray-lighter;
+      background: white;
       ul[data-depth="0"] > li {
         border-bottom: 1px solid $gray;
       }
