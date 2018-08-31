@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-use http\Env\Response;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
@@ -35,6 +34,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Webservice" page display.
@@ -86,14 +86,14 @@ class WebserviceController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-            'grid' => $presentedGrid
+            'grid' => $presentedGrid,
         ];
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
     }
 
     /**
-     * Redirects to webservice account form where new webservice account record can be created
+     * Redirects to webservice account form where new webservice account record can be created.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
@@ -105,13 +105,13 @@ class WebserviceController extends FrameworkBundleAdminController
         //@todo: this action should point to new add page
         $legacyLink = $legacyContext->getAdminLink(
                 'AdminWebservice'
-            ).'&addwebservice_account';
+            ) . '&addwebservice_account';
 
         return $this->redirect($legacyLink);
     }
 
     /**
-     * Redirects to webservice account form where existing webservice account record can be edited
+     * Redirects to webservice account form where existing webservice account record can be edited.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
@@ -127,15 +127,15 @@ class WebserviceController extends FrameworkBundleAdminController
             'AdminWebservice',
             true,
             [
-                'id_webservice_account' => $webserviceAccountId
+                'id_webservice_account' => $webserviceAccountId,
             ]
-        ).'&updatewebservice_account';
+        ) . '&updatewebservice_account';
 
         return $this->redirect($legacyLink);
     }
 
     /**
-     * Searches for specific records
+     * Searches for specific records.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
      *
@@ -162,7 +162,7 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Deletes single record
+     * Deletes single record.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to delete this.")
@@ -191,7 +191,7 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Deletes selected records
+     * Deletes selected records.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to delete this.")
@@ -222,7 +222,7 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Enables status for selected rows
+     * Enables status for selected rows.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
@@ -230,7 +230,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     * 
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -245,7 +245,7 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Disables status for selected rows
+     * Disables status for selected rows.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
@@ -253,7 +253,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return RedirectResponse
-     * 
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -268,7 +268,7 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * Toggles webservice account status
+     * Toggles webservice account status.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
