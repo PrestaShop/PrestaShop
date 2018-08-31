@@ -68,14 +68,15 @@ export default class TopMenu extends DropDown {
   }
 
   toggleMobileMenu() {
-      if ($('#mobile_top_menu_wrapper').is(":visible")) {
-        $('#notifications').hide();
-        $('#wrapper').hide();
-        $('#footer').hide();
-      } else {
-        $('#notifications').show();
-        $('#wrapper').show();
-        $('#footer').show();
-      }
+    $('#header').toggleClass('is-open');
+    if ($('#mobile_top_menu_wrapper').is(":visible")) {
+      $('#notifications').hide();
+      $('#wrapper').hide();
+      $('#footer').hide();
+    } else {
+      $('#notifications').show();
+      $('#wrapper').show();
+      $('#footer').show();
+    }
   }
 }
