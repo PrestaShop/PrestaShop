@@ -217,10 +217,10 @@ services:
             - '@prestashop.adapter.cache_clearer'
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
 
-    prestashop.adapter.webservice.eraser:
+    prestashop.adapter.webservice.webservice_account_eraser:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountEraser'
 
-    prestashop.adapter.webservice.status_modifier:
+    prestashop.adapter.webservice.webservice_account_status_modifier:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountStatusModifier'
         arguments:
             - '@translator'

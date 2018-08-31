@@ -46,7 +46,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Displays the Webservice main page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param WebserviceFilters $filters - filters for webservice list
      * @param Request $request
@@ -95,7 +95,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Redirects to webservice account form where new webservice account record can be created.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -113,7 +113,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Redirects to webservice account form where existing webservice account record can be edited.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param $webserviceAccountId
      *
@@ -137,7 +137,7 @@ class WebserviceController extends FrameworkBundleAdminController
     /**
      * Searches for specific records.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -165,7 +165,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Deletes single record.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $webserviceAccountId
      *
@@ -175,7 +175,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
         $errors = $webserviceEraser->erase([$webserviceAccountId]);
 
         if (!empty($errors)) {
@@ -194,7 +194,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Deletes selected records.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to delete this.")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param Request $request
      *
@@ -206,7 +206,7 @@ class WebserviceController extends FrameworkBundleAdminController
     {
         $webserviceToDelete = $request->request->get('webservice_bulk_action');
 
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
 
         if (!empty($errors)) {
@@ -225,7 +225,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Enables status for selected rows.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
@@ -237,7 +237,7 @@ class WebserviceController extends FrameworkBundleAdminController
     public function enableMultipleStatusAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
 
         $statusModifier->toggleMultipleStatus($webserviceToEnable, 1);
 
@@ -248,7 +248,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Disables status for selected rows.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
@@ -260,7 +260,7 @@ class WebserviceController extends FrameworkBundleAdminController
     public function disableMultipleStatusAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
 
         $statusModifier->toggleMultipleStatus($webserviceToEnable, 0);
 
@@ -271,7 +271,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Toggles webservice account status.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $webserviceAccountId
      *
@@ -282,7 +282,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function toggleStatusAction($webserviceAccountId)
     {
-        $statusModifier = $this->get('prestashop.adapter.webservice.status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
         $errors = $statusModifier->toggleStatus($webserviceAccountId);
 
         if (!empty($errors)) {
@@ -301,7 +301,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * Process the Webservice configuration form.
      *
      * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
