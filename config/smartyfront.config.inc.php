@@ -79,7 +79,11 @@ function withWidget($params, callable $cb)
 function smartyWidget($params, &$smarty)
 {
     return withWidget($params, function ($widget, $params) {
-        return $widget->renderWidget(isset($params['hook']) ? $params['hook'] : null, $params);
+        return Hook::coreRenderWidget(
+            $widget,
+            isset($params['hook']) ? $params['hook'] : null,
+            $params
+        );
     });
 }
 
