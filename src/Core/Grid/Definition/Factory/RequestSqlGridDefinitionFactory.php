@@ -152,7 +152,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ])
                         ),
                 ])
-            );
+            )
+        ;
     }
 
     /**

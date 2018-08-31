@@ -160,7 +160,8 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         )
                 ])
-            );
+            )
+        ;
     }
 
     protected function getFilters()
@@ -194,7 +195,8 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                     ]
                 ])
                 ->setAssociatedColumn('actions')
-            );
+            )
+        ;
     }
 
     protected function getGridActions()
@@ -211,8 +213,8 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            );
-
+            )
+        ;
     }
 
     protected function getBulkActions()
@@ -236,6 +238,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_delete_multiple_webservice_log',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
-            );
+            )
+        ;
     }
 }
