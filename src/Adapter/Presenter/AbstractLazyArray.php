@@ -153,6 +153,67 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     }
 
     /**
+     * The properties are provided as an array. But callers checking the type of this class (is_object === true)
+     * think they must use the object syntax.
+     *
+     * Check if the index exists inside the lazyArray.
+     *
+     * @param string $index
+     *
+     * @return bool
+     */
+    public function __isset($index)
+    {
+        return $this->offsetExists($index);
+    }
+
+    /**
+     * The properties are provided as an array. But callers checking the type of this class (is_object === true)
+     * think they must use the object syntax.
+     *
+     * Get the value associated with the $index from the lazyArray.
+     *
+     * @param mixed $index
+     *
+     * @return mixed
+     *
+     * @throws RuntimeException
+     */
+    public function __get($index)
+    {
+        return $this->offsetGet($index);
+    }
+
+    /**
+     * The properties are provided as an array. But callers checking the type of this class (is_object === true)
+     * think they must use the object syntax.
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     * @param bool $force if set, allow override of an existing method
+     *
+     * @throws RuntimeException
+     */
+    public function __set($name, $value)
+    {
+        $this->offsetSet($name, $value);
+    }
+
+    /**
+     * The properties are provided as an array. But callers checking the type of this class (is_object === true)
+     * think they must use the object syntax.
+     *
+     * @param mixed $offset
+     * @param bool $force if set, allow unset of an existing method
+     *
+     * @throws RuntimeException
+     */
+    public function __unset($name)
+    {
+        $this->offsetUnset($name);
+    }
+
+    /**
      * Get the value associated with the $index from the lazyArray.
      *
      * @param mixed $index
