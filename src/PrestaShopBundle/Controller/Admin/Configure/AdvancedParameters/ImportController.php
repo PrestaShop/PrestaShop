@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType;
@@ -174,10 +175,13 @@ class ImportController extends FrameworkBundleAdminController
 
         $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
         $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, 10);
+        $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
 
         return [
             'importDataConfigurationForm' => $form->createView(),
-            'dataRowCollection' => $dataRowCollectionPresenter->present($dataRowCollection),
+            'dataRowCollection' => $presentedDataRowCollection,
+            'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
+            'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
         ];
     }
 
