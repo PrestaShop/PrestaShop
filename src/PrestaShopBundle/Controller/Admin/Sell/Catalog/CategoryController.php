@@ -76,21 +76,4 @@ class CategoryController extends FrameworkBundleAdminController
             ])
         );
     }
-
-    /**
-     * View child categories
-     *
-     * @param int $categoryId
-     *
-     * @return Response
-     */
-    public function viewAction($categoryId)
-    {
-        return $this->redirect(
-            $this->getAdminLink('AdminCategories', [
-                'id_category' => $categoryId,
-                'viewcategory' => 1,
-            ])
-        );
-    }
 }
