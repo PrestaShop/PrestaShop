@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
+use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -60,8 +61,11 @@ final class ImportFormDataProvider implements FormDataProviderInterface
             'csv' => $this->getSelectedFile(),
             'entity' => $this->session->get('entity'),
             'iso_lang' => $this->session->get('iso_lang'),
-            'separator' => $this->session->get('separator', ImportType::DEFAULT_SEPARATOR),
-            'multiple_value_separator' => $this->session->get('multiple_value_separator', ImportType::DEFAULT_MULTIVALUE_SEPARATOR),
+            'separator' => $this->session->get('separator', ImportSettings::DEFAULT_SEPARATOR),
+            'multiple_value_separator' => $this->session->get(
+                'multiple_value_separator',
+                ImportSettings::DEFAULT_MULTIVALUE_SEPARATOR
+            ),
         ];
     }
 
