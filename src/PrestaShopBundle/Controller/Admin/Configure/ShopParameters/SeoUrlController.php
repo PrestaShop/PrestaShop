@@ -62,4 +62,29 @@ class SeoUrlController extends FrameworkBundleAdminController
             'grid' => $presentedGrid,
         ];
     }
+
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.seo_urls');
+        $definitionFactory = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
+        $searchParametersForm->handleRequest($request);
+
+        $filters = [];
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_seo_urls', ['filters' => $filters]);
+    }
+
+    public function editListAction()
+    {
+    }
+
+    public function deleteSingleListItemAction()
+    {
+    }
 }

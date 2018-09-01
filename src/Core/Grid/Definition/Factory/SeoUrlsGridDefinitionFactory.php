@@ -26,15 +26,47 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class SeoUrlsGridDefinitionFactory is responsible for adding definition for Seo & urls list.
  */
 final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectionUrl;
+
+    /**
+     * WebserviceDefinitionFactory constructor.
+     *
+     * @param string $resetActionUrl
+     * @param string $redirectionUrl
+     */
+    public function __construct(
+        $resetActionUrl,
+        $redirectionUrl
+    ) {
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectionUrl = $redirectionUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -62,7 +94,7 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'bulk_field' => 'id_meta',
                 ])
             )
-            ->add((new DataColumn('id_request_sql'))
+            ->add((new DataColumn('id_meta'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_meta',
@@ -74,6 +106,89 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'page',
                 ])
             )
+            ->add((new DataColumn('title'))
+                ->setName($this->trans('Page title', [], 'Admin.Shopparameters.Feature'))
+                ->setOptions([
+                    'field' => 'title',
+                ])
+            )
+            ->add((new DataColumn('url_rewrite'))
+                ->setName($this->trans('Friendly URL', [], 'Admin.Shopparameters.Feature'))
+                ->setOptions([
+                    'field' => 'url_rewrite',
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_seo_urls_list_edit',
+                                'route_param_name' => 'metaId',
+                                'route_param_field' => 'id_meta',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'DELETE',
+                                'route' => 'admin_seo_urls_list_delete_single',
+                                'route_param_name' => 'metaId',
+                                'route_param_field' => 'id_meta',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
+                ])
+            )
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_meta', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_meta')
+            )
+            ->add((new Filter('page', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('page')
+            )
+            ->add((new Filter('title', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('title')
+            )
+            ->add((new Filter('url_rewrite', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('url_rewrite')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
+                ])
+                ->setAssociatedColumn('actions')
+            )
+            ;
     }
 }
