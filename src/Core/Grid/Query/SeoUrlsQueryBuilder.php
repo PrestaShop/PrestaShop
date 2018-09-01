@@ -39,7 +39,7 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('m.`id_meta`, m.`page`')
+        $qb->select('m.`id_meta`, m.`page`, l.`title`, l.`url_rewrite`')
             ->orderBy(
                 $searchCriteria->getOrderBy(),
                 $searchCriteria->getOrderWay()
