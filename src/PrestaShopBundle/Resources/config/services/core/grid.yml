@@ -99,6 +99,9 @@ services:
     prestashop.core.grid.definition.factory.seo_urls:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SeoUrlsGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'seourl', 'action': 'index'})"
+            - "@=service('router').generate('admin_seo_urls')"
         public: true
 
     # Grid factories

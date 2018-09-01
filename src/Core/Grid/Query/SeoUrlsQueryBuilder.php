@@ -81,19 +81,22 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
             );
 
         foreach ($filters as $name => $value) {
-            if ('id_lang' === $name) {
-                $qb->andWhere("l.`id_lang` = :$name");
+            if ('id_meta' === $name) {
+                $qb->andWhere('m.`id_meta` = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
-            if ('id_shop' === $name) {
-                $qb->andWhere("l.`id_shop` = :$name");
-                $qb->setParameter($name, $value);
+            if ('page' === $name) {
+                $qb->andWhere('m.`page` LIKE :' . $name);
+                $qb->setParameter($name, '%' . $value . '%');
 
                 continue;
             }
+
+            $qb->andWhere('l.`' . $name . '` LIKE :' . $name);
+            $qb->setParameter($name, '%' . $value . '%');
         }
 
         return $qb;
