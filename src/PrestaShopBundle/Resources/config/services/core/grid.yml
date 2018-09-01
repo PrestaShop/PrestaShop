@@ -44,6 +44,11 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'webservice_key'
 
+    prestashop.core.grid.data_provider.seo_urls:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.seo_urls'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -91,6 +96,11 @@ services:
             - "@=service('router').generate('admin_webservice')"
         public: true
 
+    prestashop.core.grid.definition.factory.seo_urls:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SeoUrlsGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -132,6 +142,14 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.factory.seo_urls:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.seo_urls'
+            - '@prestashop.core.grid.data_provider.seo_urls'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
@@ -160,10 +178,14 @@ services:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
         public: true
 
+    prestashop.core.grid.query_builder.seo_urls:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\SeoUrlsQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+
     # Grid Query parser
     prestashop.core.grid.query.doctrine_query_parser:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'
 
-    # Grid Query applicators
     prestashop.core.query.doctrine_search_criteria_applicator:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
