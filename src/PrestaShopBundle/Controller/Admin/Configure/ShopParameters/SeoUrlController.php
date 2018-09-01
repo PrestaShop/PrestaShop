@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\SeoUrlsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -48,8 +49,16 @@ class SeoUrlController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, SeoUrlsFilters $filters)
     {
-        return [];
+        $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.seo_urls');
+        $grid = $seoUrlsGridFactory->getGrid($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        return [
+            'grid' => $presentedGrid,
+        ];
     }
 }
