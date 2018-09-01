@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+/**
+ * Class SeoUrlsQueryBuilder is responsible for providing data for seo & urls list.
+ */
 final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
@@ -76,6 +79,22 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
                 'l',
                 'm.`id_meta` = l.`id_meta`'
             );
+
+        foreach ($filters as $name => $value) {
+            if ('id_lang' === $name) {
+                $qb->andWhere("l.`id_lang` = :$name");
+                $qb->setParameter($name, $value);
+
+                continue;
+            }
+
+            if ('id_shop' === $name) {
+                $qb->andWhere("l.`id_shop` = :$name");
+                $qb->setParameter($name, $value);
+
+                continue;
+            }
+        }
 
         return $qb;
     }
