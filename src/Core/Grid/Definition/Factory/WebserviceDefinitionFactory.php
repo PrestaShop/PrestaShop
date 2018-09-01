@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -34,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -47,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 
 /**
- * Class WebserviceDefinitionFactory is responsible for creating grid definition for Webservice grid
+ * Class WebserviceDefinitionFactory is responsible for creating grid definition for Webservice grid.
  */
 final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -107,20 +105,20 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk_action'))
                 ->setOptions([
-                    'bulk_field' => 'id_webservice_account'
+                    'bulk_field' => 'id_webservice_account',
                 ])
             )
             ->add((new DataColumn('key'))
                 ->setName($this->trans('Key', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
-                    'field' => 'key'
+                    'field' => 'key',
                 ])
             )
             ->add((new DataColumn('description'))
                 ->setName($this->trans('Key description', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'description',
-                    'sortable' => false
+                    'sortable' => false,
                 ])
             )
             ->add((new ToggleColumn('active'))
@@ -129,7 +127,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
                     'route' => 'admin_webservice_status_toggle',
-                    'route_param_id' => 'webserviceAccountId'
+                    'route_param_id' => 'webserviceAccountId',
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -158,7 +156,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                                     'Admin.Notifications.Warning'
                                 ),
                             ])
-                        )
+                        ),
                 ])
             )
         ;
@@ -169,13 +167,13 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
         return (new FilterCollection())
             ->add((new Filter('key', TextType::class))
                 ->setTypeOptions([
-                    'required' => false
+                    'required' => false,
                 ])
                 ->setAssociatedColumn('key')
             )
             ->add((new Filter('description', TextType::class))
                 ->setTypeOptions([
-                    'required' => false
+                    'required' => false,
                 ])
                 ->setAssociatedColumn('description')
             )
@@ -191,8 +189,8 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'attr' => [
                         'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectionUrl
-                    ]
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
                 ])
                 ->setAssociatedColumn('actions')
             )
@@ -223,13 +221,13 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('webservice_enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_webservice_bulk_enable'
+                    'submit_route' => 'admin_webservice_bulk_enable',
                 ])
             )
             ->add((new SubmitBulkAction('webservice_disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_webservice_bulk_disable'
+                    'submit_route' => 'admin_webservice_bulk_disable',
                 ])
             )
             ->add((new SubmitBulkAction('delete_webservice'))

@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class StatusChoiceProvider is responsible for providing choices for list statuses filter criteria
+ * Class StatusChoiceProvider is responsible for providing choices for list statuses filter criteria.
  */
 final class StatusChoiceProvider implements FormChoiceProviderInterface
 {
@@ -56,7 +56,7 @@ final class StatusChoiceProvider implements FormChoiceProviderInterface
     {
         return [
             $this->translator->trans('Yes', [], 'Admin.Global') => 1,
-            $this->translator->trans('No', [], 'Admin.Global') => 0
+            $this->translator->trans('No', [], 'Admin.Global') => 0,
         ];
     }
 }

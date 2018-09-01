@@ -30,7 +30,7 @@ use PrestaShopCollection;
 use WebserviceKey;
 
 /**
- * Class WebserviceEraser is responsible for deleting the records from webservice account table
+ * Class WebserviceEraser is responsible for deleting the records from webservice account table.
  */
 final class WebserviceAccountEraser
 {

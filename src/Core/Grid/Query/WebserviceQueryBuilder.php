@@ -30,7 +30,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class WebserviceQueryBuilder
+ * Class WebserviceQueryBuilder is responsible for providing data for webservice accounts list.
  */
 final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -58,11 +58,12 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('COUNT(wa.`id_webservice_account`)');
+
         return $qb;
     }
 
     /**
-     * Gets query builder with the common sql used for displaying webservice list and applying filter actions
+     * Gets query builder with the common sql used for displaying webservice list and applying filter actions.
      *
      * @param array $filters
      *
@@ -72,16 +73,16 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix.'webservice_account', 'wa');
+            ->from($this->dbPrefix . 'webservice_account', 'wa');
 
         foreach ($filters as $filterName => $value) {
             if ('active' === $filterName && is_numeric($value)) {
-                $qb->andWhere('wa.`active`='.(int) $value);
+                $qb->andWhere('wa.`active`=' . (int) $value);
 
                 continue;
             }
 
-            $qb->andWhere('wa.`'.$filterName.'` LIKE :'.$filterName);
+            $qb->andWhere('wa.`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $value . '%');
         }
 
@@ -89,7 +90,7 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * Gets modified order by which includes an alias for reserved keyword
+     * Gets modified order by which includes an alias for reserved keyword.
      *
      * @param string $orderBy - original order by value
      *

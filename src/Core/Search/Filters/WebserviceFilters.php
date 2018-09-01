@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class WebserviceFilters is responsible for providing default values for webservice account list
+ * Class WebserviceFilters is responsible for providing default values for webservice account list.
  */
 final class WebserviceFilters extends Filters
 {

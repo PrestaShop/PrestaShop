@@ -31,7 +31,7 @@ use Validate;
 use WebserviceKey;
 
 /**
- * Class WebserviceAccountStatusModifier is responsible for modifying webservice account status
+ * Class WebserviceAccountStatusModifier is responsible for modifying webservice account status.
  */
 final class WebserviceAccountStatusModifier
 {
@@ -51,7 +51,7 @@ final class WebserviceAccountStatusModifier
     }
 
     /**
-     * Toggles status for webservice key entity
+     * Toggles status for webservice key entity.
      *
      * @param int $columnId - an id which identifies the required entity to be modified
      *
@@ -66,7 +66,11 @@ final class WebserviceAccountStatusModifier
 
         if (!Validate::isLoadedObject($webserviceKey)) {
             $error = $this->translator
-                ->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
+                ->trans(
+                    'An error occurred while updating the status for an object.',
+                    [],
+                    'Admin.Notifications.Error'
+                ) .
                 ' <b>' . WebserviceKey::$definition['table'] . '</b> ' .
                 $this->translator->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
 
@@ -76,6 +80,7 @@ final class WebserviceAccountStatusModifier
         if (!$webserviceKey->toggleStatus()) {
             $error = $this->translator
                 ->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
+
             return [$error];
         }
 
@@ -83,7 +88,7 @@ final class WebserviceAccountStatusModifier
     }
 
     /**
-     * Updates status for multiple fields
+     * Updates status for multiple fields.
      *
      * @param array $columnIds
      * @param int $status
