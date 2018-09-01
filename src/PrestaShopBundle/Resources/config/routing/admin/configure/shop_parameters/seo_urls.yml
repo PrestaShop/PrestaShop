@@ -1,5 +1,27 @@
 admin_seo_urls:
     path: /
+    methods: GET
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:index'
+        _legacy_controller: AdminMeta
+
+admin_seo_urls_search:
+    path: /
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:search'
+        _legacy_controller: AdminMeta
+
+admin_seo_urls_list_edit:
+    path: /edit/{metaId}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:editList'
+        _legacy_controller: AdminMeta
+
+admin_seo_urls_list_delete_single:
+    path: /delete/{metaId}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:deleteSingleListItem'
         _legacy_controller: AdminMeta
