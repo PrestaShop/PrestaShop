@@ -77,10 +77,6 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
                 'm.`id_meta` = l.`id_meta`'
             );
 
-        foreach ($filters as $name => $filter) {
-
-        }
-
         return $qb;
     }
 }
