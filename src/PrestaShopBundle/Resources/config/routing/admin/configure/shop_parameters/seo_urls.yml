@@ -21,7 +21,14 @@ admin_seo_urls_list_edit:
 
 admin_seo_urls_list_delete_single:
     path: /delete/{metaId}
-    methods: GET
+    methods: DELETE
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:deleteSingleListItem'
+        _legacy_controller: AdminMeta
+
+admin_seo_urls_list_delete_multiple:
+    path: /delete
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:deleteMultipleListItems'
         _legacy_controller: AdminMeta
