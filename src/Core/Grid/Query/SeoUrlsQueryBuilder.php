@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -33,6 +34,35 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    /**
+     * @var int
+     */
+    private $contextIdLang;
+
+    /**
+     * @var int
+     */
+    private $contextIdShop;
+
+    /**
+     * SeoUrlsQueryBuilder constructor.
+     *
+     * @param Connection $connection
+     * @param $dbPrefix
+     * @param int $contextIdLang
+     * @param int $contextIdShop
+     */
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        $contextIdLang,
+        $contextIdShop
+    ) {
+        parent::__construct($connection, $dbPrefix);
+        $this->contextIdLang = $contextIdLang;
+        $this->contextIdShop = $contextIdShop;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -79,6 +109,9 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
                 'l',
                 'm.`id_meta` = l.`id_meta`'
             );
+
+        $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
+        $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
 
         foreach ($filters as $name => $value) {
             if ('id_meta' === $name) {
