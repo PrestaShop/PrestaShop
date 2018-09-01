@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig_SimpleFunction as SimpleFunction;
 
@@ -44,9 +44,9 @@ class GridExtension extends AbstractExtension
     const BASE_COLUMN_HEADER_TEMPLATE_PATH = '@PrestaShop/Admin/Common/Grid/Columns/Header/Content';
 
     /**
-     * @var EngineInterface
+     * @var Environment
      */
-    private $templating;
+    private $twig;
 
     /**
      * @var AdapterInterface
@@ -54,12 +54,12 @@ class GridExtension extends AbstractExtension
     private $cache;
 
     /**
-     * @param EngineInterface $templating
+     * @param Environment $twig
      * @param AdapterInterface $cache
      */
-    public function __construct(EngineInterface $templating, AdapterInterface $cache)
+    public function __construct(Environment $twig, AdapterInterface $cache)
     {
-        $this->templating = $templating;
+        $this->twig = $twig;
         $this->cache = $cache;
     }
 
@@ -113,7 +113,7 @@ class GridExtension extends AbstractExtension
             );
         }
 
-        return $this->templating->render($this->cache->getItem($templateCacheKey)->get(), [
+        return $this->twig->render($this->cache->getItem($templateCacheKey)->get(), [
             'column' => $column,
             'record' => $record,
             'grid' => $grid,
@@ -152,7 +152,7 @@ class GridExtension extends AbstractExtension
             );
         }
 
-        return $this->templating->render($this->cache->getItem($templateCacheKey)->get(), [
+        return $this->twig->render($this->cache->getItem($templateCacheKey)->get(), [
             'column' => $column,
             'grid' => $grid,
         ]);
@@ -178,15 +178,15 @@ class GridExtension extends AbstractExtension
         $gridTemplate = sprintf('%s/%s_%s.html.twig', $basePath, $gridId, $columnType);
         $columnTemplate = sprintf('%s/%s.html.twig', $basePath, $columnType);
 
-        if ($this->templating->exists($columnGridTemplate)) {
+        if ($this->twig->getLoader()->exists($columnGridTemplate)) {
             return $columnGridTemplate;
         }
 
-        if ($this->templating->exists($gridTemplate)) {
+        if ($this->twig->getLoader()->exists($gridTemplate)) {
             return $gridTemplate;
         }
 
-        if ($this->templating->exists($columnTemplate)) {
+        if ($this->twig->getLoader()->exists($columnTemplate)) {
             return $columnTemplate;
         }
 
