@@ -2,3 +2,4 @@ admin_seo_urls:
     path: /
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:index'
+        _legacy_controller: AdminMeta
