@@ -59,6 +59,13 @@ class SeoUrlController extends FrameworkBundleAdminController
         $presentedGrid = $gridPresenter->present($grid);
 
         return [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_seo_urls_list_create'),
+                    'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
             'grid' => $presentedGrid,
         ];
     }
@@ -78,6 +85,10 @@ class SeoUrlController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_seo_urls', ['filters' => $filters]);
+    }
+
+    public function createListAction()
+    {
     }
 
     public function editListAction()
