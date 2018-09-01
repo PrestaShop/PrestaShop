@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,10 +33,10 @@ use Twig\Extension\AbstractExtension;
 use Twig_SimpleFunction as SimpleFunction;
 
 /**
- * Class GridExtension is responsible for providing twig functions:
+ * Class GridExtension is responsible for providing grid helpers functions.
  *
- * column_content(column, record, grid) - renders column content based on column type
- * column_header(column, grid) - renders column header based on column type
+ * - column_content(column, record, grid): renders column content based on column type.
+ * - column_header(column, grid): renders column header based on column type.
  */
 class GridExtension extends AbstractExtension
 {
@@ -79,7 +79,7 @@ class GridExtension extends AbstractExtension
     }
 
     /**
-     * Render column content
+     * Render column content.
      *
      * @param array $record
      * @param array $column
@@ -121,7 +121,7 @@ class GridExtension extends AbstractExtension
     }
 
     /**
-     * Render column header
+     * Render column header.
      *
      * @param array $column
      * @param array $grid
@@ -159,7 +159,7 @@ class GridExtension extends AbstractExtension
     }
 
     /**
-     * Get template for column
+     * Get template for column.
      *
      * @param array $column
      * @param array $grid
