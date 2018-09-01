@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class SeoUrlController is responsible for page display and all actions used in Configure -> Shop parameters ->
- * Traffic & Seo -> Seo & Urls tab
+ * Traffic & Seo -> Seo & Urls tab.
  */
 class SeoUrlController extends FrameworkBundleAdminController
 {
@@ -46,6 +46,7 @@ class SeoUrlController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/seo_urls.html.twig")
      *
      * @param Request $request
+     * @param SeoUrlsFilters $filters
      *
      * @return array
      */
