@@ -87,4 +87,8 @@ class SeoUrlController extends FrameworkBundleAdminController
     public function deleteSingleListItemAction()
     {
     }
+
+    public function deleteMultipleListItemsAction()
+    {
+    }
 }
