@@ -89,10 +89,28 @@ class SeoUrlController extends FrameworkBundleAdminController
 
     public function createListAction()
     {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        //@todo: this action should point to new add page
+        $legacyLink = $legacyContext->getAdminLink(
+                'AdminMeta'
+            ) . '&addmeta';
+
+        return $this->redirect($legacyLink);
     }
 
-    public function editListAction()
+    public function editListAction($metaId)
     {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        //@todo: this action should point to new add page
+        $legacyLink = $legacyContext->getAdminLink(
+                'AdminMeta',
+                true,
+                [
+                    'id_meta' => $metaId,
+                ]
+            ) . '&updatemeta';
+
+        return $this->redirect($legacyLink);
     }
 
     public function deleteSingleListItemAction()
