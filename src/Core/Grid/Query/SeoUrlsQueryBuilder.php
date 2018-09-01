@@ -35,7 +35,16 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
-        // TODO: Implement getSearchQueryBuilder() method.
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb->select('m.`id_meta`, m.`page`')
+            ->orderBy(
+                $searchCriteria->getOrderBy(),
+                $searchCriteria->getOrderWay()
+            )
+            ->setFirstResult($searchCriteria->getOffset())
+            ->setMaxResults($searchCriteria->getLimit());
+
+        return $qb;
     }
 
     /**
@@ -43,6 +52,35 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
     {
-        // TODO: Implement getCountQueryBuilder() method.
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb->select('COUNT(m.`id_meta`)');
+
+        return $qb;
+    }
+
+    /**
+     * Gets query builder with common sql for meta table
+     *
+     * @param array $filters
+     *
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    private function getQueryBuilder(array $filters)
+    {
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'meta', 'm')
+            ->innerJoin(
+                'm',
+                $this->dbPrefix . 'meta_lang',
+                'l',
+                'm.`id_meta` = l.`id_meta`'
+            );
+
+        foreach ($filters as $name => $filter) {
+
+        }
+
+        return $qb;
     }
 }
