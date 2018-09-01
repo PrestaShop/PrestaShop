@@ -100,7 +100,10 @@ const config = {
     ],
     translation_settings: [
       './js/pages/translation-settings'
-    ]
+    ],
+    seo_urls: [
+      './js/pages/seo-urls'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
