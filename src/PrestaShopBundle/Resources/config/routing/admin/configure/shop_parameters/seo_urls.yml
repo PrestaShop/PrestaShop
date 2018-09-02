@@ -43,3 +43,10 @@ admin_seo_urls_list_delete_multiple:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:deleteMultipleListItems'
         _legacy_controller: AdminMeta
+
+admin_seo_urls_process:
+  path: /settings
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\SeoUrl:processSettingsForm'
+    _legacy_controller: AdminEmails

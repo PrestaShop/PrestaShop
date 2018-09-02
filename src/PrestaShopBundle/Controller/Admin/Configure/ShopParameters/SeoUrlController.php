@@ -43,20 +43,23 @@ class SeoUrlController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/seo_urls.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/seo_urls.html.twig")
      *
-     * @param Request $request
      * @param SeoUrlsFilters $filters
      *
      * @return array
+     *
+     * @throws \Exception
      */
-    public function indexAction(Request $request, SeoUrlsFilters $filters)
+    public function indexAction(SeoUrlsFilters $filters)
     {
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.seo_urls');
         $grid = $seoUrlsGridFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
+
+        $seoUrlsForm = $this->get('prestashop.admin.seo_urls_settings.form_handler')->getForm();
 
         return [
             'layoutHeaderToolbarBtn' => [
@@ -67,6 +70,7 @@ class SeoUrlController extends FrameworkBundleAdminController
                 ],
             ],
             'grid' => $presentedGrid,
+            'seoUrlsForm' => $seoUrlsForm->createView()
         ];
     }
 
@@ -118,6 +122,10 @@ class SeoUrlController extends FrameworkBundleAdminController
     }
 
     public function deleteMultipleListItemsAction()
+    {
+    }
+
+    public function processSettingsFormAction()
     {
     }
 }
