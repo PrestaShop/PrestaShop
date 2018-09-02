@@ -24,15 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\File\Writer;
+namespace PrestaShop\PrestaShop\Core\Export\FileWriter;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Export\Data\ExportableDataInterface;
 use PrestaShop\PrestaShop\Core\Export\ExportDirectory;
-use PrestaShop\PrestaShop\Core\File\Writer\Exception\FileWritingException;
+use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use SplFileObject;
 
 /**
- * Class CsvFileWriter writes provided data into CSV file and saves it in export directory
+ * Class ExportCsvFileWriter writes provided data into CSV file and saves it in export directory
  */
 final class ExportCsvFileWriter implements FileWriterInterface
 {
@@ -54,11 +55,8 @@ final class ExportCsvFileWriter implements FileWriterInterface
      *
      * @throws FileWritingException
      */
-    public function write(
-        FileWriterDataInterface $data,
-        FileWriterConfigurationInterface $config
-    ) {
-        $fileName = sprintf('%s.csv', $config->getFileName());
+    public function write($fileName, ExportableDataInterface $data)
+    {
         $filePath = $this->exportDirectory.$fileName;
 
         try {
@@ -70,7 +68,7 @@ final class ExportCsvFileWriter implements FileWriterInterface
             );
         }
 
-        $exportFile->fputcsv($data->getHeaders(), ';');
+        $exportFile->fputcsv($data->getTitles(), ';');
 
         foreach ($data->getRows() as $row) {
             $exportFile->fputcsv($row, ';');

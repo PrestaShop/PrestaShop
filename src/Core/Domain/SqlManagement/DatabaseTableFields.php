@@ -25,6 +25,7 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
+
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
 
@@ -66,18 +67,16 @@ class DatabaseTableFields
     private function setFields(array $fields)
     {
         foreach ($fields as $field) {
-            if ($field instanceof DatabaseTableField) {
-                continue;
+            if (!$field instanceof DatabaseTableField) {
+                throw new SqlManagementConstraintException(
+                    sprintf(
+                        'Invalid database field %s supplied. Expected instance of %s',
+                        var_export($field, true),
+                        DatabaseTableField::class
+                    ),
+                    SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD
+                );
             }
-
-            throw new SqlManagementConstraintException(
-                sprintf(
-                    'Invalid database field %s supplied. Expected instance of %s',
-                    var_export($field, true),
-                    DatabaseTableField::class
-                ),
-                SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD
-            );
         }
 
         $this->fields = $fields;
