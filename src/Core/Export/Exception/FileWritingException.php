@@ -24,22 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\File\Writer;
+namespace PrestaShop\PrestaShop\Core\Export\Exception;
 
-use SplFileInfo;
-
-/**
- * Interface FileWriterInterface
- */
-interface FileWriterInterface
+class FileWritingException extends ExportException
 {
-    /**
-     * Write data to file
-     *
-     * @param FileWriterDataInterface $data
-     * @param FileWriterConfigurationInterface $config
-     *
-     * @return SplFileInfo
-     */
-    public function write(FileWriterDataInterface $data, FileWriterConfigurationInterface $config);
+    const CANNOT_OPEN_FILE_FOR_WRITING = 10;
 }

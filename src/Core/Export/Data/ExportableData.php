@@ -24,31 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\File\Writer;
+namespace PrestaShop\PrestaShop\Core\Export\Data;
 
 /**
- * Class FileWriterConfiguration stores configuration for export file writer
+ * Class ExportableData stores data that should be written to export file
  */
-final class FileWriterConfiguration implements FileWriterConfigurationInterface
+final class ExportableData implements ExportableDataInterface
 {
     /**
-     * @var string
+     * @var string[]
      */
-    private $fileName;
+    private $titles;
 
     /**
-     * @param string $fileName
+     * @var array
      */
-    public function __construct($fileName)
+    private $rows;
+
+    /**
+     * @param string[] $titles
+     * @param array $rows
+     */
+    public function __construct(array $titles, array $rows)
     {
-        $this->fileName = $fileName;
+        $this->titles = $titles;
+        $this->rows = $rows;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFileName()
+    public function getTitles()
     {
-        return $this->fileName;
+        return $this->titles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRows()
+    {
+        return $this->rows;
     }
 }

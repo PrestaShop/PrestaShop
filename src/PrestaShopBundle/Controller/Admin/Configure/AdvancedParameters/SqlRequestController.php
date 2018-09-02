@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-use PrestaShop\PrestaShop\Core\File\Writer\Exception\FileWritingException;
+use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -371,7 +371,7 @@ class SqlRequestController extends FrameworkBundleAdminController
      * Export Request SQL data.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
      * @DemoRestricted(redirectRoute="admin_sql_request")
@@ -382,7 +382,7 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     public function exportAction($sqlRequestId)
     {
-        $requestSqlExporter = $this->get('prestashop.core.sql_request.exporter.sql_request_exporter');
+        $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');
 
         try {
             $query = new GetSqlRequestExecutionResult($sqlRequestId);
@@ -463,7 +463,7 @@ class SqlRequestController extends FrameworkBundleAdminController
     protected function handleDeleteException(SqlRequestException $e)
     {
         $code = $e->getCode();
-        $exceptionType = get_class($e);
+        $type = get_class($e);
 
         $exceptionMessages = [
             SqlRequestNotFoundException::class =>
@@ -479,24 +479,17 @@ class SqlRequestController extends FrameworkBundleAdminController
                 $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
         ];
 
-        if (CannotDeleteSqlRequestException::class === $exceptionType
+        if (CannotDeleteSqlRequestException::class === $type
             && isset($deleteExceptionMessages[$code])
         ) {
             return $deleteExceptionMessages[$code];
         }
 
-        if (isset($exceptionMessages[$exceptionType])) {
-            return $exceptionMessages[$exceptionType];
+        if (isset($exceptionMessages[$type])) {
+            return $exceptionMessages[$type];
         }
 
-        return $this->trans(
-            'An unexpected error occurred. [%type% code %code%]',
-            'Admin.Notifications.Error',
-            [
-                '%type%' => $exceptionType,
-                '%code%' => $code,
-            ]
-        );
+        return $this->getFallbackErrorMessage($type, $code);
     }
 
     /**
@@ -508,25 +501,18 @@ class SqlRequestController extends FrameworkBundleAdminController
      */
     protected function handleViewException(SqlRequestException $e)
     {
-        $exceptionType = get_class($e);
+        $type = get_class($e);
 
         $exceptionMessages = [
             SqlRequestNotFoundException::class =>
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
-        if (isset($exceptionMessages[$exceptionType])) {
-            return $exceptionMessages[$exceptionType];
+        if (isset($exceptionMessages[$type])) {
+            return $exceptionMessages[$type];
         }
 
-        return $this->trans(
-            'An unexpected error occurred. [%type% code %code%]',
-            'Admin.Notifications.Error',
-            [
-                '%type%' => $exceptionType,
-                '%code%' => $e->getCode(),
-            ]
-        );
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 
     /**
@@ -546,14 +532,7 @@ class SqlRequestController extends FrameworkBundleAdminController
             return $this->handleDomainExportException($e);
         }
 
-        return $this->trans(
-            'An unexpected error occurred. [%type% code %code%]',
-            'Admin.Notifications.Error',
-            [
-                '%type%' => $type,
-                '%code%' => $e->getCode(),
-            ]
-        );
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 
     /**
@@ -574,14 +553,7 @@ class SqlRequestController extends FrameworkBundleAdminController
             return $applicationErrors[$code];
         }
 
-        return $this->trans(
-            'An unexpected application error occurred. [%type% code %code%]',
-            'Admin.Notifications.Error',
-            [
-                '%type%' => get_class($e),
-                '%code%' => $e->getCode(),
-            ]
-        );
+        return $this->getFallbackErrorMessage(get_class($e), $code);
     }
 
     /**
@@ -602,12 +574,25 @@ class SqlRequestController extends FrameworkBundleAdminController
             return $domainErrors[$type];
         }
 
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * Get fallback error message when something unexpected happens
+     *
+     * @param string $type
+     * @param string $code
+     *
+     * @return string
+     */
+    protected function getFallbackErrorMessage($type, $code)
+    {
         return $this->trans(
-            'An unexpected domain error occurred. [%type% code %code%]',
+            'An unexpected error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
             [
                 '%type%' => $type,
-                '%code%' => $e->getCode(),
+                '%code%' => $code,
             ]
         );
     }

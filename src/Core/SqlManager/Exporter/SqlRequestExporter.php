@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\SqlRequest\Exporter;
+namespace PrestaShop\PrestaShop\Core\SqlManager\Exporter;
 
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-use PrestaShop\PrestaShop\Core\File\Writer\FileWriterConfiguration;
-use PrestaShop\PrestaShop\Core\File\Writer\FileWriterData;
-use PrestaShop\PrestaShop\Core\File\Writer\FileWriterInterface;
+use PrestaShop\PrestaShop\Core\Export\Data\ExportableData;
+use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterInterface;
 
 /**
  * Class SqlRequestExporter exports SqlRequest query execution result into CSV file under export directory
@@ -55,15 +54,13 @@ final class SqlRequestExporter implements SqlRequestExporterInterface
      */
     public function exportToFile(SqlRequestId $sqlRequestId, SqlRequestExecutionResult $result)
     {
-        $data = new FileWriterData(
+        $exportData = new ExportableData(
             $result->getColumns(),
             $result->getRows()
         );
 
-        $config = new FileWriterConfiguration(
-            sprintf('request_sql_%s.csv', $sqlRequestId->getValue())
-        );
+        $exportFileName = sprintf('request_sql_%s.csv', $sqlRequestId->getValue());
 
-        return $this->csvFileWriter->write($data, $config);
+        return $this->csvFileWriter->write($exportFileName, $exportData);
     }
 }

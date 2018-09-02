@@ -24,9 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\File\Writer\Exception;
+namespace PrestaShop\PrestaShop\Core\Export\Data;
 
-class FileWritingException extends FileException
+/**
+ * Interface ExportableDataInterface
+ */
+interface ExportableDataInterface
 {
-    const CANNOT_OPEN_FILE_FOR_WRITING = 10;
+    /**
+     * Titles data
+     *
+     * @return string[]
+     */
+    public function getTitles();
+
+    /**
+     * Rows data
+     *
+     * @return array[]
+     */
+    public function getRows();
 }
