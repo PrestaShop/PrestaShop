@@ -307,7 +307,7 @@ class CommonClient {
    */
   checkDocument(folderPath, fileName, text) {
     pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
-      global.indexText = data.indexOf(text)
+      global.indexText = data.indexOf(text);
     });
 
     return this.client

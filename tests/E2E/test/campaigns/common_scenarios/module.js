@@ -71,9 +71,6 @@ module.exports = {
       } else if (sortType === "price") {
         return promise
           .then(() => client.checkSortByIncPrice((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
-      } else if (sortType === "price-desc") {
-        return promise
-          .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
       } else {
         return promise
           .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))

@@ -97,6 +97,14 @@ class Order extends CommonClient {
       .then((text) => expect(text).to.be.false);
   }
 
+  getDocumentName(selector) {
+    return this.client
+      .then(() => this.client.getText(selector))
+      .then((name) => {
+        global.invoiceFileName = name.replace('#', '')
+      })
+  }
+
 }
 
 module.exports = Order;

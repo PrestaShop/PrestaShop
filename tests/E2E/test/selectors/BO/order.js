@@ -30,7 +30,21 @@ module.exports = {
     delete_button: '(//*[@id="table-cart"]//a[@class="delete"])[1]',
     stock_product: '//*[@id="orderProducts"]//tr[%NUMBER]/td[5]',
     total_order: '//*[@id="total_order"]/td[@class="amount text-right nowrap"]/strong',
-    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]'
+    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
+    order_view_button: '//*[@id="form-order"]//table//tbody//tr[%ORDERNumber]//td[12]//a',
+    order_id: '(//*[@id="content"]//span[@class="badge"])[2]',
+    order_date: '(//*[@id="content"]//div[@class="kpi-content"])[1]/span[2]',
+    order_ref: '(//*[@id="content"]//span[@class="badge"])[1]',
+    product_information: '//*[@id="orderProducts"]/tbody/tr[1]/td[2]/a',
+    product_quantity: '//*[@id="orderProducts"]//span[contains(@class,"product_quantity_show")]',
+    product_name_tab: '//*[@id="orderProducts"]//span[contains(@class,"productName")]',
+    product_total: '//*[@id="documents"]//tr[contains(@id,"orderslip")]/td[4]',
+    product_unit_price_tax_included: '//*[@id="orderProducts"]//span[@class="product_price_show"]',
+    product_unit_price: '//*[@id="orderProducts"]//input[@name="product_price_tax_excl"]',
+    delivery_document_name: '//*[@id="documents_table"]//tr[3]//a',
+    product_total_price: '//*[@id="total_order"]/td[2]/strong',
+    delivery_slip_document: '//*[@id="documents_table"]//a[contains(@href, "DeliverySlip")]',
+    status:'//*[@id="status"]//tr[1]/td[contains(text(),"%STATUS")]'
   },
 
   CreateOrder: {
@@ -74,5 +88,14 @@ module.exports = {
     customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[8]',
     id_shopping_carts: 'table-cart',
     reset_button: '//*[@name="submitResetcart"]'
+  },
+
+  DeliverySlip: {
+    generate_btn: '//*[@id="delivery_pdf_fieldset"]//button',
+    delivery_prefix: '//*[@id="form_options_prefix_1"]',
+    delivery_number: '//*[@id="form_options_number"]',
+    product_image: '//*[@id="delivery_options_fieldset"]//label[@for="form_options_enable_product_image_1"]',
+    save_button: '//*[@id="delivery_options_fieldset"]//button[text()="Save"]',
+    success_message: '//*[@id="main-div"]//div[@class="alert-text"]/p'
   }
 };

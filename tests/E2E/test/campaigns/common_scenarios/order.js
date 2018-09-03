@@ -3,6 +3,8 @@ const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {accountPage} = require('../../selectors/FO/add_account_page');
 const {OrderPage} = require('../../selectors/BO/order');
 const {Menu} = require('../../selectors/BO/menu.js');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {ProductList} = require('../../selectors/BO/add_product_page');
 const {ShoppingCarts} = require('../../selectors/BO/order');
 
 let dateFormat = require('dateformat');
@@ -23,9 +25,8 @@ module.exports = {
       });
       test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-      test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input, '4'));
+      test('should change quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace("%NUMBER", 1), '4'));
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
-
       if (authentication === "create_account" || authentication === "guest") {
         scenario('Create new account', client => {
           test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.gender_radio_button));
@@ -191,8 +192,61 @@ module.exports = {
       test('should export carts', () => client.downloadCart(ShoppingCarts.export_carts_button));
       test('should check the file name', () => client.checkFile(global.downloadsFolderPath, global.exportCartFileName));
       test('should read the file', () => client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000));
-      test('should compare both informations', () => client.checkExportedFileInfo(1000));
+      test('should compare both information', () => client.checkExportedFileInfo(1000));
       test('should reset filter', () => client.waitForExistAndClick(ShoppingCarts.reset_button));
     }, 'order', true);
+  },
+  updateStatus: function (status) {
+    scenario('Change the order state to "' + status + '"', client => {
+      test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
+      test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
+      test('should change order state to "' + status + '"', () => client.updateStatus(status));
+      test('should click on "Update state" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+      test('should check that the status was updated', () => client.waitForVisible(OrderPage.status.replace('%STATUS', status)));
+    }, 'order');
+  },
+  getDeliveryInformation: function (index) {
+    scenario('Get all the order information', client => {
+      test('should get all order information', () => {
+        return promise
+          .then(() => client.getTextInVar(OrderPage.order_id, "OrderID"))
+          .then(() => client.getTextInVar(OrderPage.order_date, "invoiceDate"))
+          .then(() => client.getTextInVar(OrderPage.order_ref, "OrderRef"))
+          .then(() => {
+            client.getTextInVar(OrderPage.product_information, "ProductRef").then(() => {
+              global.tab['ProductRef'] = global.tab['ProductRef'].split('\n')[1];
+              global.tab['ProductRef'] = global.tab['ProductRef'].substring(18);
+            })
+          })
+          .then(() => client.pause(2000))
+          .then(() => {
+            client.getTextInVar(OrderPage.product_information, "ProductCombination").then(() => {
+              global.tab['ProductCombination'] = global.tab['ProductCombination'].split('\n')[0];
+              global.tab['ProductCombination'] = global.tab['ProductCombination'].split(':')[1];
+            })
+          })
+          .then(() => client.pause(2000))
+          .then(() => client.getTextInVar(OrderPage.product_quantity, "ProductQuantity"))
+          .then(() => {
+            client.getTextInVar(OrderPage.product_name_tab, "ProductName").then(() => {
+              global.tab['ProductName'] = global.tab['ProductName'].substring(0, 25);
+            })
+          })
+          .then(() => client.getTextInVar(OrderPage.product_total_price, "ProductTotal"))
+          .then(() => {
+            global.orderInformation[index] = {
+              "OrderId": global.tab['OrderID'].replace("#", ''),
+              "invoiceDate": global.tab['invoiceDate'],
+              "OrderRef": global.tab['OrderRef'],
+              "ProductRef": global.tab['ProductRef'],
+              "ProductCombination": global.tab['ProductCombination'],
+              "ProductQuantity": global.tab['ProductQuantity'],
+              "ProductName": global.tab['ProductName'],
+              "ProductTotal": global.tab['ProductTotal']
+            }
+          });
+      });
+    }, 'order');
+
   }
 };
