@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,12 +30,12 @@ use Supplier;
 use ProductSupplier;
 
 /**
- * This class will provide data from DB / ORM about Supplier
+ * This class will provide data from DB / ORM about Supplier.
  */
 class SupplierDataProvider
 {
     /**
-     * Get all suppliers
+     * Get all suppliers.
      *
      * @param bool $get_nb_products
      * @param int $id_lang
@@ -52,7 +52,7 @@ class SupplierDataProvider
     }
 
     /**
-     * Get product suppliers
+     * Get product suppliers.
      *
      * @param int $id_product
      * @param bool $group_by_supplier
@@ -62,15 +62,17 @@ class SupplierDataProvider
     public function getProductSuppliers($id_product, $group_by_supplier = true)
     {
         $suppliersCollection = ProductSupplier::getSupplierCollection($id_product, $group_by_supplier);
+
         return $suppliersCollection->getResults();
     }
 
     /**
-     * For a given product and supplier, gets the product supplier data
+     * For a given product and supplier, gets the product supplier data.
      *
      * @param int $id_product
      * @param int $id_product_attribute
      * @param int $id_supplier
+     *
      * @return array
      */
     public function getProductSupplierData($id_product, $id_product_attribute, $id_supplier)
@@ -79,7 +81,7 @@ class SupplierDataProvider
     }
 
     /**
-     * Get supplier name by id
+     * Get supplier name by id.
      *
      * @param int $id_supplier
      *

@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -135,7 +135,7 @@ $(document).ready(() => {
 
   $('body').on('click', '.js-search-link', function (event) {
     event.preventDefault();
-    prestashop.emit('updateFacets',$(event.target).closest('a').get(0).href);
+    prestashop.emit('updateFacets', $(event.target).closest('a').get(0).href);
   });
 
   $('body').on('change', '#search_filters select', function (event) {

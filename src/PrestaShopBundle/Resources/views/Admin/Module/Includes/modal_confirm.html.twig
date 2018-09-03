@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -30,7 +30,6 @@
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
               <h4 class="modal-title module-modal-title">
                 {% if module_action == 'disable' %}
                   {{ "Disable module?"|trans({}, 'Admin.Modules.Feature') }}
@@ -42,6 +41,9 @@
                   {{ "Reset module?"|trans({}, 'Admin.Modules.Feature') }}
                 {% endif %}
               </h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
             <div class="modal-body row">
               <div class="col-md-12">
@@ -82,7 +84,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
+              <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
               {% if module_action == 'disable' %}
                 <a
                   class="btn btn-primary uppercase module_action_modal_{{ module_action }}"

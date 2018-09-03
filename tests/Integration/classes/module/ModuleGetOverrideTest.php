@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,54 +19,56 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace Tests\Integration;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 
 use Module;
-use PrestaShop\PrestaShop\Tests\TestCase\Module as HelperModule;
+use Tests\TestCase\Module as HelperModule;
 
 class ModulesGetOverrideTest extends IntegrationTestCase
 {
+    /**
+     * @return array a list of modules to control override features.
+     */
     public function listModulesOnDisk()
     {
-        $modules = array();
-
-        foreach (scandir(_PS_MODULE_DIR_) as $entry)
-        {
-            if ($entry[0] !== '.')
-            {
-                if (file_exists(_PS_MODULE_DIR_.$entry.DIRECTORY_SEPARATOR.$entry.'.php'))
-                {
-                    $modules[] = array($entry);
-                }
-            }
-        }
-
-        return $modules;
+        return [
+            ['bankwire'],
+            ['cronjobs'],
+            ['gamification'],
+            ['ganalytics'],
+            ['ps_emailsubscription'],
+            ['ps_featuredproducts'],
+            ['psaddonsconnect'],
+            ['pscsx3241'],
+        ];
     }
 
     /**
      * @dataProvider listModulesOnDisk
      * Note: improves module list fixtures in order to cancel any override.
-     * @todo: PHP7 incompatability on module overidding
+     * @param string $moduleName the module name.
      */
     public function testDummyGetOverride($moduleName)
     {
         $module = Module::getInstanceByName($moduleName);
-        $this->assertEmpty($module->getOverrides());
+
+        if ($module instanceof Module) {
+            self::assertEmpty($module->getOverrides());
+        }
     }
 
     public function testRealOverrideInModuleDir()
     {
         HelperModule::addModule('pscsx3241');
         $module = Module::getInstanceByName('pscsx3241');
-        $this->assertSame([
+        self::assertSame([
             'Cart',
             'AdminProductsController'
         ], $module->getOverrides()

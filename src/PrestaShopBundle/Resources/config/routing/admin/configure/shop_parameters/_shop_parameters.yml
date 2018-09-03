@@ -1,0 +1,19 @@
+_preferences:
+    resource: "preferences.yml"
+    prefix: /preferences/
+
+_order_preferences:
+    resource: "order_preferences.yml"
+    prefix: /order-preferences/
+
+_product_preferences:
+    resource: "product_preferences.yml"
+    prefix: /product-preferences/
+
+_customer_preferences:
+    resource: "customer_preferences.yml"
+    prefix: /customer-preferences/
+
+_maintenance:
+    resource: "maintenance.yml"
+    prefix: /maintenance/

@@ -1,0 +1,13 @@
+admin_customer_preferences:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\CustomerPreferences:index'
+        _legacy_controller: AdminCustomerPreferences
+
+admin_customer_preferences_process:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\CustomerPreferences:process'
+        _legacy_controller: AdminCustomerPreferences

@@ -1,66 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
-        <source>(tax incl.)</source>
-        <target>(tax incl.)</target>
-        <note>Context:
-File: src/Core/Product/ProductPresenter.php:127</note>
-      </trans-unit>
-      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
-        <source>(tax excl.)</source>
-        <target>(tax excl.)</target>
-        <note>Context:
-File: src/Core/Product/ProductPresenter.php:128</note>
-      </trans-unit>
-      <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
-        <source>Tax included</source>
-        <target>Tax included</target>
-        <note>Context:
-File: src/Core/Product/ProductPresenter.php:130</note>
-      </trans-unit>
-      <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
-        <source>Tax excluded</source>
-        <target>Tax excluded</target>
-        <note>Context:
-File: src/Core/Product/ProductPresenter.php:131</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Order/OrderPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
-        <source>(tax included)</source>
-        <target>(tax included)</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:454</note>
-      </trans-unit>
-      <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
-        <source>(tax excluded)</source>
-        <target>(tax excluded)</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:455</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
         <note>Context:
-File: classes/controller/FrontController.php:857</note>
+File: classes/controller/FrontController.php:878</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/customer/_partials/my-account-links.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
         <source>Home</source>
         <target>Home</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/_partials/my-account-links.tpl:28</note>
+File: themes/classic/templates/customer/_partials/my-account-links.tpl:32</note>
       </trans-unit>
     </body>
   </file>
@@ -74,13 +30,59 @@ File: controllers/front/AddressController.php:114</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/PageNotFoundController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
-        <source>Merchandise returns</source>
-        <target>Merchandise returns</target>
+      <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
+        <source>The page you are looking for was not found.</source>
+        <target>The page you are looking for was not found.</target>
         <note>Context:
-File: controllers/front/OrderReturnController.php:174</note>
+File: controllers/front/PageNotFoundController.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/StoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
+        <source>Monday</source>
+        <target>Monday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:204</note>
+      </trans-unit>
+      <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
+        <source>Tuesday</source>
+        <target>Tuesday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:207</note>
+      </trans-unit>
+      <trans-unit id="796c163589f295373e171842f37265d5">
+        <source>Wednesday</source>
+        <target>Wednesday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:210</note>
+      </trans-unit>
+      <trans-unit id="78ae6f0cd191d25147e252dc54768238">
+        <source>Thursday</source>
+        <target>Thursday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:213</note>
+      </trans-unit>
+      <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
+        <source>Friday</source>
+        <target>Friday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:216</note>
+      </trans-unit>
+      <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
+        <source>Saturday</source>
+        <target>Saturday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:219</note>
+      </trans-unit>
+      <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
+        <source>Sunday</source>
+        <target>Sunday</target>
+        <note>Context:
+File: controllers/front/StoresController.php:222</note>
       </trans-unit>
     </body>
   </file>
@@ -106,16 +108,6 @@ File: controllers/front/DiscountController.php:106</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/PageNotFoundController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
-        <source>The page you are looking for was not found.</source>
-        <target>The page you are looking for was not found.</target>
-        <note>Context:
-File: controllers/front/PageNotFoundController.php:59</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/SitemapController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c82004d1ded071651efc9f2138342c50">
@@ -138,20 +130,138 @@ File: controllers/front/SitemapController.php:134</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="34c869c542dee932ef8cd96d2f91cae6">
         <source>Our stores</source>
         <target>Our stores</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:28</note>
+File: themes/classic/templates/cms/stores.tpl:28</note>
       </trans-unit>
-      <trans-unit id="0e2fb5b02182fd28b9b96e86ed27838f">
-        <source>Fax:</source>
-        <target>Fax:</target>
+      <trans-unit id="adc4f9f9cccaa450c10977d50da58d8d">
+        <source>About and Contact</source>
+        <target>About and Contact</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/stores.tpl:50</note>
+File: themes/classic/templates/cms/stores.tpl:44</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
+        <source>Contact us</source>
+        <target>Contact us</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/cms/sitemap.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5813ce0ec7196c492c97596718f71969">
+        <source>Sitemap</source>
+        <target>Sitemap</target>
+        <note>Context:
+File: themes/classic/templates/cms/sitemap.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
+        <source>Merchandise returns</source>
+        <target>Merchandise returns</target>
+        <note>Context:
+File: controllers/front/OrderReturnController.php:174</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
+        <source>(tax incl.)</source>
+        <target>(tax incl.)</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:392</note>
+      </trans-unit>
+      <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
+        <source>(tax excl.)</source>
+        <target>(tax excl.)</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:393</note>
+      </trans-unit>
+      <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
+        <source>(tax included)</source>
+        <target>(tax included)</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:395</note>
+      </trans-unit>
+      <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
+        <source>(tax excluded)</source>
+        <target>(tax excluded)</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:396</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
+        <source>Tax included</source>
+        <target>Tax included</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:132</note>
+      </trans-unit>
+      <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
+        <source>Tax excluded</source>
+        <target>Tax excluded</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f9d01a14011f05fffe48559583fc609">
+        <source>Sort by:</source>
+        <target>Sort by:</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/sort-orders.tpl:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7a1c5301da6b1ce9e4345bd501397045">
+        <source>(no filter)</source>
+        <target>(no filter)</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/facets.tpl:132</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2143f8cb66482342b35208bdc3fd949c">
+        <source>Active filters</source>
+        <target>Active filters</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/active_filters.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
+        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
+        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
+        <note>Context:
+File: themes/classic/templates/_partials/footer.tpl:49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="673ae02fffb72f0fe68a66f096a01347">
         <source>Phone:</source>
         <target>Phone:</target>
@@ -172,105 +282,115 @@ File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
-        <source>Contact us</source>
-        <target>Contact us</target>
+      <trans-unit id="0e2fb5b02182fd28b9b96e86ed27838f">
+        <source>Fax:</source>
+        <target>Fax:</target>
         <note>Context:
-File: modules/ps_contactinfo/ps_contactinfo.tpl:27</note>
+File: themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
+        <source>Store information</source>
+        <target>Store information</target>
+        <note>Context:
+File: themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
+        <source>Call us:</source>
+        <target>Call us:</target>
+        <note>Context:
+File: themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
+        <source>Email us:</source>
+        <target>Email us:</target>
+        <note>Context:
+File: themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl:57</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/cms/sitemap.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5813ce0ec7196c492c97596718f71969">
-        <source>Sitemap</source>
-        <target>Sitemap</target>
+      <trans-unit id="38629047675346c704697fb85268192f">
+        <source>List of subcategories in %category_name%:</source>
+        <target>List of subcategories in %category_name%:</target>
         <note>Context:
-File: themes/StarterTheme/templates/cms/sitemap.tpl:28</note>
+File: themes/StarterTheme/templates/cms/category.tpl:34</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/StoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
-        <source>Monday</source>
-        <target>Monday</target>
+      <trans-unit id="1d34e1ee316477a8f64a835307f5b84e">
+        <source>List of pages in %category_name%:</source>
+        <target>List of pages in %category_name%:</target>
         <note>Context:
-File: controllers/front/StoresController.php:205</note>
+File: themes/classic/templates/cms/category.tpl:45</note>
       </trans-unit>
-      <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
-        <source>Tuesday</source>
-        <target>Tuesday</target>
+      <trans-unit id="6c5c05a5b907385c60c3baa4087ea1a1">
+        <source>List of sub categories in %name%:</source>
+        <target>List of sub categories in %name%:</target>
         <note>Context:
-File: controllers/front/StoresController.php:208</note>
-      </trans-unit>
-      <trans-unit id="796c163589f295373e171842f37265d5">
-        <source>Wednesday</source>
-        <target>Wednesday</target>
-        <note>Context:
-File: controllers/front/StoresController.php:211</note>
-      </trans-unit>
-      <trans-unit id="78ae6f0cd191d25147e252dc54768238">
-        <source>Thursday</source>
-        <target>Thursday</target>
-        <note>Context:
-File: controllers/front/StoresController.php:214</note>
-      </trans-unit>
-      <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
-        <source>Friday</source>
-        <target>Friday</target>
-        <note>Context:
-File: controllers/front/StoresController.php:217</note>
-      </trans-unit>
-      <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
-        <source>Saturday</source>
-        <target>Saturday</target>
-        <note>Context:
-File: controllers/front/StoresController.php:220</note>
-      </trans-unit>
-      <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
-        <source>Sunday</source>
-        <target>Sunday</target>
-        <note>Context:
-File: controllers/front/StoresController.php:223</note>
+File: themes/classic/templates/cms/category.tpl:34</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/errors/maintenance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="27b4383b976d6be981598d457cc7e62d">
+        <source>We'll be back soon.</source>
+        <target>We'll be back soon.</target>
+        <note>Context:
+File: themes/classic/templates/errors/maintenance.tpl:42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/errors/restricted-country.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6351030f724f6f42fd11ec9aa6ee8c76">
+        <source>403 Forbidden</source>
+        <target>403 Forbidden</target>
+        <note>Context:
+File: themes/classic/templates/errors/restricted-country.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="cf8092a0be7b972d6cee3db90bfaf923">
+        <source>You cannot access this store from your country. We apologize for the inconvenience.</source>
+        <target>You cannot access this store from your country. We apologize for the inconvenience.</target>
+        <note>Context:
+File: themes/classic/templates/errors/restricted-country.tpl:44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/errors/not-found.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e74146e0ff2e289abfc8bec1d2b2a18">
+        <source>Sorry for the inconvenience.</source>
+        <target>Sorry for the inconvenience.</target>
+        <note>Context:
+File: themes/classic/templates/errors/not-found.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="519ee4cd58a2b719f7113965cc949d24">
+        <source>Search again what you are looking for</source>
+        <target>Search again what you are looking for</target>
+        <note>Context:
+File: themes/classic/templates/errors/not-found.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="44749712dbec183e983dcd78a7736c41">
         <source>Date</source>
         <target>Date</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:130</note>
+File: themes/classic/templates/customer/order-detail.tpl:188</note>
       </trans-unit>
       <trans-unit id="ec53a8c4f07baed5d8825072c89799be">
         <source>Status</source>
         <target>Status</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:71</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/_partials/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7601c8e861088bd27255e18afaefab6b">
-        <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
-        <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
-        <note>Context:
-File: themes/StarterTheme/templates/_partials/footer.tpl:40</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="96d6f2e7e1f705ab5e59c84a6dc009b2">
-        <source>logo</source>
-        <target>logo</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/header.tpl:32</note>
+File: themes/classic/templates/customer/order-detail.tpl:89</note>
       </trans-unit>
     </body>
   </file>
@@ -284,132 +404,18 @@ File: themes/classic/templates/checkout/_partials/steps/payment.tpl:151</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/errors/restricted-country.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/checkout/_partials/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6351030f724f6f42fd11ec9aa6ee8c76">
-        <source>403 Forbidden</source>
-        <target>403 Forbidden</target>
+      <trans-unit id="96d6f2e7e1f705ab5e59c84a6dc009b2">
+        <source>logo</source>
+        <target>logo</target>
         <note>Context:
-File: themes/StarterTheme/templates/errors/restricted-country.tpl:43</note>
-      </trans-unit>
-      <trans-unit id="cf8092a0be7b972d6cee3db90bfaf923">
-        <source>You cannot access this store from your country. We apologize for the inconvenience.</source>
-        <target>You cannot access this store from your country. We apologize for the inconvenience.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/errors/restricted-country.tpl:44</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/errors/maintenance.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="27b4383b976d6be981598d457cc7e62d">
-        <source>We'll be back soon.</source>
-        <target>We'll be back soon.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/errors/maintenance.tpl:40</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/errors/not-found.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7e74146e0ff2e289abfc8bec1d2b2a18">
-        <source>Sorry for the inconvenience.</source>
-        <target>Sorry for the inconvenience.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/errors/not-found.tpl:27</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/errors/not-found.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="519ee4cd58a2b719f7113965cc949d24">
-        <source>Search again what you are looking for</source>
-        <target>Search again what you are looking for</target>
-        <note>Context:
-File: themes/classic/templates/errors/not-found.tpl:29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6c5c05a5b907385c60c3baa4087ea1a1">
-        <source>List of sub categories in %name%:</source>
-        <target>List of sub categories in %name%:</target>
-        <note>Context:
-File: themes/classic/templates/cms/category.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="51af726259b3283f6b53613165f95697">
-        <source>List of pages in %name%:</source>
-        <target>List of pages in %name%:</target>
-        <note>Context:
-File: themes/classic/templates/cms/category.tpl:45</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/cms/stores.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="adc4f9f9cccaa450c10977d50da58d8d">
-        <source>About and Contact</source>
-        <target>About and Contact</target>
-        <note>Context:
-File: themes/classic/templates/cms/stores.tpl:44</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/facets.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7a1c5301da6b1ce9e4345bd501397045">
-        <source>(no filter)</source>
-        <target>(no filter)</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/facets.tpl:72</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/sort-orders.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6f9d01a14011f05fffe48559583fc609">
-        <source>Sort by:</source>
-        <target>Sort by:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/sort-orders.tpl:26</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2143f8cb66482342b35208bdc3fd949c">
-        <source>Active filters</source>
-        <target>Active filters</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/active_filters.tpl:26</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/modules/ps_currencyselector/ps_currencyselector.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="77295c7d814e7397c55f64ec06313984">
-        <source>Currency:</source>
-        <target>Currency:</target>
-        <note>Context:
-File: themes/classic/modules/ps_currencyselector/ps_currencyselector.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="72d43a6525ac95e552ca4eaf1dc0ad1a">
-        <source>Currency dropdown</source>
-        <target>Currency dropdown</target>
-        <note>Context:
-File: themes/classic/modules/ps_currencyselector/ps_currencyselector.tpl:29</note>
+File: themes/classic/templates/checkout/_partials/header.tpl:32</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
-        <source>Store information</source>
-        <target>Store information</target>
-        <note>Context:
-File: themes/classic/modules/ps_contactinfo/ps_contactinfo.tpl:71</note>
-      </trans-unit>
       <trans-unit id="c6359db4a43cb7267a84b389229fd073">
         <source>Call us: [1]%phone%[/1]</source>
         <target>Call us: [1]%phone%[/1]</target>
@@ -430,19 +436,45 @@ File: themes/classic/modules/ps_contactinfo/ps_contactinfo.tpl:58</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_currencyselector/ps_currencyselector.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1300caaefd15b839f37952dc7cc75d82">
-        <source>Call us:</source>
-        <target>Call us:</target>
+      <trans-unit id="77295c7d814e7397c55f64ec06313984">
+        <source>Currency:</source>
+        <target>Currency:</target>
         <note>Context:
-File: themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl:37</note>
+File: themes/classic/modules/ps_currencyselector/ps_currencyselector.tpl:28</note>
       </trans-unit>
-      <trans-unit id="a0bfe0853cf82bdf5dcb9b0bac76c357">
-        <source>Email us:</source>
-        <target>Email us:</target>
+      <trans-unit id="72d43a6525ac95e552ca4eaf1dc0ad1a">
+        <source>Currency dropdown</source>
+        <target>Currency dropdown</target>
         <note>Context:
-File: themes/classic/modules/ps_contactinfo/ps_contactinfo-rich.tpl:57</note>
+File: themes/classic/modules/ps_currencyselector/ps_currencyselector.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_languageselector/ps_languageselector.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0885f0c211f74834f0109c5abaf4cdc4">
+        <source>Language:</source>
+        <target>Language:</target>
+        <note>Context:
+File: themes/classic/modules/ps_languageselector/ps_languageselector.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="217148b9c333b63a3fb1883670f5bff2">
+        <source>Language dropdown</source>
+        <target>Language dropdown</target>
+        <note>Context:
+File: themes/classic/modules/ps_languageselector/ps_languageselector.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3805f49499fa5010c394e219aa1fe7a0">
+        <source>Get our latest news and special sales</source>
+        <target>Get our latest news and special sales</target>
+        <note>Context:
+File: themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl:28</note>
       </trans-unit>
     </body>
   </file>
@@ -465,48 +497,6 @@ File: themes/classic/modules/ps_imageslider/views/templates/hook/slider.tpl:50</
         <target>Next</target>
         <note>Context:
 File: themes/classic/modules/ps_imageslider/views/templates/hook/slider.tpl:56</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3805f49499fa5010c394e219aa1fe7a0">
-        <source>Get our latest news and special sales</source>
-        <target>Get our latest news and special sales</target>
-        <note>Context:
-File: themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl:28</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/modules/ps_languageselector/ps_languageselector.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0885f0c211f74834f0109c5abaf4cdc4">
-        <source>Language:</source>
-        <target>Language:</target>
-        <note>Context:
-File: themes/classic/modules/ps_languageselector/ps_languageselector.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="217148b9c333b63a3fb1883670f5bff2">
-        <source>Language dropdown</source>
-        <target>Language dropdown</target>
-        <note>Context:
-File: themes/classic/modules/ps_languageselector/ps_languageselector.tpl:29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/cms/category.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="38629047675346c704697fb85268192f">
-        <source>List of subcategories in %category_name%:</source>
-        <target>List of subcategories in %category_name%:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/cms/category.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="1d34e1ee316477a8f64a835307f5b84e">
-        <source>List of pages in %category_name%:</source>
-        <target>List of pages in %category_name%:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/cms/category.tpl:45</note>
       </trans-unit>
     </body>
   </file>

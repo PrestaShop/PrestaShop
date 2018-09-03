@@ -26,87 +26,13 @@ File: modules/ps_wirepayment/controllers/front/payment.php:46</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_wirepayment/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_wirepayment/controllers/front/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
         <source>This payment method is not available.</source>
         <target>This payment method is not available.</target>
         <note>Context:
-File: modules/ps_wirepayment/validation.php:51</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b2f40690858b404ed10e62bdf422c704">
-        <source>Amount</source>
-        <target>Amount</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="5ca0b1b910f393ed1f9f6fa99e414255">
-        <source>Name of account owner</source>
-        <target>Name of account owner</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="51f4741f4c53f0fe3ba1be9ac3a34f2f">
-        <source>Please include these details</source>
-        <target>Please include these details</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:32</note>
-      </trans-unit>
-      <trans-unit id="984482eb9ff11e6310fef641d2268a2a">
-        <source>Bank name</source>
-        <target>Bank name</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_wirepayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="88526efe38fd18179a127024aba8c1d7">
-        <source>Your order on %s is complete.</source>
-        <target>Your order on %s is complete.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="1552c5916ccfe019f35d91fd8955755e">
-        <source>Please send us a bank wire with:</source>
-        <target>Please send us a bank wire with:</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="e82b76a36b23218201ac431c5c2da4c6">
-        <source>Please specify your order reference %s in the bankwire description.</source>
-        <target>Please specify your order reference %s in the bankwire description.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="09e6ed8a978471819332e14dcc5cbe39">
-        <source>We've also sent you this information by e-mail.</source>
-        <target>We've also sent you this information by e-mail.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="b9a1cae09e5754424e33764777cfcaa0">
-        <source>Your order will be sent as soon as we receive payment.</source>
-        <target>Your order will be sent as soon as we receive payment.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="1b22721c0967c351b34d82496917654f">
-        <source>If you have questions, comments or concerns, please contact our [1]expert customer support team[/1].</source>
-        <target>If you have questions, comments or concerns, please contact our [1]expert customer support team[/1].</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="c00373052588907ffdd28d1866a75aee">
-        <source>We noticed a problem with your order. If you think this is an error, feel free to contact our [1]expert customer support team[/1].</source>
-        <target>We noticed a problem with your order. If you think this is an error, feel free to contact our [1]expert customer support team[/1].</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:43</note>
+File: modules/ps_wirepayment/controllers/front/validation.php:50</note>
       </trans-unit>
     </body>
   </file>
@@ -141,6 +67,50 @@ File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:42</n
         <target>Payment is made by transfer of the invoice amount to the following account:</target>
         <note>Context:
 File: modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl:45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="88526efe38fd18179a127024aba8c1d7">
+        <source>Your order on %s is complete.</source>
+        <target>Your order on %s is complete.</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="1552c5916ccfe019f35d91fd8955755e">
+        <source>Please send us a bank wire with:</source>
+        <target>Please send us a bank wire with:</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b2f40690858b404ed10e62bdf422c704">
+        <source>Amount</source>
+        <target>Amount</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="5ca0b1b910f393ed1f9f6fa99e414255">
+        <source>Name of account owner</source>
+        <target>Name of account owner</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="51f4741f4c53f0fe3ba1be9ac3a34f2f">
+        <source>Please include these details</source>
+        <target>Please include these details</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="984482eb9ff11e6310fef641d2268a2a">
+        <source>Bank name</source>
+        <target>Bank name</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl:34</note>
       </trans-unit>
     </body>
   </file>

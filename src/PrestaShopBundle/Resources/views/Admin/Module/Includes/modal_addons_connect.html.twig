@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -27,15 +27,15 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title module-modal-title">{{ 'Connect to Addons marketplace'|trans({}, 'Admin.Modules.Feature') }}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         {% if level <= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
           <div class="row">
             <div class="col-md-12">
-              <div class="alert alert-danger">
-                <p>
+              <div class="alert alert-danger" role="alert">
+                <p class="alert-text">
                   {{ errorMessage }}
                 </p>
               </div>
@@ -46,7 +46,7 @@
               <div class="col-md-12">
                   <p>
                       {{ "Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?"|trans({}, 'Admin.Modules.Feature') }}
-                      <a href="http://addons.prestashop.com/authentication.php" target="_blank">{{ 'Sign up now'|trans({}, 'Admin.Modules.Feature') }}</a>
+                      <a href="https://addons.prestashop.com/authentication.php" target="_blank">{{ 'Sign up now'|trans({}, 'Admin.Modules.Feature') }}</a>
                   </p>
                   <form id="addons-connect-form"  action="{{ path('admin_addons_login') }}" method="POST">
                   <div class="form-group">
@@ -63,10 +63,10 @@
                     </label>
                   </div>
                   <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Admin.Actions') }}</button>
-                  <button id="addons_login_btn" class="btn btn-primary-reverse btn-lg onclick" style="display:none;"></button>
+                  <div id="addons_login_btn" class="spinner" style="display:none;"></div>
                 </form>
                 <p>
-                    <a href="http://addons.prestashop.com/password.php" target="_blank">{{ 'Forgot your password?'|trans({}, 'Admin.Global') }}</a>
+                    <a href="https://addons.prestashop.com/password.php" target="_blank">{{ 'Forgot your password?'|trans({}, 'Admin.Global') }}</a>
                 </p>
               </div>
           </div>

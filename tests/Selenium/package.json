@@ -20,7 +20,7 @@
         "mocha": "^2.4.5",
         "q": "^1.4.1",
         "request": "^2.67.0",
-        "selenium-standalone": "^6.5.0",
+        "selenium-standalone": "^6.12.0",
         "underscore": "^1.8.3",
         "webdriverio": "^3.4.0"
     }

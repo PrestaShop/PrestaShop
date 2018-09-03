@@ -56,8 +56,8 @@ rm -f .gitignore
 rm -f .gitmodules
 rm -f .travis.yml
 
-rm -rf app/cache; mkdir app/cache;
-rm -rf app/logs; mkdir app/logs;
+rm -rf var/cache; mkdir var/cache;
+rm -rf var/logs; mkdir var/logs;
 
 read -p "Do you want to delete the .git directory? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]

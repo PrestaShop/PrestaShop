@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,22 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Employee;
+use RuntimeException;
+use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
 use Context;
 use Language;
 use AdminController;
 use Link;
+use Tab;
 use Tools as ToolsLegacy;
 use Dispatcher;
 use AdminLegacyLayoutControllerCore;
@@ -44,11 +48,11 @@ class LegacyContext
 {
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
-     * that will contains all you need in the Core architecture
+     * that will contains all you need in the Core architecture.
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return Context The Legacy context, for Adapter use only.
+     * @return Context the Legacy context, for Adapter use only
      */
     public function getContext()
     {
@@ -68,12 +72,23 @@ class LegacyContext
     }
 
     /**
+     * Get smarty instance from legacy context.
+     *
+     * @return Smarty
+     */
+    public function getSmarty()
+    {
+        return $this->getContext()->smarty;
+    }
+
+    /**
      * Gets the Admin base url (actually random directory name).
+     *
      * @return string
      */
     public function getAdminBaseUrl()
     {
-        return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
+        return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
     }
 
     /**
@@ -82,6 +97,7 @@ class LegacyContext
      * @param string $controller the controller name
      * @param bool $withToken
      * @param array[string] $extraParams
+     *
      * @return string
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
@@ -93,7 +109,8 @@ class LegacyContext
         }
 
         $link = new Link();
-        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+
+        return $link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -104,11 +121,12 @@ class LegacyContext
     public function getFrontUrl($controller)
     {
         $legacyContext = $this->getContext();
+
         return $legacyContext->link->getPageLink($controller);
     }
 
     /**
-     * Adapter to get Root Url
+     * Adapter to get Root Url.
      *
      * @return string The lagacy root URL
      */
@@ -130,20 +148,28 @@ class LegacyContext
     }
 
     /**
-     * Adapter to get admin legacy layout into old controller context
+     * Adapter to get admin legacy layout into old controller context.
      *
      * @param string $controllerName The legacy controller name
      * @param string $title The page title to override default one
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
-     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
+     * @param bool $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
-    {
+    public function getLegacyLayout(
+        $controllerName,
+        $title,
+        $headerToolbarBtn,
+        $displayType,
+        $showContentHeader,
+        $headerTabContent,
+        $enableSidebar,
+        $helpLink = ''
+    ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
             $title,
@@ -162,9 +188,9 @@ class LegacyContext
     /**
      * Returns available languages. The first one is the employee default one.
      *
-     * @param bool     $active   Select only active languages
-     * @param int|bool $id_shop  Shop ID
-     * @param bool     $ids_only If true, returns an array of language IDs
+     * @param bool $active Select only active languages
+     * @param int|bool $id_shop Shop ID
+     * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
      */
@@ -179,14 +205,16 @@ class LegacyContext
             if ($b['id_lang'] == $defaultLanguageFirst->id) {
                 return 1; // $b is the default one.
             }
+
             return 0;
         });
+
         return $languages;
     }
 
     /**
-     * Returns language ISO code set for the current employee
-
+     * Returns language ISO code set for the current employee.
+     *
      * @return string Languages
      */
     public function getEmployeeLanguageIso()
@@ -195,15 +223,16 @@ class LegacyContext
     }
 
     /**
-     * Returns Currency set for the current employee
+     * Returns Currency set for the current employee.
      */
     public function getEmployeeCurrency()
     {
         static $employeeCurrency;
 
-        if(null === $employeeCurrency) {
+        if (null === $employeeCurrency) {
             $employeeCurrency = $this->getContext()->currency->sign;
         }
+
         return $employeeCurrency;
     }
 
@@ -218,6 +247,27 @@ class LegacyContext
             return $context->language;
         }
 
-        return new Language;
+        return new Language();
+    }
+
+    /**
+     * Get employee's default tab name.
+     *
+     * @return string Default tab name for employee
+     *
+     * @throws RuntimeException Throws exception if employee does not exist in context
+     */
+    public function getDefaultEmployeeTab()
+    {
+        $employee = $this->getContext()->employee;
+
+        if (!$employee instanceof Employee) {
+            throw new RuntimeException('Cannot retrieve default employee tab. Employee does not exist in context!');
+        }
+
+        $idTab = $idTab = $employee->default_tab;
+        $tab = new Tab($idTab);
+
+        return $tab->class_name;
     }
 }

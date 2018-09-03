@@ -1,5 +1,5 @@
 .search-widget {
-  float: right;
+  display: inline-block;
   @include search-box;
 }
 .header-top {
@@ -39,7 +39,6 @@
   .header-top {
     .search-widget {
       float: none;
-      padding: 0 0.9375rem;
       form {
         margin: 0 auto;
         input[type="text"] {
@@ -48,5 +47,10 @@
         }
       }
     }
+  }
+}
+@include media-breakpoint-up(md) {
+  .search-widget {
+    min-width: 15.63rem;
   }
 }

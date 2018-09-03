@@ -105,11 +105,12 @@
     .product-flags .new,
     .online-only,
     .on-sale,
-    .discount-percentage {
+    .discount-percentage,
+    .discount-amount,
+    .pack {
       display: block;
       position: absolute;
       left: -0.4375rem;
-      top:0.4375rem;
       padding: 0.3125rem 0.4375rem;
       color: white;
       background: $brand-primary;
@@ -119,7 +120,8 @@
       font-size: $base-font-size;
       font-weight: 600;
       @include box-shadow-light;
-      &.discount-percentage {
+      &.discount-percentage,
+      &.discount-amount {
         z-index: 2;
         background: $brand-secondary;
       }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * History of receipts
+ * History of receipts.
+ *
  * @since 1.5.0
  */
 class SupplyOrderReceiptHistoryCore extends ObjectModel
@@ -73,12 +74,12 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
         'primary' => 'id_supply_order_receipt_history',
         'fields' => array(
             'id_supply_order_detail' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_supply_order_state' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_employee' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'employee_firstname' =>    array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' =>        array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'quantity' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'date_add' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'id_supply_order_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
 

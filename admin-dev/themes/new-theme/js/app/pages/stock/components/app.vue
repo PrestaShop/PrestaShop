@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,28 +18,30 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="stock-app">
+  <div v-if="isReady" id="app" class="stock-app container-fluid">
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
-    <div class="card p-a-2">
+    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
+    <div class="card container-fluid pa-2 clearfix">
       <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
+      <PSPagination
+        :currentIndex="currentPagination"
+        :pagesCount="pagesCount"
+        @pageChanged="onPageChanged"
+      />
     </div>
-    <PSPagination
-      :currentIndex="currentPagination"
-      :pagesCount="pagesCount"
-      @pageChanged="onPageChanged"
-    />
   </div>
 </template>
 
 <script>
   import StockHeader from './header/stock-header';
   import Search from './header/search';
+  import LowFilter from './header/filters/low-filter';
   import PSPagination from 'app/widgets/ps-pagination';
 
   export default {
@@ -54,27 +56,28 @@
       currentPagination() {
         return this.$store.state.pageIndex;
       },
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
     },
     methods: {
       onPageChanged(pageIndex) {
-        const desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch(desc);
+        this.fetch('asc');
       },
-      fetch(desc) {
-        let sorting = desc;
+      fetch(sortDirection) {
         const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        if (typeof desc !== 'string') {
-          sorting = ' desc';
-        }
+        const sorting = (sortDirection === 'desc') ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
-        this.$store.dispatch(action, Object.assign(this.filters, {
+        this.filters = Object.assign({}, this.filters, {
           order: `${this.$store.state.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.state.pageIndex,
           keywords: this.$store.state.keywords,
-        }));
+        });
+
+        this.$store.dispatch(action, this.filters);
       },
       onSearch(keywords) {
         this.$store.dispatch('updateKeywords', keywords);
@@ -87,11 +90,18 @@
       resetFilters() {
         this.filters = {};
       },
+      onLowStockChecked(isChecked) {
+        this.filters = Object.assign({}, this.filters, {
+          low_stock: isChecked,
+        });
+        this.fetch();
+      },
     },
     components: {
       StockHeader,
       Search,
       PSPagination,
+      LowFilter,
     },
     data: () => ({
       filters: {},
@@ -99,91 +109,10 @@
   };
 </script>
 
-<style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  .header-toolbar {
-    z-index: 0;
-    height: 128px;
-  }
-  .stock-app {
-    padding-top: 3em;
-  }
-  .table tr td {
-    padding: 5px 0;
-    vertical-align: top;
-    &:not(.qty-spinner) {
-      padding-top:14px;
-    }
-  }
-  .ui-spinner {
-    .ui-spinner-button {
-      right: 30px;
-      cursor: pointer;
-      display: none;
-      z-index: 3;
-      transition: all 0.2s ease;
-      height: 20px;
-    }
-    .ui-spinner-up::before {
-      font-family: 'Material Icons';
-      content: "\E5C7";
-      font-size: 20px;
-      color: $gray-dark;
-      position: relative;
-      top: -3px;
-    }
-    .ui-spinner-down::before {
-      font-family: 'Material Icons';
-      content: "\E5C5";
-      font-size: 20px;
-      color: $gray-dark;
-      bottom: 5px;
-      position: relative;
-    }
-    span {
-      display: none;
-    }
-  }
-  .qty.active .ui-spinner-button{
-    display: block;
-  }
-  #growls.default {
-    top: 20px;
-  }
-  .growl.growl-notice {
-    background: white;
-    border: 2px solid $success;
-    border-radius: 0;
-    padding: 0;
-    min-height: 50px;
-    .growl-message {
-      color: $gray-dark;
-      line-height: 46px;
-      &::before {
-        color: white;
-        text-align: center;
-        background: $success;
-        height: 48px;
-        width: 48px;
-      }
-    }
-    .growl-close {
-      color: $success;
-      font-size: 20px
-    }
-  }
-  .d-inline {
-    display: inline;
-  }
-  .flex {
-    display: flex;
-    align-items: center;
-    &.column {
-      flex-direction: column;
-    }
-  }
-  .btn:disabled {
-    background-color: $gray-light;
-    border-color: $gray-light;
+<style lang="sass" type="text/scss">
+  // hide the layout header
+  #main-div > .header-toolbar {
+    height: 0;
+    display: none;
   }
 </style>

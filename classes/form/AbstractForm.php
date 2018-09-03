@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,6 +61,7 @@ abstract class AbstractFormCore implements FormInterface
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 
@@ -76,6 +75,7 @@ abstract class AbstractFormCore implements FormInterface
         foreach ($this->formFields as $field) {
             $this->errors[$field->getName()] = $field->getErrors();
         }
+
         return $this->errors;
     }
 
@@ -86,6 +86,7 @@ abstract class AbstractFormCore implements FormInterface
                 return true;
             }
         }
+
         return false;
     }
 
@@ -94,6 +95,7 @@ abstract class AbstractFormCore implements FormInterface
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -177,24 +179,24 @@ abstract class AbstractFormCore implements FormInterface
     {
         if (array_key_exists($field_name, $this->formFields)) {
             return $this->formFields[$field_name];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function getValue($field_name)
     {
-        $field = $this->getField($field_name);
-        if ($field) {
+        if ($field = $this->getField($field_name)) {
             return $field->getValue();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function setValue($field_name, $value)
     {
         $this->getField($field_name)->setValue($value);
+
         return $this;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Core\Cldr\Composer\Hook;
+
+require_once 'install_version.php';
+
+// Check PHP version
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
+    die('You need at least PHP '._PS_INSTALL_MINIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
+}
 
 /* Redefine REQUEST_URI */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
@@ -40,5 +47,11 @@ try {
     exit(0);
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
+} catch (Throwable $t) {
+    // Executed only in PHP 7, will not match in PHP 5.
+    // Allows `Error` classes to be catched, without throwing an error on PHP 5.
+    echo $t->getMessage();
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
 exit(1);

@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
 <entity_manufacturer>
-  <manufacturer id="Fashion_Manufacturer">
-    <description/>
+  <manufacturer id="Studio_Design">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Studio Design offers a range of items from ready-to-wear collections to contemporary objects. The brand has been presenting new ideas and trends since its creation in 2012.&lt;/span&gt;&lt;/p&gt;</description>
+    <short_description/>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </manufacturer>
+  <manufacturer id="Graphic_Corner">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Since 2010, Graphic Corner offers a large choice of quality posters, available on paper and many other formats. &lt;/span&gt;&lt;/p&gt;</description>
     <short_description/>
     <meta_title/>
     <meta_keywords/>

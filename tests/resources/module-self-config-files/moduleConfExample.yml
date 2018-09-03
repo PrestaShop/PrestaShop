@@ -31,8 +31,8 @@ files:
 
 # Fox complex configuration data, allow PHP code to be executed
 php:
+    # Must have a class which implements interface PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface
     - file: "path/to/file.php"
-      # Must have a class which implements interface PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface
       params:
         - myParam1: 1
         - oneArrayParam:

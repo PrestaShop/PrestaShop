@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 
 class DeliveryOptionsFinderCore
 {
@@ -96,21 +94,19 @@ class DeliveryOptionsFinderCore
                                 if ($include_taxes) {
                                     $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
                                     if ($display_taxes_label) {
-                                        $carrier['price'] = sprintf(
-                                            $this->translator->trans(
-                                                '%s tax incl.', array(), 'Shop.Theme.Checkout'
-                                            ),
-                                            $carrier['price']
+                                        $carrier['price'] = $this->translator->trans(
+                                            '%price% tax incl.',
+                                            array('%price%' => $carrier['price']),
+                                            'Shop.Theme.Checkout'
                                         );
                                     }
                                 } else {
                                     $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
                                     if ($display_taxes_label) {
-                                        $carrier['price'] = sprintf(
-                                            $this->translator->trans(
-                                                '%s tax excl.', array(), 'Shop.Theme.Checkout'
-                                            ),
-                                            $carrier['price']
+                                        $carrier['price'] = $this->translator->trans(
+                                            '%price% tax excl.',
+                                            array('%price%' => $carrier['price']),
+                                            'Shop.Theme.Checkout'
                                         );
                                     }
                                 }
@@ -119,7 +115,7 @@ class DeliveryOptionsFinderCore
                             if (count($carriers) > 1) {
                                 $carrier['label'] = $carrier['price'];
                             } else {
-                                $carrier['label'] = $carrier['name'].' - '.$carrier['delay'].' - '.$carrier['price'];
+                                $carrier['label'] = $carrier['name'] . ' - ' . $carrier['delay'] . ' - ' . $carrier['price'];
                             }
 
                             // If carrier related to a module, check for additionnal data to display

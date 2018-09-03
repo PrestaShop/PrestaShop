@@ -22,13 +22,13 @@ File: controllers/front/AddressController.php:64</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="228289d31b9bf52373066156f9b0190e">
-        <source>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</source>
-        <target>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</target>
+      <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
+        <source>Message successfully sent</source>
+        <target>Message successfully sent</target>
         <note>Context:
-File: controllers/front/GuestTrackingController.php:102</note>
+File: controllers/front/OrderDetailController.php:179</note>
       </trans-unit>
     </body>
   </file>
@@ -64,17 +64,17 @@ File: controllers/front/PasswordController.php:182</note>
         <source>Information successfully updated.</source>
         <target>Information successfully updated.</target>
         <note>Context:
-File: controllers/front/IdentityController.php:54</note>
+File: controllers/front/IdentityController.php:57</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/OrderDetailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/GuestTrackingController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
-        <source>Message successfully sent</source>
-        <target>Message successfully sent</target>
+      <trans-unit id="228289d31b9bf52373066156f9b0190e">
+        <source>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</source>
+        <target>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</target>
         <note>Context:
-File: controllers/front/OrderDetailController.php:187</note>
+File: controllers/front/GuestTrackingController.php:102</note>
       </trans-unit>
     </body>
   </file>

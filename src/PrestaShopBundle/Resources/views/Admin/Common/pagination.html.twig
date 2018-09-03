@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,49 +18,51 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div>
-    <ul class="pagination">
-        <li class="page-item {% if first_url %}{% else %}disabled{% endif %}">
-            <a class="page-link" {% if first_url %}href="{{ first_url }}"{% else %}nohref{% endif %}>1</a>
-        </li>
-        <li class="page-item {% if previous_url %}{% else %}disabled{% endif %}">
-            <a class="page-link" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}>&lt;</a>
-        </li>
-        <li class="page-item active" style="float: left;">
-            <input name="paginator_jump_page" class="page-link" type="text" style="width: 4em;"
-                   value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
-        </li>
-        <li class="page-item {% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
-            <a class="page-link" id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}>&gt;</a>
-        </li>
-        <li class="page-item {% if last_url is defined and last_url != false %}{% else %}disabled{% endif %}">
-            <a class="page-link" {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>{{ page_count }}</a>
-        </li>
-    </ul>
-    <ul class="pagination">
-        <li style="float: left; margin-left: 2em;">
-            {{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
-              '%from%': from+1,
-              '%to%': min(to+1, total),
-              '%total%': total,
-              '%current_page%': current_page,
-              '%page_count%': page_count
-            },
-                'Admin.Catalog.Feature') }}
-            &nbsp;
-            |
-            &nbsp;
-            {{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}&nbsp;
-            <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;" class="pagination-link">
-                {% if limit not in limit_choices %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
-                {% for limit_choice in limit_choices %}
-                    <option value="{{ limit_choice }}" {% if limit==limit_choice %}selected="selected"{% endif %}>{{ limit_choice }}</option>
-                {% endfor %}
-            </select>
-        </li>
-    </ul>
+<div class="row justify-content-center">
+  <ul class="pagination mb-0">
+    <li class="page-item {% if first_url %}{% else %}disabled{% endif %}">
+      <a class="page-link" {% if first_url %}href="{{ first_url }}"{% else %}nohref{% endif %}>1</a>
+    </li>
+    <li class="page-item previous {% if previous_url %}{% else %}disabled{% endif %}">
+      <a class="page-link" aria-label="Previous" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}><span class="sr-only">Previous</span></a>
+    </li>
+    <li class="page-item active">
+      <input name="paginator_jump_page" class="jump-to-page" type="text" value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
+    </li>
+    <li class="page-item next {% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
+      <a class="page-link" aria-label="Next" id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}><span class="sr-only">Next</span></a>
+    </li>
+    <li class="page-item {% if last_url is defined and last_url != false %}{% else %}disabled{% endif %}">
+      <a class="page-link" {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>{{ page_count }}</a>
+    </li>
+  </ul>
+  <div class="mx-3">
+    {{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
+      '%from%': from+1,
+      '%to%': min(to+1, total),
+      '%total%': total,
+      '%current_page%': current_page,
+      '%page_count%': page_count
+    },
+    'Admin.Catalog.Feature') }}
+  </div>
+  <div class="mx-3">
+    <div class="form-group row mb-0">
+      <label for="paginator_select_page_limit" class="col-form-label mr-2">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+      <div>
+        <select name="paginator_select_page_limit" id="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" class="pagination-link custom-select">
+          {% if limit not in limit_choices %}
+            <option value="{{ limit }}" selected="selected">{{ limit }}</option>
+          {% endif %}
+          {% for limit_choice in limit_choices %}
+            <option value="{{ limit_choice }}" {% if limit==limit_choice %}selected="selected"{% endif %}>{{ limit_choice }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
 </div>

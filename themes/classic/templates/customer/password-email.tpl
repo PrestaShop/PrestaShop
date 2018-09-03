@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -54,8 +54,11 @@
         <div class="col-md-5 email">
           <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="form-control" required>
         </div>
-        <button class="form-control-submit btn btn-primary" name="submit" type="submit">
+        <button class="form-control-submit btn btn-primary hidden-xs-down" name="submit" type="submit">
           {l s='Send reset link' d='Shop.Theme.Actions'}
+        </button>
+        <button class="form-control-submit btn btn-primary hidden-sm-up" name="submit" type="submit">
+          {l s='Send' d='Shop.Theme.Actions'}
         </button>
       </div>
     </section>

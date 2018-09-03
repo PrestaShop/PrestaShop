@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<entity_feature_value>
+  <feature_value id="Polyester">
+    <value>Polyester</value>
+  </feature_value>
+  <feature_value id="Wool">
+    <value>Wool</value>
+  </feature_value>
+  <feature_value id="Elastane">
+    <value>Elastane</value>
+  </feature_value>
+  <feature_value id="Cotton">
+    <value>Cotton</value>
+  </feature_value>
+  <feature_value id="Ruled">
+    <value>Lign&#xE9;</value>
+  </feature_value>
+  <feature_value id="Plain">
+    <value>Vierge</value>
+  </feature_value>
+  <feature_value id="Squarred">
+    <value>Quadrill&#xE9;</value>
+  </feature_value>
+  <feature_value id="Doted">
+    <value>Pointill&#xE9;s</value>
+  </feature_value>
+  <feature_value id="White">
+    <value>Blanc</value>
+  </feature_value>
+  <feature_value id="Black">
+    <value>Noir</value>
+  </feature_value>
+  <feature_value id="S">
+    <value>S</value>
+  </feature_value>
+  <feature_value id="M">
+    <value>M</value>
+  </feature_value>
+  <feature_value id="L">
+    <value>L</value>
+  </feature_value>
+  <feature_value id="XL">
+    <value>XL</value>
+  </feature_value>
+  <feature_value id="40x60cm">
+    <value>40x60cm</value>
+  </feature_value>
+  <feature_value id="60x90cm">
+    <value>60x90cm</value>
+  </feature_value>
+  <feature_value id="80x120cm">
+    <value>80x120cm</value>
+  </feature_value>
+  <feature_value id="80x120cm_1">
+    <value>80x120cm</value>
+  </feature_value>
+</entity_feature_value>

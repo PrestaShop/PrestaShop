@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="col-xs-3">
-    <div class="card p-a-1">
+  <div class="col-sm-3">
+    <div class="card p-3">
       <PSTree
         ref="domainTree"
         :model="domainsTree"
@@ -147,23 +147,11 @@
   };
 </script>
 
-<style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  .tree-header {
-    .pointer {
-      font-size: .65rem;
-      strong {
-        font-weight: 700;
-      }
-      .material-icons {
-        font-size: 25px;
-      }
-    }
-  }
+<style lang="sass" type="text/scss">
+  @import "../../../../../../scss/config/_settings.scss";
   .translationTree {
     .tree-name {
       margin-bottom: .9375rem;
-      line-height: 1.5rem;
 
       &.active {
         font-weight: bold;
@@ -181,7 +169,7 @@
     }
     .tree-extra-label-mini {
       background-color: $danger;
-      color: $white;
+      color: #ffffff;
       padding: 0 0.5rem;
       border-radius: 0.75rem;
       display: inline-block;

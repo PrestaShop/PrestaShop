@@ -286,7 +286,7 @@ File: modules/autoupgrade/AdminSelfTab.php:1901</note>
         <source>Required field</source>
         <target>Required field</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4053</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4059</note>
       </trans-unit>
       <trans-unit id="bb7748991e29366d42f8fa2c361f4d55">
         <source>Back up my files and database</source>
@@ -623,1904 +623,1898 @@ File: modules/autoupgrade/AdminSelfUpgrade.php:1470</note>
         <source>[ERROR] %s does not exist or is not a directory.</source>
         <target>[ERROR] %s does not exist or is not a directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1773</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1777</note>
       </trans-unit>
       <trans-unit id="d8316e26b7d1322f4445d3ffeec4bcfb">
         <source>Nothing has been extracted. It seems the unzipping step has been skipped.</source>
         <target>Nothing has been extracted. It seems the unzipping step has been skipped.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1590</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1594</note>
       </trans-unit>
       <trans-unit id="2de9cd00fdcc22adb43ea03f2a09dee5">
         <source>[ERROR] Unable to find files to upgrade.</source>
         <target>[ERROR] Unable to find files to upgrade.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1680</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1684</note>
       </trans-unit>
       <trans-unit id="c165b990be724cefca897c7c4cc70cac">
         <source>Unable to list files to upgrade</source>
         <target>Unable to list files to upgrade</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1681</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1685</note>
       </trans-unit>
       <trans-unit id="5479863b0426e29c3a17a3f9cc6e3746">
         <source>%s files will be upgraded.</source>
         <target>%s files will be upgraded.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1687</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1691</note>
       </trans-unit>
       <trans-unit id="4f7c02592a962e40a920f32f3a24f2df">
         <source>filesToUpgrade is not an array</source>
         <target>filesToUpgrade is not an array</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1702</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1706</note>
       </trans-unit>
       <trans-unit id="6274f940a4c03421253b1acc4064349e">
         <source>All files upgraded. Now upgrading database...</source>
         <target>All files upgraded. Now upgrading database...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1713</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1717</note>
       </trans-unit>
       <trans-unit id="41deb3bc122b8e650d7a4758ea95f5c3">
         <source>Error when trying to upgrade file %s.</source>
         <target>Error when trying to upgrade file %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1725</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1729</note>
       </trans-unit>
       <trans-unit id="481343ab83a2b8e7c7f6c710279f2a6d">
         <source>%s files left to upgrade.</source>
         <target>%s files left to upgrade.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1733</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1737</note>
       </trans-unit>
       <trans-unit id="8994f47952b9b29743e45a72ed30707c">
         <source>Nothing has been extracted. It seems the unzip step has been skipped.</source>
         <target>Nothing has been extracted. It seems the unzip step has been skipped.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1774</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1778</note>
       </trans-unit>
       <trans-unit id="0530243ad5b9bd205a04b975d3ef8aaf">
         <source>%s modules will be upgraded.</source>
         <target>%s modules will be upgraded.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1813</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1819</note>
       </trans-unit>
       <trans-unit id="0f786a53b1674815c24679ed64770223">
         <source>upgradeModule step has not ended correctly.</source>
         <target>upgradeModule step has not ended correctly.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1830</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1836</note>
       </trans-unit>
       <trans-unit id="1baa2ea6cee198c6b7f19011431dcc73">
         <source>listModules is not an array. No module has been updated.</source>
         <target>listModules is not an array. No module has been updated.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1832</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1838</note>
       </trans-unit>
       <trans-unit id="d88a8630bd4e8fdbd61c550e53d62a94">
         <source>%s modules left to upgrade.</source>
         <target>%s modules left to upgrade.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1852</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1858</note>
       </trans-unit>
       <trans-unit id="983cd275ba4b56e0108c5d8e901adcae">
         <source>The %modulename% module is not compatible with version %version%, it will be removed from your FTP.</source>
         <target>The %modulename% module is not compatible with version %version%, it will be removed from your FTP.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1877</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1883</note>
       </trans-unit>
       <trans-unit id="2055b1329a5c5b8f443e857d396227d8">
         <source>The %modulename% module is not compatible with version %version%, please remove it from your FTP.</source>
         <target>The %modulename% module is not compatible with version %version%, please remove it from your FTP.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1886</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1892</note>
       </trans-unit>
       <trans-unit id="f0d18de100ab33463602ea5b8165d842">
         <source>Addons modules files have been upgraded.</source>
         <target>Addons modules files have been upgraded.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1901</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1907</note>
       </trans-unit>
       <trans-unit id="35687f9e2d83cd9e89860c47fb3a7bbd">
         <source>The files of module %s have been upgraded.</source>
         <target>The files of module %s have been upgraded.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1957</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1963</note>
       </trans-unit>
       <trans-unit id="2743947c7353cf849fbff70085764d76">
         <source>[WARNING] Error when trying to upgrade module %s.</source>
         <target>[WARNING] Error when trying to upgrade module %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1980</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1986</note>
       </trans-unit>
       <trans-unit id="23f0dcc0dc41c4206bb741661da76c93">
         <source>[ERROR] Unable to write module %s's zip file in temporary directory.</source>
         <target>[ERROR] Unable to write module %s's zip file in temporary directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1967</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1973</note>
       </trans-unit>
       <trans-unit id="36d56d20b3894281531cd4108e2c4cec">
         <source>[ERROR] No response from Addons server.</source>
         <target>[ERROR] No response from Addons server.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1972</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1978</note>
       </trans-unit>
       <trans-unit id="eac34868b4fb511702e53d1405c45454">
         <source>Error during database upgrade. You may need to restore your database.</source>
         <target>Error during database upgrade. You may need to restore your database.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1992</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:1998</note>
       </trans-unit>
       <trans-unit id="08ee54c048e1589f4072a351035db2ad">
         <source>Database upgraded. Now upgrading your Addons modules...</source>
         <target>Database upgraded. Now upgrading your Addons modules...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:1996</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2002</note>
       </trans-unit>
       <trans-unit id="ead14b0273e8d6cae7d146130d4be8f6">
         <source>The database has been cleaned.</source>
         <target>The database has been cleaned.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2023</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2029</note>
       </trans-unit>
       <trans-unit id="ca02217f9735e1acce9d586baeeac905">
         <source>/install/upgrade/php directory is missing in archive or directory</source>
         <target>/install/upgrade/php directory is missing in archive or directory</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2104</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2110</note>
       </trans-unit>
       <trans-unit id="ccd53528618f01a142e2e5bf92be295a">
         <source>/install/upgrade/php directory is missing in archive or directory.</source>
         <target>/install/upgrade/php directory is missing in archive or directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2105</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2111</note>
       </trans-unit>
       <trans-unit id="e04426beffbb68ad104bcaa54466f13b">
         <source>The app/config/parameters.php file was not found.</source>
         <target>The app/config/parameters.php file was not found.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2118</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2124</note>
       </trans-unit>
       <trans-unit id="bc141f39167fd8d4a57f6c9437aec8ee">
         <source>The app/config/parameters.yml file was not found.</source>
         <target>The app/config/parameters.yml file was not found.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2124</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2130</note>
       </trans-unit>
       <trans-unit id="62e3454ceb58a5cdd7e382f6ecc78fe4">
         <source>Current version: %oldversion%. Version to install: %newversion%.</source>
         <target>Current version: %oldversion%. Version to install: %newversion%.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2143</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2149</note>
       </trans-unit>
       <trans-unit id="68306e1fce88677323abaa1413abc630">
         <source>Current version: %oldversion%. Version to install: %newversion%</source>
         <target>Current version: %oldversion%. Version to install: %newversion%</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2151</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2157</note>
       </trans-unit>
       <trans-unit id="f8498f0014f0b834b635ad879ae1b3fd">
         <source>[ERROR] Version to install is too old.</source>
         <target>[ERROR] Version to install is too old.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2159</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2165</note>
       </trans-unit>
       <trans-unit id="37ce0f29c7377c827e7247fe5645a782">
         <source>You already have the %s version.</source>
         <target>You already have the %s version.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4096</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4102</note>
       </trans-unit>
       <trans-unit id="d159b135bb83d88adcde6c1ac420556e">
         <source>There is no older version. Did you delete or rename the app/config/parameters.php file?</source>
         <target>There is no older version. Did you delete or rename the app/config/parameters.php file?</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4097</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4103</note>
       </trans-unit>
       <trans-unit id="b3884f9e8ed49a8d7165787d3adec342">
         <source>Invalid database configuration</source>
         <target>Invalid database configuration</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2181</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2187</note>
       </trans-unit>
       <trans-unit id="f25792b5b08a78dd01810297d219c10c">
         <source>Unable to find upgrade directory in the installation path.</source>
         <target>Unable to find upgrade directory in the installation path.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2196</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2202</note>
       </trans-unit>
       <trans-unit id="8abd985d095a1282f6f01b98c121b41b">
         <source>Cannot find the SQL upgrade files. Please check that the %s folder is not empty.</source>
         <target>Cannot find the SQL upgrade files. Please check that the %s folder is not empty.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2211</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2217</note>
       </trans-unit>
       <trans-unit id="bf3abb5f80807c7453c246193372e1ae">
         <source>%s is not a valid version number.</source>
         <target>%s is not a valid version number.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2234</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2240</note>
       </trans-unit>
       <trans-unit id="f8b97ae2c4f8cc2a9dc74ca3d4306ce3">
         <source>Error while loading SQL upgrade file "%s.sql".</source>
         <target>Error while loading SQL upgrade file "%s.sql".</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2248</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2254</note>
       </trans-unit>
       <trans-unit id="50d6eae93c124bf2ad5888130b73b6ec">
         <source>Error while loading SQL upgrade file %s.</source>
         <target>Error while loading SQL upgrade file %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2254</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2260</note>
       </trans-unit>
       <trans-unit id="eff6f9409dac39eb2aa45ac6ac72f38c">
         <source>Error while loading sql SQL file %s.</source>
         <target>Error while loading sql SQL file %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2255</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2261</note>
       </trans-unit>
       <trans-unit id="7e6f1194307c585ca2e97f81c3db4bb3">
         <source>[DROP] SQL %s table has been dropped.</source>
         <target>[DROP] SQL %s table has been dropped.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2349</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2355</note>
       </trans-unit>
       <trans-unit id="3c2e3b812ebc9bc95ccd9bf9086c4af7">
         <source>An error happened during the database upgrade.</source>
         <target>An error happened during the database upgrade.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2378</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2384</note>
       </trans-unit>
       <trans-unit id="7c4cb748f551ab697e6af16bd77ad279">
         <source>Error upgrading Doctrine schema</source>
         <target>Error upgrading Doctrine schema</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2395</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2401</note>
       </trans-unit>
       <trans-unit id="257f5523f283710c6859d8f425a0c657">
         <source>Database upgrade OK</source>
         <target>Database upgrade OK</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2401</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2407</note>
       </trans-unit>
       <trans-unit id="9dcf84f429818d396d05335d52ef5f42">
         <source>[SKIP] directory "%s" does not exist and cannot be emptied.</source>
         <target>[SKIP] directory "%s" does not exist and cannot be emptied.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2410</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2416</note>
       </trans-unit>
       <trans-unit id="4cb8d96f333a2339fe544b96ee2740de">
         <source>[CLEANING CACHE] File %s removed</source>
         <target>[CLEANING CACHE] File %s removed</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2420</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2426</note>
       </trans-unit>
       <trans-unit id="0e8fc0184c6a5faaf01d3f9851256cac">
         <source>Error updating translations</source>
         <target>Error updating translations</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2488</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2494</note>
       </trans-unit>
       <trans-unit id="9c7e0ba2c6ecb11af7f39843bbc18ff8">
         <source>Warning detected during upgrade.</source>
         <target>Warning detected during upgrade.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2719</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2725</note>
       </trans-unit>
       <trans-unit id="c4615fc8cb7877b074cbe9813cd742b1">
         <source>Database upgrade completed</source>
         <target>Database upgrade completed</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2721</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2727</note>
       </trans-unit>
       <trans-unit id="c76662717bc0a1c0a601534af98f537b">
         <source>[NOTICE] File %s does not exist, merge skipped.</source>
         <target>[NOTICE] File %s does not exist, merge skipped.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2837</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2843</note>
       </trans-unit>
       <trans-unit id="1a863b6511367b9d8b44b21e390f2d10">
         <source>[WARNING] %variablename% variable missing in file %filename%. Merge skipped.</source>
         <target>[WARNING] %variablename% variable missing in file %filename%. Merge skipped.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2825</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2831</note>
       </trans-unit>
       <trans-unit id="a2a52f63b450e5db3bcb2a3973378e04">
         <source>[WARNING] %variablename% variable missing in file %filename%. File %filename% deleted and merge skipped.</source>
         <target>[WARNING] %variablename% variable missing in file %filename%. File %filename% deleted and merge skipped.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2848</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2854</note>
       </trans-unit>
       <trans-unit id="9a2f2cf276ea9f79b31a815897c0e3e6">
         <source>%s ignored</source>
         <target>%s ignored</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2897</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2903</note>
       </trans-unit>
       <trans-unit id="4794a520f862841749c18466119acfed">
         <source>[WARNING] File %1$s has been deleted.</source>
         <target>[WARNING] File %1$s has been deleted.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2904</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2910</note>
       </trans-unit>
       <trans-unit id="cbfafdaa2e7968a86bd6a437027edfea">
         <source>Directory %1$s created.</source>
         <target>Directory %1$s created.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2908</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2914</note>
       </trans-unit>
       <trans-unit id="a61e66de5e0b581cc66f73f5662660c6">
         <source>Error while creating directory %s.</source>
         <target>Error while creating directory %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2913</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2919</note>
       </trans-unit>
       <trans-unit id="0a6c2db1b18cb6420ad40d46db8707de">
         <source>Directory %s already exists.</source>
         <target>Directory %s already exists.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2917
+File: modules/autoupgrade/AdminSelfUpgrade.php:2923
  Comment: directory already exists</note>
       </trans-unit>
       <trans-unit id="e877efcbee96fb597e27a9d83b362f0c">
         <source>[TRANSLATION] The translation files have been merged into file %s.</source>
         <target>[TRANSLATION] The translation files have been merged into file %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2925</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2931</note>
       </trans-unit>
       <trans-unit id="b6a405342d9de91fa9f190b13b842b5c">
         <source>[TRANSLATION] The translation files have not been merged into file %filename%. Switch to copy %filename%.</source>
         <target>[TRANSLATION] The translation files have not been merged into file %filename%. Switch to copy %filename%.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2934</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2940</note>
       </trans-unit>
       <trans-unit id="b8db10001e04b8f947415aeb8b8fd19f">
         <source>Copied %1$s.</source>
         <target>Copied %1$s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2944</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2950</note>
       </trans-unit>
       <trans-unit id="eae82e869fe0a47087214e2748ae710a">
         <source>Error while copying file %s</source>
         <target>Error while copying file %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2949</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2955</note>
       </trans-unit>
       <trans-unit id="017ee1746dc3fa3a32a4dd4af37d1b17">
         <source>[ERROR] file %s is missing : unable to restore files. Operation aborted.</source>
         <target>[ERROR] file %s is missing : unable to restore files. Operation aborted.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2986</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2992</note>
       </trans-unit>
       <trans-unit id="d75374f4463479bfc16764f06fc8d33e">
         <source>[ERROR] File %s is missing: unable to restore files. Operation aborted.</source>
         <target>[ERROR] File %s is missing: unable to restore files. Operation aborted.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:2987</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:2993</note>
       </trans-unit>
       <trans-unit id="99db61185a28a3f862dcb99e891b2897">
         <source>[ERROR] No backup database files found: it would be impossible to restore the database. Operation aborted.</source>
         <target>[ERROR] No backup database files found: it would be impossible to restore the database. Operation aborted.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3004</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3010</note>
       </trans-unit>
       <trans-unit id="0438424c05d45646dc089ef15df7e0e2">
         <source>Restoring files ...</source>
         <target>Restoring files ...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3009</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3015</note>
       </trans-unit>
       <trans-unit id="222102295c3c6626ff141687b0f49b6b">
         <source>Nothing to restore</source>
         <target>Nothing to restore</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3024</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3030</note>
       </trans-unit>
       <trans-unit id="7ead6886c2e0fb40e873da8426e80988">
         <source>%s file(s) will be removed before restoring the backup files.</source>
         <target>%s file(s) will be removed before restoring the backup files.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3063</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3069</note>
       </trans-unit>
       <trans-unit id="e3ca00e5b833d0a90d433416435dcaf5">
         <source>[ERROR] Backup file %s does not exist.</source>
         <target>[ERROR] Backup file %s does not exist.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3069</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3075</note>
       </trans-unit>
       <trans-unit id="8dbf48bc796e7f70a17c63dd084bf068">
         <source>[ERROR] File "%s" does not exist.</source>
         <target>[ERROR] File "%s" does not exist.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3073</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3079</note>
       </trans-unit>
       <trans-unit id="2a2c187bdb804ba79fd4bf8972ba5073">
         <source>Unable to remove upgraded files.</source>
         <target>Unable to remove upgraded files.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3075</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3081</note>
       </trans-unit>
       <trans-unit id="671537225baa948d4c92cf4681283326">
         <source>Files restored. Now restoring database...</source>
         <target>Files restored. Now restoring database...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3093</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3099</note>
       </trans-unit>
       <trans-unit id="cb7dce5f6a1934d54c0d3335c7ffe841">
         <source>Files restored.</source>
         <target>Files restored.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3094</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3100</note>
       </trans-unit>
       <trans-unit id="22d7730ec913d8ce6ec75618a1881902">
         <source>Unable to extract file %filename% into directory %directoryname% .</source>
         <target>Unable to extract file %filename% into directory %directoryname% .</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3099</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3105</note>
       </trans-unit>
       <trans-unit id="6a5e5c0047907eaf8062e9933f0de8df">
         <source>%s: File format does not match.</source>
         <target>%s: File format does not match.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3162</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3168</note>
       </trans-unit>
       <trans-unit id="c2bcd4d44d646c47753473ff94cc66ac">
         <source>Opening backup database file %filename% in %extension% mode</source>
         <target>Opening backup database file %filename% in %extension% mode</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3174</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3180</note>
       </trans-unit>
       <trans-unit id="5ce67d010ab9c98ae1dbd6b5ea149982">
         <source>Database backup is empty.</source>
         <target>Database backup is empty.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3213</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3219</note>
       </trans-unit>
       <trans-unit id="ad12a553fe534ba86e1cebf77b27300d">
         <source>Database restoration file %filename% done. %filescount% file(s) left...</source>
         <target>Database restoration file %filename% done. %filescount% file(s) left...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3259</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3265</note>
       </trans-unit>
       <trans-unit id="55fc6682e256e387afb10ebf6c95aed5">
         <source>Database restoration file %1$s done.</source>
         <target>Database restoration file %1$s done.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3267</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3273</note>
       </trans-unit>
       <trans-unit id="5b37242b8a0a39af0a9dc28abdabba28">
         <source>Database has been restored.</source>
         <target>Database has been restored.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3277</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3283</note>
       </trans-unit>
       <trans-unit id="8f226504481b55e9f588e4bc14b5882f">
         <source>[SQL ERROR]</source>
         <target>[SQL ERROR]</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3297</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3303</note>
       </trans-unit>
       <trans-unit id="b232a418538e3f6904357039ff7b1052">
         <source>Error during database restoration</source>
         <target>Error during database restoration</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3300</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3306</note>
       </trans-unit>
       <trans-unit id="85f6ad54304538449ff3da4435be5336">
         <source>%numberqueries% queries left for file %filename%...</source>
         <target>%numberqueries% queries left for file %filename%...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3324</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3330</note>
       </trans-unit>
       <trans-unit id="30da45f850d1f1a2b42f215836382f19">
         <source>Database restoration done.</source>
         <target>Database restoration done.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3337</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3343</note>
       </trans-unit>
       <trans-unit id="926abe867e8b1be1c0b053234cae77ba">
         <source>Database backup skipped. Now upgrading files...</source>
         <target>Database backup skipped. Now upgrading files...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3354</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3360</note>
       </trans-unit>
       <trans-unit id="555231214d7c729089e80f561e118f45">
         <source>Backup directory is not writable (%path%).</source>
         <target>Backup directory is not writable (%path%).</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3364</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3370</note>
       </trans-unit>
       <trans-unit id="d12ae4e7f0d20f4a4ca357d48e42877e">
         <source>Backup file %s already exists. Operation aborted.</source>
         <target>Backup file %s already exists. Operation aborted.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3435</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3441</note>
       </trans-unit>
       <trans-unit id="d82896159c60199272e5ea481a733eba">
         <source>Unable to create backup database file %s.</source>
         <target>Unable to create backup database file %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3450</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3456</note>
       </trans-unit>
       <trans-unit id="dcb7d833c69d6e0c3f009381c51f898e">
         <source>Error during database backup.</source>
         <target>Error during database backup.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3486</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3492</note>
       </trans-unit>
       <trans-unit id="52033453d4d673bae012b9c8ccb1e79c">
         <source>An error occurred while backing up. Unable to obtain the schema of %s</source>
         <target>An error occurred while backing up. Unable to obtain the schema of %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3483</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3489</note>
       </trans-unit>
       <trans-unit id="4d4c62fccb481224ff3a5c36b45de3fd">
         <source>%s table has been saved.</source>
         <target>%s table has been saved.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3572</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3578</note>
       </trans-unit>
       <trans-unit id="71426d0545181d601dc135b78e74ac8f">
         <source>%s tables have been saved.</source>
         <target>%s tables have been saved.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3608</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3614</note>
       </trans-unit>
       <trans-unit id="c2a086cb5c3373d7e11acbd3ace6a553">
         <source>Database backup: %s table(s) left...</source>
         <target>Database backup: %s table(s) left...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3590</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3596</note>
       </trans-unit>
       <trans-unit id="f5f6ee32184b6a03c5c9928cbefa07f7">
         <source>No valid tables were found to back up. Backup of file %s canceled.</source>
         <target>No valid tables were found to back up. Backup of file %s canceled.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3599</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3605</note>
       </trans-unit>
       <trans-unit id="0e27b7ac485e03dabd5648acd5982dde">
         <source>Error during database backup for file %s.</source>
         <target>Error during database backup for file %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3601</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3607</note>
       </trans-unit>
       <trans-unit id="4b85e344355a8c135644f239db898749">
         <source>Database backup done in filename %s. Now upgrading files...</source>
         <target>Database backup done in filename %s. Now upgrading files...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3614</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3620</note>
       </trans-unit>
       <trans-unit id="e6de5ce7d70a6ed1e2d2d2a25c1bffb4">
         <source>Error during backupFiles</source>
         <target>Error during backupFiles</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3634</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3640</note>
       </trans-unit>
       <trans-unit id="f2afc9e120786d21fd6809c836258669">
         <source>[ERROR] backupFiles filename has not been set</source>
         <target>[ERROR] backupFiles filename has not been set</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3636</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3642</note>
       </trans-unit>
       <trans-unit id="48f95ff09327408a578e91655ed872a1">
         <source>%s Files to backup.</source>
         <target>%s Files to backup.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3645</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3651</note>
       </trans-unit>
       <trans-unit id="ae10eb1b240ad1b32e2a18e8c9694120">
         <source>Backup files initialized in %s</source>
         <target>Backup files initialized in %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3654</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3660</note>
       </trans-unit>
       <trans-unit id="9bebecbf68b6ce5a6d656c5ea793b762">
         <source>Backup files in progress. %d files left</source>
         <target>Backup files in progress. %d files left</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3660</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3666</note>
       </trans-unit>
       <trans-unit id="43021c1fdde702e1ce1aebb2a8bf6978">
         <source>Using class ZipArchive...</source>
         <target>Using class ZipArchive...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5694</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5706</note>
       </trans-unit>
       <trans-unit id="cf460c5ac4a650da739cf774cd5f8944">
         <source>Using class PclZip...</source>
         <target>Using class PclZip...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5712</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5724</note>
       </trans-unit>
       <trans-unit id="f36d7ee6cae92008008a95bf5898daf2">
         <source>All files saved. Now backing up database</source>
         <target>All files saved. Now backing up database</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3695</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3701</note>
       </trans-unit>
       <trans-unit id="f39b870765d50b64ba7a6facea83010d">
         <source>All files have been added to archive.</source>
         <target>All files have been added to archive.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3696</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3702</note>
       </trans-unit>
       <trans-unit id="1d7a665a8b724a2a30e72af54b8fd313">
         <source>%filename% added to archive. %filescount% files left.</source>
         <target>%filename% added to archive. %filescount% files left.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3710</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3716</note>
       </trans-unit>
       <trans-unit id="037350bc293c5e04305ff73a7e470b52">
         <source>Error when trying to add %filename% to archive %archive%.</source>
         <target>Error when trying to add %filename% to archive %archive%.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3727</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3733</note>
       </trans-unit>
       <trans-unit id="16e885a4397246a89509884b3975d6f7">
         <source>File %filename% (size: %filesize%) added to archive. %filescount% files left.</source>
         <target>File %filename% (size: %filesize%) added to archive. %filescount% files left.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3741</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3747</note>
       </trans-unit>
       <trans-unit id="58e561e0f706c22542bcf48021f88e4d">
         <source>File %filename% (size: %filesize%) added to archive.</source>
         <target>File %filename% (size: %filesize%) added to archive.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3751</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3757</note>
       </trans-unit>
       <trans-unit id="fe718bdde198efa66b9e3a9a5cf476e6">
         <source>File %filename% (size: %filesize%) has been skipped during backup.</source>
         <target>File %filename% (size: %filesize%) has been skipped during backup.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3770</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3776</note>
       </trans-unit>
       <trans-unit id="8a5062d4832b42720342c513d7d52f7d">
         <source>[ERROR] Error on backup using PclZip: %s.</source>
         <target>[ERROR] Error on backup using PclZip: %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3792</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3798</note>
       </trans-unit>
       <trans-unit id="b31006b398a0fc315119a145aa1b0466">
         <source>Unable to open archive</source>
         <target>Unable to open archive</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3801</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3807</note>
       </trans-unit>
       <trans-unit id="41247d1e5ee2ca774bfdc3262ee1770b">
         <source>All files saved. Now backing up database.</source>
         <target>All files saved. Now backing up database.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3807</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3813</note>
       </trans-unit>
       <trans-unit id="ee4ec9a767ac013c5161c50f9de96b9e">
         <source>%itemname% items removed. %itemscount% items left.</source>
         <target>%itemname% items removed. %itemscount% items left.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3823</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3829</note>
       </trans-unit>
       <trans-unit id="a22340cb1abacbe1bb6e8e069e4c96d0">
         <source>Error while removing item %itemname%, %itemscount% items left.</source>
         <target>Error while removing item %itemname%, %itemscount% items left.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3843</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3849</note>
       </trans-unit>
       <trans-unit id="2bc5a6a8c62cc5616f1d7a5abe28bb65">
         <source>Starting to remove %s sample files</source>
         <target>Starting to remove %s sample files</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3885</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3891</note>
       </trans-unit>
       <trans-unit id="6db37da3334e8a950c5bcdabc9fcf8f8">
         <source>All sample files removed. Backup process skipped. Now upgrading files.</source>
         <target>All sample files removed. Backup process skipped. Now upgrading files.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3896</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3902</note>
       </trans-unit>
       <trans-unit id="1d62b7d31a19dde578c4c56babef264a">
         <source>All sample files removed. Now backing up files.</source>
         <target>All sample files removed. Now backing up files.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3899</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3905</note>
       </trans-unit>
       <trans-unit id="f31c50f6d0edbbb94aa24943b118e316">
         <source>Downloading from %s</source>
         <target>Downloading from %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3938</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3944</note>
       </trans-unit>
       <trans-unit id="73227d741d23c1c6c0ae027b2dbc9e73">
         <source>File will be saved in %s</source>
         <target>File will be saved in %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3939</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3945</note>
       </trans-unit>
       <trans-unit id="53be0a7251b3bd0de81f488687bc0464">
         <source>Download directory has been emptied</source>
         <target>Download directory has been emptied</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3942</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3948</note>
       </trans-unit>
       <trans-unit id="3c2681ea85407c2c0d252e05a8eaf6aa">
         <source>Download complete.</source>
         <target>Download complete.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3951</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3957</note>
       </trans-unit>
       <trans-unit id="a55401a11251f53f612e950d4115e116">
         <source>Download complete. Now extracting...</source>
         <target>Download complete. Now extracting...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3953</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3959</note>
       </trans-unit>
       <trans-unit id="2d9a3f4a92c008b32903541e9af8aff0">
         <source>Download complete but MD5 sum does not match (%s).</source>
         <target>Download complete but MD5 sum does not match (%s).</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3956</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3962</note>
       </trans-unit>
       <trans-unit id="df88998b6b9585bbcfd201186695b686">
         <source>Download complete but MD5 sum does not match (%s). Operation aborted.</source>
         <target>Download complete but MD5 sum does not match (%s). Operation aborted.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3958</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3964</note>
       </trans-unit>
       <trans-unit id="412cb9a2978bf041be4ca6c6ded0030c">
         <source>Error during download. The private key may be incorrect.</source>
         <target>Error during download. The private key may be incorrect.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3964</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3970</note>
       </trans-unit>
       <trans-unit id="0c0db54fe8212c1a7215005fef75d7dd">
         <source>Error during download</source>
         <target>Error during download</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3968</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3974</note>
       </trans-unit>
       <trans-unit id="5385901e5bed459563860e2f08a90a1c">
         <source>Download directory %s is not writable.</source>
         <target>Download directory %s is not writable.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3975</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3981</note>
       </trans-unit>
       <trans-unit id="fb1ca1f5f3eb5a2ca85201f449525527">
         <source>You need allow_url_fopen or cURL enabled for automatic download to work. You can also manually upload it in filepath %s.</source>
         <target>You need allow_url_fopen or cURL enabled for automatic download to work. You can also manually upload it in filepath %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:3982</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:3988</note>
       </trans-unit>
       <trans-unit id="a75d0dd3210dc796149dd5503a4b9b9f">
         <source>[WARNING] Property %s is missing</source>
         <target>[WARNING] Property %s is missing</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4002</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4008</note>
       </trans-unit>
       <trans-unit id="435d516735dbf7f622c7d14585f66840">
         <source>Action %s skipped</source>
         <target>Action %s skipped</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4034</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4040</note>
       </trans-unit>
       <trans-unit id="6ddf6d53665123009129ef2df97f7aab">
         <source>Action "%s" not found</source>
         <target>Action "%s" not found</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4037</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4043</note>
       </trans-unit>
       <trans-unit id="760c4026bc5a0bd5378e6efc3f1370b4">
         <source>Too long!</source>
         <target>Too long!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4054</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4060</note>
       </trans-unit>
       <trans-unit id="4f2e28904946a09d8c7f36dd3ee72457">
         <source>Fields are different!</source>
         <target>Fields are different!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4055</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4061</note>
       </trans-unit>
       <trans-unit id="e5110300599f995b9d8cfbe930fba83e">
         <source>This email address is wrong!</source>
         <target>This email address is wrong!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4056</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4062</note>
       </trans-unit>
       <trans-unit id="2e170dfd78c2171a25605ececc0950a4">
         <source>Impossible to send the email!</source>
         <target>Impossible to send the email!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4057</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4063</note>
       </trans-unit>
       <trans-unit id="5f9ff5f3662e1675dcf694c707b41466">
         <source>Cannot create settings file, if /app/config/parameters.php exists, please give the public write permissions to this file, else please create a file named parameters.php in config directory.</source>
         <target>Cannot create settings file, if /app/config/parameters.php exists, please give the public write permissions to this file, else please create a file named parameters.php in config directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4058</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4064</note>
       </trans-unit>
       <trans-unit id="128a6722ff88445b488e4eb3319fa5b7">
         <source>Cannot write settings file, please create a file named settings.inc.php in the "config" directory.</source>
         <target>Cannot write settings file, please create a file named settings.inc.php in the "config" directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4059</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4065</note>
       </trans-unit>
       <trans-unit id="e930e2474c664a3a7e89ecfb8793694b">
         <source>Impossible to upload the file!</source>
         <target>Impossible to upload the file!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4060</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4066</note>
       </trans-unit>
       <trans-unit id="774fc7a0f56391abc5d8856f2436ca07">
         <source>Data integrity is not valided. Hack attempt?</source>
         <target>Data integrity is not valided. Hack attempt?</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4061</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4067</note>
       </trans-unit>
       <trans-unit id="8fd007bf08e0717537825a3e91cb4fcc">
         <source>Impossible to read the content of a MySQL content file.</source>
         <target>Impossible to read the content of a MySQL content file.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4062</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4068</note>
       </trans-unit>
       <trans-unit id="17a90b480e6f6b8d1214df46c8678015">
         <source>Cannot access a MySQL content file.</source>
         <target>Cannot access a MySQL content file.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4063</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4069</note>
       </trans-unit>
       <trans-unit id="3d5c8f1d29b1a1dc4ea0673122e0d277">
         <source>Error while inserting data in the database:</source>
         <target>Error while inserting data in the database:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4064</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4070</note>
       </trans-unit>
       <trans-unit id="bc5e1163a15106f9e941a7603124709d">
         <source>This is not a valid file name.</source>
         <target>This is not a valid file name.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4067</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4073</note>
       </trans-unit>
       <trans-unit id="a9d82945b8603f0c8807958d7db9a24d">
         <source>This is not a valid image file.</source>
         <target>This is not a valid image file.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4068</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4074</note>
       </trans-unit>
       <trans-unit id="77797ec8a35666683bbac1b20db16f5f">
         <source>Error while creating the /app/config/parameters.php file.</source>
         <target>Error while creating the /app/config/parameters.php file.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4069</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4075</note>
       </trans-unit>
       <trans-unit id="3d9f514d46849760ef1b1412e314fd99">
         <source>Error:</source>
         <target>Error:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4070</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4076</note>
       </trans-unit>
       <trans-unit id="c5bcaf2cc3be924182f0ec0e3124ed99">
         <source>This PrestaShop database already exists. Please revalidate your authentication information to the database.</source>
         <target>This PrestaShop database already exists. Please revalidate your authentication information to the database.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4071</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4077</note>
       </trans-unit>
       <trans-unit id="d7a99f61bb284d096ea4f221784af85a">
         <source>An error occurred while resizing the picture.</source>
         <target>An error occurred while resizing the picture.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4072</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4078</note>
       </trans-unit>
       <trans-unit id="428c933bafbf262d693fbf1c22c03e5d">
         <source>Database connection is available!</source>
         <target>Database connection is available!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4073</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4079</note>
       </trans-unit>
       <trans-unit id="76bd190129b7aefb90fdf42f09ec3ec7">
         <source>Database Server is available but database is not found</source>
         <target>Database Server is available but database is not found</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4074</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4080</note>
       </trans-unit>
       <trans-unit id="045f4b5c3f990e5a26e2837495d68259">
         <source>Database Server is not found. Please verify the login, password and server fields.</source>
         <target>Database Server is not found. Please verify the login, password and server fields.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4075</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4081</note>
       </trans-unit>
       <trans-unit id="757fc72e8d69106dd2cf9da22cc7adb1">
         <source>An error occurred while sending email, please verify your parameters.</source>
         <target>An error occurred while sending email, please verify your parameters.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4076</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4082</note>
       </trans-unit>
       <trans-unit id="d18ad19290b3bfc3cd0d7badbb6cb6a3">
         <source>Impossible to write the image /img/logo.jpg. If this image already exists, please delete it.</source>
         <target>Impossible to write the image /img/logo.jpg. If this image already exists, please delete it.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4077</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4083</note>
       </trans-unit>
       <trans-unit id="2368e33e3e01d53abb9b60061ab83903">
         <source>The uploaded file exceeds the upload_max_filesize directive in php.ini</source>
         <target>The uploaded file exceeds the upload_max_filesize directive in php.ini</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4078</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4084</note>
       </trans-unit>
       <trans-unit id="a10ef376d9f4c877ac86d8e4350116bf">
         <source>The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form</source>
         <target>The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4079</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4085</note>
       </trans-unit>
       <trans-unit id="f8fe8cba1625eaf8e5c253b041d57dbd">
         <source>The uploaded file was only partially uploaded</source>
         <target>The uploaded file was only partially uploaded</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4080</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4086</note>
       </trans-unit>
       <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
         <source>No file was uploaded.</source>
         <target>No file was uploaded.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4081</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4087</note>
       </trans-unit>
       <trans-unit id="2384d693d9af53b4727c092af7570a19">
         <source>Missing a temporary folder</source>
         <target>Missing a temporary folder</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4082</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4088</note>
       </trans-unit>
       <trans-unit id="f5985b2c059d5cc36968baab7585baba">
         <source>Failed to write file to disk</source>
         <target>Failed to write file to disk</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4083</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4089</note>
       </trans-unit>
       <trans-unit id="9e54dfe54e03b0010c1fe70bd65cd5e6">
         <source>File upload stopped by extension</source>
         <target>File upload stopped by extension</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4084</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4090</note>
       </trans-unit>
       <trans-unit id="01997b209bbc4a6ee04fb713afed40ec">
         <source>Cannot convert your database's data to utf-8.</source>
         <target>Cannot convert your database's data to utf-8.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4085</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4091</note>
       </trans-unit>
       <trans-unit id="7186f703d20b263cfb91161418996e43">
         <source>Your MySQL server does not support this engine, please use another one like MyISAM</source>
         <target>Your MySQL server does not support this engine, please use another one like MyISAM</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4089</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4095</note>
       </trans-unit>
       <trans-unit id="2399cf4ca7b49f2706f6e147a32efa78">
         <source>Your lastname contains some invalid characters</source>
         <target>Your lastname contains some invalid characters</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4090</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4096</note>
       </trans-unit>
       <trans-unit id="24b481455c1b72b0c2539e7d516b9582">
         <source>The file /img/logo.jpg is not writable, please CHMOD 755 this file or CHMOD 777</source>
         <target>The file /img/logo.jpg is not writable, please CHMOD 755 this file or CHMOD 777</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4091</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4097</note>
       </trans-unit>
       <trans-unit id="5746b74663148afffd1350c97d4fcdfe">
         <source>Invalid catalog mode</source>
         <target>Invalid catalog mode</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4092</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4098</note>
       </trans-unit>
       <trans-unit id="9e5459c4deb20b7842ac01e97390b334">
         <source>No error code available</source>
         <target>No error code available</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4093</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4099</note>
       </trans-unit>
       <trans-unit id="dafe44b99256a7783bc37f4f949da373">
         <source>This installer is too old.</source>
         <target>This installer is too old.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4095</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4101</note>
       </trans-unit>
       <trans-unit id="240810ecd34fca674fa9489b1ea0e879">
         <source>The app/config/parameters.php file was not found. Did you delete or rename this file?</source>
         <target>The app/config/parameters.php file was not found. Did you delete or rename this file?</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4098</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4104</note>
       </trans-unit>
       <trans-unit id="5908157f5787d0050586f5629562f1f0">
         <source>Cannot find the SQL upgrade files. Please verify that the /install/upgrade/sql folder is not empty.</source>
         <target>Cannot find the SQL upgrade files. Please verify that the /install/upgrade/sql folder is not empty.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4099</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4105</note>
       </trans-unit>
       <trans-unit id="580e4b216e324f675f0237cdb34b6c2d">
         <source>No upgrade is possible.</source>
         <target>No upgrade is possible.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4100</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4106</note>
       </trans-unit>
       <trans-unit id="94c7530ebb30de665b276d6881cb2f7b">
         <source>Error while loading SQL upgrade file.</source>
         <target>Error while loading SQL upgrade file.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4101</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4107</note>
       </trans-unit>
       <trans-unit id="b8286438fbb6c7df9129fadc5316c19f">
         <source>Error while inserting content into the database</source>
         <target>Error while inserting content into the database</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4102</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4108</note>
       </trans-unit>
       <trans-unit id="229ee8046cafc09ddaf46fb9db710e91">
         <source>Unfortunately,</source>
         <target>Unfortunately,</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4103</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4109</note>
       </trans-unit>
       <trans-unit id="e805a556799b7cef40e9760c81d99218">
         <source>SQL errors have occurred.</source>
         <target>SQL errors have occurred.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4104</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4110</note>
       </trans-unit>
       <trans-unit id="5627353fd6ac678497af3ece05087068">
         <source>The config/defines.inc.php file was not found. Where did you move it?</source>
         <target>The config/defines.inc.php file was not found. Where did you move it?</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4105</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4111</note>
       </trans-unit>
       <trans-unit id="446c9e952debe114c86bbd9e5eea7d61">
         <source>Rollback</source>
         <target>Rollback</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4176</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4182</note>
       </trans-unit>
       <trans-unit id="946a7fdf02f1a9f08e6711d014e3bc47">
         <source>After upgrading your shop, you can rollback to the previous database and files. Use this function if your theme or an essential module is not working correctly.</source>
         <target>After upgrading your shop, you can rollback to the previous database and files. Use this function if your theme or an essential module is not working correctly.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4156</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4162</note>
       </trans-unit>
       <trans-unit id="a4d88b46c8edb6b0ee2fb4d6bd0690b0">
         <source>Choose your backup:</source>
         <target>Choose your backup:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4160</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4166</note>
       </trans-unit>
       <trans-unit id="c629f24e672b4e1165ebf1c10b5c5c5d">
         <source>-- Choose a backup to restore --</source>
         <target>-- Choose a backup to restore --</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4163</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4169</note>
       </trans-unit>
       <trans-unit id="69ff9aca0bd03b3981784593311d866a">
         <source>The pre-Upgrade checklist</source>
         <target>The pre-Upgrade checklist</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4194</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4200</note>
       </trans-unit>
       <trans-unit id="03f945bba76ea63369d50a340e5b17bf">
         <source>The checklist is not OK. You can only upgrade your shop once all indicators are green.</source>
         <target>The checklist is not OK. You can only upgrade your shop once all indicators are green.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4198</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4204</note>
       </trans-unit>
       <trans-unit id="1b631ee6d890a5d6f2ede2f386f5aa3d">
         <source>Before starting the upgrade process, please make sure this checklist is all green.</source>
         <target>Before starting the upgrade process, please make sure this checklist is all green.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4202</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4208</note>
       </trans-unit>
       <trans-unit id="0058c0de9990c3b6a816affc3ffac3ef">
         <source>The 1-click upgrade module is up-to-date (your current version is v%s)</source>
         <target>The 1-click upgrade module is up-to-date (your current version is v%s)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4211</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4217</note>
       </trans-unit>
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
         <source>Download</source>
         <target>Download</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4212</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4218</note>
       </trans-unit>
       <trans-unit id="88da12c4cd4d95d020c109ea16cad3dd">
         <source>Your store's root directory is writable (with appropriate CHMOD permissions)</source>
         <target>Your store's root directory is writable (with appropriate CHMOD permissions)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4221</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4227</note>
       </trans-unit>
       <trans-unit id="b398e46a283dd457aa7dc0302004208c">
         <source>The "/admin/autoupgrade" directory is writable (appropriate CHMOD permissions)</source>
         <target>The "/admin/autoupgrade" directory is writable (appropriate CHMOD permissions)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4231</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4237</note>
       </trans-unit>
       <trans-unit id="2276494259ab54880fce5ef47110a462">
         <source>PHP's "Safe mode" option is turned off</source>
         <target>PHP's "Safe mode" option is turned off</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4243</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4249</note>
       </trans-unit>
       <trans-unit id="ce68939980bcf41f2ce33180564bed9a">
         <source>PHP's "allow_url_fopen" option is turned on, or cURL is installed</source>
         <target>PHP's "allow_url_fopen" option is turned on, or cURL is installed</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4247</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4253</note>
       </trans-unit>
       <trans-unit id="49c20044e894d8cc2da7783adbf79f16">
         <source>Your store is in maintenance mode</source>
         <target>Your store is in maintenance mode</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4252</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4258</note>
       </trans-unit>
       <trans-unit id="10f7f752bbed690312dff7e8814b6994">
         <source>Click here to put your shop under maintenance</source>
         <target>Click here to put your shop under maintenance</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4252</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4258</note>
       </trans-unit>
       <trans-unit id="7878a3623460f0f844b13f8001ba56b7">
         <source>PrestaShop's caching features are disabled</source>
         <target>PrestaShop's caching features are disabled</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4256</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4262</note>
       </trans-unit>
       <trans-unit id="77a72ea58f16fea5a44f76751c804a2d">
         <source>PHP's max_execution_time setting has a high value or is disabled entirely (current value: unlimited)</source>
         <target>PHP's max_execution_time setting has a high value or is disabled entirely (current value: unlimited)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4262</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4268</note>
       </trans-unit>
       <trans-unit id="03f5c2fd6c0be0ea1b2dfb3e93ee8513">
         <source>PHP's max_execution_time setting has a high value or is disabled entirely (current value: %s seconds)</source>
         <target>PHP's max_execution_time setting has a high value or is disabled entirely (current value: %s seconds)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4264</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4270</note>
       </trans-unit>
       <trans-unit id="aa9b0228ac4e3e44b836f79eebf5e481">
         <source>Please also make sure you make a full manual backup of your files and database.</source>
         <target>Please also make sure you make a full manual backup of your files and database.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4268</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4274</note>
       </trans-unit>
       <trans-unit id="203b006e446c7692af1bfd4e41a10749">
         <source>Branch:</source>
         <target>Branch:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4283</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4289</note>
       </trans-unit>
       <trans-unit id="e4894ca167b08880bfc35862f18575eb">
         <source>available</source>
         <target>available</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4286</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4292</note>
       </trans-unit>
       <trans-unit id="7060e0481896e00b3f7d20f1e8e2749a">
         <source>unavailable</source>
         <target>unavailable</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4286</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4292</note>
       </trans-unit>
       <trans-unit id="987023af1c4e507ea04eb5069578f7f0">
         <source>Version number:</source>
         <target>Version number:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4299</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4305</note>
       </trans-unit>
       <trans-unit id="3b3d06023f6353f8fd05f859b298573e">
         <source>URL:</source>
         <target>URL:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4305</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4311</note>
       </trans-unit>
       <trans-unit id="ededa0b9a77dd39dad86a79cdc2a7521">
         <source>MD5 hash:</source>
         <target>MD5 hash:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4311</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4317</note>
       </trans-unit>
       <trans-unit id="bca4ff8cbf5fd614a700ca81c820dc1b">
         <source>Changelog:</source>
         <target>Changelog:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4318</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4324</note>
       </trans-unit>
       <trans-unit id="39089ec5b14aadac3156e62cde5027b1">
         <source>see changelog</source>
         <target>see changelog</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4319</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4325</note>
       </trans-unit>
       <trans-unit id="628decaabab912af39cfda7aaf47b059">
         <source>Major release</source>
         <target>Major release</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4335</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4341</note>
       </trans-unit>
       <trans-unit id="43899376e3f4d4cb70dad59c81a4b957">
         <source>Minor release (recommended)</source>
         <target>Minor release (recommended)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4337</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4343</note>
       </trans-unit>
       <trans-unit id="1436348d2e10c88964c87efe3ebe7e4c">
         <source>Release candidates</source>
         <target>Release candidates</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4339</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4345</note>
       </trans-unit>
       <trans-unit id="3da4e7a86631518f47d8cedf7f09a5ed">
         <source>Beta releases</source>
         <target>Beta releases</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4341</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4347</note>
       </trans-unit>
       <trans-unit id="0c960ac8fc33e1516a568248519b4d03">
         <source>Alpha releases</source>
         <target>Alpha releases</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4343</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4349</note>
       </trans-unit>
       <trans-unit id="8ed3e1637b29848c46224287390822ad">
         <source>Private release (require link and MD5 hash)</source>
         <target>Private release (require link and MD5 hash)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4345</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4351</note>
       </trans-unit>
       <trans-unit id="15e90667b50b56b1f8a01bdb1190f3dc">
         <source>Local archive</source>
         <target>Local archive</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4347</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4353</note>
       </trans-unit>
       <trans-unit id="17897209dd708b862fe417f6d429a8da">
         <source>Local directory</source>
         <target>Local directory</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4349</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4355</note>
       </trans-unit>
       <trans-unit id="3b3d4b4b6a128cfeafc8e3f8987ddb9b">
         <source>Channel:</source>
         <target>Channel:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4351</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4357</note>
       </trans-unit>
       <trans-unit id="e710e20abcca585174701a265f39885f">
         <source>This option regroup all stable versions.</source>
         <target>This option regroup all stable versions.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4357</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4363</note>
       </trans-unit>
       <trans-unit id="ef2f59f06132ddc2e1bc8d00abbe6e02">
         <source>Link:</source>
         <target>Link:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4359</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4365</note>
       </trans-unit>
       <trans-unit id="6e843a36f447872179db90ceff68d970">
         <source>Hash key:</source>
         <target>Hash key:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4362</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4368</note>
       </trans-unit>
       <trans-unit id="b77d20ed1ba7b2ee7139dc4f3fd13117">
         <source>Allow major upgrade:</source>
         <target>Allow major upgrade:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4365</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4371</note>
       </trans-unit>
       <trans-unit id="780daf2510c5c9e1c58948f138629817">
         <source>Archive to use:</source>
         <target>Archive to use:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4376</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4382</note>
       </trans-unit>
       <trans-unit id="eb7d4dd49f36e74b58604842ee983efd">
         <source>Choose an archive</source>
         <target>Choose an archive</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4377</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4383</note>
       </trans-unit>
       <trans-unit id="4a3065086c9f18f584fab79509ae39fd">
         <source>Number of the version you want to upgrade to:</source>
         <target>Number of the version you want to upgrade to:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4382</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4388</note>
       </trans-unit>
       <trans-unit id="5be0150b075f706fc27b09753ce6646d">
         <source>No archive found in your admin/autoupgrade/download directory</source>
         <target>No archive found in your admin/autoupgrade/download directory</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4386</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4392</note>
       </trans-unit>
       <trans-unit id="510be9c2a03a7ac091736e88d1071bb7">
         <source>Save in the following directory the archive file of the version you want to upgrade to: %s</source>
         <target>Save in the following directory the archive file of the version you want to upgrade to: %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4390</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4396</note>
       </trans-unit>
       <trans-unit id="c38adafb0966d8ae1e0ea5753c4116b9">
         <source>Click "Save" once the archive is there.</source>
         <target>Click "Save" once the archive is there.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4399</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4405</note>
       </trans-unit>
       <trans-unit id="4b0319a87fb1baabe2fdb810e5cd4e62">
         <source>This option will skip the download step.</source>
         <target>This option will skip the download step.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4392</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4398</note>
       </trans-unit>
       <trans-unit id="b534ea98500fdbec0ba93d3733f85f91">
         <source>Save in the following directory the uncompressed PrestaShop files of the version you want to upgrade to: %s</source>
         <target>Save in the following directory the uncompressed PrestaShop files of the version you want to upgrade to: %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4396</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4402</note>
       </trans-unit>
       <trans-unit id="e170025f2eea43e9a73fa76b4f5649bc">
         <source>Please tell us which version you are upgrading to [1](1.7.0.1 for instance)[/1]</source>
         <target>Please tell us which version you are upgrading to [1](1.7.0.1 for instance)[/1]</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4397</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4403</note>
       </trans-unit>
       <trans-unit id="1e034b9b374950ec672faf75cdc3f713">
         <source>This option will skip both download and unzip steps and will use %1$s as the source directory</source>
         <target>This option will skip both download and unzip steps and will use %1$s as the source directory</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4400</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4406</note>
       </trans-unit>
       <trans-unit id="9e68a57463e52beb2b2d4d116085044e">
         <source>More options (Expert mode)</source>
         <target>More options (Expert mode)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5480</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5492</note>
       </trans-unit>
       <trans-unit id="d0285505fd09db653a4ec0fd3799f357">
         <source>Expert mode</source>
         <target>Expert mode</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4418</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4424</note>
       </trans-unit>
       <trans-unit id="89f144934543c527b7b064ee64361d90">
         <source>Please select your channel:</source>
         <target>Please select your channel:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4419</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4425</note>
       </trans-unit>
       <trans-unit id="cdcf07ad291a3b7a0cc30b870705ba63">
         <source>Channels are offering you different ways to perform an upgrade. You can either upload the new version manually or let the 1-Click Upgrade module download it for you.</source>
         <target>Channels are offering you different ways to perform an upgrade. You can either upload the new version manually or let the 1-Click Upgrade module download it for you.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4420</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4426</note>
       </trans-unit>
       <trans-unit id="87ad8a8ff4a99ffd2e72d5e69765f830">
         <source>The Alpha, Beta and Private channels give you the ability to upgrade to a non-official or unstable release (for testing purposes only).</source>
         <target>The Alpha, Beta and Private channels give you the ability to upgrade to a non-official or unstable release (for testing purposes only).</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4421</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4427</note>
       </trans-unit>
       <trans-unit id="7d71d389caebafeecac50e98c8e14dec">
         <source>By default, you should use the "Minor release" channel which is offering the latest stable version available.</source>
         <target>By default, you should use the "Minor release" channel which is offering the latest stable version available.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4422</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4428</note>
       </trans-unit>
       <trans-unit id="48c7c41b72e1d678923ce3571aa65b2d">
         <source>Step</source>
         <target>Step</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4442</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4448</note>
       </trans-unit>
       <trans-unit id="eeb5a49c38d2d8c2baa51ed09beccf88">
         <source>Upgrade steps</source>
         <target>Upgrade steps</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4443</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4449</note>
       </trans-unit>
       <trans-unit id="2359934469520d062d98f6b3e91e1523">
         <source>Version comparison</source>
         <target>Version comparison</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4465</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4471</note>
       </trans-unit>
       <trans-unit id="71aa2b9774b005c47f9cd225766b2045">
         <source>PrestaShop Original version</source>
         <target>PrestaShop Original version</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4468</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4474</note>
       </trans-unit>
       <trans-unit id="68d0661e6a4150c4cc813001958f47f1">
         <source>Differences between versions</source>
         <target>Differences between versions</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4474</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4480</note>
       </trans-unit>
       <trans-unit id="2b16564e6e838ce86608620b70beb570">
         <source>Activity Log</source>
         <target>Activity Log</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4488</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4494</note>
       </trans-unit>
       <trans-unit id="1f966606f0a941f655a4e9b7791a1ae0">
         <source>Currently processing</source>
         <target>Currently processing</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4496</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4502</note>
       </trans-unit>
       <trans-unit id="21739f79b8e95f4187fce4fefb12af28">
         <source>Analyzing the situation...</source>
         <target>Analyzing the situation...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4497</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4503</note>
       </trans-unit>
       <trans-unit id="5ef0c737746fae2ca90e66c39333f8f6">
         <source>Errors</source>
         <target>Errors</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4506</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4512</note>
       </trans-unit>
       <trans-unit id="e58eae3d7ced672a49b5716587b15f89">
         <source>Start your Upgrade</source>
         <target>Start your Upgrade</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4527</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4533</note>
       </trans-unit>
       <trans-unit id="5784315a8bcebe79611d3353723e010d">
         <source>Congratulations, you are already using the latest version available!</source>
         <target>Congratulations, you are already using the latest version available!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4533</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4539</note>
       </trans-unit>
       <trans-unit id="da3cd17bbbbd3ef7da8e817d3c4cdb46">
         <source>You come from the future! You are using a more recent version than the latest available!</source>
         <target>You come from the future! You are using a more recent version than the latest available!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4535</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4541</note>
       </trans-unit>
       <trans-unit id="762b3814b0c85540ac4be47c7815fc0c">
         <source>Your current PrestaShop version</source>
         <target>Your current PrestaShop version</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4537</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4543</note>
       </trans-unit>
       <trans-unit id="1f390ab6b7d0b815f43fbf0f86c96c14">
         <source>Latest official version for %s channel.</source>
         <target>Latest official version for %s channel.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4541</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4547</note>
       </trans-unit>
       <trans-unit id="f34ac641f410c44e719fbc1496efd3d8">
         <source>Upgrade PrestaShop now!</source>
         <target>Upgrade PrestaShop now!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4557</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4563</note>
       </trans-unit>
       <trans-unit id="7926343e047e18778b6819beb8468086">
         <source>You use Smarty 3</source>
         <target>You use Smarty 3</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4563</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4569</note>
       </trans-unit>
       <trans-unit id="a9bf52016ab038b62d072d35039a76b4">
         <source>Smarty 2 is deprecated in 1.4 and was removed in 1.5. You may need to upgrade your current theme or use a new one.</source>
         <target>Smarty 2 is deprecated in 1.4 and was removed in 1.5. You may need to upgrade your current theme or use a new one.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4566</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4572</note>
       </trans-unit>
       <trans-unit id="7f6336f29afd114798bf8ff3e6f2f9c9">
         <source>PrestaShop will be downloaded from %s</source>
         <target>PrestaShop will be downloaded from %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4574</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4580</note>
       </trans-unit>
       <trans-unit id="f90fc047cda408422c9097339e455572">
         <source>Open changelog in a new window</source>
         <target>Open changelog in a new window</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4577</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4583</note>
       </trans-unit>
       <trans-unit id="7f07c36a3eb42fc24f4777e3619316f0">
         <source>No file will be downloaded (channel %s is used)</source>
         <target>No file will be downloaded (channel %s is used)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4581</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4587</note>
       </trans-unit>
       <trans-unit id="604862f03b56fde085c8f0350f63d707">
         <source>The following action are automatically replaced</source>
         <target>The following action are automatically replaced</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4587</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4593</note>
       </trans-unit>
       <trans-unit id="380880e1c59f4c6f514f529512d2719a">
         <source>%old% will be replaced by %new%</source>
         <target>%old% will be replaced by %new%</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4592</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4598</note>
       </trans-unit>
       <trans-unit id="a07a3b4fc3a73fd0a8014aa40819c357">
         <source>To change this behavior, you need to manually edit your php files</source>
         <target>To change this behavior, you need to manually edit your php files</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4601</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4607</note>
       </trans-unit>
       <trans-unit id="ef754ad37c689704ede322b9a6ae66a7">
         <source>Check if a new version is available</source>
         <target>Check if a new version is available</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4615</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4621</note>
       </trans-unit>
       <trans-unit id="89de86aa34494d545d8cbb4fff3a4e59">
         <source>Last check: %s</source>
         <target>Last check: %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4618</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4624</note>
       </trans-unit>
       <trans-unit id="ea3104b84db2df54a4e798e5a47d0073">
         <source>Last check: never</source>
         <target>Last check: never</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4620</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4626</note>
       </trans-unit>
       <trans-unit id="5b7ae750cd57d8ce894a3152aadbb4e3">
         <source>Refresh the page</source>
         <target>Refresh the page</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4627</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4633</note>
       </trans-unit>
       <trans-unit id="64acebe80a242d6dbb2013d92db337d9">
         <source>Last datetime check: %s </source>
         <target>Last datetime check: %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4628</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4634</note>
       </trans-unit>
       <trans-unit id="a7eca295291f53a23ab7ba0a9c7fd9de">
         <source>This functionality has been disabled.</source>
         <target>This functionality has been disabled.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4654</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4666</note>
       </trans-unit>
       <trans-unit id="c1b55bdd4c292214e4ef2570ffe069dc">
         <source>[TECHNICAL ERROR] ajax-upgradetab.php is missing. Please reinstall or reset the module.</source>
         <target>[TECHNICAL ERROR] ajax-upgradetab.php is missing. Please reinstall or reset the module.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4659</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4671</note>
       </trans-unit>
       <trans-unit id="9a843f20677a52ca79af903123147af0">
         <source>Welcome!</source>
         <target>Welcome!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4707</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4719</note>
       </trans-unit>
       <trans-unit id="f0afedd1444b8ac9f765b544cb5b4911">
         <source>With the PrestaShop 1-Click Upgrade module, upgrading your store to the latest version available has never been easier!</source>
         <target>With the PrestaShop 1-Click Upgrade module, upgrading your store to the latest version available has never been easier!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4710</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4722</note>
       </trans-unit>
       <trans-unit id="68e5fa63e9c51108b49d3d643ec36972">
         <source>Please always perform a full manual backup of your files and database before starting any upgrade.</source>
         <target>Please always perform a full manual backup of your files and database before starting any upgrade.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4711</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4723</note>
       </trans-unit>
       <trans-unit id="a1f24b1cec5482ed0d97bce1ba0570a4">
         <source>Double-check the integrity of your backup and that you can easily manually roll-back if necessary.</source>
         <target>Double-check the integrity of your backup and that you can easily manually roll-back if necessary.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4712</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4724</note>
       </trans-unit>
       <trans-unit id="0a8276f35797dc24e6ccb5b5ff5cf102">
         <source>If you do not know how to proceed, ask your hosting provider.</source>
         <target>If you do not know how to proceed, ask your hosting provider.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4713</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4725</note>
       </trans-unit>
       <trans-unit id="017697f698d570dffed5f88a5a933d01">
         <source>Backup Options</source>
         <target>Backup Options</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4747</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4759</note>
       </trans-unit>
       <trans-unit id="564b7c9d8683f1a94798e9f7449564e4">
         <source>Upgrade Options</source>
         <target>Upgrade Options</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4748</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4760</note>
       </trans-unit>
       <trans-unit id="48995d15304fe79fc0240bf6544f2395">
         <source>Are you sure you want to delete this backup?</source>
         <target>Are you sure you want to delete this backup?</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:4835</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:4847</note>
       </trans-unit>
       <trans-unit id="f15547fe5f9f307bd42b2c01657efbcb">
         <source>Your server cannot download the file. Please upload it first by ftp in your admin/autoupgrade directory</source>
         <target>Your server cannot download the file. Please upload it first by ftp in your admin/autoupgrade directory</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5452</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5464</note>
       </trans-unit>
       <trans-unit id="f1a1fb67c8350e8881bc59f09e42d5ab">
         <source>Click to refresh the page and use the new configuration</source>
         <target>Click to refresh the page and use the new configuration</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5003</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5015</note>
       </trans-unit>
       <trans-unit id="f03a04d1f440e359840035679b49b212">
         <source>An update is currently in progress... Click "OK" to abort.</source>
         <target>An update is currently in progress... Click "OK" to abort.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5014</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5026</note>
       </trans-unit>
       <trans-unit id="98a399b35ec9e03ec985254acfe5e3a0">
         <source>Upgrading PrestaShop</source>
         <target>Upgrading PrestaShop</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5043</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5055</note>
       </trans-unit>
       <trans-unit id="e02d726a7e733ffb7737e53c89be5e4f">
         <source>Upgrade complete</source>
         <target>Upgrade complete</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5053</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5065</note>
       </trans-unit>
       <trans-unit id="c5e0a7b512fd616279924a1396bb0802">
         <source>Upgrade Complete!</source>
         <target>Upgrade Complete!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5055</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5067</note>
       </trans-unit>
       <trans-unit id="f67d595b77c8c85da5434ddf41b840d4">
         <source>Upgrade complete, but warning notifications has been found.</source>
         <target>Upgrade complete, but warning notifications has been found.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5064</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5076</note>
       </trans-unit>
       <trans-unit id="a9cb4ff8ba5698ccdc9672435be31d24">
         <source>Cookies have changed, you will need to log in again once you refreshed the page</source>
         <target>Cookies have changed, you will need to log in again once you refreshed the page</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5068</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5080</note>
       </trans-unit>
       <trans-unit id="546c6a7b5ca345af3880bfc74a339606">
         <source>Javascript and CSS files have changed, please clear your browser cache with CTRL-F5</source>
         <target>Javascript and CSS files have changed, please clear your browser cache with CTRL-F5</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5069</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5081</note>
       </trans-unit>
       <trans-unit id="19ea4327ee1bad0ed94b42a77255f3c6">
         <source>Please check that your front-office theme is functional (try to create an account, place an order...)</source>
         <target>Please check that your front-office theme is functional (try to create an account, place an order...)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5070</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5082</note>
       </trans-unit>
       <trans-unit id="c12803674a35ccc28e5da00a50a84591">
         <source><![CDATA[Product images do not appear in the front-office? Try regenerating the thumbnails in Preferences > Images]]></source>
         <target><![CDATA[Product images do not appear in the front-office? Try regenerating the thumbnails in Preferences > Images]]></target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5071</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5083</note>
       </trans-unit>
       <trans-unit id="e27d0a2f9e5caa433fc14667a1a3a15a">
         <source>Do not forget to reactivate your shop once you have checked everything!</source>
         <target>Do not forget to reactivate your shop once you have checked everything!</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5072</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5084</note>
       </trans-unit>
       <trans-unit id="bb64b7cb55bd1db0abc03b6884144113">
         <source>ToDo list:</source>
         <target>ToDo list:</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5077</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5089</note>
       </trans-unit>
       <trans-unit id="bdec5eb7ca6ae2b5646bb9524df5579a">
         <source>Restoration complete.</source>
         <target>Restoration complete.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5111</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5123</note>
       </trans-unit>
       <trans-unit id="a8192fd08a431bf547ebf9a3eaa9b6bb">
         <source>Javascript error (parseJSON) detected for action </source>
         <target>Javascript error (parseJSON) detected for action</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5188</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5200</note>
       </trans-unit>
       <trans-unit id="ecb2935cd99ace66750ffdee7954f126">
         <source>Starting restoration...</source>
         <target>Starting restoration...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5189</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5201</note>
       </trans-unit>
       <trans-unit id="e47b67bdaa4f2c695e46ce1e5231aa9f">
         <source>Error detected during</source>
         <target>Error detected during</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5223</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5235</note>
       </trans-unit>
       <trans-unit id="4e265d12ee7ee679a4f40a4c4fde1208">
         <source>The request exceeded the max_time_limit. Please change your server configuration.</source>
         <target>The request exceeded the max_time_limit. Please change your server configuration.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5234</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5246</note>
       </trans-unit>
       <trans-unit id="c050dd9e80b7658fbf59103b2b982c5d">
         <source>Manually go to %s button</source>
         <target>Manually go to %s button</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5282</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5294</note>
       </trans-unit>
       <trans-unit id="67dab01827a619fdbcb137f18a83feb5">
         <source>End of process</source>
         <target>End of process</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5299</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5311</note>
       </trans-unit>
       <trans-unit id="3b388ab38f6539009cf82a0577205cd8">
         <source>Operation canceled. Checking for restoration...</source>
         <target>Operation canceled. Checking for restoration...</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5312</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5324</note>
       </trans-unit>
       <trans-unit id="8e8f05f8ea78abf862a6bab07558627d">
         <source>Do you want to restore %backupname%?</source>
         <target>Do you want to restore %backupname%?</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5314</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5326</note>
       </trans-unit>
       <trans-unit id="f234e8051cec7a79e996e67f179bd68b">
         <source>Operation canceled. An error happened.</source>
         <target>Operation canceled. An error happened.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5319</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5331</note>
       </trans-unit>
       <trans-unit id="5bfc10a51ce7cebb27528328957c4951">
         <source>[TECHNICAL ERROR] ajax-upgradetab.php is missing. please reinstall the module</source>
         <target>[TECHNICAL ERROR] ajax-upgradetab.php is missing. please reinstall the module</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5338</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5350</note>
       </trans-unit>
       <trans-unit id="1607e6098b7b62a2791653b059c975d2">
         <source>See or hide the list</source>
         <target>See or hide the list</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5433</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5445</note>
       </trans-unit>
       <trans-unit id="25b91596a896c6cf688104169b4b6a71">
         <source>Core file(s)</source>
         <target>Core file(s)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5382</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5394</note>
       </trans-unit>
       <trans-unit id="65f04958837ddd3643fd5edaee3a0f8d">
         <source>Mail file(s)</source>
         <target>Mail file(s)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5384</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5396</note>
       </trans-unit>
       <trans-unit id="54aca96b35b48dd39265175f61b6bdd2">
         <source>Translation file(s)</source>
         <target>Translation file(s)</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5386</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5398</note>
       </trans-unit>
       <trans-unit id="6a103ec34561f1daa9e3028e78bf319b">
         <source>Your server cannot download the file. Please upload it to your FTP server, and put it in your /[admin]/autoupgrade directory.</source>
         <target>Your server cannot download the file. Please upload it to your FTP server, and put it in your /[admin]/autoupgrade directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5397</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5409</note>
       </trans-unit>
       <trans-unit id="7f034b1e149cf228e8dfc51dcab6cb96">
         <source>Theses files will be deleted</source>
         <target>Theses files will be deleted</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5436</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5448</note>
       </trans-unit>
       <trans-unit id="22f1a4b9e524d8fabb6f058bf3bb5a9f">
         <source>Theses files will be modified</source>
         <target>Theses files will be modified</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5438</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5450</note>
       </trans-unit>
       <trans-unit id="8c4e88bd9187e21ab076fb9a92343e8b">
         <source>Less options</source>
         <target>Less options</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5475</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5487</note>
       </trans-unit>
       <trans-unit id="e3da2aa16a78084597288574550e7f39">
         <source>Link and MD5 hash cannot be empty</source>
         <target>Link and MD5 hash cannot be empty</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5509</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5521</note>
       </trans-unit>
       <trans-unit id="0fdb05748bf1f267f54c2353b9fa5fbb">
         <source>You need to enter the version number associated with the archive.</source>
         <target>You need to enter the version number associated with the archive.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5526</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5538</note>
       </trans-unit>
       <trans-unit id="4f926e733c4f9087633a1be8c59cbd5e">
         <source>No archive has been selected.</source>
         <target>No archive has been selected.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5531</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5543</note>
       </trans-unit>
       <trans-unit id="69baf56a7bdc48c0637f98298742332d">
         <source>You need to enter the version number associated with the directory.</source>
         <target>You need to enter the version number associated with the directory.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5545</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5557</note>
       </trans-unit>
       <trans-unit id="3414adbd0397d764eec7f8900051331f">
         <source>Please confirm that you want to skip the backup.</source>
         <target>Please confirm that you want to skip the backup.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5555</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5567</note>
       </trans-unit>
       <trans-unit id="43195fe6505d6439239d03e00a8e7310">
         <source>Please confirm that you want to preserve file options.</source>
         <target>Please confirm that you want to preserve file options.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5568</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5580</note>
       </trans-unit>
       <trans-unit id="9311ab161709b4f5efe9c6ff08b33699">
         <source>%s is not a file</source>
         <target>%s is not a file</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5594</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5606</note>
       </trans-unit>
       <trans-unit id="3d72a59cd44079c486a184a6a7bcec34">
         <source>Unable to create directory %s.</source>
         <target>Unable to create directory %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5602</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5614</note>
       </trans-unit>
       <trans-unit id="9015190dc360d94efb0a5013a76697dd">
         <source>Archive extracted</source>
         <target>Archive extracted</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5622</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5634</note>
       </trans-unit>
       <trans-unit id="42a346b8cddc0d5a6b7494735eb68b10">
         <source><![CDATA[zip->extractTo(): unable to use %s as extract destination.]]></source>
         <target><![CDATA[zip->extractTo(): unable to use %s as extract destination.]]></target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5626</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5638</note>
       </trans-unit>
       <trans-unit id="0f9f19a4f5e93b3d5a94405e3af32a28">
         <source>Unable to open zipFile %s</source>
         <target>Unable to open zipFile %s</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5631</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5643</note>
       </trans-unit>
       <trans-unit id="a15762146514c451817fb7bb8cbecd96">
         <source>[ERROR] Error on extracting archive using PclZip: %s.</source>
         <target>[ERROR] Error on extracting archive using PclZip: %s.</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5667</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5679</note>
       </trans-unit>
       <trans-unit id="d92be6e22076518d0fe0f16aae14575a">
         <source>[ERROR] %file% has not been unzipped: %status%</source>
         <target>[ERROR] %file% has not been unzipped: %status%</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5673</note>
-      </trans-unit>
-      <trans-unit id="91495a6850fb57dd124f3affe7949d3c">
-        <source>[ERROR] %file% has not been unzipped: %status</source>
-        <target>[ERROR] %file% has not been unzipped: %status</target>
-        <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5674</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5686</note>
       </trans-unit>
       <trans-unit id="3858aebfe7dce0a1dc398d199cb85a2b">
         <source>[ERROR] Unable to list archived files</source>
         <target>[ERROR] Unable to list archived files</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5707</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5719</note>
       </trans-unit>
       <trans-unit id="ece95fa62a665fc3779168e698d6913a">
         <source>File %s is preserved</source>
         <target>File %s is preserved</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfUpgrade.php:5775</note>
+File: modules/autoupgrade/AdminSelfUpgrade.php:5787</note>
       </trans-unit>
     </body>
   </file>

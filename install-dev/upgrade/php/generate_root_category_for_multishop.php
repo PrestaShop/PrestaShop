@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,7 @@ function generate_root_category_for_multishop()
 		INSERT INTO `'._DB_PREFIX_.'category` (`id_parent`, `level_depth`, `active`, `date_add`, `date_upd`, `is_root_category`) VALUES
 		(0, 0, 1, NOW(), NOW(), 0)
 	');
-    $id = Db::getInstance()->insert_id();
+    $id = Db::getInstance()->Insert_ID();
     // set vars config
     Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 	(\'PS_ROOT_CATEGORY\', '.(int)$id.', NOW(), NOW()),

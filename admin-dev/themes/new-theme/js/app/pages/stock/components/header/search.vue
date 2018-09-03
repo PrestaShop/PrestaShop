@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,24 +18,41 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="search" class="row m-b-2">
+  <div id="search" class="row mb-2">
     <div class="col-md-8">
-      <div class="m-b-2">
+      <div class="mb-2">
         <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
-          <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
-          <PSButton @click="onClick" class="search-button" :primary="true">
-            <i class="material-icons">search</i>
-            {{trans('button_search')}}
-          </PSButton>
+          <div class="input-group">
+            <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
+            <div class="input-group-append">
+              <PSButton @click="onClick" class="search-button" :primary="true">
+                <i class="material-icons">search</i>
+                {{trans('button_search')}}
+              </PSButton>
+            </div>
+          </div>
         </form>
       </div>
       <Filters @applyFilter="applyFilter"/>
+    </div>
+    <div class="col-md-4 alert-box">
+      <transition name="fade">
+        <PSAlert
+          v-if="showAlert"
+          :alertType="alertType"
+          :hasClose="true"
+          @closeAlert="onCloseAlert"
+        >
+          <span v-if="error">{{trans('alert_bulk_edit')}}</span>
+          <span v-else>{{trans('notification_stock_updated')}}</span>
+        </PSAlert>
+      </transition>
     </div>
   </div>
 </template>
@@ -44,12 +61,20 @@
   import Filters from './filters';
   import PSTags from 'app/widgets/ps-tags';
   import PSButton from 'app/widgets/ps-button';
+  import PSAlert from 'app/widgets/ps-alert';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     components: {
       Filters,
       PSTags,
       PSButton,
+      PSAlert,
+    },
+    computed: {
+      error() {
+        return (this.alertType === 'ALERT_TYPE_DANGER');
+      },
     },
     methods: {
       onClick() {
@@ -62,36 +87,29 @@
       applyFilter(filters) {
         this.$emit('applyFilter', filters);
       },
+      onCloseAlert() {
+        this.showAlert = false;
+      },
     },
     watch: {
       $route() {
         this.tags = [];
       },
     },
-    data: () => ({ tags: [] }),
+    mounted() {
+      EventBus.$on('displayBulkAlert', (type) => {
+        this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
+        this.showAlert = true;
+        setTimeout(_ => {
+          this.showAlert = false;
+        }, 5000);
+      });
+    },
+    data: () => ({
+      tags: [],
+      showAlert: false,
+      alertType: 'ALERT_TYPE_DANGER',
+      duration: false,
+    }),
   };
 </script>
-
-<style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  #search {
-    .search-input {
-      box-shadow: none;
-      border: $gray-light 1px solid;
-      background-color: white;
-      min-height: 35px;
-      outline: none;
-      border-radius: 0;
-    }
-  }
-  .search-form {
-    width: calc(100% - 130px);
-    .search-button {
-      float: right;
-      position: absolute;
-      right: 14px;
-      top: 1px;
-      margin-top: 28px;
-    }
-  }
-</style>

@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -40,6 +40,20 @@
 		{$smarty.block.parent}
 	{else}
 		{$smarty.block.parent}
+	{/if}
+	{if ($input.name == 'active')}
+		<div class="col-lg-12">
+			<div class="help-block">
+				{l
+                    s='If you want a category to appear in the menu of your shop, go to [1]Modules > Modules & Services > Installed modules.[/1] Then, configure your menu module.'
+                    sprintf=[
+                    '[1]' => "<a href=\"{$link->getAdminLink('AdminModulesSf')}\" class=\"_blank\">",
+                    '[/1]' => '</a>'
+                    ]
+                    d='Admin.Catalog.Help'
+                }
+			</div>
+		</div>
 	{/if}
 	{if in_array($input.name, ['image', 'thumb'])}
 		<div class="col-lg-6">

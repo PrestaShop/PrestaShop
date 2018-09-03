@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class ProfileCore
+ * Class ProfileCore.
  */
 class ProfileCore extends ObjectModel
 {
@@ -48,24 +48,24 @@ class ProfileCore extends ObjectModel
     protected static $_cache_accesses = array();
 
     /**
-    * Get all available profiles
-    *
-    * @return array Profiles
-    */
+     * Get all available profiles.
+     *
+     * @return array Profiles
+     */
     public static function getProfiles($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
-		FROM `'._DB_PREFIX_.'profile` p
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int) $idLang.')
+		FROM `' . _DB_PREFIX_ . 'profile` p
+		LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = ' . (int) $idLang . ')
 		ORDER BY `id_profile` ASC');
     }
 
     /**
-     * Get the current profile name
+     * Get the current profile name.
      *
-     * @param int  $idProfile Profile ID
-     * @param null $idLang    Language ID
+     * @param int $idProfile Profile ID
+     * @param null $idLang Language ID
      *
      * @return string Profile
      */
@@ -77,10 +77,10 @@ class ProfileCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `name`
-			FROM `'._DB_PREFIX_.'profile` p
-			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
-			WHERE p.`id_profile` = '.(int) $idProfile.'
-			AND pl.`id_lang` = '.(int) $idLang
+			FROM `' . _DB_PREFIX_ . 'profile` p
+			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
+			WHERE p.`id_profile` = ' . (int) $idProfile . '
+			AND pl.`id_lang` = ' . (int) $idLang
         );
     }
 
@@ -92,19 +92,20 @@ class ProfileCore extends ObjectModel
     public function delete()
     {
         if (parent::delete()) {
-            return (
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int) $this->id)
-                && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int) $this->id)
-            );
+            return
+                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $this->id)
+                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id)
+            ;
         }
+
         return false;
     }
 
     /**
-     * Get access profile
+     * Get access profile.
      *
      * @param int $idProfile Profile ID
-     * @param int $idTab     Tab ID
+     * @param int $idTab Tab ID
      *
      * @return bool
      */
@@ -112,14 +113,15 @@ class ProfileCore extends ObjectModel
     {
         // getProfileAccesses is cached so there is no performance leak
         $accesses = Profile::getProfileAccesses($idProfile);
-        return (isset($accesses[$idTab]) ? $accesses[$idTab] : false);
+
+        return isset($accesses[$idTab]) ? $accesses[$idTab] : false;
     }
 
     /**
-     * Get access profiles
+     * Get access profiles.
      *
-     * @param int    $idProfile Profile ID
-     * @param string $type      Type
+     * @param int $idProfile Profile ID
+     * @param string $type Type
      *
      * @return bool
      */
@@ -153,7 +155,7 @@ class ProfileCore extends ObjectModel
                     $idProfile,
                     $type,
                     array(
-                        'id_profile' => _PS_ADMIN_PROFILE_,
+                        'id_profile' => $idProfile,
                         'view' => '0',
                         'add' => '0',
                         'edit' => '0',
@@ -167,14 +169,14 @@ class ProfileCore extends ObjectModel
                                     `slug` LIKE "%READ" as "view",
                                     `slug` LIKE "%UPDATE" as "edit",
                                     `slug` LIKE "%DELETE" as "delete"
-				FROM `'._DB_PREFIX_.'authorization_role` a
-				LEFT JOIN `'._DB_PREFIX_.'access` j ON j.id_authorization_role = a.id_authorization_role
-				WHERE j.`id_profile` = '.(int) $idProfile);
+				FROM `' . _DB_PREFIX_ . 'authorization_role` a
+				LEFT JOIN `' . _DB_PREFIX_ . 'access` j ON j.id_authorization_role = a.id_authorization_role
+				WHERE j.`id_profile` = ' . (int) $idProfile);
 
                 foreach ($result as $row) {
-                    $idTab = self::findIdTabByAuthSlug($row['slug']);
+                    $tab = self::findTabTypeInformationByAuthSlug($type, $row['slug']);
 
-                    self::$_cache_accesses[$idProfile][$type][$idTab][array_search('1', $row)] = '1';
+                    self::$_cache_accesses[$idProfile][$type][$tab][array_search('1', $row)] = '1';
                 }
             }
         }
@@ -182,15 +184,15 @@ class ProfileCore extends ObjectModel
         return self::$_cache_accesses[$idProfile][$type];
     }
 
-    public static function resetCacheAccesses() {
+    public static function resetCacheAccesses()
+    {
         self::$_cache_accesses = array();
     }
 
     /**
-     *
-     * @param int    $idProfile Profile ID
+     * @param int $idProfile Profile ID
      * @param string $type Type
-     * @param array  $cacheData Cached data
+     * @param array $cacheData Cached data
      */
     private static function fillCacheAccesses($idProfile, $type, $cacheData = [])
     {
@@ -206,24 +208,27 @@ class ProfileCore extends ObjectModel
     }
 
     /**
+     * Find tab type information by authorization slug.
      *
+     * @param string $type
      * @param string $authSlug
+     *
      * @return int
      */
-    private static function findIdTabByAuthSlug($authSlug)
+    private static function findTabTypeInformationByAuthSlug($type, $authSlug)
     {
         preg_match(
-            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9]*)_(?P<auth>[A-Z]+)/',
             $authSlug,
             $matches
         );
 
         $result = Db::getInstance()->getRow('
-            SELECT `id_tab`
-            FROM `'._DB_PREFIX_.'tab` t
-            WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
+            SELECT `' . $type . '`
+            FROM `' . _DB_PREFIX_ . 'tab` t
+            WHERE UCASE(`class_name`) = "' . $matches['classname'] . '"
         ');
 
-        return $result['id_tab'];
+        return $result[$type];
     }
 }

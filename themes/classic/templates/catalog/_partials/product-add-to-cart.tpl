@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -60,7 +60,7 @@
       <span id="product-availability">
         {if $product.show_availability && $product.availability_message}
           {if $product.availability == 'available'}
-            <i class="material-icons product-available">&#xE5CA;</i>
+            <i class="material-icons rtl-no-flip product-available">&#xE5CA;</i>
           {elseif $product.availability == 'last_remaining_items'}
             <i class="material-icons product-last-items">&#xE002;</i>
           {else}

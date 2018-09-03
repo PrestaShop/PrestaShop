@@ -14,6 +14,9 @@ docs/phpdoc-sf/
 composer.lock
 tests/Selenium/errorShots/
 tests/Selenium/errorDumps/
+tests/resources/modules/
+*.hot-update.js
+*.hot-update.json
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
@@ -22,6 +25,10 @@ admin-dev/import/*
 admin-dev/import/*
 !admin-dev/import/.htaccess
 !admin-dev/import/index.php
+
+admin-dev/export/*
+!admin-dev/export/.htaccess
+!admin-dev/export/index.php
 
 themes/*/cache/*
 
@@ -70,23 +77,27 @@ themes/default-bootstrap/modules/*/mails/*
 
 # Symfony
 
-/app/bootstrap.php.cache
-/app/cache/*
-!app/cache/.gitkeep
+/bin/
+/.web-server-pid
 /app/Resources/translations/*
 !/app/Resources/translations/default
-/app/test/cache/*
-!app/test/cache/.gitkeep
-/app/config/config.php
 /app/config/parameters.yml
 /app/config/parameters.php
-/app/logs/*
-!app/logs/.gitkeep
-/app/phpunit.xml
-/bin/
+/build/
+/phpunit.xml
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+/vendor/
 /web/bundles/
-/web/css/
-/web/js/
 
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm
@@ -197,7 +208,7 @@ crashlytics-build.properties
 
 ### NetBeans ###
 nbproject/private/
-build/
+/build/
 nbbuild/
 dist/
 nbdist/
@@ -210,3 +221,7 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+
+### Release creation ###
+tools/build/releases/*
+!tools/build/releases/.gitkeep

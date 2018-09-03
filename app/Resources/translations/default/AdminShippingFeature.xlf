@@ -1,167 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/lang/CarrierLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/KeysReference/CarrierLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a8bbb000124c9697aa5d63e7e758b64d">
         <source>Pick up in-store</source>
         <target>Pick up in-store</target>
         <note>Context:
-File: classes/lang/CarrierLang.php:40</note>
+File: classes/lang/KeysReference/CarrierLang.php:27</note>
       </trans-unit>
       <trans-unit id="5d671531babe55fff4ae63b94c80ea38">
         <source>Delivery next day!</source>
         <target>Delivery next day!</target>
         <note>Context:
-File: classes/lang/CarrierLang.php:41</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
-        <source>Delay</source>
-        <target>Delay</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:84</note>
-      </trans-unit>
-      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
-        <source>Free Shipping</source>
-        <target>Free Shipping</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:96</note>
-      </trans-unit>
-      <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
-        <source>Add new carrier</source>
-        <target>Add new carrier</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:128</note>
-      </trans-unit>
-      <trans-unit id="1c0e287237d8c352c6ead633b019c047">
-        <source>Apply shipping cost</source>
-        <target>Apply shipping cost</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:249</note>
-      </trans-unit>
-      <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
-        <source>Shipping and handling</source>
-        <target>Shipping and handling</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:283</note>
-      </trans-unit>
-      <trans-unit id="590f6d9a5885f042982c9a911f76abda">
-        <source>Default behavior</source>
-        <target>Default behavior</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:313</note>
-      </trans-unit>
-      <trans-unit id="e3d29a6f3d7588301aa04429e686b260">
-        <source>According to total price</source>
-        <target>According to total price</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:318</note>
-      </trans-unit>
-      <trans-unit id="49fec5c86a3b43821fdf0d9aa7bbd935">
-        <source>According to total weight</source>
-        <target>According to total weight</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:323</note>
-      </trans-unit>
-      <trans-unit id="324029d06c6bfe85489099f6e69b7637">
-        <source>Maximum package height</source>
-        <target>Maximum package height</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:349</note>
-      </trans-unit>
-      <trans-unit id="3e86ececa46af50900510892f94c4ed6">
-        <source>Maximum package width</source>
-        <target>Maximum package width</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:356</note>
-      </trans-unit>
-      <trans-unit id="1935671a637346f67b485596b9fcba2c">
-        <source>Maximum package depth</source>
-        <target>Maximum package depth</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:363</note>
-      </trans-unit>
-      <trans-unit id="0cce6348a3d85f52a44d053f542afcbc">
-        <source>Maximum package weight</source>
-        <target>Maximum package weight</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:370</note>
-      </trans-unit>
-      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
-        <source>Name:</source>
-        <target>Name:</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:730</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
-        <source>Carriers</source>
-        <target>Carriers</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:528</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5e6b7c069d71052ffc8c4410c0c46992">
-        <source>Use one of our recommended carrier modules</source>
-        <target>Use one of our recommended carrier modules</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="80a305c8cb9737ef8474472aaa65026e">
-        <source>It seems there are no recommended carriers for your country.</source>
-        <target>It seems there are no recommended carriers for your country.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="39efbaa2f3600dd82a031d7ab5138f73">
-        <source>Do you think there should be one? Let us know!</source>
-        <target>Do you think there should be one? Let us know!</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl:32</note>
+File: classes/lang/KeysReference/CarrierLang.php:28</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
-        <source>Transit time</source>
-        <target>Transit time</target>
-        <note>Context:
-File: controllers/admin/AdminCarrierWizardController.php:195</note>
-      </trans-unit>
-      <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
-        <source>Speed grade</source>
-        <target>Speed grade</target>
-        <note>Context:
-File: controllers/admin/AdminCarrierWizardController.php:204</note>
-      </trans-unit>
-      <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
-        <source>Billing</source>
-        <target>Billing</target>
-        <note>Context:
-File: controllers/admin/AdminCarrierWizardController.php:299</note>
-      </trans-unit>
-      <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
-        <source>Out-of-range behavior</source>
-        <target>Out-of-range behavior</target>
-        <note>Context:
-File: controllers/admin/AdminCarrierWizardController.php:333</note>
-      </trans-unit>
-      <trans-unit id="4f890cf6a72112cad95093baecf39831">
-        <source>Disable carrier</source>
-        <target>Disable carrier</target>
-        <note>Context:
-File: controllers/admin/AdminCarrierWizardController.php:343</note>
-      </trans-unit>
       <trans-unit id="de62775a71fc2bf7a13d7530ae24a7ed">
         <source>General settings</source>
         <target>General settings</target>
@@ -248,13 +104,131 @@ File: controllers/admin/AdminCarrierWizardController.php:417</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
+        <source>Transit time</source>
+        <target>Transit time</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:188</note>
+      </trans-unit>
+      <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
+        <source>Speed grade</source>
+        <target>Speed grade</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:197</note>
+      </trans-unit>
+      <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
+        <source>Billing</source>
+        <target>Billing</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:304</note>
+      </trans-unit>
+      <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
+        <source>Out-of-range behavior</source>
+        <target>Out-of-range behavior</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:329</note>
+      </trans-unit>
+      <trans-unit id="4f890cf6a72112cad95093baecf39831">
+        <source>Disable carrier</source>
+        <target>Disable carrier</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:339</note>
+      </trans-unit>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:165</note>
+      </trans-unit>
+      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
+        <source>Delay</source>
+        <target>Delay</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:84</note>
+      </trans-unit>
+      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
+        <source>Free Shipping</source>
+        <target>Free Shipping</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:96</note>
+      </trans-unit>
+      <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
+        <source>Add new carrier</source>
+        <target>Add new carrier</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:128</note>
+      </trans-unit>
+      <trans-unit id="1c0e287237d8c352c6ead633b019c047">
+        <source>Apply shipping cost</source>
+        <target>Apply shipping cost</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:249</note>
+      </trans-unit>
+      <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
+        <source>Shipping and handling</source>
+        <target>Shipping and handling</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:283</note>
+      </trans-unit>
+      <trans-unit id="590f6d9a5885f042982c9a911f76abda">
+        <source>Default behavior</source>
+        <target>Default behavior</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:313</note>
+      </trans-unit>
+      <trans-unit id="e3d29a6f3d7588301aa04429e686b260">
+        <source>According to total price</source>
+        <target>According to total price</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:318</note>
+      </trans-unit>
+      <trans-unit id="49fec5c86a3b43821fdf0d9aa7bbd935">
+        <source>According to total weight</source>
+        <target>According to total weight</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:323</note>
+      </trans-unit>
+      <trans-unit id="324029d06c6bfe85489099f6e69b7637">
+        <source>Maximum package height</source>
+        <target>Maximum package height</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:349</note>
+      </trans-unit>
+      <trans-unit id="3e86ececa46af50900510892f94c4ed6">
+        <source>Maximum package width</source>
+        <target>Maximum package width</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:356</note>
+      </trans-unit>
+      <trans-unit id="1935671a637346f67b485596b9fcba2c">
+        <source>Maximum package depth</source>
+        <target>Maximum package depth</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:363</note>
+      </trans-unit>
+      <trans-unit id="0cce6348a3d85f52a44d053f542afcbc">
+        <source>Maximum package weight</source>
+        <target>Maximum package weight</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:370</note>
+      </trans-unit>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>Context:
+File: controllers/admin/AdminCarriersController.php:705</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl:212</note>
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1428</note>
       </trans-unit>
     </body>
   </file>
@@ -304,25 +278,57 @@ File: controllers/admin/AdminShippingController.php:97</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="914419aa32f04011357d3b604a86d7eb">
         <source>Carrier</source>
         <target>Carrier</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:109</note>
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:338</note>
       </trans-unit>
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
         <target>Tracking number</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:105</note>
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:339</note>
       </trans-unit>
-      <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
-        <source>Shipping cost</source>
-        <target>Shipping cost</target>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5e6b7c069d71052ffc8c4410c0c46992">
+        <source>Use one of our recommended carrier modules</source>
+        <target>Use one of our recommended carrier modules</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:42</note>
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="80a305c8cb9737ef8474472aaa65026e">
+        <source>It seems there are no recommended carriers for your country.</source>
+        <target>It seems there are no recommended carriers for your country.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="39efbaa2f3600dd82a031d7ab5138f73">
+        <source>Do you think there should be one? Let us know!</source>
+        <target>Do you think there should be one? Let us know!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_footer.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="92711ef5b0215a076fef4a3abbfc2258">
+        <source>Ranges</source>
+        <target>Ranges</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="19d3894f53ce79c3f836f26cf8a3be3b">
+        <source>inactive</source>
+        <target>inactive</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl:98</note>
       </trans-unit>
     </body>
   </file>
@@ -345,22 +351,6 @@ File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/
         <target>Add new range</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:40</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="92711ef5b0215a076fef4a3abbfc2258">
-        <source>Ranges</source>
-        <target>Ranges</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="19d3894f53ce79c3f836f26cf8a3be3b">
-        <source>inactive</source>
-        <target>inactive</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl:98</note>
       </trans-unit>
     </body>
   </file>
@@ -437,6 +427,16 @@ File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl:5
         <target>Finally, this carrier will be proposed in those shops:</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl:55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
+        <source>Shipping cost</source>
+        <target>Shipping cost</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:42</note>
       </trans-unit>
     </body>
   </file>

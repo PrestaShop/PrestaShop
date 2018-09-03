@@ -4,12 +4,10 @@
     <field name="position"/>
   </fields>
   <entities>
-    <feature id="Height" position="0"/>
-    <feature id="Width" position="1"/>
-    <feature id="Depth" position="2"/>
-    <feature id="Weight" position="3"/>
-    <feature id="Compositions" position="4"/>
-    <feature id="Styles" position="5"/>
-    <feature id="Properties" position="6"/>
+    <feature id="Compositions" position="0"/>
+    <feature id="Paper_Type" position="1"/>
+    <feature id="Color" position="2"/>
+    <feature id="Size" position="3"/>
+    <feature id="Frame_Size" position="4"/>
   </entities>
 </entity_feature>

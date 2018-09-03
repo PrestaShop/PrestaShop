@@ -1,0 +1,115 @@
+@font-face {
+  font-family: Vazir;
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.eot');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.eot?#iefix') format('embedded-opentype'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.woff') format('woff'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.woff') format('woff'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.eot');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.eot?#iefix') format('embedded-opentype'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.woff') format('woff'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.ttf') format('truetype');
+  font-weight: 300;
+}
+body.lang-fa, .lang-fa .h1, .lang-fa .h2, .lang-fa .h3, .lang-fa .h4, .lang-fa .h5, .lang-fa .h6, .lang-fa .modal-title, .lang-fa h1, .lang-fa h2, .lang-fa h3, .lang-fa h4, .lang-fa h5, .lang-fa h6, .lang-fa .tooltip, .lang-fa .popover {
+	font-family: "Vazir", Helvetica, Arial, sans-serif;
+}
+.lang-fa .module-modal-title > h4, .lang-fa .module-addons-search, .lang-fa .module-search-result-wording {
+	font-family: "Vazir", Helvetica, Arial, sans-serif !important;
+}
+.rtl-flip:not(.rtl-no-flip) {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  -ms-transform: scale(-1, 1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+i[class*="right"], i[class*="left"], i[class*="backward"], i[class*="forward"] {
+  -moz-transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.magnitude:before {
+  content: "?";
+  opacity: 0;
+}
+
+.dropdown-menu, .mce-window {
+  right: auto;
+}
+
+ul.category-tree .category-label .category {
+  left: 9px;
+}
+
+.adminproducts .dz-hidden-input {
+  display: none;
+}
+
+ul.category-tree .more::before {
+  content: "\E5CB";
+}
+
+.product-page .product-header {
+  overflow: hidden;
+}
+
+.select2-container--open .select2-dropdown {
+  right: auto;
+  left: 0;
+}
+
+.collapse-button[data-v-442d0f8a], #search .search-input {
+  text-align: right;
+}
+
+.ui-datepicker-rtl {
+  right: auto;
+}
+
+svg {
+  direction: ltr
+}
+
+.mce-panel {
+  right: auto;
+}
+
+.sidebar.sidebar-right {
+  -webkit-transform: translate(-100%,0);
+  -moz-transform: translate(-100%,0);
+  -ms-transform: translate(-100%,0);
+  -o-transform: translate(-100%,0);
+  transform: translate(-100%,0);
+}
+
+.employee-dropdown .dropdown-menu {
+  right: auto !important;
+  left: 4.8px!important;
+  left: .3rem!important;
+}
+
+.main-header > .logo {
+  background-position: right;
+}

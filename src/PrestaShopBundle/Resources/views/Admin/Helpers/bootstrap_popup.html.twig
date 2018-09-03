@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -28,8 +28,8 @@
             {% block header %}
                 {% if title is defined %}
                     <div class="modal-header">
-                        {% if closable is defined and closable == true %}<button type="button" class="close" data-dismiss="modal">&times;</button>{% endif %}
                         <h4 class="modal-title">{{ title }}</h4>
+                        {% if closable is defined and closable == true %}<button type="button" class="close" data-dismiss="modal">&times;</button>{% endif %}
                     </div>
                 {% endif %}
             {% endblock %}
@@ -39,7 +39,7 @@
 
             {% if progressbar is defined %}
                 <div class="modal-body" id="{{ progressbar.id }}">
-                    <div class="pull-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}">
+                    <div class="float-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}">
                         {{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}
                     </div>
                     <div class="progress active progress-striped" style="display: block; width: 100%">
@@ -54,7 +54,7 @@
                 {% if actions is defined %}
                     <div class="modal-footer">
                         {% if closable is defined and closable == true %}
-                            <button type="button" class="btn btn-tertiary-outline btn-lg" data-dismiss="modal">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
                         {% endif %}
                         {% for action in actions %}
                             {% if action.type is defined and action.type == 'link' %}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Israel" version="1.0">
 	<currencies>
-		<currency name="Shekel" iso_code="ILS" iso_code_num="376" sign="₪‎" blank="0" conversion_rate="4.97713" format="2" decimals="2" />
+		<currency name="Shekel" iso_code="ILS" iso_code_num="376" sign="₪‎" blank="0" conversion_rate="4.97713" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="ar" />

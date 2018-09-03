@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<entity_feature>
+  <feature id="Compositions">
+    <name>Compositions</name>
+  </feature>
+  <feature id="Paper_Type">
+    <name>Paper Type</name>
+  </feature>
+  <feature id="Color">
+    <name>Couleur</name>
+  </feature>
+  <feature id="Size">
+    <name>Taille</name>
+  </feature>
+  <feature id="Frame_Size">
+    <name>Frame Size</name>
+  </feature>
+</entity_feature>

@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.pdf.type_provider.invoice:
+        class: PrestaShop\PrestaShop\Adapter\Invoice\InvoiceTemplateTypeProvider

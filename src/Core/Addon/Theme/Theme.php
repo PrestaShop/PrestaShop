@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,16 +38,16 @@ class Theme implements AddonInterface
     public function __construct(array $attributes)
     {
         if (isset($attributes['parent'])) {
-            $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_.'/'.$attributes['parent'].'/config/theme.yml'));
-            $parentAttributes['preview'] = 'themes/'.$attributes['parent'].'/preview.png';
-            $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/').'/';
+            $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_ . '/' . $attributes['parent'] . '/config/theme.yml'));
+            $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
+            $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
         }
 
-        $attributes['directory'] = rtrim($attributes['directory'], '/').'/';
+        $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
 
-        if (file_exists(_PS_ALL_THEMES_DIR_.$attributes['name'].'/preview.png')) {
-            $attributes['preview'] = 'themes/'.$attributes['name'].'/preview.png';
+        if (file_exists(_PS_ALL_THEMES_DIR_ . $attributes['name'] . '/preview.png')) {
+            $attributes['preview'] = 'themes/' . $attributes['name'] . '/preview.png';
         }
 
         $this->attributes = new ArrayFinder($attributes);
@@ -81,6 +81,9 @@ class Theme implements AddonInterface
         foreach ($modulesToHook as $hookName => $modules) {
             if (is_array($modules)) {
                 foreach (array_values($modules) as $module) {
+                    if (is_array($module)) {
+                        $module = key($module);
+                    }
                     if (null !== $module && !in_array($module, $modulesToEnable)) {
                         $modulesToEnable[] = $module;
                     }
@@ -192,14 +195,14 @@ class Theme implements AddonInterface
 
     public function getLayoutRelativePathForPage($page)
     {
-        return 'layouts/'.$this->getLayoutNameForPage($page).'.tpl';
+        return 'layouts/' . $this->getLayoutNameForPage($page) . '.tpl';
     }
 
     private function getPageSpecificCss($pageId)
     {
         $css = array_merge(
             (array) $this->get('assets.css.all'),
-            (array) $this->get('assets.css.'.$pageId)
+            (array) $this->get('assets.css.' . $pageId)
         );
         foreach ($css as $key => &$entry) {
             // Required parameters
@@ -225,7 +228,7 @@ class Theme implements AddonInterface
     {
         $js = array_merge(
             (array) $this->get('assets.js.all'),
-            (array) $this->get('assets.js.'.$pageId)
+            (array) $this->get('assets.js.' . $pageId)
         );
         foreach ($js as $key => &$entry) {
             // Required parameters

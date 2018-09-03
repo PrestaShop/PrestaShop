@@ -196,6 +196,11 @@
       <title>Display new elements in the Back Office, tab AdminCustomers</title>
       <description>This hook launches modules when the AdminCustomers tab is displayed in the Back Office</description>
     </hook>
+    <hook id="displayAdminCustomersAddressesItemAction">
+      <name>displayAdminCustomersAddressesItemAction</name>
+      <title>Display new elements in the Back Office, tab AdminCustomers, Addresses actions</title>
+      <description>This hook launches modules when the Addresses list into the AdminCustomers tab is displayed in the Back Office</description>
+    </hook>
     <hook id="displayOrderConfirmation">
       <name>displayOrderConfirmation</name>
       <title>Order confirmation page</title>
@@ -330,6 +335,11 @@
       <name>displayBackOfficeTop</name>
       <title>Administration panel hover the tabs</title>
       <description>This hook is displayed on the roll hover of the tabs within the admin panel</description>
+    </hook>
+    <hook id="displayAdminEndContent">
+      <name>displayAdminEndContent</name>
+      <title>Administration end of content</title>
+      <description>This hook is displayed at the end of the main content, before the footer</description>
     </hook>
     <hook id="displayBackOfficeFooter">
       <name>displayBackOfficeFooter</name>
@@ -740,6 +750,56 @@
       <name>displayAdminProductsCombinationBottom</name>
       <title>Display new elements in back office product page, Combination tab</title>
       <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayDashboardToolbarTopMenu">
+      <name>displayDashboardToolbarTopMenu</name>
+      <title>Display new elements in back office page with a dashboard, on top Menu</title>
+      <description>This hook launches modules when a page with a dashboard is displayed</description>
+    </hook>
+    <hook id="displayDashboardToolbarIcons">
+      <name>displayDashboardToolbarIcons</name>
+      <title>Display new elements in back office page with dashboard, on icons list</title>
+      <description>This hook launches modules when the back office with dashboard is displayed</description>
+    </hook>
+    <hook id="actionBuildFrontEndObject">
+      <name>actionBuildFrontEndObject</name>
+      <title>Manage elements added to the "prestashop" javascript object</title>
+      <description>This hook allows you to customize the "prestashop" javascript object that is included in all front office pages</description>
+    </hook>
+    <hook id="actionFrontControllerAfterInit">
+      <name>actionFrontControllerAfterInit</name>
+      <title>Perform actions after front office controller initialization</title>
+      <description>This hook is launched after the initialization of all front office controllers</description>
+    </hook>
+    <hook id="actionAdministrationPageForm">
+      <name>actionAdministrationPageForm</name>
+      <title>Manage Administration Page form fields</title>
+      <description>This hook adds, update or remove fields of the Administration Page form</description>
+    </hook>
+    <hook id="actionAdministrationPageFormSave">
+      <name>actionAdministrationPageFormSave</name>
+      <title>Processing Administration page form</title>
+      <description>This hook is called when the Administration Page form is processed</description>
+    </hook>
+    <hook id="actionPerformancePageForm">
+      <name>actionPerformancePageForm</name>
+      <title>Manage Performance Page form fields</title>
+      <description>This hook adds, update or remove fields of the Performance Page form</description>
+    </hook>
+    <hook id="actionPerformancePageFormSave">
+      <name>actionPerformancePageFormSave</name>
+      <title>Processing Performance page form</title>
+      <description>This hook is called when the Performance Page form is processed</description>
+    </hook>
+    <hook id="actionMaintenancePageForm">
+      <name>actionMaintenancePageForm</name>
+      <title>Manage Maintenance Page form fields</title>
+      <description>This hook adds, update or remove fields of the Maintenance Page form</description>
+    </hook>
+    <hook id="actionMaintenancePageFormSave">
+      <name>actionMaintenancePageFormSave</name>
+      <title>Processing Maintenance page form</title>
+      <description>This hook is called when the Maintenance Page form is processed</description>
     </hook>
   </entities>
 </entity_hook>

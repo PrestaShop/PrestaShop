@@ -1,0 +1,13 @@
+admin_webservice:
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_save:
+    path: /
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processForm'
+        _legacy_controller: AdminWebservice

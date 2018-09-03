@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
+use GuzzleHttp\Exception\RequestException;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provide the categories used to order modules and themes on https://addons.prestashop.com.
@@ -33,19 +36,26 @@ use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 class CategoriesProvider
 {
     private $apiClient;
+    private $logger;
 
-    static $categories;
-    static $categoriesFromApi;
+    public static $categories;
+    public static $categoriesFromApi;
 
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ApiClient $apiClient, LoggerInterface $logger)
     {
         $this->apiClient = $apiClient;
+        $this->logger = $logger;
     }
 
     public function getCategories()
     {
         if (null === self::$categoriesFromApi) {
-            self::$categoriesFromApi = $this->apiClient->getCategories();
+            try {
+                self::$categoriesFromApi = $this->apiClient->getCategories();
+            } catch (RequestException $e) {
+                $this->logger->error('Module & services categories could not be loaded from marketplace API');
+                self::$categoriesFromApi = array();
+            }
         }
 
         return self::$categoriesFromApi;
@@ -54,11 +64,11 @@ class CategoriesProvider
     /**
      * Return the list of categories with the number of associated modules.
      *
-     * @param array the list of modules
+     * @param array|AddonsCollection the list of modules
      *
      * @return array the list of categories
      */
-    public function getCategoriesMenu(array $modules)
+    public function getCategoriesMenu($modules)
     {
         if (null === self::$categories) {
             // The Root category is "Categories"
@@ -114,6 +124,7 @@ class CategoriesProvider
                 }
             }
         }
+
         return $categoryName;
     }
 
@@ -124,6 +135,7 @@ class CategoriesProvider
      * @param $name
      * @param array $moduleIds
      * @param null $tab
+     *
      * @return object
      */
     private function createMenuObject($menu, $name, $moduleIds = array(), $tab = null)

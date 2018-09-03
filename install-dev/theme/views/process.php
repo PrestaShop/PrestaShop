@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -127,7 +127,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 
 <?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
 	<iframe src="https://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
-		<p><a href="http://addons.prestashop.com/" target="_blank"><?php echo $this->translator->trans('Check out PrestaShop Addons to add that little something extra to your store!', array(), 'Install'); ?></a></p>
+		<p><a href="https://addons.prestashop.com/" target="_blank"><?php echo $this->translator->trans('Check out PrestaShop Addons to add that little something extra to your store!', array(), 'Install'); ?></a></p>
 	</iframe>
 <?php endif; ?>
 

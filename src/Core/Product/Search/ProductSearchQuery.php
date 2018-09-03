@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
-
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 
 class ProductSearchQuery
 {
@@ -55,6 +52,7 @@ class ProductSearchQuery
     public function setQueryType($query_type)
     {
         $this->query_type = $query_type;
+
         return $this;
     }
 
@@ -66,6 +64,7 @@ class ProductSearchQuery
     public function setIdCategory($id_category)
     {
         $this->id_category = $id_category;
+
         return $this;
     }
 
@@ -77,6 +76,7 @@ class ProductSearchQuery
     public function setIdManufacturer($id_manufacturer)
     {
         $this->id_manufacturer = $id_manufacturer;
+
         return $this;
     }
 
@@ -88,6 +88,7 @@ class ProductSearchQuery
     public function setIdSupplier($id_supplier)
     {
         $this->id_supplier = $id_supplier;
+
         return $this;
     }
 
@@ -98,7 +99,8 @@ class ProductSearchQuery
 
     public function setResultsPerPage($resultsPerPage)
     {
-        $this->resultsPerPage = (int)$resultsPerPage;
+        $this->resultsPerPage = (int) $resultsPerPage;
+
         return $this;
     }
 
@@ -109,7 +111,8 @@ class ProductSearchQuery
 
     public function setPage($page)
     {
-        $this->page = (int)$page;
+        $this->page = (int) $page;
+
         return $this;
     }
 
@@ -121,6 +124,7 @@ class ProductSearchQuery
     public function setSortOrder(SortOrder $sortOrder)
     {
         $this->sortOrder = $sortOrder;
+
         return $this;
     }
 
@@ -132,6 +136,7 @@ class ProductSearchQuery
     public function setSearchString($search_string)
     {
         $this->search_string = $search_string;
+
         return $this;
     }
 
@@ -143,6 +148,7 @@ class ProductSearchQuery
     public function setSearchTag($search_tag)
     {
         $this->search_tag = $search_tag;
+
         return $this;
     }
 
@@ -154,6 +160,7 @@ class ProductSearchQuery
     public function setEncodedFacets($encodedFacets)
     {
         $this->encodedFacets = $encodedFacets;
+
         return $this;
     }
 

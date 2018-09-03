@@ -1,0 +1,54 @@
+language: php
+
+services:
+  - docker
+  - mysql
+
+addons:
+    apt:
+      packages:
+        - postfix
+        - libappindicator1
+        - fonts-liberation
+
+cache:
+  directories:
+    - $HOME/.npm
+
+sudo: required
+dist: trusty
+
+env:
+  global:
+    - DOCKER_IMG=prestashop
+
+matrix:
+  fast_finish: true
+
+before_script:
+  - docker run --name=mysql -e MYSQL_ROOT_PASSWORD=doge -e MYSQL_DATABASE=prestashop -tid mysql
+  - docker run --link mysql -e DB_SERVER=mysql -e DB_PASSWD=doge -e PS_INSTALL_AUTO=1 -e PS_COUNTRY=fr -e PS_DEV_MODE=0 -e PS_FOLDER_INSTALL=install-dev -e PS_FOLDER_ADMIN=admin-dev -e PS_HANDLE_DYNAMIC_DOMAIN=1 -p 80:80 -tid --name=prestashop prestashop/$DOCKER_IMG:$TAG
+  - docker exec prestashop rm -f /var/www/html/app/config/parameters.yml
+  - npm install selenium-standalone@latest
+  - cd node_modules/selenium-standalone/bin/
+  - ./selenium-standalone install
+  - DISPLAY=:10 ./selenium-standalone start &> /dev/null &
+  - cd ../../..
+  - npm install
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16"
+  - docker exec prestashop rm -rf /var/www/html/modules/welcome
+  - sleep 25
+
+script:
+  - mkdir screenshots
+  - $TRAVIS_BUILD_DIR/node_modules/mocha/bin/mocha test/campaigns/high/category
+  - curl http://localhost/
+
+after_script:
+  - docker logs prestashop
+  - cd ../../.. && chmod 777 bin/upload.sh && ./bin/upload.sh
+  - node email_sender/file_concat.js
+  - node email_sender/email_sender.js
+  - google-chrome --version
+
+after_failure:

@@ -1,152 +1,269 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminTaxesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
-        <source>%d missing</source>
-        <target>%d missing</target>
+      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
+        <source>Rate</source>
+        <target>Rate</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:353</note>
+File: controllers/admin/AdminTaxesController.php:207</note>
       </trans-unit>
-      <trans-unit id="3a8b99657fcabfc65f45cd1be2b34de9">
-        <source>%nb_translations% expressions</source>
-        <target>%nb_translations% expressions</target>
+      <trans-unit id="1c669d037f8bc785f0e1a9aeb7070367">
+        <source>Tax options</source>
+        <target>Tax options</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:420</note>
+File: controllers/admin/AdminTaxesController.php:65</note>
       </trans-unit>
-      <trans-unit id="740b879fdd48f184f798b8018134f630">
-        <source>Show messages</source>
-        <target>Show messages</target>
+      <trans-unit id="783453d461b47241396594776bef68de">
+        <source>Enable tax</source>
+        <target>Enable tax</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:364</note>
+File: controllers/admin/AdminTaxesController.php:68</note>
       </trans-unit>
-      <trans-unit id="67b6092e7137b245b034286819367669">
-        <source>Hide messages</source>
-        <target>Hide messages</target>
+      <trans-unit id="9686d924d9453d29fabc55346fc57808">
+        <source>Display tax in the shopping cart</source>
+        <target>Display tax in the shopping cart</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:365</note>
+File: controllers/admin/AdminTaxesController.php:72</note>
       </trans-unit>
-      <trans-unit id="f5123d6dff8361ad9310560e87c220ef">
-        <source>%nb_translations% missing</source>
-        <target>%nb_translations% missing</target>
+      <trans-unit id="3e61afd38fcb5eca62efcfe46fc6a3c9">
+        <source>Based on</source>
+        <target>Based on</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:462</note>
+File: controllers/admin/AdminTaxesController.php:77</note>
       </trans-unit>
-      <trans-unit id="f0780b397b7190b7894af3d8d7d91a83">
-        <source>%nb_translations% translations are missing in %domain%</source>
-        <target>%nb_translations% translations are missing in %domain%</target>
+      <trans-unit id="601d8c4b9f72fc1862013c19b677a499">
+        <source>Invoice address</source>
+        <target>Invoice address</target>
         <note>Context:
-File: src/PrestaShopBundle/Twig/TranslationsExtension.php:471</note>
+File: controllers/admin/AdminTaxesController.php:82</note>
+      </trans-unit>
+      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
+        <source>Delivery address</source>
+        <target>Delivery address</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:86</note>
+      </trans-unit>
+      <trans-unit id="8e4157c726a8c5cf64361e2d751bc945">
+        <source>Use ecotax</source>
+        <target>Use ecotax</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:92</note>
+      </trans-unit>
+      <trans-unit id="e92cfa244b5eb9025d07522080468445">
+        <source>Ecotax</source>
+        <target>Ecotax</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:105</note>
+      </trans-unit>
+      <trans-unit id="7c545d3243860a144f6d3410fadd3c08">
+        <source>Add new tax</source>
+        <target>Add new tax</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:122</note>
+      </trans-unit>
+      <trans-unit id="0071aa279bd1583754a544277740f047">
+        <source>Delete item #</source>
+        <target>Delete item #</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:147</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="16ec8a60494224f7fa891897aba8caf8">
-        <source>1 missing</source>
-        <target>1 missing</target>
+      <trans-unit id="e7c7216c46ae0e04e2012a2137803cca">
+        <source>Add new tax rules group</source>
+        <target>Add new tax rules group</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:46</note>
+File: controllers/admin/AdminTaxRulesGroupController.php:81</note>
       </trans-unit>
-      <trans-unit id="026966b734feffa2a2a7c807d268e495">
-        <source>%nb_translation% expression</source>
-        <target>%nb_translation% expression</target>
+      <trans-unit id="7ec515dc1920404871d8180791d589f2">
+        <source>Add a new tax rule</source>
+        <target>Add a new tax rule</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:49
- Comment: nb_translations can be 0 or 1</note>
+File: controllers/admin/AdminTaxRulesGroupController.php:227</note>
       </trans-unit>
-      <trans-unit id="e3ee9f9a340e253eb5196ce7d53ae2d8">
-        <source>Search translations</source>
-        <target>Search translations</target>
+      <trans-unit id="b39a035a995fc6597c8eb942210d1527">
+        <source>Behavior</source>
+        <target>Behavior</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:58</note>
+File: controllers/admin/AdminTaxRulesGroupController.php:292</note>
+      </trans-unit>
+      <trans-unit id="8d4ae51b8b5831db49a6dcde1b83e175">
+        <source>Tax Rules</source>
+        <target>Tax Rules</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:172</note>
+      </trans-unit>
+      <trans-unit id="af4a7a1f7975e2f67b0dbefb21a2a94d">
+        <source>New tax rule</source>
+        <target>New tax rule</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:244</note>
+      </trans-unit>
+      <trans-unit id="e1ec2a73deaf4b7cf2fea1d51c65ddc2">
+        <source>Zip/postal code range</source>
+        <target>Zip/postal code range</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:285</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c5836008c1649301e29351a55db8f65c">
-        <source>Flag</source>
-        <target>Flag</target>
+      <trans-unit id="14e4d5e97b5a2c7780c4f23b7612a67b">
+        <source>This tax only</source>
+        <target>This tax only</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:188</note>
+File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:91</note>
       </trans-unit>
-      <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
-        <source>Language code</source>
-        <target>Language code</target>
+      <trans-unit id="e7b3c0acb7168c7969b03e8aebc67ce7">
+        <source>Combine</source>
+        <target>Combine</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:160</note>
+File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:93</note>
       </trans-unit>
-      <trans-unit id="534fd46732986cba0efeda8701592427">
-        <source>Date format</source>
-        <target>Date format</target>
+      <trans-unit id="7f8f392e0c47b730d773b4ddd9448fba">
+        <source>One after another</source>
+        <target>One after another</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:170</note>
+File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:95</note>
       </trans-unit>
-      <trans-unit id="c11566e30920ed4786e534e5332d5b87">
-        <source>Date format (full)</source>
-        <target>Date format (full)</target>
+      <trans-unit id="08a38277b0309070706f6652eeae9a53">
+        <source>Down</source>
+        <target>Down</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:179</note>
+File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:65</note>
       </trans-unit>
-      <trans-unit id="f53b6aa000ea3aa0114e70c1f8737608">
-        <source>Add new language</source>
-        <target>Add new language</target>
+      <trans-unit id="258f49887ef8d14ac268c92b02503aaa">
+        <source>Up</source>
+        <target>Up</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:111</note>
+File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:69</note>
       </trans-unit>
-      <trans-unit id="a0978fb69022447c12c0db348ad4f00c">
-        <source>"No-picture" image</source>
-        <target>"No-picture" image</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c96a77fb323a41898c3b6941a58dc741">
+        <source>Default language</source>
+        <target>Default language</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:195</note>
+File: controllers/admin/AdminLocalizationController.php:39</note>
       </trans-unit>
-      <trans-unit id="57efe5623fc0d68b37628923808d15d1">
-        <source>Is RTL language</source>
-        <target>Is RTL language</target>
+      <trans-unit id="65a9e6dae82101cecd43f16583f8cd37">
+        <source>Set language from browser</source>
+        <target>Set language from browser</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:201</note>
+File: controllers/admin/AdminLocalizationController.php:47</note>
       </trans-unit>
-      <trans-unit id="1e817248a18ffae64e10be49a46fa9ee">
-        <source>Activate this language.</source>
-        <target>Activate this language.</target>
+      <trans-unit id="aac4bf78b43b8b815119032038bbee97">
+        <source>Default country</source>
+        <target>Default country</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:240</note>
+File: controllers/admin/AdminLocalizationController.php:55</note>
       </trans-unit>
-      <trans-unit id="a4bc4ae2cbf8be348ecfc863538998bf">
-        <source>Check to see if a language pack is available for this ISO code.</source>
-        <target>Check to see if a language pack is available for this ISO code.</target>
+      <trans-unit id="e93c6cb824cab26f82d9b3446dc8e563">
+        <source>Set default country from browser language</source>
+        <target>Set default country from browser language</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:245</note>
+File: controllers/admin/AdminLocalizationController.php:64</note>
       </trans-unit>
-      <trans-unit id="22a31963fda5661b3a0919f7bda0debc">
-        <source>Translation files</source>
-        <target>Translation files</target>
+      <trans-unit id="216845c195c351faf05ff91c6411bfea">
+        <source>Local units</source>
+        <target>Local units</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:276</note>
+File: controllers/admin/AdminLocalizationController.php:84</note>
       </trans-unit>
-      <trans-unit id="704075d95dec2f52e92cbe2c6e2f61c7">
-        <source>Theme files</source>
-        <target>Theme files</target>
+      <trans-unit id="f489118ea95c746d648d36bb50c226f0">
+        <source>Weight unit</source>
+        <target>Weight unit</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:280</note>
+File: controllers/admin/AdminLocalizationController.php:88</note>
       </trans-unit>
-      <trans-unit id="37f3a51de63012d9060d5ff8ccab2b0f">
-        <source>Mail files</source>
-        <target>Mail files</target>
+      <trans-unit id="fff9ff80cc72d571e3d5115b421a27c3">
+        <source>Distance unit</source>
+        <target>Distance unit</target>
         <note>Context:
-File: controllers/admin/AdminLanguagesController.php:284</note>
+File: controllers/admin/AdminLocalizationController.php:96</note>
+      </trans-unit>
+      <trans-unit id="bac94fdafa0ab5ce874f63b75d6d28da">
+        <source>Volume unit</source>
+        <target>Volume unit</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:104</note>
+      </trans-unit>
+      <trans-unit id="cc13d156306185fd42a860da3049567c">
+        <source>Dimension unit</source>
+        <target>Dimension unit</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:112</note>
+      </trans-unit>
+      <trans-unit id="72388067f972c9a43b1ded59297f5b6e">
+        <source>Language identifier</source>
+        <target>Language identifier</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:126</note>
+      </trans-unit>
+      <trans-unit id="a86844187775f3d99ab7bad450a61d78">
+        <source>Country identifier</source>
+        <target>Country identifier</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:134</note>
+      </trans-unit>
+      <trans-unit id="1c96489b890acf7ccbb4bd0dc306870b">
+        <source>Time zone</source>
+        <target>Time zone</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:148</note>
+      </trans-unit>
+      <trans-unit id="823e3e5a2bec573e4e38853822465914">
+        <source>%s (local)</source>
+        <target>%s (local)</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:269</note>
+      </trans-unit>
+      <trans-unit id="892a326e935b414a79a1eb938afd6ba5">
+        <source>Units (e.g. weight, volume, distance)</source>
+        <target>Units (e.g. weight, volume, distance)</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:301</note>
+      </trans-unit>
+      <trans-unit id="41661d8cebe0d3d2211676fd8aaf73f7">
+        <source>Change the behavior of the price display for groups</source>
+        <target>Change the behavior of the price display for groups</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:306</note>
+      </trans-unit>
+      <trans-unit id="1240d2eed41a0fd4e898e6aab64c6732">
+        <source>Import a localization pack</source>
+        <target>Import a localization pack</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:313</note>
+      </trans-unit>
+      <trans-unit id="75f9936f4fef50cf05561217a24f058c">
+        <source>Localization pack you want to import</source>
+        <target>Localization pack you want to import</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:320</note>
+      </trans-unit>
+      <trans-unit id="41b72abcfb3ec32e91e9cfa775e49cbd">
+        <source>Content to import</source>
+        <target>Content to import</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:330</note>
+      </trans-unit>
+      <trans-unit id="345e1dd7e9d9ec15c68486caac639767">
+        <source>Download pack data</source>
+        <target>Download pack data</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:341</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ad68f9bafd9bf2dcf3865dac55662fd5">
-        <source>ISO code</source>
-        <target>ISO code</target>
-        <note>Context:
-File: controllers/admin/AdminCountriesController.php:201</note>
-      </trans-unit>
       <trans-unit id="94d7422ba3c5b0f2a35f50b048e51c6d">
         <source>Default currency</source>
         <target>Default currency</target>
@@ -227,6 +344,247 @@ File: controllers/admin/AdminCountriesController.php:340</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
+        <source>States</source>
+        <target>States</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:139</note>
+      </trans-unit>
+      <trans-unit id="ad68f9bafd9bf2dcf3865dac55662fd5">
+        <source>ISO code</source>
+        <target>ISO code</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:153</note>
+      </trans-unit>
+      <trans-unit id="71777469a202cba33a8985f7d5bf1d97">
+        <source>Add new state</source>
+        <target>Add new state</target>
+        <note>Context:
+File: controllers/admin/AdminStatesController.php:118</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminZonesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
+        <source>Zones</source>
+        <target>Zones</target>
+        <note>Context:
+File: controllers/admin/AdminZonesController.php:95</note>
+      </trans-unit>
+      <trans-unit id="77f1ebd0522a27ee9502ab13a242d823">
+        <source>Add new zone</source>
+        <target>Add new zone</target>
+        <note>Context:
+File: controllers/admin/AdminZonesController.php:75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="10d30c6319cf61386c878e4d9a3e09a2">
+        <source>Assign to a new zone</source>
+        <target>Assign to a new zone</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl:148</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminLanguagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c5836008c1649301e29351a55db8f65c">
+        <source>Flag</source>
+        <target>Flag</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:188</note>
+      </trans-unit>
+      <trans-unit id="e59a41e120686e63cbb743f003bea4e6">
+        <source>Language code</source>
+        <target>Language code</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:160</note>
+      </trans-unit>
+      <trans-unit id="534fd46732986cba0efeda8701592427">
+        <source>Date format</source>
+        <target>Date format</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:170</note>
+      </trans-unit>
+      <trans-unit id="c11566e30920ed4786e534e5332d5b87">
+        <source>Date format (full)</source>
+        <target>Date format (full)</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:179</note>
+      </trans-unit>
+      <trans-unit id="f53b6aa000ea3aa0114e70c1f8737608">
+        <source>Add new language</source>
+        <target>Add new language</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:111</note>
+      </trans-unit>
+      <trans-unit id="a0978fb69022447c12c0db348ad4f00c">
+        <source>"No-picture" image</source>
+        <target>"No-picture" image</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:195</note>
+      </trans-unit>
+      <trans-unit id="57efe5623fc0d68b37628923808d15d1">
+        <source>Is RTL language</source>
+        <target>Is RTL language</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:201</note>
+      </trans-unit>
+      <trans-unit id="1e817248a18ffae64e10be49a46fa9ee">
+        <source>Activate this language.</source>
+        <target>Activate this language.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:240</note>
+      </trans-unit>
+      <trans-unit id="a4bc4ae2cbf8be348ecfc863538998bf">
+        <source>Check to see if a language pack is available for this ISO code.</source>
+        <target>Check to see if a language pack is available for this ISO code.</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:245</note>
+      </trans-unit>
+      <trans-unit id="22a31963fda5661b3a0919f7bda0debc">
+        <source>Translation files</source>
+        <target>Translation files</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:276</note>
+      </trans-unit>
+      <trans-unit id="704075d95dec2f52e92cbe2c6e2f61c7">
+        <source>Theme files</source>
+        <target>Theme files</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:280</note>
+      </trans-unit>
+      <trans-unit id="37f3a51de63012d9060d5ff8ccab2b0f">
+        <source>Mail files</source>
+        <target>Mail files</target>
+        <note>Context:
+File: controllers/admin/AdminLanguagesController.php:284</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6b13904f9eecabe20d88f942e84e1cb8">
+        <source>%1$s (Language: %2$s, Theme: %3$s)</source>
+        <target>%1$s (Language: %2$s, Theme: %3$s)</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:134
+ Comment: Create a title for each translation page</note>
+      </trans-unit>
+      <trans-unit id="3b54d45d2c221c50e916f3be1fc12f2a">
+        <source>Update translations</source>
+        <target>Update translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:173</note>
+      </trans-unit>
+      <trans-unit id="fabfbbc841761a5621aea32aff4aa151">
+        <source>Back office translations</source>
+        <target>Back office translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1318</note>
+      </trans-unit>
+      <trans-unit id="445518ee6de9f01f5203fa05e5b83236">
+        <source>Themes translations</source>
+        <target>Themes translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1326</note>
+      </trans-unit>
+      <trans-unit id="3d966df0f234e9180aac80223c2a7e85">
+        <source>Installed modules translations</source>
+        <target>Installed modules translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1334</note>
+      </trans-unit>
+      <trans-unit id="6df6a1378a5ddcdef978aadf494cef5d">
+        <source>Email translations</source>
+        <target>Email translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1342</note>
+      </trans-unit>
+      <trans-unit id="5d1eb86e15320f5677c9502df9c97dd3">
+        <source>Other translations</source>
+        <target>Other translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1350</note>
+      </trans-unit>
+      <trans-unit id="8ed78ce61d50323c845e812aaccf247a">
+        <source>Enabled Languages</source>
+        <target>Enabled Languages</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1428</note>
+      </trans-unit>
+      <trans-unit id="c1aaec25c6e16ac8f28fdc652f1986ec">
+        <source>Main Country</source>
+        <target>Main Country</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1440</note>
+      </trans-unit>
+      <trans-unit id="2ffdb9f581f55fb1ae293ec48b151aad">
+        <source>Front office Translations</source>
+        <target>Front office Translations</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1453</note>
+      </trans-unit>
+      <trans-unit id="6e4fd86b4ea240672daa3c2fe1118fe0">
+        <source>Expand all fieldsets</source>
+        <target>Expand all fieldsets</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1748</note>
+      </trans-unit>
+      <trans-unit id="e1686cbdbfefdc838c58469866922b6c">
+        <source>Close all fieldsets</source>
+        <target>Close all fieldsets</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:1751</note>
+      </trans-unit>
+      <trans-unit id="80ab38b942fb2da88ca496f8bbe237f7">
+        <source>Email subject</source>
+        <target>Email subject</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2489</note>
+      </trans-unit>
+      <trans-unit id="673a349a39148b988e9aabf651d31a96">
+        <source>View HTML version</source>
+        <target>View HTML version</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2512</note>
+      </trans-unit>
+      <trans-unit id="b040fe53badd6b3784735f3d102df0bd">
+        <source>Edit HTML version</source>
+        <target>Edit HTML version</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2513</note>
+      </trans-unit>
+      <trans-unit id="5f986174fa9cf6c0ddd927e11b68254a">
+        <source>View/Edit TXT version</source>
+        <target>View/Edit TXT version</target>
+        <note>Context:
+File: controllers/admin/AdminTranslationsController.php:2514</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d43522f215ed8be730a542c8e1fdcff1">
+        <source>Core emails</source>
+        <target>Core emails</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:97</note>
+      </trans-unit>
+      <trans-unit id="fdfd8f2cb7c034aecf19844d1cf4abd0">
+        <source>Module emails</source>
+        <target>Module emails</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:158</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="aa3b1c5568c71eb8b7a22e5f07c70cd4">
@@ -287,364 +645,13 @@ File: controllers/admin/AdminGeolocationController.php:77</note>
         <source>Select the countries from which your store is accessible</source>
         <target>Select the countries from which your store is accessible</target>
         <note>Context:
-File: controllers/admin/AdminGeolocationController.php:126</note>
+File: controllers/admin/AdminGeolocationController.php:125</note>
       </trans-unit>
       <trans-unit id="d1e4ac2093276d0228ca8470e7ecbf98">
         <source>In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.</source>
         <target>In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.</target>
         <note>Context:
-File: controllers/admin/AdminGeolocationController.php:142</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="10d30c6319cf61386c878e4d9a3e09a2">
-        <source>Assign to a new zone</source>
-        <target>Assign to a new zone</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/countries/helpers/list/list_footer.tpl:148</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStatesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="71777469a202cba33a8985f7d5bf1d97">
-        <source>Add new state</source>
-        <target>Add new state</target>
-        <note>Context:
-File: controllers/admin/AdminStatesController.php:118</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
-        <source>States</source>
-        <target>States</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:279</note>
-      </trans-unit>
-      <trans-unit id="c96a77fb323a41898c3b6941a58dc741">
-        <source>Default language</source>
-        <target>Default language</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:39</note>
-      </trans-unit>
-      <trans-unit id="65a9e6dae82101cecd43f16583f8cd37">
-        <source>Set language from browser</source>
-        <target>Set language from browser</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:47</note>
-      </trans-unit>
-      <trans-unit id="aac4bf78b43b8b815119032038bbee97">
-        <source>Default country</source>
-        <target>Default country</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:55</note>
-      </trans-unit>
-      <trans-unit id="e93c6cb824cab26f82d9b3446dc8e563">
-        <source>Set default country from browser language</source>
-        <target>Set default country from browser language</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:64</note>
-      </trans-unit>
-      <trans-unit id="216845c195c351faf05ff91c6411bfea">
-        <source>Local units</source>
-        <target>Local units</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:84</note>
-      </trans-unit>
-      <trans-unit id="f489118ea95c746d648d36bb50c226f0">
-        <source>Weight unit</source>
-        <target>Weight unit</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:88</note>
-      </trans-unit>
-      <trans-unit id="fff9ff80cc72d571e3d5115b421a27c3">
-        <source>Distance unit</source>
-        <target>Distance unit</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:96</note>
-      </trans-unit>
-      <trans-unit id="bac94fdafa0ab5ce874f63b75d6d28da">
-        <source>Volume unit</source>
-        <target>Volume unit</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:104</note>
-      </trans-unit>
-      <trans-unit id="cc13d156306185fd42a860da3049567c">
-        <source>Dimension unit</source>
-        <target>Dimension unit</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:112</note>
-      </trans-unit>
-      <trans-unit id="72388067f972c9a43b1ded59297f5b6e">
-        <source>Language identifier</source>
-        <target>Language identifier</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:126</note>
-      </trans-unit>
-      <trans-unit id="a86844187775f3d99ab7bad450a61d78">
-        <source>Country identifier</source>
-        <target>Country identifier</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:134</note>
-      </trans-unit>
-      <trans-unit id="1c96489b890acf7ccbb4bd0dc306870b">
-        <source>Time zone</source>
-        <target>Time zone</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:148</note>
-      </trans-unit>
-      <trans-unit id="823e3e5a2bec573e4e38853822465914">
-        <source>%s (local)</source>
-        <target>%s (local)</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:267</note>
-      </trans-unit>
-      <trans-unit id="892a326e935b414a79a1eb938afd6ba5">
-        <source>Units (e.g. weight, volume, distance)</source>
-        <target>Units (e.g. weight, volume, distance)</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:299</note>
-      </trans-unit>
-      <trans-unit id="41661d8cebe0d3d2211676fd8aaf73f7">
-        <source>Change the behavior of the price display for groups</source>
-        <target>Change the behavior of the price display for groups</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:304</note>
-      </trans-unit>
-      <trans-unit id="1240d2eed41a0fd4e898e6aab64c6732">
-        <source>Import a localization pack</source>
-        <target>Import a localization pack</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:311</note>
-      </trans-unit>
-      <trans-unit id="75f9936f4fef50cf05561217a24f058c">
-        <source>Localization pack you want to import</source>
-        <target>Localization pack you want to import</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:318</note>
-      </trans-unit>
-      <trans-unit id="41b72abcfb3ec32e91e9cfa775e49cbd">
-        <source>Content to import</source>
-        <target>Content to import</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:328</note>
-      </trans-unit>
-      <trans-unit id="345e1dd7e9d9ec15c68486caac639767">
-        <source>Download pack data</source>
-        <target>Download pack data</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:339</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dcb66ff6e4a2517ade22183779939c9d">
-        <source>Rate</source>
-        <target>Rate</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:207</note>
-      </trans-unit>
-      <trans-unit id="1c669d037f8bc785f0e1a9aeb7070367">
-        <source>Tax options</source>
-        <target>Tax options</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:65</note>
-      </trans-unit>
-      <trans-unit id="783453d461b47241396594776bef68de">
-        <source>Enable tax</source>
-        <target>Enable tax</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:68</note>
-      </trans-unit>
-      <trans-unit id="9686d924d9453d29fabc55346fc57808">
-        <source>Display tax in the shopping cart</source>
-        <target>Display tax in the shopping cart</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:72</note>
-      </trans-unit>
-      <trans-unit id="3e61afd38fcb5eca62efcfe46fc6a3c9">
-        <source>Based on</source>
-        <target>Based on</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:77</note>
-      </trans-unit>
-      <trans-unit id="601d8c4b9f72fc1862013c19b677a499">
-        <source>Invoice address</source>
-        <target>Invoice address</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:82</note>
-      </trans-unit>
-      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
-        <source>Delivery address</source>
-        <target>Delivery address</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:86</note>
-      </trans-unit>
-      <trans-unit id="8e4157c726a8c5cf64361e2d751bc945">
-        <source>Use ecotax</source>
-        <target>Use ecotax</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:92</note>
-      </trans-unit>
-      <trans-unit id="e92cfa244b5eb9025d07522080468445">
-        <source>Ecotax</source>
-        <target>Ecotax</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:105</note>
-      </trans-unit>
-      <trans-unit id="7c545d3243860a144f6d3410fadd3c08">
-        <source>Add new tax</source>
-        <target>Add new tax</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:122</note>
-      </trans-unit>
-      <trans-unit id="0071aa279bd1583754a544277740f047">
-        <source>Delete item #</source>
-        <target>Delete item #</target>
-        <note>Context:
-File: controllers/admin/AdminTaxesController.php:147</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6b13904f9eecabe20d88f942e84e1cb8">
-        <source>%1$s (Language: %2$s, Theme: %3$s)</source>
-        <target>%1$s (Language: %2$s, Theme: %3$s)</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:134
- Comment: Create a title for each translation page</note>
-      </trans-unit>
-      <trans-unit id="3b54d45d2c221c50e916f3be1fc12f2a">
-        <source>Update translations</source>
-        <target>Update translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:173</note>
-      </trans-unit>
-      <trans-unit id="fabfbbc841761a5621aea32aff4aa151">
-        <source>Back office translations</source>
-        <target>Back office translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1334</note>
-      </trans-unit>
-      <trans-unit id="445518ee6de9f01f5203fa05e5b83236">
-        <source>Themes translations</source>
-        <target>Themes translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1342</note>
-      </trans-unit>
-      <trans-unit id="3d966df0f234e9180aac80223c2a7e85">
-        <source>Installed modules translations</source>
-        <target>Installed modules translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1350</note>
-      </trans-unit>
-      <trans-unit id="6df6a1378a5ddcdef978aadf494cef5d">
-        <source>Email translations</source>
-        <target>Email translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1358</note>
-      </trans-unit>
-      <trans-unit id="5d1eb86e15320f5677c9502df9c97dd3">
-        <source>Other translations</source>
-        <target>Other translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1366</note>
-      </trans-unit>
-      <trans-unit id="8ed78ce61d50323c845e812aaccf247a">
-        <source>Enabled Languages</source>
-        <target>Enabled Languages</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1444</note>
-      </trans-unit>
-      <trans-unit id="c1aaec25c6e16ac8f28fdc652f1986ec">
-        <source>Main Country</source>
-        <target>Main Country</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1456</note>
-      </trans-unit>
-      <trans-unit id="2ffdb9f581f55fb1ae293ec48b151aad">
-        <source>Front office Translations</source>
-        <target>Front office Translations</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1469</note>
-      </trans-unit>
-      <trans-unit id="6e4fd86b4ea240672daa3c2fe1118fe0">
-        <source>Expand all fieldsets</source>
-        <target>Expand all fieldsets</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1764</note>
-      </trans-unit>
-      <trans-unit id="e1686cbdbfefdc838c58469866922b6c">
-        <source>Close all fieldsets</source>
-        <target>Close all fieldsets</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:1767</note>
-      </trans-unit>
-      <trans-unit id="80ab38b942fb2da88ca496f8bbe237f7">
-        <source>Email subject</source>
-        <target>Email subject</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2504</note>
-      </trans-unit>
-      <trans-unit id="673a349a39148b988e9aabf651d31a96">
-        <source>View HTML version</source>
-        <target>View HTML version</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2527</note>
-      </trans-unit>
-      <trans-unit id="b040fe53badd6b3784735f3d102df0bd">
-        <source>Edit HTML version</source>
-        <target>Edit HTML version</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2528</note>
-      </trans-unit>
-      <trans-unit id="5f986174fa9cf6c0ddd927e11b68254a">
-        <source>View/Edit TXT version</source>
-        <target>View/Edit TXT version</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:2529</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d43522f215ed8be730a542c8e1fdcff1">
-        <source>Core emails</source>
-        <target>Core emails</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:97</note>
-      </trans-unit>
-      <trans-unit id="fdfd8f2cb7c034aecf19844d1cf4abd0">
-        <source>Module emails</source>
-        <target>Module emails</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:158</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminZonesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="77f1ebd0522a27ee9502ab13a242d823">
-        <source>Add new zone</source>
-        <target>Add new zone</target>
-        <note>Context:
-File: controllers/admin/AdminZonesController.php:75</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
-        <source>Zones</source>
-        <target>Zones</target>
-        <note>Context:
-File: controllers/admin/AdminShopController.php:553</note>
+File: controllers/admin/AdminGeolocationController.php:141</note>
       </trans-unit>
     </body>
   </file>
@@ -668,85 +675,118 @@ File: controllers/admin/AdminCurrenciesController.php:114</note>
         <note>Context:
 File: controllers/admin/AdminCurrenciesController.php:295</note>
       </trans-unit>
-      <trans-unit id="718d5d14c35955acb6e5c56817f92cf5">
-        <source>Live exchange Rate for %s</source>
-        <target>Live exchange Rate for %s</target>
+      <trans-unit id="8394539f7cc6a58a1b71c2465d84644d">
+        <source>Live exchange Rate for %shop_name%</source>
+        <target>Live exchange Rate for %shop_name%</target>
         <note>Context:
 File: controllers/admin/AdminCurrenciesController.php:326</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Twig/TranslationsExtension.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e7c7216c46ae0e04e2012a2137803cca">
-        <source>Add new tax rules group</source>
-        <target>Add new tax rules group</target>
+      <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
+        <source>%d missing</source>
+        <target>%d missing</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:81</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:353</note>
       </trans-unit>
-      <trans-unit id="7ec515dc1920404871d8180791d589f2">
-        <source>Add a new tax rule</source>
-        <target>Add a new tax rule</target>
+      <trans-unit id="3a8b99657fcabfc65f45cd1be2b34de9">
+        <source>%nb_translations% expressions</source>
+        <target>%nb_translations% expressions</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:227</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:420</note>
       </trans-unit>
-      <trans-unit id="b39a035a995fc6597c8eb942210d1527">
-        <source>Behavior</source>
-        <target>Behavior</target>
+      <trans-unit id="740b879fdd48f184f798b8018134f630">
+        <source>Show messages</source>
+        <target>Show messages</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:292</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:364</note>
       </trans-unit>
-      <trans-unit id="8d4ae51b8b5831db49a6dcde1b83e175">
-        <source>Tax Rules</source>
-        <target>Tax Rules</target>
+      <trans-unit id="67b6092e7137b245b034286819367669">
+        <source>Hide messages</source>
+        <target>Hide messages</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:172</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:365</note>
       </trans-unit>
-      <trans-unit id="af4a7a1f7975e2f67b0dbefb21a2a94d">
-        <source>New tax rule</source>
-        <target>New tax rule</target>
+      <trans-unit id="f5123d6dff8361ad9310560e87c220ef">
+        <source>%nb_translations% missing</source>
+        <target>%nb_translations% missing</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:244</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:462</note>
       </trans-unit>
-      <trans-unit id="e1ec2a73deaf4b7cf2fea1d51c65ddc2">
-        <source>Zip/postal code range</source>
-        <target>Zip/postal code range</target>
+      <trans-unit id="f0780b397b7190b7894af3d8d7d91a83">
+        <source>%nb_translations% translations are missing in %domain%</source>
+        <target>%nb_translations% translations are missing in %domain%</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:285</note>
+File: src/PrestaShopBundle/Twig/TranslationsExtension.php:471</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="14e4d5e97b5a2c7780c4f23b7612a67b">
-        <source>This tax only</source>
-        <target>This tax only</target>
+      <trans-unit id="16ec8a60494224f7fa891897aba8caf8">
+        <source>1 missing</source>
+        <target>1 missing</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:91</note>
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:46</note>
       </trans-unit>
-      <trans-unit id="e7b3c0acb7168c7969b03e8aebc67ce7">
-        <source>Combine</source>
-        <target>Combine</target>
+      <trans-unit id="026966b734feffa2a2a7c807d268e495">
+        <source>%nb_translation% expression</source>
+        <target>%nb_translation% expression</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:93</note>
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:49
+ Comment: nb_translations can be 0 or 1</note>
       </trans-unit>
-      <trans-unit id="7f8f392e0c47b730d773b4ddd9448fba">
-        <source>One after another</source>
-        <target>One after another</target>
+      <trans-unit id="e3ee9f9a340e253eb5196ce7d53ae2d8">
+        <source>Search translations</source>
+        <target>Search translations</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:95</note>
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:58</note>
       </trans-unit>
-      <trans-unit id="08a38277b0309070706f6652eeae9a53">
-        <source>Down</source>
-        <target>Down</target>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="31b7dce9ac35e52f1c4719ac210b7419">
+        <source>Live exchange rates</source>
+        <target>Live exchange rates</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:65</note>
+File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:46</note>
       </trans-unit>
-      <trans-unit id="258f49887ef8d14ac268c92b02503aaa">
-        <source>Up</source>
-        <target>Up</target>
+      <trans-unit id="a9df98bcbe3f6c6f366c373674d5008b">
+        <source>The exchange rates are not automatically updated</source>
+        <target>The exchange rates are not automatically updated</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_content.tpl:69</note>
+File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="161e96e34f07ec8c967819825f982902">
+        <source>The exchange rates are automatically updated</source>
+        <target>The exchange rates are automatically updated</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="8f76a793218248d062ced130c0ffd968">
+        <source>Update exchange rates</source>
+        <target>Update exchange rates</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/currencies/status.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a0375b8965a19b59896d90e7e08041f3">
+        <source>This currency is disabled</source>
+        <target>This currency is disabled</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/currencies/status.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="5a654deb20d708c9f56c1d7bc5e35c38">
+        <source>This currency is enabled</source>
+        <target>This currency is enabled</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/currencies/status.tpl:38</note>
       </trans-unit>
     </body>
   </file>
@@ -786,6 +826,12 @@ File: admin-dev/themes/default/template/controllers/countries/helpers/form/form.
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2303c057afcbe798a5d9811d36e88050">
+        <source>Modify translations</source>
+        <target>Modify translations</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:189</note>
+      </trans-unit>
       <trans-unit id="f05b91496296629228c94a6b4b0a335f">
         <source>Expressions to translate:</source>
         <target>Expressions to translate:</target>
@@ -804,12 +850,6 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/tr
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:116</note>
       </trans-unit>
-      <trans-unit id="2303c057afcbe798a5d9811d36e88050">
-        <source>Modify translations</source>
-        <target>Modify translations</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:189</note>
-      </trans-unit>
       <trans-unit id="a9e4402481bd9b8e36752bf731f67eb6">
         <source>Theme:</source>
         <target>Theme:</target>
@@ -821,16 +861,6 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/tr
         <target>Module:</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:102</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ea21841da70e6405af19fabc4ff8bdd9">
-        <source>missing</source>
-        <target>missing</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl:111</note>
       </trans-unit>
     </body>
   </file>
@@ -928,47 +958,13 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/ma
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/currencies/status.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a0375b8965a19b59896d90e7e08041f3">
-        <source>This currency is disabled</source>
-        <target>This currency is disabled</target>
+      <trans-unit id="ea21841da70e6405af19fabc4ff8bdd9">
+        <source>missing</source>
+        <target>missing</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/status.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="5a654deb20d708c9f56c1d7bc5e35c38">
-        <source>This currency is enabled</source>
-        <target>This currency is enabled</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/status.tpl:38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="31b7dce9ac35e52f1c4719ac210b7419">
-        <source>Live exchange rates</source>
-        <target>Live exchange rates</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:46</note>
-      </trans-unit>
-      <trans-unit id="a9df98bcbe3f6c6f366c373674d5008b">
-        <source>The exchange rates are not automatically updated</source>
-        <target>The exchange rates are not automatically updated</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="161e96e34f07ec8c967819825f982902">
-        <source>The exchange rates are automatically updated</source>
-        <target>The exchange rates are automatically updated</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="8f76a793218248d062ced130c0ffd968">
-        <source>Update exchange rates</source>
-        <target>Update exchange rates</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:54</note>
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_form.tpl:111</note>
       </trans-unit>
     </body>
   </file>

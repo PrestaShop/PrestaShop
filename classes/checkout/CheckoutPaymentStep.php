@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutPaymentStepCore extends AbstractCheckoutStep
@@ -45,6 +43,23 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
 
     public function handleRequest(array $requestParams = array())
     {
+        $allProductsInStock = $this->getCheckoutSession()->getCart()->isAllProductsInStock();
+
+        if ($allProductsInStock !== true) {
+            $cartShowUrl = $this->context->link->getPageLink(
+                'cart',
+                null,
+                $this->context->language->id,
+                array(
+                    'action' => 'show',
+                ),
+                false,
+                null,
+                false
+            );
+            Tools::redirect($cartShowUrl);
+        }
+
         if (isset($requestParams['select_payment_option'])) {
             $this->selected_payment_option = $requestParams['select_payment_option'];
         }
@@ -58,15 +73,19 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         );
     }
 
+    /**
+     * @param array $extraParams
+     *
+     * @return string
+     */
     public function render(array $extraParams = array())
     {
         $isFree = 0 == (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
         $paymentOptions = $this->paymentOptionsFinder->present($isFree);
-
         $conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
-
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $deliveryOptionKey = $this->getCheckoutSession()->getSelectedDeliveryOption();
+
         if (isset($deliveryOptions[$deliveryOptionKey])) {
             $selectedDeliveryOption = $deliveryOptions[$deliveryOptionKey];
         } else {
@@ -81,7 +100,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
-            );
+        );
 
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);
     }

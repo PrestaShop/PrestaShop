@@ -22,6 +22,12 @@ File: controllers/front/GuestTrackingController.php:96</note>
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
+        <source>250 char. max</source>
+        <target>250 char. max</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-customization.tpl:39</note>
+      </trans-unit>
       <trans-unit id="20f4168399201bd498e52bafeb59b478">
         <source>Don't forget to save your customization to be able to add to cart</source>
         <target>Don't forget to save your customization to be able to add to cart</target>
@@ -45,16 +51,6 @@ File: themes/classic/templates/catalog/_partials/product-customization.tpl:52</n
         <target>.png .jpg .gif</target>
         <note>Context:
 File: themes/classic/templates/catalog/_partials/product-customization.tpl:56</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
-        <source>250 char. max</source>
-        <target>250 char. max</target>
-        <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:38</note>
       </trans-unit>
     </body>
   </file>

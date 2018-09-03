@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -49,7 +49,7 @@
       <footer class="form-footer text-sm-center clearfix">
         <input type="hidden" name="submitLogin" value="1">
         {block name='form_buttons'}
-          <button class="btn btn-primary" data-link-action="sign-in" type="submit" class="form-control-submit">
+          <button id="submit-login" class="btn btn-primary" data-link-action="sign-in" type="submit" class="form-control-submit">
             {l s='Sign in' d='Shop.Theme.Actions'}
           </button>
         {/block}

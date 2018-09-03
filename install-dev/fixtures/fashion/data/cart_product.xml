@@ -8,20 +8,12 @@
     <field name="quantity"/>
   </fields>
   <entities>
-    <cart_product id="cart_product_1_2_10" id_cart="cart_1" id_product="Blouse" id_address_delivery="3" id_product_attribute="product_attribute_10" quantity="1"/>
-    <cart_product id="cart_product_1_3_13" id_cart="cart_1" id_product="Printed_Dress" id_address_delivery="3" id_product_attribute="product_attribute_13" quantity="1"/>
-    <cart_product id="cart_product_2_2_10" id_cart="cart_2" id_product="Blouse" id_address_delivery="3" id_product_attribute="product_attribute_10" quantity="1"/>
-    <cart_product id="cart_product_2_6_32" id_cart="cart_2" id_product="Printed_Summer_Dress_1" id_address_delivery="3" id_product_attribute="product_attribute_32" quantity="1"/>
-    <cart_product id="cart_product_2_7_34" id_cart="cart_2" id_product="Printed_Chiffon_Dress" id_address_delivery="3" id_product_attribute="product_attribute_34" quantity="1"/>
-    <cart_product id="cart_product_3_2_10" id_cart="cart_3" id_product="Blouse" id_address_delivery="3" id_product_attribute="product_attribute_10" quantity="1"/>
-    <cart_product id="cart_product_3_6_32" id_cart="cart_3" id_product="Printed_Summer_Dress_1" id_address_delivery="3" id_product_attribute="product_attribute_32" quantity="1"/>
-    <cart_product id="cart_product_3_1_1" id_cart="cart_3" id_product="Faded_Short_Sleeve_T-shirts" id_address_delivery="3" id_product_attribute="product_attribute_1" quantity="1"/>
-    <cart_product id="cart_product_4_1_1" id_cart="cart_4" id_product="Faded_Short_Sleeve_T-shirts" id_address_delivery="3" id_product_attribute="product_attribute_1" quantity="1"/>
-    <cart_product id="cart_product_4_3_13" id_cart="cart_4" id_product="Printed_Dress" id_address_delivery="3" id_product_attribute="product_attribute_13" quantity="1"/>
-    <cart_product id="cart_product_4_7_34" id_cart="cart_4" id_product="Printed_Chiffon_Dress" id_address_delivery="3" id_product_attribute="product_attribute_34" quantity="1"/>
-    <cart_product id="cart_product_4_5_19" id_cart="cart_4" id_product="Printed_Summer_Dress" id_address_delivery="3" id_product_attribute="product_attribute_19" quantity="1"/>
-    <cart_product id="cart_product_5_1_1" id_cart="cart_5" id_product="Faded_Short_Sleeve_T-shirts" id_address_delivery="3" id_product_attribute="product_attribute_1" quantity="1"/>
-    <cart_product id="cart_product_5_2_7" id_cart="cart_5" id_product="Blouse" id_address_delivery="3" id_product_attribute="product_attribute_7" quantity="1"/>
-    <cart_product id="cart_product_5_3_13" id_cart="cart_5" id_product="Printed_Dress" id_address_delivery="3" id_product_attribute="product_attribute_13" quantity="1"/>
+    <cart_product id="cart_product_1_2_10" id_cart="cart_1" id_product="Hummingbird_printed_t-shirt" id_address_delivery="3" id_product_attribute="product_attribute_46" quantity="1"/>
+    <cart_product id="cart_product_1_3_13" id_cart="cart_1" id_product="Hummingbird_printed_sweater" id_address_delivery="3" id_product_attribute="product_attribute_62" quantity="1"/>
+    <cart_product id="cart_product_2_2_10" id_cart="cart_2" id_product="The_adventure_begins_Framed_poster" id_address_delivery="3" id_product_attribute="product_attribute_73" quantity="1"/>
+    <cart_product id="cart_product_2_6_32" id_cart="cart_2" id_product="Mug_Today_is_a_good_day" id_address_delivery="3" id_product_attribute="" quantity="1"/>
+    <cart_product id="cart_product_3_2_10" id_cart="cart_3" id_product="Mountain_fox_notebook" id_address_delivery="3" id_product_attribute="product_attribute_85" quantity="1"/>
+    <cart_product id="cart_product_4_1_1" id_cart="cart_4" id_product="Mountain_fox_notebook" id_address_delivery="3" id_product_attribute="product_attribute_82" quantity="1"/>
+    <cart_product id="cart_product_5_1_1" id_cart="cart_5" id_product="Brown_bear_cushion" id_address_delivery="3" id_product_attribute="product_attribute_1" quantity="1"/>
   </entities>
 </entity_cart_product>

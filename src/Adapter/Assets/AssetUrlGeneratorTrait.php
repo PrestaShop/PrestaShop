@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,22 +31,38 @@ use Tools as ToolsLegacy;
 
 trait AssetUrlGeneratorTrait
 {
+    /**
+     * @var string
+     */
     protected $fqdn;
 
+    /**
+     * @param string $fullPath
+     *
+     * @return string
+     */
     protected function getUriFromPath($fullPath)
     {
         return str_replace($this->configuration->get('_PS_ROOT_DIR_'), rtrim($this->configuration->get('__PS_BASE_URI__'), '/'), $fullPath);
     }
 
+    /**
+     * @param string $fullUri
+     *
+     * @return string
+     */
     protected function getPathFromUri($fullUri)
     {
         if ('' !== ($trimmedUri = rtrim($this->configuration->get('__PS_BASE_URI__'), '/'))) {
-            return $this->configuration->get('_PS_ROOT_DIR_').preg_replace('#\\'.$trimmedUri.'#', '', $fullUri, 1);
+            return $this->configuration->get('_PS_ROOT_DIR_') . preg_replace('#\\' . $trimmedUri . '#', '', $fullUri, 1);
         }
 
-        return $this->configuration->get('_PS_ROOT_DIR_').$fullUri;
+        return $this->configuration->get('_PS_ROOT_DIR_') . $fullUri;
     }
 
+    /**
+     * @return string
+     */
     protected function getFQDN()
     {
         if (is_null($this->fqdn)) {

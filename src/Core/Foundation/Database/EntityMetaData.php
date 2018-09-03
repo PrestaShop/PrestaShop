@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 class EntityMetaData
@@ -33,6 +34,7 @@ class EntityMetaData
     public function setTableName($name)
     {
         $this->tableName = $name;
+
         return $this;
     }
 
@@ -44,6 +46,7 @@ class EntityMetaData
     public function setPrimaryKeyFieldNames(array $primaryKeyFieldnames)
     {
         $this->primaryKeyFieldnames = $primaryKeyFieldnames;
+
         return $this;
     }
 
@@ -55,6 +58,7 @@ class EntityMetaData
     public function setEntityClassName($entityClassName)
     {
         $this->entityClassName = $entityClassName;
+
         return $this;
     }
 

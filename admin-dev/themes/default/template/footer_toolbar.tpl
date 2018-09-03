@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -61,7 +61,7 @@
 
 				//override save and stay link label with submit button value
 				if (btn_submit.html().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
-					lbl_save_and_stay.find('span').html(btn_submit.html() + " {l s='and stay'} ");
+					lbl_save_and_stay.find('span').html(btn_submit.html() + " {l s='and stay' d='Admin.Actions'} ");
 			}
 
 			//hide standard submit button

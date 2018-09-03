@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,42 +18,68 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = {
+const config = {
   entry: [
     './js/theme.js'
   ],
   output: {
-    path: './public',
+    path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js'
   },
+  //devtool: 'source-map', // uncomment me to build source maps (really slow)
   module: {
     loaders: [{
       test: path.join(__dirname, 'js'),
-      loader: 'babel',
+      loader: 'babel-loader',
       query: {
         presets: ['es2015']
       }
     }, {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style', 'css!sass')
+      test: /\.(scss|sass)$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true,
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          }
+        ]
+      })
     }, {
-      test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
-    }, {
-      test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+      test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
       loader: 'file-loader?name=[hash].[ext]'
     }]
   },
   plugins: [
     new ExtractTextPlugin('theme.css'),
+  ]
+};
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: false,
       compress: {
@@ -68,5 +94,9 @@ module.exports = {
         comments: false
       }
     })
-  ]
-};
+  );
+} else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
+}
+
+module.exports = config;

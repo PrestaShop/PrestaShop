@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
+        <source>Contact us</source>
+        <target>Contact us</target>
+        <note>Context:
+File: modules/ps_contactinfo/nav.tpl:26</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
+        <source>Call us: [1]%phone%[/1]</source>
+        <target>Call us: [1]%phone%[/1]</target>
+        <note>Context:
+File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:32</note>
+      </trans-unit>
       <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
         <source>Store information</source>
         <target>Store information</target>
@@ -22,22 +38,6 @@ File: modules/ps_contactinfo/ps_contactinfo-rich.tpl:57</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_contactinfo/nav.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
-        <source>Call us: [1]%phone%[/1]</source>
-        <target>Call us: [1]%phone%[/1]</target>
-        <note>Context:
-File: modules/ps_contactinfo/nav.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
-        <source>Contact us</source>
-        <target>Contact us</target>
-        <note>Context:
-File: modules/ps_contactinfo/nav.tpl:26</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_contactinfo/ps_contactinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0bda3a05a6be2f106eb4f1da481bc7ce">
@@ -52,9 +52,9 @@ File: modules/ps_contactinfo/ps_contactinfo.tpl:32</note>
         <note>Context:
 File: modules/ps_contactinfo/ps_contactinfo.tpl:43</note>
       </trans-unit>
-      <trans-unit id="1b61f24345b084cbacad62fa2d22e59c">
-        <source>Email: %email%</source>
-        <target>Email: %email%</target>
+      <trans-unit id="a41346e4da379842644de7448cd7424e">
+        <source>Email: [1]%email%[/1]</source>
+        <target>Email: [1]%email%[/1]</target>
         <note>Context:
 File: modules/ps_contactinfo/ps_contactinfo.tpl:54</note>
       </trans-unit>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,7 @@ function update_customer_default_group()
     if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_')) {
         define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) and is_numeric($matches[1]))? $matches[1] : 3));
     }
-    $ps_customer_group = DB::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name = "PS_CUSTOMER_GROUP"', false);
+    $ps_customer_group = Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name = "PS_CUSTOMER_GROUP"', false);
     if ($ps_customer_group) {
         $str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
         $str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';

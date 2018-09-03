@@ -1,0 +1,58 @@
+// ==========================================================================
+// Extends
+// ==========================================================================
+
+@mixin m($modifier) {
+  &-#{$modifier} {
+    @content;
+  }
+}
+
+$ps-stars: (
+  "0":    "\E839",
+  "05":   "\E839",
+  "1":     "\E838",
+  "15":    "\E838\E839",
+  "2":     "\E838\E838",
+  "25":    "\E838\E838\E839",
+  "3":     "\E838\E838\E838",
+  "35":    "\E838\E838\E838\E838",
+  "4":     "\E838\E838\E838\E838",
+  "45":    "\E838\E838\E838\E838\E839",
+  "5":     "\E838\E838\E838\E838\E838"
+);
+
+// Generate modifier color classes
+@mixin stars($map) {
+  @each $theme, $stars in $map {
+    @include m($theme) {
+      display: inline-block;
+      position: absolute;
+      color: $gray-medium;
+      text-align: right;
+      left: 90px;
+      bottom: 50px;
+      &:before {
+        font-family: 'Material Icons';
+        content: "\E838\E838\E838\E838\E838";
+        color: $gray-light;
+        float: left;
+        font-size: 1.1em;
+        margin-right: 0.5em;
+        position: absolute;
+        left: -70px;
+        top: 0;
+      }
+
+      &:after {
+        position: absolute;
+        font-family: 'Material Icons';
+        content: $stars;
+        color: #FFD100;
+        font-size: 1.1em;
+        left: -70px;
+        top: 0;
+      }
+    }
+  }
+}

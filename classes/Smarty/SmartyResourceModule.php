@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,25 +40,26 @@ class SmartyResourceModuleCore extends Smarty_Resource_Custom
     /**
      * Fetch a template.
      *
-     * @param string $name   template name
+     * @param string $name template name
      * @param string $source template source
-     * @param int    $mtime  template modification timestamp (epoch)
+     * @param int $mtime template modification timestamp (epoch)
      */
     protected function fetch($name, &$source, &$mtime)
     {
         if ($this->isAdmin) {
             $source = '';
             $mtime = time();
+
             return;
         }
 
         foreach ($this->paths as $path) {
-            if (Tools::file_exists_cache($file = $path.$name)) {
+            if (Tools::file_exists_cache($file = $path . $name)) {
                 if (_PS_MODE_DEV_) {
                     $source = implode('', array(
-                        '<!-- begin '.$file.' -->',
+                        '<!-- begin ' . $file . ' -->',
                         file_get_contents($file),
-                        '<!-- end '.$file.' -->',
+                        '<!-- end ' . $file . ' -->',
                     ));
                 } else {
                     $source = file_get_contents($file);

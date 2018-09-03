@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="module-sorting-search-wording">
-                <span class="module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules.Feature') }}</span>
+                <span id="selected_modules" class="module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
                     data-title="{{ "Selection"|trans({}, 'Admin.Modules.Feature') }}"
                     data-content="{{ "Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules."|trans({}, 'Admin.Modules.Help') }}">
@@ -34,12 +34,8 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="module-sorting module-sorting-display pull-right">
-                <i id="module-sort-grid" data-switch="grid" class="material-icons module-sort-switch module-sort-active">view_module</i>
-                <i id="module-sort-list" data-switch="list" class="material-icons module-sort-switch">view_list</i>
-            </div>
-            <div class="module-sorting module-sorting-author pull-right">
-                <select class="c-select c-select-sm">
+            <div class="module-sorting module-sorting-author float-right">
+                <select id="sort_module" class="custom-select sort-component">
                   <option value="" disabled selected>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
                   <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
                   <option value="price">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>

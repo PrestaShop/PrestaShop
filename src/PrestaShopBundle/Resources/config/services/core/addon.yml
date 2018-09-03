@@ -1,0 +1,31 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.admin.module.repository:
+        class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+        arguments:
+            - "@prestashop.adapter.admin.data_provider.module"
+            - "@prestashop.adapter.data_provider.module"
+            - "@prestashop.core.module.updater"
+            - "@prestashop.adapter.legacy.logger"
+            - "@translator"
+            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+            - "@doctrine.cache.provider"
+        calls:
+            - [setPrestaTrustChecker, ['@prestashop.adapter.module.prestatrust.checker']]
+
+    prestashop.core.addon.theme.repository:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
+        arguments:
+          - "@prestashop.adapter.legacy.configuration"
+          - "@filesystem"
+          - "@=service('prestashop.adapter.legacy.context').getContext().shop"
+
+    prestashop.core.addon.theme.exporter:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter
+        arguments:
+          - "@prestashop.adapter.legacy.configuration"
+          - "@filesystem"
+          - "@prestashop.core.admin.lang.repository"
+          - "@prestashop.translation.theme.exporter"

@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminImagesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
+        <source>Delete selected items?</source>
+        <target>Delete selected items?</target>
+        <note>Context:
+File: controllers/admin/AdminImagesController.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="729a51874fe901b092899e9e8b31c97a">
+        <source>Are you sure?</source>
+        <target>Are you sure?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Context:
+File: controllers/admin/AdminShopUrlController.php:543</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6557717352c9b5d28da3b96bf546a389">
@@ -16,49 +46,51 @@ File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:42</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
-        <source>Delete selected items?</source>
-        <target>Delete selected items?</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:115</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/images/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="729a51874fe901b092899e9e8b31c97a">
-        <source>Are you sure?</source>
-        <target>Are you sure?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/images/content.tpl:122</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Context:
-File: controllers/admin/AdminShopUrlController.php:543</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="71a0384942a58e7418c2098eaea4fe0f">
         <source>Are you sure to delete this?</source>
         <target>Are you sure to delete this?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1248</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig:339</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1171</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig:266</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/invalid_token.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="db26e10564e958809d798e8048fcbc0a">
+        <source>Invalid security token</source>
+        <target>Invalid security token</target>
+        <note>Context:
+File: admin-dev/themes/default/template/invalid_token.tpl:85</note>
+      </trans-unit>
+      <trans-unit id="a4da6f31ab268a5310bc475e63ab92db">
+        <source>I understand the risks and I really want to display this page</source>
+        <target>I understand the risks and I really want to display this page</target>
+        <note>Context:
+File: admin-dev/themes/default/template/invalid_token.tpl:89</note>
+      </trans-unit>
+      <trans-unit id="5196611ad1bf27e9cef5375b038c04db">
+        <source>Take me out of here!</source>
+        <target>Take me out of here!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/invalid_token.tpl:92</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+        <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
+        <target>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:82</note>
       </trans-unit>
     </body>
   </file>
@@ -69,16 +101,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1171</no
         <target>No module has been installed.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/stats/menu.tpl:35</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/performance/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="98cb1c78dc57031530a646edadf2584d">
-        <source>This feature cannot be disabled because it is currently in use.</source>
-        <target>This feature cannot be disabled because it is currently in use.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/performance/helpers/form/form.tpl:37</note>
       </trans-unit>
     </body>
   </file>

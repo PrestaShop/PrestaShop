@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,7 +67,7 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 if (!defined('_PS_CACHE_DIR_')) {
-    $prestashopCacheDir =  _PS_ROOT_DIR_.'/app/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
+    $prestashopCacheDir =  _PS_ROOT_DIR_.'/var/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
     define('_PS_CACHE_DIR_',$prestashopCacheDir);
 }
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');

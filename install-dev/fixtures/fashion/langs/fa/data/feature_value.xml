@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<entity_feature_value>
+  <feature_value id="Polyester">
+    <value>پلی استر</value>
+  </feature_value>
+  <feature_value id="Wool">
+    <value>پشم</value>
+  </feature_value>
+  <feature_value id="Elastane">
+    <value>الاستان</value>
+  </feature_value>
+  <feature_value id="Cotton">
+    <value>پارچه ای</value>
+  </feature_value>
+  <feature_value id="Ruled">
+    <value>یکدست</value>
+  </feature_value>
+  <feature_value id="Plain">
+    <value>ساده</value>
+  </feature_value>
+  <feature_value id="Squarred">
+    <value>چهارگوش</value>
+  </feature_value>
+  <feature_value id="Doted">
+    <value>نقطه ای</value>
+  </feature_value>
+  <feature_value id="White">
+    <value>سفید</value>
+  </feature_value>
+  <feature_value id="Black">
+    <value>مشکی</value>
+  </feature_value>
+  <feature_value id="S">
+    <value>S</value>
+  </feature_value>
+  <feature_value id="M">
+    <value>M</value>
+  </feature_value>
+  <feature_value id="L">
+    <value>L</value>
+  </feature_value>
+  <feature_value id="XL">
+    <value>XL</value>
+  </feature_value>
+  <feature_value id="40x60cm">
+    <value>40x60 سانتی متر</value>
+  </feature_value>
+  <feature_value id="60x90cm">
+    <value>60x90 سانتی متر</value>
+  </feature_value>
+  <feature_value id="80x120cm">
+    <value>80x120 سانتی متر</value>
+  </feature_value>
+  <feature_value id="80x120cm_1">
+    <value>80x120 سانتی متر</value>
+  </feature_value>
+</entity_feature_value>

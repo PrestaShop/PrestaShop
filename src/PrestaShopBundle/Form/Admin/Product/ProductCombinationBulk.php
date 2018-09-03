@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -30,6 +31,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
  * This form class is responsible to generate the form for bulk combination feature
@@ -54,63 +60,69 @@ class ProductCombinationBulk extends CommonAbstractType
         $this->isoCode = $options['iso_code'];
         $this->priceDisplayPrecision = $options['price_display_precision'];
 
-        if($is_stock_management){
-            $builder->add('quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+        if ($is_stock_management) {
+            $builder->add('quantity', NumberType::class, [
                 'required' => true,
                 'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
-            ));
+            ]);
         }
 
-        $builder->add('cost_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+        $builder->add('cost_price', MoneyType::class, [
             'required' => false,
             'label' => $this->translator->trans('Cost Price', [], 'Admin.Catalog.Feature'),
             'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
             'currency' => $this->isoCode,
-        ))
-            ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+        ])
+            ->add('impact_on_weight', NumberType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
-            ))
-            ->add('impact_on_price_te', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+            ])
+            ->add('impact_on_price_te', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->isoCode,
-            ))
-            ->add('impact_on_price_ti', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
+            ])
+            ->add('impact_on_price_ti', MoneyType::class, [
                 'required' => false,
                 'mapped' => false,
                 'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->isoCode,
-            ))
-            ->add('date_availability', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
+            ])
+            ->add('date_availability', DatePickerType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
                 'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
-            ))
-            ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ])
+            ->add('reference', TextType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Reference', [], 'Admin.Catalog.Feature'),
-            ))
-            ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+                'empty_data' => '',
+            ])
+            ->add('minimal_quantity', NumberType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
-            ));
-
-
+            ])
+            ->add('low_stock_threshold', NumberType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
+            ])
+            ->add('low_stock_alert', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', [], 'Admin.Catalog.Feature'),
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'validation_groups' => false,
             'iso_code' => '',
             'price_display_precision' => '',
-        ));
+        ]);
     }
 
     public function getBlockPrefix()
     {
         return 'product_combination_bulk';
     }
-
 }

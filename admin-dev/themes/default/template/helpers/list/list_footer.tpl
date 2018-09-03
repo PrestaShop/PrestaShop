@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -28,7 +28,7 @@
 	<div class="col-lg-6">
 		{if $bulk_actions && $has_bulk_actions}
 		<div class="btn-group bulk-actions dropup">
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" {if $table}id="bulk_action_menu_{$table}"{/if}>
 				{l s='Bulk actions' d='Admin.Global'} <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">

@@ -4,12 +4,16 @@
     <name>Size</name>
     <public_name>Size</public_name>
   </attribute_group>
-  <attribute_group id="Shoes_Size">
-    <name>Shoe Size</name>
-    <public_name>Size</public_name>
-  </attribute_group>
   <attribute_group id="Color">
     <name>Color</name>
     <public_name>Color</public_name>
+  </attribute_group>
+  <attribute_group id="Dimension">
+    <name>Dimension</name>
+    <public_name>Dimension</public_name>
+  </attribute_group>
+  <attribute_group id="Paper_Type">
+    <name>Paper Type</name>
+    <public_name>Paper Type</public_name>
   </attribute_group>
 </entity_attribute_group>

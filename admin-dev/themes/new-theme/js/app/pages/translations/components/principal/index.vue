@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,45 +18,45 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <transition name="fade">
-    <div class="col-xs-9 card" v-if="principalReady">
-      <div class="p-a-1 row translations-wrapper">
+    <div class="col-sm-9 card" v-if="principalReady">
+      <div class="p-3 translations-wrapper">
         <PSAlert v-if="noResult" alertType="ALERT_TYPE_WARNING" :hasClose="false">
           {{noResultInfo}}
         </PSAlert>
-        <div class="translations-catalog" v-else>
-          <PSAlert v-if="searchActive" alertType="ALERT_TYPE_INFO" :hasClose="false">
+        <div class="translations-catalog row p-0" v-else>
+          <PSAlert v-if="searchActive" class="col-sm-12" alertType="ALERT_TYPE_INFO" :hasClose="false">
             {{searchInfo}}
           </PSAlert>
-          <div class="col-xs-8 p-t-1" >
-            <h1 class="domain-info">
+          <div class="col-sm-8 pt-3">
+            <h3 class="domain-info">
               <span>{{ currentDomain }}</span>
               <span>{{ currentDomainTotalTranslations }}</span>
               <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
-            </h1>
+            </h3>
           </div>
-          <div class="col-xs-4">
+          <div class="col-sm-4">
             <PSPagination
               :currentIndex="currentPagination"
               :pagesCount="pagesCount"
-              class="pull-xs-right"
+              class="float-sm-right"
               @pageChanged="onPageChanged"
             />
           </div>
-          <form class="col-xs-12"
+          <form class="col-sm-12"
             method="post"
             :action="saveAction"
             :isEdited="isEdited"
             @submit.prevent="saveTranslations"
           >
             <div class="row">
-              <div class="col-xs-12 m-b-2">
-                <PSButton :primary="true" type="submit" class="pull-xs-right">
+              <div class="col-sm-12 mb-2">
+                <PSButton :primary="true" type="submit" class="float-sm-right">
                   {{ trans('button_save') }}
                 </PSButton>
               </div>
@@ -72,11 +72,16 @@
               @editedAction="isEdited"
               >
             </TranslationInput>
-            <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
-              {{ trans('button_save') }}
-            </PSButton>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <PSButton :primary="true" type="submit" class="float-sm-right mt-3">
+                  {{ trans('button_save') }}
+                </PSButton>
+              </div>
+            </div>
           </form>
-          <div class="col-xs-12">
+          <div class="col-sm-12">
             <PSPagination
               :currentIndex="currentPagination"
               :pagesCount="pagesCount"
@@ -266,11 +271,8 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
 
-  .domain-info {
-    font-size: 1rem;
-  }
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s
   }

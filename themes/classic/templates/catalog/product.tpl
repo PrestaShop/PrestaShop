@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -110,7 +110,7 @@
                   {block name='product_pack'}
                     {if $packItems}
                       <section class="product-pack">
-                        <h3 class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</h3>
+                        <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                         {foreach from=$packItems item="product_pack"}
                           {block name='product_miniature'}
                             {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack}
@@ -132,9 +132,8 @@
                     {include file='catalog/_partials/product-additional-info.tpl'}
                   {/block}
 
-                  {block name='product_refresh'}
-                    <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
-                  {/block}
+                  {* Input to refresh product HTML removed, block kept for compatibility with themes *}
+                  {block name='product_refresh'}{/block}
                 </form>
               {/block}
 
@@ -204,7 +203,7 @@
                    {if $product.attachments}
                     <div class="tab-pane fade in" id="attachments" role="tabpanel">
                        <section class="product-attachments">
-                         <h3 class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</h3>
+                         <p class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</p>
                          {foreach from=$product.attachments item=attachment}
                            <div class="attachment">
                              <h4><a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">{$attachment.name}</a></h4>
@@ -234,7 +233,7 @@
     {block name='product_accessories'}
       {if $accessories}
         <section class="product-accessories clearfix">
-          <h3 class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</h3>
+          <p class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</p>
           <div class="products">
             {foreach from=$accessories item="product_accessory"}
               {block name='product_miniature'}

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="Clothes" id_shop="1">
+    <name>V&#xEA;tements</name>
+    <description>&lt;p&gt;&lt;span style="color:#333333;font-family:Arial, sans-serif, sans;font-size:13px;font-style:normal;font-weight:400;letter-spacing:normal;text-align:left;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;background-color:#ffffff;float:none;"&gt;&lt;span style="font-size:10pt;font-family:Arial;font-weight:normal;font-style:normal;color:#000000;"&gt;Retrouvez nos coups de &lt;span style="color:#333333;font-family:Arial, sans-serif, sans;font-size:13px;font-style:normal;font-weight:400;letter-spacing:normal;text-align:left;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;background-color:#ffffff;float:none;"&gt;c&#x153;ur&lt;/span&gt; mode, une s&#xE9;lection de pi&#xE8;ces tendances &#xE0; int&#xE9;grer &#xE0; votre garde-robe. Composez un style unique qui vous ressemble.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>vetements</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Men" id_shop="1">
+    <name>Hommes</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;T-shirts, pulls, sweats &#xE0; capuche et accessoires pour hommes. Des basiques et des cr&#xE9;ations originales pour tous les styles. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>hommes</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Women" id_shop="1">
+    <name>Femmes</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;T-shirts, pulls, sweats &#xE0; capuche et accessoires pour femmes. Des basiques et des cr&#xE9;ations originales pour tous les styles. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>femmes</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Accessoires</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Des objets et accessoires pour le bureau, la cuisine ou le salon. Faites de votre int&#xE9;rieur un espace qui vous ressemble.&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>accessoires</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Stationery" id_shop="1">
+    <name>Papeterie</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;color:#000000;"&gt;Carnets, agendas, accessoires de bureau et plus encore. Tout ce dont vous avez besoin pour joindre l'utile &#xE0; l'agr&#xE9;able, au travail ou &#xE0; la maison.&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>papeterie</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Home_Accessories" id_shop="1">
+    <name>Accessoires de maison</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Vous avez le sens du d&#xE9;tail ? Agr&#xE9;mentez votre int&#xE9;rieur avec notre s&#xE9;lection d'accessoires de maison.&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>accessoires-de-maison</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Art" id_shop="1">
+    <name>Art</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;color:#000000;"&gt;Affiches encadr&#xE9;es et images vectorielles, tout ce dont vous avez besoin pour donner de la personnalit&#xE9; &#xE0; vos murs ou donner vie &#xE0; vos projets cr&#xE9;atifs.&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>art</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+</entity_category>

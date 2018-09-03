@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core;
 
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
@@ -30,8 +31,10 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 class ContainerBuilder
 {
     /**
-     * Construct PrestaShop Core Service container
+     * Construct PrestaShop Core Service container.
+     *
      * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
+     *
      * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function build()

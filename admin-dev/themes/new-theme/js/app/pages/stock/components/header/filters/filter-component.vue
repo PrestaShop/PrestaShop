@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -27,35 +27,36 @@
     <PSTags
       v-if="!hasChildren"
       ref="tags"
-      class="form-control search search-input"
+      class="form-control search search-input mb-2"
       :tags="tags"
       :placeholder="hasPlaceholder?placeholder:''"
+      :hasIcon="true"
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
     <div v-if="hasChildren">
-        <PSTree
-          v-if="isOverview"
-          v-once
-          ref="tree"
-          :hasCheckbox="true"
-          :model="list"
-          @checked="onCheck"
-          :translations="PSTreeTranslations"
-        >
-        </PSTree>
-         <PSTree
-            v-else
-            ref="tree"
-            :hasCheckbox="true"
-            :model="list"
-            @checked="onCheck"
-            :translations="PSTreeTranslations"
-          >
+      <PSTree
+        v-if="isOverview"
+        v-once
+        ref="tree"
+        :hasCheckbox="true"
+        :model="list"
+        @checked="onCheck"
+        :translations="PSTreeTranslations"
+      >
+      </PSTree>
+      <PSTree
+        v-else
+        ref="tree"
+        :hasCheckbox="true"
+        :model="list"
+        @checked="onCheck"
+        :translations="PSTreeTranslations"
+      >
       </PSTree>
     </div>
     <ul
-      class="m-t-1"
+      class="mt-1"
       v-else
     >
       <li
@@ -185,18 +186,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  .filter-container {
-    border: $gray-light 1px solid;
-    padding: 10px;
-  }
-  .item {
-    margin-bottom: 5px;
-  }
-  ul {
-    list-style: none;
-    padding-left: 0;
-  }
-</style>

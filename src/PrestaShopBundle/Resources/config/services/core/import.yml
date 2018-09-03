@@ -1,0 +1,29 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.import.file_uploader:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
+        arguments:
+            - '@translator'
+            - '@prestashop.core.import.dir'
+
+    prestashop.core.import.file_finder:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\FileFinder'
+        arguments:
+            - '@prestashop.core.import.dir'
+
+    prestashop.core.import.dir:
+        class: 'PrestaShop\PrestaShop\Core\Import\ImportDirectory'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.import.file_removal:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
+        arguments:
+            - '@prestashop.core.import.dir'
+
+    prestashop.core.import.sample.file_provider:
+        class: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

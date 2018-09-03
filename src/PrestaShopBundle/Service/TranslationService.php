@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,20 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Service;
 
+use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
-class TranslationService {
-
+class TranslationService
+{
     /**
      * @var Container
      */
@@ -40,6 +41,7 @@ class TranslationService {
 
     /**
      * @param $lang
+     *
      * @return mixed
      */
     public function langToLocale($lang)
@@ -51,8 +53,10 @@ class TranslationService {
 
     /**
      * @param $locale
+     *
      * @return mixed
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function findLanguageByLocale($locale)
     {
@@ -61,7 +65,7 @@ class TranslationService {
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
         if (!$lang) {
-            throw new \Exception('The language for this locale is not available');
+            throw new Exception('The language for this locale is not available');
         }
 
         return $lang;
@@ -69,7 +73,8 @@ class TranslationService {
 
     /**
      * @return mixed
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     private function getLangToLocalesMapping()
     {
@@ -80,7 +85,7 @@ class TranslationService {
 
         $jsonLastErrorCode = json_last_error();
         if (JSON_ERROR_NONE !== $jsonLastErrorCode) {
-            throw new \Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
+            throw new Exception('The legacy to standard locales JSON could not be decoded', $jsonLastErrorCode);
         }
 
         return $legacyToStandardLocales;
@@ -135,15 +140,17 @@ class TranslationService {
     }
 
     /**
-     * List translation for domain
+     * List translation for domain.
      *
      * @param $locale
      * @param $domain
      * @param null $theme
      * @param null $search
+     *
      * @return array
      */
-    public function listDomainTranslation($locale, $domain, $theme = null, $search = null){
+    public function listDomainTranslation($locale, $domain, $theme = null, $search = null)
+    {
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
@@ -151,7 +158,7 @@ class TranslationService {
             $translationProvider = $this->container->get('prestashop.translation.search_provider');
         }
 
-        if ('Messages' === $domain){
+        if ('Messages' === $domain) {
             $domain = 'messages';
         }
 
@@ -184,8 +191,8 @@ class TranslationService {
         foreach ($defaultCatalog as $key => $message) {
             $data = array(
                 'default' => $key,
-                'xliff' => (array_key_exists($key, (array)$xliffCatalog) ? $xliffCatalog[$key] : null),
-                'database' => (array_key_exists($key, (array)$dbCatalog) ? $dbCatalog[$key] : null),
+                'xliff' => (array_key_exists($key, (array) $xliffCatalog) ? $xliffCatalog[$key] : null),
+                'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
             );
 
@@ -194,7 +201,7 @@ class TranslationService {
                 if (empty($data['xliff']) && empty($data['database'])) {
                     array_unshift($domains['data'], $data);
                 } else {
-                    array_push($domains['data'], $data);
+                    $domains['data'][] = $data;
                 }
             }
         }
@@ -203,15 +210,18 @@ class TranslationService {
     }
 
     /**
-     * Check if data contains search word
+     * Check if data contains search word.
      *
      * @param $search
      * @param $data
+     *
      * @return bool
      */
-    private function dataContainsSearchWord($search, $data) {
+    private function dataContainsSearchWord($search, $data)
+    {
         if (is_string($search)) {
             $search = strtolower($search);
+
             return false !== strpos(strtolower($data['default']), $search) ||
                 false !== strpos(strtolower($data['xliff']), $search) ||
                 false !== strpos(strtolower($data['database']), $search);
@@ -232,15 +242,15 @@ class TranslationService {
         return false;
     }
 
-
     /**
-     * Save a translation in database
+     * Save a translation in database.
      *
      * @param $lang
      * @param $domain
      * @param $key
      * @param $translationValue
      * @param null $theme
+     *
      * @return bool
      */
     public function saveTranslationMessage($lang, $domain, $key, $translationValue, $theme = null)
@@ -258,7 +268,7 @@ class TranslationService {
                 'lang' => $lang,
                 'domain' => $domain,
                 'key' => $key,
-                'theme' => $theme
+                'theme' => $theme,
             ));
 
         if (is_null($translation)) {
@@ -283,6 +293,7 @@ class TranslationService {
             foreach ($violations as $violation) {
                 $logger->error($violation->getMessage());
             }
+
             return false;
         }
 
@@ -293,7 +304,7 @@ class TranslationService {
             $entityManager->flush();
 
             $updatedTranslationSuccessfully = true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $logger->error($exception->getMessage());
         }
 
@@ -301,12 +312,13 @@ class TranslationService {
     }
 
     /**
-     * Reset translation from database
+     * Reset translation from database.
      *
      * @param $lang
      * @param $domain
      * @param $key
      * @param null $theme
+     *
      * @return bool
      */
     public function resetTranslationMessage($lang, $domain, $key, $theme = null)
@@ -335,7 +347,7 @@ class TranslationService {
             $entityManager->flush();
 
             $resetTranslationSuccessfully = true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->container->get('logger')->error($exception->getMessage());
         }
 

@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.admin.import.form_builder:
+        class: 'Symfony\Component\Form\FormBuilder'
+        factory: 'form.factory:createNamedBuilder'
+        arguments:
+            - ''
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'

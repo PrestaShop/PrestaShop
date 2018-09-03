@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShopBundle\Entity;
 
@@ -33,7 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AdminFilter.
  *
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_idx", columns={"employee", "shop", "controller", "action"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AdminFilterRepository")
  */
 class AdminFilter
 {
@@ -232,7 +231,7 @@ class AdminFilter
             'last_offset' => 0,
             'last_limit' => 20,
             'last_orderBy' => 'id_product',
-            'last_sortOrder' => 'asc',
+            'last_sortOrder' => 'desc',
         );
     }
 
@@ -315,7 +314,7 @@ class AdminFilter
                         $filteredSubjectWithoutOperator = 0;
                     }
 
-                    return $operator.$filteredSubjectWithoutOperator;
+                    return $operator . $filteredSubjectWithoutOperator;
                 }
             };
         };

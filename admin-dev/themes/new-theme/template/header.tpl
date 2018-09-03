@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -36,6 +36,7 @@
   <script type="text/javascript">
     var help_class_name = '{$controller_name|@addcslashes:'\''}';
     var iso_user = '{$iso_user|@addcslashes:'\''}';
+    var lang_is_rtl = '{$lang_is_rtl|intval}';
     var full_language_code = '{$full_language_code|@addcslashes:'\''}';
     var full_cldr_language_code = '{$full_cldr_language_code|@addcslashes:'\''}';
     var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';

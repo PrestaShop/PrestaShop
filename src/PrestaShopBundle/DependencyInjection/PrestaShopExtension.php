@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -43,8 +44,10 @@ class PrestaShopExtension extends Extension
         $configuration = new AddOnsConfiguration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $loader->load('services.yml');
+
+        $container->setParameter('prestashop.addons.prestatrust.enabled', $config['addons']['prestatrust']['enabled']);
 
         $hasVerifySslParameter = $container->hasParameter('addons.api_client.verify_ssl');
 
@@ -58,10 +61,6 @@ class PrestaShopExtension extends Extension
         if (!$container->hasParameter('prestashop.addons.api_client.ttl')) {
             $container->setParameter('prestashop.addons.api_client.ttl', $config['addons']['api_client']['ttl']);
         }
-
-        $this->addClassesToCompile(array(
-            $container->getDefinition('prestashop.router')->getClass(),
-        ));
     }
 
     /**

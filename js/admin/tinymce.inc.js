@@ -45,6 +45,7 @@ function tinySetup(config) {
     config.selector = '.' + config.editor_selector;
   }
 
+
   var default_config = {
     selector: ".rte",
     plugins: "align colorpicker link image filemanager table media placeholder advlist code table autoresize",
@@ -55,6 +56,7 @@ function tinySetup(config) {
     filemanager_title: "File manager",
     external_plugins: {"filemanager": baseAdminDir + "filemanager/plugin.min.js"},
     language: iso_user,
+    content_style : (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
     skin: "prestashop",
     menubar: false,
     statusbar: false,
