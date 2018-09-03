@@ -378,7 +378,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get commands bus to execute commands
+     * Get commands bus to execute commands.
      *
      * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
      */
@@ -388,7 +388,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get query bus to execute queries
+     * Get query bus to execute queries.
      *
      * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
      */
