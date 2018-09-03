@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
- * Class MultishopFeature provides data about multishop feature usage
+ * Class MultishopFeature provides data about multishop feature usage.
  *
  * @internal
  */

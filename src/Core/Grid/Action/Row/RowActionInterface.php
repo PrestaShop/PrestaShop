@@ -94,7 +94,7 @@ interface RowActionInterface
     public function setOptions(array $options);
 
     /**
-     * Check if action is applicable for given record
+     * Check if action is applicable for given record.
      *
      * @param array $record
      *

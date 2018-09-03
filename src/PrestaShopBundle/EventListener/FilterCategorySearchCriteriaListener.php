@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 
 /**
- * Class FilterCategorySearchCriteriaListener updates category search criteria filters with resolved category parent id
+ * Class FilterCategorySearchCriteriaListener updates category search criteria filters with resolved category parent id.
  */
 class FilterCategorySearchCriteriaListener
 {

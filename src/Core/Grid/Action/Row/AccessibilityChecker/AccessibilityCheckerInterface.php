@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 
 /**
- * Interface ApplicabilityCheckerInterface
+ * Interface ApplicabilityCheckerInterface.
  */
 interface AccessibilityCheckerInterface
 {
     /**
-     * Check if record is applicable for row action
+     * Check if record is applicable for row action.
      *
      * @param array $record
      *
