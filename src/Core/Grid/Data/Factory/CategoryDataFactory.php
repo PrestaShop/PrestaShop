@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CategoryDataFactory decorates DoctrineGridDataFactory configured for categories to modify category records
+ * Class CategoryDataFactory decorates DoctrineGridDataFactory configured for categories to modify category records.
  */
 final class CategoryDataFactory implements GridDataFactoryInterface
 {
@@ -65,7 +65,7 @@ final class CategoryDataFactory implements GridDataFactoryInterface
     }
 
     /**
-     * Modify category records
+     * Modify category records.
      *
      * @param array $records
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,12 +32,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class CategoryController is responsible for "Sell > Catalog > Categories" page
+ * Class CategoryController is responsible for "Sell > Catalog > Categories" page.
  */
 class CategoryController extends FrameworkBundleAdminController
 {
     /**
-     * Show categories listing
+     * Show categories listing.
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -60,7 +60,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show category for editing
+     * Show category for editing.
      *
      * @param int $categoryId
      *

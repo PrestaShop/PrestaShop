@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -55,7 +55,6 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextShopId
     ) {
         parent::__construct($connection, $dbPrefix);
-
 
         $this->contextLangId = $contextLangId;
         $this->contextShopId = $contextShopId;

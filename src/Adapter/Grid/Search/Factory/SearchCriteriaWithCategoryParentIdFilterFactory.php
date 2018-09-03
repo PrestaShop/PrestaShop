@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use Shop;
 use Tools;
 
 /**
- * Class SearchCriteriaWithCategoryParentIdFilterFactory
+ * Class SearchCriteriaWithCategoryParentIdFilterFactory.
  */
 final class SearchCriteriaWithCategoryParentIdFilterFactory implements DecoratedSearchCriteriaFactory
 {

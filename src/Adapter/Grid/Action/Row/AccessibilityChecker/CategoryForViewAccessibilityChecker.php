@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Grid\Action\Row\AccessibilityChecker;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 
 /**
- * Class CategoryForViewAccessibilityChecker
+ * Class CategoryForViewAccessibilityChecker.
  *
  * @internal
  */

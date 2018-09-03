@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class AverageProductsInCategoryKpi
+ * Class AverageProductsInCategoryKpi.
  */
 final class AverageProductsInCategoryKpi implements KpiInterface
 {

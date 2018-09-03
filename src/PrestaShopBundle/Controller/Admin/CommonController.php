@@ -280,7 +280,7 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Grid search
+     * Process Grid search.
      *
      * @param Request $request
      * @param string $gridDefinitionFactoryService
