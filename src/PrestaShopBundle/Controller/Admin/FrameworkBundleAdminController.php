@@ -367,7 +367,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Present provided grid
+     * Present provided grid.
      *
      * @param GridInterface $grid
      *
