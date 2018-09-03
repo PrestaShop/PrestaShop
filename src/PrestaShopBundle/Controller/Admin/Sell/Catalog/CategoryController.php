@@ -46,13 +46,9 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CategoryFilters $filters)
     {
-        $searchCriteriaFactory =
-            $this->get('prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id');
-        $searchCriteria = $searchCriteriaFactory->createFrom($filters);
-
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $categoryGridFactory = $this->get('prestashop.core.grid.factory.category');
-        $categoryGrid = $categoryGridFactory->getGrid($searchCriteria);
+        $categoryGrid = $categoryGridFactory->getGrid($filters);
 
         $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
 
