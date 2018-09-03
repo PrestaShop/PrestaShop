@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Search\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Interface DecoratedSearchCriteriaFactory defines contract for decorated search criteria factory
+ * Interface DecoratedSearchCriteriaFactory defines contract for decorated search criteria factory.
  */
 interface DecoratedSearchCriteriaFactory
 {
     /**
-     * Create new search criteria
+     * Create new search criteria.
      *
      * @param SearchCriteriaInterface $searchCriteria
      *

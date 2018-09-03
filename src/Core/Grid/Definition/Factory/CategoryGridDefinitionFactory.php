@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -45,7 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class CategoryGridDefinitionFactory builds Grid definition for Categories listing
+ * Class CategoryGridDefinitionFactory builds Grid definition for Categories listing.
  */
 final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
