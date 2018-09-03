@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,11 +39,12 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing
      *
+     * @param Request $request
      * @param CategoryFilters $filters
      *
      * @return Response
      */
-    public function indexAction(CategoryFilters $filters)
+    public function indexAction(Request $request, CategoryFilters $filters)
     {
         $searchCriteriaFactory =
             $this->get('prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id');
@@ -57,6 +59,7 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
             'categoriesGrid' => $gridPresenter->present($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
+            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
         ]);
     }
 
@@ -75,5 +78,41 @@ class CategoryController extends FrameworkBundleAdminController
                 'updatecategory' => 1,
             ])
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function getCategoryToolbarButtons(Request $request)
+    {
+        $toolbarButtons = [];
+
+        if ($this->get('prestashop.adapter.feature.multishop')->isActive()) {
+            $toolbarButtons['add_root'] = [
+                'href' => $this->getAdminLink('AdminCategories', [
+                    'addcategoryroot' => 1,
+                ]),
+                'desc' => $this->trans('Add new root category', 'Admin.Catalog.Feature'),
+                'icon' => 'add_circle_outline',
+            ];
+        }
+
+        $urlParams = [
+            'addcategory' => 1,
+        ];
+
+        if ($request->query->has('id_category')) {
+            $urlParams['id_parent'] = $request->query->get('id_category');
+        }
+
+        $toolbarButtons['add'] = [
+            'href' => $this->getAdminLink('AdminCategories', $urlParams),
+            'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
     }
 }
