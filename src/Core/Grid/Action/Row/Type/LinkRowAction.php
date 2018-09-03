@@ -52,11 +52,27 @@ final class LinkRowAction extends AbstractRowAction
             ])
             ->setDefaults([
                 'confirm_message' => '',
+                'is_applicable_callback' => null,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('confirm_message', 'string')
+            ->setAllowedTypes('is_applicable_callback', ['callable', 'null'])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicable(array $record)
+    {
+        $options = $this->getOptions();
+
+        if (is_callable($options['is_applicable_callback'])) {
+            return call_user_func($options['is_applicable_callback'], [$record]);
+        }
+
+        return parent::isApplicable($record);
     }
 }

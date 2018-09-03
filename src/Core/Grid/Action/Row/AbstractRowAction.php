@@ -128,6 +128,14 @@ abstract class AbstractRowAction implements RowActionInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isApplicable(array $record)
+    {
+        return true;
+    }
+
+    /**
      * Default action options configuration. You can override it if options are needed.
      *
      * @param OptionsResolver $resolver
