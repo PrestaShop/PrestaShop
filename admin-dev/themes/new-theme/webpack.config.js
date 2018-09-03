@@ -100,7 +100,10 @@ const config = {
     ],
     translation_settings: [
       './js/pages/translation-settings'
-    ]
+    ],
+    webservice: [
+      './js/pages/webservice'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),

@@ -24,41 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * This Column is used to display booleans.
- * - it will display an icon instead of the value
- * - if user clicks on it, this triggers a toggle of the boolean value.
+ * Class WebserviceFilters is responsible for providing default values for webservice account list.
  */
-final class ToggleColumn extends AbstractColumn
+final class WebserviceFilters extends Filters
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public static function getDefaults()
     {
-        return 'toggle';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'field',
-                'primary_field',
-                'route',
-                'route_param_id',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('primary_field', 'string')
-            ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_param_id', 'string');
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_webservice_account',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }

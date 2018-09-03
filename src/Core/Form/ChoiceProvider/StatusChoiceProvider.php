@@ -24,41 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * This Column is used to display booleans.
- * - it will display an icon instead of the value
- * - if user clicks on it, this triggers a toggle of the boolean value.
+ * Class StatusChoiceProvider is responsible for providing choices for list statuses filter criteria.
  */
-final class ToggleColumn extends AbstractColumn
+final class StatusChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var TranslatorInterface
      */
-    public function getType()
+    private $translator;
+
+    /**
+     * StatusChoiceProvider constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
-        return 'toggle';
+        $this->translator = $translator;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getChoices()
     {
-        $resolver
-            ->setRequired([
-                'field',
-                'primary_field',
-                'route',
-                'route_param_id',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('primary_field', 'string')
-            ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_param_id', 'string');
+        return [
+            $this->translator->trans('Yes', [], 'Admin.Global') => 1,
+            $this->translator->trans('No', [], 'Admin.Global') => 0,
+        ];
     }
 }
