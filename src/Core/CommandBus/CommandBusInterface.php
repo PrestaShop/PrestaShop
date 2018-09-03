@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 /**
- * Interface CommandBusInterface defines contract for Commands bus
+ * Interface CommandBusInterface defines contract for Commands bus.
  */
 interface CommandBusInterface
 {
     /**
-     * Handle command
+     * Handle command.
      *
      * @param object $command
      */

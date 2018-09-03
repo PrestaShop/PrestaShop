@@ -366,7 +366,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get commands bus to execute commands
+     * Get commands bus to execute commands.
      *
      * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
      */
@@ -374,8 +374,9 @@ class FrameworkBundleAdminController extends Controller
     {
         return $this->get('prestashop.core.command_bus.tactician_command_bus_adapter');
     }
+
     /**
-     * Get query bus to execute queries
+     * Get query bus to execute queries.
      *
      * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
      */
