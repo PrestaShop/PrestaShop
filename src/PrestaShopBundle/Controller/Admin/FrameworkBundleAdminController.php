@@ -384,7 +384,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getCommandBus()
     {
-        return $this->get('prestashop.core.command_bus.tactician_command_bus_adapter');
+        return $this->get('prestashop.core.command_bus');
     }
 
     /**
@@ -394,6 +394,6 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getQueryBus()
     {
-        return $this->get('prestashop.core.command_bus.tactician_query_bus_adapter');
+        return $this->get('prestashop.core.query_bus');
     }
 }
