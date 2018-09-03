@@ -814,10 +814,6 @@ class LinkCore
             $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
         }
 
-        if (is_null($routeName)) {
-            $routeName = $this->searchRouteFromModules($controller);
-        }
-
         if (!is_null($routeName)) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
@@ -830,36 +826,15 @@ class LinkCore
     }
 
     /**
-     * @param string $controller
-     * @return string|null
-     * @throws PrestaShopException
-     */
-    private function searchRouteFromModules($controller)
-    {
-        $modulesRoutes = Hook::exec('actionSymfonyModuleRoutes', array(), null, true);
-        if (is_array($modulesRoutes) && count($modulesRoutes) > 0) {
-            foreach ($modulesRoutes as $moduleName => $moduleRoutes) {
-                foreach ($moduleRoutes as $moduleRoute) {
-                    if (isset($moduleRoute['route_name']) && isset($moduleRoute['controller']) && $moduleRoute['controller'] == $controller) {
-                        return $moduleRoute['route_name'];
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * @param \Symfony\Component\Routing\RouterInterface $sfRouter
-     * @param string $controller
+     * @param string                                     $controller
      *
      * @return string|null
      */
     private function searchRouteFromRouter(\Symfony\Component\Routing\RouterInterface $sfRouter, $controller)
     {
         /**
-         * @var string $routeName
+         * @var string                           $routeName
          * @var \Symfony\Component\Routing\Route $route
          */
         foreach ($sfRouter->getRouteCollection() as $routeName => $route) {
