@@ -123,6 +123,7 @@ services:
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'category', 'action': 'index'})"
             - "@=service('router').generate('admin_category_listing')"
+            - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
         public: true
 
     # Grid factories

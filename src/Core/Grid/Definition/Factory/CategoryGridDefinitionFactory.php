@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
@@ -59,13 +60,23 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectActionUrl;
 
     /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $categoryForViewAccessibilityChecker;
+
+    /**
      * @param string $resetActionUrl
      * @param string $redirectActionUrl
+     * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
-    public function __construct($resetActionUrl, $redirectActionUrl)
-    {
+    public function __construct(
+        $resetActionUrl,
+        $redirectActionUrl,
+        AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
+    ) {
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectActionUrl = $redirectActionUrl;
+        $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
     }
 
     /**
@@ -263,6 +274,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_category_listing',
                     'route_param_name' => 'id_category',
                     'route_param_field' => 'id_category',
+                    'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
                 ])
             )
             ->add((new LinkRowAction('edit'))
