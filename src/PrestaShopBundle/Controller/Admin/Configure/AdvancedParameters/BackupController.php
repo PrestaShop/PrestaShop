@@ -71,7 +71,7 @@ class BackupController extends FrameworkBundleAdminController
         }
 
         $backupsGridFactory = $this->get('prestashop.core.grid.factory.backup');
-        $backupGrid = $backupsGridFactory->createUsingSearchCriteria($filters);
+        $backupGrid = $backupsGridFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -363,5 +364,17 @@ class FrameworkBundleAdminController extends Controller
     protected function getAdminLink($controller, array $params, $withToken = true)
     {
         return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
+    }
+
+    /**
+     * Present provided grid.
+     *
+     * @param GridInterface $grid
+     *
+     * @return array
+     */
+    protected function presentGrid(GridInterface $grid)
+    {
+        return $this->get('prestashop.core.grid.presenter.grid_presenter')->present($grid);
     }
 }
