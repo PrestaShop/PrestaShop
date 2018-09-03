@@ -258,8 +258,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new RowActionCollection())
             ->add((new LinkRowAction('view'))
-                ->setName($this->trans('View', [], 'Admin.Actions'))
-                ->setIcon('search')
+                ->setIcon('zoom_in')
                 ->setOptions([
                     'route' => 'admin_category_listing',
                     'route_param_name' => 'id_category',
