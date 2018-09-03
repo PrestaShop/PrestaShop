@@ -92,4 +92,13 @@ interface RowActionInterface
      * @return self
      */
     public function setOptions(array $options);
+
+    /**
+     * Check if action is applicable for given record
+     *
+     * @param array $record
+     *
+     * @return bool
+     */
+    public function isApplicable(array $record);
 }
