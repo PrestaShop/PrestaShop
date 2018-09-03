@@ -52,10 +52,15 @@ class CategoryController extends FrameworkBundleAdminController
 
         $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
 
+        $currentCategoryId = $filters->getFilters()['id_category_parent'];
+        $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
             'categoriesGrid' => $gridPresenter->present($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
+            'currentCategoryTree' => $categoryViewDataProvider->getTreeView($currentCategoryId),
+            'currentCategoryId' => $currentCategoryId,
         ]);
     }
 
