@@ -52,3 +52,10 @@ services:
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    prestashop.bundle.event_listener.filter_category_search_criteria:
+        class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
+        arguments:
+            - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
+        tags:
+            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onSearchCriteriaResolve }
