@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class LinkRowAction extends AbstractRowAction
@@ -52,13 +53,13 @@ final class LinkRowAction extends AbstractRowAction
             ])
             ->setDefaults([
                 'confirm_message' => '',
-                'is_applicable_callback' => null,
+                'accessibility_checker' => null,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('confirm_message', 'string')
-            ->setAllowedTypes('is_applicable_callback', ['callable', 'null'])
+            ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
         ;
     }
 
@@ -67,10 +68,14 @@ final class LinkRowAction extends AbstractRowAction
      */
     public function isApplicable(array $record)
     {
-        $options = $this->getOptions();
+        $accessibilityChecker = $this->getOptions()['accessibility_checker'];
 
-        if (is_callable($options['is_applicable_callback'])) {
-            return call_user_func($options['is_applicable_callback'], [$record]);
+        if ($accessibilityChecker instanceof AccessibilityCheckerInterface) {
+            return $accessibilityChecker->isGranted($record);
+        }
+
+        if (is_callable($accessibilityChecker)) {
+            return call_user_func($accessibilityChecker, $record);
         }
 
         return parent::isApplicable($record);
