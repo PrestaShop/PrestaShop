@@ -30,25 +30,27 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineQueryBuilderInterface defines contract to retrieve Doctrine query builders needed to get grid data.
+ * Interface DoctrineSearchCriteriaApplicatorInterface contract for doctrine query builder applicator.
  */
-interface DoctrineQueryBuilderInterface
+interface DoctrineSearchCriteriaApplicatorInterface
 {
     /**
-     * Get query that searches grid rows.
+     * Apply pagination on query builder.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param QueryBuilder $queryBuilder
      *
-     * @return QueryBuilder
+     * @return self
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria);
+    public function applyPagination(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder);
 
     /**
-     * Get query that counts grid rows.
+     * Apply sorting on query builder.
      *
-     * @param SearchCriteriaInterface|null $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param QueryBuilder $queryBuilder
      *
-     * @return QueryBuilder
+     * @return self
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria);
+    public function applySorting(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder);
 }

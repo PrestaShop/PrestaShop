@@ -34,24 +34,26 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 class DoctrineGridDataFactoryTest extends TestCase
 {
-    /**
-     * @var DoctrineGridDataFactory
-     */
-    private $doctrineDataProvider;
-
-    public function setUp()
-    {
-        $this->doctrineDataProvider = new DoctrineGridDataFactory($this->createDoctrineQueryBuilderMock());
-    }
-
     public function testItProvidesGridData()
     {
+        $hookDispatcher = $this->createHookDispatcherMock();
+        $hookDispatcher->expects($this->once())
+            ->method('dispatchWithParameters');
+
+        $doctrineGridDataFactory = new DoctrineGridDataFactory(
+            $this->createDoctrineQueryBuilderMock(),
+            $hookDispatcher,
+            'test_grid_id'
+        );
+
         $criteria = $this->createMock(SearchCriteriaInterface::class);
 
-        $data = $this->doctrineDataProvider->getData($criteria);
+        $data = $doctrineGridDataFactory->getData($criteria);
 
         $this->assertInstanceOf(GridDataInterface::class, $data);
         $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
@@ -91,5 +93,14 @@ class DoctrineGridDataFactoryTest extends TestCase
             ->willReturn($qb);
 
         return $doctrineQueryBuilder;
+    }
+
+    private function createHookDispatcherMock()
+    {
+        $hookDispatcher = $this->createMock(HookDispatcherInterface::class);
+        $hookDispatcher->method('dispatchWithParameters')
+            ->willReturn(null);
+
+        return $hookDispatcher;
     }
 }
