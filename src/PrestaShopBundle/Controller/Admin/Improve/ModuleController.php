@@ -124,9 +124,20 @@ class ModuleController extends ModuleAbstractController
                                ->presentCollection($category->modules);
         }
 
+        $bulkActions = [
+            'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
+            'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),
+            'bulk-enable' => $this->trans('Enable', 'Admin.Actions'),
+            'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
+            'bulk-enable-mobile' => $this->trans('Enable Mobile', 'Admin.Modules.Feature'),
+            'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
+        ];
+
+
         return $this->render(
             'PrestaShopBundle:Admin/Module:manage.html.twig',
             [
+                'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Manage installed modules', 'Admin.Modules.Feature'),
                 'categories' => $categories['categories'],
