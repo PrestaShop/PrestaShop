@@ -27,9 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -67,12 +71,32 @@ class CategoryController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Process bulk action for categories status enabling
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function processBulkStatusEnableAction(Request $request)
     {
+        $this->updateBulkStatus($request->request->get('categories_bulk'), CategoryStatus::ENABLED);
+
+        return $this->redirectToRoute('admin_category_listing');
     }
 
+    /**
+     * Process bulk action for categories status disabling
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function processBulkStatusDisableAction(Request $request)
     {
+        $this->updateBulkStatus($request->request->get('categories_bulk'), CategoryStatus::DISABLED);
+
+        return $this->redirectToRoute('admin_category_listing');
     }
 
     /**
@@ -90,6 +114,59 @@ class CategoryController extends FrameworkBundleAdminController
                 'updatecategory' => 1,
             ])
         );
+    }
+
+    /**
+     * Update categories status
+     *
+     * @param int[] $categoryIds
+     * @param string $newStatus
+     */
+    protected function updateBulkStatus(array $categoryIds, $newStatus)
+    {
+        try {
+            $command = new UpdateCategoriesStatusCommand(
+                $categoryIds,
+                new CategoryStatus($newStatus)
+            );
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleUpdateStatusException($e));
+        }
+    }
+
+    /**
+     * Handle exception when which occurs when updating category status
+     *
+     * @param CategoryException $e
+     *
+     * @return string Error message
+     */
+    protected function handleUpdateStatusException(CategoryException $e)
+    {
+        $type = get_class($e);
+
+        $errors = [
+            CategoryNotFoundException::class => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+                $this->trans('(cannot load object)', 'Admin.Notifications.Error')
+            ),
+            CannotUpdateCategoryStatusException::class =>
+                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errors[$type])) {
+            return $errors[$type];
+        }
+
+        return $this->trans('Failed to update the status', 'Admin.Notifications.Success');
     }
 
     /**
