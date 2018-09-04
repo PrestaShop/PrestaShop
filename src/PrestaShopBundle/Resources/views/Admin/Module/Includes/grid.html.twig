@@ -28,11 +28,13 @@
       {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level } %}
     {% endfor %}
   {% endif %}
+
   {% for module in modules %}
     {% block addon_card %}
       {% include 'PrestaShopBundle:Admin/Module/Includes:card_list.html.twig' with { 'module': module, 'origin': origin|default('none') } %}
     {% endblock %}
   {% endfor %}
+
   {% block addon_search_card %}
     {% if requireAddonsSearch is defined and requireAddonsSearch == true %}
       {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid_addons.html.twig'%}

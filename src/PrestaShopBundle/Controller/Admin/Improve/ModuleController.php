@@ -48,6 +48,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 use stdClass;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
@@ -114,20 +115,13 @@ class ModuleController extends ModuleAbstractController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
 
-        $modules = new stdClass();
-        foreach (['native_modules', 'theme_bundle', 'modules'] as $subpart) {
-            $modules->{$subpart} = [];
-        }
+        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts);
 
-        foreach ($installedProducts as $installedProduct) {
-            $modules->{$this->findModuleType($installedProduct, $modulesTheme)}[] = $installedProduct;
-        }
-
-        foreach ($modules as $moduleLabel => $modulesPart) {
-            $collection = AddonsCollection::createFrom($modulesPart);
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection);
-            $modules->{$moduleLabel} = $this->get('prestashop.adapter.presenter.module')
-                                           ->presentCollection($modulesPart);
+        foreach ($categories['categories']->subMenu as $category) {
+            $collection = AddonsCollection::createFrom($category->modules);
+            $modulesProvider->generateAddonsUrls($collection);
+            $category->modules = $this->get('prestashop.adapter.presenter.module')
+                               ->presentCollection($category->modules);
         }
 
         return $this->render(
@@ -135,10 +129,8 @@ class ModuleController extends ModuleAbstractController
             [
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Manage installed modules', 'Admin.Modules.Feature'),
-                'modules' => $modules,
-                'topMenuData' => $this->getTopMenuData(
-                    $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts)
-                ),
+                'categories' => $categories['categories'],
+                'topMenuData' => $this->getTopMenuData($categories),
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
                 'enableSidebar' => true,
@@ -760,6 +752,23 @@ class ModuleController extends ModuleAbstractController
         }
 
         return 'modules';
+    }
+
+    /**
+     * Find module category.
+     *
+     * @param ApiModule $installedProduct Installed product
+     * @param array $categories Available categories
+     */
+    private function findModuleCategory(ApiModule $installedProduct, array $categories)
+    {
+        foreach ($categories as $category) {
+            if ($category->name === $installedProduct->attributes->get('categoryName')) {
+                return $category->tab;
+            }
+        }
+
+        return CategoriesProvider::CATEGORY_OTHER;
     }
 
     private function checkPermissions(array $pageVoter)
