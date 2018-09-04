@@ -58,7 +58,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
  */
-class SqlRequestController extends FrameworkBundleAdminController
+class SqlManagerController extends FrameworkBundleAdminController
 {
     /**
      * Show list of saved SQL's.
