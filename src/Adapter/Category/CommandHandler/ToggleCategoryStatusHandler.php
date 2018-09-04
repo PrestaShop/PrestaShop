@@ -27,44 +27,39 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\UpdateCategoriesStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\ToggleCategoryStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
- * Class ChangeCategoriesStatusHandler
+ * Class ToggleCategoryStatusHandler
  *
  * @internal
  */
-final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandlerInterface
+final class ToggleCategoryStatusHandler implements ToggleCategoryStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws CannotUpdateCategoryStatusException
      * @throws CategoryNotFoundException
+     * @throws CannotUpdateCategoryStatusException
      */
-    public function handle(UpdateCategoriesStatusCommand $command)
+    public function handle(ToggleCategoryStatusCommand $command)
     {
-        $isActive = CategoryStatus::ENABLED === $command->getNewStatus()->getValue();
+        $entity = new Category($command->getCategoryId()->getValue());
 
-        foreach ($command->getCategoryIds() as $categoryId) {
-            $entity = new Category($categoryId->getValue());
-            $entity->active = $isActive;
+        if (!$entity->id) {
+            throw new CategoryNotFoundException(
+                sprintf('Category with id "%s" was not found', $command->getCategoryId()->getValue())
+            );
+        }
 
-            if (!$entity->id) {
-                throw new CategoryNotFoundException(
-                    sprintf('Category with id "%s" was not found', $categoryId->getValue())
-                );
-            }
-
-            if (!$entity->update()) {
-                throw new CannotUpdateCategoryStatusException(sprintf(
-                    'Cannot update status for category with id "%s"', $categoryId->getValue()
-                ));
-            }
+        if (!$entity->toggleStatus()) {
+            throw new CannotUpdateCategoryStatusException(sprintf(
+                'Cannot update status for category with id "%s"',
+                $command->getCategoryId()->getValue()
+            ));
         }
     }
 }

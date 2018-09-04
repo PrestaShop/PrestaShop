@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -69,6 +71,31 @@ class CategoryController extends FrameworkBundleAdminController
             'currentCategoryTree' => $categoryViewDataProvider->getTreeView($currentCategoryId),
             'currentCategory' => $categoryDataProvider->getCategory($currentCategoryId),
         ]);
+    }
+
+    /**
+     * Toggle category status
+     *
+     * @param int $categoryId
+     *
+     * @return RedirectResponse
+     */
+    public function processStatusToggleAction($categoryId)
+    {
+        try {
+            $command = new ToggleCategoryStatusCommand(new CategoryId($categoryId));
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been updated successfully', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleUpdateStatusException($e));
+        }
+
+        return $this->redirectToRoute('admin_category_listing');
     }
 
     /**
