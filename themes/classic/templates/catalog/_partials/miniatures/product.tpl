@@ -70,7 +70,10 @@
               {hook h='displayProductPriceBlock' product=$product type="before_price"}
 
               <span class="sr-only">{l s='Price' d='Shop.Theme.Catalog'}</span>
-              <span itemprop="price" class="price">{$product.price}</span>
+              <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <span itemprop="price" class="price" content="{$product.price_amount}">{$product.price}</span>
+                <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
+              </span>
 
               {hook h='displayProductPriceBlock' product=$product type='unit_price'}
 
