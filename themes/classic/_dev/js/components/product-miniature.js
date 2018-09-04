@@ -28,9 +28,9 @@ export default class ProductMinitature {
   init() {
     $('.js-product-miniature').each((index, element) => {
       const FLAG_MARGIN = 10;
-      let discountElems = $(element).find('.discount-product');
-      let onSaleElems =  $(element).find('.on-sale');
-      let newElems = $(element).find('.new');
+      const discountElems = $(element).find('.discount-product');
+      const onSaleElems =  $(element).find('.on-sale');
+      const newElems = $(element).find('.new');
 
       if (discountElems.length) {
         newElems.css('top', discountElems.height() * 2 + FLAG_MARGIN);
