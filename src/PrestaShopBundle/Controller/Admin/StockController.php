@@ -40,6 +40,9 @@ class StockController extends FrameworkBundleAdminController
      */
     public function overviewAction()
     {
-        return parent::overviewAction();
+        return array_merge(parent::overviewAction(), [
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('stock'),
+        ]);
     }
 }
