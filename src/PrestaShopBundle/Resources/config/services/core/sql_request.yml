@@ -10,5 +10,5 @@ services:
     prestashop.core.sql_manager.configuration.sql_request_configuration:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Configuration\SqlRequestConfiguration'
         arguments:
-            - '@prestashop.core.command_bus.tactician_command_bus_adapter'
-            - '@prestashop.core.command_bus.tactician_query_bus_adapter'
+            - '@prestashop.core.command_bus'
+            - '@prestashop.core.query_bus'
