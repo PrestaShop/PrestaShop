@@ -27,16 +27,28 @@
 namespace PrestaShop\PrestaShop\Core\Form;
 
 /**
- * Interface EntityFormDataProviderInterface
+ * Class NumericEntityIdentifier stores numeric entity identifier
  */
-interface EntityFormDataProviderInterface
+final class NumericEntityIdentifier implements EntityIdentifierInterface
 {
     /**
-     * Get entity form data
-     *
-     * @param EntityIdentifierInterface $entityId
-     *
-     * @return array
+     * @var int
      */
-    public function getData(EntityIdentifierInterface $entityId);
+    private $numericId;
+
+    /**
+     * @param int $numericId
+     */
+    public function __construct($numericId)
+    {
+        $this->numericId = (int) $numericId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->numericId;
+    }
 }

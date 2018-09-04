@@ -31,9 +31,9 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class EntityFormHandler
+ * Class EntityFormFactory
  */
-final class EntityFormHandler implements EntityFormHandlerInterface
+final class EntityFormFactory implements EntityFormFactoryInterface
 {
     /**
      * @var HookDispatcherInterface
@@ -92,7 +92,7 @@ final class EntityFormHandler implements EntityFormHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormFor($entityId)
+    public function getFormFor(EntityIdentifierInterface $entityId)
     {
         $entityData = $this->entityFormDataProvider->getData($entityId);
 
@@ -122,7 +122,7 @@ final class EntityFormHandler implements EntityFormHandlerInterface
             $formData
         );
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $this->entityName . 'FormBuilderModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $this->entityName . 'EntityFormBuilderModifier', [
             'form_builder' => $entityFormBuilder,
         ]);
 

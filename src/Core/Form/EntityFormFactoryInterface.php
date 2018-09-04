@@ -26,17 +26,35 @@
 
 namespace PrestaShop\PrestaShop\Core\Form;
 
+use Symfony\Component\Form\FormInterface;
+
 /**
- * Interface EntityFormDataProviderInterface
+ * Interface EntityFormHandlerInterface
  */
-interface EntityFormDataProviderInterface
+interface EntityFormFactoryInterface
 {
     /**
-     * Get entity form data
+     * Get entity form
+     *
+     * @return FormInterface
+     */
+    public function getForm();
+
+    /**
+     * Get form with data of given entity
      *
      * @param EntityIdentifierInterface $entityId
      *
-     * @return array
+     * @return FormInterface
      */
-    public function getData(EntityIdentifierInterface $entityId);
+    public function getFormFor(EntityIdentifierInterface $entityId);
+
+    /**
+     * Get entity form with provided data
+     *
+     * @param array $data
+     *
+     * @return FormInterface
+     */
+    public function getFormWith(array $data);
 }

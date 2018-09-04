@@ -26,17 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Form;
 
-/**
- * Interface EntityFormDataProviderInterface
- */
-interface EntityFormDataProviderInterface
+interface EntityIdentifierInterface
 {
     /**
-     * Get entity form data
+     * Get entity id
      *
-     * @param EntityIdentifierInterface $entityId
-     *
-     * @return array
+     * @return mixed
      */
-    public function getData(EntityIdentifierInterface $entityId);
+    public function getId();
 }
