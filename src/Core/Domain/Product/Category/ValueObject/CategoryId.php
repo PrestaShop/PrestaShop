@@ -24,10 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryException;
 
-class CategoryException extends DomainException
+/**
+ * Class CategoryId
+ */
+class CategoryId
 {
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @param int $id
+     *
+     * @throws CategoryException
+     */
+    public function __construct($id)
+    {
+        $this->setId($id);
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws CategoryException
+     */
+    private function setId($id)
+    {
+        if (!is_numeric($id) || 0 >= $id) {
+            throw new CategoryException(
+                sprintf('Invalid Category id %s supplied', var_export($id, true))
+            );
+        }
+
+        $this->id = (int) $id;
+    }
 }
