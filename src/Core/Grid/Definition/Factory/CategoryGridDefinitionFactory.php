@@ -247,13 +247,13 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_listing',
+                    'submit_route' => 'admin_category_process_bulk_status_enable',
                 ])
             )
             ->add((new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_listing',
+                    'submit_route' => 'admin_category_process_bulk_status_disable',
                 ])
             )
             ->add((new SubmitBulkAction('delete_selection'))
