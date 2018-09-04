@@ -15,6 +15,20 @@ admin_category_listing_search:
         redirectQueryParamsToKeep:
             - 'id_category'
 
+admin_category_process_bulk_status_enable:
+    path: /bulk-status-enable
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusEnable
+        _legacy_controller: AdminCategories
+
+admin_category_process_bulk_status_disable:
+    path: /bulk-status-disable
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusDisable
+        _legacy_controller: AdminCategories
+
 admin_category_edit:
     path: /edit/{categoryId}
     methods: [GET]
