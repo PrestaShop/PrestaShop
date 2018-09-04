@@ -432,6 +432,35 @@ class CartControllerCore extends FrontController
                 'Shop.Notifications.Error'
             );
         }
+        
+        // Check minimal_quantity
+        if(!$this->id_product_attribute){
+            if($qty_to_check < $product->minimal_quantity){
+                 array_push(
+                     $this->{$ErrorKey},
+                     $this->trans(
+                         'The minimum purchase order quantity for the product %product% is %quantity%.',
+                         array('%product%' => $product->name, '%quantity%' => $product->minimal_quantity),
+                         'Shop.Notifications.Error'
+                     )
+                 );
+                 return;
+            }
+        }
+        else{
+             $combination = new Combination($this->id_product_attribute);
+             if($qty_to_check < $combination->minimal_quantity){
+                 array_push(
+                     $this->{$ErrorKey},
+                     $this->trans(
+                         'The minimum purchase order quantity for the product %product% is %quantity%.',
+                         array('%product%' => $product->name, '%quantity%' => $combination->minimal_quantity),
+                         'Shop.Notifications.Error'
+                     )
+                 );
+                 return;
+            }
+        }
 
         // If no errors, process product addition
         if (!$this->errors) {
