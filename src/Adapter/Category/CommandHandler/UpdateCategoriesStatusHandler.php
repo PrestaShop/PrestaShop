@@ -30,6 +30,7 @@ use Category;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\UpdateCategoriesStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
@@ -43,6 +44,7 @@ final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandl
      * {@inheritdoc}
      *
      * @throws CannotUpdateCategoryStatusException
+     * @throws CategoryNotFoundException
      */
     public function handle(UpdateCategoriesStatusCommand $command)
     {
@@ -51,6 +53,12 @@ final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandl
         foreach ($command->getCategoryIds() as $categoryId) {
             $entity = new Category($categoryId->getValue());
             $entity->active = $isActive;
+
+            if (!$entity->id) {
+                throw new CategoryNotFoundException(
+                    sprintf('Category with id "%s" was not found', $categoryId->getValue())
+                );
+            }
 
             if (!$entity->update()) {
                 throw new CannotUpdateCategoryStatusException(sprintf(
