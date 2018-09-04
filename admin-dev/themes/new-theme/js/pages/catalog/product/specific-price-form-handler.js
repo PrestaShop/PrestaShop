@@ -154,6 +154,7 @@ class SpecificPriceFormHandler {
     var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     $('#form_modal_cancel').click(() => this.closeEditPriceModalAndRemoveForm());
+    $('#form_modal_close').click(() => this.closeEditPriceModalAndRemoveForm());
 
     $('#form_modal_save').click(() => this.submitEditPriceForm());
 
