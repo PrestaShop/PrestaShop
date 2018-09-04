@@ -321,8 +321,7 @@ class FrameworkBundleAdminController extends Controller
             ) || (
                 ($action === 'duplicate' . $suffix) &&
                 ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
-            )
-        ;
+            );
     }
 
     /**
@@ -376,5 +375,25 @@ class FrameworkBundleAdminController extends Controller
     protected function presentGrid(GridInterface $grid)
     {
         return $this->get('prestashop.core.grid.presenter.grid_presenter')->present($grid);
+    }
+
+    /**
+     * Get commands bus to execute commands.
+     *
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+     */
+    protected function getCommandBus()
+    {
+        return $this->get('prestashop.core.command_bus');
+    }
+
+    /**
+     * Get query bus to execute queries.
+     *
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+     */
+    protected function getQueryBus()
+    {
+        return $this->get('prestashop.core.query_bus');
     }
 }
