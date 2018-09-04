@@ -102,7 +102,7 @@ class SupplyOrderDetailCore extends ObjectModel
     public $quantity_received = 0;
 
     /**
-     * @var float This defines the price of the product, considering the number of units to buy.
+     * @var float this defines the price of the product, considering the number of units to buy.
      *            ($unit_price_te * $quantity), without discount, without tax
      */
     public $price_te = 0;
