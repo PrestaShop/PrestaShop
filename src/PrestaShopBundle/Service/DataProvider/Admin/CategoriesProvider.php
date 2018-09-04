@@ -35,6 +35,8 @@ use Psr\Log\LoggerInterface;
  */
 class CategoriesProvider
 {
+    const CATEGORY_OTHER = 'Other';
+
     private $apiClient;
     private $logger;
 
@@ -62,7 +64,7 @@ class CategoriesProvider
     }
 
     /**
-     * Return the list of categories with the number of associated modules.
+     * Return the list of categories with the associated modules.
      *
      * @param array|AddonsCollection the list of modules
      *
@@ -73,34 +75,31 @@ class CategoriesProvider
         if (null === self::$categories) {
             // The Root category is "Categories"
             $categories['categories'] = $this->createMenuObject('categories', 'Categories');
-
             foreach ($this->getCategories() as $category) {
-                $categoryTab = isset($category->tab) ? $category->tab : null;
-                $categoryName = $category->name;
-                $moduleIds = array();
-
-                foreach ($modules as $module) {
-                    $moduleCategory = $module->attributes->get('categoryName');
-                    $moduleCategoryParent = $this->getParentCategory($moduleCategory);
-
-                    if ($moduleCategoryParent === $categoryName) {
-                        $moduleIds[] = $module->attributes->get('id');
-                    }
-                }
-
-                if (count($moduleIds)) {
-                    $categories['categories']->subMenu[$categoryName] = $this->createMenuObject(
-                        $categoryName,
-                        $categoryName,
-                        $moduleIds,
-                        $categoryTab
-                    );
-                }
+                $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
+                    $category->name,
+                    $category->name,
+                    [],
+                    isset($category->tab) ? $category->tab : null
+                );
             }
 
-            usort($categories['categories']->subMenu, function ($a, $b) {
-                return strcmp($a->name, $b->name);
-            });
+            $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
+                self::CATEGORY_OTHER,
+                self::CATEGORY_OTHER,
+                [],
+                null
+            );
+
+            foreach ($modules as $module) {
+                $moduleCategory = $module->attributes->get('categoryName');
+                $moduleCategoryParent = $this->getParentCategory($moduleCategory);
+                if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
+                    $moduleCategoryParent = self::CATEGORY_OTHER;
+                }
+
+                $categories['categories']->subMenu[$moduleCategoryParent]->modules[] = $module;
+            }
 
             self::$categories = $categories;
         }
