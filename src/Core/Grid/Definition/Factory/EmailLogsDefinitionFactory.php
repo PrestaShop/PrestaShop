@@ -125,7 +125,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('language'))
                 ->setName($this->trans('Language', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'lang_name',
+                    'field' => 'language',
                 ])
             )
             ->add((new DataColumn('subject'))
