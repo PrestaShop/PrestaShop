@@ -3285,7 +3285,7 @@ class CartCore extends ObjectModel
      * @param int $id_carrier Carrier ID (default : current carrier)
      * @param bool $use_tax
      * @param Country|null $default_country
-     * @param array|null $product_list List of product concerned by the shipping.
+     * @param array|null $product_list list of product concerned by the shipping.
      *                                 If null, all the product of the cart are used to calculate the shipping cost
      * @param int|null $id_zone Zone ID
      *

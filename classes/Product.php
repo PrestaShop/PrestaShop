@@ -3074,9 +3074,9 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product id
      * @param bool $usetax With taxes or not (optional)
-     * @param int|null $id_product_attribute Product attribute id (optional).
+     * @param int|null $id_product_attribute product attribute id (optional).
      *                                       If set to false, do not apply the combination price impact.
-     *                                       NULL does apply the default combination price impact.
+     *                                       NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
      * @param int|null $divisor Useful when paying many time without fees (optional)
      * @param bool $only_reduc Returns only the reduction amount

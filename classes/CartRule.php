@@ -850,10 +850,10 @@ class CartRuleCore extends ObjectModel
      * @param \Cart $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
-     *                             Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError).
+     *                             Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError)
      * @param bool $displayError [default=false]
      *                           If true, this method will return an error message instead of FALSE on errors.
-     *                           Otherwise, it returns FALSE on errors.
+     *                           Otherwise, it returns FALSE on errors
      * @param bool $alreadyInCart
      *
      * @return array|bool|string
