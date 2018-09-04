@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -133,10 +134,13 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'position_update_route' => 'AdminCategories',
                 ])
             )
-            ->add((new DataColumn('active'))
+            ->add((new ToggleColumn('active'))
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'primary_field' => 'id_category',
+                    'route' => 'admin_webservice_status_toggle',
+                    'route_param_name' => 'webserviceAccountId',
                 ])
             )
             ->add((new ActionColumn('actions'))
