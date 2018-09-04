@@ -8,7 +8,7 @@ services:
             - '@prestashop.adapter.legacy.configuration'
 
     prestashop.core.backup.listing.grid_data_factory:
-        class: 'PrestaShop\PrestaShop\Core\Backup\Listing\BackupGridDataProvider'
+        class: 'PrestaShop\PrestaShop\Core\Backup\Listing\BackupGridDataFactory'
         arguments:
             - '@prestashop.adapter.backup.backup_provider'
             - '@prestashop.core.backup.comparator.backup_by_date_comparator'
