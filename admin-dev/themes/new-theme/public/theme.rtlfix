@@ -67,7 +67,7 @@ ul.category-tree .category-label .category {
   display: none;
 }
 
-ul.category-tree .more::before {
+ul.category-tree .more>.radio:before {
   content: "\E5CB";
 }
 
