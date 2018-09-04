@@ -24,11 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
-
-interface ToggleCategoryStatusHandlerInterface
+class CannotUpdateCategoryStatusException extends CategoryException
 {
-    public function handle(ToggleCategoryStatusCommand $command);
 }

@@ -27,11 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\UpdateCategoriesStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler\UpdateCategoriesStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CannotUpdateCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
+
 
 /**
  * Class ChangeCategoriesStatusHandler
