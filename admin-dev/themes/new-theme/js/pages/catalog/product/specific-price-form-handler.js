@@ -141,8 +141,6 @@ class SpecificPriceFormHandler {
 
     $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
 
-    $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
-
     $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
     $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
@@ -161,8 +159,6 @@ class SpecificPriceFormHandler {
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
-    $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
-
     $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
     $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
@@ -170,6 +166,7 @@ class SpecificPriceFormHandler {
     this.reinitializeDatePickers();
 
     this.initializeLeaveBPriceField(usePrefixForCreate);
+    this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate);
   }
 
   /**
@@ -374,7 +371,7 @@ class SpecificPriceFormHandler {
    *
    * @private
    */
-  showSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
+  enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
 
     var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
@@ -416,22 +413,6 @@ class SpecificPriceFormHandler {
     var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     $(selectorPrefix + 'sp_price').prop('disabled', $(selectorPrefix + 'leave_bprice').is(':checked')).val('');
-  }
-
-  /**
-   * @param boolean usePrefixForCreate
-   *
-   * @private
-   */
-  enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
-    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
-    const uglySelect2Selector = $('#select2-' + selectorPrefix + 'sp_reduction_tax-container').parent().parent();
-
-    if ($(selectorPrefix + 'sp_reduction_type').val() === 'amount') {
-      uglySelect2Selector.show();
-    } else {
-      uglySelect2Selector.hide();
-    }
   }
 
   /**
