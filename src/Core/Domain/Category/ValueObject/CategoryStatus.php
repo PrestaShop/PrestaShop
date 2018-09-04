@@ -47,7 +47,7 @@ class CategoryStatus
     private $status;
 
     /**
-     * @param $status
+     * @param string $status
      *
      * @throws CategoryConstraintException
      */
