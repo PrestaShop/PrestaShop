@@ -27,6 +27,6 @@ do
 done
 
 echo "Running PHP CS Fixer..."
-php bin/php-cs-fixer fix
+php ./vendor/bin/php-cs-fixer fix
 
 exit $?
