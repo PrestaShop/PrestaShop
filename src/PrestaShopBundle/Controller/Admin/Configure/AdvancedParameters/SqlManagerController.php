@@ -578,26 +578,6 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get fallback error message when something unexpected happens
-     *
-     * @param string $type
-     * @param string $code
-     *
-     * @return string
-     */
-    protected function getFallbackErrorMessage($type, $code)
-    {
-        return $this->trans(
-            'An unexpected error occurred. [%type% code %code%]',
-            'Admin.Notifications.Error',
-            [
-                '%type%' => $type,
-                '%code%' => $code,
-            ]
-        );
-    }
-
-    /**
      * @return string[] Array of database tables
      */
     protected function getDatabaseTables()
