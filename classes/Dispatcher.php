@@ -311,6 +311,8 @@ class DispatcherCore
      */
     private function setFrontControllerType()
     {
+        $this->front_controller = self::FC_FRONT;
+
         if (defined('_PS_ADMIN_DIR_')) {
             $this->front_controller = self::FC_ADMIN;
         }
@@ -318,8 +320,6 @@ class DispatcherCore
         if ('module' === Tools::getValue('fc')) {
             $this->front_controller = self::FC_MODULE;
         }
-        
-        $this->front_controller = self::FC_FRONT;
     }
     
     /**
