@@ -31,9 +31,12 @@ export default class ProductMinitature {
       let $discount = $(element).find('.discount-product');
       let $onsale =  $(element).find('.on-sale');
       let $new = $(element).find('.new');
+
       if($discount.length){
         $new.css('top', $discount.height() * 2 + FLAG_MARGIN);
         $discount.css('top',-$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
+
+        if ($(element).find('.pack').length) $(element).find('.pack').css('top', $discount.height() * 2 + FLAG_MARGIN);
       }
       if($onsale.length){
         $discount.css('top', parseFloat($discount.css('top')) + $onsale.height() + FLAG_MARGIN);
