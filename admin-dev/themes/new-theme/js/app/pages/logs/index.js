@@ -28,6 +28,7 @@ import ReloadListActionExtension from '../../../components/grid/extension/reload
 import ExportToSqlManagerExtension from '../../../components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '../../../components/grid/extension/filters-reset-extension';
 import SortingExtension from '../../../components/grid/extension/sorting-extension';
+import SubmitGridActionExtension from '../../../components/grid/extension/submit-grid-action-extension';
 
 const $ = global.$;
 
@@ -38,4 +39,5 @@ $(() => {
   grid.addExtension(new ExportToSqlManagerExtension());
   grid.addExtension(new FiltersResetExtension());
   grid.addExtension(new SortingExtension());
+  grid.addExtension(new SubmitGridActionExtension());
 });
