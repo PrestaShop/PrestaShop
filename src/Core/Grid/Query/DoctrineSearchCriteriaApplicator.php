@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class DoctrineSearchCriteriaApplicator applies search criteria to doctrine query builder
+ * Class DoctrineSearchCriteriaApplicator applies search criteria to doctrine query builder.
  */
 final class DoctrineSearchCriteriaApplicator implements DoctrineSearchCriteriaApplicatorInterface
 {
