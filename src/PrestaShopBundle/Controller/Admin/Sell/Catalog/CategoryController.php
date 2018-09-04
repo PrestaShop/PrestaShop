@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +65,14 @@ class CategoryController extends FrameworkBundleAdminController
             'currentCategoryTree' => $categoryViewDataProvider->getTreeView($currentCategoryId),
             'currentCategory' => $categoryDataProvider->getCategory($currentCategoryId),
         ]);
+    }
+
+    public function processBulkStatusEnableAction(Request $request)
+    {
+    }
+
+    public function processBulkStatusDisableAction(Request $request)
+    {
     }
 
     /**
