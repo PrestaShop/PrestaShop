@@ -25,31 +25,35 @@
 import $ from 'jquery';
 
 export default class ProductMinitature {
-  init(){
+  init() {
     $('.js-product-miniature').each((index, element) => {
       const FLAG_MARGIN = 10;
-      let $discount = $(element).find('.discount-product');
-      let $onsale =  $(element).find('.on-sale');
-      let $new = $(element).find('.new');
+      let discountElems = $(element).find('.discount-product');
+      let onSaleElems =  $(element).find('.on-sale');
+      let newElems = $(element).find('.new');
 
-      if($discount.length){
-        $new.css('top', $discount.height() * 2 + FLAG_MARGIN);
-        $discount.css('top',-$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
+      if (discountElems.length) {
+        newElems.css('top', discountElems.height() * 2 + FLAG_MARGIN);
+        discountElems.css('top', -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
 
-        if ($(element).find('.pack').length) $(element).find('.pack').css('top', $discount.height() * 2 + FLAG_MARGIN);
+        if ($(element).find('.pack').length) $(element).find('.pack').css('top', discountElems.height() * 2 + FLAG_MARGIN);
       }
-      if($onsale.length){
-        $discount.css('top', parseFloat($discount.css('top')) + $onsale.height() + FLAG_MARGIN);
-        $new.css('top', ($discount.height() * 2 + $onsale.height()) + FLAG_MARGIN * 2);
+
+      if (onSaleElems.length) {
+        discountElems.css('top', parseFloat(discountElems.css('top')) + onSaleElems.height() + FLAG_MARGIN);
+        newElems.css('top', (discountElems.height() * 2 + onSaleElems.height()) + FLAG_MARGIN * 2);
       }
-      if($(element).find('.color').length > 5){
+
+      if ($(element).find('.color').length > 5) {
         let count = 0;
-        $(element).find('.color').each((index, element) =>{
-          if(index > 4){
+
+        $(element).find('.color').each((index, element) => {
+          if (index > 4) {
             $(element).hide();
             count ++;
           }
         });
+
         $(element).find('.js-count').append(`+${count}`);
       }
     });
