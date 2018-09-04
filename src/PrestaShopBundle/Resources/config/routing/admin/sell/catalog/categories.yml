@@ -29,6 +29,13 @@ admin_category_process_bulk_status_disable:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkStatusDisable
         _legacy_controller: AdminCategories
 
+admin_category_process_status_toggle:
+    path: /toggle-status/{categoryId}
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processStatusToggle
+        _legacy_controller: AdminCategories
+
 admin_category_edit:
     path: /edit/{categoryId}
     methods: [GET]

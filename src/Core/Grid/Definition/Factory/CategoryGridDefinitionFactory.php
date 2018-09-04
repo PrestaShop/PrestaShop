@@ -139,8 +139,8 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_category',
-                    'route' => 'admin_webservice_status_toggle',
-                    'route_param_name' => 'webserviceAccountId',
+                    'route' => 'admin_category_process_status_toggle',
+                    'route_param_name' => 'categoryId',
                 ])
             )
             ->add((new ActionColumn('actions'))
