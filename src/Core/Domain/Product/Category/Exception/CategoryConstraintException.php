@@ -24,11 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
-
-interface UpdateCategoriesStatusHandlerInterface
+class CategoryConstraintException extends CategoryException
 {
-    public function handle(UpdateCategoriesStatusCommand $command);
+    const INVALID_STATUS = 10;
 }

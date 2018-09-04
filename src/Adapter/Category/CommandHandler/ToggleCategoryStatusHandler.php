@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\ToggleCategoryStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler\ToggleCategoryStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CannotUpdateCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoundException;
 
 /**
  * Class ToggleCategoryStatusHandler

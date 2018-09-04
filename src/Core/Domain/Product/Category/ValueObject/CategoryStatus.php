@@ -24,51 +24,64 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
 
 /**
- * Class CategoryId
+ * Class CategoryStatus
  */
-class CategoryId
+class CategoryStatus
 {
-    /**
-     * @var int
-     */
-    private $id;
+    const ENABLED = 'enabled';
+    const DISABLED = 'disabled';
+
+    const AVAILABLE_STATUSES = [
+        self::ENABLED,
+        self::DISABLED,
+    ];
 
     /**
-     * @param int $id
-     *
-     * @throws CategoryException
+     * @var string
      */
-    public function __construct($id)
+    private $status;
+
+    /**
+     * @param string $status
+     *
+     * @throws CategoryConstraintException
+     */
+    public function __construct($status)
     {
-        $this->setId($id);
+        $this->setStatus($status);
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getValue()
     {
-        return $this->id;
+        return $this->status;
     }
 
     /**
-     * @param int $id
+     * @param string $status
      *
-     * @throws CategoryException
+     * @throws CategoryConstraintException
      */
-    private function setId($id)
+    private function setStatus($status)
     {
-        if (!is_numeric($id) || 0 >= $id) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($id, true))
+        if (!in_array($status, self::AVAILABLE_STATUSES)) {
+            throw new CategoryConstraintException(
+                sprintf(
+                    'Invalid category status %s supplied. Available statuses are "%s"',
+                    var_export($status, true),
+                    implode(',', self::AVAILABLE_STATUSES)
+                ),
+                CategoryConstraintException::INVALID_STATUS
             );
         }
 
-        $this->id = (int) $id;
+        $this->status = $status;
     }
 }

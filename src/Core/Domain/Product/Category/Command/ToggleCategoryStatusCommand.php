@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 
 /**
  * Class ToggleCategoryStatusCommand toggles given category status
