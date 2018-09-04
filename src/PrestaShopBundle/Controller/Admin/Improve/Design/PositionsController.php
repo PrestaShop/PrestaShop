@@ -56,9 +56,8 @@ class PositionsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $moduleAdapter = $this->get('prestashop.adapter.legacy.module');
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $hookProvider = $this->get('prestashop.adapter.legacy.hook');
-        $installedModules = $moduleAdapter->getModulesInstalled();
 
         $selectedModule = $request->get('show_modules');
         if ($selectedModule && strval($selectedModule) != 'all') {
@@ -68,11 +67,13 @@ class PositionsController extends FrameworkBundleAdminController
         $this->manageLegacyFlashes($request->query->get('conf'));
 
         $modules = [];
-        foreach ($installedModules as $installedModule) {
-            if ($module = $moduleAdapter->getInstanceById($installedModule['id_module'])) {
-                // We want to be able to sort modules by display name
-                $modules[(int) $module->id] = $module;
+        foreach ($moduleRepository->getInstalledModules() as $installedModule) {
+            if (!$installedModule->hasValidInstance()) {
+                continue;
             }
+            $module = $installedModule->getInstance();
+            // We want to be able to sort modules by display name
+            $modules[(int) $module->id] = $module;
         }
 
         $hooks = $hookProvider->getHooks();
@@ -154,7 +155,7 @@ class PositionsController extends FrameworkBundleAdminController
             $explode = explode('_', $unhook);
             $hookId = (int) isset($explode[0]) ? $explode[0] : 0;
             $moduleId = (int) isset($explode[1]) ? $explode[1] : 0;
-            $module = $this->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
+            $module = $this->get('prestashop.core.admin.module.repository')->getInstanceById($moduleId);
             $hook = new Hook($hookId);
 
             if (!$validateAdapter->isLoadedObject($module)) {

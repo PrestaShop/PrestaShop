@@ -47,7 +47,7 @@ class PositionsController extends ApiController
         $positions = $request->request->get('positions');
         $position = (int) is_array($positions) ? array_search($hookId . '_' . $moduleId, $positions) + 1 : null;
 
-        $module = $this->container->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
+        $module = $this->container->get('prestashop.core.admin.module.repository')->getInstanceById($moduleId);
         if (empty($module->id)) {
             return $this->jsonResponse(
                 [
