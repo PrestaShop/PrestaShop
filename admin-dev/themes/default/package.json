@@ -13,7 +13,7 @@
     "devDependencies": {
         "@babel/core": "^7.0.0-rc.1",
         "@babel/preset-env": "^7.0.0-rc.1",
-        "babel-loader": "^8.0.0-beta.4",
+        "babel-loader": "^8.0.2",
         "bourbon": "^4.3.4",
         "css-loader": "^1.0.0",
         "file-loader": "^1.1.11",
