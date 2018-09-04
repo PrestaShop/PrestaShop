@@ -39,4 +39,15 @@ class ContactControllerCore extends FrontController
 
         $this->setTemplate('contact');
     }
+    
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('Contact us', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('contact', true)
+        ];
+        return $breadcrumb;
+    }
 }
