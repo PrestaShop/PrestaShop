@@ -127,7 +127,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
                     'route' => 'admin_webservice_status_toggle',
-                    'route_param_id' => 'webserviceAccountId',
+                    'route_param_name' => 'webserviceAccountId',
                 ])
             )
             ->add((new ActionColumn('actions'))
