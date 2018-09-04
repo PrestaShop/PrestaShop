@@ -91,11 +91,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk_action'))
-                ->setOptions([
-                    'bulk_field' => 'id_log',
-                ])
-            )
             ->add((new DataColumn('id_log'))
                 ->setName($this->trans('ID', [], 'Global.Actions'))
                 ->setOptions([
