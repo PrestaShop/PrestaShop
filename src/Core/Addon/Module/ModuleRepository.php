@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use Module as LegacyModule;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -198,6 +199,19 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         // Return legacy instance !
         return $this->getModule($name)->getInstance();
+    }
+
+    /**
+     * Get the **Legacy** Module object from its ID (local database).
+     * Return an instance of the specified module.
+     *
+     * @param int $moduleId Module id
+     *
+     * @return \Module instance
+     */
+    public function getInstanceById($moduleId)
+    {
+        return LegacyModule::getInstanceById((int) $moduleId);
     }
 
     /**
