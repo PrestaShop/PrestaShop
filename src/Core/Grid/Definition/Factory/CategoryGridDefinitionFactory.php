@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -66,18 +68,26 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $categoryForViewAccessibilityChecker;
 
     /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
      * @param string $resetActionUrl
      * @param string $redirectActionUrl
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
     public function __construct(
         $resetActionUrl,
         $redirectActionUrl,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
         AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
     ) {
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectActionUrl = $redirectActionUrl;
         $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
+        $this->multistoreContextChecker = $multistoreContextChecker;
     }
 
     /**
@@ -101,7 +111,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
                     'bulk_field' => 'id_category',
@@ -125,15 +135,6 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'description',
                 ])
             )
-            ->add((new CategoryPositionColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'position',
-                    'id_field' => 'id_category',
-                    'id_parent_field' => 'id_parent',
-                    'position_update_route' => 'AdminCategories',
-                ])
-            )
             ->add((new ToggleColumn('active'))
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
@@ -150,6 +151,20 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
         ;
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $columns->addAfter('description', (new CategoryPositionColumn('position'))
+                ->setName($this->trans('Position', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'position',
+                    'id_field' => 'id_category',
+                    'id_parent_field' => 'id_parent',
+                    'position_update_route' => 'AdminCategories',
+                ])
+            );
+        }
+
+        return $columns;
     }
 
     /**
@@ -157,7 +172,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getFilters()
     {
-        return (new FilterCollection())
+        $filters = (new FilterCollection())
             ->add((new Filter('id_category', TextType::class))
                 ->setAssociatedColumn('id_category')
                 ->setTypeOptions([
@@ -172,12 +187,6 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('description', TextType::class))
                 ->setAssociatedColumn('description')
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-            )
-            ->add((new Filter('position', TextType::class))
-                ->setAssociatedColumn('position')
                 ->setTypeOptions([
                     'required' => false,
                 ])
@@ -198,6 +207,17 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
         ;
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $filters->add((new Filter('position', TextType::class))
+                ->setAssociatedColumn('position')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            );
+        }
+
+        return $filters;
     }
 
     /**
@@ -285,6 +305,15 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new LinkRowAction('edit'))
                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                 ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_category_edit',
+                    'route_param_name' => 'categoryId',
+                    'route_param_field' => 'id_category',
+                ])
+            )
+            ->add((new SubmitRowAction('delete'))
+                ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                ->setIcon('delete')
                 ->setOptions([
                     'route' => 'admin_category_edit',
                     'route_param_name' => 'categoryId',
