@@ -558,3 +558,9 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.category.delete_categories:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
+        tags:
+            - { name: form.type }

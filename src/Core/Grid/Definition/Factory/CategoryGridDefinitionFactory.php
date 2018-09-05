@@ -318,6 +318,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_category_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
+                    'confirm_message' => ''
                 ])
             )
         ;

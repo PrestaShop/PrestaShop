@@ -43,6 +43,10 @@
     </div>
   {% endblock %}
 
+  {% block categories_delete_block %}
+    {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig' %}
+  {% endblock %}
+
   {% block categories_breadcrumb %}
     {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/breadcrumb.html.twig' %}
   {% endblock %}
