@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 
 /**
- * Class ToggleCategoryStatusCommand toggles given category status
+ * Class ToggleCategoryStatusCommand toggles given category status.
  */
 class ToggleCategoryStatusCommand
 {

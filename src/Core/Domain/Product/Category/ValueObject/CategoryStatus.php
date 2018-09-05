@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
 
 /**
- * Class CategoryStatus
+ * Class CategoryStatus.
  */
 class CategoryStatus
 {
@@ -65,7 +65,7 @@ class CategoryStatus
     }
 
     /**
-     * Check if status is equal to other status
+     * Check if status is equal to other status.
      *
      * @param CategoryStatus $status
      *

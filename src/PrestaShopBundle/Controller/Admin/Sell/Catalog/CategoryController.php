@@ -72,7 +72,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Toggle category status
+     * Toggle category status.
      *
      * @param int $categoryId
      *
@@ -97,7 +97,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process bulk action for categories status enabling
+     * Process bulk action for categories status enabling.
      *
      * @param Request $request
      *
@@ -111,7 +111,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process bulk action for categories status disabling
+     * Process bulk action for categories status disabling.
      *
      * @param Request $request
      *
@@ -142,7 +142,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update categories status
+     * Update categories status.
      *
      * @param int[] $categoryIds
      * @param string $newStatus
@@ -167,7 +167,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle exception when which occurs when updating category status
+     * Handle exception when which occurs when updating category status.
      *
      * @param CategoryException $e
      *
@@ -183,8 +183,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
                 $this->trans('(cannot load object)', 'Admin.Notifications.Error')
             ),
-            CannotUpdateCategoryStatusException::class =>
-                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+            CannotUpdateCategoryStatusException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
         ];
 
         if (isset($errors[$type])) {

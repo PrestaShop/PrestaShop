@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Multistore;
 
 /**
- * Interface MultistoreContextCheckerInterface
+ * Interface MultistoreContextCheckerInterface.
  */
 interface MultistoreContextCheckerInterface
 {
     /**
-     * Check if current shop is in single store context
+     * Check if current shop is in single store context.
      *
      * @return bool
      */

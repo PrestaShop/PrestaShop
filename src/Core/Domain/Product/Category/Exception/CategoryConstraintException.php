@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
 /**
- * Class CategoryConstraintException
+ * Class CategoryConstraintException.
  */
 class CategoryConstraintException extends CategoryException
 {
     /**
-     * Code is used when Category status is created with invalid value
+     * Code is used when Category status is created with invalid value.
      */
     const INVALID_STATUS = 10;
 }
