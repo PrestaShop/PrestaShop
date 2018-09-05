@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.bundle.controller.argument_resolver.entity_form_factory:
+        class: 'PrestaShopBundle\Controller\ArgumentResolver\EntityFormFactoryResolver'
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: controller.argument_value_resolver, priority: 50 }
