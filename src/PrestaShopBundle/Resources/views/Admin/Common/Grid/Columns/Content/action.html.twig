@@ -40,7 +40,7 @@
           {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
             'grid': grid,
             'column': column,
-            'attributes': {'class': 'dropdown-item'},
+            'attributes': {'class': 'dropdown-item', 'tooltip_name': true},
             'record': record,
             'action': action
           }) }}
@@ -63,7 +63,7 @@
             {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
               'grid': grid,
               'column': column,
-              'attributes': {'class': 'dropdown-item'},
+              'attributes': {'class': 'dropdown-item', 'tooltip_name': false},
               'record': record,
               'action': action
             }) }}
