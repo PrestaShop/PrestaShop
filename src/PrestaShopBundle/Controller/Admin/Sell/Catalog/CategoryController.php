@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,11 +64,14 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
+            'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
         ]);
     }
 

@@ -6,7 +6,7 @@ admin_category_listing:
         _legacy_controller: AdminCategories
 
 admin_category_listing_search:
-    path: /
+    path: /search
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
