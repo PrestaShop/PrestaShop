@@ -323,7 +323,8 @@ class SpecificPriceCore extends ObjectModel
         return $query_extra;
     }
 
-    private static function formatIntInQuery($first_value, $second_value) {
+    protected static function formatIntInQuery($first_value, $second_value) 
+    {
         $first_value = (int)$first_value;
         $second_value = (int)$second_value;
         if ($first_value != $second_value) {
