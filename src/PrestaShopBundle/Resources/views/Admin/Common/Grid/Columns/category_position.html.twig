@@ -24,10 +24,10 @@
  *#}
 
 {% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
-  <div class="js-drag-handle js-category-position"
+  <div class="js-drag-handle js-{{ grid.id }}-position"
        style="cursor: move;"
-       data-id-category="{{ record[column.options.id_field] }}"
-       data-id-parent-category="{{ record[column.options.id_parent_field] }}"
+       data-id="{{ record[column.options.id_field] }}"
+       data-id-parent="{{ record[column.options.id_parent_field] }}"
        data-position="{{ record[column.options.field] }}"
        data-position-update-url="{{ getAdminLink(column.options.position_update_route) }}"
        data-pagination-offset="{{ grid.pagination.offset }}"

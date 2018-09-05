@@ -32,7 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class PositionColumn.
  */
-final class CategoryPositionColumn extends AbstractColumn
+final class PositionColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
