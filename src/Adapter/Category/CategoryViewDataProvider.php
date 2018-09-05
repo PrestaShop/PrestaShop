@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use Tools;
 
 /**
- * Class CategoryViewDataProvider provides category view data for categories listing page
+ * Class CategoryViewDataProvider provides category view data for categories listing page.
  *
  * @internal
  */
@@ -78,7 +78,7 @@ class CategoryViewDataProvider
     }
 
     /**
-     * Get category view data
+     * Get category view data.
      *
      * @param int $categoryId
      *
