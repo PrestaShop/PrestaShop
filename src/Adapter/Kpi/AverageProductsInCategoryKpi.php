@@ -33,6 +33,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class AverageProductsInCategoryKpi.
+ *
+ * @internal
  */
 final class AverageProductsInCategoryKpi implements KpiInterface
 {

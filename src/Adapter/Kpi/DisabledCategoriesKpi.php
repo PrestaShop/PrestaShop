@@ -33,6 +33,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class DisabledCategoriesKpi.
+ *
+ * @internal
  */
 final class DisabledCategoriesKpi implements KpiInterface
 {

@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
+/**
+ * Class CategoryNotFoundException
+ */
 class CategoryNotFoundException extends CategoryException
 {
 }

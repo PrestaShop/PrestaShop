@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
+/**
+ * Class CategoryException is base exception for Category bounded context
+ */
 class CategoryException extends DomainException
 {
 }

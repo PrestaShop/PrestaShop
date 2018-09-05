@@ -31,6 +31,11 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class EmptyCategoriesKpi.
+ *
+ * @internal
+ */
 final class EmptyCategoriesKpi implements KpiInterface
 {
     /**

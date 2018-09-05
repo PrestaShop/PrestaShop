@@ -49,7 +49,9 @@ final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandl
      */
     public function handle(UpdateCategoriesStatusCommand $command)
     {
-        $isActive = CategoryStatus::ENABLED === $command->getNewStatus()->getValue();
+        $isActive = $command->getNewStatus()->isEqualTo(
+            new CategoryStatus(CategoryStatus::ENABLED)
+        );
 
         foreach ($command->getCategoryIds() as $categoryId) {
             $entity = new Category($categoryId->getValue());

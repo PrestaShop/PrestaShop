@@ -54,7 +54,6 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CategoryFilters $filters)
     {
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $categoryGridFactory = $this->get('prestashop.core.grid.factory.category');
         $categoryGrid = $categoryGridFactory->getGrid($filters);
 
@@ -65,7 +64,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
-            'categoriesGrid' => $gridPresenter->present($categoryGrid),
+            'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
