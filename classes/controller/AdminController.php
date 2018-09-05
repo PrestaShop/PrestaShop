@@ -420,27 +420,27 @@ class AdminControllerCore extends Controller
             $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         }
 
-        if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
-            && @filemtime(_PS_BO_ALL_THEMES_DIR_ . _PS_BO_DEFAULT_THEME_ . DIRECTORY_SEPARATOR . 'template')) {
-            $default_theme_name = _PS_BO_DEFAULT_THEME_;
-        }
-
-        $this->bo_theme = $default_theme_name;
-
-        if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
-            $this->bo_theme = 'default';
-        }
-
-        $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
-            && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
-
-        $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
-
-        if (file_exists($adminThemeCSSFile)) {
-            $this->bo_css = 'theme.css';
-        }
-
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
+            if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
+                && @filemtime(_PS_BO_ALL_THEMES_DIR_ . _PS_BO_DEFAULT_THEME_ . DIRECTORY_SEPARATOR . 'template')) {
+                $default_theme_name = _PS_BO_DEFAULT_THEME_;
+            }
+
+            $this->bo_theme = $default_theme_name;
+
+            if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
+                $this->bo_theme = 'default';
+            }
+
+            $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
+                && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
+
+            $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
+
+            if (file_exists($adminThemeCSSFile)) {
+                $this->bo_css = 'theme.css';
+            }
+
             $this->context->smarty->setTemplateDir(array(
                 _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template',
                 _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
