@@ -25,6 +25,10 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% if not currentCategoryView.is_home_category %}
+  {% set layoutTitle = currentCategoryView.name %}
+{% endif %}
+
 {% block content %}
   {% block categories_kpis %}
     <div class="col-md-12">
@@ -46,8 +50,8 @@
   {% block categories_listing %}
     <div class="col-md-12">
       {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
-        {% block grid_footer %}
-          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/grid_footer.html.twig' %}
+        {% block grid_panel_footer %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
         {% endblock %}
       {% endembed %}
     </div>
