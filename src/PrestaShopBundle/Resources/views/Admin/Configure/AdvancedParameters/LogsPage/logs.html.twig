@@ -28,11 +28,13 @@
 
 {% block content %}
   {% block logs_severity_level_meaning %}
-    {{ include('@AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
+    <div class="row">
+      {{ include('@AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
+    </div>
   {% endblock %}
 
   {% block logs_main_panel %}
-    <div class="col-md-12">
+    <div class="row">
       <div class="col">
         {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
       </div>
@@ -41,18 +43,18 @@
 
   {% block logs_by_mail %}
     {{ form_start(logsByEmailForm, {'action': path('admin_logs_save')}) }}
-    <div class="col-md-12">
-      <div class="col">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
         <div class="card">
           <h3 class="card-header">
             <i class="material-icons">business_center</i> {{ 'Logs by email'|trans }}
           </h3>
-          <div class="card-block">
+          <div class="card-block row">
             <div class="card-text">
               <div class="form-group row">
-              {% set helptip = 'Enter "5" if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Emails will be sent to the shop owner.'|trans({}, 'Admin.Advparameters.Help') %}
-              {{ ps.label_with_help(('Minimum severity level'|trans), helptip, 'col-sm-2') }}
-                <div class="col-sm-8">
+                {% set helptip = 'Enter "5" if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Emails will be sent to the shop owner.'|trans({}, 'Admin.Advparameters.Help') %}
+                {{ ps.label_with_help(('Minimum severity level'|trans), helptip, 'col-sm-2') }}
+                <div class="col-sm">
                   {{ form_errors(logsByEmailForm.logs_by_email) }}
                   {{ form_widget(logsByEmailForm.logs_by_email) }}
                 </div>
@@ -60,7 +62,9 @@
             </div>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
           </div>
         </div>
       </div>
