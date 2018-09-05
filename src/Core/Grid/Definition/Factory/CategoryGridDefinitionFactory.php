@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\CategoryPositionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -153,7 +153,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $columns->addAfter('description', (new CategoryPositionColumn('position'))
+            $columns->addAfter('description', (new PositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'position',
