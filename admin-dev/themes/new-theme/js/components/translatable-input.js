@@ -26,8 +26,15 @@
 const $ = window.$;
 
 class TranslatableInput {
-    constructor() {
-        $('body').on('click', '.js-locale-item', this.toggleInputs);
+    constructor(options) {
+        options = options || {};
+
+        const self = this;
+        self.localeItemSelector = options.localeItemSelector || '.js-locale-item';
+        self.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
+        self.localeInputSelector = options.localeInputSelector || 'input.js-locale-input';
+
+        $('body').on('click', self.localeItemSelector, this.toggleInputs.bind(this));
     }
 
     /**
@@ -39,11 +46,12 @@ class TranslatableInput {
         const localeItem = $(event.target);
         const form = localeItem.closest('form');
         const selectedLocale = localeItem.data('locale');
+        const self = this;
 
-        form.find('.js-locale-btn').text(selectedLocale);
+        form.find(self.localeButtonSelector).text(selectedLocale);
 
-        form.find('input.js-locale-input').addClass('d-none');
-        form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
+        form.find(self.localeInputSelector).addClass('d-none');
+        form.find(self.localeInputSelector+'.js-locale-' + selectedLocale).removeClass('d-none');
     }
 }
 
