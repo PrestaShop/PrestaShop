@@ -43,6 +43,7 @@ class AdminOutstandingControllerCore extends AdminController
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		c.`outstanding_allow_amount`,
 		r.`color`,
+		c.`company`,
 		rl.`name` AS `risk`';
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.`id_order` = a.`id_order`)
 		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = o.`id_customer`)
