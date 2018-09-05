@@ -28,7 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class CategoryFilters extends Filters
+/**
+ * Class CategoryFilters defines default filters for Category grid
+ */
+final class CategoryFilters extends Filters
 {
     /**
      * {@inheritdoc}

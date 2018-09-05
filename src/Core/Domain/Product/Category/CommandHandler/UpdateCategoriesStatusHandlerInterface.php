@@ -28,7 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateCategoriesStatusCommand;
 
+/**
+ * Interface UpdateCategoriesStatusHandlerInterface
+ */
 interface UpdateCategoriesStatusHandlerInterface
 {
+    /**
+     * @param UpdateCategoriesStatusCommand $command
+     */
     public function handle(UpdateCategoriesStatusCommand $command);
 }

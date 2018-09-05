@@ -28,7 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\ToggleCategoryStatusCommand;
 
+/**
+ * Interface ToggleCategoryStatusHandlerInterface
+ */
 interface ToggleCategoryStatusHandlerInterface
 {
+    /**
+     * @param ToggleCategoryStatusCommand $command
+     */
     public function handle(ToggleCategoryStatusCommand $command);
 }

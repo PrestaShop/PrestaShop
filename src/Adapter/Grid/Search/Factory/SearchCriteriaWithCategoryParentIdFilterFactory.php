@@ -37,6 +37,8 @@ use Tools;
 
 /**
  * Class SearchCriteriaWithCategoryParentIdFilterFactory.
+ *
+ * @internal
  */
 final class SearchCriteriaWithCategoryParentIdFilterFactory implements DecoratedSearchCriteriaFactory
 {

@@ -69,4 +69,4 @@ services:
         arguments:
             - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
         tags:
-            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onSearchCriteriaResolve }
+            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }

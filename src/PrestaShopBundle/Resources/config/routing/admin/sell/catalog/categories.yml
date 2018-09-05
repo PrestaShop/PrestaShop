@@ -41,5 +41,6 @@ admin_category_edit:
     methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:edit
+        _legacy_controller: AdminCategories
     requirements:
         categoryId: \d+

@@ -65,6 +65,18 @@ class CategoryStatus
     }
 
     /**
+     * Check if status is equal to other status
+     *
+     * @param CategoryStatus $status
+     *
+     * @return bool
+     */
+    public function isEqualTo(CategoryStatus $status)
+    {
+        return $this->getValue() === $status->getValue();
+    }
+
+    /**
      * @param string $status
      *
      * @throws CategoryConstraintException
