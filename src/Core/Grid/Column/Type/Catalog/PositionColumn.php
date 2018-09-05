@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @see admin-dev/themes/new-theme/js/components/grid/extension/position-extension.js
  * @see GridPositionUpdater
  */
-final class CategoryPositionColumn extends AbstractColumn
+final class PositionColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
