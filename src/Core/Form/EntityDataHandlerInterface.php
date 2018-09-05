@@ -26,27 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form;
 
-/**
- * Interface EntityFormDataHandlerInterface
- */
-interface EntityFormDataHandlerInterface
+interface EntityDataHandlerInterface
 {
-    /**
-     * Create new entity from form data
-     *
-     * @param array $formData
-     *
-     * @return mixed
-     */
-    public function createEntity(array $formData);
 
-    /**
-     * Update existing entity with new form data
-     *
-     * @param EntityIdentifierInterface $entityId
-     * @param array $formData
-     *
-     * @return mixed
-     */
-    public function updateEntity(EntityIdentifierInterface $entityId, array $formData);
 }
