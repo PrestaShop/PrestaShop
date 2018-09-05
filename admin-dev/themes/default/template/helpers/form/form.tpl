@@ -430,7 +430,6 @@
 										<a class="slide-button btn"></a>
 									</span>
 								{elseif $input.type == 'textarea'}
-									{if isset($input.maxchar) && $input.maxchar}<div class="input-group">{/if}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
 										{foreach $languages as $language}
@@ -439,11 +438,15 @@
 												<div class="col-lg-9">
 											{/if}
 													{if isset($input.maxchar) && $input.maxchar}
+													<div class="input-group">
 														<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
 															<span class="text-count-down">{$input.maxchar|intval}</span>
 														</span>
 													{/if}
 													<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}_{$language.id_lang}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
+                                    {if isset($input.maxchar) && $input.maxchar}
+										</div>
+                                    {/if}
 											{if $languages|count > 1}
 												</div>
 												<div class="col-lg-2">
