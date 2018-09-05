@@ -68,10 +68,10 @@ export default class CategoryPositionExtension {
     const positions = decodeURIComponent($.tableDnD.serialize());
     const way = (this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)) ? 1 : 0;
 
-    const $categoryPositionContainer = $(row).find('.js-category-position:first');
+    const $categoryPositionContainer = $(row).find('.js-' + this.grid.getId() + '-position:first');
 
-    const categoryId = $categoryPositionContainer.data('id-category');
-    const categoryParentId = $categoryPositionContainer.data('id-parent-category');
+    const categoryId = $categoryPositionContainer.data('id');
+    const categoryParentId = $categoryPositionContainer.data('id-parent');
     const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
     let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'category');
@@ -91,16 +91,19 @@ export default class CategoryPositionExtension {
    * @private
    */
   _addIdsToGridTableRows() {
-    this.grid.getContainer().find('.js-grid-table').find('.js-category-position').each((index, positionWrapper) => {
-      const $positionWrapper = $(positionWrapper);
+    this.grid.getContainer()
+      .find('.js-grid-table')
+      .find('.js-' + this.grid.getId() + '-position')
+      .each((index, positionWrapper) => {
+        const $positionWrapper = $(positionWrapper);
 
-      const categoryId = $positionWrapper.data('id-category');
-      const categoryParentId = $positionWrapper.data('id-parent-category');
-      const position = $positionWrapper.data('position');
+        const categoryId = $positionWrapper.data('id');
+        const categoryParentId = $positionWrapper.data('id-parent');
+        const position = $positionWrapper.data('position');
 
-      const id = 'tr_' + categoryParentId + '_' + categoryId + '_' + position;
+        const id = 'tr_' + categoryParentId + '_' + categoryId + '_' + position;
 
-      $positionWrapper.closest('tr').attr('id', id);
+        $positionWrapper.closest('tr').attr('id', id);
     });
   }
 
@@ -110,18 +113,21 @@ export default class CategoryPositionExtension {
    * @private
    */
   _updateCategoryIdsAndPositions() {
-    this.grid.getContainer().find('.js-grid-table').find('.js-category-position').each((index, positionWrapper) => {
-      const $positionWrapper = $(positionWrapper);
-      const $row = $positionWrapper.closest('tr');
+    this.grid.getContainer()
+      .find('.js-grid-table')
+      .find('.js-' + this.grid.getId() + '-position')
+      .each((index, positionWrapper) => {
+        const $positionWrapper = $(positionWrapper);
+        const $row = $positionWrapper.closest('tr');
 
-      const offset = $positionWrapper.data('pagination-offset');
-      const newPosition = offset > 0 ? index + offset : index;
+        const offset = $positionWrapper.data('pagination-offset');
+        const newPosition = offset > 0 ? index + offset : index;
 
-      const oldId = $row.attr('id');
-      $row.attr('id', oldId.replace(/_[0-9]$/g, '_' + newPosition));
+        const oldId = $row.attr('id');
+        $row.attr('id', oldId.replace(/_[0-9]$/g, '_' + newPosition));
 
-      $positionWrapper.find('.js-position').text(newPosition + 1);
-      $positionWrapper.data('position', newPosition);
+        $positionWrapper.find('.js-position').text(newPosition + 1);
+        $positionWrapper.data('position', newPosition);
     });
   }
 
