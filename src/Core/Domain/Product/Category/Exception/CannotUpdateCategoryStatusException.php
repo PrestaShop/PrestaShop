@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
+/**
+ * Class CannotUpdateCategoryStatusException is thrown when Category status update failed
+ */
 class CannotUpdateCategoryStatusException extends CategoryException
 {
 }

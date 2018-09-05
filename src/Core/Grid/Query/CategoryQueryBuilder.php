@@ -30,6 +30,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+/**
+ * Class CategoryQueryBuilder builds search & count queries for categories grid
+ */
 final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
@@ -43,14 +46,21 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopId;
 
     /**
+     * @var DoctrineSearchCriteriaApplicator
+     */
+    private $searchCriteriaApplicator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicator $searchCriteriaApplicator
      * @param int $contextLangId
      * @param int $contextShopId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
         $contextLangId,
         $contextShopId
     ) {
@@ -58,21 +68,20 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->contextLangId = $contextLangId;
         $this->contextShopId = $contextShopId;
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position')
-            ->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            )
-            ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit())
+        $qb->select('c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
         ;
 
         return $qb;
@@ -81,7 +90,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('COUNT(c.id_category)');

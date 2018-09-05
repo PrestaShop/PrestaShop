@@ -26,7 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
 
+/**
+ * Class CategoryConstraintException
+ */
 class CategoryConstraintException extends CategoryException
 {
+    /**
+     * Code is used when Category status is created with invalid value
+     */
     const INVALID_STATUS = 10;
 }
