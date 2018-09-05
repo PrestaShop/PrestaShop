@@ -50,26 +50,10 @@
       </div>
     {% endif %}
 
-    {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
+    {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') and bulkActions is defined %}
       <div class="col-md-4 module-menu-item">
         <h3>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</h3>
-        <div class="ps-dropdown dropdown btn-group bordered mb-1 module-sorting module-bulk-actions ">
-          <div class="ps-dropdown-menu dropdown-menu module-category-selector">
-            <ul class="items-list js-items-list">
-              {% for key, name in bulkActions %}
-                <li
-                  data-ref="{{key}}"
-                  data-display-name="{{name}}"
-                >
-                  {{ name }}
-                  <a class="dropdown-item" href="#">
-                    {{ name }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
+        {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_bulk.html.twig' %}
       </div>
     {% endif %}
   </div>
