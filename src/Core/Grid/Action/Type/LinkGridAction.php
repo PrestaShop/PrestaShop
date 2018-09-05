@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\AbstractGridAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class LinkGridAction defines grid action which is link
+ * Class LinkGridAction defines grid action which is link.
  */
 final class LinkGridAction extends AbstractGridAction
 {

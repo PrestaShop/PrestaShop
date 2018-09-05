@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,9 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CannotUpdateCat
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
 
-
 /**
- * Class ChangeCategoriesStatusHandler
+ * Class ChangeCategoriesStatusHandler.
  *
  * @internal
  */

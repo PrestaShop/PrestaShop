@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
 
 /**
- * Class ChangeCategoriesStatusCommand updates provided categories status to new given status
+ * Class ChangeCategoriesStatusCommand updates provided categories status to new given status.
  */
 class UpdateCategoriesStatusCommand
 {

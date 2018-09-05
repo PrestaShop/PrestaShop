@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class TopCategoryKpi
+ * Class TopCategoryKpi.
  *
  * @internal
  */
