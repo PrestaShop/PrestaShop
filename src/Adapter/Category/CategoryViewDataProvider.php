@@ -82,7 +82,7 @@ class CategoryViewDataProvider
      *
      * @return array
      */
-    public function getTreeView($categoryId)
+    public function getViewData($categoryId)
     {
         $category = new Category($categoryId);
 
@@ -101,6 +101,12 @@ class CategoryViewDataProvider
 
         $categoriesTree = array_reverse($categoriesTree);
 
-        return $categoriesTree;
+        return [
+            'breadcrumb_tree' => $categoriesTree,
+            'id' => $category->id,
+            'id_parent' => $category->id_parent,
+            'is_home_category' => $this->configuration->get('PS_HOME_CATEGORY') == $category->id,
+            'name' => $category->name[$this->contextLangId],
+        ];
     }
 }

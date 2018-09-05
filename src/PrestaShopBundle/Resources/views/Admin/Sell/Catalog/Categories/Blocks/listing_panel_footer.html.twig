@@ -23,9 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if currentCategory.id_parent %}
+{% if app.request.query.has('id_category') and not currentCategoryView.is_home_category %}
+  {% if currentCategoryView.id_parent %}
+    {% set params = {'id_category': currentCategoryView.id_parent} %}
+  {% endif %}
+
   <div class="card-footer">
-    <a href="{{ path('admin_category_listing', {'id_category': currentCategory.id_parent}) }}" class="btn btn-outline-secondary">
+    <a href="{{ path('admin_category_listing', params|default({})) }}" class="btn btn-outline-secondary">
       <i class="material-icons">arrow_back</i>
       {{ 'Back to list'|trans({}, 'Admin.Actions') }}
     </a>
