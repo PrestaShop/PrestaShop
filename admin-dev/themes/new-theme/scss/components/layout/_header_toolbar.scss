@@ -81,10 +81,11 @@
   .tab {
     .notification-container {
       @include notification_container(1.5rem)
+      float: right;
 
       .notification-counter {
         @include notification_counter();
-        top: -0.5625rem;
+        top: -1.75rem;
         right: -0.9375rem;
       }
     }

@@ -133,7 +133,6 @@ class ModuleController extends ModuleAbstractController
             'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
         ];
 
-
         return $this->render(
             'PrestaShopBundle:Admin/Module:manage.html.twig',
             [
