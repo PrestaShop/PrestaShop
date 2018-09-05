@@ -13,8 +13,8 @@ admin_logs_save:
         _legacy_controller: AdminLogs
 
 admin_logs_delete:
-    path: /
-    methods: [DELETE]
+    path: /erase-all
+    methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:deleteAll'
         _legacy_controller: AdminLogs
