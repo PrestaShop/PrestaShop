@@ -183,7 +183,7 @@ export default function() {
         refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
-        const url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
+        const url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/form-images\/\d+/, 'form-images/' + $('.js-combinations-list').data('id-product'));
         $.get(url)
           .then(function(combinationsImages) {
             refreshImagesCombination(combinationsImages, response.ids_product_attribute);
