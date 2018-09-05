@@ -31,8 +31,7 @@ if (file_exists('.git/hooks/pre-commit')) {
 
 file_put_contents(
     '.git/hooks/pre-commit',
-    file_get_contents(__DIR__.'/pre-commit'),
-    FILE_APPEND | LOCK_EX
+    file_get_contents(__DIR__.'/pre-commit')
 );
 
 chmod('.git/hooks/pre-commit', 0750);
