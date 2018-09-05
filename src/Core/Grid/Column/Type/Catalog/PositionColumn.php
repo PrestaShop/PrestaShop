@@ -45,7 +45,7 @@ final class PositionColumn extends AbstractColumn
      */
     public function getType()
     {
-        return 'category_position';
+        return 'position';
     }
 
     /**
