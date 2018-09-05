@@ -26,26 +26,26 @@
 
 {% block content %}
     <div class="row justify-content-center">
-        <div class="col-lg-10">
-            {# Bulk Action confirm modal #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_bulk_action.html.twig' %}
-            {# PrestaTrust modal #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
-            {# Addons connect modal with level authorization#}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-            {# Contains toolbar-nav for module page with level authorization #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-            {# Contains menu with Selection/Categories/Popular and Tag Search #}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+      <div class="col-lg-10">
+        {# Bulk Action confirm modal #}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_bulk_action.html.twig' %}
+        {# PrestaTrust modal #}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
+        {# Addons connect modal with level authorization#}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+        {# Contains toolbar-nav for module page with level authorization #}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+        {# Contains menu with Selection/Categories/Popular and Tag Search #}
+        {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' with { 'topMenuData': topMenuData, 'bulkActions': bulkActions } %}
 
-            {% for category in categories.subMenu %}
-              <div class="module-short-list">
-                <span id="{{ category.tab }}_modules" class="module-search-result-wording">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
-              </div>
+        {% for category in categories.subMenu %}
+          <div class="module-short-list">
+            <span id="{{ category.tab }}_modules" class="module-search-result-wording">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
+          </div>
 
-              {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.tab } %}
-            {% endfor %}
-        </div>
+          {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.tab } %}
+        {% endfor %}
+      </div>
     </div>
 {% endblock %}
 
