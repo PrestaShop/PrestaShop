@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
 /**
- * Interface ExceptionInterface is implemented by all import exceptions
+ * Interface ExceptionInterface is implemented by all import exceptions.
  */
 interface ExceptionInterface
 {

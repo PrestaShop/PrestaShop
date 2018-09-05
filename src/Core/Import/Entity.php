@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Import;
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportTypeException;
 
 /**
- * Class Entity defines available import entities
+ * Class Entity defines available import entities.
  */
 final class Entity
 {
@@ -56,7 +56,7 @@ final class Entity
     ];
 
     /**
-     * Get import entity type from name
+     * Get import entity type from name.
      *
      * @param string $importType
      *
@@ -72,7 +72,7 @@ final class Entity
     }
 
     /**
-     * Class is not suppose to be initialized as it only use case
+     * Class is not suppose to be initialized as it only use case.
      */
     private function __construct()
     {

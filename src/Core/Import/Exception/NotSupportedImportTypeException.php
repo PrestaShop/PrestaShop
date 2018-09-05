@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Exception;
 use Exception;
 
 /**
- * Class NotSupportedImportTypeException is thrown when no supported import type is provided
+ * Class NotSupportedImportTypeException is thrown when no supported import type is provided.
  */
 class NotSupportedImportTypeException extends Exception implements ExceptionInterface
 {
