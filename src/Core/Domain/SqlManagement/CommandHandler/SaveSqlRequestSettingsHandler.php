@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
- * Class SaveSqlRequestSettingsHandler handles command to save SqlRequest settings
+ * Class SaveSqlRequestSettingsHandler handles command to save SqlRequest settings.
  */
 final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandlerInterface
 {
@@ -58,7 +58,7 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandl
     }
 
     /**
-     * File encodings are saved as integer values in databases
+     * File encodings are saved as integer values in databases.
      *
      * @param SaveSqlRequestSettingsCommand $command
      *

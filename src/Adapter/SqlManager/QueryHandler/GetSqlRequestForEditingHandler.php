@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use RequestSql;
 
 /**
- * Class GetSqlRequestForEditingHandler
+ * Class GetSqlRequestForEditingHandler.
  *
  * @internal
  */

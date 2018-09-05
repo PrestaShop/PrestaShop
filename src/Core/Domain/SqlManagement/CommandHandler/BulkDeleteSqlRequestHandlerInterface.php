@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
 
 /**
- * Interface BulkDeleteSqlRequestHandlerInterface defines contract for bulk deleting handler of SqlRequest
+ * Interface BulkDeleteSqlRequestHandlerInterface defines contract for bulk deleting handler of SqlRequest.
  */
 interface BulkDeleteSqlRequestHandlerInterface
 {

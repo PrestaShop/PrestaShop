@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstrai
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * This command modifies an existing SqlRequest object, replacing its data by the provided one
+ * This command modifies an existing SqlRequest object, replacing its data by the provided one.
  */
 class EditSqlRequestCommand
 {
@@ -94,7 +94,7 @@ class EditSqlRequestCommand
     }
 
     /**
-     * Set Request SQL name
+     * Set Request SQL name.
      *
      * @param string $name
      *
@@ -117,7 +117,7 @@ class EditSqlRequestCommand
     }
 
     /**
-     * Set Request SQL query
+     * Set Request SQL query.
      *
      * @param string $sql
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use PrestaShopException;
 use RequestSql;
 
 /**
- * Class GetSqlRequestExecutionResultHandler
+ * Class GetSqlRequestExecutionResultHandler.
  *
  * @internal
  */
@@ -83,7 +83,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
     }
 
     /**
-     * Replaces sensitive data with placeholder values
+     * Replaces sensitive data with placeholder values.
      *
      * @param array $records
      *

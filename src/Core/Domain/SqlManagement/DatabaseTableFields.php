@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConst
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
 
 /**
- * Class DatabaseTableFields stores fields of single database table
+ * Class DatabaseTableFields stores fields of single database table.
  */
 class DatabaseTableFields
 {

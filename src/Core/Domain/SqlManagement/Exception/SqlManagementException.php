@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class SqlManagementException base exception of SqlManagement bounded context
+ * Class SqlManagementException base exception of SqlManagement bounded context.
  */
 class SqlManagementException extends DomainException
 {

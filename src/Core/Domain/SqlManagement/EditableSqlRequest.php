@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestExceptio
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * Class EditableSqlRequest stores information about SqlRequest that can be edited
+ * Class EditableSqlRequest stores information about SqlRequest that can be edited.
  */
 class EditableSqlRequest
 {
@@ -60,7 +60,7 @@ class EditableSqlRequest
         SqlRequestId $requestSqlId,
         $name,
         $sql
-    ){
+    ) {
         $this
             ->setSqlRequestId($requestSqlId)
             ->setName($name)

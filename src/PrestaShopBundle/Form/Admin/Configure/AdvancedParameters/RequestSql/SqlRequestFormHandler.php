@@ -66,7 +66,7 @@ class SqlRequestFormHandler
     }
 
     /**
-     * Get RequestSql form
+     * Get RequestSql form.
      *
      * @return FormInterface
      */
@@ -76,7 +76,7 @@ class SqlRequestFormHandler
     }
 
     /**
-     * Get for for given RequestSql
+     * Get for for given RequestSql.
      *
      * @param int $requestSqlId
      *
@@ -90,7 +90,7 @@ class SqlRequestFormHandler
     }
 
     /**
-     * Save RequestSql form data
+     * Save RequestSql form data.
      *
      * @param array $data
      *

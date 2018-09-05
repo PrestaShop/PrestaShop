@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement;
 
 /**
- * Class SqlRequestSettings stores SqlRequest settings
+ * Class SqlRequestSettings stores SqlRequest settings.
  */
 class SqlRequestSettings
 {
     /**
-     * Name of the setting for SqlRequest SQL query result file encoding in ps_configuration
+     * Name of the setting for SqlRequest SQL query result file encoding in ps_configuration.
      */
     const FILE_ENCODING = 'PS_ENCODING_FILE_MANAGER_SQL';
 

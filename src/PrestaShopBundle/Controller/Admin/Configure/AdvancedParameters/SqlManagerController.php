@@ -227,7 +227,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int     $sqlRequestId
+     * @param int $sqlRequestId
      * @param Request $request
      *
      * @return Response
@@ -341,7 +341,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int     $sqlRequestId
+     * @param int $sqlRequestId
      *
      * @return Response
      */
@@ -454,7 +454,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get human readable error for exception
+     * Get human readable error for exception.
      *
      * @param SqlRequestException $e
      *
@@ -466,17 +466,13 @@ class SqlManagerController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-            SqlRequestException::class =>
-                $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
         ];
 
         $deleteExceptionMessages = [
-            CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE =>
-                $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
-            CannotDeleteSqlRequestException::CANNOT_BULK_DELETE =>
-                $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::CANNOT_BULK_DELETE => $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
         ];
 
         if (CannotDeleteSqlRequestException::class === $type
@@ -493,7 +489,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get error message when exception occurs on View action
+     * Get error message when exception occurs on View action.
      *
      * @param SqlRequestException $e
      *
@@ -504,8 +500,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $exceptionMessages = [
-            SqlRequestNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
         if (isset($exceptionMessages[$type])) {
@@ -545,8 +540,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $code = $e->getCode();
 
         $applicationErrors = [
-            FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING =>
-                $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
+            FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING => $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
         ];
 
         if (isset($applicationErrors[$code])) {
@@ -566,8 +560,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $domainErrors = [
-            SqlRequestNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
         if (isset($domainErrors[$type])) {

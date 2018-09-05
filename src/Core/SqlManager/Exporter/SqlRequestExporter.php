@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Export\Data\ExportableData;
 use PrestaShop\PrestaShop\Core\Export\FileWriter\FileWriterInterface;
 
 /**
- * Class SqlRequestExporter exports SqlRequest query execution result into CSV file under export directory
+ * Class SqlRequestExporter exports SqlRequest query execution result into CSV file under export directory.
  */
 final class SqlRequestExporter implements SqlRequestExporterInterface
 {

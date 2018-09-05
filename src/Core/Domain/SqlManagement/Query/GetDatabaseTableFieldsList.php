@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlManagementConstraintException;
 
 /**
- * Class GetAttributesForDatabaseTableQuery gets list of attributes for given database table name
+ * Class GetAttributesForDatabaseTableQuery gets list of attributes for given database table name.
  */
 class GetDatabaseTableFieldsList
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use PrestaShop\PrestaShop\Core\Export\Data\ExportableDataInterface;
 use SplFileInfo;
 
 /**
- * Interface FileWriterInterface
+ * Interface FileWriterInterface.
  */
 interface FileWriterInterface
 {
     /**
-     * Write data to file
+     * Write data to file.
      *
      * @param string $fileName
      * @param ExportableDataInterface $data

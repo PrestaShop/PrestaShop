@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Export\Data;
 
 /**
- * Class ExportableData stores data that should be written to export file
+ * Class ExportableData stores data that should be written to export file.
  */
 final class ExportableData implements ExportableDataInterface
 {

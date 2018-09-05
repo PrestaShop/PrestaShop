@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 
 /**
- * Interface EditSqlRequestHandlerInterface defines contract SqlRequest editing handler
+ * Interface EditSqlRequestHandlerInterface defines contract SqlRequest editing handler.
  */
 interface EditSqlRequestHandlerInterface
 {

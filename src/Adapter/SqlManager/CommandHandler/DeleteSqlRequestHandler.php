@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShopException;
 use RequestSql;
 
 /**
- * Class DeleteSqlRequestHandler
+ * Class DeleteSqlRequestHandler.
  *
  * @internal
  */

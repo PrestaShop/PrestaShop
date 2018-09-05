@@ -104,7 +104,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Handle exception when configuration update fails
+     * Handle exception when configuration update fails.
      *
      * @param SqlRequestSettingsConstraintException $e
      *

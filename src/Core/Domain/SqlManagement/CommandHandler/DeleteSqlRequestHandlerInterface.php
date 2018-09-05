@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
 
 /**
- * Interface DeleteSqlRequestHandlerInterface defines contract for SqlRequest delete handler
+ * Interface DeleteSqlRequestHandlerInterface defines contract for SqlRequest delete handler.
  */
 interface DeleteSqlRequestHandlerInterface
 {
     /**
-     * Delete SqlRequest
+     * Delete SqlRequest.
      *
      * @param DeleteSqlRequestCommand $command
      */

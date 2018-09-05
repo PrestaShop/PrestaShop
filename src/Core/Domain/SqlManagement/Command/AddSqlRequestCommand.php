@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 
 /**
- * This command creates new SqlRequest entity with provided data
+ * This command creates new SqlRequest entity with provided data.
  */
 class AddSqlRequestCommand
 {
@@ -74,7 +74,7 @@ class AddSqlRequestCommand
     }
 
     /**
-     * Set Request SQL name
+     * Set Request SQL name.
      *
      * @param string $name
      *
@@ -97,7 +97,7 @@ class AddSqlRequestCommand
     }
 
     /**
-     * Set Request SQL query
+     * Set Request SQL query.
      *
      * @param string $sql
      *

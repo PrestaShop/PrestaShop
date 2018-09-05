@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query;
 
 /**
- * Class GetSqlRequestSettingsQuery gets SqlRequest settings
+ * Class GetSqlRequestSettingsQuery gets SqlRequest settings.
  */
 class GetSqlRequestSettings
 {

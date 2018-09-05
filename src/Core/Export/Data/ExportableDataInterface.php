@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Export\Data;
 
 /**
- * Interface ExportableDataInterface
+ * Interface ExportableDataInterface.
  */
 interface ExportableDataInterface
 {
     /**
-     * Titles data
+     * Titles data.
      *
      * @return string[]
      */
     public function getTitles();
 
     /**
-     * Rows data
+     * Rows data.
      *
      * @return array[]
      */

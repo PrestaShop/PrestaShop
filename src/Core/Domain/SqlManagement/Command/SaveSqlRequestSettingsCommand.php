@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
  * Class SaveSqlManagerSettingsCommand saves default file encoding settings
- * for SqlRequest's query result export file
+ * for SqlRequest's query result export file.
  */
 class SaveSqlRequestSettingsCommand
 {

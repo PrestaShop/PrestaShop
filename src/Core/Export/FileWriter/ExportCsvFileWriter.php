@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use SplFileObject;
 
 /**
- * Class ExportCsvFileWriter writes provided data into CSV file and saves it in export directory
+ * Class ExportCsvFileWriter writes provided data into CSV file and saves it in export directory.
  */
 final class ExportCsvFileWriter implements FileWriterInterface
 {
@@ -57,7 +57,7 @@ final class ExportCsvFileWriter implements FileWriterInterface
      */
     public function write($fileName, ExportableDataInterface $data)
     {
-        $filePath = $this->exportDirectory.$fileName;
+        $filePath = $this->exportDirectory . $fileName;
 
         try {
             $exportFile = new SplFileObject($filePath, 'w');

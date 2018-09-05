@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditin
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * Class RequestSqlFormDataProvider is responsible for getting/saving RequestSql form data
+ * Class RequestSqlFormDataProvider is responsible for getting/saving RequestSql form data.
  */
 class SqlRequestFormDataProvider
 {
@@ -66,7 +66,7 @@ class SqlRequestFormDataProvider
     }
 
     /**
-     * Get RequestSql form data
+     * Get RequestSql form data.
      *
      * @param int $requestSqlId
      *
@@ -91,7 +91,7 @@ class SqlRequestFormDataProvider
     }
 
     /**
-     * Save form data for RequestSql
+     * Save form data for RequestSql.
      *
      * @param array $requestSqlData
      *
@@ -144,7 +144,7 @@ class SqlRequestFormDataProvider
     }
 
     /**
-     * Transform exception into translatable errors
+     * Transform exception into translatable errors.
      *
      * @param SqlRequestException $e
      *
@@ -162,7 +162,7 @@ class SqlRequestFormDataProvider
     }
 
     /**
-     * Get error for constraint exception
+     * Get error for constraint exception.
      *
      * @param SqlRequestConstraintException $e
      *
@@ -196,7 +196,7 @@ class SqlRequestFormDataProvider
     }
 
     /**
-     * Get error for exception
+     * Get error for exception.
      *
      * @param SqlRequestException $e
      *

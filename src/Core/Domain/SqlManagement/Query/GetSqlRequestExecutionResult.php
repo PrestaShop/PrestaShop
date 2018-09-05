@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestExceptio
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * Class GetSqlRequestExecutionResultQuery returns the result of executing an SqlRequest query
+ * Class GetSqlRequestExecutionResultQuery returns the result of executing an SqlRequest query.
  */
 class GetSqlRequestExecutionResult
 {

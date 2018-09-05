@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 use RequestSql;
 
 /**
- * Class SqlRequestFormDataValidator validates SqlRequest data that is submitted via from
+ * Class SqlRequestFormDataValidator validates SqlRequest data that is submitted via from.
  *
  * @internal
  */
@@ -49,7 +49,7 @@ class SqlRequestFormDataValidator
     }
 
     /**
-     * Validate SqlRequest form data
+     * Validate SqlRequest form data.
      *
      * @param array $data
      *

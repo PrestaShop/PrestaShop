@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 
 /**
- * Interface GetSqlRequestSettingsHandlerInterface
+ * Interface GetSqlRequestSettingsHandlerInterface.
  */
 interface GetSqlRequestSettingsHandlerInterface
 {

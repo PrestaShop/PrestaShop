@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,8 +34,8 @@ use PrestaShopException;
 use RequestSql;
 
 /**
- * Class BulkDeleteSqlRequestHandler handles bulk delete of SqlRequest command
-  */
+ * Class BulkDeleteSqlRequestHandler handles bulk delete of SqlRequest command.
+ */
 final class BulkDeleteSqlRequestHandler implements BulkDeleteSqlRequestHandlerInterface
 {
     /**

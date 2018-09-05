@@ -352,7 +352,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get fallback error message when something unexpected happens
+     * Get fallback error message when something unexpected happens.
      *
      * @param string $type
      * @param string $code

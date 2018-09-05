@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList;
 
 /**
- * Interface GetDatabaseTablesListHandlerInterface
+ * Interface GetDatabaseTablesListHandlerInterface.
  */
 interface GetDatabaseTablesListHandlerInterface
 {

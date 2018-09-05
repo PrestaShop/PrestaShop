@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\CommandBus;
 use League\Tactician\CommandBus;
 
 /**
- * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract
+ * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract.
  */
 final class TacticianCommandBusAdapter implements CommandBusInterface
 {

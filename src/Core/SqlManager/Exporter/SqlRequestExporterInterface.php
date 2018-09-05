@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,12 +31,12 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use SplFileInfo;
 
 /**
- * Interface SqlRequestExporterInterface defines contract for SqlRequest exporter
+ * Interface SqlRequestExporterInterface defines contract for SqlRequest exporter.
  */
 interface SqlRequestExporterInterface
 {
     /**
-     * Export SqlRequest query execution result to file
+     * Export SqlRequest query execution result to file.
      *
      * @param SqlRequestId $sqlRequestId
      * @param SqlRequestExecutionResult $sqlRequestExecutionResult
