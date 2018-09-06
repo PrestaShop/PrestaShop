@@ -43,9 +43,9 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class SeoUrlsGridDefinitionFactory is responsible for adding definition for Seo & urls list.
+ * Class MetaGridDefinitionFactory is responsible for adding definition for Seo & urls list.
  */
-final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * @var string
@@ -58,7 +58,7 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * WebserviceDefinitionFactory constructor.
+     * MetaGridDefinitionFactory constructor.
      *
      * @param string $resetActionUrl
      * @param string $redirectionUrl
@@ -76,7 +76,7 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'seo_urls';
+        return 'meta';
     }
 
     /**
@@ -129,7 +129,7 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_seo_urls_list_edit',
+                                'route' => 'admin_meta_list_edit',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
                             ])
@@ -139,7 +139,7 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_seo_urls_list_delete_single',
+                                'route' => 'admin_meta_list_delete_single',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
                                 'confirm_message' => $this->trans(
@@ -226,7 +226,7 @@ final class SeoUrlsGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_seo_urls'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_seo_urls_list_delete_multiple',
+                    'submit_route' => 'admin_meta_list_delete_multiple',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )

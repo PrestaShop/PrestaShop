@@ -19,5 +19,5 @@ _maintenance:
     prefix: /maintenance/
 
 _seo_urls:
-    resource: "seo_urls.yml"
+    resource: "meta.yml"
     prefix: /seo-urls/
