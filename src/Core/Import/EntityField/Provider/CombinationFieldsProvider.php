@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class CombinationFieldCollectionFactory defines a combination field collection factory.
+ * Class CombinationFieldsProvider defines a combination fields provider.
  */
-final class CombinationFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
+final class CombinationFieldsProvider implements EntityFieldsProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -51,7 +51,7 @@ final class CombinationFieldCollectionFactory implements EntityFieldCollectionFa
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function getCollection()
     {
         $fields = [
             new EntityField('id_product', $this->trans('Product ID')),

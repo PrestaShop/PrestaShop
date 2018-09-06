@@ -594,6 +594,6 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
-            - '@=service("prestashop.core.form.import.choice_provider_finder").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
         tags:
             - { name: form.type }

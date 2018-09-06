@@ -99,6 +99,21 @@
         </div>
       </div>
       <div class="row">
+        <div class="col">
+          <div class="alert alert-warning js-validation-error js-duplicate-columns-warning d-none" role="alert">
+            <p class="alert-text">
+              {{ 'Two columns cannot have the same type of values'|trans({}, 'Admin.Advparameters.Feature') }}
+            </p>
+          </div>
+          <div class="alert alert-warning js-validation-error js-missing-column-warning d-none" role="alert">
+            <p class="alert-text">
+              {{ 'This column must be set:'|trans({}, 'Admin.Advparameters.Feature') }}
+              <span class="js-missing-column">&nbsp;</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <table class="table table-bordered js-import-data-table">
           <thead>
             <tr>
@@ -145,7 +160,7 @@
         <i class="material-icons">cancel</i>
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary">
+      <button class="btn btn-primary js-process-import">
         <i class="material-icons">check</i>
         {{ 'Import'|trans({}, 'Admin.Actions') }}
       </button>

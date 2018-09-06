@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class AliasFieldCollectionFactory defines an alias field collection factory.
+ * Class SupplierFieldsProvider defines a supplier fields provider.
  */
-final class AliasFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
+final class SupplierFieldsProvider implements EntityFieldsProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -51,13 +51,23 @@ final class AliasFieldCollectionFactory implements EntityFieldCollectionFactoryI
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function getCollection()
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
-            new EntityField('alias', $this->trans('Alias', 'Admin.Shopparameters.Feature'), '', true),
-            new EntityField('search', $this->trans('Search', 'Admin.Shopparameters.Feature'), '', true),
-            new EntityField('active', $this->trans('Active', 'Admin.Global')),
+            new EntityField('active', $this->trans('Active (0/1)')),
+            new EntityField('name', $this->trans('Name', 'Admin.Global')),
+            new EntityField('description', $this->trans('Description', 'Admin.Global')),
+            new EntityField('short_description', $this->trans('Short description', 'Admin.Catalog.Feature')),
+            new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
+            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
+            new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
+            new EntityField('image', $this->trans('Image URL')),
+            new EntityField(
+                'shop',
+                $this->trans('ID / Name of group shop'),
+                $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
+            ),
         ];
 
         return EntityFieldCollection::createFromArray($fields);
