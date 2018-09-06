@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\InvalidVersionException;
@@ -69,13 +70,13 @@ class Version
     private $releaseVersion;
 
     /**
-     * Initialize version data
+     * Initialize version data.
      *
-     * @param string  $version            Version
-     * @param string  $majorVersionString Major version in string format
-     * @param integer $majorVersion       Major version
-     * @param integer $minorVersion       Minor version
-     * @param integer $releaseVersion     Release version
+     * @param string $version Version
+     * @param string $majorVersionString Major version in string format
+     * @param int $majorVersion Major version
+     * @param int $minorVersion Minor version
+     * @param int $releaseVersion Release version
      */
     public function __construct(
         $version,
@@ -132,7 +133,7 @@ class Version
     }
 
     /**
-     * Returns the current release version
+     * Returns the current release version.
      *
      * @return int
      */
@@ -227,15 +228,15 @@ class Version
 
     /**
      * Compares the current version with the provided version depending on the provided operator.
-     * It sanitized both version to have a
+     * It sanitized both version to have a.
      *
      * @param $version  Must be a valid version string, for example "1.7.4.0"
      * @param $operator Operator for version_compare(),
      *                  allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
      *
-     * @return boolean Result of the comparison.
+     * @return bool result of the comparison
      *
-     * @throws InvalidVersionException If the provided version is invalid.
+     * @throws InvalidVersionException if the provided version is invalid
      */
     private function versionCompare($version, $operator)
     {
@@ -255,11 +256,12 @@ class Version
     }
 
     /**
-     * Checks if a given version is a valid version string
+     * Checks if a given version is a valid version string.
      *
      * @param $version
      *
-     * @return bool true only if version is valid, else throw an exception.
+     * @return bool true only if version is valid, else throw an exception
+     *
      * @throws InvalidVersionException If the provided version is invalid
      */
     private function checkVersion($version)

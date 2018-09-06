@@ -70,15 +70,15 @@ $grid-breakpoints: (
   xl: 81.25em  // 1300px
 );
 
-$card-border-color: #e5e5e5 !default;
+$card-border-color: #dbe6e9 !default;
 $module-logo-size: 45px;
 
-$card-spacer-x: 1.25rem !default;
-$card-spacer-y: .75rem !default;
+$card-spacer-x: .625rem !default;
+$card-spacer-y: .625rem !default;
 $card-border-width: 1px !default;
-$card-border-radius: $border-radius !default;
+$card-border-radius: 5px !default;
 $card-border-radius-inner: $card-border-radius !default;
-$card-cap-bg: #f5f5f5 !default;
+$card-cap-bg: $gray-soft !default;
 $card-bg: #fff !default;
 $card-link-hover-color: #fff !default;
 $enable-rounded: true !default;

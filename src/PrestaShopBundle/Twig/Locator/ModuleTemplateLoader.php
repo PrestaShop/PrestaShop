@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig\Locator;
 
 use Twig\Loader\FilesystemLoader;
@@ -34,7 +35,7 @@ use Twig\Loader\FilesystemLoader;
 class ModuleTemplateLoader extends FilesystemLoader
 {
     /**
-     * @param array $namespaces  A collection of path namespaces with namespace names.
+     * @param array $namespaces a collection of path namespaces with namespace names
      * @param array $modulePaths A path or an array of paths where to look for module templates
      */
     public function __construct(array $namespaces, array $modulePaths = array())

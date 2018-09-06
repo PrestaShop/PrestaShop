@@ -4,17 +4,19 @@
 
 ### 1/ Declare your route
 You must declare your route in one of the files in:
-`src/PrestaShopBundle/Resources/config/api/routing_xxx.yml`.
+`src/PrestaShopBundle/Resources/config/routing/api/path/to/file.yml`.
 
 If the file corresponding to your context does not exist, you can create it by taking care of declaring your new route file in:
-`src/PrestaShopBundle/Resources/config/routing_api.yml`
+`src/PrestaShopBundle/Resources/config/routing/api.yml`
 
-Example, you want a route showing you the list of the warehouses available: in `src/PrestaShopBundle/Resources/config/api/routing_warehouse.yml`, add (if it does not exist)
+Example, you want a route showing you the list of the warehouses available: in `src/PrestaShopBundle/Resources/config/routing/api/warehouse.yml`, add (if it does not exist)
 ```yml
 _api_warehouse:
-  resource: "api/routing_warehouse.yml"
+    resource: "api/warehouse.yml"
 ```
-Then, create a file named `src/PrestaShopBundle/Resources/config/api/routing_warehouse.yml` and add your route:
+
+Then, create a file named `src/PrestaShopBundle/Resources/config/routing/api/warehouse.yml` and add your route:
+
 ```yml
 api_warehouse_list_warehouses:
     path: /warehouses

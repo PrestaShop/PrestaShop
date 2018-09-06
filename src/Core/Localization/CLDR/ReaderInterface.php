@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 interface ReaderInterface
 {
     /**
-     * Read locale data by locale code
+     * Read locale data by locale code.
      *
      * @param $localeCode
      *  The locale code (simplified IETF tag syntax)
@@ -38,7 +38,7 @@ interface ReaderInterface
      *  eg: fr-FR, en-US
      *
      * @return LocaleData
-     *  A LocaleData object
+     *                    A LocaleData object
      */
     public function readLocaleData($localeCode);
 }

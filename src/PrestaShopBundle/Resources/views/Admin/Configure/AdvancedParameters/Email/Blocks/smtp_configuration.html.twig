@@ -1,0 +1,100 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% block smtp_configuration %}
+  <div class="col-xl-10">
+    <div class="card js-smtp-configuration {% if emailConfigurationForm.email_config.mail_method.vars.value != smtpMailMethod %}d-none{% endif %}">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i> {{ 'Email'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="form-group row">
+            {{ ps.label_with_help(('Mail domain name'|trans), ('Fully qualified domain name (keep this field empty if you don\'t know).'|trans({}, 'Admin.Advparameters.Help'))) }}
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.smtp_config.domain) }}
+              {{ form_widget(emailConfigurationForm.smtp_config.domain) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            {{ ps.label_with_help(('SMTP server'|trans), ('IP address or server name (e.g. smtp.mydomain.com).'|trans({}, 'Admin.Advparameters.Help'))) }}
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.smtp_config.server) }}
+              {{ form_widget(emailConfigurationForm.smtp_config.server) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            {{ ps.label_with_help(('SMTP username'|trans), ('Leave blank if not applicable.'|trans({}, 'Admin.Advparameters.Help'))) }}
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.smtp_config.username) }}
+              {{ form_widget(emailConfigurationForm.smtp_config.username) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            {{ ps.label_with_help(('SMTP password'|trans), ('Leave blank if not applicable.'|trans({}, 'Admin.Advparameters.Help'))) }}
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.smtp_config.password) }}
+              {{ form_widget(emailConfigurationForm.smtp_config.password) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'Encryption'|trans }}</label>
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.smtp_config.encryption) }}
+              {{ form_widget(emailConfigurationForm.smtp_config.encryption) }}
+              {% if not isOpenSslExtensionLoaded %}
+                <small class="form-text">
+                  {{ 'SSL does not seem to be available on your server.'|trans({}, 'Admin.Advparameters.Notification') }}
+                </small>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            {{ ps.label_with_help(('Port'|trans), ('Port number to use.'|trans)) }}
+            <div class="col-sm">
+              {{ form_errors(emailConfigurationForm.smtp_config.port) }}
+              {{ form_widget(emailConfigurationForm.smtp_config.port) }}
+            </div>
+          </div>
+
+          {% block smtp_configuration_form_rest %}
+            {{ form_rest(emailConfigurationForm.smtp_config) }}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

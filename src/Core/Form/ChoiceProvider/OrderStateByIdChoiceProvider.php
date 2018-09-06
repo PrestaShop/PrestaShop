@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class OrderStateByIdChoiceProvider provides order state choices with ID values
+ * Class OrderStateByIdChoiceProvider provides order state choices with ID values.
  */
 final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,13 +48,14 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
      * @param int $languageId language ID
      * @param OrderStateDataProviderInterface $orderStateDataProvider
      */
-    public function __construct($languageId, OrderStateDataProviderInterface $orderStateDataProvider) {
+    public function __construct($languageId, OrderStateDataProviderInterface $orderStateDataProvider)
+    {
         $this->languageId = $languageId;
         $this->orderStateDataProvider = $orderStateDataProvider;
     }
 
     /**
-     * Get order state choices
+     * Get order state choices.
      *
      * @return array
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
-use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DateTimeColumn extends AbstractColumn
@@ -54,7 +52,6 @@ final class DateTimeColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'format' => 'Y-m-d H:i:s',
-                'filter' => new ColumnFilterOption(DateRangeType::class, []),
             ])
             ->setAllowedTypes('format', 'string')
             ->setAllowedTypes('field', 'string')

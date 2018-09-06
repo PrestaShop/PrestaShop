@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
 /**
- * ModuleHistory
+ * ModuleHistory.
  *
  * @ORM\Table
  * @ORM\Entity
@@ -39,7 +39,7 @@ use DateTime;
 class ModuleHistory
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
@@ -48,14 +48,14 @@ class ModuleHistory
     private $id;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id_employee", type="integer")
      */
     private $idEmployee;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id_module", type="integer")
      */
@@ -75,11 +75,10 @@ class ModuleHistory
      */
     private $dateUpd;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -87,9 +86,9 @@ class ModuleHistory
     }
 
     /**
-     * Set idEmployee
+     * Set idEmployee.
      *
-     * @param integer $idEmployee
+     * @param int $idEmployee
      *
      * @return ModuleHistory
      */
@@ -101,9 +100,9 @@ class ModuleHistory
     }
 
     /**
-     * Get idEmployee
+     * Get idEmployee.
      *
-     * @return integer
+     * @return int
      */
     public function getIdEmployee()
     {
@@ -111,9 +110,9 @@ class ModuleHistory
     }
 
     /**
-     * Set idModule
+     * Set idModule.
      *
-     * @param integer $idModule
+     * @param int $idModule
      *
      * @return ModuleHistory
      */
@@ -125,9 +124,9 @@ class ModuleHistory
     }
 
     /**
-     * Get idModule
+     * Get idModule.
      *
-     * @return integer
+     * @return int
      */
     public function getIdModule()
     {
@@ -135,7 +134,7 @@ class ModuleHistory
     }
 
     /**
-     * Set dateAdd
+     * Set dateAdd.
      *
      * @param \DateTime $dateAdd
      *
@@ -149,7 +148,7 @@ class ModuleHistory
     }
 
     /**
-     * Get dateAdd
+     * Get dateAdd.
      *
      * @return \DateTime
      */
@@ -159,7 +158,7 @@ class ModuleHistory
     }
 
     /**
-     * Set dateUpd
+     * Set dateUpd.
      *
      * @param \DateTime $dateUpd
      *
@@ -173,7 +172,7 @@ class ModuleHistory
     }
 
     /**
-     * Get dateUpd
+     * Get dateUpd.
      *
      * @return \DateTime
      */

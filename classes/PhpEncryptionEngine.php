@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Encoding;
 use Defuse\Crypto\Key;
 
 /**
- * Class PhpEncryption engine for openSSL 1.0.1+
+ * Class PhpEncryption engine for openSSL 1.0.1+.
  */
 class PhpEncryptionEngineCore
 {
@@ -47,7 +46,7 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * Encrypt the plaintext
+     * Encrypt the plaintext.
      *
      * @param string $plaintext Plaintext
      *
@@ -59,12 +58,13 @@ class PhpEncryptionEngineCore
     }
 
     /**
-     * Decrypt the cipher text
+     * Decrypt the cipher text.
      *
      * @param string $cipherText Cipher text
      *
      * @return bool|string Plaintext
      *                     `false` if unable to decrypt
+     *
      * @throws Exception
      */
     public function decrypt($cipherText)
@@ -85,7 +85,9 @@ class PhpEncryptionEngineCore
     /**
      * @param $header
      * @param $bytes
+     *
      * @return string
+     *
      * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
      */
     public static function saveBytesToChecksummedAsciiSafeString($header, $bytes)
@@ -105,6 +107,7 @@ class PhpEncryptionEngineCore
 
     /**
      * @param $hexString
+     *
      * @return Key
      */
     public static function loadFromAsciiSafeString($hexString)
@@ -114,6 +117,7 @@ class PhpEncryptionEngineCore
 
     /**
      * @return string
+     *
      * @throws Exception
      *
      * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_openssl.php
@@ -151,6 +155,7 @@ class PhpEncryptionEngineCore
 
     /**
      * @param $buf
+     *
      * @return string
      */
     public static function saveToAsciiSafeString($buf)

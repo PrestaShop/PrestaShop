@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -77,6 +77,7 @@ class ThemeExporter
      * @param $themeName
      * @param $locale
      * @param $rootDir
+     *
      * @return string
      */
     public function createZipArchive($themeName, $locale, $rootDir = false)
@@ -92,6 +93,7 @@ class ThemeExporter
      * @param $themeName
      * @param $locale
      * @param $rootDir
+     *
      * @return string
      */
     public function exportCatalogues($themeName, $locale, $rootDir = false)
@@ -146,7 +148,9 @@ class ThemeExporter
 
     /**
      * @param $filePath
+     *
      * @return bool
+     *
      * @throws \Exception
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
@@ -164,6 +168,7 @@ class ThemeExporter
      * @param $themeName
      * @param $locale
      * @param $rootDir
+     *
      * @return \Symfony\Component\Translation\MessageCatalogue
      */
     protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
@@ -199,7 +204,7 @@ class ThemeExporter
             $parentDirectoryParts = explode(DIRECTORY_SEPARATOR, dirname($file));
             $destinationFilenameParts = array(
                 $archiveParentDirectory,
-                $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf'
+                $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf',
             );
             $destinationFilename = implode(DIRECTORY_SEPARATOR, $destinationFilenameParts);
             if ($this->filesystem->exists($destinationFilename)) {
@@ -219,6 +224,7 @@ class ThemeExporter
 
     /**
      * @param $themeName
+     *
      * @return string
      */
     protected function getTemporaryExtractionFolder($themeName)
@@ -228,6 +234,7 @@ class ThemeExporter
 
     /**
      * @param $themeName
+     *
      * @return string
      */
     protected function getFlattenizationFolder($themeName)
@@ -237,6 +244,7 @@ class ThemeExporter
 
     /**
      * @param $themeName
+     *
      * @return string
      */
     protected function getExportDir($themeName)
@@ -247,6 +255,7 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     *
      * @return string
      */
     protected function makeZipFilename($themeName, $locale)
@@ -259,7 +268,7 @@ class ThemeExporter
             $this->exportDir,
             $themeName,
             $locale,
-            $themeName . '.' . $locale . '.zip'
+            $themeName . '.' . $locale . '.zip',
         );
 
         return implode(DIRECTORY_SEPARATOR, $zipFilenameParts);
@@ -268,7 +277,9 @@ class ThemeExporter
     /**
      * @param $themeName
      * @param $locale
+     *
      * @return string
+     *
      * @throws \Exception
      */
     protected function makeArchiveParentDirectory($themeName, $locale)
@@ -308,6 +319,7 @@ class ThemeExporter
 
     /**
      * @param array $metadata
+     *
      * @return bool
      */
     protected function metadataContainNotes(array $metadata = null)
@@ -320,6 +332,7 @@ class ThemeExporter
 
     /**
      * @param $metadata
+     *
      * @return bool
      */
     protected function shouldAddFileMetadata($metadata)
@@ -330,6 +343,7 @@ class ThemeExporter
     /**
      * @param $locale
      * @param MessageCatalogue $sourceCatalogue
+     *
      * @return MessageCatalogue
      */
     protected function addLocaleToDomain($locale, MessageCatalogue $sourceCatalogue)
@@ -344,6 +358,7 @@ class ThemeExporter
 
     /**
      * @param array|null $metadata
+     *
      * @return array
      */
     protected function parseMetadataNotes(array $metadata = null)

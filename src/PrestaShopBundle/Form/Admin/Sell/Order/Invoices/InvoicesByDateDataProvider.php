@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -71,7 +71,7 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Perform validations on form data
+     * Perform validations on form data.
      *
      * @param array $data
      *

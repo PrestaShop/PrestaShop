@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -49,7 +49,7 @@ class TextWithUnitType extends AbstractType
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
-            'unit' => 'unit'
+            'unit' => 'unit',
         ]);
     }
 
@@ -61,7 +61,7 @@ class TextWithUnitType extends AbstractType
         parent::buildView($view, $form, $options);
 
         $view->vars = array_merge($view->vars, [
-            'unit' => $options['unit']
+            'unit' => $options['unit'],
         ]);
     }
 

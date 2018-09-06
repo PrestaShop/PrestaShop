@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -82,7 +82,9 @@ class ConsoleWriter
      *
      * @param string $text
      * @param string $color
+     *
      * @return $this
+     *
      * @throws BuildException
      */
     public function displayText($text, $color = self::COLOR_WHITE)
@@ -103,7 +105,7 @@ class ConsoleWriter
             self::COLOR_BROWN => '0;33',
             self::COLOR_YELLOW => '1;33',
             self::COLOR_LIGHT_GRAY => '0;37',
-            self::COLOR_WHITE => '1;37'
+            self::COLOR_WHITE => '1;37',
         );
 
         if (empty($cliColors[$color])) {

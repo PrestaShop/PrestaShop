@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 
 /**
- * This form class is responsible to generate the product combination form
+ * This form class is responsible to generate the product combination form.
  */
 class ProductCombination extends CommonAbstractType
 {
@@ -49,7 +49,7 @@ class ProductCombination extends CommonAbstractType
     private $configuration;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -84,7 +84,7 @@ class ProductCombination extends CommonAbstractType
                 'error_bubbling' => true,
                 'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Regex("/^[0-9]{0,13}$/"),
+                    new Assert\Regex('/^[0-9]{0,13}$/'),
                 ],
                 'empty_data' => '',
             ])
@@ -92,7 +92,7 @@ class ProductCombination extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Regex("/^[0-9-]{0,32}$/"),
+                    new Assert\Regex('/^[0-9-]{0,32}$/'),
                 ],
                 'empty_data' => '',
             ])
@@ -100,7 +100,7 @@ class ProductCombination extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Regex("/^[0-9]{0,12}$/"),
+                    new Assert\Regex('/^[0-9]{0,12}$/'),
                 ],
                 'empty_data' => '',
             ])
@@ -108,20 +108,20 @@ class ProductCombination extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_wholesale_price']
+                'attr' => ['class' => 'attribute_wholesale_price'],
             ])
             ->add('attribute_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_priceTE']
+                'attr' => ['class' => 'attribute_priceTE'],
             ])
             ->add('attribute_priceTI', MoneyType::class, [
                 'required' => false,
                 'mapped' => false,
                 'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_priceTI']
+                'attr' => ['class' => 'attribute_priceTI'],
             ])
             ->add('attribute_ecotax', MoneyType::class, [
                 'required' => false,
@@ -129,12 +129,12 @@ class ProductCombination extends CommonAbstractType
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Type(['type' => 'float'])
-                ]
+                    new Assert\Type(['type' => 'float']),
+                ],
             ])
             ->add('attribute_weight', NumberType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature')
+                'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
             ])
             ->add('attribute_unity', MoneyType::class, [
                 'required' => false,
@@ -148,7 +148,7 @@ class ProductCombination extends CommonAbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Type(['type' => 'numeric']),
-                ]
+                ],
             ])
             ->add('attribute_low_stock_threshold', NumberType::class, [
                 'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
@@ -172,7 +172,7 @@ class ProductCombination extends CommonAbstractType
             ->add('available_date_attribute', DatePickerType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
-                'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD']
+                'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
             ])
             ->add('attribute_default', CheckboxType::class, [
                 'label' => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
@@ -189,7 +189,7 @@ class ProductCombination extends CommonAbstractType
                     'constraints' => [
                         new Assert\NotBlank(),
                         new Assert\Type(['type' => 'numeric']),
-                    ]
+                    ],
                 ]
             );
         }

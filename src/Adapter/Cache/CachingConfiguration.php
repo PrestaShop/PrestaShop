@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,17 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Caching configuration for a Shop
+ * This class manages Caching configuration for a Shop.
  */
 class CachingConfiguration implements DataConfigurationInterface
 {
-
     /**
      * @var MemcacheServerManager
      */
@@ -53,12 +50,12 @@ class CachingConfiguration implements DataConfigurationInterface
     private $cacheClearer;
 
     /**
-     * @var bool Check if the caching is enabled.
+     * @var bool check if the caching is enabled
      */
     private $isCachingEnabled;
 
     /**
-     * @var string The selected Caching system: 'CacheApc' for instance.
+     * @var string the selected Caching system: 'CacheApc' for instance
      */
     private $cachingSystem;
 
@@ -117,7 +114,7 @@ class CachingConfiguration implements DataConfigurationInterface
     /**
      * Update the Php configuration for Cache feature and system.
      *
-     * @return array the errors list during the update operation.
+     * @return array the errors list during the update operation
      */
     private function updatePhpCacheConfiguration(array $configuration)
     {

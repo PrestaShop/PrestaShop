@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "webpack --progress",
     "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
     "watch": "webpack --progress --colors --debug --display-chunks --watch",
     "start-dev-server": "webpack-dev-server --config webpack.config.js",
@@ -64,7 +63,7 @@
     "path": "^0.12.7",
     "postcss-cssnext": "^2.10.0",
     "postcss-loader": "^1.3.3",
-    "prestakit": "^1.0.1",
+    "prestakit": "^1.0.2",
     "sass-loader": "^6.0.6",
     "sinon": "^2.4.1",
     "sinon-chai": "^2.12.0",

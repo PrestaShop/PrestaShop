@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,9 +31,9 @@ interface FilterInterface
     /**
      * Performs a filter on the subject object.
      *
-     * @param mixed $subject Subject to filter.
+     * @param mixed $subject subject to filter
      *
-     * @return mixed Filtered subject.
+     * @return mixed filtered subject
      */
     public function filter($subject);
 }

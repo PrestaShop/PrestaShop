@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -154,7 +154,7 @@ class PDFCore
     public function getTemplateObject($object)
     {
         $class = false;
-        $class_name = 'HTMLTemplate'.$this->template;
+        $class_name = 'HTMLTemplate' . $this->template;
 
         if (class_exists($class_name)) {
             // Some HTMLTemplateXYZ implementations won't use the third param but this is not a problem (no warning in PHP),

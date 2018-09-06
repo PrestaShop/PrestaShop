@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
- * Currency repository interface
+ * Currency repository interface.
  *
  * Describes the behavior of Currency Repository classes
  */
@@ -43,7 +43,7 @@ interface RepositoryInterface
      *  Must be an alphabetic ISO 4217 currency code
      *
      * @return Currency
-     *  The wanted Currency instance
+     *                  The wanted Currency instance
      */
     public function getCurrency($currencyCode);
 }

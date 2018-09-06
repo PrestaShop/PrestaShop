@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Form;
 
 use Symfony\Component\Form\FormInterface;
@@ -42,6 +43,7 @@ interface FormHandlerInterface
      * using a form data provider, but it's also the right place to dispatch events/log something.
      *
      * @param array $data data retrieved from form that need to be persisted in database
+     *
      * @throws \Exception if the data can't be handled
      *
      * @return array $errors if data can't persisted an array of errors messages

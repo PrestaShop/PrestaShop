@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
- * Currency data repository interface
+ * Currency data repository interface.
  *
  * Describes the behavior of currency DataRepository classes
  */
 interface DataRepositoryInterface
 {
     /**
-     * Get complete currency data by currency code
+     * Get complete currency data by currency code.
      *
      * @param string $currencyCode
      *
      * @return array
-     *  The currency data
+     *               The currency data
      */
     public function getDataByCurrencyCode($currencyCode);
 }

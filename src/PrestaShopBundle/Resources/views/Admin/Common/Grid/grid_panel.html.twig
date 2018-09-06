@@ -24,15 +24,19 @@
  *#}
 
 <div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
-  <div class="card-header">
-    <h3>
-      <i class="material-icons">list</i>
-      {{ grid.name }} ({{ grid.data.rows_total }})
+  {% block grid_panel_header %}
+    <h3 class="card-header">
+        {{ grid.name }} ({{ grid.data.records_total }})
     </h3>
-  </div>
-  <div class="card-block">
-    {% block grid_view_block %}
-      {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
-    {% endblock %}
-  </div>
+  {% endblock %}
+
+  {% block grid_panel_body %}
+    <div class="card-body">
+      {% block grid_view_block %}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': grid }) }}
+      {% endblock %}
+    </div>
+  {% endblock %}
+
+  {% block grid_panel_footer %}{% endblock %}
 </div>

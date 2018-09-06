@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\File;
 
 /**
- * Interface FileFinderInterface defines a file finder
+ * Interface FileFinderInterface defines a file finder.
  */
 interface FileFinderInterface
 {
     /**
-     * Finds files
+     * Finds files.
      *
      * @return array of file paths
      */

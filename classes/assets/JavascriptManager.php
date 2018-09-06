@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class JavascriptManagerCore extends AbstractAssetManager
 {
     protected $list;
@@ -84,7 +83,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             $uri = $fullPath;
             $type = 'external';
         } else {
-            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
+            $uri = $this->getFQDN() . $this->getUriFromPath($fullPath);
             $type = ($inline) ? 'inline' : 'external';
         }
 
@@ -112,7 +111,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         foreach ($this->valid_position as $position) {
             foreach ($this->list[$position]['inline'] as &$item) {
                 $item['content'] =
-                    '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
+                    '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
                     file_get_contents($item['path']);
             }
         }
@@ -136,6 +135,7 @@ class JavascriptManagerCore extends AbstractAssetManager
                     if ($a['priority'] === $b['priority']) {
                         return 0;
                     }
+
                     return ($a['priority'] < $b['priority']) ? -1 : 1;
                 });
                 $this->list[$position][$type] = $items;

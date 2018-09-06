@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace  PrestaShop\PrestaShop\Core\Configuration;
 
 /**
- * Gets ini configuration
+ * Gets ini configuration.
  */
 class IniConfiguration
 {
     /**
-     * Get max post max size from ini configuration in bytes
+     * Get max post max size from ini configuration in bytes.
      *
      * @return int
      */

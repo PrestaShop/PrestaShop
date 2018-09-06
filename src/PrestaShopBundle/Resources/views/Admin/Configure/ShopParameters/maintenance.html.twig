@@ -24,59 +24,60 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
+{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
-{%
-    set generalForm = form.general
-%}
+{% set generalForm = form.general %}
 
 {% block content %}
-    <div class="container">
-        {{ form_start(form, {'attr' : {'class': 'form'} }) }}
-        <div class="row">
-            {% block maintenance_form_general %}
-            <div class="col">
-                <div class="card">
-                    <h3 class="card-header">
-                        <i class="material-icons">business_center</i> {{ 'General'|trans({}, 'Admin.Global') }}
-                    </h3>
-                    <div class="card-block">
-                        <div class="card-text">
-                            <div class="form-group">
-                                {{ ps.label_with_help(('Enable Shop'|trans), ('Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                                {{ form_errors(generalForm.enable_shop) }}
-                                {{ form_widget(generalForm.enable_shop) }}
-                            </div>
-                            <div class="form-group">
-                                {{ ps.label_with_help(('Maintenance IP'|trans), ('IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                                {{ form_errors(generalForm.maintenance_ip) }}
-                                {{ form_widget(generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
-                            </div>
-                            <div class="form-group">
-                                {{ ps.label_with_help(('Custom maintenance text'|trans), ('Custom text displayed on maintenance page while shop is deactivated.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                                {{ form_errors(generalForm.maintenance_text) }}
-                                {{ form_widget(generalForm.maintenance_text) }}
-                            </div>
-                            {{ form_rest(generalForm) }}
-                        </div>
-                    </div>
-
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                        </div>
-                    </div>
+  {{ form_start(form, {'attr' : {'class': 'form'} }) }}
+  <div class="row justify-content-center">
+    {% block maintenance_form_general %}
+      <div class="col-xl-10">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">business_center</i> {{ 'General'|trans({}, 'Admin.Global') }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                {{ ps.label_with_help(('Enable Shop'|trans), ('Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.enable_shop) }}
+                  {{ form_widget(generalForm.enable_shop) }}
                 </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Maintenance IP'|trans), ('IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.maintenance_ip) }}
+                  {{ form_widget(generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Custom maintenance text'|trans), ('Custom text displayed on maintenance page while shop is deactivated.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.maintenance_text) }}
+                  {{ form_widget(generalForm.maintenance_text) }}
+                </div>
+              </div>
+              {{ form_rest(generalForm) }}
             </div>
-            {% endblock %}
-
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
         </div>
-        {{ form_end(form) }}
-    </div>
+      </div>
+    {% endblock %}
+  </div>
+  {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
-    <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
-    <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+  {{ parent() }}
+  <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
+  <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
+  <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
 {% endblock %}

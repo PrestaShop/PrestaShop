@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ abstract class ModuleAdminControllerCore extends AdminController
 
         $tab = new Tab($this->id);
         if (!$tab->module) {
-            throw new PrestaShopException('Admin tab '.get_class($this).' is not a module tab');
+            throw new PrestaShopException('Admin tab ' . get_class($this) . ' is not a module tab');
         }
 
         $this->module = Module::getInstanceByName($tab->module);
@@ -53,29 +53,30 @@ abstract class ModuleAdminControllerCore extends AdminController
     }
 
     /**
-     * Creates a template object
+     * Creates a template object.
      *
      * @param string $tpl_name Template filename
+     *
      * @return Smarty_Internal_Template
      */
     public function createTemplate($tpl_name)
     {
-        if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name) && $this->viewAccess()) {
-            return $this->context->smarty->createTemplate(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name, $this->context->smarty);
-        } elseif (file_exists($this->getTemplatePath().$this->override_folder.$tpl_name) && $this->viewAccess()) {
-            return $this->context->smarty->createTemplate($this->getTemplatePath().$this->override_folder.$tpl_name, $this->context->smarty);
+        if (file_exists(_PS_THEME_DIR_ . 'modules/' . $this->module->name . '/views/templates/admin/' . $tpl_name) && $this->viewAccess()) {
+            return $this->context->smarty->createTemplate(_PS_THEME_DIR_ . 'modules/' . $this->module->name . '/views/templates/admin/' . $tpl_name, $this->context->smarty);
+        } elseif (file_exists($this->getTemplatePath() . $this->override_folder . $tpl_name) && $this->viewAccess()) {
+            return $this->context->smarty->createTemplate($this->getTemplatePath() . $this->override_folder . $tpl_name, $this->context->smarty);
         }
 
         return parent::createTemplate($tpl_name);
     }
 
     /**
-     * Get path to back office templates for the module
+     * Get path to back office templates for the module.
      *
      * @return string
      */
     public function getTemplatePath()
     {
-        return _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/';
+        return _PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/';
     }
 }

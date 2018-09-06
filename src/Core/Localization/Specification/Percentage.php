@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 /**
- * Percentage specification class
+ * Percentage specification class.
  *
  * Regroups specific rules and data used when formatting a percentage number in a given locale and a given numbering
  * system (latin, arab, ...).

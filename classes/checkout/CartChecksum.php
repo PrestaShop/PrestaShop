@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class CartChecksumCore implements ChecksumInterface
 {
     public $addressChecksum = null;
@@ -57,14 +56,14 @@ class CartChecksumCore implements ChecksumInterface
         $products = $cart->getProducts($refresh = true);
         foreach ($products as $product) {
             $uniq_id .= $product['id_shop']
-                .$this->subseparator
-                .$product['id_product']
-                .$this->subseparator
-                .$product['id_product_attribute']
-                .$this->subseparator
-                .$product['cart_quantity']
-                .$this->subseparator
-                .$product['total_wt'];
+                . $this->subseparator
+                . $product['id_product']
+                . $this->subseparator
+                . $product['id_product_attribute']
+                . $this->subseparator
+                . $product['cart_quantity']
+                . $this->subseparator
+                . $product['total_wt'];
             $uniq_id .= $this->separator;
         }
 

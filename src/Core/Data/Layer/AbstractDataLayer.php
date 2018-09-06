@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Exception;
 
 /**
  * Abstract data layer class
- * Provides common behavior to any data layer
+ * Provides common behavior to any data layer.
  *
  * A data layer acts as a middleware, chained to other data layers, and is meant to
  * read/write data from/to it's data source but also from/to other data layers
@@ -41,7 +41,7 @@ use Exception;
 abstract class AbstractDataLayer
 {
     /**
-     * The lower data layer to communicate with (read/write)
+     * The lower data layer to communicate with (read/write).
      *
      * @var AbstractDataLayer|null
      */
@@ -65,7 +65,7 @@ abstract class AbstractDataLayer
      * Is this data layer writable ?
      *
      * @return bool
-     *  True if writable. False if read-only layer.
+     *              True if writable. False if read-only layer.
      */
     public function isWritable()
     {
@@ -78,10 +78,10 @@ abstract class AbstractDataLayer
      * Lower layer might be called if nothing found in current layer
      *
      * @param mixed $id
-     *  The data object identifier
+     *                  The data object identifier
      *
      * @return mixed|null
-     *  A data object. Null if not found.
+     *                    A data object. Null if not found.
      *
      * @throws DataLayerException
      */
@@ -106,23 +106,22 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Write a data object
+     * Write a data object.
      *
      * Write request is propagated to lower layer, and the propagation result is actually written in
      * current layer (because lower layer might hydrate/update the data object).
      *
      * @param mixed $id
-     *  The data object identifier
-     *
+     *                  The data object identifier
      * @param mixed $data
-     *  The data object to write
+     *                    The data object to write
      *
      * @return mixed
-     *  The data object to be written by the upper data layer
-     *  (each layer might hydrate/update the data object for upper layers)
+     *               The data object to be written by the upper data layer
+     *               (each layer might hydrate/update the data object for upper layers)
      *
      * @throws DataLayerException
-     *  When write fails
+     *                            When write fails
      */
     public function write($id, $data)
     {
@@ -136,12 +135,13 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Propagate read to the lower layer
+     * Propagate read to the lower layer.
      *
      * @param $field
      *  The field to read
      *
      * @return mixed|null
+     *
      * @throws DataLayerException
      */
     protected function propagateRead($field)
@@ -154,19 +154,18 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Propagate write to lower layer
+     * Propagate write to lower layer.
      *
      * @param mixed $id
-     *  The data object identifier
-     *
+     *                  The data object identifier
      * @param mixed $data
-     *  The data object to write into this field
+     *                    The data object to write into this field
      *
      * @return mixed
-     *  The data object to be written by the upper data layer
+     *               The data object to be written by the upper data layer
      *
      * @throws DataLayerException
-     *  When write fails
+     *                            When write fails
      */
     protected function propagateWrite($id, $data)
     {
@@ -178,20 +177,17 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Save data object received from lower layers after a Read request
+     * Save data object received from lower layers after a Read request.
      *
      * This data object is written in the current layer to avoid read propagation next time.
      *
      * @param mixed $id
-     *  Data object identifier
-     *
+     *                  Data object identifier
      * @param mixed $data
-     *  Data object received from lower layers
-     *
-     * @return void
+     *                    Data object received from lower layers
      *
      * @throws DataLayerException
-     *  When write failed
+     *                            When write failed
      */
     protected function saveReadPropagationResult($id, $data)
     {
@@ -209,21 +205,20 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Save data object received from lower layers after a Write request
+     * Save data object received from lower layers after a Write request.
      *
      * This data object is written in the current layer after lower layers have hydrated/updated (and written) it
      *
      * @param mixed $id
-     *  Data object identifier
-     *
+     *                  Data object identifier
      * @param mixed $data
-     *  Data object received from lower layers
+     *                    Data object received from lower layers
      *
      * @return mixed
-     *  Data object to be written by upper layer
+     *               Data object to be written by upper layer
      *
      * @throws DataLayerException
-     *  When write failed
+     *                            When write failed
      */
     protected function saveWritePropagationResult($id, $data)
     {
@@ -249,13 +244,13 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Process some updates on $data before writing it in the current layer
+     * Process some updates on $data before writing it in the current layer.
      *
      * @param mixed $data
-     *  Data object to be updated before write
+     *                    Data object to be updated before write
      *
      * @return mixed
-     *  The updated data object
+     *               The updated data object
      */
     protected function beforeWrite($data)
     {
@@ -263,13 +258,13 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Process some updates on $data after writing it in the current layer
+     * Process some updates on $data after writing it in the current layer.
      *
      * @param mixed $data
-     *  Data object to be updated after write
+     *                    Data object to be updated after write
      *
      * @return mixed
-     *  The updated data object
+     *               The updated data object
      */
     protected function afterWrite($data)
     {
@@ -277,36 +272,33 @@ abstract class AbstractDataLayer
     }
 
     /**
-     * Actually read a data object into the current layer
+     * Actually read a data object into the current layer.
      *
      * Might be a file access, cache read, DB select...
      *
      * @param mixed $id
-     *  The data object identifier
+     *                  The data object identifier
      *
      * @return mixed|null
-     *  The wanted data object (null if not found)
+     *                    The wanted data object (null if not found)
      *
      * @throws DataLayerException
-     *  When read fails
+     *                            When read fails
      */
     abstract protected function doRead($id);
 
     /**
-     * Actually write a data object into the current layer
+     * Actually write a data object into the current layer.
      *
      * Might be a file edit, cache update, DB insert/update...
      *
      * @param mixed $id
-     *  The data object identifier
-     *
+     *                  The data object identifier
      * @param mixed $data
-     *  The data object to be written
-     *
-     * @return void
+     *                    The data object to be written
      *
      * @throws DataLayerException
-     *  When write fails
+     *                            When write fails
      */
     abstract protected function doWrite($id, $data);
 }

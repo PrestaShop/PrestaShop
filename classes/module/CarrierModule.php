@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class CarrierModuleCore extends Module
 {
     abstract public function getOrderShippingCost($params, $shipping_cost);
+
     abstract public function getOrderShippingCostExternal($params);
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Shop
+ * Shop.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ShopRepository")
@@ -38,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Shop
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_shop", type="integer")
@@ -60,7 +59,7 @@ class Shop
     private $name;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id_category", type="integer")
      */
@@ -74,24 +73,23 @@ class Shop
     private $themeName;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="deleted", type="boolean")
      */
     private $deleted;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -99,7 +97,7 @@ class Shop
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -113,7 +111,7 @@ class Shop
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -123,9 +121,9 @@ class Shop
     }
 
     /**
-     * Set idCategory
+     * Set idCategory.
      *
-     * @param integer $idCategory
+     * @param int $idCategory
      *
      * @return Shop
      */
@@ -137,9 +135,9 @@ class Shop
     }
 
     /**
-     * Get idCategory
+     * Get idCategory.
      *
-     * @return integer
+     * @return int
      */
     public function getIdCategory()
     {
@@ -147,7 +145,7 @@ class Shop
     }
 
     /**
-     * Set themeName
+     * Set themeName.
      *
      * @param string $themeName
      *
@@ -161,7 +159,7 @@ class Shop
     }
 
     /**
-     * Get themeName
+     * Get themeName.
      *
      * @return string
      */
@@ -171,9 +169,9 @@ class Shop
     }
 
     /**
-     * Set active
+     * Set active.
      *
-     * @param boolean $active
+     * @param bool $active
      *
      * @return Shop
      */
@@ -185,9 +183,9 @@ class Shop
     }
 
     /**
-     * Get active
+     * Get active.
      *
-     * @return boolean
+     * @return bool
      */
     public function getActive()
     {
@@ -195,9 +193,9 @@ class Shop
     }
 
     /**
-     * Set deleted
+     * Set deleted.
      *
-     * @param boolean $deleted
+     * @param bool $deleted
      *
      * @return Shop
      */
@@ -209,9 +207,9 @@ class Shop
     }
 
     /**
-     * Get deleted
+     * Get deleted.
      *
-     * @return boolean
+     * @return bool
      */
     public function getDeleted()
     {
@@ -219,7 +217,7 @@ class Shop
     }
 
     /**
-     * Set shopGroup
+     * Set shopGroup.
      *
      * @param \PrestaShopBundle\Entity\ShopGroup $shopGroup
      *
@@ -233,7 +231,7 @@ class Shop
     }
 
     /**
-     * Get shopGroup
+     * Get shopGroup.
      *
      * @return \PrestaShopBundle\Entity\ShopGroup
      */

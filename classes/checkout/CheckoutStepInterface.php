@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,20 +23,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 
 interface CheckoutStepInterface extends RenderableInterface
 {
     public function getTitle();
+
     public function handleRequest(array $requestParameters = array());
+
     public function setCheckoutProcess(CheckoutProcess $checkoutProcess);
+
     public function isReachable();
+
     public function isComplete();
+
     public function isCurrent();
+
     public function getIdentifier();
+
     public function getDataToPersist();
+
     public function restorePersistedData(array $data);
+
     public function getTemplate();
 }

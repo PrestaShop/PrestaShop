@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,18 +35,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Administration" page display
+ * Responsible of "Configure > Advanced Parameters > Administration" page display.
  */
 class AdministrationController extends FrameworkBundleAdminController
 {
     const CONTROLLER_NAME = 'AdminAdminPreferences';
 
     /**
-     * Show Administration page
+     * Show Administration page.
+     *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param FormInterface $form
+     *
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
@@ -55,7 +57,7 @@ class AdministrationController extends FrameworkBundleAdminController
 
         return [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Administration','Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -68,10 +70,12 @@ class AdministrationController extends FrameworkBundleAdminController
 
     /**
      * Process the Administration configuration form.
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     *
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)

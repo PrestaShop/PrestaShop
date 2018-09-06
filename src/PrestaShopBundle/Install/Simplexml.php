@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,14 +31,14 @@ use DOMDocument;
 class SimplexmlElement extends \SimpleXMLElement
 {
     /**
-     * Can add SimpleXMLElement values in XML tree
+     * Can add SimpleXMLElement values in XML tree.
      *
      * @see SimpleXMLElement::addChild()
      */
     public function addChild($name, $value = null, $namespace = null)
     {
         if ($value instanceof SimplexmlElement) {
-            $content = trim((string)$value);
+            $content = trim((string) $value);
             if (strlen($content) > 0) {
                 $new_element = parent::addChild($name, str_replace('&', '&amp;', $content), $namespace);
             } else {
@@ -57,7 +57,7 @@ class SimplexmlElement extends \SimpleXMLElement
     }
 
     /**
-     * Generate nice and sweet XML
+     * Generate nice and sweet XML.
      *
      * @see SimpleXMLElement::asXML()
      */
@@ -69,8 +69,9 @@ class SimplexmlElement extends \SimpleXMLElement
         $dom->loadXML(parent::asXML());
 
         if ($filename) {
-            return (bool)file_put_contents($filename, $dom->saveXML());
+            return (bool) file_put_contents($filename, $dom->saveXML());
         }
+
         return $dom->saveXML();
     }
 }

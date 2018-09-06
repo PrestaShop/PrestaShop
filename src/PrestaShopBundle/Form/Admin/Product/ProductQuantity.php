@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use Pack;
-use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;

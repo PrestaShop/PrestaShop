@@ -42,7 +42,10 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     /**
      * @return array Define the default filters configuration
      */
-    abstract public static function getDefaults();
+    public static function getDefaults()
+    {
+        return [];
+    }
 
     /**
      * {@inheritdoc}

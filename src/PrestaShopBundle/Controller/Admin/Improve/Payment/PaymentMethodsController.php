@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,12 +31,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class PaymentMethodsController is responsible for 'Improve > Payment > Payment Methods' page
+ * Class PaymentMethodsController is responsible for 'Improve > Payment > Payment Methods' page.
  */
 class PaymentMethodsController extends FrameworkBundleAdminController
 {
     /**
-     * Show payment method modules
+     * Show payment method modules.
      *
      * @param Request $request
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -80,7 +80,7 @@ class SupplierControllerCore extends ProductListingFrontController
                 $this->label = $this->trans(
                     'List of products by supplier %supplier_name%',
                     array(
-                        '%supplier_name%' => $this->supplier->name
+                        '%supplier_name%' => $this->supplier->name,
                     ),
                     'Shop.Theme.Catalog'
                 );

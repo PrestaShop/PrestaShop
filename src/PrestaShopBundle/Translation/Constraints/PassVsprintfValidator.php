@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Translation\Constraints;
 use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\PrestaShopTranslatorTrait;
-use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

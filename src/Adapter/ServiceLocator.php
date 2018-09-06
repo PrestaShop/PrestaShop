@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
@@ -35,7 +36,8 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 class ServiceLocator
 {
     /**
-     * Set a service container Instance
+     * Set a service container Instance.
+     *
      * @var Container
      */
     private static $service_container;
@@ -46,9 +48,12 @@ class ServiceLocator
     }
 
     /**
-     * Get a service depending on its given $serviceName
+     * Get a service depending on its given $serviceName.
+     *
      * @param $serviceName
+     *
      * @return mixed|object
+     *
      * @throws CoreException
      */
     public static function get($serviceName)

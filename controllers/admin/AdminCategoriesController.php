@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -58,28 +58,28 @@ class AdminCategoriesControllerCore extends AdminController
 
         $this->fieldImageSettings = array(
             'name' => 'image',
-            'dir' => 'c'
+            'dir' => 'c',
         );
 
         $this->fields_list = array(
             'id_category' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global')
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
             ),
             'description' => array(
                 'title' => $this->trans('Description', array(), 'Admin.Global'),
                 'callback' => 'getDescriptionClean',
-                'orderby' => false
+                'orderby' => false,
             ),
             'position' => array(
                 'title' => $this->trans('Position', array(), 'Admin.Global'),
                 'filter_key' => 'sa!position',
                 'position' => 'position',
-                'align' => 'center'
+                'align' => 'center',
             ),
             'active' => array(
                 'title' => $this->trans('Displayed', array(), 'Admin.Global'),
@@ -88,16 +88,16 @@ class AdminCategoriesControllerCore extends AdminController
                 'class' => 'fixed-width-xs',
                 'align' => 'center',
                 'ajax' => true,
-                'orderby' => false
-            )
+                'orderby' => false,
+            ),
         );
 
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')
-            )
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+            ),
         );
         $this->specificConfirmDelete = false;
     }
@@ -124,32 +124,31 @@ class AdminCategoriesControllerCore extends AdminController
         if (Tools::isSubmit('id_category')) {
             $id_parent = $this->_category->id;
         } elseif (!Shop::isFeatureActive() && $count_categories_without_parent > 1) {
-            $id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+            $id_parent = (int) Configuration::get('PS_ROOT_CATEGORY');
         } elseif (Shop::isFeatureActive() && $count_categories_without_parent == 1) {
-            $id_parent = (int)Configuration::get('PS_HOME_CATEGORY');
+            $id_parent = (int) Configuration::get('PS_HOME_CATEGORY');
         } elseif (Shop::isFeatureActive() && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP) {
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1) {
                 $id_parent = $this->context->shop->id_category;
             } else {
-                $id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+                $id_parent = (int) Configuration::get('PS_ROOT_CATEGORY');
             }
         } else {
             $id_parent = $this->context->shop->id_category;
         }
         $this->_select = 'sa.position position';
-        $this->original_filter = $this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+        $this->original_filter = $this->_filter .= ' AND `id_parent` = ' . (int) $id_parent . ' ';
         $this->_use_found_rows = false;
 
         if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+            $this->_join .= ' LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = ' . (int) $this->context->shop->id . ') ';
         } else {
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
+            $this->_join .= ' LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
         }
-
 
         // we add restriction for shop
         if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive()) {
-            $this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
+            $this->_where = ' AND sa.`id_shop` = ' . (int) Context::getContext()->shop->id;
         }
 
         // if we are not in a shop context, we remove the position column
@@ -159,9 +158,9 @@ class AdminCategoriesControllerCore extends AdminController
         // shop restriction : if category is not available for current shop, we redirect to the list from default category
         if (Validate::isLoadedObject($this->_category) && !$this->_category->isAssociatedToShop() && Shop::getContext() == Shop::CONTEXT_SHOP) {
             if ($this->_category->id === $this->context->shop->getCategory()) {
-                $this->redirect_after = $this->context->link->getAdminLink('AdminDashboard').'&error=1';
+                $this->redirect_after = $this->context->link->getAdminLink('AdminDashboard') . '&error=1';
             } else {
-                $this->redirect_after = self::$currentIndex . '&id_category=' . (int)$this->context->shop->getCategory() . '&token=' . $this->token;
+                $this->redirect_after = self::$currentIndex . '&id_category=' . (int) $this->context->shop->getCategory() . '&token=' . $this->token;
             }
 
             $this->redirect();
@@ -175,16 +174,16 @@ class AdminCategoriesControllerCore extends AdminController
         if ($this->display != 'edit' && $this->display != 'add') {
             if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
                 $this->page_header_toolbar_btn['new-url'] = array(
-                    'href' => self::$currentIndex.'&add'.$this->table.'root&token='.$this->token,
-                    'desc' => $this->trans('Add new root category', array(), 'Admin.Catalog.Feature')
+                    'href' => self::$currentIndex . '&add' . $this->table . 'root&token=' . $this->token,
+                    'desc' => $this->trans('Add new root category', array(), 'Admin.Catalog.Feature'),
                 );
             }
 
-            $id_category = (Tools::isSubmit('id_category')) ? '&id_parent='.(int)Tools::getValue('id_category') : '';
+            $id_category = (Tools::isSubmit('id_category')) ? '&id_parent=' . (int) Tools::getValue('id_category') : '';
             $this->page_header_toolbar_btn['new_category'] = array(
-                'href' => self::$currentIndex.'&addcategory&token='.$this->token.$id_category,
+                'href' => self::$currentIndex . '&addcategory&token=' . $this->token . $id_category,
                 'desc' => $this->trans('Add new category', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
     }
@@ -220,29 +219,27 @@ class AdminCategoriesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-
         $count_categories_without_parent = count(Category::getCategoriesWithoutParent());
         $categories_tree = $this->_category->getParentsCategories();
 
         if (empty($categories_tree)
-            && ($this->_category->id != (int)Configuration::get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
+            && ($this->_category->id != (int) Configuration::get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
             && (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1)) {
             $categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
         }
-
 
         $categories_tree = array_reverse($categories_tree);
         if (!empty($categories_tree)) {
             $link = Context::getContext()->link;
             foreach ($categories_tree as $k => $tree) {
-                $categories_tree[$k]['edit_link'] = $link->getAdminLink('AdminCategories', true).'&id_category='.(int)$tree['id_category'].'&updatecategory';
+                $categories_tree[$k]['edit_link'] = $link->getAdminLink('AdminCategories', true) . '&id_category=' . (int) $tree['id_category'] . '&updatecategory';
             }
         }
 
         $this->tpl_list_vars['categories_tree'] = $categories_tree;
         $this->tpl_list_vars['categories_tree_current_id'] = $this->_category->id;
 
-        if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table)) {
+        if (Tools::isSubmit('submitBulkdelete' . $this->table) || Tools::isSubmit('delete' . $this->table)) {
             $category = new Category(Tools::getValue('id_category'));
             if ($category->is_root_category) {
                 $this->tpl_list_vars['need_delete_mode'] = false;
@@ -263,9 +260,9 @@ class AdminCategoriesControllerCore extends AdminController
         // Check each row to see if there are combinations and get the correct action in consequence
 
         $nb_items = count($this->_list);
-        for ($i = 0; $i < $nb_items; $i++) {
+        for ($i = 0; $i < $nb_items; ++$i) {
             $item = &$this->_list[$i];
-            $category_tree = Category::getChildren((int)$item['id_category'], $this->context->language->id, false);
+            $category_tree = Category::getChildren((int) $item['id_category'], $this->context->language->id, false);
             if (!count($category_tree)) {
                 $this->addRowActionSkipList('view', array($item['id_category']));
             }
@@ -275,6 +272,7 @@ class AdminCategoriesControllerCore extends AdminController
     public function renderView()
     {
         $this->initToolbar();
+
         return $this->renderList();
     }
 
@@ -282,14 +280,14 @@ class AdminCategoriesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->toolbar_btn['new'] = array(
-                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
-                'desc' => $this->trans('Add New', array(), 'Admin.Actions')
+                'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                'desc' => $this->trans('Add New', array(), 'Admin.Actions'),
             );
 
             if ($this->can_import) {
                 $this->toolbar_btn['import'] = array(
-                    'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
-                    'desc' => $this->trans('Import', array(), 'Admin.Actions')
+                    'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=categories',
+                    'desc' => $this->trans('Import', array(), 'Admin.Actions'),
                 );
             }
         }
@@ -300,44 +298,44 @@ class AdminCategoriesControllerCore extends AdminController
             && !empty($this->_category)
         ) {
             $this->toolbar_btn['edit'] = array(
-                'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)$this->_category->id.'&token='.$this->token,
-                'desc' => $this->trans('Edit', array(), 'Admin.Actions')
+                'href' => self::$currentIndex . '&update' . $this->table . '&id_category=' . (int) $this->_category->id . '&token=' . $this->token,
+                'desc' => $this->trans('Edit', array(), 'Admin.Actions'),
             );
         }
         if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory')) {
             $this->toolbar_btn['edit'] = array(
-                'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)Tools::getValue('id_category').'&token='.$this->token,
-                'desc' => $this->trans('Edit', array(), 'Admin.Actions')
+                'href' => self::$currentIndex . '&update' . $this->table . '&id_category=' . (int) Tools::getValue('id_category') . '&token=' . $this->token,
+                'desc' => $this->trans('Edit', array(), 'Admin.Actions'),
             );
         }
 
         if ($this->display == 'view') {
             $this->toolbar_btn['new'] = array(
-                'href' => self::$currentIndex.'&add'.$this->table.'&id_parent='.(int)Tools::getValue('id_category').'&token='.$this->token,
-                'desc' => $this->trans('Add New', array(), 'Admin.Actions')
+                'href' => self::$currentIndex . '&add' . $this->table . '&id_parent=' . (int) Tools::getValue('id_category') . '&token=' . $this->token,
+                'desc' => $this->trans('Add New', array(), 'Admin.Actions'),
             );
         }
         parent::initToolbar();
 
-        if (!empty($this->_category) && $this->_category->id == (int)Configuration::get('PS_ROOT_CATEGORY') && isset($this->toolbar_btn['new'])) {
+        if (!empty($this->_category) && $this->_category->id == (int) Configuration::get('PS_ROOT_CATEGORY') && isset($this->toolbar_btn['new'])) {
             unset($this->toolbar_btn['new']);
         }
         // after adding a category
         if (empty($this->display)) {
-            $id_category = (Tools::isSubmit('id_category')) ? '&id_parent='.(int)Tools::getValue('id_category') : '';
+            $id_category = (Tools::isSubmit('id_category')) ? '&id_parent=' . (int) Tools::getValue('id_category') : '';
             $this->toolbar_btn['new'] = array(
-                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token.$id_category,
-                'desc' => $this->trans('Add New', array(), 'Admin.Actions')
+                'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token . $id_category,
+                'desc' => $this->trans('Add New', array(), 'Admin.Actions'),
             );
 
             if (Tools::isSubmit('id_category')) {
                 $back = Tools::safeOutput(Tools::getValue('back', ''));
                 if (empty($back)) {
-                    $back = self::$currentIndex.'&token='.$this->token;
+                    $back = self::$currentIndex . '&token=' . $this->token;
                 }
                 $this->toolbar_btn['back'] = array(
                     'href' => $back,
-                    'desc' => $this->trans('Back to list', array(), 'Admin.Actions')
+                    'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
             }
         }
@@ -346,17 +344,17 @@ class AdminCategoriesControllerCore extends AdminController
             && !empty($this->_category)
             && $this->_category->level_depth > 1
             && $this->_category->id_parent
-            && $this->_category->id_parent != (int)Configuration::get('PS_ROOT_CATEGORY')
+            && $this->_category->id_parent != (int) Configuration::get('PS_ROOT_CATEGORY')
         ) {
-            $this->toolbar_btn['back']['href'] .= '&id_category='.(int)$this->_category->id_parent;
+            $this->toolbar_btn['back']['href'] .= '&id_category=' . (int) $this->_category->id_parent;
         }
     }
 
     public function initProcess()
     {
-        if (Tools::isSubmit('add'.$this->table.'root')) {
+        if (Tools::isSubmit('add' . $this->table . 'root')) {
             if ($this->access('add')) {
-                $this->action = 'add'.$this->table.'root';
+                $this->action = 'add' . $this->table . 'root';
                 $obj = $this->loadObject(true);
                 if (Validate::isLoadedObject($obj)) {
                     $this->display = 'edit';
@@ -372,7 +370,7 @@ class AdminCategoriesControllerCore extends AdminController
 
         if ($this->action == 'delete' || $this->action == 'bulkdelete') {
             if (Tools::getIsset('cancel')) {
-                Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories'));
+                Tools::redirectAdmin(self::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminCategories'));
             } elseif (Tools::getValue('deleteMode') == 'link' || Tools::getValue('deleteMode') == 'linkanddisable' || Tools::getValue('deleteMode') == 'delete') {
                 $this->delete_mode = Tools::getValue('deleteMode');
             } else {
@@ -396,8 +394,8 @@ class AdminCategoriesControllerCore extends AdminController
         if (ConfigurationKPI::get('DISABLED_CATEGORIES') !== false) {
             $helper->value = ConfigurationKPI::get('DISABLED_CATEGORIES');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
-        $helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time);
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=disabled_categories';
+        $helper->refresh = (bool) (ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
         $helper = new HelperKpi();
@@ -409,8 +407,8 @@ class AdminCategoriesControllerCore extends AdminController
         if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false) {
             $helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
-        $helper->refresh = (bool)(ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time);
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=empty_categories';
+        $helper->refresh = (bool) (ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
         $helper = new HelperKpi();
@@ -422,8 +420,8 @@ class AdminCategoriesControllerCore extends AdminController
         if (ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang) !== false) {
             $helper->value = ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang);
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
-        $helper->refresh = (bool)(ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time);
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=top_category';
+        $helper->refresh = (bool) (ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time);
         $kpis[] = $helper->generate();
 
         $helper = new HelperKpi();
@@ -434,12 +432,13 @@ class AdminCategoriesControllerCore extends AdminController
         if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false) {
             $helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
-        $helper->refresh = (bool)(ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time);
+        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=products_per_category';
+        $helper->refresh = (bool) (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
         $helper = new HelperKpiRow();
         $helper->kpis = $kpis;
+
         return $helper->generate();
     }
 
@@ -451,54 +450,54 @@ class AdminCategoriesControllerCore extends AdminController
         $obj = $this->loadObject(true);
         $context = Context::getContext();
         $id_shop = $context->shop->id;
-        $selected_categories = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));
+        $selected_categories = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop)) ? (int) $obj->id_parent : (int) Tools::getValue('id_parent', Category::getRootCategory()->id));
         $unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
         $guest = new Group(Configuration::get('PS_GUEST_GROUP'));
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-        $unidentified_group_information = $this->trans('%group_name% - All people without a valid customer account.', array('%group_name%' => '<b>'.$unidentified->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
-        $guest_group_information = $this->trans('%group_name% - Customer who placed an order with the guest checkout.', array('%group_name%' => '<b>'.$guest->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
-        $default_group_information = $this->trans('%group_name% - All people who have created an account on this site.', array('%group_name%' => '<b>'.$default->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
+        $unidentified_group_information = $this->trans('%group_name% - All people without a valid customer account.', array('%group_name%' => '<b>' . $unidentified->name[$this->context->language->id] . '</b>'), 'Admin.Catalog.Feature');
+        $guest_group_information = $this->trans('%group_name% - Customer who placed an order with the guest checkout.', array('%group_name%' => '<b>' . $guest->name[$this->context->language->id] . '</b>'), 'Admin.Catalog.Feature');
+        $default_group_information = $this->trans('%group_name% - All people who have created an account on this site.', array('%group_name%' => '<b>' . $default->name[$this->context->language->id] . '</b>'), 'Admin.Catalog.Feature');
 
         if (!($obj = $this->loadObject(true))) {
             return;
         }
 
-        $image = _PS_CAT_IMG_DIR_.$obj->id.'.'.$this->imageType;
-        $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true, true);
+        $image = _PS_CAT_IMG_DIR_ . $obj->id . '.' . $this->imageType;
+        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $obj->id . '.' . $this->imageType, 350, $this->imageType, true, true);
 
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
         $images_types = ImageType::getImagesTypes('categories');
         $format = array();
         $thumb = $thumb_url = '';
-        $formatted_category= ImageType::getFormattedName('category');
+        $formatted_category = ImageType::getFormattedName('category');
         $formatted_small = ImageType::getFormattedName('small');
         foreach ($images_types as $k => $image_type) {
             if ($formatted_category == $image_type['name']) {
                 $format['category'] = $image_type;
             } elseif ($formatted_small == $image_type['name']) {
                 $format['small'] = $image_type;
-                $thumb = _PS_CAT_IMG_DIR_.$obj->id.'-'.$image_type['name'].'.'.$this->imageType;
+                $thumb = _PS_CAT_IMG_DIR_ . $obj->id . '-' . $image_type['name'] . '.' . $this->imageType;
                 if (is_file($thumb)) {
-                    $thumb_url = ImageManager::thumbnail($thumb, $this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, (int)$image_type['width'], $this->imageType, true, true);
+                    $thumb_url = ImageManager::thumbnail($thumb, $this->table . '_' . (int) $obj->id . '-thumb.' . $this->imageType, (int) $image_type['width'], $this->imageType, true, true);
                 }
             }
         }
 
         if (!is_file($thumb)) {
             $thumb = $image;
-            $thumb_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, 125, $this->imageType, true, true);
-            ImageManager::resize(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, _PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, (int)$image_type['width'], (int)$image_type['height']);
+            $thumb_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $obj->id . '-thumb.' . $this->imageType, 125, $this->imageType, true, true);
+            ImageManager::resize(_PS_TMP_IMG_DIR_ . $this->table . '_' . (int) $obj->id . '-thumb.' . $this->imageType, _PS_TMP_IMG_DIR_ . $this->table . '_' . (int) $obj->id . '-thumb.' . $this->imageType, (int) $image_type['width'], (int) $image_type['height']);
         }
 
         $thumb_size = file_exists($thumb) ? filesize($thumb) / 1000 : false;
 
         $menu_thumbnails = [];
-        for ($i = 0; $i < 3; $i++) {
-            if (file_exists(_PS_CAT_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg')) {
+        for ($i = 0; $i < 3; ++$i) {
+            if (file_exists(_PS_CAT_IMG_DIR_ . (int) $obj->id . '-' . $i . '_thumb.jpg')) {
                 $menu_thumbnails[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
-                $menu_thumbnails[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$obj->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
-                $menu_thumbnails[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='.$i.'&id_category='.(int)$obj->id;
+                $menu_thumbnails[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . (int) $obj->id . '-' . $i . '_thumb.jpg', $this->context->controller->table . '_' . (int) $obj->id . '-' . $i . '_thumb.jpg', 100, 'jpg', true, true);
+                $menu_thumbnails[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories') . '&deleteThumb=' . $i . '&id_category=' . (int) $obj->id;
             }
         }
 
@@ -506,7 +505,7 @@ class AdminCategoriesControllerCore extends AdminController
             'tinymce' => true,
             'legend' => array(
                 'title' => $this->trans('Category', array(), 'Admin.Catalog.Feature'),
-                'icon' => 'icon-tags'
+                'icon' => 'icon-tags',
             ),
             'input' => array(
                 array(
@@ -516,7 +515,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'lang' => true,
                     'required' => true,
                     'class' => 'copy2friendlyUrl',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
                 ),
                 array(
                     'type' => 'switch',
@@ -529,25 +528,25 @@ class AdminCategoriesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
-                    )
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                        ),
+                    ),
                 ),
                 array(
-                    'type'  => 'categories',
+                    'type' => 'categories',
                     'label' => $this->trans('Parent category', array(), 'Admin.Catalog.Feature'),
-                    'name'  => 'id_parent',
-                    'tree'  => array(
-                        'id'                  => 'categories-tree',
+                    'name' => 'id_parent',
+                    'tree' => array(
+                        'id' => 'categories-tree',
                         'selected_categories' => $selected_categories,
-                        'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null,
-                        'root_category'       => $context->shop->getCategory()
-                    )
+                        'disabled_categories' => (!Tools::isSubmit('add' . $this->table) && !Tools::isSubmit('submitAdd' . $this->table)) ? array($this->_category->id) : null,
+                        'root_category' => $context->shop->getCategory(),
+                    ),
                 ),
                 array(
                     'type' => 'textarea',
@@ -555,7 +554,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'name' => 'description',
                     'autoload_rte' => true,
                     'lang' => true,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
                 ),
                 array(
                     'type' => 'file',
@@ -564,9 +563,9 @@ class AdminCategoriesControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
-                    'delete_url' => self::$currentIndex.'&'.$this->identifier.'='.$this->_category->id.'&token='.$this->token.'&deleteImage=1',
+                    'delete_url' => self::$currentIndex . '&' . $this->identifier . '=' . $this->_category->id . '&token=' . $this->token . '&deleteImage=1',
                    'hint' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', array(), 'Admin.Catalog.Help'),
-                   'format' => $format['category']
+                   'format' => $format['category'],
                 ),
                 array(
                     'type' => 'file',
@@ -586,7 +585,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'multiple' => true,
                     'max_files' => 3,
                     'files' => $menu_thumbnails,
-                    'url' => Context::getContext()->link->getAdminLink('AdminCategories').'&ajax=1&id_category='.$this->id.'&action=uploadThumbnailImages',
+                    'url' => Context::getContext()->link->getAdminLink('AdminCategories') . '&ajax=1&id_category=' . $this->id . '&action=uploadThumbnailImages',
                     'hint' => $this->trans('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.', array(), 'Admin.Catalog.Help'),
                 ),
                 array(
@@ -598,7 +597,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
-                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
+                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
                 ),
                 array(
                     'type' => 'textarea',
@@ -609,14 +608,14 @@ class AdminCategoriesControllerCore extends AdminController
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
-                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
+                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
                 ),
                 array(
                     'type' => 'tags',
                     'label' => $this->trans('Meta keywords', array(), 'Admin.Global'),
                     'name' => 'meta_keywords',
                     'lang' => true,
-                    'hint' => $this->trans('To add "tags," click in the field, write something, and then press "Enter."', array(), 'Admin.Catalog.Help').'&nbsp;'.$this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info').' <>;=#{}'
+                    'hint' => $this->trans('To add "tags," click in the field, write something, and then press "Enter."', array(), 'Admin.Catalog.Help') . '&nbsp;' . $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
                 ),
                 array(
                     'type' => 'text',
@@ -624,7 +623,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'name' => 'link_rewrite',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->trans('Only letters, numbers, underscore (_) and the minus (-) character are allowed.', array(), 'Admin.Catalog.Help')
+                    'hint' => $this->trans('Only letters, numbers, underscore (_) and the minus (-) character are allowed.', array(), 'Admin.Catalog.Help'),
                 ),
                 array(
                     'type' => 'group',
@@ -635,21 +634,21 @@ class AdminCategoriesControllerCore extends AdminController
                     'unidentified' => $unidentified_group_information,
                     'guest' => $guest_group_information,
                     'customer' => $default_group_information,
-                    'hint' => $this->trans('Mark all of the customer groups which you would like to have access to this category.', array(), 'Admin.Catalog.Help')
-                )
+                    'hint' => $this->trans('Mark all of the customer groups which you would like to have access to this category.', array(), 'Admin.Catalog.Help'),
+                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-                'name' => 'submitAdd'.$this->table.($this->_category->is_root_category && !Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('add'.$this->table.'root') ? '': 'AndBackToParent')
-            )
+                'name' => 'submitAdd' . $this->table . ($this->_category->is_root_category && !Tools::isSubmit('add' . $this->table) && !Tools::isSubmit('add' . $this->table . 'root') ? '' : 'AndBackToParent'),
+            ),
         );
 
         $this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries();
-        $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+        $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int) Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
         $this->tpl_form_vars['displayBackOfficeCategory'] = Hook::exec('displayBackOfficeCategory');
 
         // Display this field only if multistore option is enabled
-        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && Tools::isSubmit('add'.$this->table.'root')) {
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && Tools::isSubmit('add' . $this->table . 'root')) {
             $this->fields_form['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->trans('Root Category', array(), 'Admin.Catalog.Feature'),
@@ -660,14 +659,14 @@ class AdminCategoriesControllerCore extends AdminController
                     array(
                         'id' => 'is_root_on',
                         'value' => 1,
-                        'label' => $this->trans('Yes', array(), 'Admin.Global')
+                        'label' => $this->trans('Yes', array(), 'Admin.Global'),
                     ),
                     array(
                         'id' => 'is_root_off',
                         'value' => 0,
-                        'label' => $this->trans('No', array(), 'Admin.Global')
-                    )
-                )
+                        'label' => $this->trans('No', array(), 'Admin.Global'),
+                    ),
+                ),
             );
             unset($this->fields_form['input'][2], $this->fields_form['input'][3]);
         }
@@ -681,7 +680,7 @@ class AdminCategoriesControllerCore extends AdminController
         }
 
         // remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
-        if ($this->_category->id_parent == (int)Configuration::get('PS_ROOT_CATEGORY') && Tools::isSubmit('updatecategory')) {
+        if ($this->_category->id_parent == (int) Configuration::get('PS_ROOT_CATEGORY') && Tools::isSubmit('updatecategory')) {
             foreach ($this->fields_form['input'] as $k => $input) {
                 if (in_array($input['name'], array('id_parent', 'is_root_category'))) {
                     unset($this->fields_form['input'][$k]);
@@ -693,11 +692,11 @@ class AdminCategoriesControllerCore extends AdminController
             return;
         }
 
-        $image = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.'/'.$obj->id.'.'.$this->imageType, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
+        $image = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . '/' . $obj->id . '.' . $this->imageType, $this->table . '_' . (int) $obj->id . '.' . $this->imageType, 350, $this->imageType, true);
 
         $this->fields_value = array(
             'image' => $image ? $image : false,
-            'size' => $image ? filesize(_PS_CAT_IMG_DIR_.'/'.$obj->id.'.'.$this->imageType) / 1000 : false
+            'size' => $image ? filesize(_PS_CAT_IMG_DIR_ . '/' . $obj->id . '.' . $this->imageType) / 1000 : false,
         );
 
         // Added values of object Group
@@ -710,10 +709,10 @@ class AdminCategoriesControllerCore extends AdminController
             $category_groups_ids = array_merge($category_groups_ids, $preselected);
         }
         foreach ($groups as $group) {
-            $this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $category_groups_ids)));
+            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $category_groups_ids)));
         }
 
-        $this->fields_value['is_root_category'] = (bool)Tools::isSubmit('add'.$this->table.'root');
+        $this->fields_value['is_root_category'] = (bool) Tools::isSubmit('add' . $this->table . 'root');
 
         return parent::renderForm();
     }
@@ -727,12 +726,12 @@ class AdminCategoriesControllerCore extends AdminController
             $this->processForceDeleteImage();
             $this->processForceDeleteThumb();
             if (Tools::isSubmit('forcedeleteImage')) {
-                Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
+                Tools::redirectAdmin(self::$currentIndex . '&token=' . Tools::getAdminTokenLite('AdminCategories') . '&conf=7');
             }
         }
         if (($id_thumb = Tools::getValue('deleteThumb', false)) !== false) {
-            if (file_exists(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')
-                && !unlink(_PS_CAT_IMG_DIR_.(int)Tools::getValue('id_category').'-'.(int)$id_thumb.'_thumb.jpg')) {
+            if (file_exists(_PS_CAT_IMG_DIR_ . (int) Tools::getValue('id_category') . '-' . (int) $id_thumb . '_thumb.jpg')
+                && !unlink(_PS_CAT_IMG_DIR_ . (int) Tools::getValue('id_category') . '-' . (int) $id_thumb . '_thumb.jpg')) {
                 $this->context->controller->errors[] = $this->trans('Error while delete', array(), 'Admin.Notifications.Error');
             }
 
@@ -740,9 +739,10 @@ class AdminCategoriesControllerCore extends AdminController
                 Tools::clearSmartyCache();
             }
 
-            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories').'&id_category='
-                .(int)Tools::getValue('id_category').'&updatecategory');
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCategories') . '&id_category='
+                . (int) Tools::getValue('id_category') . '&updatecategory');
         }
+
         return parent::postProcess();
     }
 
@@ -751,12 +751,12 @@ class AdminCategoriesControllerCore extends AdminController
         $category = $this->loadObject(true);
 
         if (Validate::isLoadedObject($category)) {
-            if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.$category->id.'-thumb.'.$this->imageType)
-                && !unlink(_PS_TMP_IMG_DIR_.$this->table.'_'.$category->id.'-thumb.'.$this->imageType)) {
+            if (file_exists(_PS_TMP_IMG_DIR_ . $this->table . '_' . $category->id . '-thumb.' . $this->imageType)
+                && !unlink(_PS_TMP_IMG_DIR_ . $this->table . '_' . $category->id . '-thumb.' . $this->imageType)) {
                 return false;
             }
-            if (file_exists(_PS_CAT_IMG_DIR_.$category->id.'_thumb.'.$this->imageType)
-                && !unlink(_PS_CAT_IMG_DIR_.$category->id.'_thumb.'.$this->imageType)) {
+            if (file_exists(_PS_CAT_IMG_DIR_ . $category->id . '_thumb.' . $this->imageType)
+                && !unlink(_PS_CAT_IMG_DIR_ . $category->id . '_thumb.' . $this->imageType)) {
                 return false;
             }
 
@@ -764,13 +764,14 @@ class AdminCategoriesControllerCore extends AdminController
             $formatted_small = ImageType::getFormattedName('small');
             foreach ($images_types as $image_type) {
                 if ($formatted_small == $image_type['name'] &&
-                    file_exists(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType) &&
-                    !unlink(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType)
+                    file_exists(_PS_CAT_IMG_DIR_ . $category->id . '-' . $image_type['name'] . '.' . $this->imageType) &&
+                    !unlink(_PS_CAT_IMG_DIR_ . $category->id . '-' . $image_type['name'] . '.' . $this->imageType)
                 ) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
@@ -784,13 +785,13 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function processAdd()
     {
-        $id_category = (int)Tools::getValue('id_category');
-        $id_parent = (int)Tools::getValue('id_parent');
+        $id_category = (int) Tools::getValue('id_category');
+        $id_parent = (int) Tools::getValue('id_parent');
 
         // if true, we are in a root category creation
         if (!$id_parent) {
             $_POST['is_root_category'] = $_POST['level_depth'] = 1;
-            $_POST['id_parent'] = $id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
+            $_POST['id_parent'] = $id_parent = (int) Configuration::get('PS_ROOT_CATEGORY');
         }
 
         if ($id_category) {
@@ -806,8 +807,9 @@ class AdminCategoriesControllerCore extends AdminController
 
         //if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
         if ($object && Tools::getValue('is_root_category')) {
-            Tools::redirectAdmin(self::$currentIndex.'&id_category='.(int)Configuration::get('PS_ROOT_CATEGORY').'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
+            Tools::redirectAdmin(self::$currentIndex . '&id_category=' . (int) Configuration::get('PS_ROOT_CATEGORY') . '&token=' . Tools::getAdminTokenLite('AdminCategories') . '&conf=3');
         }
+
         return $object;
     }
 
@@ -827,8 +829,8 @@ class AdminCategoriesControllerCore extends AdminController
     {
         if ($this->access('delete')) {
             $cats_ids = array();
-            foreach (Tools::getValue($this->table.'Box') as $id_category) {
-                $category = new Category((int)$id_category);
+            foreach (Tools::getValue($this->table . 'Box') as $id_category) {
+                $category = new Category((int) $id_category);
                 if (!$category->isRootCategoryForAShop()) {
                     $cats_ids[$category->id] = $category->id_parent;
                 }
@@ -837,8 +839,9 @@ class AdminCategoriesControllerCore extends AdminController
             if (parent::processBulkDelete()) {
                 $this->setDeleteMode();
                 foreach ($cats_ids as $id_parent) {
-                    $this->processFatherlessProducts((int)$id_parent);
+                    $this->processFatherlessProducts((int) $id_parent);
                 }
+
                 return true;
             } else {
                 return false;
@@ -857,12 +860,14 @@ class AdminCategoriesControllerCore extends AdminController
                 $this->errors[] = $this->trans('You cannot remove this category because one of your shops uses it as a root category.', array(), 'Admin.Catalog.Notification');
             } elseif (parent::processDelete()) {
                 $this->setDeleteMode();
-                $this->processFatherlessProducts((int)$category->id_parent);
+                $this->processFatherlessProducts((int) $category->id_parent);
+
                 return true;
             }
         } else {
             $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
         }
+
         return false;
     }
 
@@ -870,12 +875,12 @@ class AdminCategoriesControllerCore extends AdminController
     {
         /* Delete or link products which were not in others categories */
         $fatherless_products = Db::getInstance()->executeS('
-			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
-			'.Shop::addSqlAssociation('product', 'p').'
-			WHERE NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
+			SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p
+			' . Shop::addSqlAssociation('product', 'p') . '
+			WHERE NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
 
         foreach ($fatherless_products as $id_poor_product) {
-            $poor_product = new Product((int)$id_poor_product['id_product']);
+            $poor_product = new Product((int) $id_poor_product['id_product']);
             if (Validate::isLoadedObject($poor_product)) {
                 if ($this->remove_products || $id_parent == 0) {
                     $poor_product->delete();
@@ -883,8 +888,8 @@ class AdminCategoriesControllerCore extends AdminController
                     if ($this->disable_products) {
                         $poor_product->active = 0;
                     }
-                    $poor_product->id_category_default = (int)$id_parent;
-                    $poor_product->addToCategories((int)$id_parent);
+                    $poor_product->id_category_default = (int) $id_parent;
+                    $poor_product->addToCategories((int) $id_parent);
                     $poor_product->save();
                 }
             }
@@ -895,31 +900,31 @@ class AdminCategoriesControllerCore extends AdminController
     {
         if ($this->access('edit') !== '1') {
             $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
-        } elseif (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1))))) {
-            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').' <b>'.
-                $this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+        } elseif (!Validate::isLoadedObject($object = new Category((int) Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1))))) {
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') . ' <b>' .
+                $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
         }
-        if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
+        if (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
             $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
         } else {
             $object->regenerateEntireNtree();
-            Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
+            Tools::redirectAdmin(self::$currentIndex . '&' . $this->table . 'Orderby=position&' . $this->table . 'Orderway=asc&conf=5' . (($id_category = (int) Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&' . $this->identifier . '=' . $id_category) : '') . '&token=' . Tools::getAdminTokenLite('AdminCategories'));
         }
     }
 
     protected function postImage($id)
     {
         $ret = parent::postImage($id);
-        if (($id_category = (int)Tools::getValue('id_category')) && isset($_FILES) && count($_FILES)) {
+        if (($id_category = (int) Tools::getValue('id_category')) && isset($_FILES) && count($_FILES)) {
             $name = 'image';
-            if ($_FILES[$name]['name'] != null && file_exists(_PS_CAT_IMG_DIR_.$id_category.'.'.$this->imageType)) {
+            if ($_FILES[$name]['name'] != null && file_exists(_PS_CAT_IMG_DIR_ . $id_category . '.' . $this->imageType)) {
                 $images_types = ImageType::getImagesTypes('categories');
                 foreach ($images_types as $k => $image_type) {
                     if (!ImageManager::resize(
-                        _PS_CAT_IMG_DIR_.$id_category.'.'.$this->imageType,
-                        _PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.'.$this->imageType,
-                        (int)$image_type['width'],
-                        (int)$image_type['height']
+                        _PS_CAT_IMG_DIR_ . $id_category . '.' . $this->imageType,
+                        _PS_CAT_IMG_DIR_ . $id_category . '-' . stripslashes($image_type['name']) . '.' . $this->imageType,
+                        (int) $image_type['width'],
+                        (int) $image_type['height']
                     )) {
                         $this->errors = $this->trans('An error occurred while uploading category image.', array(), 'Admin.Catalog.Notification');
                     }
@@ -941,17 +946,17 @@ class AdminCategoriesControllerCore extends AdminController
                         } else {
                             if (!ImageManager::resize(
                                 $tmpName,
-                                _PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.'.$this->imageType,
-                                (int)$image_type['width'],
-                                (int)$image_type['height']
+                                _PS_CAT_IMG_DIR_ . $id_category . '-' . stripslashes($image_type['name']) . '.' . $this->imageType,
+                                (int) $image_type['width'],
+                                (int) $image_type['height']
                             )) {
                                 $this->errors = $this->trans('An error occurred while uploading thumbnail image.', array(), 'Admin.Catalog.Notification');
                             } elseif (($infos = getimagesize($tmpName)) && is_array($infos)) {
                                 ImageManager::resize(
                                     $tmpName,
-                                    _PS_CAT_IMG_DIR_.$id_category.'_'.$name.'.'.$this->imageType,
-                                    (int)$infos[0],
-                                    (int)$infos[1]
+                                    _PS_CAT_IMG_DIR_ . $id_category . '_' . $name . '.' . $this->imageType,
+                                    (int) $infos[0],
+                                    (int) $infos[1]
                                 );
                             }
                             if (count($this->errors)) {
@@ -964,6 +969,7 @@ class AdminCategoriesControllerCore extends AdminController
                 }
             }
         }
+
         return $ret;
     }
 
@@ -974,11 +980,11 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function ajaxProcessUpdatePositions()
     {
-        $id_category_to_move = (int)Tools::getValue('id_category_to_move');
-        $id_category_parent = (int)Tools::getValue('id_category_parent');
-        $way = (int)Tools::getValue('way');
+        $id_category_to_move = (int) Tools::getValue('id_category_to_move');
+        $id_category_parent = (int) Tools::getValue('id_category_parent');
+        $way = (int) Tools::getValue('way');
         $positions = Tools::getValue('category');
-        $found_first = (bool)Tools::getValue('found_first');
+        $found_first = (bool) Tools::getValue('found_first');
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
@@ -994,7 +1000,7 @@ class AdminCategoriesControllerCore extends AdminController
             if (isset($position) && $category->updatePosition($way, $position)) {
                 /* Position '0' was not found in given positions so try to reorder parent category*/
                 if (!$found_first) {
-                    $category->cleanPositions((int)$category->id_parent);
+                    $category->cleanPositions((int) $category->id_parent);
                 }
 
                 die(true);
@@ -1008,10 +1014,10 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function ajaxProcessStatusCategory()
     {
-        if (!$id_category = (int)Tools::getValue('id_category')) {
+        if (!$id_category = (int) Tools::getValue('id_category')) {
             die(json_encode(array('success' => false, 'error' => true, 'text' => $this->trans('Failed to update the status', array(), 'Admin.Notifications.Error'))));
         } else {
-            $category = new Category((int)$id_category);
+            $category = new Category((int) $id_category);
             if (Validate::isLoadedObject($category)) {
                 $category->active = $category->active == 1 ? 0 : 1;
                 $category->save() ?
@@ -1023,25 +1029,25 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function ajaxProcessuploadThumbnailImages()
     {
-        $category = new Category((int)Tools::getValue('id_category'));
+        $category = new Category((int) Tools::getValue('id_category'));
 
         if (isset($_FILES['thumbnail'])) {
             //Get total of image already present in directory
             $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
             $assigned_keys = array();
-            $allowed_keys  = array(0, 1, 2);
+            $allowed_keys = array(0, 1, 2);
 
             foreach ($files as $file) {
                 $matches = array();
 
-                if (preg_match('/^'.$category->id.'-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
-                    $assigned_keys[] = (int)$matches[1];
+                if (preg_match('/^' . $category->id . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
+                    $assigned_keys[] = (int) $matches[1];
                 }
             }
 
             $available_keys = array_diff($allowed_keys, $assigned_keys);
             $helper = new HelperImageUploader('thumbnail');
-            $files  = $helper->process();
+            $files = $helper->process();
             $total_errors = array();
 
             if (count($available_keys) < count($files)) {
@@ -1059,7 +1065,7 @@ class AdminCategoriesControllerCore extends AdminController
                 }
                 // Copy new image
                 if (!isset($file['save_path']) || (empty($errors) && !ImageManager::resize($file['save_path'], _PS_CAT_IMG_DIR_
-                            .(int)Tools::getValue('id_category').'-'.$id.'_thumb.jpg'))) {
+                            . (int) Tools::getValue('id_category') . '-' . $id . '_thumb.jpg'))) {
                     $errors[] = $this->trans('An error occurred while uploading the image.', array(), 'Admin.Catalog.Notification');
                 }
 
@@ -1080,10 +1086,10 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 //Add image preview and delete url
-                $file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$category->id.'-'.$id.'_thumb.jpg',
-                    $this->context->controller->table.'_'.(int)$category->id.'-'.$id.'_thumb.jpg', 100, 'jpg', true, true);
-                $file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='
-                    .$id.'&id_category='.(int)$category->id.'&updatecategory';
+                $file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg', 100, 'jpg', true, true);
+                $file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories') . '&deleteThumb='
+                    . $id . '&id_category=' . (int) $category->id . '&updatecategory';
             }
 
             if (count($total_errors)) {

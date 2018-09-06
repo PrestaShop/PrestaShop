@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AttributeGroupLang
+ * AttributeGroupLang.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupLangRepository")
@@ -66,20 +65,18 @@ class AttributeGroupLang
      */
     private $publicName;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->attributeGroup;
     }
 
-
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -93,7 +90,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -103,7 +100,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Set publicName
+     * Set publicName.
      *
      * @param string $publicName
      *
@@ -117,7 +114,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get publicName
+     * Get publicName.
      *
      * @return string
      */
@@ -127,7 +124,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Set attributeGroup
+     * Set attributeGroup.
      *
      * @param \PrestaShopBundle\Entity\AttributeGroup $attributeGroup
      *
@@ -141,7 +138,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get attributeGroup
+     * Get attributeGroup.
      *
      * @return \PrestaShopBundle\Entity\AttributeGroup
      */
@@ -151,7 +148,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Set lang
+     * Set lang.
      *
      * @param \PrestaShopBundle\Entity\Lang $lang
      *
@@ -165,7 +162,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get lang
+     * Get lang.
      *
      * @return \PrestaShopBundle\Entity\Lang
      */

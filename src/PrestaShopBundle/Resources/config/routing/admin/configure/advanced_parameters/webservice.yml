@@ -1,0 +1,75 @@
+admin_webservice:
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:index'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_search:
+  path: /
+  methods: POST
+  defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_settings_save:
+    path: /settings
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processSettingsForm'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_list_create:
+    path: /create
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:listCreate'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_list_edit:
+    path: /edit/{webserviceAccountId}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:listEdit'
+        _legacy_controller: AdminWebservice
+    requirements:
+        webserviceAccountId: \d+
+
+admin_delete_single_webservice_log:
+    path: /delete/{webserviceAccountId}
+    methods: DELETE
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteSingleWebservice'
+        _legacy_controller: AdminWebservice
+    requirements:
+        webserviceAccountId: \d+
+
+admin_delete_multiple_webservice_log:
+    path: /delete
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:deleteMultipleWebservice'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_status_toggle:
+    path: /status/{webserviceAccountId}
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:toggleStatus'
+        _legacy_controller: AdminWebservice
+    requirements:
+        webserviceAccountId: \d+
+
+admin_webservice_bulk_enable:
+    path: /status/bulk/enable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:enableMultipleStatus'
+        _legacy_controller: AdminWebservice
+
+admin_webservice_bulk_disable:
+    path: /status/bulk/disable
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:disableMultipleStatus'
+        _legacy_controller: AdminWebservice

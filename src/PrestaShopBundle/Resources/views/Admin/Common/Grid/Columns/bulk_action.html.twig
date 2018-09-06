@@ -29,7 +29,7 @@
            title="{{ column.name }}"
            class="js-bulk-action-checkbox"
            name="{{ grid.id~'_'~column.id }}[]"
-           value="{{ row[column.options.bulk_field] }}"
+           value="{{ record[column.options.bulk_field] }}"
     >
     <i class="md-checkbox-control"></i>
   </label>

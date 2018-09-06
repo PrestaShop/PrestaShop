@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -57,7 +57,8 @@ class PrestaTrustChecker
     protected $cache;
 
     /**
-     * Addons marketplace API client
+     * Addons marketplace API client.
+     *
      * @var ApiClient
      */
     protected $apiClient;
@@ -82,7 +83,7 @@ class PrestaTrustChecker
     /**
      * If the module is compliant, this class generates and adds all PrestaTrust related details.
      * If not, the module remains untouched. We do not execute checks to avoid slow performances.
-     * 
+     *
      * @param Module $module
      */
     public function loadDetailsIntoModule(Module $module)
@@ -96,12 +97,12 @@ class PrestaTrustChecker
         }
 
         // Merge 2 existing sources of data
-        $details = (object) array_merge((array) $module->get('prestatrust', new \stdClass), (array) $this->cache->fetch($module->get('name')));
+        $details = (object) array_merge((array) $module->get('prestatrust', new \stdClass()), (array) $this->cache->fetch($module->get('name')));
 
         $details->check_list = $this->requestCheck($details->hash, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
         $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
-        
+
         $module->set('prestatrust', $details);
     }
 
@@ -118,7 +119,7 @@ class PrestaTrustChecker
     {
         // Do we need to check something in order to validate only PrestaTrust related modules?
 
-        $details = new \stdClass;
+        $details = new \stdClass();
         $details->hash = $this->calculateHash($zipFile->getSource());
 
         $this->cache->save($zipFile->getName(), $details);
@@ -128,6 +129,7 @@ class PrestaTrustChecker
      * Find all files with defined extensions, and calculate md5 from their content.
      *
      * @param string $zipFile Path to the module Zip file
+     *
      * @return string Hash of the module
      */
     protected function calculateHash($zipFile)
@@ -137,8 +139,8 @@ class PrestaTrustChecker
         if (true !== $zip->open($zipFile)) {
             return $preparehash;
         }
-        
-        for ($i = 0; $i < $zip->numFiles; $i++) {
+
+        for ($i = 0; $i < $zip->numFiles; ++$i) {
             $stat = $zip->statIndex($i);
             $file_info = pathinfo($stat['name']);
 
@@ -147,10 +149,11 @@ class PrestaTrustChecker
             }
 
             if (in_array(trim($file_info['extension']), $this->checked_extensions)) {
-                $preparehash .= $zip->getFromName($file_info['dirname'].'/'.$file_info['basename']);
+                $preparehash .= $zip->getFromName($file_info['dirname'] . '/' . $file_info['basename']);
             }
         }
         $zip->close();
+
         return hash('sha256', $preparehash);
     }
 
@@ -160,7 +163,8 @@ class PrestaTrustChecker
      * The address will be found right after it, and must also match the file name.
      *
      * @param string $path Module root path
-     * @return string|null Smart contract address, if found.
+     *
+     * @return string|null smart contract address, if found
      */
     public function findSmartContrat($path)
     {
@@ -174,6 +178,7 @@ class PrestaTrustChecker
                 return $sc;
             }
         }
+
         return null;
     }
 
@@ -182,6 +187,7 @@ class PrestaTrustChecker
      * went right (or wrong).
      *
      * @param array $check_list
+     *
      * @return string Message displayed for confirmation
      */
     protected function getMessage(array $check_list)
@@ -195,6 +201,7 @@ class PrestaTrustChecker
         if ($check_list['integrity'] && !$check_list['property']) {
             return self::CHECKS_PROPERTY_NOK;
         }
+
         return self::CHECKS_ALL_NOK;
     }
 
@@ -203,7 +210,8 @@ class PrestaTrustChecker
      * must exist, start with "0x" and be 42 characters long.
      *
      * @param Module $module
-     * @return boolean Module compliancy
+     *
+     * @return bool Module compliancy
      */
     protected function isCompliant(Module $module)
     {
@@ -230,32 +238,36 @@ class PrestaTrustChecker
      * Check that the string starts with '0x'.
      *
      * @param string $str Author address
+     *
      * @return bool True if starts with '0x'
      */
     protected function hasHexPrefix($str)
     {
         $prefix = '0x';
+
         return substr($str, 0, strlen($prefix)) === $prefix;
     }
 
     /**
      * Send to the Marketplace API our details about the module, and get results
-     * about its integrity and property
+     * about its integrity and property.
      *
      * @param string $hash Calculted hash from the modules files
      * @param string $contract Smart contract address from module
-     * @return array of check list results.
+     *
+     * @return array of check list results
      */
     protected function requestCheck($hash, $contract)
     {
         try {
             $result = $this->apiClient->getPrestaTrustCheck($hash, $contract);
+
             return array(
-                'integrity' => (bool)($result->hash_trusted),
-                'property' => (bool)($result->property_trusted),
+                'integrity' => (bool) ($result->hash_trusted),
+                'property' => (bool) ($result->property_trusted),
             );
         } catch (Exception $e) {
-            return array('integrity' => false, 'property' => false, );
+            return array('integrity' => false, 'property' => false);
         }
     }
 }

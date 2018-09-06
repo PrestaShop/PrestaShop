@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class FacetCollection
@@ -34,6 +33,7 @@ class FacetCollection
     public function addFacet(Facet $facet)
     {
         $this->facets[] = $facet;
+
         return $this;
     }
 

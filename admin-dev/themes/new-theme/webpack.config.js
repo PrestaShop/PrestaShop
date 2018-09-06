@@ -22,12 +22,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const keepLicense = require('uglify-save-license');
 
-let config = {
+const config = {
   entry: {
     main: [
       'prestakit/dist/js/prestashop-ui-kit.js',
@@ -55,14 +56,17 @@ let config = {
     logs: [
       './js/app/pages/logs',
     ],
+    improve_design_positions: [
+      './js/pages/improve/design_positions',
+    ],
     order_preferences: [
       './js/pages/order-preferences',
     ],
-    product_preferences: [
-      './js/pages/product-preferences',
-    ],
     order_delivery: [
       './js/pages/order/delivery',
+    ],
+    product_preferences: [
+      './js/pages/product-preferences',
     ],
     imports: [
       './js/pages/import'
@@ -71,14 +75,35 @@ let config = {
       './js/pages/localization'
     ],
     invoices: [
-        './js/pages/invoices',
+      './js/pages/invoices',
     ],
     geolocation: [
       './js/pages/geolocation',
     ],
     payment_preferences: [
-      './js/pages/payment-preferences'
-    ]
+      './js/pages/payment-preferences',
+    ],
+    email: [
+      './js/pages/email'
+    ],
+    sql_manager: [
+      './js/pages/sql-manager',
+    ],
+    catalog_product: [
+      './js/pages/catalog/product'
+    ],
+    backup: [
+      './js/pages/backup'
+    ],
+    module_card: [
+      './js/app/pages/module-card'
+    ],
+    translation_settings: [
+      './js/pages/translation-settings'
+    ],
+    webservice: [
+      './js/pages/webservice'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -190,7 +215,6 @@ let config = {
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
@@ -216,6 +240,7 @@ if (process.env.NODE_ENV === 'production') {
     })
   );
 } else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.entry.stock.push('webpack/hot/only-dev-server');
   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
 }

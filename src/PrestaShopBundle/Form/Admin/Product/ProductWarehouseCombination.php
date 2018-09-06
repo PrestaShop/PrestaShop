@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
- * This form class is responsible to generate the basic product Warehouse combinations form
+ * This form class is responsible to generate the basic product Warehouse combinations form.
  */
 class ProductWarehouseCombination extends CommonAbstractType
 {
@@ -42,7 +42,7 @@ class ProductWarehouseCombination extends CommonAbstractType
     private $contextLegacy;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -62,7 +62,7 @@ class ProductWarehouseCombination extends CommonAbstractType
     {
         $builder->add('activated', CheckboxType::class, [
             'required' => false,
-            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature')
+            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature'),
         ])
             ->add('id_product_attribute', HiddenType::class)
             ->add('product_id', HiddenType::class)

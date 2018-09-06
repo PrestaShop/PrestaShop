@@ -29,6 +29,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
     prestashop.core.api.stock.repository:
         class: PrestaShopBundle\Entity\Repository\StockRepository
@@ -86,7 +87,13 @@ services:
             - '%database_prefix%'
 
     prestashop.bundle.repository.module:
-        class: PrestaShopBundle\Entity\Repository\ModuleRepository
+            class: PrestaShopBundle\Entity\Repository\ModuleRepository
+            arguments:
+                - '@doctrine.dbal.default_connection'
+                - '%database_prefix%'
+
+    prestashop.core.admin.request_sql.repository:
+        class: PrestaShopBundle\Entity\Repository\RequestSqlRepository
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'

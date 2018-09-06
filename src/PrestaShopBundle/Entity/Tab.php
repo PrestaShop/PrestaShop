@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tab
+ * Tab.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabRepository")
@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Tab
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_tab", type="integer")
@@ -46,14 +46,14 @@ class Tab
     private $id;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id_parent", type="integer")
      */
     private $idParent;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer")
      */
@@ -74,14 +74,14 @@ class Tab
     private $className;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="hide_host_mode", type="boolean")
      */
@@ -98,7 +98,6 @@ class Tab
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
      */
     private $tabLangs;
-
 
     public function getId()
     {
@@ -146,7 +145,7 @@ class Tab
     }
 
     /**
-     * Set active
+     * Set active.
      *
      * @param bool $active
      *

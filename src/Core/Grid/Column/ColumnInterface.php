@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,35 +27,34 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column;
 
 /**
- * Interface ColumnInterface exposes contract for single column
+ * Interface ColumnInterface exposes contract for single column.
  */
 interface ColumnInterface
 {
     /**
-     * Get unique column id
+     * Get unique column id.
      *
      * @return string
-     *
      * @return self
      */
     public function getId();
 
     /**
-     * Get column type
+     * Get column type.
      *
      * @return string
      */
     public function getType();
 
     /**
-     * Get translated column name
+     * Get translated column name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Translated column name
+     * Translated column name.
      *
      * @param string $name
      *
@@ -64,14 +63,14 @@ interface ColumnInterface
     public function setName($name);
 
     /**
-     * Get column related options
+     * Get column related options.
      *
      * @return array
      */
     public function getOptions();
 
     /**
-     * Set column options
+     * Set column options.
      *
      * @param array $options
      *

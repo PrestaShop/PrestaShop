@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class OrderCartRuleCore extends ObjectModel
 {
     /** @var int */
@@ -57,14 +56,14 @@ class OrderCartRuleCore extends ObjectModel
         'table' => 'order_cart_rule',
         'primary' => 'id_order_cart_rule',
         'fields' => array(
-            'id_order' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_cart_rule' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order_invoice' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'name' =>                array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
-            'value' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'value_tax_excl' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'free_shipping' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
-        )
+            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_cart_rule' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_order_invoice' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
+            'value' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'value_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'free_shipping' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        ),
     );
 
     protected $webserviceParameters = array(

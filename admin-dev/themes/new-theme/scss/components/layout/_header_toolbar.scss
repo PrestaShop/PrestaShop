@@ -4,7 +4,7 @@
   top: $size-header-height;
   left: $size-navbar-width;
   right: 0;
-  z-index: 501;
+  z-index: 1;
   border-bottom: 0.0625rem solid $color-separator;
 
   transition: left .5s ease; // transition when collapsing the nav menu

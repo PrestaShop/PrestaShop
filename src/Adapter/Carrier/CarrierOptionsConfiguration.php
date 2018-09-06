@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration
+ * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration.
  */
 class CarrierOptionsConfiguration implements DataConfigurationInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Entity\Repository\TimezoneRepository;
 
 /**
- * Class TimezoneByNameChoiceProvider provides timezone choices with name values
+ * Class TimezoneByNameChoiceProvider provides timezone choices with name values.
  */
 final class TimezoneByNameChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,7 +48,7 @@ final class TimezoneByNameChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get timezone choices
+     * Get timezone choices.
      *
      * @return array
      */

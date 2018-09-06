@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -121,7 +121,7 @@ class GuestTrackingControllerCore extends FrontController
     public function initContent()
     {
         parent::initContent();
-        
+
         if (!Validate::isLoadedObject($this->order)) {
             return $this->setTemplate('customer/guest-login');
         }

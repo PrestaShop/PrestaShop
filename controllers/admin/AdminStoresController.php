@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -45,7 +45,7 @@ class AdminStoresControllerCore extends AdminController
 
         $this->fieldImageSettings = array(
             'name' => 'image',
-            'dir' => 'st'
+            'dir' => 'st',
         );
 
         $this->fields_list = array(
@@ -58,15 +58,15 @@ class AdminStoresControllerCore extends AdminController
             'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'filter_key' => 'cl!name'),
             'phone' => array('title' => $this->trans('Phone', array(), 'Admin.Global')),
             'fax' => array('title' => $this->trans('Fax', array(), 'Admin.Global')),
-            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
         );
 
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->_buildOrderedFieldsShop($this->_getDefaultFieldsContent());
@@ -98,9 +98,9 @@ class AdminStoresControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_store'] = array(
-                'href' => self::$currentIndex.'&addstore&token='.$this->token,
+                'href' => self::$currentIndex . '&addstore&token=' . $this->token,
                 'desc' => $this->trans('Add new store', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
@@ -120,12 +120,12 @@ class AdminStoresControllerCore extends AdminController
         $this->_join = '
             LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
                 ON (cl.`id_country` = a.`id_country`
-                AND cl.`id_lang` = ' . (int)$this->context->language->id . ')
+                AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
             LEFT JOIN `' . _DB_PREFIX_ . 'state` st
                 ON (st.`id_state` = a.`id_state`)
             LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
                 ON (sl.`id_store` = a.`id_store`
-                AND sl.`id_lang` = ' . (int)$this->context->language->id . ') ';
+                AND sl.`id_lang` = ' . (int) $this->context->language->id . ') ';
 
         return parent::renderList();
     }
@@ -136,8 +136,8 @@ class AdminStoresControllerCore extends AdminController
             return;
         }
 
-        $image = _PS_STORE_IMG_DIR_.$obj->id.'.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
+        $image = _PS_STORE_IMG_DIR_ . $obj->id . '.jpg';
+        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $obj->id . '.' . $this->imageType, 350,
             $this->imageType, true, true);
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
@@ -145,13 +145,13 @@ class AdminStoresControllerCore extends AdminController
         $res = $tmp_addr->getFieldsRequiredDatabase();
         $required_fields = array();
         foreach ($res as $row) {
-            $required_fields[(int)$row['id_required_field']] = $row['field_name'];
+            $required_fields[(int) $row['id_required_field']] = $row['field_name'];
         }
 
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Stores', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-home'
+                'icon' => 'icon-home',
             ),
             'input' => array(
                 array(
@@ -162,15 +162,15 @@ class AdminStoresControllerCore extends AdminController
                     'required' => false,
                     'hint' => array(
                         $this->trans('Store name (e.g. City Center Mall Store).', array(), 'Admin.Shopparameters.Feature'),
-                        $this->trans('Allowed characters: letters, spaces and %s', array(), 'Admin.Shopparameters.Feature')
-                    )
+                        $this->trans('Allowed characters: letters, spaces and %s', array(), 'Admin.Shopparameters.Feature'),
+                    ),
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Address', array(), 'Admin.Global'),
                     'name' => 'address1',
                     'lang' => true,
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'text',
@@ -182,25 +182,25 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
                     'name' => 'postcode',
-                    'required' => in_array('postcode', $required_fields)
+                    'required' => in_array('postcode', $required_fields),
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('City', array(), 'Admin.Global'),
                     'name' => 'city',
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'select',
                     'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
-                    'default_value' => (int)$this->context->country->id,
+                    'default_value' => (int) $this->context->country->id,
                     'options' => array(
                         'query' => Country::getCountries($this->context->language->id),
                         'id' => 'id_country',
                         'name' => 'name',
-                    )
+                    ),
                 ),
                 array(
                     'type' => 'select',
@@ -210,8 +210,8 @@ class AdminStoresControllerCore extends AdminController
                     'options' => array(
                         'id' => 'id_state',
                         'name' => 'name',
-                        'query' => null
-                    )
+                        'query' => null,
+                    ),
                 ),
                 array(
                     'type' => 'latitude',
@@ -219,22 +219,22 @@ class AdminStoresControllerCore extends AdminController
                     'name' => 'latitude',
                     'required' => true,
                     'maxlength' => 12,
-                    'hint' => $this->trans('Store coordinates (e.g. 45.265469/-47.226478).', array(), 'Admin.Shopparameters.Feature')
+                    'hint' => $this->trans('Store coordinates (e.g. 45.265469/-47.226478).', array(), 'Admin.Shopparameters.Feature'),
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Phone', array(), 'Admin.Global'),
-                    'name' => 'phone'
+                    'name' => 'phone',
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Fax', array(), 'Admin.Global'),
-                    'name' => 'fax'
+                    'name' => 'fax',
                 ),
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Email address', array(), 'Admin.Global'),
-                    'name' => 'email'
+                    'name' => 'email',
                 ),
                 array(
                     'type' => 'textarea',
@@ -242,7 +242,7 @@ class AdminStoresControllerCore extends AdminController
                     'name' => 'note',
                     'lang' => true,
                     'cols' => 42,
-                    'rows' => 4
+                    'rows' => 4,
                 ),
                 array(
                     'type' => 'switch',
@@ -254,15 +254,15 @@ class AdminStoresControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                        ),
                     ),
-                    'hint' => $this->trans('Whether or not to display this store.', array(), 'Admin.Shopparameters.Help')
+                    'hint' => $this->trans('Whether or not to display this store.', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'file',
@@ -271,14 +271,14 @@ class AdminStoresControllerCore extends AdminController
                     'display_image' => true,
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
-                    'hint' => $this->trans('Storefront picture.', array(), 'Admin.Shopparameters.Help')
-                )
+                    'hint' => $this->trans('Storefront picture.', array(), 'Admin.Shopparameters.Help'),
+                ),
             ),
             'hours' => array(
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
+            ),
         );
 
         if (Shop::isFeatureActive()) {
@@ -323,7 +323,7 @@ class AdminStoresControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (isset($_POST['submitAdd'.$this->table])) {
+        if (isset($_POST['submitAdd' . $this->table])) {
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
@@ -338,25 +338,25 @@ class AdminStoresControllerCore extends AdminController
             }
 
             /* Rewrite latitude and longitude to 8 digits */
-            $_POST['latitude'] = number_format((float)$_POST['latitude'], 8);
-            $_POST['longitude'] = number_format((float)$_POST['longitude'], 8);
+            $_POST['latitude'] = number_format((float) $_POST['latitude'], 8);
+            $_POST['longitude'] = number_format((float) $_POST['longitude'], 8);
 
             /* If the selected country does not contain states */
-            $id_state = (int)Tools::getValue('id_state');
-            $id_country = (int)Tools::getValue('id_country');
-            $country = new Country((int)$id_country);
+            $id_state = (int) Tools::getValue('id_state');
+            $id_country = (int) Tools::getValue('id_country');
+            $country = new Country((int) $id_country);
 
-            if ($id_country && $country && !(int)$country->contains_states && $id_state) {
+            if ($id_country && $country && !(int) $country->contains_states && $id_state) {
                 $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', array(), 'Admin.Advparameters.Notification');
             }
 
             /* If the selected country contains states, then a state have to be selected */
-            if ((int)$country->contains_states && !$id_state) {
+            if ((int) $country->contains_states && !$id_state) {
                 $this->errors[] = $this->trans('An address located in a country containing states must have a state selected.', array(), 'Admin.Shopparameters.Notification');
             }
 
-            $latitude = (float)Tools::getValue('latitude');
-            $longitude = (float)Tools::getValue('longitude');
+            $latitude = (float) Tools::getValue('latitude');
+            $longitude = (float) Tools::getValue('longitude');
 
             if (empty($latitude) || empty($longitude)) {
                 $this->errors[] = $this->trans('Latitude and longitude are required.', array(), 'Admin.Shopparameters.Notification');
@@ -365,7 +365,7 @@ class AdminStoresControllerCore extends AdminController
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error').'<br />'.$this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
                 $this->errors[] = $this->trans('A Zip/postal code is required.', array(), 'Admin.Notifications.Error');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
@@ -374,7 +374,7 @@ class AdminStoresControllerCore extends AdminController
             /* Store hours */
             foreach ($langs as $lang) {
                 $hours = array();
-                for ($i = 1; $i < 8; $i++) {
+                for ($i = 1; $i < 8; ++$i) {
                     if (1 < count($langs)) {
                         $hours[] = explode(' | ', $_POST['hours'][$i][$lang['id_lang']]);
                         unset($_POST['hours'][$i][$lang['id_lang']]);
@@ -398,24 +398,25 @@ class AdminStoresControllerCore extends AdminController
     protected function postImage($id)
     {
         $ret = parent::postImage($id);
-        $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+        $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int)Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_.$id_store.'.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
-                ImageManager::resize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
-                    _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
-                    (int)$image_type['width'], (int)$image_type['height']
+                ImageManager::resize(_PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                    _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.jpg',
+                    (int) $image_type['width'], (int) $image_type['height']
                 );
 
                 if ($generate_hight_dpi_images) {
-                    ImageManager::resize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
-                        _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'2x.jpg',
-                        (int)$image_type['width']*2, (int)$image_type['height']*2
+                    ImageManager::resize(_PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
+                        (int) $image_type['width'] * 2, (int) $image_type['height'] * 2
                     );
                 }
             }
         }
+
         return $ret;
     }
 
@@ -446,7 +447,7 @@ class AdminStoresControllerCore extends AdminController
                 'hint' => $this->trans('Displayed in emails sent to customers.', array(), 'Admin.Shopparameters.Help'),
                 'validation' => 'isEmail',
                 'required' => true,
-                'type' => 'text'
+                'type' => 'text',
             ),
             'PS_SHOP_DETAILS' => array(
                 'title' => $this->trans('Registration number', array(), 'Admin.Shopparameters.Feature'),
@@ -454,27 +455,27 @@ class AdminStoresControllerCore extends AdminController
                 'validation' => 'isGenericName',
                 'type' => 'textarea',
                 'cols' => 30,
-                'rows' => 5
+                'rows' => 5,
             ),
             'PS_SHOP_ADDR1' => array(
                 'title' => $this->trans('Shop address line 1', array(), 'Admin.Shopparameters.Feature'),
                 'validation' => 'isAddress',
-                'type' => 'text'
+                'type' => 'text',
             ),
             'PS_SHOP_ADDR2' => array(
                 'title' => $this->trans('Shop address line 2', array(), 'Admin.Shopparameters.Feature'),
                 'validation' => 'isAddress',
-                'type' => 'text'
+                'type' => 'text',
             ),
             'PS_SHOP_CODE' => array(
                 'title' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
                 'validation' => 'isGenericName',
-                'type' => 'text'
+                'type' => 'text',
             ),
             'PS_SHOP_CITY' => array(
                 'title' => $this->trans('City', array(), 'Admin.Global'),
                 'validation' => 'isGenericName',
-                'type' => 'text'
+                'type' => 'text',
             ),
             'PS_SHOP_COUNTRY_ID' => array(
                 'title' => $this->trans('Country', array(), 'Admin.Global'),
@@ -483,7 +484,7 @@ class AdminStoresControllerCore extends AdminController
                 'list' => $countryList,
                 'identifier' => 'id',
                 'cast' => 'intval',
-                'defaultValue' => (int)$this->context->country->id
+                'defaultValue' => (int) $this->context->country->id,
             ),
             'PS_SHOP_STATE_ID' => array(
                 'title' => $this->trans('State', array(), 'Admin.Global'),
@@ -491,17 +492,17 @@ class AdminStoresControllerCore extends AdminController
                 'type' => 'select',
                 'list' => $stateList,
                 'identifier' => 'id',
-                'cast' => 'intval'
+                'cast' => 'intval',
             ),
             'PS_SHOP_PHONE' => array(
                 'title' => $this->trans('Phone', array(), 'Admin.Global'),
                 'validation' => 'isGenericName',
-                'type' => 'text'
+                'type' => 'text',
             ),
             'PS_SHOP_FAX' => array(
                 'title' => $this->trans('Fax', array(), 'Admin.Global'),
                 'validation' => 'isGenericName',
-                'type' => 'text'
+                'type' => 'text',
             ),
         );
 
@@ -514,40 +515,40 @@ class AdminStoresControllerCore extends AdminController
         // Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
 
         // $associatedOrderKey = array(
-            // 'PS_SHOP_NAME' => 'company',
-            // 'PS_SHOP_ADDR1' => 'address1',
-            // 'PS_SHOP_ADDR2' => 'address2',
-            // 'PS_SHOP_CITY' => 'city',
-            // 'PS_SHOP_STATE_ID' => 'State:name',
-            // 'PS_SHOP_CODE' => 'postcode',
-            // 'PS_SHOP_COUNTRY_ID' => 'Country:name',
-            // 'PS_SHOP_PHONE' => 'phone');
+        // 'PS_SHOP_NAME' => 'company',
+        // 'PS_SHOP_ADDR1' => 'address1',
+        // 'PS_SHOP_ADDR2' => 'address2',
+        // 'PS_SHOP_CITY' => 'city',
+        // 'PS_SHOP_STATE_ID' => 'State:name',
+        // 'PS_SHOP_CODE' => 'postcode',
+        // 'PS_SHOP_COUNTRY_ID' => 'Country:name',
+        // 'PS_SHOP_PHONE' => 'phone');
         // $fields = array();
         // $orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
         // foreach ($orderedFields as $lineFields)
-            // if (($patterns = explode(' ', $lineFields)))
-                // foreach ($patterns as $pattern)
-                    // if (($key = array_search($pattern, $associatedOrderKey)))
-                        // $fields[$key] = $formFields[$key];
+        // if (($patterns = explode(' ', $lineFields)))
+        // foreach ($patterns as $pattern)
+        // if (($key = array_search($pattern, $associatedOrderKey)))
+        // $fields[$key] = $formFields[$key];
         // foreach ($formFields as $key => $value)
-            // if (!isset($fields[$key]))
-                // $fields[$key] = $formFields[$key];
+        // if (!isset($fields[$key]))
+        // $fields[$key] = $formFields[$key];
 
         $fields = $formFields;
         $this->fields_options['contact'] = array(
-            'title' =>    $this->trans('Contact details', array(), 'Admin.Shopparameters.Feature'),
-            'icon' =>    'icon-user',
-            'fields' =>    $fields,
-            'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
+            'title' => $this->trans('Contact details', array(), 'Admin.Shopparameters.Feature'),
+            'icon' => 'icon-user',
+            'fields' => $fields,
+            'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
         );
     }
 
     public function beforeUpdateOptions()
     {
         if (isset($_POST['PS_SHOP_STATE_ID']) && $_POST['PS_SHOP_STATE_ID'] != '0') {
-            $sql = 'SELECT `active` FROM `'._DB_PREFIX_.'state`
-					WHERE `id_country` = '.(int)Tools::getValue('PS_SHOP_COUNTRY_ID').'
-						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
+            $sql = 'SELECT `active` FROM `' . _DB_PREFIX_ . 'state`
+					WHERE `id_country` = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
+						AND `id_state` = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if ($isStateOk != 1) {
                 $this->errors[] = $this->trans('The specified state is not located in this country.', array(), 'Admin.Shopparameters.Notification');
@@ -578,15 +579,16 @@ class AdminStoresControllerCore extends AdminController
     }
 
     /**
-     * Adapt the format of hours
-     * 
+     * Adapt the format of hours.
+     *
      * @param array $value
+     *
      * @return array
      */
     private function adaptHoursFormat($value)
     {
         $separator = array_fill(0, count($value), ' | ');
-        
+
         return array_map('implode', $value, $separator);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class LocalizationPackByIsoCodeChoiceProvider provides localization pack choices with iso code values
+ * Class LocalizationPackByIsoCodeChoiceProvider provides localization pack choices with iso code values.
  */
 final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProviderInterface
 {
@@ -76,7 +76,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
     }
 
     /**
-     * Get localization pack choices
+     * Get localization pack choices.
      *
      * @return array
      */
@@ -100,7 +100,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
         $finder = (new Finder())
             ->files()
             ->depth('0')
-            ->in($rootDir.'/localization')
+            ->in($rootDir . '/localization')
             ->name('/^([a-z]{2})\.xml$/');
 
         foreach ($finder as $file) {
@@ -113,7 +113,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
                 $packName = $this->translator->trans(
                     '%s (local)',
                     [
-                        (string) $pack['name']
+                        (string) $pack['name'],
                     ],
                     'Admin.International.Feature'
                 );

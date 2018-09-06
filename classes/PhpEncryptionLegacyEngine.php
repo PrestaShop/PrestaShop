@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -74,7 +74,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
             $this->mode,
             $this->iv
         );
-        $cipherText = $this->iv.$cipherText;
+        $cipherText = $this->iv . $cipherText;
 
         return $this->generateHmac($cipherText) . ':' . base64_encode($cipherText);
     }
@@ -115,11 +115,12 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         );
 
         $pad = ord($data[strlen($data) - 1]);
+
         return substr($data, 0, -$pad);
     }
 
     /**
-     * Generate Hmac
+     * Generate Hmac.
      *
      * @param string $encrypted
      *
@@ -128,6 +129,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     protected function generateHmac($encrypted)
     {
         $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->hmacIv, 32);
+
         return hash_hmac(
             'sha256',
             $this->hmacIv . $this->cipher . $encrypted,
@@ -139,10 +141,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      * Alternative to mhash_keygen_s2k for security reason
      * and php compatibilities.
      *
-     * @param string  $hash
-     * @param string  $password
-     * @param string  $salt
-     * @param integer $bytes
+     * @param string $hash
+     * @param string $password
+     * @param string $salt
+     * @param int $bytes
      *
      * @return string
      */

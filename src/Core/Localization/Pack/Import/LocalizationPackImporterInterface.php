@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 /**
- * Interface LocalizationPackImporterInterface defines contract for localization importer
+ * Interface LocalizationPackImporterInterface defines contract for localization importer.
  */
 interface LocalizationPackImporterInterface
 {
     /**
-     * Import localization pack
+     * Import localization pack.
      *
      * @param LocalizationPackImportConfig $config
      *

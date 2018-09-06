@@ -99,11 +99,10 @@ class CommonClient {
       return this.client
         .waitForExistAndClick(selector.languageFO.language_selector)
         .waitForVisibleAndClick(selector.languageFO.language_FR)
-    } else {
-      return this.client
-        .waitForExistAndClick(selector.languageFO.language_selector)
-        .waitForVisibleAndClick(selector.languageFO.language_EN)
     }
+    return this.client
+       .waitForExistAndClick(selector.languageFO.language_selector)
+       .waitForVisibleAndClick(selector.languageFO.language_EN)
   }
 
   selectLanguage(selector, option, language, id) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,14 +34,14 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 /**
- * Locale cache data layer
+ * Locale cache data layer.
  *
  * Reads / writes into cache.
  */
 class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
-     * Symfony Cache component adapter
+     * Symfony Cache component adapter.
      *
      * Provides cached LocaleData objects
      * Implements PSR-6: Cache Interface (@see http://www.php-fig.org/psr/psr-6/)
@@ -61,7 +61,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
     {
@@ -71,15 +71,15 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     }
 
     /**
-     * Actually read a LocaleData object into the current layer
+     * Actually read a LocaleData object into the current layer.
      *
      * Data is read from passed cache adapter
      *
      * @param string $localeCode
-     *  The LocaleData object identifier
+     *                           The LocaleData object identifier
      *
      * @return LocaleData|null
-     *  The wanted LocaleData object (null if not found)
+     *                         The wanted LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -91,7 +91,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function write($id, $data)
     {
@@ -105,20 +105,17 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     }
 
     /**
-     * Actually write a LocaleData object into the current layer
+     * Actually write a LocaleData object into the current layer.
      *
      * Might be a file edit, cache update, DB insert/update...
      *
      * @param mixed $localeCode
-     *  The LocaleData object identifier
-     *
+     *                          The LocaleData object identifier
      * @param LocaleData $data
-     *  The LocaleData object to be written
-     *
-     * @return void
+     *                         The LocaleData object to be written
      *
      * @throws DataLayerException
-     *  When write fails
+     *                            When write fails
      */
     protected function doWrite($localeCode, $data)
     {

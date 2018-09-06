@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Form;
 
 /**
- * Interface FormChoiceProviderInterface defines contract for choice providers
+ * Interface FormChoiceProviderInterface defines contract for choice providers.
  */
 interface FormChoiceProviderInterface
 {
     /**
-     * Get choices
+     * Get choices.
      *
      * @return array
      */

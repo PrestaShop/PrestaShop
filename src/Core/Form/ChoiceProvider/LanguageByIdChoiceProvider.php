@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class LanguageByIdChoiceProvider provides language choices with ID values
+ * Class LanguageByIdChoiceProvider provides language choices with ID values.
  */
 final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,7 +48,7 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get language choices for form
+     * Get language choices for form.
      *
      * @return array
      */

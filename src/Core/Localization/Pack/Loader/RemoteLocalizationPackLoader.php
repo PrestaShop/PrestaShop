@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 /**
- * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com
+ * Class RemoteLocalizationPackLoader is responsible for loading localization pack data from prestashop.com.
  */
 final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 {
@@ -61,7 +61,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
     {
         $apiUrl = $this->configuration->get('_PS_API_URL_');
 
-        $xmlLocalizationPacks = $this->loadXml($apiUrl.'/rss/localization.xml');
+        $xmlLocalizationPacks = $this->loadXml($apiUrl . '/rss/localization.xml');
         if (!$xmlLocalizationPacks) {
             return null;
         }

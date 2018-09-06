@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,10 +34,10 @@ class ShopFilter extends HashMapWhitelistFilter
     public function __construct()
     {
         $whitelist = array(
-            "favicon",
-            "logo",
-            "name",
-            "stores_icon",
+            'favicon',
+            'logo',
+            'name',
+            'stores_icon',
         );
 
         $this->whitelist($whitelist);

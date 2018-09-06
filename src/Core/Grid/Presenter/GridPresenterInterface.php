@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 
 /**
- * Interface GridPresenterInterface defines contract for grid presenter
+ * Interface GridPresenterInterface defines contract for grid presenter.
  */
 interface GridPresenterInterface
 {
     /**
-     * Present grid as plain array
+     * Present grid as plain array.
      *
      * @param GridInterface $grid
      *

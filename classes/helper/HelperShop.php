@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class HelperShopCore extends Helper
 {
     /**
-     * Render shop list
+     * Render shop list.
      *
      * @return string
      */
@@ -43,9 +42,9 @@ class HelperShopCore extends Helper
         if ($this->noShopSelection()) {
             $current_shop_value = '';
         } elseif ($shop_context == Shop::CONTEXT_GROUP) {
-            $current_shop_value = 'g-'.Shop::getContextShopGroupID();
+            $current_shop_value = 'g-' . Shop::getContextShopGroupID();
         } else {
-            $current_shop_value = 's-'.Shop::getContextShopID();
+            $current_shop_value = 's-' . Shop::getContextShopID();
         }
 
         $tpl = $this->createTemplate('helpers/shops_list/list.tpl');
@@ -56,11 +55,11 @@ class HelperShopCore extends Helper
             'current_shop_value' => $current_shop_value,
             'multishop_context' => $context->controller->multishop_context,
             'multishop_context_group' => $context->controller->multishop_context_group,
-            'is_shop_context'  => ($context->controller->multishop_context & Shop::CONTEXT_SHOP),
+            'is_shop_context' => ($context->controller->multishop_context & Shop::CONTEXT_SHOP),
             'is_group_context' => ($context->controller->multishop_context & Shop::CONTEXT_GROUP),
             'is_all_context' => ($context->controller->multishop_context & Shop::CONTEXT_ALL),
             'shop_context' => $shop_context,
-            'url' => $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext='
+            'url' => $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=',
         ));
 
         return $tpl->fetch();

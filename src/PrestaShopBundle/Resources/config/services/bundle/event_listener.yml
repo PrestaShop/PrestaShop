@@ -11,7 +11,7 @@ services:
 
     prestashop.dispatcher.legacy_hooks.subscriber:
         class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
-        arguments: ['@prestashop.hook.dispatcher']
+        arguments: ['@prestashop.core.hook.dispatcher']
         tags:
             - { name: kernel.event_subscriber }
 

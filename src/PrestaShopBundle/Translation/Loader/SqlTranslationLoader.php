@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,12 +37,13 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class SqlTranslationLoader implements LoaderInterface
 {
     /**
-     * @var  Theme
+     * @var Theme
      */
     protected $theme;
 
     /**
      * @param $theme
+     *
      * @return $this
      */
     public function setTheme(Theme $theme)
@@ -63,8 +64,8 @@ class SqlTranslationLoader implements LoaderInterface
             $locale = Db::getInstance()->escape($locale, false, true);
 
             $localeResults[$locale] = Db::getInstance()->getRow('SELECT `id_lang`
-                FROM `'._DB_PREFIX_.'lang`
-                WHERE `locale` = "'.$locale.'"'
+                FROM `' . _DB_PREFIX_ . 'lang`
+                WHERE `locale` = "' . $locale . '"'
             );
         }
 
@@ -74,8 +75,8 @@ class SqlTranslationLoader implements LoaderInterface
 
         $selectTranslationsQuery = '
             SELECT `key`, `translation`, `domain`
-            FROM `'._DB_PREFIX_.'translation`
-            WHERE `id_lang` = '.$localeResults[$locale]['id_lang']
+            FROM `' . _DB_PREFIX_ . 'translation`
+            WHERE `id_lang` = ' . $localeResults[$locale]['id_lang']
         ;
         $translations = Db::getInstance()->executeS($selectTranslationsQuery);
 
@@ -84,8 +85,8 @@ class SqlTranslationLoader implements LoaderInterface
 
         if (!is_null($this->theme)) {
             $selectThemeTranslationsQuery =
-                $selectTranslationsQuery."\n".
-                "AND theme = '".$this->theme->getName()."'"
+                $selectTranslationsQuery . "\n" .
+                "AND theme = '" . $this->theme->getName() . "'"
             ;
             $themeTranslations = Db::getInstance()->executeS($selectThemeTranslationsQuery);
             $this->addTranslationsToCatalogue($themeTranslations, $catalogue);

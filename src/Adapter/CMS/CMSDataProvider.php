@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\CMS;
 use CMS;
 
 /**
- * Class CMSDataProvider provides CMS data using legacy code
+ * Class CMSDataProvider provides CMS data using legacy code.
  */
 class CMSDataProvider
 {
     /**
-     * Gets all CMS pages
+     * Gets all CMS pages.
      *
      * @param int $languageId
      *
@@ -46,7 +46,7 @@ class CMSDataProvider
     }
 
     /**
-     * Gets one CMS object by ID
+     * Gets one CMS object by ID.
      *
      * @param int $cmsId
      *
@@ -58,7 +58,7 @@ class CMSDataProvider
     }
 
     /**
-     * Gets CMS choices for choice type
+     * Gets CMS choices for choice type.
      *
      * @param int $languageId
      *
