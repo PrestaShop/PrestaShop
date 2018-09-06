@@ -2,11 +2,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
 
-use Db;
-use DbQuery;
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use PrestaShopBundle\Entity\Repository\ImportMatchRepository;
 use SplFileInfo;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -41,24 +41,48 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     private $importFilename;
 
     /**
+     * @var Connection database connection
+     */
+    private $connection;
+
+    /**
+     * @var string database table prefix
+     */
+    private $dbPrefix;
+
+    /**
+     * @var ImportMatchRepository
+     */
+    private $importMatchRepository;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $entityFieldChoices
      * @param ImportDirectory $importDirectory
      * @param string $importFilename
      * @param DataRowCollectionFactoryInterface $dataRowCollectionFactory
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param ImportMatchRepository $importMatchRepository
      */
     public function __construct(
         TranslatorInterface $translator,
         array $entityFieldChoices,
         ImportDirectory $importDirectory,
         $importFilename,
-        DataRowCollectionFactoryInterface $dataRowCollectionFactory
+        DataRowCollectionFactoryInterface $dataRowCollectionFactory,
+        Connection $connection,
+        $dbPrefix,
+        ImportMatchRepository $importMatchRepository
     ) {
         $this->translator = $translator;
         $this->entityFieldChoices = $entityFieldChoices;
         $this->dataRowCollectionFactory = $dataRowCollectionFactory;
         $this->importDirectory = $importDirectory;
         $this->importFilename = $importFilename;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+        $this->importMatchRepository = $importMatchRepository;
     }
 
     /**
@@ -135,21 +159,15 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      * Saves the import configuration match data.
      *
      * @param array $configuration
-     *
-     * @throws \PrestaShopDatabaseException
      */
     private function saveConfigurationMatch(array $configuration)
     {
-        Db::getInstance()->insert(
-            'import_match',
+        $this->connection->insert($this->dbPrefix . 'import_match',
             [
-                'name' => pSQL($configuration['match_name']),
-                'match' => pSQL(implode('|', $configuration['type_value'])),
-                'skip' => (int) $configuration['rows_skip'],
-            ],
-            false,
-            true,
-            Db::INSERT_IGNORE
+                '`name`' => $configuration['match_name'],
+                '`match`' => implode('|', $configuration['type_value']),
+                '`skip`' => $configuration['rows_skip'],
+            ]
         );
     }
 
@@ -162,11 +180,6 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      */
     private function configurationNameExists($matchName)
     {
-        $query = new DbQuery();
-        $query->select('`id_import_match`');
-        $query->from('import_match');
-        $query->where('`name`="' . pSQL($matchName) . '"');
-
-        return Db::getInstance()->getValue($query) ? true : false;
+        return $this->importMatchRepository->findOneByName($matchName) ? true : false;
     }
 }
