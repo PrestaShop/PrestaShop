@@ -40,6 +40,11 @@ final class CanonicalUrlChoiceProvider implements FormChoiceProviderInterface
      */
     private $translator;
 
+    /**
+     * CanonicalUrlChoiceProvider constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;

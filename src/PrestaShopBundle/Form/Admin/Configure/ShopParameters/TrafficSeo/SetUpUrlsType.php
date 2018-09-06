@@ -52,13 +52,15 @@ class SetUpUrlsType extends AbstractType
         $this->canonicalUrlChoices = $canonicalUrlChoices;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('friendly_url', SwitchType::class)
             ->add('accented_url', SwitchType::class)
-            ->add(
-                'canonical_url_redirection', ChoiceType::class, [
+            ->add('canonical_url_redirection', ChoiceType::class, [
                     'choices' => $this->canonicalUrlChoices,
                 ]
             )

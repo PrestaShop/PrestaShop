@@ -26,10 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\SeoUrlsFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -45,13 +46,13 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/meta.html.twig")
      *
-     * @param SeoUrlsFilters $filters
+     * @param MetaFilters $filters
      *
      * @return array
      *
      * @throws \Exception
      */
-    public function indexAction(SeoUrlsFilters $filters)
+    public function indexAction(MetaFilters $filters)
     {
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
         $grid = $seoUrlsGridFactory->getGrid($filters);
@@ -59,7 +60,8 @@ class MetaController extends FrameworkBundleAdminController
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
 
-        $seoUrlsForm = $this->get('prestashop.admin.seo_urls_settings.form_handler')->getForm();
+        $metaForm = $this->get('prestashop.admin.meta_settings.form_handler')->getForm();
+        $tools = $this->get('prestashop.adapter.tools');
 
         return [
             'layoutHeaderToolbarBtn' => [
@@ -70,10 +72,18 @@ class MetaController extends FrameworkBundleAdminController
                 ],
             ],
             'grid' => $presentedGrid,
-            'seoUrlsForm' => $seoUrlsForm->createView()
+            'metaForm' => $metaForm->createView(),
+            'isModRewriteActive' => $tools->isModRewriteActive(),
         ];
     }
 
+    /**
+     * Used for applying filtering actions.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.meta');
@@ -91,7 +101,12 @@ class MetaController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_meta', ['filters' => $filters]);
     }
 
-    public function createListAction()
+    /**
+     * Redirects to page where new record of meta list can be created.
+     *
+     * @return RedirectResponse
+     */
+    public function createAction()
     {
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
         //@todo: this action should point to new add page
@@ -102,30 +117,36 @@ class MetaController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    public function editListAction($metaId)
+    /**
+     * Redirects to page where list record can be edited.
+     *
+     * @param int $metaId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction($metaId)
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         //@todo: this action should point to new add page
-        $legacyLink = $legacyContext->getAdminLink(
-                'AdminMeta',
-                true,
-                [
-                    'id_meta' => $metaId,
-                ]
-            ) . '&updatemeta';
+        $legacyLink = $this->getAdminLink('AdminMeta', [
+            'id_meta' => $metaId,
+            'updatemeta' => 1,
+        ]);
 
         return $this->redirect($legacyLink);
     }
 
     public function deleteSingleListItemAction()
     {
+        // todo: implement
     }
 
     public function deleteMultipleListItemsAction()
     {
+        // todo: implement
     }
 
-    public function processSettingsFormAction()
+    public function processFormAction()
     {
+        // todo: implement
     }
 }

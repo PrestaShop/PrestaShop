@@ -136,5 +136,5 @@ services:
         arguments:
             - '@prestashop.core.backup.options_configuration'
 
-    prestashop.admin.seo_urls.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SeoUrlsFormDataProvider'
+    prestashop.admin.traffic_seo.meta.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\MetaFormDataProvider'

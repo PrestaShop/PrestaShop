@@ -16,14 +16,14 @@ admin_meta_list_create:
     path: /create
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:createList'
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
         _legacy_controller: AdminMeta
 
 admin_meta_list_edit:
     path: /edit/{metaId}
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:editList'
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'
         _legacy_controller: AdminMeta
     requirements:
         metaId: \d+
@@ -48,5 +48,5 @@ admin_meta_process:
   path: /settings
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processSettingsForm'
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processForm'
     _legacy_controller: AdminEmails

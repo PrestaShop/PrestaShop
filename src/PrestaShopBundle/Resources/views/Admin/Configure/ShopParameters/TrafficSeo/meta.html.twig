@@ -33,15 +33,15 @@
     </div>
   </div>
 
-  {{ form_start(seoUrlsForm, {'action': path('admin_meta_process')}) }}
+  {{ form_start(metaForm, {'action': path('admin_meta_process')}) }}
     <div class="row justify-content-center">
       {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls.html.twig' %}
 
-      {% block seo_urls_form_rest %}
-        {{ form_rest(seoUrlsForm) }}
+      {% block meta_form_rest %}
+        {{ form_rest(metaForm) }}
       {% endblock %}
     </div>
-  {{ form_end(seoUrlsForm) }}
+  {{ form_end(metaForm) }}
 
 {% endblock %}
 

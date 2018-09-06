@@ -143,4 +143,14 @@ class Tools
     {
         return LegacyTools::getShopDomainSsl($http, $entities);
     }
+
+    /**
+     * Checks if apache mod exists for mod_rewrite or the server has HTTP_MOD_REWRITE enabled.
+     *
+     * @return bool
+     */
+    public function isModRewriteActive()
+    {
+        return LegacyTools::modRewriteActive();
+    }
 }
