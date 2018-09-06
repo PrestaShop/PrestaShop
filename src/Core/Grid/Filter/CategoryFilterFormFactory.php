@@ -28,8 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -71,12 +70,12 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
             FormType::class
         );
 
-        /** @var Form $categoryFormType */
-        foreach ($categoryFilterForm->getRoot() as $categoryFormType) {
+        /** @var FormInterface $categoryFormItem */
+        foreach ($categoryFilterForm as $categoryFormItem) {
             $newCategoryFormBuilder->add(
-                $categoryFormType->getName(),
-                get_class($categoryFormType->getConfig()->getType()->getInnerType()),
-                $categoryFormType->getConfig()->getOptions()
+                $categoryFormItem->getName(),
+                get_class($categoryFormItem->getConfig()->getType()->getInnerType()),
+                $categoryFormItem->getConfig()->getOptions()
             );
         }
 
