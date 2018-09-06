@@ -36,13 +36,13 @@ import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-ac
 const $ = window.$;
 
 $(() => {
-  const seoUrlsGrid = new Grid('seo_urls');
-  seoUrlsGrid.addExtension(new ReloadListActionExtension());
-  seoUrlsGrid.addExtension(new ExportToSqlManagerExtension());
-  seoUrlsGrid.addExtension(new FiltersResetExtension());
-  seoUrlsGrid.addExtension(new SortingExtension());
-  seoUrlsGrid.addExtension(new LinkRowActionExtension());
-  seoUrlsGrid.addExtension(new SubmitGridExtension());
-  seoUrlsGrid.addExtension(new SubmitBulkExtension());
-  seoUrlsGrid.addExtension(new BulkActionCheckboxExtension());
+  const meta = new Grid('meta');
+  meta.addExtension(new ReloadListActionExtension());
+  meta.addExtension(new ExportToSqlManagerExtension());
+  meta.addExtension(new FiltersResetExtension());
+  meta.addExtension(new SortingExtension());
+  meta.addExtension(new LinkRowActionExtension());
+  meta.addExtension(new SubmitGridExtension());
+  meta.addExtension(new SubmitBulkExtension());
+  meta.addExtension(new BulkActionCheckboxExtension());
 });
