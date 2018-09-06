@@ -34,9 +34,9 @@ const $ = window.$;
 export default class SaveImportMatchConfiguration
 {
   /**
-   * Initialises all the processes relates with save import match
+   * Initializes all the processes related with import match saving
    */
-  init() {
+  constructor() {
     this.loadEvents();
   }
 
