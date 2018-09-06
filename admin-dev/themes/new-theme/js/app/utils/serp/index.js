@@ -41,8 +41,8 @@ class SerpApp {
 
     this.defaultTitle = $('.serp-default-title:input');
     this.watchedTitle = $('.serp-watched-title:input');
-    this.defaultDescription = $('.serp-default-description:input');
-    this.watchedDescription = $('.serp-watched-description:input');
+    this.defaultDescription = $('.serp-default-description');
+    this.watchedDescription = $('.serp-watched-description');
     this.defaultUrl = $('.serp-default-url:input');
 
     this.vm = new Vue({
@@ -67,8 +67,8 @@ class SerpApp {
       }
     };
     const updateSerpDescription = () => {
-      const desc1 = this.watchedDescription.length ? $(this.watchedDescription.val()).text() : '';
-      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() : '';
+      const desc1 = this.watchedDescription.length ? $(this.watchedDescription.val()).text() || this.watchedDescription.val() : '';
+      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() || this.defaultDescription.val() : '';
       app.setDescription(desc1 || desc2);
     };
     this.watchedTitle.on('keyup change', updateSerpTitle);
