@@ -96,6 +96,7 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
 
     /**
      * @param QueryBuilder $queryBuilder
+     *
      * @return string
      */
     private function getRawQuery(QueryBuilder $queryBuilder)
