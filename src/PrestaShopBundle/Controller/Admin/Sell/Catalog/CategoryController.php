@@ -31,11 +31,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateCategoriesS
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,14 +66,42 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
+        ]);
+    }
+
+    /**
+     * Renders category deletion from
+     *
+     * @return Response
+     */
+    public function renderDeleteFormBlockAction()
+    {
+        $request = $this->get('request_stack')->getMasterRequest();
+
+        $data = [];
+        $options = [];
+        $isDeleteSubmitted = true;
+
+        if ($request->request->has('categories_bulk')) {
+            $data['categories_to_delete'] = $request->request->get('categories_bulk');
+            $options['action'] = $this->generateUrl('admin_category_process_bulk_delete');
+        } elseif ($request->query->has('id_category_to_delete')) {
+            $data['categories_to_delete'] = [$request->query->get('id_category_to_delete')];
+            $options['action'] = $this->generateUrl('admin_category_process_delete');
+        } else {
+            $isDeleteSubmitted = false;
+        }
+
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, $data, $options);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig', [
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
+            'isDeleteSubmitted' => $isDeleteSubmitted,
         ]);
     }
 
@@ -124,6 +154,72 @@ class CategoryController extends FrameworkBundleAdminController
     public function processBulkStatusDisableAction(Request $request)
     {
         $this->updateBulkStatus($request->request->get('categories_bulk'), CategoryStatus::DISABLED);
+
+        return $this->redirectToRoute('admin_category_listing');
+    }
+
+    /**
+     * Processes bulk categories deleting
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processBulkDeleteAction(Request $request)
+    {
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+        $deleteCategoriesForm->handleRequest($request);
+
+        if ($deleteCategoriesForm->isSubmitted()) {
+            $categoriesDeleteData = $deleteCategoriesForm->getData();
+
+            $errors = $this->get('prestashop.adapter.category.category_remover')->removeMultiple(
+                $categoriesDeleteData['categories_to_delete'],
+                new CategoryDeletionMode($categoriesDeleteData['delete_mode'])
+            );
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                );
+            } else {
+                $this->flashErrors($errors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_category_listing');
+    }
+
+    /**
+     * Process single category deleting
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processDeleteAction(Request $request)
+    {
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+        $deleteCategoriesForm->handleRequest($request);
+
+        if ($deleteCategoriesForm->isSubmitted()) {
+            $categoriesDeleteData = $deleteCategoriesForm->getData();
+
+            $errors = $this->get('prestashop.adapter.category.category_remover')->remove(
+                reset($categoriesDeleteData['categories_to_delete']),
+                new CategoryDeletionMode($categoriesDeleteData['delete_mode'])
+            );
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                );
+            } else {
+                $this->flashErrors($errors);
+            }
+        }
 
         return $this->redirectToRoute('admin_category_listing');
     }
@@ -187,7 +283,10 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
                 $this->trans('(cannot load object)', 'Admin.Notifications.Error')
             ),
-            CannotUpdateCategoryStatusException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+            CannotUpdateCategoryStatusException::class => $this->trans(
+                'An error occurred while updating the status for an object.',
+                'Admin.Notifications.Error'
+            ),
         ];
 
         if (isset($errors[$type])) {

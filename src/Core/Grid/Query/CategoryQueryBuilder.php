@@ -116,14 +116,15 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                 'cl',
                 'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = :context_shop_id'
             )
-            ->setParameter('context_lang_id', $this->contextLangId)
-            ->setParameter('context_shop_id', $this->contextShopId)
             ->leftJoin(
                 'c',
                 $this->dbPrefix . 'category_shop',
                 'cs',
                 'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id'
             )
+            ->andWhere('cs.id_shop = :context_shop_id')
+            ->setParameter('context_lang_id', $this->contextLangId)
+            ->setParameter('context_shop_id', $this->contextShopId)
         ;
 
         foreach ($filters as $filterName => $filterValue) {

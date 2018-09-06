@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -62,7 +63,7 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
             $this->translator->trans('(Recommended)', [], 'Admin.Catalog.Notification')
         );
 
-        $associateAndKeepEnabledLabel = $this->translator->trans(
+        $associateOnlyLabel = $this->translator->trans(
             'I want to associate the products without other categories to the parent category, and keep them enabled.',
             [],
             'Admin.Catalog.Notification'
@@ -75,9 +76,9 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
         );
 
         return [
-            $associateAndDisableLabel => 'linkanddisable',
-            $associateAndKeepEnabledLabel => 'link',
-            $deleteProductLabel => 'delete',
+            $associateAndDisableLabel => CategoryDeletionMode::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
+            $associateOnlyLabel => CategoryDeletionMode::ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY,
+            $deleteProductLabel => CategoryDeletionMode::REMOVE_ASSOCIATED_PRODUCTS,
         ];
     }
 }

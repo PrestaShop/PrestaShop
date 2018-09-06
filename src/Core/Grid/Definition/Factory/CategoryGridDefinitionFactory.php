@@ -311,14 +311,14 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_field' => 'id_category',
                 ])
             )
-            ->add((new SubmitRowAction('delete'))
+            ->add((new LinkRowAction('delete'))
                 ->setName($this->trans('Delete', [], 'Admin.Actions'))
                 ->setIcon('delete')
                 ->setOptions([
-                    'route' => 'admin_category_edit',
-                    'route_param_name' => 'categoryId',
+                    'route' => 'admin_category_listing',
+                    'route_param_name' => 'id_category_to_delete',
                     'route_param_field' => 'id_category',
-                    'confirm_message' => ''
+                    'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;
