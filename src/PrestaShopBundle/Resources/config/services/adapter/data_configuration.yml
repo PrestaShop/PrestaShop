@@ -251,3 +251,6 @@ services:
             - '@=service("prestashop.core.import.dir")'
             - '@=service("session").get("csv")'
             - '@prestashop.core.import.factory.data_row.collection_factory'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.core.admin.import_match.repository'
