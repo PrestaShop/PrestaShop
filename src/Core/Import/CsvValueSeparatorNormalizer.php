@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,40 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File;
-
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
-use SplFileInfo;
+namespace PrestaShop\PrestaShop\Core\Import;
 
 /**
- * Class CsvFileReader defines a CSV file reader.
+ * Class CsvValueSeparatorNormalizer normalizes import separator before usage.
  */
-final class CsvFileReader implements FileReaderInterface
+final class CsvValueSeparatorNormalizer implements StringNormalizerInterface
 {
-    /**
-     * @var string the data separator in the CSV row
-     */
-    private $separator;
-
-    /**
-     * @param string $separator
-     */
-    public function __construct($separator)
-    {
-        $this->separator = $separator;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function read(SplFileInfo $file)
+    public function normalize($value)
     {
-        $handle = fopen($file->getPathname(), 'r');
+        $value = trim($value);
+        $value = substr($value, 0, 1);
 
-        while ($row = fgetcsv($handle, 0, $this->separator)) {
-            yield DataRow::createFromArray($row);
-        }
-
-        fclose($handle);
+        return $value ?: ImportSettings::DEFAULT_SEPARATOR;
     }
 }
