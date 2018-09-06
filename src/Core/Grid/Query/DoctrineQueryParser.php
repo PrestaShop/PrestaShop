@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 /**
  * This class offers a DBAL implementation of Query parser.
  */
-class DoctrineQueryParser implements QueryParserInterface
+final class DoctrineQueryParser implements QueryParserInterface
 {
     /**
      * {@inheritdoc}
