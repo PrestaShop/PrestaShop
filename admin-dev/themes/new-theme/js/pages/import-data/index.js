@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import SaveImportMatchConfiguration from '../import-data/SaveImportMatchConfiguration';
+import SaveImportMatchConfiguration from './SaveImportMatchConfiguration';
 
 const $ = window.$;
 
 $(() => {
-  new SaveImportMatchConfiguration().init();
+  new SaveImportMatchConfiguration();
 });
