@@ -25,10 +25,22 @@
 
 import ImportMatchConfiguration from './ImportMatchConfiguration';
 import ImportDataTable from './ImportDataTable';
+import EntityFieldsValidator from './EntityFieldsValidator';
 
 export default class ImportDataPage {
   constructor() {
     new ImportMatchConfiguration();
     new ImportDataTable();
+
+    $(document).on('click', '.js-process-import', (e) => this.importHandler(e));
+  }
+
+  /**
+   * Import process event handler
+   */
+  importHandler(e) {
+    if (!EntityFieldsValidator.validate()) {
+      e.preventDefault();
+    }
   }
 }

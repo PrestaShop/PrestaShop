@@ -172,17 +172,19 @@ class ImportController extends FrameworkBundleAdminController
         $importDirectory = $this->get('prestashop.core.import.dir');
         $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
         $dataRowCollectionPresenter = $this->get('prestashop.core.import.data_row.collection_presenter');
+        $entityFieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
 
         $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
         $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, 10);
         $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
+        $entityFieldsProvider = $entityFieldsProviderFinder->find();
 
         return [
             'importDataConfigurationForm' => $form->createView(),
             'dataRowCollection' => $presentedDataRowCollection,
             'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
             'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
-            'requiredFields' => [],
+            'requiredFields' => $entityFieldsProvider->getCollection()->getRequiredFields(),
         ];
     }
 
