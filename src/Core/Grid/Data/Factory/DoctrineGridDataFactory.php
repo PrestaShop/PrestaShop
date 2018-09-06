@@ -30,6 +30,7 @@ use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -50,6 +51,11 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     private $hookDispatcher;
 
     /**
+     * @var QueryParserInterface
+     */
+    private $queryParser;
+
+    /**
      * @var string
      */
     private $gridId;
@@ -62,10 +68,12 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     public function __construct(
         DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcherInterface $hookDispatcher,
+        QueryParserInterface $queryParser,
         $gridId
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
         $this->hookDispatcher = $hookDispatcher;
+        $this->queryParser = $queryParser;
         $this->gridId = $gridId;
     }
 
@@ -104,10 +112,6 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         $query = $queryBuilder->getSQL();
         $parameters = $queryBuilder->getParameters();
 
-        foreach ($parameters as $pattern => $value) {
-            $query = str_replace(":$pattern", $value, $query);
-        }
-
-        return $query;
+        return $this->queryParser->parse($query, $parameters);
     }
 }
