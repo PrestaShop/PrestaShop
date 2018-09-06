@@ -30,6 +30,8 @@ services:
 
     prestashop.core.import.csv_file_reader:
         class: 'PrestaShop\PrestaShop\Core\Import\File\CsvFileReader'
+        arguments:
+            - '@=service("prestashop.core.import.normalizer.csv_value_separator").normalize(service("session").get("separator"))'
 
     prestashop.core.import.data_row.presenter:
         class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowPresenter'
@@ -83,3 +85,6 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Factory\StoreContactFieldCollectionFactory'
         arguments:
             - '@translator'
+
+    prestashop.core.import.normalizer.csv_value_separator:
+        class: 'PrestaShop\PrestaShop\Core\Import\CsvValueSeparatorNormalizer'
