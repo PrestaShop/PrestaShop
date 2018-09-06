@@ -240,7 +240,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_category_listing',
+                    'route' => 'admin_category_export',
                 ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))

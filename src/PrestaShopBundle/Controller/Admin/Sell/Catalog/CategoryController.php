@@ -34,7 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoun
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use Symfony\Component\Form\FormInterface;
@@ -121,7 +123,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been updated successfully', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (CategoryException $e) {
             $this->addFlash('error', $this->handleUpdateStatusException($e));
@@ -242,6 +244,45 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Export filtered categories
+     *
+     * @param CategoryFilters $filters
+     *
+     * @return Response
+     */
+    public function exportAction(CategoryFilters $filters)
+    {
+        $categoriesGridFactory = $this->get('prestashop.core.grid.factory.category');
+        $categoriesGrid = $categoriesGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_category' => $this->trans('ID', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'description' => $this->trans('Description', 'Admin.Global'),
+            'position' => $this->trans('Position', 'Admin.Global'),
+            'active' => $this->trans('Displayed', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($categoriesGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_category' => $record['id_category'],
+                'name' => $record['name'],
+                'description' => $record['description'],
+                'position' => $record['position'],
+                'active' => $record['active'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
+        ;
+    }
+
+    /**
      * Update categories status.
      *
      * @param int[] $categoryIds
@@ -293,7 +334,7 @@ class CategoryController extends FrameworkBundleAdminController
             return $errors[$type];
         }
 
-        return $this->trans('Failed to update the status', 'Admin.Notifications.Success');
+        return $this->trans('Failed to update the status', 'Admin.Notifications.Error');
     }
 
     /**
