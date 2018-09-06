@@ -57,7 +57,13 @@ final class ImportEntityFieldChoiceProvider implements FormChoiceProviderInterfa
 
         /** @var EntityFieldInterface $entityField */
         foreach ($this->entityFieldCollection as $entityField) {
-            $choices[$entityField->getLabel()] = $entityField->getName();
+            $label = $entityField->getLabel();
+
+            if ($entityField->isRequired()) {
+                $label .= '*';
+            }
+
+            $choices[$label] = $entityField->getName();
         }
 
         return $choices;
