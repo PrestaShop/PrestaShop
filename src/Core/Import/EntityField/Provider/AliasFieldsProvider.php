@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class AddressFieldCollectionFactory defines a address field collection factory.
+ * Class AliasFieldsProvider defines an alias fields provider.
  */
-final class AddressFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
+final class AliasFieldsProvider implements EntityFieldsProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -51,30 +51,13 @@ final class AddressFieldCollectionFactory implements EntityFieldCollectionFactor
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function getCollection()
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('alias', $this->trans('Alias', 'Admin.Shopparameters.Feature'), '', true),
-            new EntityField('active', $this->trans('Active  (0/1)')),
-            new EntityField('customer_email', $this->trans('Customer email'), '', true),
-            new EntityField('id_customer', $this->trans('Customer ID')),
-            new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
-            new EntityField('supplier', $this->trans('Supplier', 'Admin.Global')),
-            new EntityField('company', $this->trans('Company', 'Admin.Global')),
-            new EntityField('lastname', $this->trans('Last name', 'Admin.Global'), '', true),
-            new EntityField('firstname', $this->trans('First name ', 'Admin.Global'), '', true),
-            new EntityField('address1', $this->trans('Address', 'Admin.Global'), '', true),
-            new EntityField('address2', $this->trans('Address (2)', 'Admin.Global')),
-            new EntityField('postcode', $this->trans('Zip/postal code', 'Admin.Global'), '', true),
-            new EntityField('city', $this->trans('City', 'Admin.Global'), '', true),
-            new EntityField('country', $this->trans('Country', 'Admin.Global'), '', true),
-            new EntityField('state', $this->trans('State', 'Admin.Global')),
-            new EntityField('other', $this->trans('Other', 'Admin.Global')),
-            new EntityField('phone', $this->trans('Phone', 'Admin.Global')),
-            new EntityField('phone_mobile', $this->trans('Mobile Phone', 'Admin.Global')),
-            new EntityField('vat_number', $this->trans('VAT number', 'Admin.Orderscustomers.Feature')),
-            new EntityField('dni', $this->trans('Identification number', 'Admin.Orderscustomers.Feature')),
+            new EntityField('search', $this->trans('Search', 'Admin.Shopparameters.Feature'), '', true),
+            new EntityField('active', $this->trans('Active', 'Admin.Global')),
         ];
 
         return EntityFieldCollection::createFromArray($fields);
